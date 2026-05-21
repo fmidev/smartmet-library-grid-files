@@ -7,6 +7,8 @@ namespace SmartMet
 
 #if 0
 
+/*! \brief Constructs an AutoReadLock and acquires a read lock on the modification lock. */
+
 AutoReadLock::AutoReadLock(ModificationLock *modificationLock)
 {
   try
@@ -23,6 +25,8 @@ AutoReadLock::AutoReadLock(ModificationLock *modificationLock)
 
 
 
+
+/*! \brief Destructor that releases the held read lock. */
 
 AutoReadLock::~AutoReadLock()
 {

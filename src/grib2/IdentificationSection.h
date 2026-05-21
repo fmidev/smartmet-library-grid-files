@@ -174,10 +174,10 @@ class IdentificationSection : public GRID::MessageSection
     T::UInt8_opt    mTypeOfProcessedData;
 
 
-    bool            mReleaseData;
+    bool            mReleaseData;   //!< If true, free mDataPtr on destruction.
 };
 
-typedef std::shared_ptr<IdentificationSection> IdentifSect_sptr;
+typedef std::shared_ptr<IdentificationSection> IdentifSect_sptr;  //!< Shared ownership pointer to an IdentificationSection.
 
 }  // namespace GRIB2
 }  // namespace SmartMet

@@ -8,6 +8,8 @@ namespace SmartMet
 
 #if 0
 
+/*! \brief Default constructor for ModificationLock. */
+
 ModificationLock::ModificationLock()
 {
   try
@@ -25,12 +27,16 @@ ModificationLock::ModificationLock()
 
 
 
+/*! \brief Destructor for ModificationLock. */
+
 ModificationLock::~ModificationLock()
 {
 }
 
 
 
+
+/*! \brief Acquires a shared read lock. */
 
 void ModificationLock::readLock()
 {
@@ -53,6 +59,8 @@ void ModificationLock::readLock()
 
 
 
+/*! \brief Releases a previously acquired read lock. */
+
 void ModificationLock::readUnlock()
 {
   try
@@ -73,6 +81,8 @@ void ModificationLock::readUnlock()
 
 
 
+
+/*! \brief Acquires an exclusive write lock, waiting for readers to finish. */
 
 void ModificationLock::writeLock()
 {
@@ -101,6 +111,8 @@ void ModificationLock::writeLock()
 
 
 
+/*! \brief Acquires a write lock while the current thread already holds a read lock. */
+
 void ModificationLock::writeLockWhenInsideReadLock()
 {
   try
@@ -126,6 +138,8 @@ void ModificationLock::writeLockWhenInsideReadLock()
 
 
 
+/*! \brief Releases a previously acquired write lock. */
+
 void ModificationLock::writeUnlock()
 {
   try
@@ -145,6 +159,8 @@ void ModificationLock::writeUnlock()
 
 
 
+/*! \brief Acquires the underlying mutex. */
+
 void ModificationLock::lock()
 {
   try
@@ -162,6 +178,8 @@ void ModificationLock::lock()
 
 
 
+
+/*! \brief Releases the underlying mutex. */
 
 void ModificationLock::unlock()
 {
@@ -181,6 +199,8 @@ void ModificationLock::unlock()
 
 
 
+
+/*! \brief Enables or disables locking behaviour entirely. */
 
 void ModificationLock::setLockingEnabled(bool lockingEnabled)
 {

@@ -164,6 +164,8 @@ bool BitmapSection::getProperty(uint propertyId,Int64& value)
 
 
 
+/*! \brief The method collects the bitmap section properties into the given vector. */
+
 void BitmapSection::getProperties(T::PropertySettingVec& properties)
 {
   try
@@ -200,6 +202,8 @@ bool BitmapSection::setProperty(uint propertyId,Int64 value)
 
 
 
+
+/*! \brief The method sets the bitmap indicator value. */
 
 void BitmapSection::setBitMapIndicator(uchar ind)
 {
@@ -468,6 +472,8 @@ std::size_t BitmapSection::getBitmapDataSizeInBytes() const
 
 
 
+/*! \brief The method returns a hash value computed from the bitmap data. */
+
 Int64 BitmapSection::getHash()
 {
   try
@@ -489,6 +495,8 @@ Int64 BitmapSection::getHash()
 
 
 
+
+/*! \brief The method fills the given index vector with bitmap-derived value indices. */
 
 void BitmapSection::getIndexVector(uint numOfValues,T::IndexVector& indexVector)
 {
@@ -553,7 +561,7 @@ void BitmapSection::setBitmapData(T::Data_ptr data,std::size_t size)
 
 /*! \brief The method prints the content of the current object into the given stream.
 
-        \param ostream      The output stream.
+        \param stream      The output stream.
         \param level        The print level (used when printing multi-level structures).
         \param optionFlags  The printing options expressed in flag-bits.
 */

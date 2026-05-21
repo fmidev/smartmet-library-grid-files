@@ -81,6 +81,8 @@ void SphericalHarmonicsDataRepresentationImpl::read(MemoryReader& memoryReader)
 
 
 
+/*! \brief Decodes the spherical-harmonics packed grid values (not implemented). */
+
 void SphericalHarmonicsDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec& decodedValues) const
 {
   throw Fmi::Exception(BCP,"The method not implemented!");

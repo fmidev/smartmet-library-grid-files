@@ -12,6 +12,8 @@ namespace T
 
 
 
+/*! \brief Default constructor for Attribute. */
+
 Attribute::Attribute()
 {
   try
@@ -25,6 +27,8 @@ Attribute::Attribute()
 
 
 
+
+/*! \brief Copy constructor for Attribute. */
 
 Attribute::Attribute(const Attribute& attribute)
 {
@@ -41,6 +45,8 @@ Attribute::Attribute(const Attribute& attribute)
 
 
 
+
+/*! \brief Constructs an Attribute with the given name and value. */
 
 Attribute::Attribute(const std::string& name,const std::string& value)
 {
@@ -59,6 +65,8 @@ Attribute::Attribute(const std::string& name,const std::string& value)
 
 
 
+/*! \brief Destructor for Attribute. */
+
 Attribute::~Attribute()
 {
   try
@@ -73,6 +81,8 @@ Attribute::~Attribute()
 
 
 
+
+/*! \brief Assignment operator for Attribute. */
 
 Attribute& Attribute::operator=(const Attribute& attribute)
 {
@@ -95,6 +105,8 @@ Attribute& Attribute::operator=(const Attribute& attribute)
 
 
 
+/*! \brief Returns a hash value computed from the attribute name and value. */
+
 std::size_t Attribute::getHash()
 {
   try
@@ -114,6 +126,8 @@ std::size_t Attribute::getHash()
 
 
 
+/*! \brief Returns a heap-allocated copy of this attribute. */
+
 Attribute* Attribute::duplicate()
 {
   try
@@ -129,6 +143,8 @@ Attribute* Attribute::duplicate()
 
 
 
+
+/*! \brief Prints the attribute contents to the given stream. */
 
 void Attribute::print(std::ostream& stream,uint level,uint optionFlags)
 {

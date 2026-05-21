@@ -15,6 +15,8 @@
 namespace SmartMet
 {
 
+/*! \brief Default constructor for DataFetcher_network. */
+
 DataFetcher_network::DataFetcher_network()
 {
   FUNCTION_TRACE
@@ -30,6 +32,8 @@ DataFetcher_network::DataFetcher_network()
 
 
 
+
+/*! \brief Destructor that releases all pooled network clients. */
 
 DataFetcher_network::~DataFetcher_network()
 {
@@ -56,6 +60,8 @@ DataFetcher_network::~DataFetcher_network()
 
 
 
+/*! \brief Creates a new client instance for the given protocol. */
+
 Client* DataFetcher_network::newClient(uint protocol)
 {
   FUNCTION_TRACE
@@ -79,6 +85,8 @@ Client* DataFetcher_network::newClient(uint protocol)
 
 
 
+
+/*! \brief Returns an available pooled client for the given server, creating one if needed. */
 
 Client* DataFetcher_network::getClient(const char *serverAddress,uint serverType,uint protocol)
 {
@@ -147,6 +155,8 @@ Client* DataFetcher_network::getClient(const char *serverAddress,uint serverType
 
 
 
+/*! \brief Fetches a byte range from a remote file via a pooled client. */
+
 int DataFetcher_network::getData(uint serverType,uint protocol,const char *server,const char *filename,std::size_t filePosition,int dataSize,char *dataPtr)
 {
   FUNCTION_TRACE
@@ -183,6 +193,8 @@ int DataFetcher_network::getData(uint serverType,uint protocol,const char *serve
 
 
 
+
+/*! \brief Parses an S3 ListBucketResult XML element into a list of file records. */
 
 bool DataFetcher_network::getFileList(uint protocol,const char *server,XmlElement& rootElement,std::vector<std::string> &filePatterns,std::vector<FileRec>& fileList,std::string& lastKey)
 {
@@ -251,6 +263,8 @@ bool DataFetcher_network::getFileList(uint protocol,const char *server,XmlElemen
 
 
 
+/*! \brief Dispatches the file listing call based on the server type. */
+
 void DataFetcher_network::getFileList(uint serverType,uint protocol,const char *server,const char *dir,std::vector<std::string> &filePatterns,std::vector<FileRec>& fileList)
 {
   FUNCTION_TRACE
@@ -282,6 +296,8 @@ void DataFetcher_network::getFileList(uint serverType,uint protocol,const char *
 }
 
 
+
+/*! \brief Lists files in an S3 bucket directory, handling pagination. */
 
 void DataFetcher_network::getFileList_S3(uint protocol,const char *server,const char *dir,std::vector<std::string> &filePatterns,std::vector<FileRec>& fileList)
 {
@@ -320,6 +336,8 @@ void DataFetcher_network::getFileList_S3(uint protocol,const char *server,const 
 
 
 
+/*! \brief Fetches and parses HTTP headers for a remote file. */
+
 void DataFetcher_network::getFileHeaders(uint serverType,uint protocol,const char *server,const char *filename,std::map<std::string,std::string>& headers)
 {
   FUNCTION_TRACE
@@ -357,6 +375,8 @@ void DataFetcher_network::getFileHeaders(uint serverType,uint protocol,const cha
 }
 
 
+
+/*! \brief Returns the size of a remote file by inspecting Content-Range headers. */
 
 Int64 DataFetcher_network::getFileSize(uint serverType,uint protocol,const char *server,const char *filename)
 {

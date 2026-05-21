@@ -10,6 +10,8 @@ namespace SmartMet
 {
 
 
+/*! \brief Default constructor for Client. */
+
 Client::Client()
 {
   FUNCTION_TRACE
@@ -28,12 +30,16 @@ Client::Client()
 
 
 
+/*! \brief Destructor for Client. */
+
 Client::~Client()
 {
 }
 
 
 
+
+/*! \brief Stub for fetching a range of bytes from a file; must be implemented in a subclass. */
 
 int Client::getData(const char *server,const char *filename,std::size_t filePosition,int dataSize,char *dataPtr)
 {
@@ -43,6 +49,8 @@ int Client::getData(const char *server,const char *filename,std::size_t filePosi
 
 
 
+/*! \brief Stub for fetching file header data; must be implemented in a subclass. */
+
 int Client::getHeaderData(const char *server,const char *filename,int dataSize,char *dataPtr)
 {
   throw Fmi::Exception(BCP,"Should be implemented in the child class!");
@@ -50,6 +58,8 @@ int Client::getHeaderData(const char *server,const char *filename,int dataSize,c
 
 
 
+
+/*! \brief Returns whether the client is currently active. */
 
 bool Client::isActive()
 {
@@ -59,12 +69,16 @@ bool Client::isActive()
 
 
 
+/*! \brief Sets the active state of the client. */
+
 void Client::setActive(bool active)
 {
   mActive = active;
 }
 
 
+
+/*! \brief Enables or disables debug output for the client. */
 
 void Client::setDebugEnabled(bool enabled)
 {
@@ -73,6 +87,8 @@ void Client::setDebugEnabled(bool enabled)
 
 
 
+
+/*! \brief Sets the authentication method, username, and password. */
 
 void Client::setAuthentication(uint authenticationMethod,const char *username,const char *password)
 {
@@ -92,6 +108,8 @@ void Client::setAuthentication(uint authenticationMethod,const char *username,co
 
 
 
+
+/*! \brief Adds AWS S3 V4 authentication headers to the given curl header list. */
 
 struct curl_slist* Client::addAuthenticationHeaders(const char *server,const char *filename,struct curl_slist *headerList)
 {
@@ -166,6 +184,8 @@ struct curl_slist* Client::addAuthenticationHeaders(const char *server,const cha
 
 
 
+/*! \brief Curl write callback that appends response bytes into the response buffer. */
+
 size_t curl_responseProcessing(char *ptr, size_t size, size_t nmemb, void *userdata)
 {
   FUNCTION_TRACE
@@ -194,6 +214,8 @@ size_t curl_responseProcessing(char *ptr, size_t size, size_t nmemb, void *userd
 
 
 
+
+/*! \brief Dumps a hex/ASCII view of a memory buffer to the given stream. */
 
 void curl_dump(const char *text,FILE *stream, unsigned char *ptr, size_t size)
 {
@@ -229,6 +251,8 @@ void curl_dump(const char *text,FILE *stream, unsigned char *ptr, size_t size)
 }
 
 
+
+/*! \brief Curl debug trace callback that dumps protocol details to stderr. */
 
 int curl_trace(CURL *handle, curl_infotype type,char *data, size_t size,void *userp)
 {

@@ -1,5 +1,10 @@
 #pragma once
 
+/*! \file GeneralFunctions.h
+ *  \brief Miscellaneous utility functions for time handling, type conversions,
+ *  string manipulation, file I/O, numeric parsing, and data compression.
+ *  All declarations are in the `SmartMet` namespace. */
+
 #include "Coordinate.h"
 #include "../grid/Typedefs.h"
 

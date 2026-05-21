@@ -15,6 +15,15 @@ namespace GRIB2
 
 class Message;
 
+// ====================================================================================
+/*! \brief Abstract base class for GRIB 2 data representation templates (Section 5).
+ *
+ *  Concrete subclasses implement Data Representation Template 5.x encoding schemes
+ *  (grid data, JPEG2000, PNG, spectral, etc.).  The RepresentationSection owns one
+ *  RepresentationDefinition and delegates decode/encode operations to it.
+ *  Sub-structure access is provided through PackingSettings and OriginalValuesSettings. */
+// ====================================================================================
+
 class RepresentationDefinition
 {
   public:
@@ -49,7 +58,7 @@ class RepresentationDefinition
 };
 
 
-typedef std::shared_ptr<RepresentationDefinition> RepresentationDefinition_sptr;
+typedef std::shared_ptr<RepresentationDefinition> RepresentationDefinition_sptr;  //!< Shared ownership pointer to a RepresentationDefinition.
 
 }  // namespace GRIB2
 }  // namespace SmartMet

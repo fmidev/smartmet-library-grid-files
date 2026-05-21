@@ -60,7 +60,7 @@ class BitmapSection : public GRID::MessageSection
     T::UInt8_opt    getBitMapIndicator() const;
     T::Data_ptr     getBitmapDataPtr() const;
     std::size_t     getBitmapDataSizeInBytes() const;
-    Int64       getHash();
+    Int64           getHash();
     void            getIndexVector(uint numOfValues,T::IndexVector& indexVector);
 
     void            setBitMapIndicator(uchar ind);
@@ -83,7 +83,7 @@ class BitmapSection : public GRID::MessageSection
     /*! \brief The pointer to the bitmap. */
     T::Data_ptr     mBitmapDataPtr;
 
-    Int64       mHash;
+    Int64           mHash;           //!< Cached hash of the bitmap content (0 = not yet computed).
 
     /*! \brief The section start position in the file. */
     T::FilePosition mFilePosition;
@@ -100,11 +100,11 @@ class BitmapSection : public GRID::MessageSection
     /*! \brief The Bitmap indicator (see Code Table 6.0) */
     T::UInt8_opt    mBitmapIndicator;
 
-    bool            mReleaseData;
+    bool            mReleaseData;   //!< If true, free the bitmap data buffer on destruction.
 };
 
 
-typedef std::shared_ptr<BitmapSection> BitmapSect_sptr;
+typedef std::shared_ptr<BitmapSection> BitmapSect_sptr;  //!< Shared ownership pointer to a BitmapSection.
 
 }  // namespace GRIB2
 }  // namespace SmartMet

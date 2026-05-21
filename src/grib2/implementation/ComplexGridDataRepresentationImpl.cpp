@@ -86,6 +86,8 @@ void ComplexGridDataRepresentationImpl::read(MemoryReader& memoryReader)
 
 
 
+/*! \brief Decodes the complex-packed grid values into a vector of parameter values. */
+
 void ComplexGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec& decodedValues) const
 {
   try

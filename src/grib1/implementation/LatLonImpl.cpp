@@ -117,6 +117,8 @@ void LatLonImpl::read(MemoryReader& memoryReader)
 
 
 
+/*! \brief Initializes derived projection parameters (grid origin and direction increments). */
+
 void LatLonImpl::init() const
 {
   try
@@ -317,6 +319,8 @@ T::Dimensions LatLonImpl::getGridDimensions() const
 
 
 
+/*! \brief Returns the number of columns in the original grid. */
+
 std::size_t LatLonImpl::getGridColumnCount() const
 {
   try
@@ -332,6 +336,8 @@ std::size_t LatLonImpl::getGridColumnCount() const
 
 
 
+/*! \brief Returns the number of rows in the original grid. */
+
 std::size_t LatLonImpl::getGridRowCount() const
 {
   try
@@ -346,6 +352,8 @@ std::size_t LatLonImpl::getGridRowCount() const
 
 
 
+
+/*! \brief Returns the metric grid cell width and height. */
 
 bool LatLonImpl::getGridMetricCellSize(double& width,double& height) const
 {
@@ -678,6 +686,8 @@ bool LatLonImpl::reverseYDirection() const
 
 
 
+/*! \brief Appends the projection-specific property settings to the given vector. */
+
 void LatLonImpl::getProperties(T::PropertySettingVec& properties)
 {
   try
@@ -859,7 +869,7 @@ void LatLonImpl::initSpatialReference()
 
 /*! \brief The method prints the content of the current object into the given stream.
 
-        \param ostream      The output stream.
+        \param stream      The output stream.
         \param level        The print level (used when printing multi-level structures).
         \param optionFlags  The printing options expressed in flag-bits.
 */

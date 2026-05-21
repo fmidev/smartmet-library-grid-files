@@ -72,6 +72,8 @@ LambertConformalImpl::~LambertConformalImpl()
 
 
 
+/*! \brief Initializes derived projection parameters (start coordinates and direction increments). */
+
 void LambertConformalImpl::init() const
 {
   try
@@ -289,6 +291,8 @@ T::Dimensions LambertConformalImpl::getGridDimensions() const
 
 
 
+/*! \brief Returns the number of columns in the original grid. */
+
 std::size_t LambertConformalImpl::getGridColumnCount() const
 {
   try
@@ -305,6 +309,8 @@ std::size_t LambertConformalImpl::getGridColumnCount() const
 
 
 
+/*! \brief Returns the number of rows in the original grid. */
+
 std::size_t LambertConformalImpl::getGridRowCount() const
 {
   try
@@ -318,6 +324,8 @@ std::size_t LambertConformalImpl::getGridRowCount() const
 }
 
 
+
+/*! \brief Returns the metric grid cell width and height. */
 
 bool LambertConformalImpl::getGridMetricCellSize(double& width,double& height) const
 {
@@ -462,6 +470,8 @@ bool LambertConformalImpl::reverseYDirection() const
 }
 
 
+
+/*! \brief Appends the projection-specific property settings to the given vector. */
 
 void LambertConformalImpl::getProperties(T::PropertySettingVec& properties)
 {

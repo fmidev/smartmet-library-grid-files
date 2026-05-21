@@ -28,6 +28,15 @@ namespace GRIB1
   --------------------------------------------------------------------------------------
 */
 
+// ====================================================================================
+/*! \brief GRIB 1 second-order (complex) packing decoder.
+ *
+ *  Implements GRIB 1 Code Table 11 second-order packing where values are split into
+ *  first-order and second-order packed arrays.  Four decode strategies are selected
+ *  based on the extended flags byte: row-by-row, constant-width, different-width,
+ *  and spatial-differencing (SPD) variants. */
+// ====================================================================================
+
 class SecondOrderPacking : public DataDefinition
 {
   public:
@@ -45,12 +54,12 @@ class SecondOrderPacking : public DataDefinition
 
   private:
 
-    std::uint16_t   mN1;
-    std::uint8_t    mExtendedFlags;
-    std::uint16_t   mN2;
-    std::uint16_t   mP1;
-    std::uint16_t   mP2;
-    std::uint8_t    mExtraValues;
+    std::uint16_t   mN1;            //!< Octet number at which first-order packed data begin.
+    std::uint8_t    mExtendedFlags; //!< Extended flags (Code Table 11, octet 14).
+    std::uint16_t   mN2;            //!< Octet number at which second-order packed data begin.
+    std::uint16_t   mP1;            //!< Number of first-order packed values (number of sub-sections).
+    std::uint16_t   mP2;            //!< Number of second-order packed values.
+    std::uint8_t    mExtraValues;   //!< Reserved extra-value byte (octet 21).
 
   private:
 

@@ -86,6 +86,8 @@ RotatedLatLonImpl::~RotatedLatLonImpl()
 
 
 
+/*! \brief Initializes derived projection parameters (south pole, grid origin, increments). */
+
 void RotatedLatLonImpl::init() const
 {
   try
@@ -604,6 +606,8 @@ T::Dimensions RotatedLatLonImpl::getGridDimensions() const
 
 
 
+/*! \brief Returns the number of columns in the original grid. */
+
 std::size_t RotatedLatLonImpl::getGridColumnCount() const
 {
   try
@@ -619,6 +623,8 @@ std::size_t RotatedLatLonImpl::getGridColumnCount() const
 
 
 
+/*! \brief Returns the number of rows in the original grid. */
+
 std::size_t RotatedLatLonImpl::getGridRowCount() const
 {
   try
@@ -633,6 +639,8 @@ std::size_t RotatedLatLonImpl::getGridRowCount() const
 
 
 
+
+/*! \brief Returns the metric grid cell width and height. */
 
 bool RotatedLatLonImpl::getGridMetricCellSize(double& width,double& height) const
 {
@@ -830,6 +838,8 @@ bool RotatedLatLonImpl::reverseYDirection() const
 
 
 
+/*! \brief Returns the WKT (Well-Known-Text) of the current grid. */
+
 std::string RotatedLatLonImpl::getWKT()
 {
   try
@@ -844,6 +854,8 @@ std::string RotatedLatLonImpl::getWKT()
 
 
 
+
+/*! \brief Returns the PROJ.4 projection string of the current grid. */
 
 std::string RotatedLatLonImpl::getProj4()
 {
@@ -948,7 +960,7 @@ void RotatedLatLonImpl::initSpatialReference()
 
 /*! \brief The method prints the content of the current object into the given stream.
 
-        \param ostream      The output stream.
+        \param stream      The output stream.
         \param level        The print level (used when printing multi-level structures).
         \param optionFlags  The printing options expressed in flag-bits.
 */

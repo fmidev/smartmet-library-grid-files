@@ -11,6 +11,8 @@ Property gribProperty;
 
 
 
+/*! \brief The constructor that registers all known GRIB 2 property names and identifiers. */
+
 Property::Property()
 {
   try
@@ -199,6 +201,8 @@ Property::Property()
 
 
 
+/*! \brief The destructor of the class. */
+
 Property::~Property()
 {
   try
@@ -213,6 +217,8 @@ Property::~Property()
 
 
 
+
+/*! \brief The method registers a property name with its numeric identifier. */
 
 void Property::addProperty(const char *name,uint id)
 {
@@ -230,6 +236,8 @@ void Property::addProperty(const char *name,uint id)
 
 
 
+
+/*! \brief The method returns the numeric identifier for the named property. */
 
 uint Property::getPropertyId(const char *name)
 {
@@ -250,6 +258,8 @@ uint Property::getPropertyId(const char *name)
 
 
 
+
+/*! \brief The method returns the name corresponding to the given property identifier. */
 
 std::string Property::getPropertyName(uint id)
 {
@@ -273,6 +283,8 @@ std::string Property::getPropertyName(uint id)
 
 
 
+/*! \brief The method returns a reference to the property name-to-id map. */
+
 T::PropertyMap& Property::getPropertyMap()
 {
   try
@@ -288,6 +300,8 @@ T::PropertyMap& Property::getPropertyMap()
 
 
 
+
+/*! \brief The method returns a reference to the property vector in registration order. */
 
 T::PropertyVec& Property::getPropertyVector()
 {

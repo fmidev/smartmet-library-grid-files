@@ -46,100 +46,7 @@ NetCdfFile::~NetCdfFile()
 
 
 
-
-
-
-
-#if 0
-
-
-bool NetCdfFile::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,double& x,double& y) const
-{
-  FUNCTION_TRACE
-  try
-  {
-    if (grid_i >= mXCoordinates.size() || grid_j >= mYCoordinates.size())
-      return false;
-
-    x = mXCoordinates[grid_i];
-    y = mYCoordinates[grid_j];
-
-    return true;
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
-bool NetCdfFile::getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const
-{
-  FUNCTION_TRACE
-  try
-  {
-    if (grid_i < 0 || grid_j < 0 || grid_i >= (double)mXCoordinates.size() || grid_j >= (double)mYCoordinates.size() || mYCoordinates.size() <= 1 || mXCoordinates.size() <= 1)
-      return false;
-
-    double dy = mYCoordinates[1] - mYCoordinates[0];
-    double dx = mXCoordinates[1] - mXCoordinates[0];
-
-    y = mYCoordinates[0] + grid_j * dy;
-    x = mXCoordinates[0] + grid_i * dx;
-
-    return true;
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-bool NetCdfFile::getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const
-{
-  try
-  {
-    if (mYCoordinates.size() <= 1 || mXCoordinates.size() <= 1)
-      return false;
-
-    if (x < 0)
-      x = x + 360;
-
-    double dy = mYCoordinates[1] - mYCoordinates[0];
-    double dx = mXCoordinates[1] - mXCoordinates[0];
-
-    double diffX = x - mXCoordinates[0];
-    double diffY = y - mYCoordinates[0];
-
-    double i = diffX / dx;
-    double j = diffY / dy;
-
-    grid_i = i;
-    grid_j = j;
-
-    //printf("%f,%f => %f,%f\n",x,y,grid_i,grid_j);
-
-    if (i < 0 ||  j < 0  ||  i >= C_DOUBLE(mXCoordinates.size()) ||  j >= C_DOUBLE(mYCoordinates.size()))
-      return false;
-
-    return true;
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-#endif
-
+/*! \brief Reads a single NetCDF attribute (name and typed values) from the memory reader. */
 
 void NetCdfFile::readAttribute(MemoryReader& memoryReader,std::string& attrName,std::vector<std::string>& attrValues)
 {
@@ -265,6 +172,8 @@ void NetCdfFile::readAttribute(MemoryReader& memoryReader,std::string& attrName,
 
 
 
+/*! \brief Reads the requested number of char values from the given file offset. */
+
 void NetCdfFile::readValues(MemoryReader& memoryReader,uint items,UInt64 offset,std::vector<char>& values)
 {
   try
@@ -287,6 +196,8 @@ void NetCdfFile::readValues(MemoryReader& memoryReader,uint items,UInt64 offset,
 
 
 
+
+/*! \brief Reads the requested number of unsigned byte values from the given file offset. */
 
 void NetCdfFile::readValues(MemoryReader& memoryReader,uint items,UInt64 offset,std::vector<uchar>& values)
 {
@@ -311,6 +222,8 @@ void NetCdfFile::readValues(MemoryReader& memoryReader,uint items,UInt64 offset,
 
 
 
+/*! \brief Reads the requested number of short values from the given file offset. */
+
 void NetCdfFile::readValues(MemoryReader& memoryReader,uint items,UInt64 offset,std::vector<short>& values)
 {
   try
@@ -333,6 +246,8 @@ void NetCdfFile::readValues(MemoryReader& memoryReader,uint items,UInt64 offset,
 
 
 
+
+/*! \brief Reads the requested number of int values from the given file offset. */
 
 void NetCdfFile::readValues(MemoryReader& memoryReader,uint items,UInt64 offset,std::vector<int>& values)
 {
@@ -359,6 +274,8 @@ void NetCdfFile::readValues(MemoryReader& memoryReader,uint items,UInt64 offset,
 
 
 
+/*! \brief Reads the requested number of float values from the given file offset. */
+
 void NetCdfFile::readValues(MemoryReader& memoryReader,uint items,UInt64 offset,std::vector<float>& values)
 {
   try
@@ -382,6 +299,8 @@ void NetCdfFile::readValues(MemoryReader& memoryReader,uint items,UInt64 offset,
 
 
 
+/*! \brief Reads the requested number of double values from the given file offset. */
+
 void NetCdfFile::readValues(MemoryReader& memoryReader,uint items,UInt64 offset,std::vector<double>& values)
 {
   try
@@ -404,6 +323,8 @@ void NetCdfFile::readValues(MemoryReader& memoryReader,uint items,UInt64 offset,
 
 
 
+
+/*! \brief Reads typed values from the file offset and converts them to scaled float values. */
 
 void NetCdfFile::readValues(MemoryReader& memoryReader,uint type,uint items,UInt64 offset,float baseValue,float scaleFactor,std::vector<float>& values)
 {
@@ -489,6 +410,8 @@ void NetCdfFile::readValues(MemoryReader& memoryReader,uint type,uint items,UInt
 
 
 
+
+/*! \brief Reads typed values from the file offset and converts them to scaled double values. */
 
 void NetCdfFile::readValues(MemoryReader& memoryReader,uint type,uint items,UInt64 offset,double baseValue,double scaleFactor,std::vector<double>& values)
 {
@@ -576,6 +499,8 @@ void NetCdfFile::readValues(MemoryReader& memoryReader,uint type,uint items,UInt
 
 
 
+/*! \brief Returns the indexed property value as a string and true if the property exists. */
+
 bool NetCdfFile::getProperty(std::string propertyName,uint index,std::string& propertyValue)
 {
   FUNCTION_TRACE
@@ -603,6 +528,8 @@ bool NetCdfFile::getProperty(std::string propertyName,uint index,std::string& pr
 
 
 
+/*! \brief Returns the indexed property value as a signed int and true if the property exists. */
+
 bool NetCdfFile::getProperty(std::string propertyName,uint index,int& propertyValue)
 {
   FUNCTION_TRACE
@@ -628,6 +555,8 @@ bool NetCdfFile::getProperty(std::string propertyName,uint index,int& propertyVa
 
 
 
+
+/*! \brief Returns the indexed property value as an unsigned int and true if the property exists. */
 
 bool NetCdfFile::getProperty(std::string propertyName,uint index,uint& propertyValue)
 {
@@ -656,6 +585,8 @@ bool NetCdfFile::getProperty(std::string propertyName,uint index,uint& propertyV
 
 
 
+/*! \brief Returns the indexed property value as a 64-bit integer and true if the property exists. */
+
 bool NetCdfFile::getProperty(std::string propertyName,uint index,Int64& propertyValue)
 {
   FUNCTION_TRACE
@@ -681,6 +612,8 @@ bool NetCdfFile::getProperty(std::string propertyName,uint index,Int64& property
 
 
 
+
+/*! \brief Returns the indexed property value as a float and true if the property exists. */
 
 bool NetCdfFile::getProperty(std::string propertyName,uint index,float& propertyValue)
 {
@@ -708,6 +641,8 @@ bool NetCdfFile::getProperty(std::string propertyName,uint index,float& property
 
 
 
+/*! \brief Returns the indexed property value as a double and true if the property exists. */
+
 bool NetCdfFile::getProperty(std::string propertyName,uint index,double& propertyValue)
 {
   FUNCTION_TRACE
@@ -734,6 +669,8 @@ bool NetCdfFile::getProperty(std::string propertyName,uint index,double& propert
 
 
 
+/*! \brief Inserts a property containing a vector of string values into the property list. */
+
 void NetCdfFile::insertProperty(std::string propertyName,std::vector<std::string>& propertyValue)
 {
   FUNCTION_TRACE
@@ -750,6 +687,8 @@ void NetCdfFile::insertProperty(std::string propertyName,std::vector<std::string
 
 
 
+
+/*! \brief Inserts a single string-valued property into the property list. */
 
 void NetCdfFile::insertProperty(std::string propertyName,std::string propertyValue)
 {
@@ -770,6 +709,8 @@ void NetCdfFile::insertProperty(std::string propertyName,std::string propertyVal
 
 
 
+/*! \brief Inserts a signed integer property into the property list. */
+
 void NetCdfFile::insertProperty(std::string propertyName,int propertyValue)
 {
   FUNCTION_TRACE
@@ -788,6 +729,8 @@ void NetCdfFile::insertProperty(std::string propertyName,int propertyValue)
 
 
 
+
+/*! \brief Inserts an unsigned integer property into the property list. */
 
 void NetCdfFile::insertProperty(std::string propertyName,uint propertyValue)
 {
@@ -808,6 +751,8 @@ void NetCdfFile::insertProperty(std::string propertyName,uint propertyValue)
 
 
 
+/*! \brief Inserts a 64-bit integer property into the property list. */
+
 void NetCdfFile::insertProperty(std::string propertyName,Int64 propertyValue)
 {
   FUNCTION_TRACE
@@ -827,6 +772,8 @@ void NetCdfFile::insertProperty(std::string propertyName,Int64 propertyValue)
 
 
 
+/*! \brief Inserts a double-valued property into the property list. */
+
 void NetCdfFile::insertProperty(std::string propertyName,double propertyValue)
 {
   FUNCTION_TRACE
@@ -845,6 +792,8 @@ void NetCdfFile::insertProperty(std::string propertyName,double propertyValue)
 
 
 
+
+/*! \brief Parses the NetCDF header (dimensions, attributes, variables) into the property list. */
 
 void NetCdfFile::readPropertyList(MemoryReader& memoryReader)
 {
@@ -1055,6 +1004,8 @@ void NetCdfFile::readPropertyList(MemoryReader& memoryReader)
 
 
 
+
+/*! \brief Builds MessageInfo entries for each grid variable, time step and level in the file. */
 
 void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec& messageInfoList)
 {
@@ -1777,7 +1728,8 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
 
 /*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory mapped file.
+        \param memoryReader    This object controls the access to the memory mapped file.
+        \param messageInfoList Output list populated with one entry per parameter/level/time slice.
 */
 
 void NetCdfFile::read(MemoryReader& memoryReader,MessageInfoVec& messageInfoList)
@@ -1797,6 +1749,8 @@ void NetCdfFile::read(MemoryReader& memoryReader,MessageInfoVec& messageInfoList
 
 
 
+
+/*! \brief Collects all properties belonging to a NetCDF variable into the given attribute list. */
 
 void NetCdfFile::getAttributeList(const char *variableName,const std::string& prefix,T::AttributeList& attributeList) const
 {
@@ -1836,7 +1790,7 @@ void NetCdfFile::getAttributeList(const char *variableName,const std::string& pr
 
 /*! \brief The method prints the content of the current object into the given stream.
 
-        \param ostream      The output stream.
+        \param stream      The output stream.
         \param level        The print level (used when printing multi-level structures).
         \param optionFlags  The printing options expressed in flag-bits.
 */

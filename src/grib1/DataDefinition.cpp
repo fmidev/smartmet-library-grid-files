@@ -41,6 +41,8 @@ DataDefinition::~DataDefinition()
 
 
 
+/*! \brief The method collects attributeList details related to the current data definition. */
+
 void DataDefinition::getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const
 {
 }
@@ -48,6 +50,8 @@ void DataDefinition::getAttributeList(const std::string& prefix,T::AttributeList
 
 
 
+
+/*! \brief The method returns the packing method used by this data definition. */
 
 PackingMethod DataDefinition::getPackingMethod() const
 {
@@ -63,6 +67,8 @@ PackingMethod DataDefinition::getPackingMethod() const
 
 
 
+
+/*! \brief The method returns a value by its index from the encoded data. */
 
 bool DataDefinition::getValueByIndex(Message *message,uint index,T::ParamValue& value) const
 {
@@ -105,6 +111,8 @@ void DataDefinition::write(DataWriter& dataWriter)
 
 
 
+/*! \brief The method creates a new DataDefinition instance of the current type. */
+
 DataDefinition* DataDefinition::createDataDefinition() const
 {
   throw Fmi::Exception(BCP,"Not implemented!");
@@ -113,6 +121,8 @@ DataDefinition* DataDefinition::createDataDefinition() const
 
 
 
+
+/*! \brief The method decodes the packed values from the message into a value vector. */
 
 void DataDefinition::decodeValues(Message *message,T::ParamValue_vec& decodedValues) const
 {
@@ -123,6 +133,8 @@ void DataDefinition::decodeValues(Message *message,T::ParamValue_vec& decodedVal
 
 
 
+/*! \brief The method encodes the given values into the message data. */
+
 void DataDefinition::encodeValues(Message *message,T::ParamValue_vec& values)
 {
   throw Fmi::Exception(BCP,"Not implemented!");
@@ -130,6 +142,8 @@ void DataDefinition::encodeValues(Message *message,T::ParamValue_vec& values)
 
 
 
+
+/*! \brief The method collects the properties associated with this data definition. */
 
 void DataDefinition::getProperties(T::PropertySettingVec& properties)
 {
@@ -141,7 +155,7 @@ void DataDefinition::getProperties(T::PropertySettingVec& properties)
 
 /*! \brief The method prints the content of the current object into the given stream.
 
-        \param ostream      The output stream.
+        \param stream      The output stream.
         \param level        The print level (used when printing multi-level structures).
         \param optionFlags  The printing options expressed in flag-bits.
 */

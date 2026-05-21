@@ -12,6 +12,8 @@ namespace SmartMet
 
 
 
+/*! \brief Constructs an ImagePaint that owns a newly allocated image buffer of the given size. */
+
 ImagePaint::ImagePaint(int _imageWidth,int _imageHeight,uint _backColor,uint _drawColor,uint _fillColor,bool _rotatedX,bool _rotatedY)
 {
   try
@@ -51,6 +53,8 @@ ImagePaint::ImagePaint(int _imageWidth,int _imageHeight,uint _backColor,uint _dr
 
 
 
+/*! \brief Constructs an ImagePaint that uses the externally owned image buffer. */
+
 ImagePaint::ImagePaint(uint *_image,int _imageWidth,int _imageHeight,uint _backColor,uint _drawColor,uint _fillColor,bool _rotatedX,bool _rotatedY)
 {
   try
@@ -84,6 +88,8 @@ ImagePaint::ImagePaint(uint *_image,int _imageWidth,int _imageHeight,uint _backC
 
 
 
+/*! \brief Destructor. Frees the image buffer if this object owns it. */
+
 ImagePaint::~ImagePaint()
 {
   try
@@ -101,6 +107,8 @@ ImagePaint::~ImagePaint()
 
 
 
+/*! \brief Returns the underlying image buffer. */
+
 uint* ImagePaint::getImage()
 {
   try
@@ -117,6 +125,8 @@ uint* ImagePaint::getImage()
 
 
 
+/*! \brief Sets the color used for drawing lines and outlines. */
+
 void ImagePaint::setDrawColor(uint _color)
 {
   try
@@ -132,6 +142,8 @@ void ImagePaint::setDrawColor(uint _color)
 
 
 
+/*! \brief Sets the color used for filling polygon interiors. */
+
 void ImagePaint::setFillColor(uint _color)
 {
   try
@@ -146,6 +158,8 @@ void ImagePaint::setFillColor(uint _color)
 
 
 
+
+/*! \brief Returns the color of the pixel at the given coordinates, honouring axis rotations. */
 
 uint ImagePaint::getPixel(int _x,int _y)
 {
@@ -171,6 +185,8 @@ uint ImagePaint::getPixel(int _x,int _y)
 
 
 
+
+/*! \brief Sets the color of the pixel at the given coordinates, honouring axis rotations. */
 
 void ImagePaint::paintPixel(int _x,int _y,uint _color)
 {
@@ -200,6 +216,8 @@ void ImagePaint::paintPixel(int _x,int _y,uint _color)
 
 
 
+/*! \brief Draws a line between two floating-point endpoints by rounding to pixel coordinates. */
+
 void ImagePaint::paintLine(double _x1,double _y1,double _x2,double _y2,uint _color)
 {
   try
@@ -219,6 +237,8 @@ void ImagePaint::paintLine(double _x1,double _y1,double _x2,double _y2,uint _col
 
 
 
+
+/*! \brief Draws a line between two integer pixel coordinates using Bresenham's algorithm. */
 
 void ImagePaint::paintLine(int _x1,int _y1,int _x2,int _y2,uint _color)
 {
@@ -305,6 +325,8 @@ void ImagePaint::paintLine(int _x1,int _y1,int _x2,int _y2,uint _color)
 
 
 
+
+/*! \brief Draws the outline of a polygon and fills its interior with the given colors. */
 
 void ImagePaint::paintPolygon(std::vector<T::Coordinate>& polygonPoints,uint _drawColor,uint _fillColor)
 {
@@ -425,6 +447,8 @@ void ImagePaint::paintPolygon(std::vector<T::Coordinate>& polygonPoints,uint _dr
 
 
 
+
+/*! \brief Draws the outlines and fills all polygons in the given polygon path. */
 
 void ImagePaint::paintPolygonPath(std::vector<std::vector<T::Coordinate>>& polygonPath,uint _drawColor,uint _fillColor)
 {
@@ -575,6 +599,8 @@ void ImagePaint::paintPolygonPath(std::vector<std::vector<T::Coordinate>>& polyg
 
 
 
+/*! \brief Draws a WKB point geometry from the given memory reader. */
+
 void ImagePaint::paintWkbPoint(double _mpx,double _mpy,double _dx,double _dy,MemoryReader& _memoryReader)
 {
   FUNCTION_TRACE
@@ -618,6 +644,8 @@ void ImagePaint::paintWkbPoint(double _mpx,double _mpy,double _dx,double _dy,Mem
 
 
 
+
+/*! \brief Draws a WKB line string geometry from the given memory reader. */
 
 void ImagePaint::paintWkbLine(double _mpx,double _mpy,double _dx,double _dy,MemoryReader& _memoryReader)
 {
@@ -668,6 +696,8 @@ void ImagePaint::paintWkbLine(double _mpx,double _mpy,double _dx,double _dy,Memo
 
 
 
+/*! \brief Draws a WKB linear ring (polygon ring) geometry from the given memory reader. */
+
 void ImagePaint::paintWkbRing(double _mpx,double _mpy,double _dx,double _dy,MemoryReader& _memoryReader)
 {
   FUNCTION_TRACE
@@ -716,6 +746,8 @@ void ImagePaint::paintWkbRing(double _mpx,double _mpy,double _dx,double _dy,Memo
 
 
 
+/*! \brief Draws a WKB polygon geometry by painting each of its rings. */
+
 void ImagePaint::paintWkbPolygon(double _mpx,double _mpy,double _dx,double _dy,MemoryReader& _memoryReader)
 {
   FUNCTION_TRACE
@@ -738,6 +770,8 @@ void ImagePaint::paintWkbPolygon(double _mpx,double _mpy,double _dx,double _dy,M
 
 
 
+/*! \brief Draws a WKB multipoint geometry from the given memory reader. */
+
 void ImagePaint::paintWkbMultiPoint(double _mpx,double _mpy,double _dx,double _dy,MemoryReader& _memoryReader)
 {
   FUNCTION_TRACE
@@ -758,6 +792,8 @@ void ImagePaint::paintWkbMultiPoint(double _mpx,double _mpy,double _dx,double _d
 
 
 
+
+/*! \brief Draws a WKB multilinestring geometry from the given memory reader. */
 
 void ImagePaint::paintWkbMultiLineString(double _mpx,double _mpy,double _dx,double _dy,MemoryReader& _memoryReader)
 {
@@ -782,6 +818,8 @@ void ImagePaint::paintWkbMultiLineString(double _mpx,double _mpy,double _dx,doub
 
 
 
+
+/*! \brief Draws a WKB multipolygon geometry from the given memory reader. */
 
 void ImagePaint::paintWkbMultiPolygon(double _mpx,double _mpy,double _dx,double _dy,MemoryReader& _memoryReader)
 {
@@ -848,6 +886,8 @@ void ImagePaint::paintWkbMultiPolygon(double _mpx,double _mpy,double _dx,double 
 
 
 
+/*! \brief Draws a WKB geometry collection by recursively painting each contained geometry. */
+
 void ImagePaint::paintWkbGeometryCollection(double _mpx,double _mpy,double _dx,double _dy,MemoryReader& _memoryReader)
 {
   FUNCTION_TRACE
@@ -868,6 +908,8 @@ void ImagePaint::paintWkbGeometryCollection(double _mpx,double _mpy,double _dx,d
 
 
 
+
+/*! \brief Dispatches WKB geometries from the reader to their type-specific painters until the buffer is consumed. */
 
 void ImagePaint::paintWkb(double _mpx,double _mpy,double _dx,double _dy,MemoryReader& _memoryReader)
 {
@@ -924,6 +966,8 @@ void ImagePaint::paintWkb(double _mpx,double _mpy,double _dx,double _dy,MemoryRe
 
 
 
+/*! \brief Draws the WKB geometry stored in the given raw byte buffer. */
+
 void ImagePaint::paintWkb(double _mpx,double _mpy,double _dx,double _dy,uchar *_wkb,uint _size)
 {
   FUNCTION_TRACE
@@ -944,6 +988,8 @@ void ImagePaint::paintWkb(double _mpx,double _mpy,double _dx,double _dy,uchar *_
 
 
 
+
+/*! \brief Draws the WKB geometry stored in the given byte vector. */
 
 void ImagePaint::paintWkb(double _mpx,double _mpy,double _dx,double _dy,T::ByteData& _wkb)
 {
@@ -972,6 +1018,8 @@ void ImagePaint::paintWkb(double _mpx,double _mpy,double _dx,double _dy,T::ByteD
 
 
 
+/*! \brief Draws every WKB geometry stored in the given vector of byte buffers. */
+
 void ImagePaint::paintWkb(double _mpx,double _mpy,double _dx,double _dy,T::ByteData_vec& _wkbVec)
 {
   FUNCTION_TRACE
@@ -991,6 +1039,8 @@ void ImagePaint::paintWkb(double _mpx,double _mpy,double _dx,double _dy,T::ByteD
 
 
 
+
+/*! \brief Computes the bounding box of a WKB geometry without actually drawing it. */
 
 void ImagePaint::countPaintWkbArea(uchar *_wkb,uint _size,double& _minX,double& _minY,double& _maxX,double& _maxY)
 {
@@ -1017,6 +1067,8 @@ void ImagePaint::countPaintWkbArea(uchar *_wkb,uint _size,double& _minX,double& 
 
 
 
+/*! \brief Saves the current image buffer as a JPEG file. */
+
 void ImagePaint::saveJpgImage(const char *_filename)
 {
   FUNCTION_TRACE
@@ -1033,6 +1085,8 @@ void ImagePaint::saveJpgImage(const char *_filename)
 
 
 
+
+/*! \brief Saves the current image buffer as a PNG file. */
 
 void ImagePaint::savePngImage(const char *_filename)
 {

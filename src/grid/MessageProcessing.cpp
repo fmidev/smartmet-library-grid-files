@@ -14,12 +14,16 @@ namespace GRID
 {
 
 
+/*! \brief The constructor of the class. */
+
 MessageProcessing::MessageProcessing()
 {
 }
 
 
 
+
+/*! \brief The destructor of the class. */
 
 MessageProcessing::~MessageProcessing()
 {
@@ -28,6 +32,8 @@ MessageProcessing::~MessageProcessing()
 
 
 
+
+/*! \brief Computes isoband polygons between two messages interpolated to a target level. */
 
 void MessageProcessing::getGridIsobandsByLevel(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,T::ByteData_vec& contours) const
 {
@@ -45,6 +51,8 @@ void MessageProcessing::getGridIsobandsByLevel(const GRID::Message& message1,con
 
 
 
+
+/*! \brief Computes isoband polygons between two messages interpolated to a target level with value modification. */
 
 void MessageProcessing::getGridIsobandsByLevel(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours) const
 {
@@ -149,6 +157,8 @@ void MessageProcessing::getGridIsobandsByLevel(const GRID::Message& message1,con
 
 
 
+/*! \brief Computes isoband polygons between two messages interpolated to a target time. */
+
 void MessageProcessing::getGridIsobandsByTime(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,T::ByteData_vec& contours) const
 {
   FUNCTION_TRACE
@@ -165,6 +175,8 @@ void MessageProcessing::getGridIsobandsByTime(const GRID::Message& message1,cons
 
 
 
+
+/*! \brief Computes isoband polygons between two messages interpolated to a target time with value modification. */
 
 void MessageProcessing::getGridIsobandsByTime(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours) const
 {
@@ -248,6 +260,8 @@ void MessageProcessing::getGridIsobandsByTime(const GRID::Message& message1,cons
 
 
 
+/*! \brief Computes isoband polygons over a target geometry between two messages interpolated to a target level. */
+
 void MessageProcessing::getGridIsobandsByLevelAndGeometry(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,T::ByteData_vec& contours) const
 {
   FUNCTION_TRACE
@@ -263,6 +277,8 @@ void MessageProcessing::getGridIsobandsByLevelAndGeometry(const GRID::Message& m
 
 
 
+
+/*! \brief Computes isoband polygons over a target geometry between two messages at a target level with value modification. */
 
 void MessageProcessing::getGridIsobandsByLevelAndGeometry(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours) const
 {
@@ -464,6 +480,8 @@ void MessageProcessing::getGridIsobandsByLevelAndGeometry(const GRID::Message& m
 
 
 
+/*! \brief Computes isoband polygons over an explicit target grid between two messages at a target level. */
+
 void MessageProcessing::getGridIsobandsByLevelAndGrid(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,T::AttributeList& attributeList,T::ByteData_vec& contours)
 {
   FUNCTION_TRACE
@@ -480,6 +498,8 @@ void MessageProcessing::getGridIsobandsByLevelAndGrid(const GRID::Message& messa
 
 
 
+
+/*! \brief Computes isoband polygons over an explicit target grid between two messages at a target level with value modification. */
 
 void MessageProcessing::getGridIsobandsByLevelAndGrid(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours)
 {
@@ -563,6 +583,8 @@ void MessageProcessing::getGridIsobandsByLevelAndGrid(const GRID::Message& messa
 
 
 
+/*! \brief Computes isoband polygons over an explicit target grid between two messages at a target time. */
+
 void MessageProcessing::getGridIsobandsByTimeAndGrid(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,T::AttributeList& attributeList,T::ByteData_vec& contours)
 {
   FUNCTION_TRACE
@@ -578,6 +600,8 @@ void MessageProcessing::getGridIsobandsByTimeAndGrid(const GRID::Message& messag
 
 
 
+
+/*! \brief Computes isoband polygons over an explicit target grid between two messages at a target time with value modification. */
 
 void MessageProcessing::getGridIsobandsByTimeAndGrid(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours)
 {
@@ -662,6 +686,8 @@ void MessageProcessing::getGridIsobandsByTimeAndGrid(const GRID::Message& messag
 
 
 
+/*! \brief Computes isoband polygons over a target geometry between two messages interpolated to a target time. */
+
 void MessageProcessing::getGridIsobandsByTimeAndGeometry(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,T::ByteData_vec& contours) const
 {
   FUNCTION_TRACE
@@ -678,6 +704,8 @@ void MessageProcessing::getGridIsobandsByTimeAndGeometry(const GRID::Message& me
 
 
 
+
+/*! \brief Computes isoband polygons over a target geometry between two messages at a target time with value modification. */
 
 void MessageProcessing::getGridIsobandsByTimeAndGeometry(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours) const
 {
@@ -896,6 +924,8 @@ void MessageProcessing::getGridIsobandsByTimeAndGeometry(const GRID::Message& me
 
 
 
+/*! \brief Computes isoband polygons between four messages interpolated to a target time and level. */
+
 void MessageProcessing::getGridIsobandsByTimeAndLevel(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,T::ByteData_vec& contours) const
 {
   FUNCTION_TRACE
@@ -912,6 +942,8 @@ void MessageProcessing::getGridIsobandsByTimeAndLevel(const GRID::Message& messa
 
 
 
+
+/*! \brief Computes isoband polygons between four messages at a target time and level with value modification. */
 
 void MessageProcessing::getGridIsobandsByTimeAndLevel(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours) const
 {
@@ -1001,6 +1033,8 @@ void MessageProcessing::getGridIsobandsByTimeAndLevel(const GRID::Message& messa
 
 
 
+/*! \brief Computes isoband polygons over a target geometry between four messages at a target time and level. */
+
 void MessageProcessing::getGridIsobandsByTimeLevelAndGeometry(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,T::ByteData_vec& contours) const
 {
   FUNCTION_TRACE
@@ -1017,6 +1051,8 @@ void MessageProcessing::getGridIsobandsByTimeLevelAndGeometry(const GRID::Messag
 
 
 
+
+/*! \brief Computes isoband polygons over a target geometry between four messages at a target time and level with value modification. */
 
 void MessageProcessing::getGridIsobandsByTimeLevelAndGeometry(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours) const
 {
@@ -1218,6 +1254,8 @@ void MessageProcessing::getGridIsobandsByTimeLevelAndGeometry(const GRID::Messag
 
 
 
+/*! \brief Computes isoband polygons over an explicit target grid between four messages at a target time and level. */
+
 void MessageProcessing::getGridIsobandsByTimeLevelAndGrid(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,T::AttributeList& attributeList,T::ByteData_vec& contours) const
 {
   FUNCTION_TRACE
@@ -1234,6 +1272,8 @@ void MessageProcessing::getGridIsobandsByTimeLevelAndGrid(const GRID::Message& m
 
 
 
+
+/*! \brief Computes isoband polygons over an explicit target grid between four messages at a target time and level with value modification. */
 
 void MessageProcessing::getGridIsobandsByTimeLevelAndGrid(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours) const
 {
@@ -1274,6 +1314,8 @@ void MessageProcessing::getGridIsobandsByTimeLevelAndGrid(const GRID::Message& m
 
 
 
+/*! \brief Computes isoline contours between four messages interpolated to a target time and level. */
+
 void MessageProcessing::getGridIsolinesByTimeAndLevel(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::ParamValue_vec& contourValues,T::AttributeList& attributeList,T::ByteData_vec& contours) const
 {
   FUNCTION_TRACE
@@ -1290,6 +1332,8 @@ void MessageProcessing::getGridIsolinesByTimeAndLevel(const GRID::Message& messa
 
 
 
+
+/*! \brief Computes isoline contours between four messages at a target time and level with value modification. */
 
 void MessageProcessing::getGridIsolinesByTimeAndLevel(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::ParamValue_vec& contourValues,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours) const
 {
@@ -1379,6 +1423,8 @@ void MessageProcessing::getGridIsolinesByTimeAndLevel(const GRID::Message& messa
 
 
 
+/*! \brief Computes isoline contours over a target geometry between four messages at a target time and level. */
+
 void MessageProcessing::getGridIsolinesByTimeLevelAndGeometry(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::ParamValue_vec& contourValues,T::AttributeList& attributeList,T::ByteData_vec& contours) const
 {
   FUNCTION_TRACE
@@ -1395,6 +1441,8 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGeometry(const GRID::Messag
 
 
 
+
+/*! \brief Computes isoline contours over a target geometry between four messages at a target time and level with value modification. */
 
 void MessageProcessing::getGridIsolinesByTimeLevelAndGeometry(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::ParamValue_vec& contourValues,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours) const
 {
@@ -1608,6 +1656,8 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGeometry(const GRID::Messag
 
 
 
+/*! \brief Computes isoline contours between two messages interpolated to a target level. */
+
 void MessageProcessing::getGridIsolinesByLevel(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::ParamValue_vec& contourValues,T::AttributeList& attributeList,T::ByteData_vec& contours) const
 {
   FUNCTION_TRACE
@@ -1624,6 +1674,8 @@ void MessageProcessing::getGridIsolinesByLevel(const GRID::Message& message1,con
 
 
 
+
+/*! \brief Computes isoline contours between two messages at a target level with value modification. */
 
 void MessageProcessing::getGridIsolinesByLevel(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::ParamValue_vec& contourValues,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours) const
 {
@@ -1707,6 +1759,8 @@ void MessageProcessing::getGridIsolinesByLevel(const GRID::Message& message1,con
 
 
 
+/*! \brief Computes isoline contours between two messages interpolated to a target time. */
+
 void MessageProcessing::getGridIsolinesByTime(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::ParamValue_vec& contourValues,T::AttributeList& attributeList,T::ByteData_vec& contours) const
 {
   FUNCTION_TRACE
@@ -1723,6 +1777,8 @@ void MessageProcessing::getGridIsolinesByTime(const GRID::Message& message1,cons
 
 
 
+
+/*! \brief Computes isoline contours between two messages at a target time with value modification. */
 
 void MessageProcessing::getGridIsolinesByTime(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::ParamValue_vec& contourValues,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours) const
 {
@@ -1786,7 +1842,6 @@ void MessageProcessing::getGridIsolinesByTime(const GRID::Message& message1,cons
 
     getIsolines(gridValues,coordinatePtr,d.nx(),d.ny(),contourValues,interpolationType,smoothSize,smoothDegree,contours);
 
-    //attributeList.setAttribute("grid.timeInterpolationMethod",Fmi::to_string(timeInterpolationMethod));
     attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
     attributeList.setAttribute("grid.width",Fmi::to_string(d.nx()));
     attributeList.setAttribute("grid.height",Fmi::to_string(d.ny()));
@@ -1807,6 +1862,8 @@ void MessageProcessing::getGridIsolinesByTime(const GRID::Message& message1,cons
 
 
 
+/*! \brief Computes isoline contours over a target geometry between two messages at a target level. */
+
 void MessageProcessing::getGridIsolinesByLevelAndGeometry(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::ParamValue_vec& contourValues,T::AttributeList& attributeList,T::ByteData_vec& contours) const
 {
   FUNCTION_TRACE
@@ -1823,6 +1880,8 @@ void MessageProcessing::getGridIsolinesByLevelAndGeometry(const GRID::Message& m
 
 
 
+
+/*! \brief Computes isoline contours over a target geometry between two messages at a target level with value modification. */
 
 void MessageProcessing::getGridIsolinesByLevelAndGeometry(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::ParamValue_vec& contourValues,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours) const
 {
@@ -2053,6 +2112,8 @@ void MessageProcessing::getGridIsolinesByLevelAndGeometry(const GRID::Message& m
 
 
 
+/*! \brief Computes isoline contours over a target geometry between two messages at a target time. */
+
 void MessageProcessing::getGridIsolinesByTimeAndGeometry(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::ParamValue_vec& contourValues,T::AttributeList& attributeList,T::ByteData_vec& contours) const
 {
   FUNCTION_TRACE
@@ -2069,6 +2130,8 @@ void MessageProcessing::getGridIsolinesByTimeAndGeometry(const GRID::Message& me
 
 
 
+
+/*! \brief Computes isoline contours over a target geometry between two messages at a target time with value modification. */
 
 void MessageProcessing::getGridIsolinesByTimeAndGeometry(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::ParamValue_vec& contourValues,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours) const
 {
@@ -2300,6 +2363,8 @@ void MessageProcessing::getGridIsolinesByTimeAndGeometry(const GRID::Message& me
 
 
 
+/*! \brief Computes isoline contours over an explicit target grid between two messages at a target level. */
+
 void MessageProcessing::getGridIsolinesByLevelAndGrid(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::ParamValue_vec& contourValues,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,T::AttributeList& attributeList,T::ByteData_vec& contours)
 {
   FUNCTION_TRACE
@@ -2316,6 +2381,8 @@ void MessageProcessing::getGridIsolinesByLevelAndGrid(const GRID::Message& messa
 
 
 
+
+/*! \brief Computes isoline contours over an explicit target grid between two messages at a target level with value modification. */
 
 void MessageProcessing::getGridIsolinesByLevelAndGrid(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::ParamValue_vec& contourValues,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours)
 {
@@ -2399,6 +2466,8 @@ void MessageProcessing::getGridIsolinesByLevelAndGrid(const GRID::Message& messa
 
 
 
+/*! \brief Computes isoline contours over an explicit target grid between two messages at a target time. */
+
 void MessageProcessing::getGridIsolinesByTimeAndGrid(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::ParamValue_vec& contourValues,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,T::AttributeList& attributeList,T::ByteData_vec& contours)
 {
   FUNCTION_TRACE
@@ -2415,6 +2484,8 @@ void MessageProcessing::getGridIsolinesByTimeAndGrid(const GRID::Message& messag
 
 
 
+
+/*! \brief Computes isoline contours over an explicit target grid between two messages at a target time with value modification. */
 
 void MessageProcessing::getGridIsolinesByTimeAndGrid(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::ParamValue_vec& contourValues,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours)
 {
@@ -2498,6 +2569,8 @@ void MessageProcessing::getGridIsolinesByTimeAndGrid(const GRID::Message& messag
 
 
 
+/*! \brief Computes isoline contours over an explicit target grid between four messages at a target time and level. */
+
 void MessageProcessing::getGridIsolinesByTimeLevelAndGrid(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::ParamValue_vec& contourValues,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,T::AttributeList& attributeList,T::ByteData_vec& contours) const
 {
   FUNCTION_TRACE
@@ -2514,6 +2587,8 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGrid(const GRID::Message& m
 
 
 
+
+/*! \brief Computes isoline contours over an explicit target grid between four messages at a target time and level with value modification. */
 
 void MessageProcessing::getGridIsolinesByTimeLevelAndGrid(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::ParamValue_vec& contourValues,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours) const
 {
@@ -2560,24 +2635,7 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGrid(const GRID::Message& m
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/*! \brief Computes streamlines between four messages interpolated to a target time and level. */
 
 void MessageProcessing::getGridStreamlinesByTimeAndLevel(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::AttributeList& attributeList,T::ByteData_vec& streamlines) const
 {
@@ -2595,6 +2653,8 @@ void MessageProcessing::getGridStreamlinesByTimeAndLevel(const GRID::Message& me
 
 
 
+
+/*! \brief Computes streamlines between four messages at a target time and level with value modification. */
 
 void MessageProcessing::getGridStreamlinesByTimeAndLevel(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& streamlines) const
 {
@@ -2693,6 +2753,8 @@ void MessageProcessing::getGridStreamlinesByTimeAndLevel(const GRID::Message& me
 
 
 
+/*! \brief Computes streamlines over a target geometry between four messages at a target time and level. */
+
 void MessageProcessing::getGridStreamlinesByTimeLevelAndGeometry(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::AttributeList& attributeList,T::ByteData_vec& streamlines) const
 {
   FUNCTION_TRACE
@@ -2709,6 +2771,8 @@ void MessageProcessing::getGridStreamlinesByTimeLevelAndGeometry(const GRID::Mes
 
 
 
+
+/*! \brief Computes streamlines over a target geometry between four messages at a target time and level with value modification. */
 
 void MessageProcessing::getGridStreamlinesByTimeLevelAndGeometry(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& streamlines) const
 {
@@ -2948,6 +3012,8 @@ void MessageProcessing::getGridStreamlinesByTimeLevelAndGeometry(const GRID::Mes
 
 
 
+/*! \brief Computes streamlines between two messages interpolated to a target level. */
+
 void MessageProcessing::getGridStreamlinesByLevel(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::AttributeList& attributeList,T::ByteData_vec& streamlines) const
 {
   FUNCTION_TRACE
@@ -2964,6 +3030,8 @@ void MessageProcessing::getGridStreamlinesByLevel(const GRID::Message& message1,
 
 
 
+
+/*! \brief Computes streamlines between two messages at a target level with value modification. */
 
 void MessageProcessing::getGridStreamlinesByLevel(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& streamlines) const
 {
@@ -3056,6 +3124,8 @@ void MessageProcessing::getGridStreamlinesByLevel(const GRID::Message& message1,
 
 
 
+/*! \brief Computes streamlines between two messages interpolated to a target time. */
+
 void MessageProcessing::getGridStreamlinesByTime(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::AttributeList& attributeList,T::ByteData_vec& streamlines) const
 {
   FUNCTION_TRACE
@@ -3072,6 +3142,8 @@ void MessageProcessing::getGridStreamlinesByTime(const GRID::Message& message1,c
 
 
 
+
+/*! \brief Computes streamlines between two messages at a target time with value modification. */
 
 void MessageProcessing::getGridStreamlinesByTime(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& streamlines) const
 {
@@ -3145,7 +3217,6 @@ void MessageProcessing::getGridStreamlinesByTime(const GRID::Message& message1,c
 
     getStreamlines(gridValues,coordinatePtr,d.nx(),d.ny(),minStreamLen, maxStreamLen,lineLen,xStep,yStep,streamlines);
 
-    //attributeList.setAttribute("grid.timeInterpolationMethod",Fmi::to_string(timeInterpolationMethod));
     attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
     attributeList.setAttribute("grid.width",Fmi::to_string(d.nx()));
     attributeList.setAttribute("grid.height",Fmi::to_string(d.ny()));
@@ -3165,6 +3236,8 @@ void MessageProcessing::getGridStreamlinesByTime(const GRID::Message& message1,c
 
 
 
+/*! \brief Computes streamlines over a target geometry between two messages at a target level. */
+
 void MessageProcessing::getGridStreamlinesByLevelAndGeometry(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::AttributeList& attributeList,T::ByteData_vec& streamlines) const
 {
   FUNCTION_TRACE
@@ -3181,6 +3254,8 @@ void MessageProcessing::getGridStreamlinesByLevelAndGeometry(const GRID::Message
 
 
 
+
+/*! \brief Computes streamlines over a target geometry between two messages at a target level with value modification. */
 
 void MessageProcessing::getGridStreamlinesByLevelAndGeometry(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& streamlines) const
 {
@@ -3420,6 +3495,8 @@ void MessageProcessing::getGridStreamlinesByLevelAndGeometry(const GRID::Message
 
 
 
+/*! \brief Computes streamlines over a target geometry between two messages at a target time. */
+
 void MessageProcessing::getGridStreamlinesByTimeAndGeometry(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::AttributeList& attributeList,T::ByteData_vec& streamlines) const
 {
   FUNCTION_TRACE
@@ -3436,6 +3513,8 @@ void MessageProcessing::getGridStreamlinesByTimeAndGeometry(const GRID::Message&
 
 
 
+
+/*! \brief Computes streamlines over a target geometry between two messages at a target time with value modification. */
 
 void MessageProcessing::getGridStreamlinesByTimeAndGeometry(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& streamlines) const
 {
@@ -3675,6 +3754,8 @@ void MessageProcessing::getGridStreamlinesByTimeAndGeometry(const GRID::Message&
 
 
 
+/*! \brief Computes streamlines over an explicit target grid between two messages at a target level. */
+
 void MessageProcessing::getGridStreamlinesByLevelAndGrid(const GRID::Message& message1,const GRID::Message& message2,double newLevel,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,T::AttributeList& attributeList,T::ByteData_vec& streamlines)
 {
   FUNCTION_TRACE
@@ -3691,6 +3772,8 @@ void MessageProcessing::getGridStreamlinesByLevelAndGrid(const GRID::Message& me
 
 
 
+
+/*! \brief Computes streamlines over an explicit target grid between two messages at a target level with value modification. */
 
 void MessageProcessing::getGridStreamlinesByLevelAndGrid(const GRID::Message& message1,const GRID::Message& message2,double newLevel,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& streamlines)
 {
@@ -3783,6 +3866,8 @@ void MessageProcessing::getGridStreamlinesByLevelAndGrid(const GRID::Message& me
 
 
 
+/*! \brief Computes streamlines over an explicit target grid between two messages at a target time. */
+
 void MessageProcessing::getGridStreamlinesByTimeAndGrid(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,T::AttributeList& attributeList,T::ByteData_vec& streamlines)
 {
   FUNCTION_TRACE
@@ -3799,6 +3884,8 @@ void MessageProcessing::getGridStreamlinesByTimeAndGrid(const GRID::Message& mes
 
 
 
+
+/*! \brief Computes streamlines over an explicit target grid between two messages at a target time with value modification. */
 
 void MessageProcessing::getGridStreamlinesByTimeAndGrid(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& streamlines)
 {
@@ -3891,6 +3978,8 @@ void MessageProcessing::getGridStreamlinesByTimeAndGrid(const GRID::Message& mes
 
 
 
+/*! \brief Computes streamlines over an explicit target grid between four messages at a target time and level. */
+
 void MessageProcessing::getGridStreamlinesByTimeLevelAndGrid(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,T::AttributeList& attributeList,T::ByteData_vec& streamlines) const
 {
   FUNCTION_TRACE
@@ -3908,6 +3997,8 @@ void MessageProcessing::getGridStreamlinesByTimeLevelAndGrid(const GRID::Message
 
 
 
+/*! \brief Computes streamlines over an explicit target grid between four messages at a target time and level with value modification. */
+
 void MessageProcessing::getGridStreamlinesByTimeLevelAndGrid(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& streamlines) const
 {
   FUNCTION_TRACE
@@ -3920,11 +4011,6 @@ void MessageProcessing::getGridStreamlinesByTimeLevelAndGrid(const GRID::Message
     const char *areaInterpolationMethodStr = attributeList.getAttributeValue("grid.areaInterpolationMethod");
     if (areaInterpolationMethodStr != nullptr)
       areaInterpolationMethod = toInt16(areaInterpolationMethodStr);
-
-    //T::CoordinateType coordinateType = T::CoordinateTypeValue::LATLON_COORDINATES;
-    //const char *coordinateTypeStr = attributeList.getAttributeValue("stream.coordinateType");
-    //if (coordinateTypeStr != nullptr)
-    //  coordinateType = toUInt8(coordinateTypeStr);
 
     int maxStreamLen = 2048;
     const char *maxLengthStr = attributeList.getAttributeValue("stream.maxLength");
@@ -3967,10 +4053,7 @@ void MessageProcessing::getGridStreamlinesByTimeLevelAndGrid(const GRID::Message
 
 
 
-
-
-
-
+/*! \brief Returns the interpolated grid value at a point between two messages at a target level. */
 
 void MessageProcessing::getGridValueByLevelAndPoint(const GRID::Message& message1,const GRID::Message& message2,int level1,int level2,double newLevel,T::CoordinateType coordinateType,double x,double y,short areaInterpolationMethod,short levelInterpolationMethod,T::ParamValue& value) const
 {
@@ -3988,6 +4071,8 @@ void MessageProcessing::getGridValueByLevelAndPoint(const GRID::Message& message
 
 
 
+
+/*! \brief Returns the interpolated grid value at a point between two messages at a target level with value modification. */
 
 void MessageProcessing::getGridValueByLevelAndPoint(const GRID::Message& message1,const GRID::Message& message2,int level1,int level2,double newLevel,T::CoordinateType coordinateType,double x,double y,short areaInterpolationMethod,short levelInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::ParamValue& value) const
 {
@@ -4027,6 +4112,8 @@ void MessageProcessing::getGridValueByLevelAndPoint(const GRID::Message& message
 
 
 
+/*! \brief Returns the interpolated grid value at a point between two messages at a target time. */
+
 void MessageProcessing::getGridValueByTimeAndPoint(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::CoordinateType coordinateType,double x,double y,short areaInterpolationMethod,short timeInterpolationMethod,T::ParamValue& value) const
 {
   FUNCTION_TRACE
@@ -4043,6 +4130,8 @@ void MessageProcessing::getGridValueByTimeAndPoint(const GRID::Message& message1
 
 
 
+
+/*! \brief Returns the interpolated grid value at a point between two messages at a target time with value modification. */
 
 void MessageProcessing::getGridValueByTimeAndPoint(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::CoordinateType coordinateType,double x,double y,short areaInterpolationMethod,short timeInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::ParamValue& value) const
 {
@@ -4067,6 +4156,8 @@ void MessageProcessing::getGridValueByTimeAndPoint(const GRID::Message& message1
 
 
 
+/*! \brief Returns the interpolated grid value at a point between four messages at a target time and level. */
+
 void MessageProcessing::getGridValueByTimeLevelAndPoint(const GRID::Message& message1,int level1,const GRID::Message& message2,int level2,const GRID::Message& message3,int level3,const GRID::Message& message4,int level4,time_t newTime,double newLevel,T::CoordinateType coordinateType,double x,double y,short areaInterpolationMethod,short timeInterpolationMethod,short levelInterpolationMethod,T::ParamValue& value) const
 {
   FUNCTION_TRACE
@@ -4083,6 +4174,8 @@ void MessageProcessing::getGridValueByTimeLevelAndPoint(const GRID::Message& mes
 
 
 
+
+/*! \brief Returns the interpolated grid value at a point between four messages at a target time and level with value modification. */
 
 void MessageProcessing::getGridValueByTimeLevelAndPoint(const GRID::Message& message1,int level1,const GRID::Message& message2,int level2,const GRID::Message& message3,int level3,const GRID::Message& message4,int level4,time_t newTime,double newLevel,T::CoordinateType coordinateType,double x,double y,short areaInterpolationMethod,short timeInterpolationMethod,short levelInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::ParamValue& value) const
 {
@@ -4136,6 +4229,8 @@ void MessageProcessing::getGridValueByTimeLevelAndPoint(const GRID::Message& mes
 
 
 
+/*! \brief Returns grid point values for the given point list between two messages at a target level. */
+
 void MessageProcessing::getGridValueListByLevelAndPointList(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::CoordinateType coordinateType,std::vector<T::Coordinate>& pointList,short areaInterpolationMethod,short levelInterpolationMethod,T::GridValueList& valueList) const
 {
   FUNCTION_TRACE
@@ -4152,6 +4247,8 @@ void MessageProcessing::getGridValueListByLevelAndPointList(const GRID::Message&
 
 
 
+
+/*! \brief Returns grid point values for the given point list between two messages at a target level with value modification. */
 
 void MessageProcessing::getGridValueListByLevelAndPointList(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::CoordinateType coordinateType,std::vector<T::Coordinate>& pointList,short areaInterpolationMethod,short levelInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const
 {
@@ -4184,6 +4281,8 @@ void MessageProcessing::getGridValueListByLevelAndPointList(const GRID::Message&
 
 
 
+/*! \brief Returns grid point values inside the given circle between two messages at a target level. */
+
 void MessageProcessing::getGridValueListByLevelAndCircle(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::CoordinateType coordinateType,double origoX,double origoY,double radius,short levelInterpolationMethod,T::GridValueList& valueList) const
 {
   FUNCTION_TRACE
@@ -4200,6 +4299,8 @@ void MessageProcessing::getGridValueListByLevelAndCircle(const GRID::Message& me
 
 
 
+
+/*! \brief Returns grid point values inside the given circle between two messages at a target level with value modification. */
 
 void MessageProcessing::getGridValueListByLevelAndCircle(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::CoordinateType coordinateType,double origoX,double origoY,double radius,short levelInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const
 {
@@ -4224,6 +4325,8 @@ void MessageProcessing::getGridValueListByLevelAndCircle(const GRID::Message& me
 
 
 
+/*! \brief Returns grid point values inside the given circle between two messages at a target time. */
+
 void MessageProcessing::getGridValueListByTimeAndCircle(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::CoordinateType coordinateType,double origoX,double origoY,double radius,short timeInterpolationMethod,T::GridValueList& valueList) const
 {
   FUNCTION_TRACE
@@ -4240,6 +4343,8 @@ void MessageProcessing::getGridValueListByTimeAndCircle(const GRID::Message& mes
 
 
 
+
+/*! \brief Returns grid point values inside the given circle between two messages at a target time with value modification. */
 
 void MessageProcessing::getGridValueListByTimeAndCircle(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::CoordinateType coordinateType,double origoX,double origoY,double radius,short timeInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const
 {
@@ -4264,6 +4369,8 @@ void MessageProcessing::getGridValueListByTimeAndCircle(const GRID::Message& mes
 
 
 
+/*! \brief Returns grid point values inside the given circle between four messages at a target time and level. */
+
 void MessageProcessing::getGridValueListByTimeLevelAndCircle(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::CoordinateType coordinateType,double origoX,double origoY,double radius,short timeInterpolationMethod,short levelInterpolationMethod,T::GridValueList& valueList) const
 {
   FUNCTION_TRACE
@@ -4279,6 +4386,8 @@ void MessageProcessing::getGridValueListByTimeLevelAndCircle(const GRID::Message
 
 
 
+
+/*! \brief Returns grid point values inside the given circle between four messages at a target time and level with value modification. */
 
 void MessageProcessing::getGridValueListByTimeLevelAndCircle(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::CoordinateType coordinateType,double origoX,double origoY,double radius,short timeInterpolationMethod,short levelInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const
 {
@@ -4302,6 +4411,8 @@ void MessageProcessing::getGridValueListByTimeLevelAndCircle(const GRID::Message
 
 
 
+/*! \brief Returns grid point values for the given point list between two messages at a target time. */
+
 void MessageProcessing::getGridValueListByTimeAndPointList(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::CoordinateType coordinateType,std::vector<T::Coordinate>& pointList,short areaInterpolationMethod,short timeInterpolationMethod,T::GridValueList& valueList) const
 {
   FUNCTION_TRACE
@@ -4318,6 +4429,8 @@ void MessageProcessing::getGridValueListByTimeAndPointList(const GRID::Message& 
 
 
 
+
+/*! \brief Returns grid point values for the given point list between two messages at a target time with value modification. */
 
 void MessageProcessing::getGridValueListByTimeAndPointList(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::CoordinateType coordinateType,std::vector<T::Coordinate>& pointList,short areaInterpolationMethod,short timeInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const
 {
@@ -4342,6 +4455,8 @@ void MessageProcessing::getGridValueListByTimeAndPointList(const GRID::Message& 
 
 
 
+/*! \brief Returns grid point values inside the given polygon between two messages at a target level. */
+
 void MessageProcessing::getGridValueListByLevelAndPolygon(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::CoordinateType coordinateType,std::vector<T::Coordinate>& polygonPoints,short levelInterpolationMethod,T::GridValueList& valueList) const
 {
   FUNCTION_TRACE
@@ -4358,6 +4473,8 @@ void MessageProcessing::getGridValueListByLevelAndPolygon(const GRID::Message& m
 
 
 
+
+/*! \brief Returns grid point values inside the given polygon between two messages at a target level with value modification. */
 
 void MessageProcessing::getGridValueListByLevelAndPolygon(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::CoordinateType coordinateType,std::vector<T::Coordinate>& polygonPoints,short levelInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const
 {
@@ -4382,6 +4499,8 @@ void MessageProcessing::getGridValueListByLevelAndPolygon(const GRID::Message& m
 
 
 
+/*! \brief Returns grid point values inside the given polygon between two messages at a target time. */
+
 void MessageProcessing::getGridValueListByTimeAndPolygon(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::CoordinateType coordinateType,std::vector<T::Coordinate>& polygonPoints,short timeInterpolationMethod,T::GridValueList& valueList) const
 {
   FUNCTION_TRACE
@@ -4398,6 +4517,8 @@ void MessageProcessing::getGridValueListByTimeAndPolygon(const GRID::Message& me
 
 
 
+
+/*! \brief Returns grid point values inside the given polygon between two messages at a target time with value modification. */
 
 void MessageProcessing::getGridValueListByTimeAndPolygon(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::CoordinateType coordinateType,std::vector<T::Coordinate>& polygonPoints,short timeInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const
 {
@@ -4422,6 +4543,8 @@ void MessageProcessing::getGridValueListByTimeAndPolygon(const GRID::Message& me
 
 
 
+/*! \brief Returns grid point values inside the given polygon between four messages at a target time and level. */
+
 void MessageProcessing::getGridValueListByTimeLevelAndPolygon(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::CoordinateType coordinateType,std::vector<T::Coordinate>& polygonPoints,short timeInterpolationMethod,short levelInterpolationMethod,T::GridValueList& valueList) const
 {
   FUNCTION_TRACE
@@ -4438,6 +4561,8 @@ void MessageProcessing::getGridValueListByTimeLevelAndPolygon(const GRID::Messag
 
 
 
+
+/*! \brief Returns grid point values inside the given polygon between four messages at a target time and level with value modification. */
 
 void MessageProcessing::getGridValueListByTimeLevelAndPolygon(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::CoordinateType coordinateType,std::vector<T::Coordinate>& polygonPoints,short timeInterpolationMethod,short levelInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const
 {
@@ -4462,6 +4587,8 @@ void MessageProcessing::getGridValueListByTimeLevelAndPolygon(const GRID::Messag
 
 
 
+/*! \brief Returns grid point values inside the given polygon path between two messages at a target level. */
+
 void MessageProcessing::getGridValueListByLevelAndPolygonPath(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::CoordinateType coordinateType,std::vector<std::vector<T::Coordinate>>& polygonPath,short levelInterpolationMethod,T::GridValueList& valueList) const
 {
   FUNCTION_TRACE
@@ -4478,6 +4605,8 @@ void MessageProcessing::getGridValueListByLevelAndPolygonPath(const GRID::Messag
 
 
 
+
+/*! \brief Returns grid point values inside the given polygon path between two messages at a target level with value modification. */
 
 void MessageProcessing::getGridValueListByLevelAndPolygonPath(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::CoordinateType coordinateType,std::vector<std::vector<T::Coordinate>>& polygonPath,short levelInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const
 {
@@ -4502,6 +4631,8 @@ void MessageProcessing::getGridValueListByLevelAndPolygonPath(const GRID::Messag
 
 
 
+/*! \brief Returns grid point values inside the given polygon path between two messages at a target time. */
+
 void MessageProcessing::getGridValueListByTimeAndPolygonPath(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::CoordinateType coordinateType,std::vector<std::vector<T::Coordinate>>& polygonPath,short timeInterpolationMethod,T::GridValueList& valueList) const
 {
   FUNCTION_TRACE
@@ -4518,6 +4649,8 @@ void MessageProcessing::getGridValueListByTimeAndPolygonPath(const GRID::Message
 
 
 
+
+/*! \brief Returns grid point values inside the given polygon path between two messages at a target time with value modification. */
 
 void MessageProcessing::getGridValueListByTimeAndPolygonPath(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::CoordinateType coordinateType,std::vector<std::vector<T::Coordinate>>& polygonPath,short timeInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const
 {
@@ -4542,6 +4675,8 @@ void MessageProcessing::getGridValueListByTimeAndPolygonPath(const GRID::Message
 
 
 
+/*! \brief Returns grid point values inside the given polygon path between four messages at a target time and level. */
+
 void MessageProcessing::getGridValueListByTimeLevelAndPolygonPath(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::CoordinateType coordinateType,std::vector<std::vector<T::Coordinate>>& polygonPath,short timeInterpolationMethod,short levelInterpolationMethod,T::GridValueList& valueList) const
 {
   FUNCTION_TRACE
@@ -4558,6 +4693,8 @@ void MessageProcessing::getGridValueListByTimeLevelAndPolygonPath(const GRID::Me
 
 
 
+
+/*! \brief Returns grid point values inside the given polygon path between four messages at a target time and level with value modification. */
 
 void MessageProcessing::getGridValueListByTimeLevelAndPolygonPath(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::CoordinateType coordinateType,std::vector<std::vector<T::Coordinate>>& polygonPath,short timeInterpolationMethod,short levelInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const
 {
@@ -4582,6 +4719,8 @@ void MessageProcessing::getGridValueListByTimeLevelAndPolygonPath(const GRID::Me
 
 
 
+/*! \brief Returns grid point values for the given point list between four messages at a target time and level. */
+
 void MessageProcessing::getGridValueListByTimeLevelAndPointList(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::CoordinateType coordinateType,std::vector<T::Coordinate>& pointList,short areaInterpolationMethod,short timeInterpolationMethod,short levelInterpolationMethod,T::GridValueList& valueList) const
 {
   FUNCTION_TRACE
@@ -4598,6 +4737,8 @@ void MessageProcessing::getGridValueListByTimeLevelAndPointList(const GRID::Mess
 
 
 
+
+/*! \brief Returns grid point values for the given point list between four messages at a target time and level with value modification. */
 
 void MessageProcessing::getGridValueListByTimeLevelAndPointList(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::CoordinateType coordinateType,std::vector<T::Coordinate>& pointList,short areaInterpolationMethod,short timeInterpolationMethod,short levelInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const
 {
@@ -4642,6 +4783,8 @@ void MessageProcessing::getGridValueListByTimeLevelAndPointList(const GRID::Mess
 
 
 
+/*! \brief Returns the full grid value vector between two messages at a target level. */
+
 void MessageProcessing::getGridValueVectorByLevel(const GRID::Message& message1,const GRID::Message& message2,double newLevel,short levelInterpolationMethod,T::ParamValue_vec& values) const
 {
   FUNCTION_TRACE
@@ -4658,6 +4801,8 @@ void MessageProcessing::getGridValueVectorByLevel(const GRID::Message& message1,
 
 
 
+
+/*! \brief Returns the full grid value vector between two messages at a target level with value modification. */
 
 void MessageProcessing::getGridValueVectorByLevel(const GRID::Message& message1,const GRID::Message& message2,double newLevel,short levelInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const
 {
@@ -4690,6 +4835,8 @@ void MessageProcessing::getGridValueVectorByLevel(const GRID::Message& message1,
 
 
 
+/*! \brief Returns the full grid value vector between two messages at a target time. */
+
 void MessageProcessing::getGridValueVectorByTime(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,short timeInterpolationMethod,T::ParamValue_vec& values) const
 {
   FUNCTION_TRACE
@@ -4706,6 +4853,8 @@ void MessageProcessing::getGridValueVectorByTime(const GRID::Message& message1,c
 
 
 
+
+/*! \brief Returns the full grid value vector between two messages at a target time with value modification. */
 
 void MessageProcessing::getGridValueVectorByTime(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,short timeInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const
 {
@@ -4749,6 +4898,8 @@ void MessageProcessing::getGridValueVectorByTime(const GRID::Message& message1,c
 
 
 
+/*! \brief Returns interpolated grid values for the given coordinate list between two messages at a target level. */
+
 void MessageProcessing::getGridValueVectorByLevelAndCoordinateList(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::CoordinateType coordinateType,std::vector<T::Coordinate>& coordinates,T::AttributeList& attributeList,T::ParamValue_vec& values) const
 {
   FUNCTION_TRACE
@@ -4765,6 +4916,8 @@ void MessageProcessing::getGridValueVectorByLevelAndCoordinateList(const GRID::M
 
 
 
+
+/*! \brief Returns interpolated grid values for the given coordinate list between two messages at a target level with value modification. */
 
 void MessageProcessing::getGridValueVectorByLevelAndCoordinateList(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::CoordinateType coordinateType,std::vector<T::Coordinate>& coordinates,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const
 {
@@ -4806,6 +4959,8 @@ void MessageProcessing::getGridValueVectorByLevelAndCoordinateList(const GRID::M
 
 
 
+/*! \brief Returns interpolated grid values for the given coordinate list between two messages at a target time. */
+
 void MessageProcessing::getGridValueVectorByTimeAndCoordinateList(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::CoordinateType coordinateType,std::vector<T::Coordinate>& coordinates,T::AttributeList& attributeList,T::ParamValue_vec& values) const
 {
   FUNCTION_TRACE
@@ -4822,6 +4977,8 @@ void MessageProcessing::getGridValueVectorByTimeAndCoordinateList(const GRID::Me
 
 
 
+
+/*! \brief Returns interpolated grid values for the given coordinate list between two messages at a target time with value modification. */
 
 void MessageProcessing::getGridValueVectorByTimeAndCoordinateList(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::CoordinateType coordinateType,std::vector<T::Coordinate>& coordinates,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const
 {
@@ -4875,6 +5032,8 @@ void MessageProcessing::getGridValueVectorByTimeAndCoordinateList(const GRID::Me
 
 
 
+/*! \brief Returns grid values over a target geometry between two messages at a target level. */
+
 void MessageProcessing::getGridValueVectorByLevelAndGeometry(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::AttributeList& attributeList,T::ParamValue_vec& values) const
 {
   FUNCTION_TRACE
@@ -4891,6 +5050,8 @@ void MessageProcessing::getGridValueVectorByLevelAndGeometry(const GRID::Message
 
 
 
+
+/*! \brief Returns grid values over a target geometry between two messages at a target level with value modification. */
 
 void MessageProcessing::getGridValueVectorByLevelAndGeometry(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const
 {
@@ -4928,6 +5089,8 @@ void MessageProcessing::getGridValueVectorByLevelAndGeometry(const GRID::Message
 
 
 
+/*! \brief Returns grid values over a target geometry between two messages at a target time. */
+
 void MessageProcessing::getGridValueVectorByTimeAndGeometry(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::AttributeList& attributeList,T::ParamValue_vec& values) const
 {
   FUNCTION_TRACE
@@ -4944,6 +5107,8 @@ void MessageProcessing::getGridValueVectorByTimeAndGeometry(const GRID::Message&
 
 
 
+
+/*! \brief Returns grid values over a target geometry between two messages at a target time with value modification. */
 
 void MessageProcessing::getGridValueVectorByTimeAndGeometry(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const
 {
@@ -4985,6 +5150,8 @@ void MessageProcessing::getGridValueVectorByTimeAndGeometry(const GRID::Message&
 
 
 
+/*! \brief Returns the full grid value vector between four messages at a target time and level. */
+
 void MessageProcessing::getGridValueVectorByTimeAndLevel(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,short areaInterpolationMethod,short timeInterpolationMethod,short levelInterpolationMethod,T::ParamValue_vec& values) const
 {
   FUNCTION_TRACE
@@ -5001,6 +5168,8 @@ void MessageProcessing::getGridValueVectorByTimeAndLevel(const GRID::Message& me
 
 
 
+
+/*! \brief Returns the full grid value vector between four messages at a target time and level with value modification. */
 
 void MessageProcessing::getGridValueVectorByTimeAndLevel(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,short areaInterpolationMethod,short timeInterpolationMethod,short levelInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const
 {
@@ -5026,6 +5195,8 @@ void MessageProcessing::getGridValueVectorByTimeAndLevel(const GRID::Message& me
 
 
 
+/*! \brief Returns grid values over a target geometry between four messages at a target time and level. */
+
 void MessageProcessing::getGridValueVectorByTimeLevelAndGeometry(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::AttributeList& attributeList,T::ParamValue_vec& values) const
 {
   FUNCTION_TRACE
@@ -5042,6 +5213,8 @@ void MessageProcessing::getGridValueVectorByTimeLevelAndGeometry(const GRID::Mes
 
 
 
+
+/*! \brief Returns grid values over a target geometry between four messages at a target time and level with value modification. */
 
 void MessageProcessing::getGridValueVectorByTimeLevelAndGeometry(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const
 {
@@ -5083,6 +5256,8 @@ void MessageProcessing::getGridValueVectorByTimeLevelAndGeometry(const GRID::Mes
 
 
 
+/*! \brief Returns interpolated grid values for the given coordinate list between four messages at a target time and level. */
+
 void MessageProcessing::getGridValueVectorByTimeLevelAndCoordinateList(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::CoordinateType coordinateType,std::vector<T::Coordinate>& coordinates,T::AttributeList& attributeList,T::ParamValue_vec& values) const
 {
   FUNCTION_TRACE
@@ -5099,6 +5274,8 @@ void MessageProcessing::getGridValueVectorByTimeLevelAndCoordinateList(const GRI
 
 
 
+
+/*! \brief Returns interpolated grid values for the given coordinate list between four messages at a target time and level with value modification. */
 
 void MessageProcessing::getGridValueVectorByTimeLevelAndCoordinateList(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::CoordinateType coordinateType,std::vector<T::Coordinate>& coordinates,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const
 {

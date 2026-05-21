@@ -5,6 +5,8 @@ namespace SmartMet
 {
 
 
+/*! \brief Constructs a MemoryWriter over the given buffer of the given size. */
+
 MemoryWriter::MemoryWriter(uchar *_data,UInt64 _dataSize,bool _dataRelease)
 {
   try
@@ -30,6 +32,8 @@ MemoryWriter::MemoryWriter(uchar *_data,UInt64 _dataSize,bool _dataRelease)
 
 
 
+/*! \brief Destructor that releases the buffer if owned. */
+
 MemoryWriter::~MemoryWriter()
 {
   try
@@ -50,6 +54,8 @@ MemoryWriter::~MemoryWriter()
 
 
 
+/*! \brief Returns the current write offset in the buffer. */
+
 UInt64 MemoryWriter::getWritePosition()
 {
   try
@@ -65,6 +71,8 @@ UInt64 MemoryWriter::getWritePosition()
 
 
 
+/*! \brief Returns the maximum buffer offset reached so far. */
+
 UInt64 MemoryWriter::getMaxWritePosition()
 {
   try
@@ -79,6 +87,8 @@ UInt64 MemoryWriter::getMaxWritePosition()
 
 
 
+
+/*! \brief Sets the current write offset in the buffer. */
 
 void MemoryWriter::setWritePosition(UInt64 _pos)
 {
@@ -99,6 +109,8 @@ void MemoryWriter::setWritePosition(UInt64 _pos)
 
 
 
+/*! \brief Returns a pointer to the underlying buffer. */
+
 uchar* MemoryWriter::getDataPtr()
 {
   try
@@ -114,6 +126,8 @@ uchar* MemoryWriter::getDataPtr()
 
 
 
+
+/*! \brief Writes a block of bytes into the buffer at the current write position. */
 
 void MemoryWriter::write_data(void *_data,UInt64 _size)
 {

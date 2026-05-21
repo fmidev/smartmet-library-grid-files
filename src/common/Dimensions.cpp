@@ -10,6 +10,8 @@ namespace T
 {
 
 
+/*! \brief Default constructor; creates an empty dimensions object. */
+
 Dimensions::Dimensions()
 {
   try
@@ -49,6 +51,8 @@ Dimensions::Dimensions(const Dimensions& dimensions)
 
 
 
+/*! \brief Constructs a 1D Dimensions of size nx. */
+
 Dimensions::Dimensions(uint nx)
 {
   try
@@ -67,6 +71,8 @@ Dimensions::Dimensions(uint nx)
 
 
 
+
+/*! \brief Constructs a 2D Dimensions of size nx by ny. */
 
 Dimensions::Dimensions(uint nx,uint ny)
 {
@@ -87,6 +93,8 @@ Dimensions::Dimensions(uint nx,uint ny)
 
 
 
+/*! \brief Constructs a 3D Dimensions of size nx by ny by nz. */
+
 Dimensions::Dimensions(uint nx,uint ny,uint nz)
 {
   try
@@ -106,6 +114,8 @@ Dimensions::Dimensions(uint nx,uint ny,uint nz)
 
 
 
+/*! \brief Destructor for Dimensions. */
+
 Dimensions::~Dimensions()
 {
   try
@@ -121,6 +131,8 @@ Dimensions::~Dimensions()
 
 
 
+
+/*! \brief Returns the size of the first dimension. */
 
 uint Dimensions::nx() const
 {
@@ -143,6 +155,8 @@ uint Dimensions::nx() const
 
 
 
+/*! \brief Returns the size of the second dimension. */
+
 uint Dimensions::ny() const
 {
   try
@@ -161,6 +175,8 @@ uint Dimensions::ny() const
 
 
 
+
+/*! \brief Returns the size of the third dimension. */
 
 uint Dimensions::nz() const
 {
@@ -181,6 +197,8 @@ uint Dimensions::nz() const
 
 
 
+/*! \brief Returns the number of dimensions. */
+
 uint Dimensions::getDimensions() const
 {
   try
@@ -196,6 +214,8 @@ uint Dimensions::getDimensions() const
 
 
 
+
+/*! \brief Returns the size of the given dimension index. */
 
 uint Dimensions::getSize(uint dimension) const
 {
@@ -214,6 +234,8 @@ uint Dimensions::getSize(uint dimension) const
 
 
 
+
+/*! \brief Prints the dimension sizes to the given stream. */
 
 void Dimensions::print(std::ostream& stream,uint level,uint optionFlags) const
 {

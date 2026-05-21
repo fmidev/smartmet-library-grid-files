@@ -9,6 +9,8 @@ namespace Identification
 {
 
 
+/*! \brief The constructor of the class. */
+
 ForecastTypeDef::ForecastTypeDef()
 {
   try
@@ -23,6 +25,8 @@ ForecastTypeDef::ForecastTypeDef()
 
 
 
+
+/*! \brief The destructor of the class. */
 
 ForecastTypeDef::~ForecastTypeDef()
 {
@@ -39,6 +43,8 @@ ForecastTypeDef::~ForecastTypeDef()
 
 
 
+
+/*! \brief Prints the content of the object into the given stream. */
 
 void ForecastTypeDef::print(std::ostream& stream,uint level,uint optionFlags) const
 {

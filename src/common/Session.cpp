@@ -21,17 +21,23 @@ static const char *emptyStr = "\0";
 
 
 
+/*! \brief Default constructor for Session. */
+
 Session::Session()
 {
 }
 
 
 
+/*! \brief Destructor for Session. */
+
 Session::~Session()
 {
 }
 
 
+
+/*! \brief Removes all attributes from the session. */
 
 void Session::clearAttributes()
 {
@@ -46,6 +52,8 @@ void Session::clearAttributes()
 }
 
 
+
+/*! \brief Sets attributes by parsing a semicolon-separated key=value string. */
 
 void Session::setAttributes(std::string& attributes)
 {
@@ -76,6 +84,8 @@ void Session::setAttributes(std::string& attributes)
 
 
 
+/*! \brief Sets a session attribute to a double value. */
+
 void Session::setAttribute(const char *name,double value)
 {
   try
@@ -96,6 +106,8 @@ void Session::setAttribute(const char *name,double value)
 }
 
 
+
+/*! \brief Sets a session attribute to an int value. */
 
 void Session::setAttribute(const char *name,int value)
 {
@@ -118,6 +130,8 @@ void Session::setAttribute(const char *name,int value)
 
 
 
+/*! \brief Sets a session attribute to an unsigned int value. */
+
 void Session::setAttribute(const char *name,uint value)
 {
   try
@@ -138,6 +152,8 @@ void Session::setAttribute(const char *name,uint value)
 }
 
 
+
+/*! \brief Sets a session attribute to an Int64 value. */
 
 void Session::setAttribute(const char *name,Int64 value)
 {
@@ -161,6 +177,8 @@ void Session::setAttribute(const char *name,Int64 value)
 
 
 
+/*! \brief Sets a session attribute to a UInt64 value. */
+
 void Session::setAttribute(const char *name,UInt64 value)
 {
   try
@@ -180,6 +198,8 @@ void Session::setAttribute(const char *name,UInt64 value)
   }
 }
 
+
+/*! \brief Sets a session attribute to a std::string value. */
 
 void Session::setAttribute(const char *name,std::string& value)
 {
@@ -202,6 +222,8 @@ void Session::setAttribute(const char *name,std::string& value)
 
 
 
+/*! \brief Sets a session attribute to a C-string value. */
+
 void Session::setAttribute(const char *name,const char *value)
 {
   try
@@ -223,6 +245,8 @@ void Session::setAttribute(const char *name,const char *value)
 
 
 
+/*! \brief Returns the C-string value of an attribute, or empty string if missing. */
+
 const char* Session::getAttribute(const char *name)
 {
   try
@@ -240,6 +264,8 @@ const char* Session::getAttribute(const char *name)
 }
 
 
+
+/*! \brief Returns the std::string value of an attribute, returning false if missing. */
 
 bool Session::getAttribute(const char *name,std::string& value)
 {
@@ -261,6 +287,8 @@ bool Session::getAttribute(const char *name,std::string& value)
 
 
 
+/*! \brief Returns true if an attribute with the given name exists. */
+
 bool Session::findAttribute(const char *name)
 {
   try
@@ -279,6 +307,8 @@ bool Session::findAttribute(const char *name)
 
 
 
+
+/*! \brief Returns true if an attribute with the prefixed name exists. */
 
 bool Session::findAttribute(const char *prefix,const char *name)
 {
@@ -301,6 +331,8 @@ bool Session::findAttribute(const char *prefix,const char *name)
 
 
 
+/*! \brief Returns an attribute interpreted as an int. */
+
 int Session::getIntAttribute(const char *name)
 {
   try
@@ -319,6 +351,8 @@ int Session::getIntAttribute(const char *name)
 
 
 
+/*! \brief Returns an attribute interpreted as an unsigned int. */
+
 uint Session::getUIntAttribute(const char *name)
 {
   try
@@ -336,6 +370,8 @@ uint Session::getUIntAttribute(const char *name)
 }
 
 
+
+/*! \brief Returns an attribute interpreted as an Int64. */
 
 Int64 Session::getInt64Attribute(const char *name)
 {
@@ -356,6 +392,8 @@ Int64 Session::getInt64Attribute(const char *name)
 
 
 
+/*! \brief Returns an attribute interpreted as a UInt64. */
+
 UInt64 Session::getUInt64Attribute(const char *name)
 {
   try
@@ -374,6 +412,8 @@ UInt64 Session::getUInt64Attribute(const char *name)
 
 
 
+/*! \brief Returns an attribute interpreted as a double. */
+
 double Session::getDoubleAttribute(const char *name)
 {
   try
@@ -391,6 +431,8 @@ double Session::getDoubleAttribute(const char *name)
 }
 
 
+
+/*! \brief Returns an attribute as int via output parameter, returning false if missing. */
 
 bool Session::getAttribute(const char *name,int& value)
 {
@@ -412,6 +454,8 @@ bool Session::getAttribute(const char *name,int& value)
 
 
 
+/*! \brief Returns an attribute as uint via output parameter, returning false if missing. */
+
 bool Session::getAttribute(const char *name,uint& value)
 {
   try
@@ -431,6 +475,8 @@ bool Session::getAttribute(const char *name,uint& value)
 }
 
 
+
+/*! \brief Returns an attribute as Int64 via output parameter, returning false if missing. */
 
 bool Session::getAttribute(const char *name,Int64& value)
 {
@@ -452,6 +498,8 @@ bool Session::getAttribute(const char *name,Int64& value)
 
 
 
+/*! \brief Returns an attribute as UInt64 via output parameter, returning false if missing. */
+
 bool Session::getAttribute(const char *name,UInt64& value)
 {
   try
@@ -471,6 +519,8 @@ bool Session::getAttribute(const char *name,UInt64& value)
 }
 
 
+
+/*! \brief Returns an attribute as double via output parameter, returning false if missing. */
 
 bool Session::getAttribute(const char *name,double& value)
 {
@@ -492,6 +542,8 @@ bool Session::getAttribute(const char *name,double& value)
 
 
 
+/*! \brief Removes an attribute from the session if present. */
+
 void Session::deleteAttribute(const char *name)
 {
   try
@@ -507,6 +559,8 @@ void Session::deleteAttribute(const char *name)
 }
 
 
+
+/*! \brief Returns the session attributes serialized as a URL parameter string. */
 
 std::string Session::getUrlParameter()
 {
@@ -527,6 +581,8 @@ std::string Session::getUrlParameter()
 }
 
 
+
+/*! \brief Prints all session attributes to the given stream. */
 
 void Session::print(std::ostream& stream,uint level,uint optionFlags)
 {

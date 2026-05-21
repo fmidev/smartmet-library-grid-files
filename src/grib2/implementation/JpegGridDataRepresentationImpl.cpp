@@ -77,6 +77,8 @@ void JpegGridDataRepresentationImpl::read(MemoryReader &memoryReader)
   }
 }
 
+/*! \brief Encodes the given grid values into a JPEG-2000 packed data buffer (placeholder). */
+
 void JpegGridDataRepresentationImpl::encodeValues(Message *message, T::ParamValue_vec &values)
 {
   try
@@ -92,6 +94,8 @@ void JpegGridDataRepresentationImpl::encodeValues(Message *message, T::ParamValu
 
 
 
+
+/*! \brief Decodes a JPEG-2000 packed message into a vector of parameter values (JASPER backend). */
 
 void JpegGridDataRepresentationImpl::decodeValues(Message* message,
                                                   T::ParamValue_vec& decodedValues) const
@@ -350,6 +354,8 @@ void openjpeg_info_callback(const char *msg, void*)
   //std::cout << "OpenJPEG info: " << msg << std::endl;
 }
 
+
+/*! \brief Decodes a JPEG-2000 packed message into a vector of parameter values (OpenJPEG backend). */
 
 void JpegGridDataRepresentationImpl::decodeValues(Message *message, T::ParamValue_vec &decodedValues) const
 {

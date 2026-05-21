@@ -88,6 +88,8 @@ Message::Message(const Message& message)
 
 
 
+/*! \brief Constructs the message from grid file, GeoTIFF file and message info metadata. */
+
 Message::Message(GRID::GridFile *gridFile,GeoTiffFile *geoTiffFile,T::MessageIndex messageIndex,GeoTiff::MessageInfo& messageInfo)
 {
   FUNCTION_TRACE
@@ -299,6 +301,8 @@ T::FilePosition Message::getFilePosition() const
 
 
 
+
+/*! \brief Returns the file type identifier of the current message. */
 
 T::FileType Message::getMessageType() const
 {
@@ -539,6 +543,8 @@ T::Dimensions Message::getGridDimensions() const
 
 
 
+/*! \brief Returns the number of rows in the original grid. */
+
 std::size_t Message::getGridRowCount() const
 {
   FUNCTION_TRACE
@@ -674,6 +680,8 @@ bool Message::isGridGlobal() const
 
 
 
+/*! \brief Returns true when wind vector components are expressed relative to grid axes. */
+
 bool Message::isRelativeUV() const
 {
   FUNCTION_TRACE
@@ -722,6 +730,8 @@ T::GeometryId Message::getGridGeometryId() const
 
 
 
+/*! \brief Returns the average grid cell width and height. */
+
 void Message::getGridCellAverageSize(double& width,double& height) const
 {
   FUNCTION_TRACE
@@ -741,6 +751,8 @@ void Message::getGridCellAverageSize(double& width,double& height) const
 
 
 
+
+/*! \brief Returns the metric grid cell width and height. */
 
 bool Message::getGridMetricCellSize(double& width,double& height) const
 {
@@ -764,6 +776,8 @@ bool Message::getGridMetricCellSize(double& width,double& height) const
 
 
 
+/*! \brief Returns the overall metric size of the grid in meters. */
+
 bool Message::getGridMetricSize(double& width,double& height) const
 {
   FUNCTION_TRACE
@@ -786,6 +800,8 @@ bool Message::getGridMetricSize(double& width,double& height) const
 
 
 
+/*! \brief Returns the four corner coordinates of the grid in the metric projection. */
+
 bool Message::getGridMetricArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight)
 {
   FUNCTION_TRACE
@@ -807,6 +823,8 @@ bool Message::getGridMetricArea(T::Coordinate& topLeft,T::Coordinate& topRight,T
 
 
 
+
+/*! \brief Returns the four corner coordinates of the grid as latlon coordinates. */
 
 bool Message::getGridLatLonArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight)
 {
@@ -867,7 +885,7 @@ std::string Message::getGridGeometryString() const
    It is also possible that we might want to use our own geometry identifiers and this method allows us to set it
    in place.
 
-        \param   The grid geometry identifier.
+        \param geometryId  The grid geometry identifier.
 */
 
 void Message::setGridGeometryId(T::GeometryId geometryId)
@@ -1091,6 +1109,8 @@ bool Message::getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lo
 
 
 
+/*! \brief Resolves a list of latlon coordinates into grid point coordinates. */
+
 void Message::getGridPointListByLatLonCoordinates(T::Coordinate_vec& latlon,T::Coordinate_vec& points) const
 {
   FUNCTION_TRACE
@@ -1141,6 +1161,8 @@ bool Message::getGridPointByLatLonCoordinates(double lat,double lon,double& grid
 
 
 
+
+/*! \brief Resolves a latlon coordinate into a grid point coordinate without using the cache. */
 
 bool Message::getGridPointByLatLonCoordinatesNoCache(double lat,double lon,double& grid_i,double& grid_j)  const
 {
@@ -1513,6 +1535,8 @@ std::string Message::getWKT() const
 
 
 
+/*! \brief Returns the PROJ.4 projection string of the current grid. */
+
 std::string Message::getProj4() const
 {
   try
@@ -1634,6 +1658,8 @@ T::ForecastNumber Message::getForecastNumber() const
 
 
 
+/*! \brief Locks the message data in memory (no-op for this format). */
+
 void Message::lockData()
 {
   //throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
@@ -1643,6 +1669,8 @@ void Message::lockData()
 
 
 
+/*! \brief Releases a memory lock on the message data (no-op for this format). */
+
 void Message::unlockData()
 {
   //throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
@@ -1651,6 +1679,8 @@ void Message::unlockData()
 
 
 
+
+/*! \brief Returns true if the message has been read into memory. */
 
 bool Message::isRead()
 {
@@ -1669,6 +1699,8 @@ bool Message::isRead()
 
 
 
+
+/*! \brief Reads the message data from the previously assigned grid file (no-op placeholder). */
 
 void Message::read()
 {
@@ -1728,7 +1760,7 @@ void Message::write(DataWriter& dataWriter)
 
 /*! \brief The method prints the content of the current object into the given stream.
 
-        \param ostream      The output stream.
+        \param stream      The output stream.
         \param level        The print level (used when printing multi-level structures).
         \param optionFlags  The printing options expressed in flag-bits.
 */

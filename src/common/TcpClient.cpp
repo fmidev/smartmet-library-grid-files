@@ -16,6 +16,8 @@ namespace SmartMet
 {
 
 
+/*! \brief Default constructor for TcpClient. */
+
 TcpClient::TcpClient()
 {
   try
@@ -33,6 +35,8 @@ TcpClient::TcpClient()
 
 
 
+/*! \brief Destructor that shuts down and closes any open socket. */
+
 TcpClient::~TcpClient()
 {
 
@@ -46,6 +50,8 @@ TcpClient::~TcpClient()
 
 
 
+
+/*! \brief Opens a TCP connection to the given server and port. */
 
 void TcpClient::openConnection(const char *serverAddress,int serverPort)
 {
@@ -98,6 +104,8 @@ void TcpClient::openConnection(const char *serverAddress,int serverPort)
 
 
 
+/*! \brief Closes the TCP connection if currently open. */
+
 void TcpClient::closeConnection()
 {
   try
@@ -117,6 +125,8 @@ void TcpClient::closeConnection()
 
 
 
+
+/*! \brief Returns true if the TCP socket is currently connected. */
 
 bool TcpClient::isConnected()
 {
@@ -142,6 +152,8 @@ bool TcpClient::isConnected()
 
 
 
+/*! \brief Sends bytes on the socket using a single non-blocking send. */
+
 int TcpClient::writeData(char *data,int size)
 {
   try
@@ -161,6 +173,8 @@ int TcpClient::writeData(char *data,int size)
 
 
 
+/*! \brief Reads bytes from the socket using a single non-blocking recv. */
+
 int TcpClient::readData(char *data,int size)
 {
   try
@@ -179,6 +193,8 @@ int TcpClient::readData(char *data,int size)
 
 
 
+
+/*! \brief Writes the entire buffer to the socket, looping until all bytes are sent. */
 
 int TcpClient::writeAll(char *data,int size)
 {
@@ -211,6 +227,8 @@ int TcpClient::writeAll(char *data,int size)
 
 
 
+
+/*! \brief Reads a line from the socket up to a newline or the buffer size. */
 
 int TcpClient::readLine(char *data,int size)
 {
@@ -249,6 +267,8 @@ int TcpClient::readLine(char *data,int size)
 
 
 
+
+/*! \brief Reads exactly the requested number of bytes from the socket. */
 
 int TcpClient::readAll(char *data,int size)
 {

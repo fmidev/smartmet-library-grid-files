@@ -26,9 +26,7 @@
 #include <set>
 
 
-// The name of the environment variable that is usually used in order to store the location
-// of the GridDef configuration file.
-
+/*! \brief Environment variable whose value is the path to the GridDef configuration file. */
 #define SMARTMET_GRID_CONFIG_FILE "SMARTMET_GRID_CONFIG_FILE"
 
 
@@ -37,10 +35,26 @@ namespace SmartMet
 namespace Identification
 {
 
-typedef std::unordered_map<uint,std::string> GeometryNames;
-typedef std::unordered_map<uint,uint> IdMap;
-typedef std::unordered_map<std::string,uint> StringIdMap;
+typedef std::unordered_map<uint,std::string> GeometryNames;  //!< Map from geometry ID to geometry name
+typedef std::unordered_map<uint,uint> IdMap;                 //!< Generic uint→uint identifier mapping
+typedef std::unordered_map<std::string,uint> StringIdMap;    //!< String→uint identifier mapping
 
+
+// ====================================================================================
+/*! \brief Central registry for all parameter, level, and geometry identifier mappings.
+ *
+ *  `GridDef` is the single entry point for translating between the identifier systems
+ *  used by GRIB 1, GRIB 2, NetCDF, and Newbase formats and the FMI canonical parameter
+ *  and level IDs.  It also manages the geometry (grid projection) registry, allowing
+ *  callers to look up grid dimensions, coordinates, and projection parameters by a
+ *  numeric geometry ID.
+ *
+ *  All mapping tables are loaded from CSV and libconfig files whose paths are given in
+ *  the configuration file pointed to by `SMARTMET_GRID_CONFIG_FILE`.  The tables are
+ *  hot-reloaded automatically when their files change on disk.
+ *
+ *  A process-wide singleton instance is available as `SmartMet::Identification::gridDef`. */
+// ====================================================================================
 
 class GridDef
 {
@@ -48,101 +62,254 @@ class GridDef
                         GridDef();
     virtual             ~GridDef();
 
+    /*! \brief Initialise all mapping tables from the given libconfig configuration file.
+     *  \param[in] configFile  Path to the GridDef configuration file. */
+
     void                init(const char* configFile);
 
+    // -----------------------------------------------------------------------
+    // Common GRIB parameter lookups
+    // -----------------------------------------------------------------------
+
+    /*! \brief Look up a GRIB parameter definition by its numeric GRIB ID.
+     *  \return true on success; false if not found. */
     bool                getGribParameterDefById(T::GribParamId gribParamId,GribParameterDef&  paramDef);
+    /*! \brief Look up a GRIB parameter definition by its name string.
+     *  \return true on success; false if not found. */
     bool                getGribParameterDefByName(const std::string& gribParamName,GribParameterDef&  paramDef);
+    /*! \brief Determine the GRIB parameter ID from the fields of a GRIB 1 message. */
     T::GribParamId      getGribParameterId(GRIB1::Message& message);
+    //! \overload (GRIB 2 message)
     T::GribParamId      getGribParameterId(GRIB2::Message& message);
+    /*! \brief Look up the FMI→GRIB mapping record for an FMI parameter ID.
+     *  \return true on success; false if no mapping exists. */
     bool                getGribParameterMappingByFmiId(T::FmiParamId fmiParamId,FmiParameterId_grib& def);
+    /*! \brief Return the GRIB parameter name for a GRIB 1 message, or empty string if unknown. */
     std::string         getGribParameterName(GRIB1::Message& message);
+    //! \overload (GRIB 2 message)
     std::string         getGribParameterName(GRIB2::Message& message);
 
+    // -----------------------------------------------------------------------
+    // GRIB 1 — geometry, level, and parameter lookups
+    // -----------------------------------------------------------------------
+
+    /*! \brief Return the GRIB 1 grid definition for a geometry ID, or nullptr if unknown. */
     GRIB1::GridDef_sptr getGrib1DefinitionByGeometryId(int geometryId);
+    /*! \brief Return the GRIB 1 grid definition matching a geometry string descriptor. */
     GRIB1::GridDef_sptr getGrib1DefinitionByGeometryString(const char *geometryStr);
+    //! \overload
     GRIB1::GridDef_sptr getGrib1DefinitionByGeometryString(std::string& geometryStr);
+    /*! \brief Determine the FMI geometry ID from a GRIB 1 message's grid definition. */
     int                 getGrib1GeometryId(GRIB1::Message& message);
+    /*! \brief Look up the GRIB 1 level key/value mapping for an FMI level ID.
+     *  \return true on success; false if not found. */
     bool                getGrib1LevelDef(uint fmiLevelId,FmiLevelId_grib& def);
+    /*! \brief Return the total number of loaded GRIB 1 parameter definitions. */
     uint                getGrib1ParameterDefCount();
+    /*! \brief Look up a GRIB 1 parameter definition by its GRIB parameter ID.
+     *  \return true on success; false if not found. */
     bool                getGrib1ParameterDefById(T::GribParamId gribParamId,Grib1ParameterDef& paramDef);
+    /*! \brief Look up a GRIB 1 parameter definition by an FMI parameter ID.
+     *  \return true on success; false if not found. */
     bool                getGrib1ParameterDefByFmiId(T::FmiParamId fmiParamId,Grib1ParameterDef& paramDef);
+    /*! \brief Return the GRIB 1 parameter definition at position \p index.
+     *  \return true on success; false if index is out of range. */
     bool                getGrib1ParameterDefByIndex(uint index,Grib1ParameterDef& paramDef);
 
+    // -----------------------------------------------------------------------
+    // GRIB 2 — geometry, level, and parameter lookups
+    // -----------------------------------------------------------------------
+
+    /*! \brief Return the GRIB 2 grid definition for a geometry ID, or nullptr if unknown. */
     GRIB2::GridDef_sptr getGrib2DefinitionByGeometryId(int geometryId);
+    /*! \brief Return the GRIB 2 grid definition matching a geometry string descriptor. */
     GRIB2::GridDef_sptr getGrib2DefinitionByGeometryString(const char *geometryStr);
+    //! \overload
     GRIB2::GridDef_sptr getGrib2DefinitionByGeometryString(std::string& geometryStr);
+    /*! \brief Determine the FMI geometry ID from a GRIB 2 message's grid definition. */
     int                 getGrib2GeometryId(GRIB2::Message& message);
+    /*! \brief Look up the GRIB 2 level key/value mapping for an FMI level ID.
+     *  \return true on success; false if not found. */
     bool                getGrib2LevelDef(uint fmiLevelId,FmiLevelId_grib& def);
+    /*! \brief Return the total number of loaded GRIB 2 parameter definitions. */
     uint                getGrib2ParameterDefCount();
+    /*! \brief Look up a GRIB 2 parameter definition by its GRIB parameter ID.
+     *  \return true on success; false if not found. */
     bool                getGrib2ParameterDefById(T::GribParamId gribParamId,Grib2ParameterDef& paramDef);
+    /*! \brief Look up a GRIB 2 parameter definition by an FMI parameter ID.
+     *  \return true on success; false if not found. */
     bool                getGrib2ParameterDefByFmiId(T::FmiParamId fmiParamId,Grib2ParameterDef& paramDef);
+    /*! \brief Return the GRIB 2 parameter definition at position \p index.
+     *  \return true on success; false if index is out of range. */
     bool                getGrib2ParameterDefByIndex(uint index,Grib2ParameterDef& paramDef);
 
+    // -----------------------------------------------------------------------
+    // FMI — aggregation, geometry group, level, forecast type, parameter lookups
+    // -----------------------------------------------------------------------
+
+    /*! \brief Look up an aggregation definition by numeric ID.
+     *  \return true on success; false if not found. */
     bool                getFmiAggregationDef(int aggregationId,AggregationDef& aggregationDef);
+    /*! \brief Look up a geometry group definition by numeric group ID.
+     *  \return true on success; false if not found. */
     bool                getFmiGeometryGroupDef(uint geometryGroupId,FmiGeometryGroupDef& geometryGroupDef);
+    /*! \brief Look up a geometry group definition by producer name and group type.
+     *  \return true on success; false if not found. */
     bool                getFmiGeometryGroupDef(const char *producerName,uint groupType,FmiGeometryGroupDef& geometryGroupDef);
+    /*! \brief Return all geometry group IDs that contain \p geometryId. */
     void                getFmiGeometryGroupsByGeometryId(int geometryId,std::vector<uint>& groupIdentifiers);
+    //! \overload (filtered by \p groupType)
     void                getFmiGeometryGroupsByGeometryId(int geometryId,uint groupType,std::vector<uint>& groupIdentifiers);
+    //! \overload (result as a set)
     void                getFmiGeometryGroupsByGeometryId(int geometryId,std::set<uint>& groupIdentifiers);
+    /*! \brief Look up a level definition by FMI level ID.
+     *  \return true on success; false if not found. */
     bool                getFmiLevelDef(uint levelId,LevelDef& levelDef);
+    /*! \brief Determine the FMI level ID for a GRIB 1 message. */
     T::ParamLevelId     getFmiLevelId(GRIB1::Message& message);
+    //! \overload (GRIB 2 message)
     T::ParamLevelId     getFmiLevelId(GRIB2::Message& message);
+    /*! \brief Map a Newbase level ID to the corresponding FMI level ID. */
     uint                getFmiLevelIdByNewbaseLevelId(uint newbaseLevelId);
+    /*! \brief Look up a forecast type definition by numeric ID.
+     *  \return true on success; false if not found. */
     bool                getFmiForecastTypeDef(int forecastTypeId,ForecastTypeDef& forecastTypeDef);
+    /*! \brief Look up an FMI parameter definition by FMI parameter ID.
+     *  \return true on success; false if not found. */
     bool                getFmiParameterDefById(T::FmiParamId fmiParamId,FmiParameterDef& paramDef);
+    /*! \brief Look up an FMI parameter definition by GRIB parameter ID.
+     *  \return true on success; false if not found. */
     bool                getFmiParameterDefByGribId(T::GribParamId gribParamId,FmiParameterDef& paramDef);
+    /*! \brief Look up an FMI parameter definition by Newbase parameter ID.
+     *  \return true on success; false if not found. */
     bool                getFmiParameterDefByNewbaseId(T::NewbaseParamId newbaseParamId,FmiParameterDef& paramDef);
+    /*! \brief Look up an FMI parameter definition by NetCDF variable name.
+     *  \return true on success; false if not found. */
     bool                getFmiParameterDefByNetCdfName(std::string& netCdfParamName,FmiParameterDef& paramDef);
+    /*! \brief Look up an FMI parameter definition by FMI parameter name.
+     *  \return true on success; false if not found. */
     bool                getFmiParameterDefByName(const std::string& fmiParamName,FmiParameterDef& paramDef);
+    /*! \brief Determine the FMI parameter ID for a GRIB 1 message. */
     T::FmiParamId       getFmiParameterId(GRIB1::Message& message);
+    //! \overload (GRIB 2 message)
     T::FmiParamId       getFmiParameterId(GRIB2::Message& message);
+    /*! \brief Look up the FMI parameter ID by FMI canonical parameter name. */
     T::FmiParamId       getFmiParameterIdByFmiName(const std::string& fmiParamName);
+    /*! \brief Look up the FMI parameter ID by Newbase parameter name. */
     T::FmiParamId       getFmiParameterIdByNewbaseName(const std::string& newbaseParamName);
+    /*! \brief Look up the FMI parameter ID by NetCDF variable name. */
     T::FmiParamId       getFmiParameterIdByNetCdfName(const std::string& netCdfParamName);
+    /*! \brief Look up the FMI parameter ID by Newbase numeric parameter ID. */
     T::FmiParamId       getFmiParameterIdByNewbaseId(T::NewbaseParamId newbaseParamId);
+    /*! \brief Look up the FMI parameter ID by GRIB numeric parameter ID. */
     T::FmiParamId       getFmiParameterIdByGribId(T::GribParamId gribParamId);
+    /*! \brief Return the default area interpolation method for the parameter in a GRIB 1 message. */
     short               getFmiParameterInterpolationMethod(GRIB1::Message& message);
+    //! \overload (GRIB 2 message)
     short               getFmiParameterInterpolationMethod(GRIB2::Message& message);
+    /*! \brief Return the FMI canonical parameter name for a GRIB 1 message, or empty string. */
     std::string         getFmiParameterName(GRIB1::Message& message);
+    //! \overload (GRIB 2 message)
     std::string         getFmiParameterName(GRIB2::Message& message);
+    /*! \brief Return the FMI parameter description for a GRIB 1 message, or empty string. */
     std::string         getFmiParameterDescription(GRIB1::Message& message);
+    //! \overload (GRIB 2 message)
     std::string         getFmiParameterDescription(GRIB2::Message& message);
+    /*! \brief Return the FMI parameter units for a GRIB 1 message, or empty string. */
     std::string         getFmiParameterUnits(GRIB1::Message& message);
+    //! \overload (GRIB 2 message)
     std::string         getFmiParameterUnits(GRIB2::Message& message);
+    /*! \brief Look up a processing type definition by numeric ID.
+     *  \return true on success; false if not found. */
     bool                getFmiProcessingTypeDef(int processingTypeId,ProcessingTypeDef& processingTypeDef);
 
+    // -----------------------------------------------------------------------
+    // NetCDF parameter lookups
+    // -----------------------------------------------------------------------
+
+    /*! \brief Look up a NetCDF parameter definition by FMI parameter ID.
+     *  \return true on success; false if not found. */
     bool                getNetCdfParameterDefByFmiId(T::FmiParamId fmiParamId,NetCdfParameterDef& paramDef);
+    /*! \brief Look up a NetCDF parameter definition by NetCDF variable name.
+     *  \return true on success; false if not found. */
     bool                getNetCdfParameterDefByName(const std::string& netCdfParamName,NetCdfParameterDef& paramDef);
+    /*! \brief Look up the FMI→NetCDF mapping record by FMI parameter ID.
+     *  \return true on success; false if not found. */
     bool                getNetCdfParameterMappingByFmiId(T::FmiParamId fmiParamId,FmiParameterId_netCdf& paramMapping);
+    /*! \brief Return the NetCDF variable name for the parameter in a GRIB 1 message, or empty string. */
     std::string         getNetCdfParameterName(GRIB1::Message& message);
+    //! \overload (GRIB 2 message)
     std::string         getNetCdfParameterName(GRIB2::Message& message);
 
+    // -----------------------------------------------------------------------
+    // Newbase parameter lookups
+    // -----------------------------------------------------------------------
+
+    /*! \brief Look up a Newbase parameter definition by Newbase numeric ID.
+     *  \return true on success; false if not found. */
     bool                getNewbaseParameterDefById(T::NewbaseParamId newbaseParamId,NewbaseParameterDef& paramDef);
+    /*! \brief Look up a Newbase parameter definition by Newbase parameter name.
+     *  \return true on success; false if not found. */
     bool                getNewbaseParameterDefByName(const std::string& newbaseParamName,NewbaseParameterDef& paramDef);
+    /*! \brief Look up a Newbase parameter definition by FMI parameter ID.
+     *  \return true on success; false if not found. */
     bool                getNewbaseParameterDefByFmiId(T::FmiParamId fmiParamId,NewbaseParameterDef& paramDef);
+    /*! \brief Look up the FMI→Newbase mapping record by FMI parameter ID.
+     *  \return true on success; false if not found. */
     bool                getNewbaseParameterMappingByFmiId(T::FmiParamId fmiParamId,FmiParameterId_newbase& paramMapping);
+    /*! \brief Determine the Newbase parameter ID for a GRIB 1 message. */
     T::NewbaseParamId   getNewbaseParameterId(GRIB1::Message& message);
+    //! \overload (GRIB 2 message)
     T::NewbaseParamId   getNewbaseParameterId(GRIB2::Message& message);
+    /*! \brief Return the Newbase parameter name for a GRIB 1 message, or empty string. */
     std::string         getNewbaseParameterName(GRIB1::Message& message);
+    //! \overload (GRIB 2 message)
     std::string         getNewbaseParameterName(GRIB2::Message& message);
 
+    // -----------------------------------------------------------------------
+    // Geometry (grid projection) queries
+    // -----------------------------------------------------------------------
+
+    /*! \brief Return the column and row count for a geometry ID.
+     *  \return true on success; false if the geometry is unknown. */
     bool                getGridDimensionsByGeometryId(T::GeometryId  geometryId,uint& cols,uint& rows);
+    /*! \brief Return all lat/lon coordinates for a geometry ID into \p coordinates.
+     *  \return true on success; false if the geometry is unknown. */
     bool                getGridLatLonCoordinatesByGeometryId(T::GeometryId  geometryId,T::Coordinate_svec& coordinates);
+    //! \overload (returns a shared vector; empty on failure)
     T::Coordinate_svec  getGridLatLonCoordinatesByGeometryId(T::GeometryId  geometryId);
+    /*! \brief Return lat/lon coordinates and grid dimensions for a geometry described by \p attributeList. */
     void                getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList,T::Coordinate_svec& latLonCoordinates,uint& width,uint& height);
+    /*! \brief Return the boundary polyline (lat/lon) of a geometry, or empty on failure. */
     T::Coordinate_svec  getGridLatLonCoordinateLinePointsByGeometryId(T::GeometryId  geometryId);
+    /*! \brief Return grid points in the native projection coordinates for a geometry ID. */
     T::Coordinate_svec  getGridOriginalCoordinatesByGeometryId(T::GeometryId  geometryId);
+    /*! \brief Return native-projection coordinates and dimensions for a geometry described by \p attributeList. */
     void                getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeList,T::Coordinate_svec& latLonCoordinates,T::CoordinateType coordinateType,T::Coordinate_svec& coordinates,uint& width,uint& height);
+    /*! \brief Convert a lat/lon point to fractional grid indices for a geometry ID.
+     *  \return true on success; false if the geometry is unknown or the point is outside. */
     bool                getGridPointByGeometryIdAndLatLonCoordinates(T::GeometryId  geometryId,double lat,double lon,double& grid_i,double& grid_j);
+    /*! \brief Return the four corner lat/lon coordinates of a geometry's bounding box.
+     *  \return true on success; false if the geometry is unknown. */
     bool                getGridLatLonAreaByGeometryId(T::GeometryId geometryId,T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight);
+    /*! \brief Return the approximate average cell size (degrees) for a geometry.
+     *  \return true on success; false if the geometry is unknown. */
     bool                getGridCellAverageSizeByGeometryId(T::GeometryId geometryId,double& width,double& height);
+    /*! \brief Return the axis-flip flags for a geometry.
+     *  \return true on success; false if the geometry is unknown. */
     bool                getGridDirectionsByGeometryId(T::GeometryId geometryId,bool& reverseXDirection,bool& reverseYDirection);
 
+    /*! \brief Populate \p geometryIdList with all registered geometry IDs. */
     void                getGeometryIdList(std::set<T::GeometryId>& geometryIdList);
+    /*! \brief Populate \p geometryIdList with IDs of geometries that cover the given lat/lon point. */
     void                getGeometryIdListByLatLon(double lat,double lon,std::set<T::GeometryId>& geometryIdList);
+    /*! \brief Look up the human-readable name for a geometry ID.
+     *  \return true on success; false if the geometry is unknown. */
     bool                getGeometryNameById(T::GeometryId  geometryId,std::string& name);
 
+    /*! \brief Create a new GRIB 1 grid definition object from a geometry string.  Caller owns the result. */
     GRIB1::GridDefinition*  createGrib1GridDefinition(const char *str);
+    /*! \brief Create a new GRIB 2 grid definition object from a geometry string.  Caller owns the result. */
     GRIB2::GridDefinition*  createGrib2GridDefinition(const char *str);
 
 

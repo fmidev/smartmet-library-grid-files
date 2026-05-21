@@ -10,6 +10,8 @@ int globalTraceLevel = 0;
 
 
 
+/*! \brief Constructs a trace logger and prints a START entry for the scope. */
+
 ShowFunction::ShowFunction(const char *_file,uint _line,const char *_function)
 {
   filename = _file;
@@ -31,6 +33,8 @@ ShowFunction::ShowFunction(const char *_file,uint _line,const char *_function)
 
 
 
+
+/*! \brief Destructor that prints an END entry and the elapsed time. */
 
 ShowFunction::~ShowFunction()
 {

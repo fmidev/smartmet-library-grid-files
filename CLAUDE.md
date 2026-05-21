@@ -14,7 +14,8 @@ Part of the SmartMet Server ecosystem (Finnish Meteorological Institute).
 make                # Build libsmartmet-grid-files.so
 make debug          # Build with debug flags
 make test           # Run tests (in test/ subdirectory)
-make clean          # Clean build artifacts
+make clean          # Clean build artifacts (removes doc/html/)
+make doc            # Generate Doxygen HTML documentation in doc/html/
 make rpm            # Build RPM package
 make install        # Install library and headers (PREFIX=/usr)
 make create_def     # Regenerate auto-generated GRIB definition classes

@@ -9,6 +9,8 @@ namespace SmartMet
 
 typedef Int64 Int64;
 
+/*! \brief Linearly interpolates a value between two positions. */
+
 double linearInterpolation(double wantedPosition, double position1, double position2, double value1, double value2)
 {
   try
@@ -42,6 +44,8 @@ double linearInterpolation(double wantedPosition, double position1, double posit
 
 
 
+
+/*! \brief Performs bilinear interpolation on a quadrilateral, handling missing corner values. */
 
 double linearInterpolation(double x,double y,double x1,double y1,double x2,double y2,double val_q11,double val_q21,double val_q22,double val_q12)
 {
@@ -196,6 +200,8 @@ double linearInterpolation(double x,double y,double x1,double y1,double x2,doubl
 
 
 
+/*! \brief Performs integer-based bilinear interpolation on a quadrilateral, handling missing corner values. */
+
 Int64 linearInterpolation(Int64 x,Int64 y,Int64 x1,Int64 y1,Int64 x2,Int64 y2,Int64 val_q11,Int64 val_q21,Int64 val_q22,Int64 val_q12)
 {
   try
@@ -307,6 +313,8 @@ Int64 linearInterpolation(Int64 x,Int64 y,Int64 x1,Int64 y1,Int64 x2,Int64 y2,In
 
 
 
+/*! \brief Performs bilinear interpolation by delegating to the fixed-point integer implementation. */
+
 double linearInterpolation2(double x,double y,double x1,double y1,double x2,double y2,double val_q11,double val_q21,double val_q22,double val_q12)
 {
   if (val_q11 == ParamValueMissing && val_q21 == ParamValueMissing  &&
@@ -336,6 +344,8 @@ double linearInterpolation2(double x,double y,double x1,double y1,double x2,doub
 
 
 
+/*! \brief Logarithmically interpolates a value between two positions. */
+
 double logarithmicInterpolation(double wantedPosition, double position1, double position2, double value1, double value2)
 {
   try
@@ -364,6 +374,8 @@ double logarithmicInterpolation(double wantedPosition, double position1, double 
 
 
 
+
+/*! \brief Interpolates a single parameter value between two vertical levels using the given method. */
 
 T::ParamValue levelInterpolation(T::ParamValue value1,T::ParamValue value2,double level1,double level2,double newLevel,short levelInterpolationMethod)
 {
@@ -448,6 +460,8 @@ T::ParamValue levelInterpolation(T::ParamValue value1,T::ParamValue value2,doubl
 
 
 
+
+/*! \brief Interpolates two value vectors between vertical levels using the given method. */
 
 void levelInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,double level1,double level2,double newLevel,short levelInterpolationMethod,T::ParamValue_vec& values)
 {
@@ -571,6 +585,8 @@ void levelInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,do
 
 
 
+
+/*! \brief Interpolates two grid value lists between vertical levels using the given method. */
 
 void levelInterpolation(T::GridValueList& values1,T::GridValueList& values2,double level1,double level2,double newLevel,short levelInterpolationMethod,T::GridValueList& valueList)
 {
@@ -727,6 +743,8 @@ void levelInterpolation(T::GridValueList& values1,T::GridValueList& values2,doub
 
 
 
+/*! \brief Interpolates a parameter value between two timestamps given as strings. */
+
 T::ParamValue timeInterpolation(T::ParamValue value1,T::ParamValue& value2,std::string time1,std::string time2,std::string newTime,short timeInterpolationMethod)
 {
   try
@@ -746,6 +764,8 @@ T::ParamValue timeInterpolation(T::ParamValue value1,T::ParamValue& value2,std::
 
 
 
+
+/*! \brief Interpolates a parameter value between two epoch timestamps using the given method. */
 
 T::ParamValue timeInterpolation(T::ParamValue value1,T::ParamValue& value2,time_t t1,time_t t2,time_t newTime,short timeInterpolationMethod)
 {
@@ -832,6 +852,8 @@ T::ParamValue timeInterpolation(T::ParamValue value1,T::ParamValue& value2,time_
 
 
 
+/*! \brief Interpolates two value vectors between two timestamps given as strings. */
+
 void timeInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,int width,int height,std::string time1,std::string time2,std::string newTime,short timeInterpolationMethod,T::ParamValue_vec& newValues)
 {
   try
@@ -851,6 +873,8 @@ void timeInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,int
 
 
 
+
+/*! \brief Interpolates two value vectors between two epoch timestamps using the given method. */
 
 void timeInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,int width,int height,time_t t1,time_t t2,time_t newTime,short timeInterpolationMethod,T::ParamValue_vec& newValues)
 {
@@ -970,6 +994,8 @@ void timeInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,int
 
 
 
+/*! \brief Interpolates two grid value lists between two timestamps given as strings. */
+
 void timeInterpolation(T::GridValueList& values1,T::GridValueList& values2,std::string time1,std::string time2,std::string newTime,short timeInterpolationMethod,T::GridValueList& valueList)
 {
   try
@@ -988,6 +1014,8 @@ void timeInterpolation(T::GridValueList& values1,T::GridValueList& values2,std::
 
 
 
+
+/*! \brief Interpolates two grid value lists between two epoch timestamps using the given method. */
 
 void timeInterpolation(T::GridValueList& values1,T::GridValueList& values2,time_t t1,time_t t2,time_t newTime,short timeInterpolationMethod,T::GridValueList& valueList)
 {
@@ -1120,6 +1148,8 @@ void timeInterpolation(T::GridValueList& values1,T::GridValueList& values2,time_
 
 
 
+/*! \brief Computes the lapse-rate correction for the height difference between true and model terrain. */
+
 double lapseratefix(double lapseRate,double trueHeight,double modelHeight,bool waterFlag)
 {
   try
@@ -1164,6 +1194,8 @@ double lapseratefix(double lapseRate,double trueHeight,double modelHeight,bool w
 
 
 
+
+/*! \brief Performs landscape-aware interpolation using height, lapse rate and land-sea-mask corrections. */
 
 double landscapeInterpolation(
     double height,

@@ -12,6 +12,8 @@ namespace T
 
 
 
+/*! \brief Default constructor for AttributeNode. */
+
 AttributeNode::AttributeNode()
 {
   try
@@ -25,6 +27,8 @@ AttributeNode::AttributeNode()
 
 
 
+
+/*! \brief Copy constructor for AttributeNode. */
 
 AttributeNode::AttributeNode(const AttributeNode& attributeNode)
 {
@@ -43,6 +47,8 @@ AttributeNode::AttributeNode(const AttributeNode& attributeNode)
 
 
 
+/*! \brief Constructs an AttributeNode with a C-string name and std::string value. */
+
 AttributeNode::AttributeNode(const char *name,std::string value)
 {
   try
@@ -59,6 +65,8 @@ AttributeNode::AttributeNode(const char *name,std::string value)
 
 
 
+
+/*! \brief Constructs an AttributeNode with C-string name and value. */
 
 AttributeNode::AttributeNode(const char *name,const char *value)
 {
@@ -77,6 +85,8 @@ AttributeNode::AttributeNode(const char *name,const char *value)
 
 
 
+/*! \brief Constructs an AttributeNode with only a name. */
+
 AttributeNode::AttributeNode(const char *name)
 {
   try
@@ -92,6 +102,8 @@ AttributeNode::AttributeNode(const char *name)
 
 
 
+
+/*! \brief Adds a sub-attribute with the given name and C-string value. */
 
 std::shared_ptr<AttributeNode> AttributeNode::addAttribute(const char *name,const char *value)
 {
@@ -111,6 +123,8 @@ std::shared_ptr<AttributeNode> AttributeNode::addAttribute(const char *name,cons
 
 
 
+/*! \brief Adds a sub-attribute with the given name and std::string value. */
+
 std::shared_ptr<AttributeNode> AttributeNode::addAttribute(const char *name,std::string value)
 {
   try
@@ -128,6 +142,8 @@ std::shared_ptr<AttributeNode> AttributeNode::addAttribute(const char *name,std:
 
 
 
+
+/*! \brief Adds a sub-attribute with the given name and integer value. */
 
 std::shared_ptr<AttributeNode> AttributeNode::addAttribute(const char *name,int value)
 {
@@ -149,6 +165,8 @@ std::shared_ptr<AttributeNode> AttributeNode::addAttribute(const char *name,int 
 
 
 
+/*! \brief Adds a sub-attribute with only the given name. */
+
 std::shared_ptr<AttributeNode> AttributeNode::addAttribute(const char *name)
 {
   try
@@ -167,6 +185,8 @@ std::shared_ptr<AttributeNode> AttributeNode::addAttribute(const char *name)
 
 
 
+/*! \brief Destructor for AttributeNode. */
+
 AttributeNode::~AttributeNode()
 {
   try
@@ -181,6 +201,8 @@ AttributeNode::~AttributeNode()
 
 
 
+
+/*! \brief Prints the attribute node and its sub-attributes to the stream. */
 
 void AttributeNode::print(std::ostream& stream,uint level,uint optionFlags)
 {

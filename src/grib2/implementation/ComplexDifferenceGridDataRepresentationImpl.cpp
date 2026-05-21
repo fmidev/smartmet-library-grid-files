@@ -86,6 +86,8 @@ void ComplexDifferenceGridDataRepresentationImpl::read(MemoryReader& memoryReade
 
 
 
+/*! \brief Decodes the complex-difference packed grid values into a vector of parameter values. */
+
 void ComplexDifferenceGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec& decodedValues) const
 {
   try

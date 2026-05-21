@@ -13,6 +13,7 @@ GridPointValue::GridPointValue()
 {
   try
   {
+    mTime = 0;
     mFileId = 0;
     mMessageIndex = 0;
     mValue = 0;
@@ -93,6 +94,8 @@ GridPointValue::~GridPointValue()
 
 
 
+/*! \brief Copy-assignment operator that copies fields from the given grid point value. */
+
 GridPointValue& GridPointValue::operator=(const GridPointValue& gridPointValue)
 {
   try
@@ -119,6 +122,8 @@ GridPointValue& GridPointValue::operator=(const GridPointValue& gridPointValue)
 
 
 
+
+/*! \brief Compares this grid point value against another using the specified ordering scheme. */
 
 int GridPointValue::compare(ComparisonMethod comparisonMethod,GridPointValue *gridPointValue)
 {
@@ -232,6 +237,8 @@ int GridPointValue::compare(ComparisonMethod comparisonMethod,GridPointValue *gr
 
 
 
+/*! \brief Creates a deep copy of this grid point value. */
+
 GridPointValue* GridPointValue::duplicate()
 {
   try
@@ -250,7 +257,7 @@ GridPointValue* GridPointValue::duplicate()
 
 /*! \brief The method prints the content of the current object into the given stream.
 
-        \param ostream      The output stream.
+        \param stream      The output stream.
         \param optionFlags  The printing options expressed in flag-bits.
 */
 

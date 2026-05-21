@@ -10,6 +10,8 @@ namespace Identification
 {
 
 
+/*! \brief The constructor of the class. */
+
 FmiLevelId_grib::FmiLevelId_grib()
 {
   try
@@ -24,6 +26,8 @@ FmiLevelId_grib::FmiLevelId_grib()
 
 
 
+
+/*! \brief The destructor of the class. */
 
 FmiLevelId_grib::~FmiLevelId_grib()
 {
@@ -40,6 +44,8 @@ FmiLevelId_grib::~FmiLevelId_grib()
 
 
 
+
+/*! \brief Prints the content of the object into the given stream. */
 
 void FmiLevelId_grib::print(std::ostream& stream,uint level,uint optionFlags) const
 {

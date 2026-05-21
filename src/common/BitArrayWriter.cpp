@@ -5,6 +5,8 @@ namespace SmartMet
 
 
 
+/*! \brief Constructs a BitArrayWriter over the given data buffer and bit count. */
+
 BitArrayWriter::BitArrayWriter(unsigned char *data,UInt64 numberOfBits)
 {
   try
@@ -25,6 +27,8 @@ BitArrayWriter::BitArrayWriter(unsigned char *data,UInt64 numberOfBits)
 
 
 
+/*! \brief Destructor for BitArrayWriter. */
+
 BitArrayWriter::~BitArrayWriter()
 {
   try
@@ -40,6 +44,8 @@ BitArrayWriter::~BitArrayWriter()
 
 
 
+
+/*! \brief Returns the total number of bits in the array. */
 
 UInt64 BitArrayWriter::getNumberOfBits()
 {
@@ -57,6 +63,8 @@ UInt64 BitArrayWriter::getNumberOfBits()
 
 
 
+/*! \brief Returns the current bit write position. */
+
 UInt64 BitArrayWriter::getWritePosition()
 {
   try
@@ -73,6 +81,8 @@ UInt64 BitArrayWriter::getWritePosition()
 
 
 
+
+/*! \brief Sets the current bit write position, with range checking. */
 
 void BitArrayWriter::setWritePosition(UInt64 writePosition)
 {
@@ -97,6 +107,8 @@ void BitArrayWriter::setWritePosition(UInt64 writePosition)
 
 
 
+
+/*! \brief Writes a single bit value into the bit array. */
 
 void BitArrayWriter:: writeBit(bool bitOn)
 {
@@ -124,6 +136,8 @@ void BitArrayWriter:: writeBit(bool bitOn)
 
 
 
+
+/*! \brief Writes the given number of bits from the value into the bit array. */
 
 void BitArrayWriter::writeBits(unsigned int numberOfBits,UInt64 value)
 {
@@ -166,6 +180,8 @@ void BitArrayWriter::writeBits(unsigned int numberOfBits,UInt64 value)
 
 
 
+
+/*! \brief Writes a single bit without bounds checking. */
 
 void BitArrayWriter::writeBitNoCheck(bool bitOn)
 {

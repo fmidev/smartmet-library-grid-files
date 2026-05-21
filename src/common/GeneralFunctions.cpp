@@ -41,6 +41,8 @@ namespace SmartMet
 Fmi::TimeZones itsTimeZones;
 
 
+/*! \brief Converts an unsigned 64-bit integer to a hexadecimal string. */
+
 std::string uint64_toHex(UInt64 value)
 {
   try
@@ -234,6 +236,8 @@ int time_compare(time_t v1, time_t v2)
 #endif
 
 
+/*! \brief Sleeps for the specified number of seconds and microseconds. */
+
 void time_usleep(int _sec, int _usec)
 {
   timespec r1, r2;
@@ -243,6 +247,8 @@ void time_usleep(int _sec, int _usec)
 }
 
 
+
+/*! \brief Computes x raised to an integer power y. */
 
 double int_power(double x, int y)
 {
@@ -274,6 +280,8 @@ double int_power(double x, int y)
 }
 
 
+
+/*! \brief Converts IEEE floating-point values to IBM floating-point format. */
 
 void ieee2ibm(void *to, void *from, int len)
 {
@@ -323,6 +331,8 @@ void ieee2ibm(void *to, void *from, int len)
 
 
 
+/*! \brief Converts a single IEEE float to IBM float format. */
+
 float ieee2ibm(float value)
 {
   try
@@ -338,6 +348,8 @@ float ieee2ibm(float value)
 }
 
 
+
+/*! \brief Converts an IBM float to IEEE float format. */
 
 float ibm2ieee(float ibmFloat)
 {
@@ -365,6 +377,8 @@ float ibm2ieee(float ibmFloat)
 
 
 
+/*! \brief Computes n raised to the power s as used by the GRIB scaling formula. */
+
 double grib_power(long s, long n)
 {
   try
@@ -390,6 +404,8 @@ double grib_power(long s, long n)
 
 
 
+/*! \brief Returns an indentation string of 2*size spaces. */
+
 std::string space(uint size)
 {
   try
@@ -403,6 +419,8 @@ std::string space(uint size)
 }
 
 
+
+/*! \brief Returns the current wall-clock time in microseconds since the epoch. */
 
 UInt64 getTime()
 {
@@ -420,6 +438,8 @@ UInt64 getTime()
 
 
 
+/*! \brief Returns the modification time of the given file. */
+
 time_t getFileModificationTime(const char *filename)
 {
   try
@@ -436,6 +456,8 @@ time_t getFileModificationTime(const char *filename)
 }
 
 
+
+/*! \brief Copies a source file to a target file, aborting if shutdown is requested. */
 
 void copyFile(const char *sourceFileName,const char *targetFileName,bool& shutdownRequested)
 {
@@ -492,6 +514,8 @@ void copyFile(const char *sourceFileName,const char *targetFileName,bool& shutdo
 
 
 
+/*! \brief Returns the size in bytes of the named file, or -1 on error. */
+
 Int64 getFileSize(const char *filename)
 {
   try
@@ -512,6 +536,8 @@ Int64 getFileSize(const char *filename)
 }
 
 
+
+/*! \brief Returns the size in bytes of an open FILE stream, or -1 on error. */
 
 Int64 getFileSize(FILE *file)
 {
@@ -536,6 +562,8 @@ Int64 getFileSize(FILE *file)
 
 
 
+/*! \brief Replaces all occurrences of a substring within a string. */
+
 std::string stringReplaceAll(const std::string& st,const std::string& oldStr,std::string newStr)
 {
   try
@@ -556,6 +584,8 @@ std::string stringReplaceAll(const std::string& st,const std::string& oldStr,std
 }
 
 
+
+/*! \brief Computes a numeric hash id from the first len characters of a string. */
 
 uint stringToId(const char *str, uint len)
 {
@@ -581,6 +611,8 @@ uint stringToId(const char *str, uint len)
 
 
 
+/*! \brief Computes a numeric hash id from a null-terminated string. */
+
 uint stringToId(const char *str)
 {
   try
@@ -598,6 +630,8 @@ uint stringToId(const char *str)
 
 
 
+/*! \brief Extracts an integer from a substring of a C string. */
+
 int getInt(const char *str, uint startIdx, uint len)
 {
   try
@@ -614,6 +648,8 @@ int getInt(const char *str, uint startIdx, uint len)
 }
 
 
+
+/*! \brief Converts a broken-down local time in the given timezone to a UTC time_t. */
 
 time_t mktime_tz(struct tm *tm, const char *tzone)
 {
@@ -645,6 +681,8 @@ time_t mktime_tz(struct tm *tm, const char *tzone)
 }
 
 
+
+/*! \brief Fills a tm struct with the local time in the given timezone. */
 
 struct tm *localtime_tz(time_t t, struct tm *tt, const char *tzone)
 {
@@ -687,6 +725,8 @@ struct tm *localtime_tz(time_t t, struct tm *tt, const char *tzone)
 
 
 
+/*! \brief Converts a local ISO timestamp string in the given timezone to a UTC time_t. */
+
 time_t localTimeToTimeT(const std::string& localTime, const char *tzone)
 {
   try
@@ -722,6 +762,8 @@ time_t localTimeToTimeT(const std::string& localTime, const char *tzone)
 
 
 
+/*! \brief Converts a UTC ISO timestamp C string to a time_t. */
+
 time_t utcTimeToTimeT(const char *utcTime)
 {
   try
@@ -754,6 +796,8 @@ time_t utcTimeToTimeT(const char *utcTime)
 
 
 
+/*! \brief Converts a UTC ISO timestamp std::string to a time_t. */
+
 time_t utcTimeToTimeT(const std::string& utcTime)
 {
   try
@@ -769,6 +813,8 @@ time_t utcTimeToTimeT(const std::string& utcTime)
 }
 
 
+
+/*! \brief Converts year/month/day/hour/minute/second UTC components to a time_t. */
 
 time_t utcTimeToTimeT(int year,int month,int day,int hour,int minute,int second)
 {
@@ -794,6 +840,8 @@ time_t utcTimeToTimeT(int year,int month,int day,int hour,int minute,int second)
 
 
 
+/*! \brief Splits an ISO timestamp into year, month, day, hour, minute and second integers. */
+
 void splitTimeString(const std::string& timeStr, int &year, int &month, int &day, int &hour, int &minute, int &second)
 {
   try
@@ -818,6 +866,8 @@ void splitTimeString(const std::string& timeStr, int &year, int &month, int &day
 
 
 
+/*! \brief Splits an ISO timestamp into compact short/uchar date and time components. */
+
 void splitTimeString(const std::string& timeStr, short &year, uchar &month, uchar &day, uchar &hour, uchar &minute, uchar &second)
 {
   try
@@ -841,6 +891,8 @@ void splitTimeString(const std::string& timeStr, short &year, uchar &month, ucha
 }
 
 
+
+/*! \brief Formats a time_t as a local-time ISO timestamp string in the given timezone. */
 
 std::string localTimeFromTimeT(time_t t, const char *tzone)
 {
@@ -869,6 +921,8 @@ std::string localTimeFromTimeT(time_t t, const char *tzone)
 
 
 
+/*! \brief Formats a time_t as a UTC ISO timestamp string. */
+
 std::string utcTimeFromTimeT(time_t t)
 {
   try
@@ -883,6 +937,8 @@ std::string utcTimeFromTimeT(time_t t)
 
 
 
+/*! \brief Converts a local-time ISO timestamp in the given timezone to a UTC ISO timestamp. */
+
 std::string localTimeToUtcTime(const std::string& localTime, const char *tzone)
 {
   try
@@ -895,6 +951,8 @@ std::string localTimeToUtcTime(const std::string& localTime, const char *tzone)
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
+/*! \brief Converts a local DateTime in the given timezone to UTC. */
 
 Fmi::DateTime localTimeToUtc(const Fmi::DateTime& localTime,Fmi::TimeZonePtr tz)
 {
@@ -911,6 +969,8 @@ Fmi::DateTime localTimeToUtc(const Fmi::DateTime& localTime,Fmi::TimeZonePtr tz)
   }
 }
 
+
+/*! \brief Converts a local-time ISO string in the given timezone to a UTC ISO string. */
 
 std::string localTimeToUtc(const std::string& localTime, Fmi::TimeZonePtr tz)
 {
@@ -929,6 +989,8 @@ std::string localTimeToUtc(const std::string& localTime, Fmi::TimeZonePtr tz)
 
 
 
+/*! \brief Converts a UTC ISO timestamp to a local-time ISO timestamp in the given timezone. */
+
 std::string utcTimeToLocalTime(const std::string& utcTime, const char *tzone)
 {
   try
@@ -944,6 +1006,8 @@ std::string utcTimeToLocalTime(const std::string& utcTime, const char *tzone)
 
 
 
+/*! \brief Converts an Fmi::DateTime to a time_t. */
+
 time_t toTimeT(Fmi::DateTime tim)
 {
   try
@@ -957,6 +1021,8 @@ time_t toTimeT(Fmi::DateTime tim)
 }
 
 
+
+/*! \brief Returns the given UTC ISO timestamp shifted by the specified number of seconds. */
 
 std::string addSeconds(const std::string& timeStr, int seconds)
 {
@@ -974,6 +1040,8 @@ std::string addSeconds(const std::string& timeStr, int seconds)
 
 
 
+/*! \brief Parses a C string into an 8-bit signed integer. */
+
 char toInt8(const char *str)
 {
   try
@@ -989,6 +1057,8 @@ char toInt8(const char *str)
 }
 
 
+
+/*! \brief Parses a C string into a 16-bit signed integer. */
 
 short toInt16(const char *str)
 {
@@ -1006,6 +1076,8 @@ short toInt16(const char *str)
 
 
 
+/*! \brief Parses a C string into a 32-bit signed integer. */
+
 int toInt32(const char *str)
 {
   try
@@ -1021,6 +1093,8 @@ int toInt32(const char *str)
 }
 
 
+
+/*! \brief Parses a C string into a 64-bit signed integer. */
 
 Int64 toInt64(const char *str)
 {
@@ -1038,6 +1112,8 @@ Int64 toInt64(const char *str)
 
 
 
+/*! \brief Parses a C string into a size_t value. */
+
 size_t toSize_t(const char *str)
 {
   try
@@ -1053,6 +1129,8 @@ size_t toSize_t(const char *str)
 }
 
 
+
+/*! \brief Parses a C string into an 8-bit unsigned integer. */
 
 uchar toUInt8(const char *str)
 {
@@ -1070,6 +1148,8 @@ uchar toUInt8(const char *str)
 
 
 
+/*! \brief Parses a C string into a 16-bit unsigned integer. */
+
 ushort toUInt16(const char *str)
 {
   try
@@ -1085,6 +1165,8 @@ ushort toUInt16(const char *str)
 }
 
 
+
+/*! \brief Parses a C string into a 32-bit unsigned integer. */
 
 uint toUInt32(const char *str)
 {
@@ -1102,6 +1184,8 @@ uint toUInt32(const char *str)
 
 
 
+/*! \brief Parses a C string into a 64-bit unsigned integer. */
+
 UInt64 toUInt64(const char *str)
 {
   try
@@ -1117,6 +1201,8 @@ UInt64 toUInt64(const char *str)
 }
 
 
+
+/*! \brief Parses a C string into a double using a locale-independent custom parser. */
 
 double toDouble2(const char* str)
 {
@@ -1159,6 +1245,8 @@ double toDouble2(const char* str)
 
 
 
+/*! \brief Parses a C string into a float. */
+
 float toFloat(const char *str)
 {
   try
@@ -1179,6 +1267,8 @@ float toFloat(const char *str)
 
 
 
+
+/*! \brief Parses a C string into a double. */
 
 double toDouble(const char *str)
 {
@@ -1201,6 +1291,8 @@ double toDouble(const char *str)
 
 
 
+/*! \brief Parses an std::string into an 8-bit signed integer. */
+
 char toInt8(const std::string &str)
 {
   try
@@ -1214,6 +1306,8 @@ char toInt8(const std::string &str)
 }
 
 
+
+/*! \brief Parses an std::string into a 16-bit signed integer. */
 
 short toInt16(const std::string &str)
 {
@@ -1229,6 +1323,8 @@ short toInt16(const std::string &str)
 
 
 
+/*! \brief Parses an std::string into a 32-bit signed integer. */
+
 int toInt32(const std::string &str)
 {
   try
@@ -1242,6 +1338,8 @@ int toInt32(const std::string &str)
 }
 
 
+
+/*! \brief Parses an std::string into a 64-bit signed integer. */
 
 Int64 toInt64(const std::string &str)
 {
@@ -1257,6 +1355,8 @@ Int64 toInt64(const std::string &str)
 
 
 
+/*! \brief Parses an std::string into an 8-bit unsigned integer. */
+
 uchar toUInt8(const std::string &str)
 {
   try
@@ -1270,6 +1370,8 @@ uchar toUInt8(const std::string &str)
 }
 
 
+
+/*! \brief Parses an std::string into a 16-bit unsigned integer. */
 
 ushort toUInt16(const std::string &str)
 {
@@ -1285,6 +1387,8 @@ ushort toUInt16(const std::string &str)
 
 
 
+/*! \brief Parses an std::string into a 32-bit unsigned integer. */
+
 uint toUInt32(const std::string &str)
 {
   try
@@ -1298,6 +1402,8 @@ uint toUInt32(const std::string &str)
 }
 
 
+
+/*! \brief Parses an std::string into a 64-bit unsigned integer. */
 
 UInt64 toUInt64(const std::string &str)
 {
@@ -1313,6 +1419,8 @@ UInt64 toUInt64(const std::string &str)
 
 
 
+/*! \brief Parses an std::string into a float. */
+
 float toFloat(const std::string &str)
 {
   try
@@ -1326,6 +1434,8 @@ float toFloat(const std::string &str)
 }
 
 
+
+/*! \brief Parses an std::string into a double. */
 
 double toDouble(const std::string &str)
 {
@@ -1341,6 +1451,8 @@ double toDouble(const std::string &str)
 
 
 
+/*! \brief Parses an std::string into a size_t value. */
+
 size_t toSize_t(const std::string &str)
 {
   try
@@ -1354,6 +1466,8 @@ size_t toSize_t(const std::string &str)
 }
 
 
+
+/*! \brief Returns a placeholder string for a 16-byte char array value. */
 
 std::string toString(std::array<char, 16> value)
 {
@@ -1370,6 +1484,8 @@ std::string toString(std::array<char, 16> value)
 
 
 
+/*! \brief Converts an int8_t value to its string representation. */
+
 std::string toString(std::int8_t value)
 {
   try
@@ -1383,6 +1499,8 @@ std::string toString(std::int8_t value)
 }
 
 
+
+/*! \brief Converts an int16_t value to its string representation. */
 
 std::string toString(std::int16_t value)
 {
@@ -1398,6 +1516,8 @@ std::string toString(std::int16_t value)
 
 
 
+/*! \brief Converts an int32_t value to its string representation. */
+
 std::string toString(std::int32_t value)
 {
   try
@@ -1411,6 +1531,8 @@ std::string toString(std::int32_t value)
 }
 
 
+
+/*! \brief Converts an int64_t value to its string representation. */
 
 std::string toString(std::int64_t value)
 {
@@ -1426,6 +1548,8 @@ std::string toString(std::int64_t value)
 
 
 
+/*! \brief Converts a uint8_t value to its string representation. */
+
 std::string toString(std::uint8_t value)
 {
   try
@@ -1439,6 +1563,8 @@ std::string toString(std::uint8_t value)
 }
 
 
+
+/*! \brief Converts a uint16_t value to its string representation. */
 
 std::string toString(std::uint16_t value)
 {
@@ -1454,6 +1580,8 @@ std::string toString(std::uint16_t value)
 
 
 
+/*! \brief Converts a uint32_t value to its string representation. */
+
 std::string toString(std::uint32_t value)
 {
   try
@@ -1468,6 +1596,8 @@ std::string toString(std::uint32_t value)
 
 
 
+/*! \brief Converts a uint64_t value to its string representation. */
+
 std::string toString(std::uint64_t value)
 {
   try
@@ -1481,6 +1611,8 @@ std::string toString(std::uint64_t value)
 }
 
 
+
+/*! \brief Converts a float value to a string with three decimal digits. */
 
 std::string toString(float value)
 {
@@ -1498,6 +1630,8 @@ std::string toString(float value)
 
 
 
+/*! \brief Converts a double value to a string with three decimal digits. */
+
 std::string toString(double value)
 {
   try
@@ -1514,6 +1648,8 @@ std::string toString(double value)
 
 
 
+/*! \brief Returns the given string unchanged. */
+
 std::string toString(const std::string& value)
 {
   try
@@ -1527,6 +1663,8 @@ std::string toString(const std::string& value)
 }
 
 
+
+/*! \brief Converts an optional UInt8 to a string, returning empty if unset. */
 
 std::string toString(T::UInt8_opt value)
 {
@@ -1544,6 +1682,8 @@ std::string toString(T::UInt8_opt value)
 
 
 
+/*! \brief Converts an optional UInt16 to a string, returning empty if unset. */
+
 std::string toString(T::UInt16_opt value)
 {
   try
@@ -1559,6 +1699,8 @@ std::string toString(T::UInt16_opt value)
 }
 
 
+
+/*! \brief Converts an optional UInt32 to a string, returning empty if unset. */
 
 std::string toString(T::UInt32_opt value)
 {
@@ -1576,6 +1718,8 @@ std::string toString(T::UInt32_opt value)
 
 
 
+/*! \brief Converts an optional UInt64 to a string, returning empty if unset. */
+
 std::string toString(T::UInt64_opt value)
 {
   try
@@ -1591,6 +1735,8 @@ std::string toString(T::UInt64_opt value)
 }
 
 
+
+/*! \brief Converts an optional Int8 to a string, returning empty if unset. */
 
 std::string toString(T::Int8_opt value)
 {
@@ -1608,6 +1754,8 @@ std::string toString(T::Int8_opt value)
 
 
 
+/*! \brief Converts an optional Int16 to a string, returning empty if unset. */
+
 std::string toString(T::Int16_opt value)
 {
   try
@@ -1623,6 +1771,8 @@ std::string toString(T::Int16_opt value)
 }
 
 
+
+/*! \brief Converts an optional Int32 to a string, returning empty if unset. */
 
 std::string toString(T::Int32_opt value)
 {
@@ -1640,6 +1790,8 @@ std::string toString(T::Int32_opt value)
 
 
 
+/*! \brief Converts an optional Int64 to a string, returning empty if unset. */
+
 std::string toString(T::Int64_opt value)
 {
   try
@@ -1655,6 +1807,8 @@ std::string toString(T::Int64_opt value)
 }
 
 
+/*! \brief Converts an Fmi::DateTime to an ISO timestamp string. */
+
 std::string toString(Fmi::DateTime time)
 {
   try
@@ -1668,6 +1822,8 @@ std::string toString(Fmi::DateTime time)
 }
 
 
+
+/*! \brief Returns a lower-case copy of the given C string. */
 
 std::string toLowerString(const char *sourceString)
 {
@@ -1683,6 +1839,8 @@ std::string toLowerString(const char *sourceString)
 }
 
 
+
+/*! \brief Returns a lower-case copy of the given std::string. */
 
 std::string toLowerString(const std::string& sourceString)
 {
@@ -1706,6 +1864,8 @@ std::string toLowerString(const std::string& sourceString)
 
 
 
+/*! \brief Returns an upper-case copy of the given C string. */
+
 std::string toUpperString(const char *sourceString)
 {
   try
@@ -1720,6 +1880,8 @@ std::string toUpperString(const char *sourceString)
 }
 
 
+
+/*! \brief Returns an upper-case copy of the given std::string. */
 
 std::string toUpperString(const std::string& sourceString)
 {
@@ -1743,6 +1905,8 @@ std::string toUpperString(const std::string& sourceString)
 
 
 
+
+/*! \brief Parses an ISO time string into an Fmi::DateTime value. */
 
 Fmi::DateTime toTimeStamp(T::TimeString timeStr)
 {
@@ -1779,6 +1943,8 @@ Fmi::DateTime toTimeStamp(T::TimeString timeStr)
 
 
 
+/*! \brief Compresses a memory buffer using zlib. */
+
 int compressData(void *_data, uint _dataSize, void *_compressedData, uint &_compressedDataSize)
 {
   try
@@ -1802,6 +1968,8 @@ int compressData(void *_data, uint _dataSize, void *_compressedData, uint &_comp
 }
 
 
+
+/*! \brief Decompresses a zlib-compressed memory buffer. */
 
 int decompressData(void *_compressedData,
                    uint _compressedDataSize,
@@ -1829,6 +1997,8 @@ int decompressData(void *_compressedData,
 }
 
 
+
+/*! \brief Parses a delimited latitude/longitude string into a coordinate vector. */
 
 void parseLatLonCoordinates(const std::string& latLonCoordinates, std::vector<T::Coordinate> &coordinates)
 {
@@ -1871,6 +2041,8 @@ void parseLatLonCoordinates(const std::string& latLonCoordinates, std::vector<T:
 
 
 
+/*! \brief Splits a unit string into a numeric value and a unit name. */
+
 void parseUnits(const char *unitString,double& value,std::string& units)
 {
   try
@@ -1911,6 +2083,8 @@ void parseUnits(const char *unitString,double& value,std::string& units)
 }
 
 
+
+/*! \brief Parses a NetCDF time-unit string into reference date components and unit size. */
 
 void parseNetCdfTime(std::string& timeStr,int& year,int& month,int& day,int& hour,int& minute,int& second,time_t& unitSize)
 {
@@ -1967,6 +2141,8 @@ void parseNetCdfTime(std::string& timeStr,int& year,int& month,int& day,int& hou
 
 
 
+/*! \brief Splits a C string by a separator into a vector of strings. */
+
 void splitString(const char *str, char separator, std::vector<std::string> &partList)
 {
   try
@@ -2007,6 +2183,8 @@ void splitString(const char *str, char separator, std::vector<std::string> &part
 
 
 
+/*! \brief Splits an std::string by a separator into a vector of strings. */
+
 void splitString(const std::string& str, char separator, std::vector<std::string> &partList)
 {
   try
@@ -2020,6 +2198,8 @@ void splitString(const std::string& str, char separator, std::vector<std::string
 }
 
 
+
+/*! \brief Splits a C string by a separator into a set of strings. */
 
 void splitString(const char *str, char separator, std::set<std::string> &partList)
 {
@@ -2061,6 +2241,8 @@ void splitString(const char *str, char separator, std::set<std::string> &partLis
 
 
 
+/*! \brief Splits an std::string by a separator into a set of strings. */
+
 void splitString(const std::string& str, char separator, std::set<std::string> &partList)
 {
   try
@@ -2074,6 +2256,8 @@ void splitString(const std::string& str, char separator, std::set<std::string> &
 }
 
 
+
+/*! \brief Splits a C string by a separator into a vector of unsigned integers. */
 
 void splitString(const char *str, char separator, std::vector<uint> &partList)
 {
@@ -2115,6 +2299,8 @@ void splitString(const char *str, char separator, std::vector<uint> &partList)
 
 
 
+/*! \brief Splits an std::string by a separator into a vector of unsigned integers. */
+
 void splitString(const std::string& str, char separator, std::vector<uint> &partList)
 {
   try
@@ -2128,6 +2314,8 @@ void splitString(const std::string& str, char separator, std::vector<uint> &part
 }
 
 
+
+/*! \brief Splits a C string by a separator into a vector of integers. */
 
 void splitString(const char *str, char separator, std::vector<int> &partList)
 {
@@ -2169,6 +2357,8 @@ void splitString(const char *str, char separator, std::vector<int> &partList)
 
 
 
+/*! \brief Splits an std::string by a separator into a vector of integers. */
+
 void splitString(const std::string& str, char separator, std::vector<int> &partList)
 {
   try
@@ -2182,6 +2372,8 @@ void splitString(const std::string& str, char separator, std::vector<int> &partL
 }
 
 
+
+/*! \brief Splits a C string by a separator into a vector of doubles. */
 
 void splitString(const char *str, char separator, std::vector<double> &partList)
 {
@@ -2223,6 +2415,8 @@ void splitString(const char *str, char separator, std::vector<double> &partList)
 
 
 
+/*! \brief Splits an std::string by a separator into a vector of doubles. */
+
 void splitString(const std::string& str, char separator, std::vector<double> &partList)
 {
   try
@@ -2236,6 +2430,8 @@ void splitString(const std::string& str, char separator, std::vector<double> &pa
 }
 
 
+
+/*! \brief Splits a C string by a separator into a vector of floats. */
 
 void splitString(const char *str, char separator, std::vector<float> &partList)
 {
@@ -2277,6 +2473,8 @@ void splitString(const char *str, char separator, std::vector<float> &partList)
 
 
 
+/*! \brief Splits an std::string by a separator into a vector of floats. */
+
 void splitString(const std::string& str, char separator, std::vector<float> &partList)
 {
   try
@@ -2290,6 +2488,8 @@ void splitString(const std::string& str, char separator, std::vector<float> &par
 }
 
 
+
+/*! \brief Splits a C string by a separator into a set of floats. */
 
 void splitString(const char *str, char separator, std::set<float> &partList)
 {
@@ -2331,6 +2531,8 @@ void splitString(const char *str, char separator, std::set<float> &partList)
 
 
 
+/*! \brief Splits an std::string by a separator into a set of floats. */
+
 void splitString(const std::string& str, char separator, std::set<float> &partList)
 {
   try
@@ -2344,6 +2546,8 @@ void splitString(const std::string& str, char separator, std::set<float> &partLi
 }
 
 
+
+/*! \brief Splits a C string by a separator into a set of integers. */
 
 void splitString(const char *str, char separator, std::set<int> &partList)
 {
@@ -2385,6 +2589,8 @@ void splitString(const char *str, char separator, std::set<int> &partList)
 
 
 
+/*! \brief Splits an std::string by a separator into a set of integers. */
+
 void splitString(const std::string& str, char separator, std::set<int> &partList)
 {
   try
@@ -2398,6 +2604,8 @@ void splitString(const std::string& str, char separator, std::set<int> &partList
 }
 
 
+
+/*! \brief Splits a C string by a separator into a set of doubles. */
 
 void splitString(const char *str, char separator, std::set<double> &partList)
 {
@@ -2439,6 +2647,8 @@ void splitString(const char *str, char separator, std::set<double> &partList)
 
 
 
+/*! \brief Splits an std::string by a separator into a set of doubles. */
+
 void splitString(const std::string& str, char separator, std::set<double> &partList)
 {
   try
@@ -2452,6 +2662,8 @@ void splitString(const std::string& str, char separator, std::set<double> &partL
 }
 
 
+
+/*! \brief Expands a slash- and dash-delimited number range string into a list of numbers. */
 
 void splitNumbers(const char *str,std::vector<std::string>& numbers)
 {
@@ -2480,6 +2692,8 @@ void splitNumbers(const char *str,std::vector<std::string>& numbers)
   }
 }
 
+
+/*! \brief Splits a C string into separate lines by newline characters. */
 
 void lineSplit(const char *str,std::vector<std::string> &lines)
 {
@@ -2521,6 +2735,8 @@ void lineSplit(const char *str,std::vector<std::string> &lines)
 
 
 
+/*! \brief Returns the canonical absolute path for the given filename. */
+
 std::string getAbsoluteFilePath(const std::string& filename)
 {
   try
@@ -2545,6 +2761,8 @@ std::string getAbsoluteFilePath(const std::string& filename)
 
 
 
+/*! \brief Returns the directory part of the given file path. */
+
 std::string getFileDir(const std::string& filename)
 {
   try
@@ -2566,6 +2784,8 @@ std::string getFileDir(const std::string& filename)
 
 
 
+/*! \brief Returns true if the string matches any of the supplied glob patterns. */
+
 bool patternMatch(const char *str, std::vector<std::string> &patterns)
 {
   try
@@ -2584,6 +2804,8 @@ bool patternMatch(const char *str, std::vector<std::string> &patterns)
 }
 
 
+
+/*! \brief Recursively lists files in a directory that match the given patterns. */
 
 void getFileList(const char *dirName,
                  std::vector<std::string> &filePatterns,
@@ -2664,6 +2886,8 @@ void getFileList(const char *dirName,
 
 
 
+/*! \brief Parses a time period string such as "5m" or "2h" into seconds. */
+
 int timePeriodToSeconds(const char *timePeriod)
 {
   try
@@ -2716,6 +2940,8 @@ int timePeriodToSeconds(const char *timePeriod)
 
 
 
+/*! \brief Joins a list of strings with the given separator. */
+
 std::string toString(std::list<std::string> &parts, char separator)
 {
   try
@@ -2736,6 +2962,8 @@ std::string toString(std::list<std::string> &parts, char separator)
 }
 
 
+
+/*! \brief Joins a set of integers with the given separator. */
 
 std::string toString(std::set<int> &parts, char separator)
 {
@@ -2758,6 +2986,8 @@ std::string toString(std::set<int> &parts, char separator)
 
 
 
+/*! \brief Joins a set of floats with the given separator. */
+
 std::string toString(std::set<float> &parts, char separator)
 {
   try
@@ -2778,6 +3008,8 @@ std::string toString(std::set<float> &parts, char separator)
 }
 
 
+
+/*! \brief Serialises area coordinates as a string with two-level separators. */
 
 std::string toString(T::AreaCoordinates &coordinates, char separator1, char separator2)
 {
@@ -2804,6 +3036,8 @@ std::string toString(T::AreaCoordinates &coordinates, char separator1, char sepa
 }
 
 
+
+/*! \brief Parses an area coordinate string into nested coordinate lists. */
 
 void parseCoordinates(const std::string& coordinateStr,
                       char separator1,
@@ -2837,6 +3071,8 @@ void parseCoordinates(const std::string& coordinateStr,
 }
 
 
+
+/*! \brief Adjusts the level range so the new level fits inside it by scaling by powers of ten. */
 
 void tuneLevels(int &level1, int &level2, int newLevel)
 {
@@ -2876,6 +3112,8 @@ void tuneLevels(int &level1, int &level2, int newLevel)
 
 
 
+/*! \brief Encodes a binary buffer as a base64 string. */
+
 std::string base64_encode(unsigned char *data, size_t dataSize)
 {
   try
@@ -2903,6 +3141,8 @@ std::string base64_encode(unsigned char *data, size_t dataSize)
 }
 
 
+
+/*! \brief Reads a file and returns its contents as a base64-encoded string. */
 
 std::string fileToBase64(const char *filename)
 {
@@ -2952,6 +3192,8 @@ std::string fileToBase64(const char *filename)
 
 
 
+
+/*! \brief Reads a semicolon-separated CSV file into rows of fields. */
 
 void readCsvFile(const char *filename,std::vector<std::vector<std::string>>& records)
 {
@@ -3019,6 +3261,8 @@ void readCsvFile(const char *filename,std::vector<std::vector<std::string>>& rec
 
 
 
+/*! \brief Reads the last N lines from the end of a text file. */
+
 void readEofLines(const char *filename,uint numberOfLines,std::vector<std::string>& lines)
 {
   try
@@ -3073,6 +3317,8 @@ void readEofLines(const char *filename,uint numberOfLines,std::vector<std::strin
 
 
 
+/*! \brief Reads an 8-bit unsigned integer from a memory buffer at the given offset. */
+
 std::uint8_t read_uint8(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos)
 {
   try
@@ -3100,6 +3346,8 @@ std::uint8_t read_uint8(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos)
 
 
 
+
+/*! \brief Reads a 16-bit big-endian unsigned integer from a memory buffer. */
 
 std::uint16_t read_uint16(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos)
 {
@@ -3131,6 +3379,8 @@ std::uint16_t read_uint16(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos)
 
 
 
+/*! \brief Reads a 24-bit big-endian unsigned integer from a memory buffer. */
+
 std::uint32_t read_uint24(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos)
 {
   try
@@ -3161,6 +3411,8 @@ std::uint32_t read_uint24(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos)
 
 
 
+
+/*! \brief Reads a 32-bit big-endian unsigned integer from a memory buffer. */
 
 std::uint32_t read_uint32(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos)
 {
@@ -3194,6 +3446,8 @@ std::uint32_t read_uint32(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos)
 
 
 
+
+/*! \brief Reads a 64-bit big-endian unsigned integer from a memory buffer. */
 
 std::uint64_t read_uint64(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos)
 {
@@ -3232,6 +3486,8 @@ std::uint64_t read_uint64(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos)
 
 
 
+/*! \brief Reads an 8-bit signed integer from a memory buffer. */
+
 std::int8_t read_int8(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos)
 {
   try
@@ -3260,6 +3516,8 @@ std::int8_t read_int8(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos)
 
 
 
+
+/*! \brief Reads a 16-bit big-endian signed integer from a memory buffer. */
 
 std::int16_t read_int16(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos)
 {
@@ -3291,6 +3549,8 @@ std::int16_t read_int16(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos)
 
 
 
+
+/*! \brief Reads a 24-bit big-endian signed integer from a memory buffer. */
 
 std::int32_t read_int24(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos)
 {
@@ -3325,6 +3585,8 @@ std::int32_t read_int24(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos)
 
 
 
+/*! \brief Reads a 32-bit big-endian signed integer from a memory buffer. */
+
 std::int32_t read_int32(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos)
 {
   try
@@ -3356,6 +3618,8 @@ std::int32_t read_int32(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos)
 
 
 
+
+/*! \brief Reads a 32-bit float in reversed byte order from a memory buffer. */
 
 std::float_t read_float(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos)
 {
@@ -3392,6 +3656,8 @@ std::float_t read_float(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos)
 
 
 
+
+/*! \brief Reads a 64-bit double in reversed byte order from a memory buffer. */
 
 std::double_t read_double(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos)
 {
@@ -3432,6 +3698,8 @@ std::double_t read_double(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos)
 
 
 
+/*! \brief Reads a 4-byte IBM-format float from a memory buffer and converts it to IEEE. */
+
 std::float_t read_ibmFloat(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos)
 {
   try
@@ -3470,12 +3738,16 @@ std::float_t read_ibmFloat(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos
 
 
 
+/*! \brief Returns the mathematical floor-based modulo of x by y. */
+
 double mod(double x,double y)
 {
   return (x - y * floor(x / y));
 }
 
 
+
+/*! \brief Returns true if the given year is a Gregorian leap year. */
 
 bool isGregorianLeapYear(int year)
 {
@@ -3484,6 +3756,8 @@ bool isGregorianLeapYear(int year)
 
 
 
+
+/*! \brief Converts a Gregorian date to a Julian day number. */
 
 double gregorian_to_jd(int year, int month, int day)
 {
@@ -3507,6 +3781,8 @@ double gregorian_to_jd(int year, int month, int day)
 
 
 // Calculate Gregorian calendar date from Julian day number
+
+/*! \brief Converts a Julian day number into a Gregorian year/month/day. */
 
 void jdnToGregorian(double jd,int& year, int& month, int& day)
 {
@@ -3548,6 +3824,8 @@ void jdnToGregorian(double jd,int& year, int& month, int& day)
 
 
 
+/*! \brief Converts a Gregorian date to a Julian day number using an integer formula. */
+
 double gregorianToJdn(int year, int month, int day)
 {
   try
@@ -3562,6 +3840,8 @@ double gregorianToJdn(int year, int month, int day)
 
 
 
+
+/*! \brief Converts a Julian-calendar date to a Julian day number. */
 
 double julianToJdn(int year, int month, int day)
 {
@@ -3578,6 +3858,8 @@ double julianToJdn(int year, int month, int day)
 
 
 
+
+/*! \brief Converts a Julian day number to a Julian-calendar year/month/day. */
 
 void jdnToJulian(double J,int& year, int& month, int& day)
 {
@@ -3611,6 +3893,8 @@ void jdnToJulian(double J,int& year, int& month, int& day)
 
 
 
+
+/*! \brief Returns a time_t offset from a reference date, handling Julian and Gregorian calendars. */
 
 time_t getGregorianTimeT(int refYear, int refMonth, int refDay,int refHour, int refMinute, int refSecond,time_t plusSeconds)
 {
@@ -3665,6 +3949,8 @@ time_t getGregorianTimeT(int refYear, int refMonth, int refDay,int refHour, int 
 
 
 
+/*! \brief Returns the closest index in a descending float vector for the given value. */
+
 int getClosestIndexPos(FloatVec& values,float value)
 {
   try
@@ -3716,6 +4002,8 @@ int getClosestIndexPos(FloatVec& values,float value)
 
 
 
+
+/*! \brief Returns the closest index in an ascending float vector for the given value. */
 
 int getClosestIndexNeg(FloatVec& values,float value)
 {
@@ -3770,6 +4058,8 @@ int getClosestIndexNeg(FloatVec& values,float value)
 
 
 
+/*! \brief Returns the closest index in a sorted float vector for the given value. */
+
 int getClosestIndex(FloatVec& values,float value)
 {
   try
@@ -3791,6 +4081,8 @@ int getClosestIndex(FloatVec& values,float value)
 
 
 
+
+/*! \brief Parses an Int64 from the given field index of a CSV-style line. */
 
 Int64 getCsvInt64Field(const char *csv,uint fieldIndex)
 {
@@ -3850,6 +4142,8 @@ Int64 getCsvInt64Field(const char *csv,uint fieldIndex)
 
 
 
+/*! \brief Compares the given field of a CSV-style line to a value using strcmp. */
+
 int getCsvCompare(const char *csv,uint fieldIndex,const char *value)
 {
   try
@@ -3902,6 +4196,8 @@ int getCsvCompare(const char *csv,uint fieldIndex,const char *value)
 
 
 
+/*! \brief Compares the given field of a CSV-style line to a value case-insensitively. */
+
 int getCsvCaseCompare(const char *csv,uint fieldIndex,const char *value)
 {
   try
@@ -3951,6 +4247,8 @@ int getCsvCaseCompare(const char *csv,uint fieldIndex,const char *value)
 }
 
 
+/*! \brief Packs year/month/day/hour/min/sec/usec components into a single 64-bit value. */
+
 time_t timeToValue(uint year,uint month,uint day,uint hour,uint min,uint sec,uint usec)
 {
   time_t val = year;
@@ -3964,6 +4262,8 @@ time_t timeToValue(uint year,uint month,uint day,uint hour,uint min,uint sec,uin
   return val;
 }
 
+
+/*! \brief Unpacks a packed time_t value into year/month/day/hour/min/sec/usec components. */
 
 void valueToTime(time_t value,uint& year,uint& month,uint& day,uint& hour,uint& min,uint& sec,uint& usec)
 {
@@ -3979,6 +4279,8 @@ void valueToTime(time_t value,uint& year,uint& month,uint& day,uint& hour,uint& 
 
 
 
+/*! \brief Computes an HMAC-SHA256 of the input using the given secret key. */
+
 int hmac_sha256(const uint8_t *secretKey,int secretKeyLen,const uint8_t *input,int inputSize,uint8_t *output)
 {
   uint outputSize = 32;
@@ -3991,6 +4293,8 @@ int hmac_sha256(const uint8_t *secretKey,int secretKeyLen,const uint8_t *input,i
 
 
 
+
+/*! \brief Computes an AWS S3 v4 request signature as a hexadecimal string. */
 
 int signature_aws_s3_v4(const char *username,
                  const char *password,
@@ -4046,6 +4350,8 @@ int signature_aws_s3_v4(const char *username,
 
 
 
+/*! \brief Computes a SHA-256 hash of the input and writes it as a hexadecimal string. */
+
 void hash_sha256(uchar *input,int inputLen,char *hexHash)
 {
   unsigned char hash[SHA256_DIGEST_LENGTH];
@@ -4060,6 +4366,8 @@ void hash_sha256(uchar *input,int inputLen,char *hexHash)
 }
 
 
+
+/*! \brief Substitutes $(name) tokens in a string with values from the variable map. */
 
 std::string replaceVariables(const std::string& str,std::map<std::string,std::string>& variables)
 {

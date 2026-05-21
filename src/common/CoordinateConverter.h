@@ -8,11 +8,21 @@
 namespace SmartMet
 {
 
-#define CONVERTER_COUNT 10
+#define CONVERTER_COUNT 10  //!< Number of parallel OGR transformation slots
+
+// ====================================================================================
+/*! \brief Thread-safe OGR coordinate transformation wrapper with a fixed-size slot pool.
+ *
+ *  Maintains `CONVERTER_COUNT` `OGRCoordinateTransformation` instances that are
+ *  checked out round-robin and used concurrently without locking via per-slot
+ *  in-progress flags and a `ThreadLock` per slot.  This avoids the serialisation
+ *  bottleneck that would result from a single transformation object. */
+// ====================================================================================
 
 class CoordinateConverter
 {
   public:
+    /*! \brief Construct an empty converter (no transformations until copy or OGR constructor). */
     CoordinateConverter()
     {
       for (uint t=0; t<CONVERTER_COUNT; t++)
@@ -28,6 +38,7 @@ class CoordinateConverter
       r1.tv_nsec = 10;
     }
 
+    /*! \brief Copy constructor — clones spatial references and creates fresh transformations. */
     CoordinateConverter(const CoordinateConverter& rec)
     {
       sr1 = rec.sr1->Clone();
@@ -41,6 +52,9 @@ class CoordinateConverter
       r1.tv_nsec = 10;
     }
 
+    /*! \brief Construct from two OGR spatial references.
+     *  \param[in] sr_from  Source spatial reference (cloned).
+     *  \param[in] sr_to    Target spatial reference (cloned). */
     CoordinateConverter(const OGRSpatialReference *sr_from,const OGRSpatialReference *sr_to)
     {
       sr1 = sr_from->Clone();
@@ -70,6 +84,8 @@ class CoordinateConverter
     }
 
 
+    /*! \brief Acquire a free transformation slot index (spins until one is available).
+     *  \return Slot index in [0, CONVERTER_COUNT). */
     inline uint getTransform()
     {
       while (true)
@@ -87,6 +103,11 @@ class CoordinateConverter
     }
 
 
+    /*! \brief Transform \p nCount coordinate pairs in place.
+     *  \param[in]     nCount  Number of coordinate pairs.
+     *  \param[in,out] x       X values (overwritten with transformed values).
+     *  \param[in,out] y       Y values (overwritten with transformed values).
+     *  \return True on success. */
     inline bool convert(int nCount,double *x,double *y)
     {
       uint idx = getTransform();
@@ -103,12 +124,12 @@ class CoordinateConverter
 
   protected:
 
-    OGRCoordinateTransformation *transformation[CONVERTER_COUNT];
-    bool tranformationInProgress[CONVERTER_COUNT];
-    OGRSpatialReference *sr1;
-    OGRSpatialReference *sr2;
-    ThreadLock threadLock[CONVERTER_COUNT];
-    timespec r1, r2;
+    OGRCoordinateTransformation *transformation[CONVERTER_COUNT]; //!< OGR transformation objects per slot
+    bool tranformationInProgress[CONVERTER_COUNT];                //!< True while slot is in use
+    OGRSpatialReference *sr1;                                     //!< Source spatial reference (owned)
+    OGRSpatialReference *sr2;                                     //!< Target spatial reference (owned)
+    ThreadLock threadLock[CONVERTER_COUNT];                       //!< Per-slot mutex
+    timespec r1, r2;                                              //!< nanosleep spin interval
 };
 
 

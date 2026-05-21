@@ -120,6 +120,8 @@ MemoryReader::~MemoryReader()
 
 
 
+/*! \brief Returns the size of the memory area in bytes. */
+
 UInt64 MemoryReader::getDataSize()
 {
   try
@@ -135,6 +137,8 @@ UInt64 MemoryReader::getDataSize()
 
 
 
+
+/*! \brief Sets the parent pointer used as the reference origin for global read positions. */
 
 void MemoryReader::setParentPtr(unsigned char *_parentPtr)
 {
@@ -152,6 +156,8 @@ void MemoryReader::setParentPtr(unsigned char *_parentPtr)
 
 
 
+/*! \brief Returns the parent pointer used as the reference origin for global read positions. */
+
 unsigned char* MemoryReader::getParentPtr()
 {
   try
@@ -167,6 +173,8 @@ unsigned char* MemoryReader::getParentPtr()
 
 
 
+
+/*! \brief Returns the pointer to the start of the memory area. */
 
 unsigned char* MemoryReader::getStartPtr()
 {
@@ -184,6 +192,8 @@ unsigned char* MemoryReader::getStartPtr()
 
 
 
+/*! \brief Returns the pointer to the end of the memory area. */
+
 unsigned char* MemoryReader::getEndPtr()
 {
   try
@@ -200,6 +210,8 @@ unsigned char* MemoryReader::getEndPtr()
 
 
 
+/*! \brief Returns the current read pointer. */
+
 unsigned char* MemoryReader::getReadPtr()
 {
   try
@@ -215,6 +227,8 @@ unsigned char* MemoryReader::getReadPtr()
 
 
 
+
+/*! \brief Validates and sets the current read pointer. */
 
 void MemoryReader::setReadPtr(unsigned char *_readPtr)
 {
@@ -236,6 +250,8 @@ void MemoryReader::setReadPtr(unsigned char *_readPtr)
 
 
 
+/*! \brief Returns the current read position as an offset from the start of the memory area. */
+
 UInt64 MemoryReader::getReadPosition()
 {
   try
@@ -252,6 +268,8 @@ UInt64 MemoryReader::getReadPosition()
 
 
 
+/*! \brief Returns the current read position as an offset from the parent pointer. */
+
 UInt64 MemoryReader::getGlobalReadPosition()
 {
   try
@@ -267,6 +285,8 @@ UInt64 MemoryReader::getGlobalReadPosition()
 
 
 
+
+/*! \brief Sets the current read position as an offset from the start of the memory area. */
 
 void MemoryReader::setReadPosition(UInt64 _pos)
 {
@@ -292,6 +312,8 @@ void MemoryReader::setReadPosition(UInt64 _pos)
 
 
 
+/*! \brief Configures whether multi-byte values are read as little-endian. */
+
 void MemoryReader::setLittleEndian(bool _littleEndian)
 {
   try
@@ -308,6 +330,8 @@ void MemoryReader::setLittleEndian(bool _littleEndian)
 
 
 
+/*! \brief Configures whether multi-byte values are read in network byte order. */
+
 void MemoryReader::setNetworkByteOrder(bool _networkByteOrder)
 {
   try
@@ -323,6 +347,8 @@ void MemoryReader::setNetworkByteOrder(bool _networkByteOrder)
 
 
 
+
+/*! \brief Returns the byte at the given offset from the start of the memory area. */
 
 unsigned char MemoryReader::getByte(UInt64 _pos)
 {
@@ -348,6 +374,8 @@ unsigned char MemoryReader::getByte(UInt64 _pos)
 
 
 
+/*! \brief Returns the byte at the given pointer position, validating that it is in range. */
+
 unsigned char MemoryReader::getByte(unsigned char *_posPtr)
 {
   try
@@ -366,6 +394,8 @@ unsigned char MemoryReader::getByte(unsigned char *_posPtr)
 
 
 
+
+/*! \brief Returns true if the bytes at the current read position match the given string, without consuming. */
 
 bool MemoryReader::peek_string(const char *_str)
 {
@@ -392,6 +422,8 @@ bool MemoryReader::peek_string(const char *_str)
 
 
 
+
+/*! \brief Reads characters into the buffer up to the terminator character or the given length. */
 
 bool MemoryReader::read_string(uchar _endChar,char *_str,uint _maxLen)
 {
@@ -437,6 +469,8 @@ bool MemoryReader::read_string(uchar _endChar,char *_str,uint _maxLen)
 
 
 
+/*! \brief Searches for the given string starting from the current read position and returns its offset. */
+
 int MemoryReader::search_string(const char *_str)
 {
   try
@@ -471,6 +505,8 @@ int MemoryReader::search_string(const char *_str)
 
 
 
+/*! \brief Reads an 8-bit unsigned integer and advances the read pointer. */
+
 std::uint8_t MemoryReader::read_uint8()
 {
   try
@@ -501,6 +537,8 @@ std::uint8_t MemoryReader::read_uint8()
 
 
 
+
+/*! \brief Reads a 16-bit unsigned integer and advances the read pointer. */
 
 std::uint16_t MemoryReader::read_uint16()
 {
@@ -544,6 +582,8 @@ std::uint16_t MemoryReader::read_uint16()
 
 
 
+/*! \brief Reads a 24-bit unsigned integer and advances the read pointer. */
+
 std::uint32_t MemoryReader::read_uint24()
 {
   try
@@ -579,6 +619,8 @@ std::uint32_t MemoryReader::read_uint24()
 
 
 
+
+/*! \brief Reads a 32-bit unsigned integer and advances the read pointer. */
 
 std::uint32_t MemoryReader::read_uint32()
 {
@@ -624,6 +666,8 @@ std::uint32_t MemoryReader::read_uint32()
 
 
 
+/*! \brief Reads a 64-bit unsigned integer and advances the read pointer. */
+
 std::uint64_t MemoryReader::read_uint64()
 {
   try
@@ -665,6 +709,8 @@ std::uint64_t MemoryReader::read_uint64()
 
 
 
+/*! \brief Reads an 8-bit signed integer (sign-and-magnitude encoded) and advances the read pointer. */
+
 std::int8_t MemoryReader::read_int8()
 {
   try
@@ -696,6 +742,8 @@ std::int8_t MemoryReader::read_int8()
 
 
 
+
+/*! \brief Reads a 16-bit signed integer (sign-and-magnitude encoded) and advances the read pointer. */
 
 std::int16_t MemoryReader::read_int16()
 {
@@ -739,6 +787,8 @@ std::int16_t MemoryReader::read_int16()
 
 
 
+/*! \brief Reads a 24-bit signed integer (sign-and-magnitude encoded) and advances the read pointer. */
+
 std::int32_t MemoryReader::read_int24()
 {
   try
@@ -777,6 +827,8 @@ std::int32_t MemoryReader::read_int24()
 
 
 
+
+/*! \brief Reads a 32-bit signed integer (sign-and-magnitude encoded) and advances the read pointer. */
 
 std::int32_t MemoryReader::read_int32()
 {
@@ -821,6 +873,8 @@ std::int32_t MemoryReader::read_int32()
 
 
 
+
+/*! \brief Reads a 32-bit IEEE float and advances the read pointer. */
 
 std::float_t MemoryReader::read_float()
 {
@@ -867,6 +921,8 @@ std::float_t MemoryReader::read_float()
 
 
 
+
+/*! \brief Reads a 64-bit IEEE double and advances the read pointer. */
 
 std::double_t MemoryReader::read_double()
 {
@@ -921,6 +977,8 @@ std::double_t MemoryReader::read_double()
 
 
 
+/*! \brief Reads a 32-bit IBM floating-point value and converts it to a standard float. */
+
 std::float_t MemoryReader::read_ibmFloat()
 {
   try
@@ -962,6 +1020,8 @@ std::float_t MemoryReader::read_ibmFloat()
 
 
 
+/*! \brief Reads a 16-byte UUID and advances the read pointer. */
+
 std::array<char,16> MemoryReader::read_uuid()
 {
   try
@@ -994,6 +1054,8 @@ std::array<char,16> MemoryReader::read_uuid()
 
 
 
+
+/*! \brief Reads an 8-bit unsigned integer, returning an empty optional if all bits are set (missing value). */
 
 T::UInt8_opt MemoryReader::read_UInt8_opt()
 {
@@ -1029,6 +1091,8 @@ T::UInt8_opt MemoryReader::read_UInt8_opt()
 
 
 
+/*! \brief Reads a 16-bit unsigned integer, returning an empty optional if all bits are set (missing value). */
+
 T::UInt16_opt MemoryReader::read_UInt16_opt()
 {
   try
@@ -1061,6 +1125,8 @@ T::UInt16_opt MemoryReader::read_UInt16_opt()
 
 
 
+/*! \brief Reads a 24-bit unsigned integer, returning an empty optional if all bits are set (missing value). */
+
 T::UInt32_opt MemoryReader::read_UInt24_opt()
 {
   try
@@ -1091,6 +1157,8 @@ T::UInt32_opt MemoryReader::read_UInt24_opt()
 
 
 
+
+/*! \brief Reads a 32-bit unsigned integer, returning an empty optional if all bits are set (missing value). */
 
 T::UInt32_opt MemoryReader::read_UInt32_opt()
 {
@@ -1123,6 +1191,8 @@ T::UInt32_opt MemoryReader::read_UInt32_opt()
 
 
 
+/*! \brief Reads a 64-bit unsigned integer, returning an empty optional if all bits are set (missing value). */
+
 T::UInt64_opt MemoryReader::read_UInt64_opt()
 {
   try
@@ -1153,6 +1223,8 @@ T::UInt64_opt MemoryReader::read_UInt64_opt()
 
 
 
+
+/*! \brief Reads an 8-bit signed integer, returning an empty optional if the byte is 0xFF (missing value). */
 
 T::Int8_opt MemoryReader::read_Int8_opt()
 {
@@ -1186,6 +1258,8 @@ T::Int8_opt MemoryReader::read_Int8_opt()
 
 
 
+
+/*! \brief Reads a 16-bit signed integer, returning an empty optional if all bytes are 0xFF (missing value). */
 
 T::Int16_opt MemoryReader::read_Int16_opt()
 {
@@ -1224,6 +1298,8 @@ T::Int16_opt MemoryReader::read_Int16_opt()
 
 
 
+
+/*! \brief Reads a 24-bit signed integer, returning an empty optional if all bytes are 0xFF (missing value). */
 
 T::Int32_opt MemoryReader::read_Int24_opt()
 {
@@ -1266,6 +1342,8 @@ T::Int32_opt MemoryReader::read_Int24_opt()
 
 
 
+/*! \brief Reads a 32-bit signed integer, returning an empty optional if all bytes are 0xFF (missing value). */
+
 T::Int32_opt MemoryReader::read_Int32_opt()
 {
   try
@@ -1305,6 +1383,8 @@ T::Int32_opt MemoryReader::read_Int32_opt()
 
 
 
+
+/*! \brief Reads a 32-bit float, returning an empty optional if all bytes are 0xFF (missing value). */
 
 T::Float_opt MemoryReader::read_Float_opt()
 {
@@ -1355,6 +1435,8 @@ T::Float_opt MemoryReader::read_Float_opt()
 
 
 
+/*! \brief Reads the given number of bytes into the supplied buffer and advances the read pointer. */
+
 void MemoryReader::read_data(unsigned char *_data,UInt64 _size)
 {
   try
@@ -1385,6 +1467,8 @@ void MemoryReader::read_data(unsigned char *_data,UInt64 _size)
 
 
 
+/*! \brief Skips the given number of bytes by advancing the read pointer without storing data. */
+
 void MemoryReader::read_null(UInt64 _size)
 {
   try
@@ -1411,6 +1495,8 @@ void MemoryReader::read_null(UInt64 _size)
 
 
 
+/*! \brief Stream extraction operator for an 8-bit unsigned integer. */
+
 MemoryReader& MemoryReader::operator>>(std::uint8_t& _value)
 {
   try
@@ -1427,6 +1513,8 @@ MemoryReader& MemoryReader::operator>>(std::uint8_t& _value)
 
 
 
+
+/*! \brief Stream extraction operator for a 16-bit unsigned integer. */
 
 MemoryReader& MemoryReader::operator>>(std::uint16_t& _value)
 {
@@ -1445,6 +1533,8 @@ MemoryReader& MemoryReader::operator>>(std::uint16_t& _value)
 
 
 
+/*! \brief Stream extraction operator for a 32-bit unsigned integer. */
+
 MemoryReader& MemoryReader::operator>>(std::uint32_t& _value)
 {
   try
@@ -1461,6 +1551,8 @@ MemoryReader& MemoryReader::operator>>(std::uint32_t& _value)
 
 
 
+
+/*! \brief Stream extraction operator for a 64-bit unsigned integer. */
 
 MemoryReader& MemoryReader::operator>>(std::uint64_t& _value)
 {
@@ -1479,6 +1571,8 @@ MemoryReader& MemoryReader::operator>>(std::uint64_t& _value)
 
 
 
+/*! \brief Stream extraction operator for an 8-bit signed integer. */
+
 MemoryReader& MemoryReader::operator>>(std::int8_t& _value)
 {
   try
@@ -1495,6 +1589,8 @@ MemoryReader& MemoryReader::operator>>(std::int8_t& _value)
 
 
 
+
+/*! \brief Stream extraction operator for a 16-bit signed integer. */
 
 MemoryReader& MemoryReader::operator>>(std::int16_t& _value)
 {
@@ -1513,6 +1609,8 @@ MemoryReader& MemoryReader::operator>>(std::int16_t& _value)
 
 
 
+/*! \brief Stream extraction operator for a 32-bit signed integer. */
+
 MemoryReader& MemoryReader::operator>>(std::int32_t& _value)
 {
   try
@@ -1529,6 +1627,8 @@ MemoryReader& MemoryReader::operator>>(std::int32_t& _value)
 
 
 
+
+/*! \brief Stream extraction operator for a 32-bit float. */
 
 MemoryReader& MemoryReader::operator>>(std::float_t& _value)
 {
@@ -1547,6 +1647,8 @@ MemoryReader& MemoryReader::operator>>(std::float_t& _value)
 
 
 
+/*! \brief Stream extraction operator for a 64-bit double. */
+
 MemoryReader& MemoryReader::operator>>(std::double_t& _value)
 {
   try
@@ -1563,6 +1665,8 @@ MemoryReader& MemoryReader::operator>>(std::double_t& _value)
 
 
 
+
+/*! \brief Stream extraction operator for an optional 8-bit unsigned integer. */
 
 MemoryReader& MemoryReader::operator>>(T::UInt8_opt& _value)
 {
@@ -1581,6 +1685,8 @@ MemoryReader& MemoryReader::operator>>(T::UInt8_opt& _value)
 
 
 
+/*! \brief Stream extraction operator for an optional 16-bit unsigned integer. */
+
 MemoryReader& MemoryReader::operator>>(T::UInt16_opt& _value)
 {
   try
@@ -1597,6 +1703,8 @@ MemoryReader& MemoryReader::operator>>(T::UInt16_opt& _value)
 
 
 
+
+/*! \brief Stream extraction operator for an optional 32-bit unsigned integer. */
 
 MemoryReader& MemoryReader::operator>>(T::UInt32_opt& _value)
 {
@@ -1615,6 +1723,8 @@ MemoryReader& MemoryReader::operator>>(T::UInt32_opt& _value)
 
 
 
+/*! \brief Stream extraction operator for an optional 64-bit unsigned integer. */
+
 MemoryReader& MemoryReader::operator>>(T::UInt64_opt& _value)
 {
   try
@@ -1631,6 +1741,8 @@ MemoryReader& MemoryReader::operator>>(T::UInt64_opt& _value)
 
 
 
+
+/*! \brief Stream extraction operator for an optional 8-bit signed integer. */
 
 MemoryReader& MemoryReader::operator>>(T::Int8_opt& _value)
 {
@@ -1649,6 +1761,8 @@ MemoryReader& MemoryReader::operator>>(T::Int8_opt& _value)
 
 
 
+/*! \brief Stream extraction operator for an optional 16-bit signed integer. */
+
 MemoryReader& MemoryReader::operator>>(T::Int16_opt& _value)
 {
   try
@@ -1666,6 +1780,8 @@ MemoryReader& MemoryReader::operator>>(T::Int16_opt& _value)
 
 
 
+/*! \brief Stream extraction operator for an optional 32-bit signed integer. */
+
 MemoryReader& MemoryReader::operator>>(T::Int32_opt& _value)
 {
   try
@@ -1682,6 +1798,8 @@ MemoryReader& MemoryReader::operator>>(T::Int32_opt& _value)
 
 
 
+
+/*! \brief Stream extraction operator for an optional 32-bit float. */
 
 MemoryReader& MemoryReader::operator>>(T::Float_opt& _value)
 {

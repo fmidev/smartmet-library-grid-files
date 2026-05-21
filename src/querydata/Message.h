@@ -10,18 +10,21 @@ namespace SmartMet
 namespace QueryData
 {
 
+/*! \brief Metadata record identifying one parameter/level/time slice inside a QueryData file.
+ *
+ *  Populated by QueryDataFile::read() and passed to the Message constructor. */
 struct MessageInfo
 {
-  uint        mColumns;
-  uint        mRows;
-  UInt64      mParameterIndex;
-  UInt64      mLevelIndex;
-  UInt64      mTimeIndex;
-  uint        mNewbaseId;
-  int         mParameterLevelId;
-  int         mParameterLevel;
-  time_t      mForecastTimeT;
-  int         mGeometryId;
+  uint        mColumns;          //!< Number of grid columns.
+  uint        mRows;             //!< Number of grid rows.
+  UInt64      mParameterIndex;   //!< Index into the NFmiFastQueryInfo parameter dimension.
+  UInt64      mLevelIndex;       //!< Index into the NFmiFastQueryInfo level dimension.
+  UInt64      mTimeIndex;        //!< Index into the NFmiFastQueryInfo time dimension.
+  uint        mNewbaseId;        //!< Newbase parameter identifier.
+  int         mParameterLevelId; //!< FMI level type identifier.
+  int         mParameterLevel;   //!< Level value (pressure, height, etc.).
+  time_t      mForecastTimeT;    //!< Forecast valid time as a Unix timestamp.
+  int         mGeometryId;       //!< FMI geometry identifier.
 };
 
 
@@ -29,6 +32,15 @@ typedef std::vector<MessageInfo> MessageInfoVec;
 
 class QueryDataFile;
 
+
+// ====================================================================================
+/*! \brief QueryData message — adapts one NFmiQueryData parameter/level/time slice to
+ *  the GRID::Message interface.
+ *
+ *  Constructed by reading the NFmiFastQueryInfo index provided in a MessageInfo record.
+ *  Grid values are retrieved on demand from the owning QueryDataFile object, which
+ *  keeps the NFmiFastQueryInfo alive for the lifetime of all messages derived from it. */
+// ====================================================================================
 
 class Message : public GRID::Message
 {
@@ -110,29 +122,29 @@ class Message : public GRID::Message
 
   protected:
 
-    GRID::GridFile*     mGridFile;
-    uint                mColumns;
-    uint                mRows;
-    UInt64              mParameterIndex;
-    UInt64              mLevelIndex;
-    UInt64              mTimeIndex;
-    int                 mParameterLevelId;
-    int                 mParameterLevel;
-    int                 mGeometryId;
-    T::ForecastType     mForecastType;
-    T::ForecastNumber   mForecastNumber;
-    std::string         mForecastTime;
-    time_t              mForecastTimeT;
-    QueryDataFile*      mQueryDataFile;
-    GRIB2::GridDef_sptr mGeometryDef;
-    T::GridProjection   mProjectionId;
-    bool                mIsRead;
+    GRID::GridFile*     mGridFile;          //!< Owning GridFile (not owned by this object).
+    uint                mColumns;           //!< Number of grid columns.
+    uint                mRows;              //!< Number of grid rows.
+    UInt64              mParameterIndex;    //!< Parameter index in NFmiFastQueryInfo.
+    UInt64              mLevelIndex;        //!< Level index in NFmiFastQueryInfo.
+    UInt64              mTimeIndex;         //!< Time index in NFmiFastQueryInfo.
+    int                 mParameterLevelId;  //!< FMI level type identifier.
+    int                 mParameterLevel;    //!< Level value (pressure, height, etc.).
+    int                 mGeometryId;        //!< FMI geometry identifier.
+    T::ForecastType     mForecastType;      //!< Forecast type code.
+    T::ForecastNumber   mForecastNumber;    //!< Ensemble member or perturbation number.
+    std::string         mForecastTime;      //!< Forecast valid time as an ISO-8601 string.
+    time_t              mForecastTimeT;     //!< Forecast valid time as a Unix timestamp.
+    QueryDataFile*      mQueryDataFile;     //!< QueryData file that owns the underlying NFmiFastQueryInfo.
+    GRIB2::GridDef_sptr mGeometryDef;      //!< Grid geometry definition.
+    T::GridProjection   mProjectionId;      //!< Grid projection type.
+    bool                mIsRead;            //!< True after grid values have been decoded.
 };
 
 
 
-typedef Message* MessagePtr;
-typedef std::vector<MessagePtr> MessagePtr_vec;
+typedef Message* MessagePtr;                    //!< Non-owning pointer to a QueryData Message.
+typedef std::vector<MessagePtr> MessagePtr_vec;  //!< Vector of non-owning QueryData Message pointers.
 
 
 }  // namespace NetCDF

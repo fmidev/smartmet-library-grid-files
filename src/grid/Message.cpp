@@ -141,6 +141,8 @@ Message::~Message()
 
 
 
+/*! \brief Pre-maps the underlying file memory for faster access. */
+
 void Message::premap() const
 {
 }
@@ -160,6 +162,8 @@ void Message::getAttributeList(const std::string& prefix,T::AttributeList& attri
 
 
 
+/*! \brief Returns the value of the named attribute as a string. */
+
 bool Message::getAttributeValue(const char *attributeName, std::string& attributeValue) const
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
@@ -167,6 +171,8 @@ bool Message::getAttributeValue(const char *attributeName, std::string& attribut
 
 
 
+
+/*! \brief Returns true if the named attribute equals the given value. */
 
 bool Message::hasAttributeValue(const char *attributeName, const char *attributeValue) const
 {
@@ -188,6 +194,8 @@ T::FileId Message::getFileId() const
 
 
 
+
+/*! \brief Returns the pointer to the memory-mapped grid file content. */
 
 char* Message::getFileMemoryPtr() const
 {
@@ -242,6 +250,8 @@ T::FilePosition Message::getFilePosition() const
 
 
 
+/*! \brief Returns the index of the current message within its grid file. */
+
 T::MessageIndex Message::getMessageIndex() const
 {
   FUNCTION_TRACE
@@ -258,6 +268,8 @@ T::MessageIndex Message::getMessageIndex() const
 
 
 
+
+/*! \brief Returns the size in bytes of the current message. */
 
 uint Message::getMessageSize() const
 {
@@ -276,6 +288,8 @@ uint Message::getMessageSize() const
 
 
 
+/*! \brief Sets the parent grid file pointer for the message. */
+
 void Message::setGridFilePtr(GridFile *gridFilePtr)
 {
   FUNCTION_TRACE
@@ -292,6 +306,8 @@ void Message::setGridFilePtr(GridFile *gridFilePtr)
 
 
 
+
+/*! \brief Sets the index of the current message within its grid file. */
 
 void Message::setMessageIndex(uint index)
 {
@@ -325,6 +341,8 @@ T::TimeString Message::getReferenceTime() const
 
 
 
+/*! \brief Returns the GRIB edition number of the current message, or zero for non-GRIB. */
+
 uint Message::getGribVersion() const
 {
   return 0;
@@ -333,6 +351,8 @@ uint Message::getGribVersion() const
 
 
 
+
+/*! \brief Returns the GRIB centre identifier of the originating data centre. */
 
 uint Message::getGribCentre() const
 {
@@ -343,6 +363,8 @@ uint Message::getGribCentre() const
 
 
 
+/*! \brief Returns the GRIB sub-centre identifier of the originating data centre. */
+
 uint Message::getGribSubCentre() const
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
@@ -352,6 +374,8 @@ uint Message::getGribSubCentre() const
 
 
 
+/*! \brief Returns the GRIB identifier of the process that generated the data. */
+
 uint Message::getGribGeneratingProcessIdentifier() const
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
@@ -360,6 +384,8 @@ uint Message::getGribGeneratingProcessIdentifier() const
 
 
 
+
+/*! \brief Returns the GRIB parameter table version used by this message. */
 
 uint Message::getGribTableVersion() const
 {
@@ -445,6 +471,8 @@ T::Coordinate_svec Message::getGridOriginalCoordinates() const
 
 
 
+/*! \brief Computes isoband polygons between consecutive contour value pairs. */
+
 void Message::getGridIsobands(T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,T::ByteData_vec& contours)
 {
   FUNCTION_TRACE
@@ -461,6 +489,8 @@ void Message::getGridIsobands(T::ParamValue_vec& contourLowValues,T::ParamValue_
 
 
 
+
+/*! \brief Computes isoband polygons between consecutive contour value pairs with value modification. */
 
 void Message::getGridIsobands(T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours)
 {
@@ -529,6 +559,8 @@ void Message::getGridIsobands(T::ParamValue_vec& contourLowValues,T::ParamValue_
 
 
 
+/*! \brief Computes isoband polygons over a target geometry specified by attributes. */
+
 void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,T::ByteData_vec& contours)
 {
   FUNCTION_TRACE
@@ -545,6 +577,8 @@ void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::P
 
 
 
+
+/*! \brief Computes isoband polygons over a target geometry with value modification. */
 
 void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours)
 {
@@ -766,6 +800,8 @@ void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::P
 
 
 
+/*! \brief Computes isoband polygons over an explicit target grid. */
+
 void Message::getGridIsobandsByGrid(T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,std::vector<T::Coordinate>& projectionCoordinates,T::AttributeList& attributeList,T::ByteData_vec& contours)
 {
   FUNCTION_TRACE
@@ -782,6 +818,8 @@ void Message::getGridIsobandsByGrid(T::ParamValue_vec& contourLowValues,T::Param
 
 
 
+
+/*! \brief Computes isoband polygons over an explicit target grid with value modification. */
 
 void Message::getGridIsobandsByGrid(T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,std::vector<T::Coordinate>& projectionCoordinates,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours)
 {
@@ -856,6 +894,8 @@ void Message::getGridIsobandsByGrid(T::ParamValue_vec& contourLowValues,T::Param
 
 
 
+/*! \brief Computes isoline contours for the given contour values. */
+
 void Message::getGridIsolines(T::ParamValue_vec& contourValues,T::AttributeList& attributeList,T::ByteData_vec& contours)
 {
   FUNCTION_TRACE
@@ -872,6 +912,8 @@ void Message::getGridIsolines(T::ParamValue_vec& contourValues,T::AttributeList&
 
 
 
+
+/*! \brief Computes isoline contours for the given contour values with value modification. */
 
 void Message::getGridIsolines(T::ParamValue_vec& contourValues,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours)
 {
@@ -943,6 +985,8 @@ void Message::getGridIsolines(T::ParamValue_vec& contourValues,T::AttributeList&
 
 
 
+/*! \brief Computes isoline contours over a target geometry specified by attributes. */
+
 void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::AttributeList& attributeList,T::ByteData_vec& contours)
 {
   FUNCTION_TRACE
@@ -959,6 +1003,8 @@ void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::Attr
 
 
 
+
+/*! \brief Computes isoline contours over a target geometry with value modification. */
 
 void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours)
 {
@@ -1180,6 +1226,8 @@ void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::Attr
 
 
 
+/*! \brief Computes isoline contours over an explicit target grid. */
+
 void Message::getGridIsolinesByGrid(T::ParamValue_vec& contourValues,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,std::vector<T::Coordinate>& projectionCoordinates,T::AttributeList& attributeList,T::ByteData_vec& contours)
 {
   FUNCTION_TRACE
@@ -1196,6 +1244,8 @@ void Message::getGridIsolinesByGrid(T::ParamValue_vec& contourValues,uint gridWi
 
 
 
+
+/*! \brief Computes isoline contours over an explicit target grid with value modification. */
 
 void Message::getGridIsolinesByGrid(T::ParamValue_vec& contourValues,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,std::vector<T::Coordinate>& projectionCoordinates,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours)
 {
@@ -1271,6 +1321,8 @@ void Message::getGridIsolinesByGrid(T::ParamValue_vec& contourValues,uint gridWi
 
 
 
+/*! \brief Computes streamlines from the grid vector field. */
+
 void Message::getGridStreamlines(T::AttributeList& attributeList,T::ByteData_vec& streamlines)
 {
   FUNCTION_TRACE
@@ -1287,6 +1339,8 @@ void Message::getGridStreamlines(T::AttributeList& attributeList,T::ByteData_vec
 
 
 
+
+/*! \brief Computes streamlines from the grid vector field with value modification. */
 
 void Message::getGridStreamlines(T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& streamlines)
 {
@@ -1367,6 +1421,8 @@ void Message::getGridStreamlines(T::AttributeList& attributeList,uint modificati
 
 
 
+/*! \brief Computes streamlines over a target geometry specified by attributes. */
+
 void Message::getGridStreamlinesByGeometry(T::AttributeList& attributeList,T::ByteData_vec& streamlines)
 {
   FUNCTION_TRACE
@@ -1383,6 +1439,8 @@ void Message::getGridStreamlinesByGeometry(T::AttributeList& attributeList,T::By
 
 
 
+
+/*! \brief Computes streamlines over a target geometry with value modification. */
 
 void Message::getGridStreamlinesByGeometry(T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& streamlines)
 {
@@ -1594,6 +1652,8 @@ void Message::getGridStreamlinesByGeometry(T::AttributeList& attributeList,uint 
 
 
 
+/*! \brief Computes streamlines over an explicit target grid. */
+
 void Message::getGridStreamlinesByGrid(uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,std::vector<T::Coordinate>& projectionCoordinates,T::AttributeList& attributeList,T::ByteData_vec& streamlines)
 {
   FUNCTION_TRACE
@@ -1610,6 +1670,8 @@ void Message::getGridStreamlinesByGrid(uint gridWidth,uint gridHeight,std::vecto
 
 
 
+
+/*! \brief Computes streamlines over an explicit target grid with value modification. */
 
 void Message::getGridStreamlinesByGrid(uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,std::vector<T::Coordinate>& projectionCoordinates,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& streamlines)
 {
@@ -1712,6 +1774,8 @@ T::Dimensions Message::getGridDimensions() const
 
 
 
+/*! \brief Returns the width of the grid (number of columns). */
+
 uint Message::getGridWidth() const
 {
   FUNCTION_TRACE
@@ -1728,6 +1792,8 @@ uint Message::getGridWidth() const
 
 
 
+
+/*! \brief Returns the height of the grid (number of rows). */
 
 uint Message::getGridHeight() const
 {
@@ -1746,6 +1812,8 @@ uint Message::getGridHeight() const
 
 
 
+/*! \brief Returns the number of rows in the original grid. */
+
 std::size_t Message::getGridRowCount() const
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
@@ -1755,10 +1823,9 @@ std::size_t Message::getGridRowCount() const
 
 
 
-/*! \brief The method returns the number of columns used in the given original grid row.
+/*! \brief The method returns the number of columns used in the original grid.
 
-        \param row    The grid row index (= j-position).
-        \return       The number of columns in the given grid row.
+        \return       The number of columns in the grid.
 */
 
 std::size_t Message::getGridColumnCount() const
@@ -1822,6 +1889,8 @@ bool Message::isGridGlobal() const
 
 
 
+/*! \brief Returns true if the U/V wind components are relative to the grid orientation. */
+
 bool Message::isRelativeUV() const
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
@@ -1845,6 +1914,8 @@ T::GeometryId Message::getGridGeometryId() const
 
 
 
+/*! \brief Returns the average grid cell width and height in degrees. */
+
 void Message::getGridCellAverageSize(double& width,double& height) const
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
@@ -1853,6 +1924,8 @@ void Message::getGridCellAverageSize(double& width,double& height) const
 
 
 
+
+/*! \brief Returns the grid cell width and height in metric units. */
 
 bool Message::getGridMetricCellSize(double& width,double& height) const
 {
@@ -1863,6 +1936,8 @@ bool Message::getGridMetricCellSize(double& width,double& height) const
 
 
 
+/*! \brief Returns the full grid width and height in metric units. */
+
 bool Message::getGridMetricSize(double& width,double& height) const
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
@@ -1872,6 +1947,8 @@ bool Message::getGridMetricSize(double& width,double& height) const
 
 
 
+/*! \brief Returns the corner coordinates of the grid in metric units. */
+
 bool Message::getGridMetricArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight)
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
@@ -1880,6 +1957,8 @@ bool Message::getGridMetricArea(T::Coordinate& topLeft,T::Coordinate& topRight,T
 
 
 
+
+/*! \brief Returns the corner coordinates of the grid in latitude/longitude. */
 
 bool Message::getGridLatLonArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight)
 {
@@ -1904,6 +1983,8 @@ std::string Message::getGridGeometryString() const
 
 
 
+
+/*! \brief Returns the grid geometry string formatted as a single line entry. */
 
 std::string Message::getGridGeometryLine() const
 {
@@ -1930,6 +2011,8 @@ std::string Message::getGridGeometryLine() const
 
 
 
+/*! \brief Returns the file type of the underlying message format. */
+
 T::FileType Message::getMessageType() const
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
@@ -1947,7 +2030,7 @@ T::FileType Message::getMessageType() const
    It is also possible that we might want to use our own geometry identifiers and this method allows us to set it
    in place.
 
-        \param   The grid geometry identifier.
+        \param geometryId  The grid geometry identifier.
 */
 
 void Message::setGridGeometryId(T::GeometryId geometryId)
@@ -2083,6 +2166,8 @@ bool Message::getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lo
 
 
 
+/*! \brief Converts a list of latlon coordinates to the corresponding grid point list. */
+
 void Message::getGridPointListByLatLonCoordinates(T::Coordinate_vec& latlon,T::Coordinate_vec& points) const
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
@@ -2111,6 +2196,8 @@ bool Message::getGridPointByLatLonCoordinates(double lat,double lon,double& grid
 
 
 
+/*! \brief Computes the grid position for a latlon coordinate without using the cache. */
+
 bool Message::getGridPointByLatLonCoordinatesNoCache(double lat,double lon,double& grid_i,double& grid_j)  const
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
@@ -2119,6 +2206,8 @@ bool Message::getGridPointByLatLonCoordinatesNoCache(double lat,double lon,doubl
 
 
 
+
+/*! \brief Returns the rotation angle of the grid at the given coordinate. */
 
 float Message::getGridPointAngle(T::CoordinateType coordinateType,double x,double y) const
 {
@@ -2165,6 +2254,8 @@ float Message::getGridPointAngle(T::CoordinateType coordinateType,double x,doubl
 
 
 
+
+/*! \brief Returns the rotation angle of the grid at the given latlon coordinate. */
 
 float Message::getGridPointAngleByLatLonCoordinates(double lat,double lon)  const
 {
@@ -2259,6 +2350,8 @@ float Message::getGridPointAngleByLatLonCoordinates(double lat,double lon)  cons
 
 
 
+/*! \brief Returns rotation angles for every grid point, using the cache when possible. */
+
 void Message::getGridPointAngles(std::vector<float>& angles) const
 {
   FUNCTION_TRACE
@@ -2338,6 +2431,8 @@ void Message::getGridProjectionAttributes(const std::string& prefix,T::Attribute
 
 
 
+
+/*! \brief Returns the GRIB parameter identifier. */
 
 T::GribParamId Message::getGribParameterId() const
 {
@@ -2580,6 +2675,8 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
 
 
 
+/*! \brief Returns the pointer to the in-memory data section of the message. */
+
 char* Message::getMemoryPtr() const
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
@@ -2589,6 +2686,8 @@ char* Message::getMemoryPtr() const
 
 
 
+
+/*! \brief Returns the grid value at the given grid point applying the requested modification. */
 
 T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j,uint modificationOperation,double_vec& modificationParameters) const
 {
@@ -2782,6 +2881,8 @@ void Message::getGridMinAndMaxValues(T::ParamValue& minValue,T::ParamValue& maxV
 
 
 
+/*! \brief Computes the area-weighted average value of the grid. */
+
 T::ParamValue Message::countAverageValue() const
 {
   FUNCTION_TRACE
@@ -2854,6 +2955,8 @@ void Message::getGridValueVector(T::ParamValue_vec& values) const
 
 
 
+
+/*! \brief Applies the requested modification operation to a grid value vector in place. */
 
 void Message::modifyGridValueVector(uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const
 {
@@ -3078,6 +3181,8 @@ void Message::modifyGridValueVector(uint modificationOperation,double_vec& modif
 
 
 
+/*! \brief Returns the full grid value vector with the requested modification operation applied. */
+
 void Message::getGridValueVector(uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const
 {
   try
@@ -3116,6 +3221,8 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,T::Pa
 
 
 
+
+/*! \brief Returns grid values for the geometry described by attributes with value modification. */
 
 void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const
 {
@@ -3293,8 +3400,6 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,uint 
       return;
     }
 
-
-    //T::ParamValue_vec gridValues;
     getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,*latLonCoordinates,areaInterpolationMethod,modificationOperation,modificationParameters,values);
 
     attributeList.setAttribute("grid.width",Fmi::to_string(width));
@@ -3309,6 +3414,8 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,uint 
 
 
 
+
+/*! \brief Returns grid values from a cropped region defined by attributes. */
 
 void Message::getGridValueVectorByCrop(T::AttributeList& attributeList,T::ParamValue_vec& values) const
 {
@@ -3326,6 +3433,8 @@ void Message::getGridValueVectorByCrop(T::AttributeList& attributeList,T::ParamV
 
 
 
+
+/*! \brief Returns grid values from a cropped region with value modification. */
 
 void Message::getGridValueVectorByCrop(T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const
 {
@@ -3572,6 +3681,8 @@ void Message::getGridValueVectorWithCaching(T::ParamValue_vec& values) const
 
 
 
+/*! \brief Returns the cached grid value vector with the requested modification applied. */
+
 void Message::getGridValueVectorWithCaching(uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const
 {
   FUNCTION_TRACE
@@ -3650,6 +3761,8 @@ std::string Message::getWKT() const
 
 
 
+/*! \brief Returns the PROJ.4 description string of the current grid. */
+
 std::string Message::getProj4() const
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
@@ -3657,6 +3770,8 @@ std::string Message::getProj4() const
 
 
 
+
+/*! \brief Returns the file positions of all sections belonging to this message. */
 
 void Message::getSectionPositions(std::set<T::FilePosition>& positions)
 {
@@ -3747,6 +3862,8 @@ T::ForecastNumber Message::getForecastNumber() const
 
 
 
+/*! \brief Locks the message data so that it stays resident in memory. */
+
 void Message::lockData()
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
@@ -3755,6 +3872,8 @@ void Message::lockData()
 
 
 
+
+/*! \brief Unlocks the message data so it can be released from memory. */
 
 void Message::unlockData()
 {
@@ -3996,6 +4115,8 @@ bool Message::getProperty(const char *propertyName,Int64& value)
 
 
 
+
+/*! \brief Returns all property settings of the message. */
 
 void Message::getProperties(T::PropertySettingVec& properties)
 {
@@ -4451,6 +4572,8 @@ void Message::getGridValueByPoint(T::CoordinateType coordinateType,double x,doub
 
 
 
+/*! \brief Returns the interpolated grid value at the given coordinate with value modification. */
+
 void Message::getGridValueByPoint(T::CoordinateType coordinateType,double x,double y,short areaInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::ParamValue& value) const
 {
   FUNCTION_TRACE
@@ -4494,7 +4617,7 @@ void Message::getGridValueByPoint(T::CoordinateType coordinateType,double x,doub
         \param x               The x-coordinate (longitude when using latlon)
         \param y               The y-coordinate (latitude when using latlon)
         \param vectorType      The type of the requested value vector.
-        \param value           The value vector is returned in this parameter.
+        \param valueVector     The value vector is returned in this parameter.
 */
 
 void Message::getGridValueVectorByPoint(T::CoordinateType coordinateType,double x,double y,uint vectorType,double_vec& valueVector) const
@@ -4513,6 +4636,8 @@ void Message::getGridValueVectorByPoint(T::CoordinateType coordinateType,double 
 
 
 
+
+/*! \brief Returns the value vector for the given coordinate with value modification. */
 
 void Message::getGridValueVectorByPoint(T::CoordinateType coordinateType,double x,double y,uint vectorType,uint modificationOperation,double_vec& modificationParameters,double_vec& valueVector) const
 {
@@ -4554,10 +4679,10 @@ void Message::getGridValueVectorByPoint(T::CoordinateType coordinateType,double 
 
 /*! \brief The method returns the value vector related to the given grid position (for example grid corner values).
 
-        \param x               The x-coordinate (longitude when using latlon)
-        \param y               The y-coordinate (latitude when using latlon)
+        \param grid_i          The grid i-position (column).
+        \param grid_j          The grid j-position (row).
         \param vectorType      The type of the requested value vector.
-        \param value           The value vector is returned in this parameter.
+        \param valueVector     The value vector is returned in this parameter.
 */
 
 void Message::getGridValueVectorByGridPoint(double grid_i,double grid_j,uint vectorType,double_vec& valueVector) const
@@ -4576,6 +4701,8 @@ void Message::getGridValueVectorByGridPoint(double grid_i,double grid_j,uint vec
 
 
 
+
+/*! \brief Returns the value vector for the given grid position with value modification. */
 
 void Message::getGridValueVectorByGridPoint(double grid_i,double grid_j,uint vectorType,uint modificationOperation,double_vec& modificationParameters,double_vec& valueVector) const
 {
@@ -4653,7 +4780,7 @@ void Message::getGridValueVectorByGridPoint(double grid_i,double grid_j,uint vec
         \param lat             The latitude of the coordinates
         \param lon             The longitude of the coordinates
         \param vectorType      The type of the requested value vector.
-        \param value           The value vector is returned in this parameter.
+        \param valueVector     The value vector is returned in this parameter.
 */
 
 void Message::getGridValueVectorByLatLonCoordinate(double lat,double lon,uint vectorType,double_vec& valueVector) const
@@ -4672,6 +4799,8 @@ void Message::getGridValueVectorByLatLonCoordinate(double lat,double lon,uint ve
 
 
 
+
+/*! \brief Returns the value vector for the given latlon coordinate with value modification. */
 
 void Message::getGridValueVectorByLatLonCoordinate(double lat,double lon,uint vectorType,uint modificationOperation,double_vec& modificationParameters,double_vec& valueVector) const
 {
@@ -4719,6 +4848,8 @@ void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double o
 
 
 
+
+/*! \brief Returns grid point values inside the given circle with value modification. */
 
 void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double origoX,double origoY,double radius,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const
 {
@@ -4858,6 +4989,8 @@ void Message::getGridValueListByPointList(T::CoordinateType coordinateType,std::
 
 
 
+/*! \brief Returns grid values for the given point list with value modification. */
+
 void Message::getGridValueListByPointList(T::CoordinateType coordinateType,std::vector<T::Coordinate>& pointList,short areaInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const
 {
   FUNCTION_TRACE
@@ -4906,6 +5039,8 @@ void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::ve
 
 
 
+
+/*! \brief Returns grid point values inside the given polygon with value modification. */
 
 void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::vector<T::Coordinate>& polygonPoints,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const
 {
@@ -5049,6 +5184,8 @@ void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std
 
 
 
+/*! \brief Returns grid point values inside the given polygon path with value modification. */
+
 void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std::vector<std::vector<T::Coordinate>>& polygonPath,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const
 {
   FUNCTION_TRACE
@@ -5057,21 +5194,6 @@ void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std
     T::Dimensions d = getGridDimensions();
     uint cols = d.nx();
     uint rows = d.ny();
-
-    /*
-    std::size_t hash = 0;
-    Fmi::hash_merge(hash,mGeometryId);
-    Fmi::hash_merge(hash,coordinateType);
-
-    for (auto polygonPoints = polygonPath.begin(); polygonPoints != polygonPath.end(); ++polygonPoints)
-    {
-      for (auto it = polygonPoints->begin(); it != polygonPoints->end(); ++it)
-      {
-        Fmi::hash_merge(hash,it->x());
-        Fmi::hash_merge(hash,it->y());
-      }
-    }
-   */
 
     switch (coordinateType)
     {
@@ -5190,7 +5312,7 @@ void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std
         \param y1                The y-parameter of the rectangles top-left corner.
         \param x2                The x-parameter of the rectangles bottom-right corner.
         \param x2                The x-parameter of the rectangles bottom-right corner.
-        \gridRectangle           The parameter defines if the given area is rectangular in the grid (or in the coordinate space).
+        \param gridRectangle     The parameter defines if the given area is rectangular in the grid (or in the coordinate space).
         \param valueList         The list of grid point values are returned in this parameter.
 */
 
@@ -5210,6 +5332,8 @@ void Message::getGridValueListByRectangle(T::CoordinateType coordinateType,doubl
 
 
 
+
+/*! \brief Returns grid point values inside the given rectangle with value modification. */
 
 void Message::getGridValueListByRectangle(T::CoordinateType coordinateType,double x1,double y1,double x2,double y2,bool gridRectangle,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const
 {
@@ -5356,6 +5480,8 @@ void Message::getGridValueVectorByCoordinateList(T::CoordinateType coordinateTyp
 
 
 
+/*! \brief Returns interpolated grid values for the given coordinate list with value modification. */
+
 void Message::getGridValueVectorByCoordinateList(T::CoordinateType coordinateType,std::vector<T::Coordinate>& coordinates,short areaInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const
 {
   FUNCTION_TRACE
@@ -5456,6 +5582,8 @@ void Message::getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate
 
 
 
+
+/*! \brief Returns interpolated grid values for the given latlon coordinate list with value modification. */
 
 void Message::getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate>& coordinates,short areaInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const
 {
@@ -5559,6 +5687,8 @@ void Message::getGridValueVectorByGridPointList(std::vector<T::Coordinate>& coor
 
 
 
+
+/*! \brief Returns interpolated grid values for the given grid point list with value modification. */
 
 void Message::getGridValueVectorByGridPointList(std::vector<T::Coordinate>& coordinates,short areaInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const
 {
@@ -5665,6 +5795,8 @@ T::ParamValue Message::getGridValueByGridPoint_byInterpolation(double grid_i,dou
 
 
 
+/*! \brief Returns the interpolated grid value at the given grid position with value modification. */
+
 T::ParamValue Message::getGridValueByGridPoint_byInterpolation(double grid_i,double grid_j,short areaInterpolationMethod,uint modificationOperation,double_vec& modificationParameters) const
 {
   FUNCTION_TRACE
@@ -5738,6 +5870,8 @@ T::ParamValue Message::getGridValueByLatLonCoordinate(double lat,double lon,shor
 
 
 
+/*! \brief Returns the interpolated grid value at the given latlon coordinate with value modification. */
+
 T::ParamValue Message::getGridValueByLatLonCoordinate(double lat,double lon,short areaInterpolationMethod,uint modificationOperation,double_vec& modificationParameters) const
 {
   FUNCTION_TRACE
@@ -5788,6 +5922,8 @@ void Message::getGridValueVectorByRectangle(uint grid_i_start,uint grid_j_start,
 
 
 
+
+/*! \brief Returns grid point values in the given rectangle with value modification. */
 
 void Message::getGridValueVectorByRectangle(uint grid_i_start,uint grid_j_start,uint grid_i_end,uint grid_j_end,uint modificationOperation,double_vec& modificationParameters,T::GridPointValue_vec& gridPointValues) const
 {
@@ -5842,6 +5978,8 @@ void Message::getParameterValuesByRectangle(uint grid_i_start,uint grid_j_start,
 
 
 
+/*! \brief Returns parameter values in the given rectangle with value modification. */
+
 void Message::getParameterValuesByRectangle(uint grid_i_start,uint grid_j_start,uint grid_i_end,uint grid_j_end,uint modificationOperation,double_vec& modificationParameters,T::GridPointValueList& gridPointValues) const
 {
   FUNCTION_TRACE
@@ -5891,6 +6029,8 @@ T::ParamValue Message::getGridValueByGridPoint_noInterpolation(double grid_i,dou
 
 
 
+/*! \brief Returns the rounded grid point value with value modification. */
+
 T::ParamValue Message::getGridValueByGridPoint_noInterpolation(double grid_i,double grid_j,uint modificationOperation,double_vec& modificationParameters) const
 {
   FUNCTION_TRACE
@@ -5931,6 +6071,8 @@ T::ParamValue Message::getGridValueByGridPoint_nearest(double grid_i,double grid
 
 
 
+
+/*! \brief Returns the nearest grid point value with value modification. */
 
 T::ParamValue Message::getGridValueByGridPoint_nearest(double grid_i,double grid_j,uint modificationOperation,double_vec& modificationParameters) const
 {
@@ -6003,6 +6145,8 @@ T::ParamValue Message::getGridValueByGridPoint_min(double grid_i,double grid_j) 
 
 
 
+/*! \brief Returns the minimum of the surrounding grid point values with value modification. */
+
 T::ParamValue Message::getGridValueByGridPoint_min(double grid_i,double grid_j,uint modificationOperation,double_vec& modificationParameters) const
 {
   FUNCTION_TRACE
@@ -6057,6 +6201,8 @@ T::ParamValue Message::getGridValueByGridPoint_max(double grid_i,double grid_j) 
 
 
 
+
+/*! \brief Returns the maximum of the surrounding grid point values with value modification. */
 
 T::ParamValue Message::getGridValueByGridPoint_max(double grid_i,double grid_j,uint modificationOperation,double_vec& modificationParameters) const
 {
@@ -6114,6 +6260,8 @@ T::ParamValue Message::getGridValueByGridPoint_linearInterpolation(double grid_i
 
 
 
+/*! \brief Returns the linearly interpolated grid value with value modification. */
+
 T::ParamValue Message::getGridValueByGridPoint_linearInterpolation(double grid_i,double grid_j,uint modificationOperation,double_vec& modificationParameters) const
 {
   FUNCTION_TRACE
@@ -6148,6 +6296,8 @@ T::ParamValue Message::getGridValueByGridPoint_linearInterpolation(double grid_i
 
 
 
+/*! \brief Returns true if the message data has already been read into memory. */
+
 bool Message::isRead()
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
@@ -6156,6 +6306,8 @@ bool Message::isRead()
 
 
 
+
+/*! \brief Reads and initializes the message data from its underlying storage. */
 
 void Message::read()
 {
@@ -6196,7 +6348,7 @@ void Message::write(DataWriter& dataWriter)
 
 /*! \brief The method prints the content of the current object into the given stream.
 
-        \param ostream      The output stream.
+        \param stream      The output stream.
         \param level        The print level (used when printing multi-level structures).
         \param optionFlags  The printing options expressed in flag-bits.
 */

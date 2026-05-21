@@ -36,6 +36,8 @@ DataSection::DataSection()
 
 
 
+/*! \brief The copy constructor of the class. */
+
 DataSection::DataSection(const DataSection& other)
 :GRID::MessageSection(other)
 {
@@ -111,6 +113,8 @@ void DataSection::getAttributeList(const std::string& prefix,T::AttributeList& a
 
 
 
+/*! \brief The method sets the data buffer and its size. */
+
 void DataSection::setData(T::Data_ptr data,std::size_t size)
 {
   try
@@ -180,6 +184,8 @@ bool DataSection::getProperty(uint propertyId,Int64& value)
 
 
 
+
+/*! \brief The method collects the data section properties into the given vector. */
 
 void DataSection::getProperties(T::PropertySettingVec& properties)
 {
@@ -400,6 +406,8 @@ std::uint8_t DataSection::getNumberOfSection() const
 
 
 
+/*! \brief The method returns the pointer to the data buffer. */
+
 T::Data_ptr DataSection::getDataPtr() const
 {
   try
@@ -415,6 +423,8 @@ T::Data_ptr DataSection::getDataPtr() const
 
 
 
+
+/*! \brief The method returns the size of the data buffer in bytes. */
 
 std::size_t DataSection::getDataSize() const
 {
@@ -434,7 +444,7 @@ std::size_t DataSection::getDataSize() const
 
 /*! \brief The method prints the content of the current object into the given stream.
 
-        \param ostream      The output stream.
+        \param stream      The output stream.
         \param level        The print level (used when printing multi-level structures).
         \param optionFlags  The printing options expressed in flag-bits.
 */

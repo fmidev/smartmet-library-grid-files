@@ -5,6 +5,8 @@ namespace SmartMet
 {
 
 
+/*! \brief Default constructor for FileWriter. */
+
 FileWriter::FileWriter()
 {
   try
@@ -21,6 +23,8 @@ FileWriter::FileWriter()
 
 
 
+
+/*! \brief Destructor that closes the file if still open. */
 
 FileWriter::~FileWriter()
 {
@@ -41,6 +45,8 @@ FileWriter::~FileWriter()
 
 
 
+
+/*! \brief Creates and opens a new file for writing. */
 
 void FileWriter::createFile(const char *_filename)
 {
@@ -65,6 +71,8 @@ void FileWriter::createFile(const char *_filename)
 
 
 
+/*! \brief Closes the currently open file. */
+
 void FileWriter::closeFile()
 {
   try
@@ -83,6 +91,8 @@ void FileWriter::closeFile()
 
 
 
+
+/*! \brief Returns the current write offset in the open file. */
 
 UInt64 FileWriter::getWritePosition()
 {
@@ -103,6 +113,8 @@ UInt64 FileWriter::getWritePosition()
 
 
 
+/*! \brief Returns the maximum file offset reached so far. */
+
 UInt64 FileWriter::getMaxWritePosition()
 {
   try
@@ -122,6 +134,8 @@ UInt64 FileWriter::getMaxWritePosition()
 
 
 
+/*! \brief Seeks to the given byte offset in the open file. */
+
 void FileWriter::setWritePosition(UInt64 _pos)
 {
   try
@@ -140,6 +154,8 @@ void FileWriter::setWritePosition(UInt64 _pos)
 
 
 
+
+/*! \brief Writes a block of raw bytes to the open file. */
 
 void FileWriter::write_data(void *_data,UInt64 _size)
 {

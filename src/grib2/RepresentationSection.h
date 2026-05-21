@@ -68,7 +68,6 @@ class RepresentationSection : public GRID::MessageSection
     std::uint8_t    getNumberOfSection() const;
     std::uint32_t   getNumberOfValues() const;
     std::uint16_t   getDataRepresentationTemplateNumber() const;
-    //std::string     getDataRepresentationString() const;
     bool            getValueByIndex(uint index,T::ParamValue& value) const;
 
     void            setNumberOfValues(std::uint32_t numOfValues);
@@ -113,6 +112,7 @@ class RepresentationSection : public GRID::MessageSection
     T::UInt8_opt    mNumberOfSection;
 
   public:
+    /*! \brief Data Representation Template numbers (Code Table 5.0). */
     class Template
     {
       public:
@@ -135,7 +135,7 @@ class RepresentationSection : public GRID::MessageSection
 };
 
 
-typedef std::shared_ptr<RepresentationSection> RepresentSect_sptr;
+typedef std::shared_ptr<RepresentationSection> RepresentSect_sptr;  //!< Shared ownership pointer to a RepresentationSection.
 
 
 }  // namespace GRIB2

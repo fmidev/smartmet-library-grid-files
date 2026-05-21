@@ -63,7 +63,7 @@ SphericalHarmonicsComplexPacking::~SphericalHarmonicsComplexPacking()
 
 
 
-
+/*! \brief Returns the packing method identifier for spherical harmonics complex packing. */
 
 PackingMethod SphericalHarmonicsComplexPacking::getPackingMethod() const
 {
@@ -79,7 +79,7 @@ PackingMethod SphericalHarmonicsComplexPacking::getPackingMethod() const
 
 
 
-
+/*! \brief Returns a deep copy of the current data definition object. */
 
 DataDefinition* SphericalHarmonicsComplexPacking::createDataDefinition() const
 {
@@ -141,6 +141,8 @@ void SphericalHarmonicsComplexPacking::write(DataWriter& dataWriter)
 
 
 
+/*! \brief Decodes packed spherical harmonics complex values into the output vector (not yet implemented). */
+
 void SphericalHarmonicsComplexPacking::decodeValues(Message *message,T::ParamValue_vec& decodedValues) const
 {
   try
@@ -159,7 +161,7 @@ void SphericalHarmonicsComplexPacking::decodeValues(Message *message,T::ParamVal
 
 /*! \brief The method prints the content of the current object into the given stream.
 
-        \param ostream      The output stream.
+        \param stream      The output stream.
         \param level        The print level (used when printing multi-level structures).
         \param optionFlags  The printing options expressed in flag-bits.
 */

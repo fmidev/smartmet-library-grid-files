@@ -28,6 +28,19 @@ namespace GRIB2
 
 
 
+// ====================================================================================
+/*! \brief GRIB edition 2 message — the main entry point for accessing GRIB 2 data.
+ *
+ *  Wraps the eight GRIB 2 sections (Indicator, Identification, Local, Grid, Product,
+ *  Representation, Bitmap, Data) and implements the full GRID::Message virtual
+ *  interface: coordinate conversions, grid metadata, parameter/level identification,
+ *  and value decoding.
+ *
+ *  Sections are parsed lazily on first access via read(MemoryReader&) and cached in
+ *  shared_ptr members.  Grid value decode results are cached via GRID::ValueCache
+ *  keyed on mCacheKey / mOrigCacheKey. */
+// ====================================================================================
+
 class Message : public GRID::Message
 {
   public:
@@ -184,7 +197,7 @@ class Message : public GRID::Message
     /*! \brief  The message start position in the file. */
     T::FilePosition     mFilePosition;
 
-    T::FilePosition     mOriginalFilePosition;
+    T::FilePosition     mOriginalFilePosition;  //!< File position before any in-place modifications.
 
     /*! \brief  A shared pointer to the IndicatorSection object. */
     IndicatorSect_sptr  mIndicatorSection;
@@ -219,7 +232,7 @@ class Message : public GRID::Message
     /*! \brief  A cache key that was used for caching the original grid data. */
     mutable uint        mOrigCacheKey;
 
-    time_t              mForecastTimeT;
+    time_t              mForecastTimeT;     //!< Cached forecast time as a Unix timestamp.
 
     /*! \brief Indicates if the message is already read. */
     bool                mIsRead;
@@ -227,26 +240,27 @@ class Message : public GRID::Message
     /*! \brief  A flag that indicates that the data decoding is impossible. */
     mutable bool        mValueDecodingFailed;
 
-    mutable bool        mDataLocked;
+    mutable bool        mDataLocked;        //!< True while a concurrent thread holds the data for read.
 
 
 
   public:
 
+    /*! \brief GRIB 2 section numbers used to identify each section in a message. */
     class SectionNumber
     {
       public:
         enum
 	  {
-	   indicator_section       = 0,
-	   identification_section  = 1,
-	   local_section           = 2,
-	   grid_section            = 3,
-	   product_section         = 4,
-	   representation_section  = 5,
-	   bitmap_section          = 6,
-	   data_section            = 7,
-	   end_section             = 8
+	   indicator_section       = 0,  //!< Section 0 — Indicator Section.
+	   identification_section  = 1,  //!< Section 1 — Identification Section.
+	   local_section           = 2,  //!< Section 2 — Local Use Section.
+	   grid_section            = 3,  //!< Section 3 — Grid Definition Section.
+	   product_section         = 4,  //!< Section 4 — Product Definition Section.
+	   representation_section  = 5,  //!< Section 5 — Data Representation Section.
+	   bitmap_section          = 6,  //!< Section 6 — Bit-Map Section.
+	   data_section            = 7,  //!< Section 7 — Data Section.
+	   end_section             = 8   //!< Section 8 — End Section.
 	  };
     };
 };

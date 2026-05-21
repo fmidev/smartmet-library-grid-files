@@ -323,6 +323,8 @@ std::size_t BitmapSection::getBitmapDataSizeInBytes() const
 
 
 
+/*! \brief The method returns a hash value computed from the bitmap data. */
+
 Int64 BitmapSection::getHash()
 {
   try
@@ -344,6 +346,8 @@ Int64 BitmapSection::getHash()
 
 
 
+
+/*! \brief The method fills the given index vector with bitmap-derived value indices. */
 
 void BitmapSection::getIndexVector(uint numOfValues,T::IndexVector& indexVector)
 {
@@ -374,6 +378,8 @@ void BitmapSection::getIndexVector(uint numOfValues,T::IndexVector& indexVector)
 
 
 
+/*! \brief The method sets the number of unused bits in the bitmap. */
+
 void BitmapSection::setNumberOfUnusedBits(std::uint8_t unusedBits)
 {
   try
@@ -389,6 +395,8 @@ void BitmapSection::setNumberOfUnusedBits(std::uint8_t unusedBits)
 
 
 
+
+/*! \brief The method sets the table reference value. */
 
 void BitmapSection::setTableReference(std::uint16_t reference)
 {
@@ -440,7 +448,7 @@ void BitmapSection::setBitmapData(T::Data_ptr data,std::size_t size)
 
 /*! \brief The method prints the content of the current object into the given stream.
 
-        \param ostream      The output stream.
+        \param stream      The output stream.
         \param level        The print level (used when printing multi-level structures).
         \param optionFlags  The printing options expressed in flag-bits.
 */

@@ -111,6 +111,8 @@ void LambertAzimuthalEqualAreaImpl::read(MemoryReader& memoryReader)
 
 
 
+/*! \brief Initializes derived projection parameters (start coordinates and direction increments). */
+
 void LambertAzimuthalEqualAreaImpl::init() const
 {
   try
@@ -292,6 +294,8 @@ T::Dimensions LambertAzimuthalEqualAreaImpl::getGridDimensions() const
 
 
 
+/*! \brief Returns the number of columns in the original grid. */
+
 std::size_t LambertAzimuthalEqualAreaImpl::getGridColumnCount() const
 {
   try
@@ -306,6 +310,8 @@ std::size_t LambertAzimuthalEqualAreaImpl::getGridColumnCount() const
 
 
 
+
+/*! \brief Returns the number of rows in the original grid. */
 
 std::size_t LambertAzimuthalEqualAreaImpl::getGridRowCount() const
 {
@@ -349,6 +355,8 @@ bool LambertAzimuthalEqualAreaImpl::getGridPointByLatLonCoordinates(double lat,d
 
 
 
+
+/*! \brief Returns the metric grid cell width and height. */
 
 bool LambertAzimuthalEqualAreaImpl::getGridMetricCellSize(double& width,double& height) const
 {
@@ -570,7 +578,7 @@ void LambertAzimuthalEqualAreaImpl::initSpatialReference()
 
 /*! \brief The method prints the content of the current object into the given stream.
 
-        \param ostream      The output stream.
+        \param stream      The output stream.
         \param level        The print level (used when printing multi-level structures).
         \param optionFlags  The printing options expressed in flag-bits.
 */

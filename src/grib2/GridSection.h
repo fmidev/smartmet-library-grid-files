@@ -169,6 +169,7 @@ class GridSection : public GRID::MessageSection
 
   public:
 
+    /*! \brief Grid Definition Template numbers (Code Table 3.1). */
     class Template
     {
       public:
@@ -204,7 +205,7 @@ class GridSection : public GRID::MessageSection
     };
 };
 
-typedef std::shared_ptr<GridSection> GridSect_sptr;
+typedef std::shared_ptr<GridSection> GridSect_sptr;  //!< Shared ownership pointer to a GridSection.
 
 }  // namespace GRIB2
 }  // namespace SmartMet

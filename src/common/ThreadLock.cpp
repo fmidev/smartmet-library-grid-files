@@ -8,6 +8,8 @@ namespace SmartMet
 
 #if 0
 
+/*! \brief Default constructor that initializes the underlying mutex. */
+
 ThreadLock::ThreadLock()
 {
   try
@@ -23,6 +25,8 @@ ThreadLock::ThreadLock()
 
 
 
+
+/*! \brief Destructor that destroys the underlying mutex. */
 
 ThreadLock::~ThreadLock()
 {
@@ -41,6 +45,8 @@ ThreadLock::~ThreadLock()
 
 
 
+/*! \brief Acquires the mutex, blocking until it becomes available. */
+
 void ThreadLock::lock()
 {
   try
@@ -56,6 +62,8 @@ void ThreadLock::lock()
 
 
 
+
+/*! \brief Tries to acquire the mutex without blocking. */
 
 bool ThreadLock::tryLock()
 {
@@ -75,6 +83,8 @@ bool ThreadLock::tryLock()
 
 
 
+
+/*! \brief Releases the held mutex. */
 
 void ThreadLock::unlock()
 {

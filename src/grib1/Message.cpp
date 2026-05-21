@@ -45,6 +45,7 @@ Message::Message()
     mGeometryId = 0;
     mCacheKey = 0;
     mOrigCacheKey = 0;
+    mOriginalFilePosition = 0;
     mValueDecodingFailed = false;
     mIsRead = false;
     mFileType = T::FileTypeValue::Grib1;
@@ -60,6 +61,8 @@ Message::Message()
 
 
 
+
+/*! \brief The constructor that initializes the message from grid file metadata. */
 
 Message::Message(GRID::GridFile *gridFile,T::MessageIndex messageIndex,GRID::MessageInfo& messageInfo)
 {
@@ -78,6 +81,7 @@ Message::Message(GRID::GridFile *gridFile,T::MessageIndex messageIndex,GRID::Mes
     mGeometryId = messageInfo.mGeometryId;
     mCacheKey = 0;
     mOrigCacheKey = 0;
+    mOriginalFilePosition = 0;
     mValueDecodingFailed = false;
     mIsRead = false;
     mFileType = T::FileTypeValue::Grib1;
@@ -108,6 +112,7 @@ Message::Message(const Message& other)
     mMessageSize = other.mMessageSize;
     mFileType = other.mFileType;
     mForecastTimeT = other.mForecastTimeT;
+    mOriginalFilePosition = other.mOriginalFilePosition;
 
     if (other.mIndicatorSection)
     {
@@ -177,6 +182,8 @@ Message::~Message()
 
 
 
+/*! \brief The method premaps the message data and bitmap into memory. */
+
 void Message::premap() const
 {
   FUNCTION_TRACE
@@ -230,6 +237,8 @@ void Message::premap() const
 
 
 
+
+/*! \brief The method collects the file positions of all sections of the message. */
 
 void Message::getSectionPositions(std::set<T::FilePosition>& positions)
 {
@@ -347,6 +356,8 @@ void Message::getAttributeList(const std::string& prefix,T::AttributeList& attri
 
 
 
+/*! \brief The method returns the value of the named attribute. */
+
 bool Message::getAttributeValue(const char *attributeName, std::string& attributeValue) const
 {
   FUNCTION_TRACE
@@ -367,6 +378,8 @@ bool Message::getAttributeValue(const char *attributeName, std::string& attribut
 }
 
 
+
+/*! \brief The method returns true if the named attribute has the given value. */
 
 bool Message::hasAttributeValue(const char *attributeName, const char *attributeValue) const
 {
@@ -390,6 +403,8 @@ bool Message::hasAttributeValue(const char *attributeName, const char *attribute
 
 
 
+/*! \brief The method returns the file type of the message (GRIB1). */
+
 T::FileType Message::getMessageType() const
 {
   return T::FileTypeValue::Grib1;
@@ -397,6 +412,8 @@ T::FileType Message::getMessageType() const
 
 
 
+
+/*! \brief The method returns the memory pointer to the message data. */
 
 char* Message::getMemoryPtr() const
 {
@@ -423,6 +440,8 @@ char* Message::getMemoryPtr() const
 
 
 
+/*! \brief The method returns true if the message has been read. */
+
 bool Message::isRead()
 {
   try
@@ -439,6 +458,8 @@ bool Message::isRead()
 
 
 
+
+/*! \brief The method reads the message from its grid file using a memory reader. */
 
 void Message::read()
 {
@@ -872,6 +893,8 @@ void Message::initGridSection()
 
 
 
+/*! \brief The method locks the message data pages in memory. */
+
 void Message::lockData()
 {
   FUNCTION_TRACE
@@ -897,6 +920,8 @@ void Message::lockData()
 
 
 
+
+/*! \brief The method unlocks the message data pages from memory. */
 
 void Message::unlockData()
 {
@@ -1009,6 +1034,8 @@ bool Message::getProperty(const char *propertyName,Int64& value)
 
 
 
+
+/*! \brief The method collects the properties of all sections into the given vector. */
 
 void Message::getProperties(T::PropertySettingVec& properties)
 {
@@ -1543,6 +1570,8 @@ T::GeometryId Message::getGridGeometryId() const
 
 
 
+/*! \brief The method returns the average width and height of a grid cell in metric units. */
+
 void Message::getGridCellAverageSize(double& width,double& height) const
 {
   FUNCTION_TRACE
@@ -1564,6 +1593,8 @@ void Message::getGridCellAverageSize(double& width,double& height) const
 
 
 
+
+/*! \brief The method returns the grid cell size in metric units. */
 
 bool Message::getGridMetricCellSize(double& width,double& height) const
 {
@@ -1587,6 +1618,8 @@ bool Message::getGridMetricCellSize(double& width,double& height) const
 
 
 
+/*! \brief The method returns the total grid size in metric units. */
+
 bool Message::getGridMetricSize(double& width,double& height) const
 {
   FUNCTION_TRACE
@@ -1609,6 +1642,8 @@ bool Message::getGridMetricSize(double& width,double& height) const
 
 
 
+/*! \brief The method returns the grid corner coordinates in metric projection. */
+
 bool Message::getGridMetricArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight)
 {
   FUNCTION_TRACE
@@ -1630,6 +1665,8 @@ bool Message::getGridMetricArea(T::Coordinate& topLeft,T::Coordinate& topRight,T
 
 
 
+
+/*! \brief The method returns the grid corner coordinates in latlon. */
 
 bool Message::getGridLatLonArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight)
 {
@@ -1692,7 +1729,7 @@ std::string Message::getGridGeometryString() const
    It is also possible that we might want to use our own geometry identifiers and this method allows us to set it
    in place.
 
-        \param   The grid geometry identifier.
+        \param geometryId  The grid geometry identifier.
 */
 
 void Message::setGridGeometryId(T::GeometryId geometryId)
@@ -1719,7 +1756,7 @@ void Message::setGridGeometryId(T::GeometryId geometryId)
 /*! \brief The method set the data compression method that is used when new grid values are set into
     the place. In other words, the method does not change the compression method of the existing grid values.
 
-        \param   The grid value compression method.
+        \param compressionMethod  The grid value compression method.
 */
 
 void Message::setGridValueCompressionMethod(ushort compressionMethod)
@@ -2272,6 +2309,8 @@ DataSect_sptr Message::getDataSection() const
 
 
 
+/*! \brief The method converts a list of latlon coordinates into grid point coordinates. */
+
 void Message::getGridPointListByLatLonCoordinates(T::Coordinate_vec& latlon,T::Coordinate_vec& points) const
 {
   {
@@ -2327,6 +2366,8 @@ bool Message::getGridPointByLatLonCoordinates(double lat,double lon,double& grid
 
 
 
+
+/*! \brief The method calculates the grid position from latlon coordinates without using the cache. */
 
 bool Message::getGridPointByLatLonCoordinatesNoCache(double lat,double lon,double& grid_i,double& grid_j) const
 {
@@ -2629,54 +2670,6 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
 
 
 
-/*! \brief The method returns the grid value in the given original grid point.
-
-        \param grid_i   The grid i-position.
-        \param grid_j   The grid j-position.
-        \return         The parameter value of the given grid point.
-*/
-/*
-T::ParamValue Message::getGridValueByOriginalGridPoint(uint grid_i,uint grid_j) const
-{
-  FUNCTION_TRACE
-  try
-  {
-    if (mValueDecodingFailed)
-    {
-      // We have failed to decode parameter values
-      return ParamValueMissing;
-    }
-
-    int idx = getGridOriginalValueIndex(grid_i,grid_j);
-    if (idx < 0)
-      return ParamValueMissing;
-
-    if (mOrigCacheKey > 0)
-    {
-      T::ParamValue value = 0;
-      if (GRID::valueCache.getValue(mOrigCacheKey,idx,value))
-        return value;
-    }
-
-    T::ParamValue_vec values;
-    getGridOriginalValueVector(values);
-    if ((std::size_t)idx >= values.size())
-      return ParamValueMissing;
-
-    return values[idx];
-  }
-  catch (...)
-  {
-    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
-    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
-    throw exception;
-  }
-}
-*/
-
-
-
-
 /*! \brief The method returns all grid data values (also missing values) as the grid
     would be regular. in the case of an irregular grid, the grid rows are filled so that
     the grid looks like a regular grid.
@@ -2727,43 +2720,8 @@ void Message::getGridValueVector(T::ParamValue_vec& values) const
 
       if (mDataSection->getPackingMethod() != PackingMethod::SIMPLE_PACKING || (mBitmapSection != nullptr  &&  mBitmapSection->getBitmapDataSizeInBytes() > 0))
         mOrigCacheKey = GRID::valueCache.addValues(values);
-#if 0
-      if (d.getDimensions() == 2  &&  n != (d.nx() * d.ny()))
-      {
-        // Grid rows have different number of columns. Let's fill the rows so that they all have the same
-        // number of columns.
 
-        // TODO: We should interpolate between the columns. Now we just repeat the same value.
-
-        auto maxCols = getGridColumnCount();
-
-        T::ParamValue_vec valVector;
-        uint rows = d.ny();
-
-        for (uint r=0; r<rows; r++)
-        {
-          uint cols = getGridColumnCount(r);
-          double step = C_DOUBLE(maxCols) / C_DOUBLE(cols);
-
-          for (std::size_t c=0; c<maxCols; c++)
-          {
-            uint cc = C_UINT(C_DOUBLE(c) / step);
-            int idx = C_INT(getGridOriginalValueIndex(cc,r));
-            T::ParamValue val = values[idx];
-            valVector.emplace_back(val);
-          }
-        }
-        values = valVector;
-
-        //  printf("FILE (2) %u\n",getFileId());
-        if (mDataSection->getPackingMethod() != PackingMethod::SIMPLE_PACKING || (mBitmapSection != nullptr  &&  mBitmapSection->getBitmapDataSizeInBytes() > 0))
-          mCacheKey = GRID::valueCache.addValues(values);
-      }
-#endif
-      //else
-      //{
-        mCacheKey = mOrigCacheKey;
-      //}
+      mCacheKey = mOrigCacheKey;
     }
     catch (...)
     {
@@ -3007,6 +2965,8 @@ std::string Message::getWKT() const
 
 
 
+/*! \brief The method returns the PROJ.4 string of the current grid. */
+
 std::string Message::getProj4() const
 {
   FUNCTION_TRACE
@@ -3120,6 +3080,8 @@ bool Message::isGridGlobal() const
 
 
 
+
+/*! \brief The method returns true if the U/V vector components are relative to the grid. */
 
 bool Message::isRelativeUV() const
 {
@@ -3443,7 +3405,7 @@ std::uint8_t Message::getFlags() const
 
 /*! \brief The method prints the content of the current object into the given stream.
 
-        \param ostream      The output stream.
+        \param stream      The output stream.
         \param level        The print level (used when printing multi-level structures).
         \param optionFlags  The printing options expressed in flag-bits.
 */

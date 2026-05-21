@@ -174,6 +174,8 @@ bool DataSection::getProperty(uint propertyId,Int64& value)
 
 
 
+/*! \brief The method collects the properties of the data section into the given vector. */
+
 void DataSection::getProperties(T::PropertySettingVec& properties)
 {
   try
@@ -421,6 +423,8 @@ void DataSection::read(MemoryReader& memoryReader)
 
 
 
+/*! \brief The method selects and sets the data definition based on the given compression method. */
+
 void DataSection::setDataDefinition(ushort compressionMethod)
 {
   try
@@ -631,6 +635,8 @@ std::uint8_t DataSection::getSectionNumber() const
 
 
 
+/*! \brief The method returns the pointer to the packed data buffer. */
+
 T::Data_ptr DataSection::getDataPtr() const
 {
   try
@@ -645,6 +651,8 @@ T::Data_ptr DataSection::getDataPtr() const
 
 
 
+
+/*! \brief The method returns the data section flag byte. */
 
 std::uint8_t DataSection::getFlags() const
 {
@@ -662,6 +670,8 @@ std::uint8_t DataSection::getFlags() const
 
 
 
+/*! \brief The method returns the binary scale factor. */
+
 std::int16_t DataSection::getBinaryScaleFactor() const
 {
   try
@@ -677,6 +687,8 @@ std::int16_t DataSection::getBinaryScaleFactor() const
 
 
 
+
+/*! \brief The method returns the reference value used in packing. */
 
 std::float_t DataSection::getReferenceValue() const
 {
@@ -694,6 +706,8 @@ std::float_t DataSection::getReferenceValue() const
 
 
 
+/*! \brief The method returns the number of bits used per packed value. */
+
 std::uint8_t DataSection::getBitsPerValue() const
 {
   try
@@ -709,6 +723,8 @@ std::uint8_t DataSection::getBitsPerValue() const
 
 
 
+
+/*! \brief The method returns the size of the data buffer in bytes. */
 
 std::size_t DataSection::getDataSize() const
 {
@@ -726,6 +742,8 @@ std::size_t DataSection::getDataSize() const
 
 
 
+/*! \brief The method returns the maximum addressable data size in bytes. */
+
 std::size_t DataSection::getDataSizeMax() const
 {
   try
@@ -741,6 +759,8 @@ std::size_t DataSection::getDataSizeMax() const
 
 
 
+
+/*! \brief The method returns the decoded value at the given index. */
 
 bool DataSection::getValueByIndex(uint index,T::ParamValue& value) const
 {
@@ -761,6 +781,8 @@ bool DataSection::getValueByIndex(uint index,T::ParamValue& value) const
 
 
 
+/*! \brief The method returns the packing method used for the data. */
+
 PackingMethod DataSection::getPackingMethod() const
 {
   try
@@ -779,6 +801,8 @@ PackingMethod DataSection::getPackingMethod() const
 
 
 
+/*! \brief The method decodes the packed values into the given vector. */
+
 void DataSection::decodeValues(T::ParamValue_vec& decodedValues) const
 {
   try
@@ -796,6 +820,8 @@ void DataSection::decodeValues(T::ParamValue_vec& decodedValues) const
 
 
 
+/*! \brief The method encodes the given values into the data buffer. */
+
 void DataSection::encodeValues(T::ParamValue_vec& values)
 {
   try
@@ -812,6 +838,8 @@ void DataSection::encodeValues(T::ParamValue_vec& values)
 
 
 
+
+/*! \brief The method sets the data section flags and selects the matching data definition. */
 
 void DataSection::setFlags(std::uint8_t flags)
 {
@@ -859,6 +887,8 @@ void DataSection::setFlags(std::uint8_t flags)
 
 
 
+/*! \brief The method sets the binary scale factor. */
+
 void DataSection::setBinaryScaleFactor(std::int16_t binaryScaleFactor)
 {
   try
@@ -874,6 +904,8 @@ void DataSection::setBinaryScaleFactor(std::int16_t binaryScaleFactor)
 
 
 
+
+/*! \brief The method sets the reference value used in packing. */
 
 void DataSection::setReferenceValue(std::float_t referenceValue)
 {
@@ -891,6 +923,8 @@ void DataSection::setReferenceValue(std::float_t referenceValue)
 
 
 
+/*! \brief The method sets the number of bits used per packed value. */
+
 void DataSection::setBitsPerValue(std::uint8_t bitsPerValue)
 {
   try
@@ -906,6 +940,8 @@ void DataSection::setBitsPerValue(std::uint8_t bitsPerValue)
 
 
 
+
+/*! \brief The method sets the packed data buffer and its size. */
 
 void DataSection::setData(T::Data_ptr data,std::size_t size)
 {
@@ -932,6 +968,8 @@ void DataSection::setData(T::Data_ptr data,std::size_t size)
 
 
 
+/*! \brief The method sets the data definition object. */
+
 void DataSection::setDataDefinition(DataDefinition *dataDefinition)
 {
   try
@@ -950,7 +988,7 @@ void DataSection::setDataDefinition(DataDefinition *dataDefinition)
 
 /*! \brief The method prints the content of the current object into the given stream.
 
-        \param ostream      The output stream.
+        \param stream      The output stream.
         \param level        The print level (used when printing multi-level structures).
         \param optionFlags  The printing options expressed in flag-bits.
 */

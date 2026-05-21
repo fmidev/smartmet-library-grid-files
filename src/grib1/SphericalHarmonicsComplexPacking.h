@@ -25,6 +25,14 @@ namespace GRIB1
   --------------------------------------------------------------------------------------
 */
 
+// ====================================================================================
+/*! \brief GRIB 1 spherical harmonics complex-packing decoder.
+ *
+ *  Decodes grid values encoded using the ECMWF-style spherical harmonics complex
+ *  packing scheme.  Spectral coefficients within truncation (J1, K1, M1) are stored
+ *  unpacked in floating point; remaining coefficients are simple-packed. */
+// ====================================================================================
+
 class SphericalHarmonicsComplexPacking : public DataDefinition
 {
   public:
@@ -42,11 +50,11 @@ class SphericalHarmonicsComplexPacking : public DataDefinition
 
   protected:
 
-    std::uint16_t   mN;
-    std::uint16_t   mIP;
-    std::uint8_t    mJ1;
-    std::uint8_t    mK1;
-    std::uint8_t    mM1;
+    std::uint16_t   mN;   //!< Offset N (relative to BDS start, or GRIB record start for ECMWF).
+    std::uint16_t   mIP;  //!< Integer representation of P: IP = int(1000 * P).
+    std::uint8_t    mJ1;  //!< Pentagonal resolution parameter J.
+    std::uint8_t    mK1;  //!< Pentagonal resolution parameter K.
+    std::uint8_t    mM1;  //!< Pentagonal resolution parameter M.
 };
 
 }  // namespace GRIB1

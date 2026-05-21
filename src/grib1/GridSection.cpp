@@ -182,6 +182,8 @@ bool GridSection::getProperty(uint propertyId,Int64& value)
 
 
 
+/*! \brief The method collects the grid section properties into the given vector. */
+
 void GridSection::getProperties(T::PropertySettingVec& properties)
 {
   try
@@ -275,6 +277,8 @@ bool GridSection::setProperty(uint propertyId,double value)
 
 
 
+/*! \brief The method sets the number of vertical coordinate values. */
+
 void GridSection::setNumberOfVerticalCoordinateValues(Int64 value)
 {
   FUNCTION_TRACE
@@ -292,6 +296,8 @@ void GridSection::setNumberOfVerticalCoordinateValues(Int64 value)
 
 
 
+/*! \brief The method sets the PVL (PV/PL) location offset. */
+
 void GridSection::setPvlLocation(Int64 value)
 {
   FUNCTION_TRACE
@@ -308,6 +314,8 @@ void GridSection::setPvlLocation(Int64 value)
 
 
 
+
+/*! \brief The method sets the data representation type and creates the matching grid definition. */
 
 void GridSection::setDataRepresentationType(Int64 value)
 {
@@ -427,16 +435,6 @@ void GridSection::read(MemoryReader& memoryReader)
             mGridDefinition->setEarthSemiMinor(def->getEarthSemiMinor());
           }
         }
-        /*
-        else
-        {
-          auto def = Identification::gridDef.getGrib1DefinitionByGeometryId(geomId);
-          if (def)
-          {
-            mGridDefinition = def;
-          }
-        }
-        */
 
         mGridDefinition->initSpatialReference();
       }
@@ -593,6 +591,8 @@ std::uint8_t GridSection::getSectionNumber() const
 
 
 
+/*! \brief The method converts a list of latlon coordinates into grid point coordinates. */
+
 void GridSection::getGridPointListByLatLonCoordinates(T::Coordinate_vec& latlon,T::Coordinate_vec& points) const
 {
   FUNCTION_TRACE
@@ -642,6 +642,8 @@ bool GridSection::getGridPointByLatLonCoordinates(double lat,double lon,double& 
 
 
 
+
+/*! \brief The method calculates the grid position from latlon coordinates without using the cache. */
 
 bool GridSection::getGridPointByLatLonCoordinatesNoCache(double lat,double lon,double& grid_i,double& grid_j) const
 {
@@ -1032,6 +1034,8 @@ T::GeometryId GridSection::getGridGeometryId() const
 
 
 
+/*! \brief The method returns the average width and height of a grid cell in metric units. */
+
 void GridSection::getGridCellAverageSize(double& width,double& height) const
 {
   FUNCTION_TRACE
@@ -1053,6 +1057,8 @@ void GridSection::getGridCellAverageSize(double& width,double& height) const
 
 
 
+/*! \brief The method returns the grid cell size in metric units. */
+
 bool GridSection::getGridMetricCellSize(double& width,double& height) const
 {
   FUNCTION_TRACE
@@ -1072,6 +1078,8 @@ bool GridSection::getGridMetricCellSize(double& width,double& height) const
 
 
 
+
+/*! \brief The method returns the total grid size in metric units. */
 
 bool GridSection::getGridMetricSize(double& width,double& height) const
 {
@@ -1093,6 +1101,8 @@ bool GridSection::getGridMetricSize(double& width,double& height) const
 
 
 
+/*! \brief The method returns the grid corner coordinates in metric projection. */
+
 bool GridSection::getGridMetricArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight)
 {
   FUNCTION_TRACE
@@ -1112,6 +1122,8 @@ bool GridSection::getGridMetricArea(T::Coordinate& topLeft,T::Coordinate& topRig
 
 
 
+
+/*! \brief The method returns the grid corner coordinates in latlon. */
 
 bool GridSection::getGridLatLonArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight)
 {
@@ -1169,7 +1181,7 @@ std::string GridSection::getGridGeometryString() const
    It is also possible that we might want to use our own geometry identifiers and this method allows us to set it
    in place.
 
-        \param   The grid geometry identifier.
+        \param geometryId  The grid geometry identifier.
 */
 
 void GridSection::setGridGeometryId(T::GeometryId geometryId)
@@ -1299,6 +1311,8 @@ bool GridSection::isGridGlobal() const
 
 
 
+/*! \brief The method returns true if the U/V vector components are relative to the grid. */
+
 bool GridSection::isRelativeUV() const
 {
   FUNCTION_TRACE
@@ -1344,31 +1358,6 @@ T::GridProjection GridSection::getGridProjection() const
 
 
 
-/*! \brief This method can be used for finding out the grid layout.
-
-        \return   The layout of the grid (expressed as an enum value).
-*/
-/*
-T::GridLayout GridSection::getGridLayout() const
-{
-  FUNCTION_TRACE
-  try
-  {
-    if (mGridDefinition == nullptr)
-      throw Fmi::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
-
-    return mGridDefinition->getGridLayout();
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-*/
-
-
-
-
 /*! \brief The method initializes the spatial reference (mSpatialReference) of the grid. */
 
 void GridSection::initSpatialReference()
@@ -1387,6 +1376,8 @@ void GridSection::initSpatialReference()
 
 
 
+
+/*! \brief The method returns the spatial reference of the grid as a WKT string. */
 
 std::string GridSection::getWKT()
 {
@@ -1407,6 +1398,8 @@ std::string GridSection::getWKT()
 
 
 
+
+/*! \brief The method returns the spatial reference of the grid as a PROJ.4 string. */
 
 std::string GridSection::getProj4()
 {
@@ -1601,7 +1594,7 @@ GridDefinition* GridSection::createGridDefinition(std::uint8_t  dataRepresentati
 
 /*! \brief The method prints the content of the current object into the given stream.
 
-        \param ostream      The output stream.
+        \param stream      The output stream.
         \param level        The print level (used when printing multi-level structures).
         \param optionFlags  The printing options expressed in flag-bits.
 */

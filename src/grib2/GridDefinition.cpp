@@ -144,6 +144,8 @@ GridDefinition::~GridDefinition()
 
 
 
+/*! \brief The method creates a new GridDefinition instance of the current type. */
+
 GridDefinition* GridDefinition::createGridDefinition() const
 {
   FUNCTION_TRACE
@@ -154,6 +156,8 @@ GridDefinition* GridDefinition::createGridDefinition() const
 
 
 
+/*! \brief The method collects attributeList details related to the grid definition. */
+
 void GridDefinition::getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const
 {
   FUNCTION_TRACE
@@ -162,6 +166,8 @@ void GridDefinition::getAttributeList(const std::string& prefix,T::AttributeList
 
 
 
+
+/*! \brief The method returns the Earth shape settings if available. */
 
 EarthShapeSettings* GridDefinition::getEarthShape() const
 {
@@ -173,6 +179,8 @@ EarthShapeSettings* GridDefinition::getEarthShape() const
 
 
 
+/*! \brief The method returns the resolution settings if available. */
+
 ResolutionSettings* GridDefinition::getResolution() const
 {
   FUNCTION_TRACE
@@ -183,6 +191,8 @@ ResolutionSettings* GridDefinition::getResolution() const
 
 
 
+/*! \brief The method returns the latlon settings if available. */
+
 LatLonSettings* GridDefinition::getLatLon() const
 {
   FUNCTION_TRACE
@@ -192,6 +202,8 @@ LatLonSettings* GridDefinition::getLatLon() const
 
 
 
+
+/*! \brief The method returns the rotation settings if available. */
 
 RotationSettings* GridDefinition::getRotation() const
 {
@@ -253,6 +265,8 @@ std::string GridDefinition::getGridGeometryString() const
 
 
 
+/*! \brief The method returns the grid corner coordinates in metric (WGS84 mercator) projection. */
+
 bool GridDefinition::getGridMetricArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight)
 {
   FUNCTION_TRACE
@@ -310,6 +324,8 @@ bool GridDefinition::getGridMetricArea(T::Coordinate& topLeft,T::Coordinate& top
 
 
 
+
+/*! \brief The method returns the grid corner coordinates in latlon. */
 
 bool GridDefinition::getGridLatLonArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight)
 {
@@ -386,7 +402,7 @@ T::GridProjection GridDefinition::getGridProjection()
    It is also possible that we might want to use our own geometry identifiers and this method allows us to set it
    in place.
 
-        \param   The grid geometry identifier.
+        \param geometryId  The grid geometry identifier.
 */
 
 void GridDefinition::setGridGeometryId(T::GeometryId geometryId)
@@ -442,6 +458,8 @@ bool GridDefinition::getProperty(uint propertyId,Int64& value)
 
 
 
+/*! \brief The method collects the grid definition properties into the given vector. */
+
 void GridDefinition::getProperties(T::PropertySettingVec& properties)
 {
   try
@@ -459,6 +477,8 @@ void GridDefinition::getProperties(T::PropertySettingVec& properties)
 
 
 
+
+/*! \brief The method collects the Earth shape properties into the given vector. */
 
 void GridDefinition::getProperties_EarthShape(T::PropertySettingVec& properties)
 {
@@ -497,6 +517,8 @@ void GridDefinition::getProperties_EarthShape(T::PropertySettingVec& properties)
 
 
 
+
+/*! \brief The method collects the grid properties into the given vector. */
 
 void GridDefinition::getProperties_Grid(T::PropertySettingVec& properties)
 {
@@ -549,6 +571,8 @@ void GridDefinition::getProperties_Grid(T::PropertySettingVec& properties)
 
 
 
+/*! \brief The method collects the rotation properties into the given vector. */
+
 void GridDefinition::getProperties_Rotation(T::PropertySettingVec& properties)
 {
   try
@@ -573,6 +597,8 @@ void GridDefinition::getProperties_Rotation(T::PropertySettingVec& properties)
 
 
 
+
+/*! \brief The method collects the latlon properties into the given vector. */
 
 void GridDefinition::getProperties_LatLon(T::PropertySettingVec& properties)
 {
@@ -601,6 +627,8 @@ void GridDefinition::getProperties_LatLon(T::PropertySettingVec& properties)
 
 
 
+
+/*! \brief The method returns the Int64 value of the given Earth shape property. */
 
 bool GridDefinition::getProperty_EarthShape(uint propertyId,Int64& value)
 {
@@ -653,6 +681,8 @@ bool GridDefinition::getProperty_EarthShape(uint propertyId,Int64& value)
 
 
 
+
+/*! \brief The method returns the Int64 value of the given grid property. */
 
 bool GridDefinition::getProperty_Grid(uint propertyId,Int64& value)
 {
@@ -725,6 +755,8 @@ bool GridDefinition::getProperty_Grid(uint propertyId,Int64& value)
 
 
 
+/*! \brief The method returns the Int64 value of the given rotation property. */
+
 bool GridDefinition::getProperty_Rotation(uint propertyId,Int64& value)
 {
   FUNCTION_TRACE
@@ -760,6 +792,8 @@ bool GridDefinition::getProperty_Rotation(uint propertyId,Int64& value)
 
 
 
+
+/*! \brief The method returns the Int64 value of the given latlon property. */
 
 bool GridDefinition::getProperty_LatLon(uint propertyId,Int64& value)
 {
@@ -841,6 +875,8 @@ bool GridDefinition::setProperty(uint propertyId,Int64 value)
 
 
 
+/*! \brief The method sets the Int64 value of the given Earth shape property. */
+
 bool GridDefinition::setProperty_EarthShape(uint propertyId,Int64 value)
 {
   FUNCTION_TRACE
@@ -892,6 +928,8 @@ bool GridDefinition::setProperty_EarthShape(uint propertyId,Int64 value)
 
 
 
+
+/*! \brief The method sets the Int64 value of the given grid property. */
 
 bool GridDefinition::setProperty_Grid(uint propertyId,Int64 value)
 {
@@ -965,6 +1003,8 @@ bool GridDefinition::setProperty_Grid(uint propertyId,Int64 value)
 
 
 
+/*! \brief The method sets the Int64 value of the given rotation property. */
+
 bool GridDefinition::setProperty_Rotation(uint propertyId,Int64 value)
 {
   FUNCTION_TRACE
@@ -1000,6 +1040,8 @@ bool GridDefinition::setProperty_Rotation(uint propertyId,Int64 value)
 
 
 
+
+/*! \brief The method sets the Int64 value of the given latlon property. */
 
 bool GridDefinition::setProperty_LatLon(uint propertyId,Int64 value)
 {
@@ -1063,6 +1105,8 @@ T::Coordinate_svec GridDefinition::getGridOriginalCoordinatesNoCache() const
 
 
 
+/*! \brief The method returns the grid original coordinates, using a cache when available. */
+
 T::Coordinate_svec GridDefinition::getGridOriginalCoordinates() const
 {
   try
@@ -1098,6 +1142,8 @@ T::Coordinate_svec GridDefinition::getGridOriginalCoordinates() const
 
 
 
+
+/*! \brief The method returns the grid template number. */
 
 uint GridDefinition::getTemplateNumber() const
 {
@@ -1290,6 +1336,8 @@ T::Dimensions GridDefinition::getGridDimensions() const
 
 
 
+/*! \brief The method returns the number of columns in the grid. */
+
 std::size_t GridDefinition::getGridColumnCount() const
 {
   try
@@ -1309,6 +1357,8 @@ std::size_t GridDefinition::getGridColumnCount() const
 
 
 
+
+/*! \brief The method returns the number of rows in the grid. */
 
 std::size_t GridDefinition::getGridRowCount() const
 {
@@ -1401,6 +1451,8 @@ bool GridDefinition::isGridGlobal() const
 
 
 
+/*! \brief The method returns true if the U/V vector components are relative to the grid. */
+
 bool GridDefinition::isRelativeUV() const
 {
   FUNCTION_TRACE
@@ -1423,6 +1475,8 @@ bool GridDefinition::isRelativeUV() const
 
 
 
+
+/*! \brief The method converts a list of latlon coordinates into grid point coordinates. */
 
 void GridDefinition:: getGridPointListByLatLonCoordinates(T::Coordinate_vec& latlon,T::Coordinate_vec& points) const
 {
@@ -1562,6 +1616,8 @@ bool GridDefinition::getGridPointByLatLonCoordinates(double lat,double lon,doubl
 
 
 
+
+/*! \brief The method calculates the grid position from latlon coordinates without using the cache. */
 
 bool GridDefinition::getGridPointByLatLonCoordinatesNoCache(double lat,double lon,double& grid_i,double& grid_j) const
 {
@@ -1708,6 +1764,8 @@ bool GridDefinition::getGridOriginalCoordinatesByLatLonCoordinates(double lat,do
 
 
 
+/*! \brief The method looks up a cached coordinate transform by hash and latlon. */
+
 bool GridDefinition::getTransformFromCache(std::size_t hash,double lat,double lon,double& x,double& y) const
 {
   FUNCTION_TRACE
@@ -1738,6 +1796,8 @@ bool GridDefinition::getTransformFromCache(std::size_t hash,double lat,double lo
 }
 
 
+
+/*! \brief The method inserts a coordinate transform result into the cache. */
 
 void GridDefinition::insertTranformIntoCache(std::size_t hash,double lat,double lon,double x,double y) const
 {
@@ -1770,6 +1830,8 @@ void GridDefinition::insertTranformIntoCache(std::size_t hash,double lat,double 
 
 
 
+
+/*! \brief The method converts latlon to original coordinates without using the cache. */
 
 bool GridDefinition::getGridOriginalCoordinatesByLatLonCoordinatesNoCache(double lat,double lon,double& x,double& y) const
 {
@@ -1821,6 +1883,8 @@ bool GridDefinition::getGridLatLonCoordinatesByOriginalCoordinates(double x,doub
 
 
 
+/*! \brief The method returns the spatial reference of the grid as a WKT string. */
+
 std::string GridDefinition::getWKT()
 {
   FUNCTION_TRACE
@@ -1847,6 +1911,8 @@ std::string GridDefinition::getWKT()
 
 
 
+
+/*! \brief The method returns the spatial reference of the grid as a PROJ.4 string. */
 
 std::string GridDefinition::getProj4()
 {
@@ -1920,6 +1986,8 @@ T::SpatialRef_sptr GridDefinition::getSpatialReference()
 
 
 
+/*! \brief The method adds the spatial reference to the shared cache. */
+
 void GridDefinition::addSpatialReference(T::SpatialRef_sptr sp)
 {
   FUNCTION_TRACE
@@ -1968,6 +2036,8 @@ T::Hash GridDefinition::getGridHash() const
 
 
 
+/*! \brief The method returns the average width and height of a grid cell in metric units. */
+
 void GridDefinition::getGridCellAverageSize(double& width,double& height) const
 {
   FUNCTION_TRACE
@@ -2003,6 +2073,8 @@ void GridDefinition::getGridCellAverageSize(double& width,double& height) const
 
 
 
+/*! \brief The method returns the grid cell size in metric units. */
+
 bool GridDefinition::getGridMetricCellSize(double& width,double& height) const
 {
   FUNCTION_TRACE
@@ -2021,6 +2093,8 @@ bool GridDefinition::getGridMetricCellSize(double& width,double& height) const
 
 
 
+
+/*! \brief The method returns the total grid size in metric units. */
 
 bool GridDefinition::getGridMetricSize(double& width,double& height) const
 {
@@ -2051,6 +2125,8 @@ bool GridDefinition::getGridMetricSize(double& width,double& height) const
 
 
 
+/*! \brief The method computes the hash value of the grid definition. */
+
 T::Hash GridDefinition::countHash() const
 {
   FUNCTION_TRACE
@@ -2062,6 +2138,8 @@ T::Hash GridDefinition::countHash() const
 
 
 
+
+/*! \brief The method returns the Earth semi-major axis override value. */
 
 double GridDefinition::getEarthSemiMajor()
 {
@@ -2079,6 +2157,8 @@ double GridDefinition::getEarthSemiMajor()
 
 
 
+/*! \brief The method returns the Earth semi-minor axis override value. */
+
 double GridDefinition::getEarthSemiMinor()
 {
   try
@@ -2095,6 +2175,8 @@ double GridDefinition::getEarthSemiMinor()
 
 
 
+/*! \brief The method sets the Earth semi-major axis override value. */
+
 void GridDefinition::setEarthSemiMajor(double value)
 {
   try
@@ -2109,6 +2191,8 @@ void GridDefinition::setEarthSemiMajor(double value)
 
 
 
+
+/*! \brief The method sets the Earth semi-minor axis override value. */
 
 void GridDefinition::setEarthSemiMinor(double value)
 {
@@ -2125,6 +2209,8 @@ void GridDefinition::setEarthSemiMinor(double value)
 
 
 
+
+/*! \brief The method returns the Earth major axis based on the given Earth shape settings. */
 
 double GridDefinition::getMajorAxis(EarthShapeSettings& earthSettings)
 {
@@ -2202,6 +2288,8 @@ double GridDefinition::getMajorAxis(EarthShapeSettings& earthSettings)
 
 
 
+
+/*! \brief The method returns the Earth minor axis based on the given Earth shape settings. */
 
 double GridDefinition::getMinorAxis(EarthShapeSettings& earthSettings)
 {
@@ -2285,6 +2373,8 @@ double GridDefinition::getMinorAxis(EarthShapeSettings& earthSettings)
 
 
 
+
+/*! \brief The method returns the Earth flattening based on the given Earth shape settings. */
 
 double GridDefinition::getFlattening(EarthShapeSettings& earthSettings)
 {
@@ -2404,7 +2494,7 @@ void GridDefinition::write(DataWriter& dataWriter)
 
 /*! \brief The method prints the content of the current object into the given stream.
 
-        \param ostream      The output stream.
+        \param stream      The output stream.
         \param level        The print level (used when printing multi-level structures).
         \param optionFlags  The printing options expressed in flag-bits.
 */

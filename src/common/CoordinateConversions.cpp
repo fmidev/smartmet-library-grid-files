@@ -24,6 +24,8 @@ Fmi::Cache::Cache<std::size_t,std::shared_ptr<SmartMet::CoordinateConverter>> co
 
 
 
+/*! \brief Converts coordinates between two spatial references using a cached converter. */
+
 bool convert(const std::shared_ptr<OGRSpatialReference> sr_from,const std::shared_ptr<OGRSpatialReference> sr_to,int nCount,double *x,double *y)
 {
   try
@@ -47,6 +49,8 @@ bool convert(const std::shared_ptr<OGRSpatialReference> sr_from,const std::share
 
 
 
+
+/*! \brief Normalises an angle to the (-180, 180] range. */
 
 double getValue(double theAngle)
 {
@@ -72,6 +76,8 @@ double getValue(double theAngle)
 
 
 
+
+/*! \brief Converts geographic latlon to rotated latlon for the given south pole. */
 
 void latlon_to_rotatedLatlon(double lat,double lon,double southPoleLat,double southPoleLon,double& rotLat,double& rotLon)
 {
@@ -117,6 +123,8 @@ void latlon_to_rotatedLatlon(double lat,double lon,double southPoleLat,double so
 
 
 
+
+/*! \brief Converts rotated latlon back to geographic latlon for the given south pole. */
 
 void rotatedLatlon_to_latlon(double rotLat,double rotLon,double southPoleLat,double southPoleLon,double& lat,double& lon)
 {
@@ -165,6 +173,8 @@ void rotatedLatlon_to_latlon(double rotLat,double rotLon,double southPoleLat,dou
 
 
 
+/*! \brief Returns the great-circle distance between two latlon points in kilometres. */
+
 double latlon_distance(double lat1, double lon1, double lat2, double lon2)
 {
   double p = 0.017453292519943295;    // Math.PI / 180
@@ -176,6 +186,8 @@ double latlon_distance(double lat1, double lon1, double lat2, double lon2)
 }
 
 
+
+/*! \brief Returns the metric width corresponding to a span of longitude at the given latitude. */
 
 double latlon_width(double lat, double longitudes)
 {
@@ -194,6 +206,8 @@ double latlon_width(double lat, double longitudes)
 
 
 
+/*! \brief Returns the metric height corresponding to a span of latitude. */
+
 double latlon_height(double lon, double latitudes)
 {
   try
@@ -209,6 +223,8 @@ double latlon_height(double lon, double latitudes)
 }
 
 
+
+/*! \brief Returns evenly spaced points along the great circle between two coordinates. */
 
 std::pair<std::vector<SmartMet::T::Coordinate>, std::vector<double>> getIsocirclePoints(double lon1, double lat1, double lon2, double lat2, std::size_t steps)
 {
@@ -263,6 +279,8 @@ std::pair<std::vector<SmartMet::T::Coordinate>, std::vector<double>> getIsocircl
 
 
 
+/*! \brief Builds a latlon bounding box of given metric size centered on the point. */
+
 void latLon_bboxByCenter(double centerX,double centerY,double metricWidth,double metricHeight,double& lon1,double& lat1,double& lon2,double& lat2)
 {
   try
@@ -287,6 +305,8 @@ void latLon_bboxByCenter(double centerX,double centerY,double metricWidth,double
 
 
 
+
+/*! \brief Builds a latlon bounding box from per-side metric distances around the center. */
 
 void latLon_bboxByCenter(double centerX,double centerY,double metricDistanceLeft,double metricDistanceBottom,double metricDistanceRight,double metricDistanceTop,double& lon1,double& lat1,double& lon2,double& lat2)
 {

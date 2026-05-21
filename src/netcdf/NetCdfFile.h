@@ -10,9 +10,20 @@ namespace NetCDF
 {
 
 
-typedef std::map<std::string,std::vector<std::string>> PropertyVec;
-typedef std::vector<float> FloatVec;
+typedef std::map<std::string,std::vector<std::string>> PropertyVec;  //!< Map from attribute/property name to its string values.
+typedef std::vector<float> FloatVec;                                  //!< Flat array of float coordinate or data values.
 
+
+// ====================================================================================
+/*! \brief Parser for the NetCDF classic/64-bit format (CDL binary layout).
+ *
+ *  Reads a memory-mapped NetCDF file, extracts global and variable attributes into a
+ *  PropertyVec, and builds a MessageInfoVec describing each variable/level/time slice
+ *  as a grid message that can be wrapped by NetCDF::Message.
+ *
+ *  Only the metadata pass is performed here; raw data values are read on demand by
+ *  the Message objects via the MemoryReader helper methods exposed by this class. */
+// ====================================================================================
 
 class NetCdfFile
 {
@@ -57,14 +68,14 @@ class NetCdfFile
 
   protected:
 
-    PropertyVec mPropertyList;
-    FloatVec    mXCoordinates;
-    FloatVec    mYCoordinates;
+    PropertyVec mPropertyList;   //!< All NetCDF global and variable attributes, keyed by name.
+    FloatVec    mXCoordinates;  //!< Decoded x/longitude coordinate array.
+    FloatVec    mYCoordinates;  //!< Decoded y/latitude coordinate array.
 };
 
 
 
-typedef NetCdfFile* NetCdfFilePtr;
+typedef NetCdfFile* NetCdfFilePtr;  //!< Non-owning pointer to a NetCdfFile.
 
 
 }  // namespace NetCDF

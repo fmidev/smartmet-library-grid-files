@@ -18,6 +18,8 @@ namespace SmartMet
 #define CHECK_INTERVAL 120
 
 
+/*! \brief Default constructor for DataFetcher_filesys. */
+
 DataFetcher_filesys::DataFetcher_filesys()
 {
   FUNCTION_TRACE
@@ -27,6 +29,8 @@ DataFetcher_filesys::DataFetcher_filesys()
 
 
 
+
+/*! \brief Destructor that closes any open file handles. */
 
 DataFetcher_filesys::~DataFetcher_filesys()
 {
@@ -41,6 +45,8 @@ DataFetcher_filesys::~DataFetcher_filesys()
 }
 
 
+
+/*! \brief Sets the maximum number of cached open file handles. */
 
 void DataFetcher_filesys::setFileHandleLimit(std::size_t fileHandleLimit)
 {
@@ -57,6 +63,8 @@ void DataFetcher_filesys::setFileHandleLimit(std::size_t fileHandleLimit)
 
 
 
+
+/*! \brief Closes and removes stale or excess cached file handles. */
 
 void DataFetcher_filesys::checkFileHandles()
 {
@@ -106,6 +114,8 @@ void DataFetcher_filesys::checkFileHandles()
 
 
 
+
+/*! \brief Returns an open file handle for the file, opening it if necessary. */
 
 FileHandle* DataFetcher_filesys::getFileHandle(const char *filename)
 {
@@ -167,6 +177,8 @@ FileHandle* DataFetcher_filesys::getFileHandle(const char *filename)
 
 
 
+/*! \brief Reads a range of bytes from a local file into the given buffer. */
+
 int DataFetcher_filesys::getData(uint serverType,uint protocol,const char *server,const char *filename,std::size_t filePosition,int dataSize,char *dataPtr)
 {
   FUNCTION_TRACE
@@ -217,6 +229,8 @@ int DataFetcher_filesys::getData(uint serverType,uint protocol,const char *serve
 
 
 
+
+/*! \brief Recursively lists matching files under a directory into the given vector. */
 
 void DataFetcher_filesys::getFileList(const char *dirName,std::vector<std::string> &filePatterns,std::set<std::string> &dirList,std::vector<FileRec>& fileList)
 {
@@ -312,6 +326,8 @@ void DataFetcher_filesys::getFileList(const char *dirName,std::vector<std::strin
 
 
 
+/*! \brief Lists files matching the given patterns under the given directory. */
+
 void DataFetcher_filesys::getFileList(uint serverType,uint protocol,const char *server,const char *dir,std::vector<std::string> &filePatterns,std::vector<FileRec>& fileList)
 {
   FUNCTION_TRACE
@@ -327,6 +343,8 @@ void DataFetcher_filesys::getFileList(uint serverType,uint protocol,const char *
 }
 
 
+
+/*! \brief Returns the size of the given local file, or -1 on error. */
 
 Int64 DataFetcher_filesys::getFileSize(uint serverType,uint protocol,const char *server,const char *filename)
 {
@@ -346,6 +364,8 @@ Int64 DataFetcher_filesys::getFileSize(uint serverType,uint protocol,const char 
 }
 
 
+
+/*! \brief No-op file headers retrieval for local files. */
 
 void DataFetcher_filesys::getFileHeaders(uint serverType,uint protocol,const char *server,const char *filename,std::map<std::string,std::string>& headers)
 {

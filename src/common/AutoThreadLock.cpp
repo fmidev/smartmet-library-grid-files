@@ -7,6 +7,8 @@ namespace SmartMet
 
 #if 0
 
+/*! \brief Constructs an AutoThreadLock and acquires the given thread lock. */
+
 AutoThreadLock::AutoThreadLock(ThreadLock *threadLock)
 {
   try
@@ -24,6 +26,8 @@ AutoThreadLock::AutoThreadLock(ThreadLock *threadLock)
 }
 
 
+
+/*! \brief Destructor that releases the held thread lock. */
 
 AutoThreadLock::~AutoThreadLock()
 {

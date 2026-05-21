@@ -25,6 +25,8 @@ GaussianLatitudeCache gaussianLatitudeCache;
 #endif
 
 
+/*! \brief Provides initial Newton iteration guesses for Gaussian latitudes. */
+
 static void gauss_first_guess(long N, double* vals)
 {
   try
@@ -66,6 +68,8 @@ static void gauss_first_guess(long N, double* vals)
 
 
 
+
+/*! \brief Computes the N Gaussian latitudes using Newton-Raphson iteration. */
 
 int gaussian_getLatitudes(long N, double *lats)
 {
@@ -182,6 +186,8 @@ GaussianLatitudeCache::~GaussianLatitudeCache()
 
 
 
+/*! \brief Returns a cached Gaussian latitude array for the given dimension, computing it if missing. */
+
 double* GaussianLatitudeCache::getLatitudes(uint nj,long n)
 {
   try
@@ -220,6 +226,8 @@ double* GaussianLatitudeCache::getLatitudes(uint nj,long n)
 
 
 
+
+/*! \brief Finds the two Gaussian latitudes that bracket the given latitude. */
 
 int GaussianLatitudeCache::getClosestLatitudes(uint nj,long n,double lat,double& latLow,double& latHigh)
 {

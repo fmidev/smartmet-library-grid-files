@@ -101,6 +101,8 @@ GridFile::GridFile(const GridFile& other)
 
 
 
+/*! \brief Constructs a GridFile by initializing members based on an existing GridFile pointer. */
+
 GridFile::GridFile(GridFile *gridFile)
 {
   FUNCTION_TRACE
@@ -170,6 +172,8 @@ GridFile::~GridFile()
 
 
 
+
+/*! \brief Factory method for creating a new GridFile instance; not implemented in the base class. */
 
 GridFile* GridFile::createGridFile()
 {
@@ -419,6 +423,8 @@ std::string GridFile::getDeletionTimeStr() const
 
 
 
+/*! \brief Returns the expected deletion time of the grid file as a time_t value. */
+
 time_t GridFile::getDeletionTime() const
 {
   FUNCTION_TRACE
@@ -457,6 +463,8 @@ T::SourceId GridFile::getSourceId() const
 
 
 
+/*! \brief Computes the total file size by inspecting the message positions and message sizes. */
+
 Int64 GridFile::countSize()
 {
   FUNCTION_TRACE
@@ -492,6 +500,8 @@ Int64 GridFile::countSize()
 
 
 
+/*! \brief Collects per-message request counters into the given container and returns the maximum. */
+
 Int64 GridFile::getRequestCounters(RequestCounters& requestCounters)
 {
   FUNCTION_TRACE
@@ -520,6 +530,8 @@ Int64 GridFile::getRequestCounters(RequestCounters& requestCounters)
 
 
 
+/*! \brief Decays the request counters of all messages to one percent of their current values. */
+
 void GridFile::resetRequestCounters()
 {
   FUNCTION_TRACE
@@ -537,6 +549,8 @@ void GridFile::resetRequestCounters()
 
 
 
+/*! \brief Registers a dependence on another file (currently a no-op placeholder). */
+
 void GridFile::addDependence(T::FileId fileId)
 {
   FUNCTION_TRACE
@@ -552,6 +566,8 @@ void GridFile::addDependence(T::FileId fileId)
 
 
 
+
+/*! \brief Returns true if an error was detected when validating message positions. */
 
 bool GridFile::hasMessagePositionError() const
 {
@@ -569,6 +585,8 @@ bool GridFile::hasMessagePositionError() const
 
 
 
+
+/*! \brief Returns true if the memory mapper has flagged a mapping error for this file. */
 
 bool GridFile::hasMemoryMapperError() const
 {
@@ -652,7 +670,7 @@ void GridFile::mapToMemory()
 
 /*! \brief The method sets time when the current grid file was last accessed.
 
-      \param checkTime   The last check time.
+      \param accessTime   The last check time.
 */
 
 void GridFile::setAccessTime(time_t accessTime)
@@ -786,7 +804,7 @@ void GridFile::setFlags(uint flags)
 
 /*! \brief The method sets the producer identifier of the current grid file.
 
-      \param producerID  The grid producer identifier.
+      \param producerId  The grid producer identifier.
 */
 
 void GridFile::setProducerId(T::ProducerId producerId)
@@ -904,6 +922,8 @@ void GridFile::setSourceId(T::SourceId sourceId)
 
 
 
+/*! \brief Sets the network protocol used for accessing the grid file. */
+
 void GridFile::setProtocol(uchar protocol)
 {
   FUNCTION_TRACE
@@ -919,6 +939,8 @@ void GridFile::setProtocol(uchar protocol)
 
 
 
+
+/*! \brief Sets the server type (filesystem, S3, etc.) used for accessing the grid file. */
 
 void GridFile::setServerType(uchar serverType)
 {
@@ -936,6 +958,8 @@ void GridFile::setServerType(uchar serverType)
 
 
 
+/*! \brief Sets the server name where the grid file resides. */
+
 void GridFile::setServer(const std::string& server)
 {
   FUNCTION_TRACE
@@ -951,6 +975,8 @@ void GridFile::setServer(const std::string& server)
 
 
 
+
+/*! \brief Creates a new empty message of the given file type and adds it to the message list. */
 
 Message* GridFile::newMessage(T::FileType fileType)
 {
@@ -994,6 +1020,8 @@ Message* GridFile::newMessage(T::FileType fileType)
 
 
 
+/*! \brief Registers the message position information for the given message index. */
+
 Message* GridFile::newMessage(T::MessageIndex messageIndex,MessageInfo& messageInfo)
 {
   FUNCTION_TRACE
@@ -1015,6 +1043,8 @@ Message* GridFile::newMessage(T::MessageIndex messageIndex,MessageInfo& messageI
 
 
 
+
+/*! \brief Adds a pre-existing message to the grid file's message list. */
 
 void GridFile::addMessage(Message *message)
 {
@@ -1038,6 +1068,8 @@ void GridFile::addMessage(Message *message)
 
 
 
+
+/*! \brief Writes the grid file contents to a file at the given path. */
 
 void GridFile::write(const std::string& filename)
 {
@@ -1109,6 +1141,8 @@ std::string GridFile::getFileName() const
 
 
 
+/*! \brief Returns the filename used for memory mapping the grid file. */
+
 std::string GridFile::getMappingFileName() const
 {
   FUNCTION_TRACE
@@ -1170,6 +1204,8 @@ std::string GridFile::getFileTypeString() const
 
 
 
+
+/*! \brief Creates a format-specific message object based on the supplied message information. */
 
 GRID::Message* GridFile::createMessage(T::MessageIndex messageIndex,GRID::MessageInfo& messageInfo)
 {
@@ -1335,6 +1371,8 @@ GRID::Message* GridFile::createMessage(T::MessageIndex messageIndex,GRID::Messag
 
 
 
+/*! \brief Returns true if the grid file is accessed via a network protocol. */
+
 bool GridFile::isNetworkFile() const
 {
   try
@@ -1356,6 +1394,8 @@ bool GridFile::isNetworkFile() const
 
 
 
+/*! \brief Returns the size of the grid file in bytes. */
+
 Int64 GridFile::getSize()
 {
   FUNCTION_TRACE
@@ -1375,6 +1415,8 @@ Int64 GridFile::getSize()
 
 
 
+/*! \brief Sets the recorded size of the grid file. */
+
 void GridFile::setSize(Int64 size)
 {
   FUNCTION_TRACE
@@ -1390,6 +1432,8 @@ void GridFile::setSize(Int64 size)
 
 
 
+
+/*! \brief Returns a pointer to the memory-mapped contents of the grid file, mapping it if needed. */
 
 char* GridFile::getMemoryPtr()
 {
@@ -1438,6 +1482,8 @@ void GridFile::read(const std::string& filename)
 
 
 
+
+/*! \brief Memory-maps the given file and reads up to the given maximum number of messages from it. */
 
 void GridFile::read(const std::string& filename,uint maxMessages)
 {
@@ -1495,6 +1541,8 @@ void GridFile::read(MemoryReader& memoryReader)
 
 
 
+
+/*! \brief Scans messages from the memory reader and creates the appropriate format-specific messages. */
 
 void GridFile::read(MemoryReader& memoryReader,uint maxMessages)
 {
@@ -2088,7 +2136,7 @@ uchar GridFile::readMessageType(MemoryReader& memoryReader)
 
 /*! \brief The method prints the content of the current object into the given stream.
 
-        \param ostream      The output stream.
+        \param stream      The output stream.
         \param level        The print level (used when printing multi-level structures).
         \param optionFlags  The printing options expressed in flag-bits.
 */

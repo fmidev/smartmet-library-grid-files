@@ -231,10 +231,10 @@ class ProductSection : public GRID::MessageSection
     /*! \brief The sub-center identification (see Code Table 0). */
     std::uint8_t      mSubCentre;
 
-    bool              mReleaseData;
+    bool              mReleaseData;    //!< If true, free mDataPtr on destruction.
 
-    short             mForecastType;
-    short             mForecastNumber;
+    short             mForecastType;   //!< Extended forecast type (FMI addition, not in GRIB 1 standard).
+    short             mForecastNumber; //!< Extended forecast number (FMI addition, not in GRIB 1 standard).
 
     /*! \brief  The size of the optional extra data. */
     uint              mDataSize;
@@ -246,7 +246,7 @@ class ProductSection : public GRID::MessageSection
 };
 
 
-typedef std::shared_ptr<ProductSection> ProductSect_sptr;
+typedef std::shared_ptr<ProductSection> ProductSect_sptr;  //!< Shared ownership pointer to a ProductSection.
 
 }  // namespace GRIB1
 }  // namespace SmartMet
