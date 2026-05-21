@@ -77,7 +77,7 @@ DEPFILES = $(OBJFILES:%.o=%.d)
 INCLUDES := -Isrc $(INCLUDES)
 
 
-.PHONY: test rpm
+.PHONY: test rpm doc
 
 # The rules
 
@@ -106,10 +106,11 @@ $(LIBFILE): $(OBJFILES)
 		exit 1; \
 	fi
 
-clean: 
+clean:
 	rm -f src/*~ src/*/*~ src/*/*/*~
 	rm -rf obj
 	rm -rf $(LIBFILE)
+	rm -rf doc/html
 
 clean-install: 
 	rm -rf $(includedir)/$(INCDIR)/*
@@ -176,6 +177,9 @@ delete_def:
 	cd src/grib1/definition; $(MAKE) clean;
 	cd src/grib2/definition; $(MAKE) clean;
 
+
+doc:
+	doxygen Doxyfile
 
 rpm: clean $(SPEC).spec
 	rm -f $(SPEC).tar.gz # Clean a possible leftover from previous attempt
