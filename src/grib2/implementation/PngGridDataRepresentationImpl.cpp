@@ -112,6 +112,8 @@ void PngGridDataRepresentationImpl::read(MemoryReader& memoryReader)
 
 
 
+/*! \brief Decodes a PNG-packed message into a vector of parameter values. */
+
 void PngGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec& decodedValues) const
 {
   try

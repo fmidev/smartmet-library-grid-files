@@ -162,6 +162,8 @@ void IdentificationSection::getAttributeList(const std::string& prefix,T::Attrib
 
 
 
+/*! \brief The method returns the value of the named identification attribute. */
+
 bool IdentificationSection::getAttributeValue(const char *attributeName, std::string& attributeValue) const
 {
   try
@@ -218,6 +220,8 @@ bool IdentificationSection::getAttributeValue(const char *attributeName, std::st
 
 
 
+
+/*! \brief The method returns true if the named attribute matches the given value. */
 
 bool IdentificationSection::hasAttributeValue(const char *attributeName, const char *attributeValue) const
 {
@@ -353,6 +357,8 @@ bool IdentificationSection::getProperty(uint propertyId,Int64& value)
 
 
 
+
+/*! \brief The method collects the identification section properties into the given vector. */
 
 void IdentificationSection::getProperties(T::PropertySettingVec& properties)
 {
@@ -992,6 +998,8 @@ T::UInt8_opt IdentificationSection::getTypeOfProcessedData() const
 
 
 
+/*! \brief The method returns the pointer to the reserved data buffer. */
+
 T::Data_ptr IdentificationSection::getReservedDataPtr() const
 {
   try
@@ -1007,6 +1015,8 @@ T::Data_ptr IdentificationSection::getReservedDataPtr() const
 
 
 
+
+/*! \brief The method sets the centre identifier. */
 
 void IdentificationSection::setCentre(T::UInt16_opt centre)
 {
@@ -1024,6 +1034,8 @@ void IdentificationSection::setCentre(T::UInt16_opt centre)
 
 
 
+/*! \brief The method sets the sub-centre identifier. */
+
 void IdentificationSection::setSubCentre(T::UInt16_opt subCentre)
 {
   try
@@ -1039,6 +1051,8 @@ void IdentificationSection::setSubCentre(T::UInt16_opt subCentre)
 
 
 
+
+/*! \brief The method sets the tables version. */
 
 void IdentificationSection::setTablesVersion(T::UInt8_opt tablesVersion)
 {
@@ -1056,6 +1070,8 @@ void IdentificationSection::setTablesVersion(T::UInt8_opt tablesVersion)
 
 
 
+/*! \brief The method sets the local tables version. */
+
 void IdentificationSection::setLocalTablesVersion(T::UInt8_opt localTablesVersion)
 {
   try
@@ -1071,6 +1087,8 @@ void IdentificationSection::setLocalTablesVersion(T::UInt8_opt localTablesVersio
 
 
 
+
+/*! \brief The method sets the significance of reference time. */
 
 void IdentificationSection::setSignificanceOfReferenceTime(T::UInt8_opt significanceOfRererenceTime)
 {
@@ -1088,6 +1106,8 @@ void IdentificationSection::setSignificanceOfReferenceTime(T::UInt8_opt signific
 
 
 
+/*! \brief The method sets the reference year. */
+
 void IdentificationSection::setYear(T::UInt16_opt year)
 {
   try
@@ -1103,6 +1123,8 @@ void IdentificationSection::setYear(T::UInt16_opt year)
 
 
 
+
+/*! \brief The method sets the reference month. */
 
 void IdentificationSection::setMonth(T::UInt8_opt month)
 {
@@ -1128,6 +1150,8 @@ void IdentificationSection::setMonth(T::UInt8_opt month)
 
 
 
+/*! \brief The method sets the reference day. */
+
 void IdentificationSection::setDay(T::UInt8_opt day)
 {
   try
@@ -1151,6 +1175,8 @@ void IdentificationSection::setDay(T::UInt8_opt day)
 
 
 
+
+/*! \brief The method sets the reference hour. */
 
 void IdentificationSection::setHour(T::UInt8_opt hour)
 {
@@ -1176,6 +1202,8 @@ void IdentificationSection::setHour(T::UInt8_opt hour)
 
 
 
+/*! \brief The method sets the reference minute. */
+
 void IdentificationSection::setMinute(T::UInt8_opt minute)
 {
   try
@@ -1199,6 +1227,8 @@ void IdentificationSection::setMinute(T::UInt8_opt minute)
 
 
 
+
+/*! \brief The method sets the reference second. */
 
 void IdentificationSection::setSecond(T::UInt8_opt second)
 {
@@ -1224,6 +1254,8 @@ void IdentificationSection::setSecond(T::UInt8_opt second)
 
 
 
+/*! \brief The method sets the production status of processed data. */
+
 void IdentificationSection::setProductionStatusOfProcessedData(T::UInt8_opt productionStatusOfProcessedData)
 {
   try
@@ -1239,6 +1271,8 @@ void IdentificationSection::setProductionStatusOfProcessedData(T::UInt8_opt prod
 
 
 
+
+/*! \brief The method sets the type of processed data. */
 
 void IdentificationSection::setTypeOfProcessedData(T::UInt8_opt typeOfProcessedData)
 {
@@ -1258,7 +1292,7 @@ void IdentificationSection::setTypeOfProcessedData(T::UInt8_opt typeOfProcessedD
 
 /*! \brief The method prints the content of the current object into the given stream.
 
-        \param ostream      The output stream.
+        \param stream      The output stream.
         \param level        The print level (used when printing multi-level structures).
         \param optionFlags  The printing options expressed in flag-bits.
 */

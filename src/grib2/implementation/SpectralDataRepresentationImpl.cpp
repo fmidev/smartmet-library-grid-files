@@ -81,6 +81,8 @@ void SpectralDataRepresentationImpl::read(MemoryReader& memoryReader)
 
 
 
+/*! \brief Decodes the spectrally-packed grid values (not implemented). */
+
 void SpectralDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec& decodedValues) const
 {
   throw Fmi::Exception(BCP,"The method not implemented!");

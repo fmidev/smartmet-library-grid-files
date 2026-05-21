@@ -136,6 +136,8 @@ class TraxGrid: public Trax::Grid
 
 extern void convertWkbCoordinates(MemoryReader &_memoryReader, MemoryWriter &_memoryWriter, OGRCoordinateTransformation &_transformation);
 
+/*! \brief Comparator for sorting doubles in ascending order via qsort. */
+
 static int compare_points(const void *p1, const void *p2)
 {
   const double *v1 = (const double*) p1;
@@ -151,6 +153,8 @@ static int compare_points(const void *p1, const void *p2)
 }
 
 
+
+/*! \brief Adds integer grid points along the given line segment into the supplied set. */
 
 void addLine(double x1, double y1, double x2, double y2, std::set<UInt64> &cList)
 {
@@ -240,6 +244,8 @@ void addLine(double x1, double y1, double x2, double y2, std::set<UInt64> &cList
 }
 
 
+
+/*! \brief Returns all grid points that lie inside or on the given polygon. */
 
 void getPointsInsidePolygon(int gridWidth, int gridHeight, T::Coordinate_vec &polygonPoints, std::vector<T::Point> &gridPoints)
 {
@@ -386,6 +392,8 @@ void getPointsInsidePolygon(int gridWidth, int gridHeight, T::Coordinate_vec &po
 }
 
 
+
+/*! \brief Returns all grid points that lie inside or on any polygon in the given polygon path. */
 
 void getPointsInsidePolygonPath(int gridWidth, int gridHeight, T::Polygon_vec &polygonPath, std::vector<T::Point> &gridPoints)
 {
@@ -565,6 +573,8 @@ void getPointsInsidePolygonPath(int gridWidth, int gridHeight, T::Polygon_vec &p
 
 
 
+/*! \brief Returns all grid points whose distance from the given origin is within the radius. */
+
 void getPointsInsideCircle(int gridWidth, int gridHeight, double origoX, double origoY, double radius, std::vector<T::Point> &gridPoints)
 {
   try
@@ -617,6 +627,8 @@ void getPointsInsideCircle(int gridWidth, int gridHeight, double origoX, double 
 
 
 
+/*! \brief Returns the total number of points across all polygons in the path. */
+
 std::size_t getPolygonPathLength(T::Polygon_vec &polygonPath)
 {
   try
@@ -636,6 +648,8 @@ std::size_t getPolygonPathLength(T::Polygon_vec &polygonPath)
 
 
 
+/*! \brief Flattens a polygon path into a single vector of coordinates. */
+
 void convertToPointVector(T::Polygon_vec &polygonPath, T::Coordinate_vec &polygonPoints)
 {
   try
@@ -653,6 +667,8 @@ void convertToPointVector(T::Polygon_vec &polygonPath, T::Coordinate_vec &polygo
 }
 
 
+
+/*! \brief Converts an SVG path into a polygon path of coordinate rings. */
 
 void convertSvgPathToPolygonPath(NFmiSvgPath &svgPath, T::Polygon_vec &polygonPath)
 {
@@ -706,6 +722,8 @@ void convertSvgPathToPolygonPath(NFmiSvgPath &svgPath, T::Polygon_vec &polygonPa
 
 
 
+/*! \brief Converts a WKT multipolygon textual representation into an SVG path string. */
+
 std::string convertWktMultiPolygonToSvgString(const std::string &wktString)
 {
   try
@@ -730,6 +748,8 @@ std::string convertWktMultiPolygonToSvgString(const std::string &wktString)
 
 
 
+/*! \brief Converts a WKT multipolygon string into an NFmiSvgPath object. */
+
 void convertWktMultipolygonToSvgPath(const std::string &wktString, NFmiSvgPath &svgPath)
 {
   try
@@ -746,6 +766,8 @@ void convertWktMultipolygonToSvgPath(const std::string &wktString, NFmiSvgPath &
 }
 
 
+
+/*! \brief Converts a WKT multipolygon string into a polygon path of coordinate rings. */
 
 void convertWktMultipolygonToPolygonPath(const std::string &wktString, T::Polygon_vec &polygonPath)
 {
@@ -765,6 +787,8 @@ void convertWktMultipolygonToPolygonPath(const std::string &wktString, T::Polygo
 }
 
 
+
+/*! \brief Computes the intersection point of two infinite lines defined by their endpoints. */
 
 bool getLineIntersection(double ax1, double ay1, double ax2, double ay2, double bx1, double by1, double bx2, double by2, double &x, double &y)
 {
@@ -814,6 +838,8 @@ bool getLineIntersection(double ax1, double ay1, double ax2, double ay2, double 
 
 
 
+/*! \brief Computes the intersection point of two line segments given as coordinate pairs. */
+
 bool getLineIntersection(std::pair<T::Coordinate, T::Coordinate> line1, std::pair<T::Coordinate, T::Coordinate> line2, T::Coordinate &intersection)
 {
   try
@@ -834,6 +860,8 @@ bool getLineIntersection(std::pair<T::Coordinate, T::Coordinate> line1, std::pai
 }
 
 
+
+/*! \brief Computes the perpendicular offset for enlarging a polygon edge outward. */
 
 void getPointMovement(double x1, double y1, double x2, double y2, double areaExtensionX, double areaExtensionY, double &mx, double &my)
 {
@@ -922,6 +950,8 @@ void getPointMovement(double x1, double y1, double x2, double y2, double areaExt
 
 
 
+/*! \brief Computes the perpendicular offset for enlarging a polygon edge in the reverse direction. */
+
 void getPointMovementRev(double x1, double y1, double x2, double y2, double areaExtensionX, double areaExtensionY, double &mx, double &my)
 {
   try
@@ -1009,6 +1039,8 @@ void getPointMovementRev(double x1, double y1, double x2, double y2, double area
 
 
 
+/*! \brief Enlarges a polygon by the given offsets, expanding outward or inward depending on the rev flag. */
+
 T::Coordinate_vec getEnlargedPolygon(T::Coordinate_vec &oldCoordinates, double areaExtensionX, double areaExtensionY, bool rev)
 {
   try
@@ -1065,6 +1097,8 @@ T::Coordinate_vec getEnlargedPolygon(T::Coordinate_vec &oldCoordinates, double a
 
 
 
+/*! \brief Returns the total perimeter length of the polygon defined by the given coordinates. */
+
 double getPolygonLen(T::Coordinate_vec &coordinates)
 {
   try
@@ -1090,6 +1124,8 @@ double getPolygonLen(T::Coordinate_vec &coordinates)
 }
 
 
+
+/*! \brief Enlarges a polygon by the given offsets, automatically picking the direction that grows the perimeter. */
 
 T::Coordinate_vec getEnlargedPolygon(T::Coordinate_vec &oldCoordinates, double areaExtensionX, double areaExtensionY)
 {
@@ -1117,6 +1153,8 @@ T::Coordinate_vec getEnlargedPolygon(T::Coordinate_vec &oldCoordinates, double a
 
 
 
+/*! \brief Enlarges every polygon in the given polygon path by the specified offsets. */
+
 T::Polygon_vec getEnlargedPolygonPath(T::Polygon_vec &oldPath, double areaExtensionX, double areaExtensionY)
 {
   try
@@ -1137,6 +1175,8 @@ T::Polygon_vec getEnlargedPolygonPath(T::Polygon_vec &oldPath, double areaExtens
 }
 
 
+
+/*! \brief Computes isolines for the given grid values and returns them as WKB-encoded contours. */
 
 void getIsolines(std::vector<float> &gridData, T::Coordinate_vec *coordinates, int width, int height, std::vector<float> &contourValues, short interpolationMethod,
     size_t smooth_size, size_t smooth_degree, T::ByteData_vec &contours, int subdivide)
@@ -1199,6 +1239,8 @@ void getIsolines(std::vector<float> &gridData, T::Coordinate_vec *coordinates, i
 }
 
 
+
+/*! \brief Computes isobands for the given grid values and returns them as WKB-encoded contours. */
 
 void getIsobands(std::vector<float> &gridData, std::vector<T::Coordinate> *coordinates, int width, int height, std::vector<float> &contourLowValues,
     std::vector<float> &contourHighValues, short interpolationMethod, size_t smooth_size, size_t smooth_degree, T::ByteData_vec &contours, int subdivide)
@@ -1357,6 +1399,8 @@ void getIsobands(std::vector<float> &gridData, std::vector<T::Coordinate> *coord
 
 
 
+/*! \brief Computes the intersection point of two lines defined by four endpoint coordinates. */
+
 bool getLineIntersectionPoint(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, double &x, double &y)
 {
   try
@@ -1386,6 +1430,8 @@ bool getLineIntersectionPoint(double x1, double y1, double x2, double y2, double
 }
 
 
+
+/*! \brief Recursively traces a streamline through a wind/direction grid using a visited mask. */
 
 int findPath(std::vector<float> &direction, bool *visited, int width, int height, int maxLength, double x1, double y1, int level, uint cellCount,
     std::vector<T::Coordinate> &coordinates)
@@ -1549,6 +1595,8 @@ int findPath(std::vector<float> &direction, bool *visited, int width, int height
 
 
 
+/*! \brief Returns the absolute difference between two doubles, or zero if their integer parts match. */
+
 double diff(double a, double b)
 {
   if ((int) a == (int) b)
@@ -1561,6 +1609,8 @@ double diff(double a, double b)
 }
 
 
+
+/*! \brief Recursively traces a streamline through a direction grid, marking the image as visited. */
 
 int findPath(float *direction, uint *image, int width, int height, int maxLength, uint backColor, double x1, double y1, int level, uint cellCount,
     std::vector<T::Coordinate> &coordinates)
@@ -1700,6 +1750,8 @@ int findPath(float *direction, uint *image, int width, int height, int maxLength
 
 
 
+/*! \brief Recursively traces a streamline through a direction vector, marking the image as visited. */
+
 int findPath(std::vector<float>& direction, uint *image, int width, int height, int maxLength, uint backColor, double x1, double y1, int level, uint cellCount,
     std::vector<T::Coordinate> &coordinates)
 {
@@ -1836,6 +1888,8 @@ int findPath(std::vector<float>& direction, uint *image, int width, int height, 
 
 
 
+/*! \brief Renders a colored streamline image from direction and value grids using the given color range. */
+
 void getStreamlineImage(float *direction, float *value, uint *image, int width, int height, int xStep, int yStep, int minLength, int maxLength, float valueRangeStart,
     float valueRangeEnd, int startColor, int endColor, uint backColor)
 {
@@ -1931,6 +1985,8 @@ void getStreamlineImage(float *direction, float *value, uint *image, int width, 
 
 
 
+/*! \brief Renders a streamline image from a direction grid, marking pixels by their sequence index. */
+
 void getStreamlineImage(float *direction, float *value, uint *image, int width, int height, int xStep, int yStep, int minLength, int maxLength)
 {
   try
@@ -1979,6 +2035,8 @@ void getStreamlineImage(float *direction, float *value, uint *image, int width, 
 
 
 
+/*! \brief Renders a streamline image from a direction vector, marking pixels by their sequence index. */
+
 void getStreamlineImage(std::vector<float>& direction, float *value, uint *image, int width, int height, int xStep, int yStep, int minLength, int maxLength)
 {
   try
@@ -2026,6 +2084,8 @@ void getStreamlineImage(std::vector<float>& direction, float *value, uint *image
 }
 
 
+
+/*! \brief Extracts streamlines from a direction grid and returns them as WKB-encoded line segments. */
 
 void getStreamlines(T::ParamValue_vec &gridValues, std::vector<T::Coordinate> *coordinates, int width, int height, int minStreamLen, int maxStreamLen, int lineLen, int xStep,
     int yStep, T::ByteData_vec &streamlines)

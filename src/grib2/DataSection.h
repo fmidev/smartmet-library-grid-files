@@ -93,11 +93,11 @@ class DataSection : public GRID::MessageSection
     /*! \brief The section number. */
     T::UInt8_opt    mNumberOfSection;
 
-    bool            mReleaseData;
+    bool            mReleaseData;   //!< If true, free the data buffer on destruction.
 };
 
 
-typedef std::shared_ptr<DataSection> DataSect_sptr;
+typedef std::shared_ptr<DataSection> DataSect_sptr;  //!< Shared ownership pointer to a DataSection.
 
 
 }  // namespace GRIB2

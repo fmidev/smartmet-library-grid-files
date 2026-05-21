@@ -6,6 +6,8 @@ namespace SmartMet
 {
 
 #if 0
+/*! \brief Constructs an AutoWriteLock and acquires a write lock on the modification lock. */
+
 AutoWriteLock::AutoWriteLock(ModificationLock *modificationLock)
 {
   try
@@ -22,6 +24,8 @@ AutoWriteLock::AutoWriteLock(ModificationLock *modificationLock)
 
 
 
+
+/*! \brief Destructor that releases the held write lock. */
 
 AutoWriteLock::~AutoWriteLock()
 {

@@ -21,6 +21,8 @@ namespace SmartMet
 {
 
 
+/*! \brief Default constructor that creates an empty configuration. */
+
 ConfigurationFile::ConfigurationFile()
 {
   FUNCTION_TRACE
@@ -56,6 +58,8 @@ ConfigurationFile::ConfigurationFile(const ConfigurationFile& configurationFile)
 
 
 
+/*! \brief Constructs the configuration by reading attributes from the given file. */
+
 ConfigurationFile::ConfigurationFile(const std::string& filename)
 {
   FUNCTION_TRACE
@@ -74,6 +78,8 @@ ConfigurationFile::ConfigurationFile(const std::string& filename)
 
 
 
+
+/*! \brief Destructor. */
 
 ConfigurationFile::~ConfigurationFile()
 {
@@ -96,6 +102,8 @@ ConfigurationFile::~ConfigurationFile()
 // configuration files for testing, development and production. These
 // files might contain for example, database connection parameters
 // required in different environments.
+
+/*! \brief Loads an additional configuration file and merges its attributes into this configuration. */
 
 void ConfigurationFile::addConfigurationFile(const std::string& filename)
 {
@@ -122,6 +130,8 @@ void ConfigurationFile::addConfigurationFile(const std::string& filename)
 
 
 
+/*! \brief Clears all attributes from the configuration. */
+
 void ConfigurationFile::clear()
 {
   FUNCTION_TRACE
@@ -140,6 +150,8 @@ void ConfigurationFile::clear()
 
 
 
+
+/*! \brief Reads the given configuration file and parses its attributes into this configuration. */
 
 void ConfigurationFile::readFile(const std::string& filename)
 {
@@ -201,6 +213,8 @@ void ConfigurationFile::readFile(const std::string& filename)
 
 
 
+/*! \brief Copies the input file to the output file, expanding any attribute name references in its lines. */
+
 void ConfigurationFile::replaceAttributeNamesWithValues(const std::string& inputFilename,const std::string& outputFilename)
 {
   FUNCTION_TRACE
@@ -243,6 +257,8 @@ void ConfigurationFile::replaceAttributeNamesWithValues(const std::string& input
 
 
 
+
+/*! \brief Reads the named attribute as a boolean value. */
 
 bool ConfigurationFile::getAttributeValue(const char *attributeName,bool& attributeValue)
 {
@@ -302,6 +318,8 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,bool& attrib
 
 
 
+/*! \brief Reads the named attribute as a double value. */
+
 bool ConfigurationFile::getAttributeValue(const char *attributeName,double& attributeValue)
 {
   FUNCTION_TRACE
@@ -346,6 +364,8 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,double& attr
 
 
 
+/*! \brief Reads the named attribute as a char value. */
+
 bool ConfigurationFile::getAttributeValue(const char *attributeName,char& attributeValue)
 {
   FUNCTION_TRACE
@@ -368,6 +388,8 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,char& attrib
 
 
 
+
+/*! \brief Reads the named attribute as a short integer value. */
 
 bool ConfigurationFile::getAttributeValue(const char *attributeName,short& attributeValue)
 {
@@ -392,6 +414,8 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,short& attri
 
 
 
+/*! \brief Reads the named attribute as an int value. */
+
 bool ConfigurationFile::getAttributeValue(const char *attributeName,int& attributeValue)
 {
   FUNCTION_TRACE
@@ -414,6 +438,8 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,int& attribu
 
 
 
+
+/*! \brief Reads the named attribute as a 64-bit signed integer value. */
 
 bool ConfigurationFile::getAttributeValue(const char *attributeName,Int64& attributeValue)
 {
@@ -459,6 +485,8 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,Int64& attri
 
 
 
+/*! \brief Reads the named attribute as an unsigned char value. */
+
 bool ConfigurationFile::getAttributeValue(const char *attributeName,unsigned char& attributeValue)
 {
   FUNCTION_TRACE
@@ -481,6 +509,8 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,unsigned cha
 
 
 
+
+/*! \brief Reads the named attribute as an unsigned short value. */
 
 bool ConfigurationFile::getAttributeValue(const char *attributeName,unsigned short& attributeValue)
 {
@@ -505,6 +535,8 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,unsigned sho
 
 
 
+/*! \brief Reads the named attribute as an unsigned int value. */
+
 bool ConfigurationFile::getAttributeValue(const char *attributeName,unsigned int& attributeValue)
 {
   FUNCTION_TRACE
@@ -528,6 +560,8 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,unsigned int
 
 
 
+/*! \brief Reads the named attribute as a 64-bit unsigned integer value. */
+
 bool ConfigurationFile::getAttributeValue(const char *attributeName,UInt64& attributeValue)
 {
   FUNCTION_TRACE
@@ -550,6 +584,8 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,UInt64& attr
 
 
 
+
+/*! \brief Reads the named attribute as a string value, stripping surrounding quotes. */
 
 bool ConfigurationFile::getAttributeValue(const char *attributeName,std::string& attributeValue)
 {
@@ -585,6 +621,8 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,std::string&
 
 
 
+
+/*! \brief Reads the named array attribute, populating the vector with all of its string values. */
 
 bool ConfigurationFile::getAttributeValue(const char *attributeName,std::vector<std::string>& attributeValueVec)
 {
@@ -646,6 +684,8 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,std::vector<
 
 
 
+/*! \brief Returns the number of elements in the named array attribute. */
+
 uint ConfigurationFile::getArraySize(const char *attributeName)
 {
   FUNCTION_TRACE
@@ -702,6 +742,8 @@ uint ConfigurationFile::getArraySize(const char *attributeName)
 
 
 
+/*! \brief Collects the names of immediate sub-fields under the given attribute. */
+
 bool ConfigurationFile::getAttributeFields(const char *attributeName,std::set<std::string>& attributeFields)
 {
   FUNCTION_TRACE
@@ -749,6 +791,8 @@ bool ConfigurationFile::getAttributeFields(const char *attributeName,std::set<st
 
 
 
+/*! \brief Collects the full sub-attribute names under the given attribute. */
+
 bool ConfigurationFile::getSubAttributes(const char *attributeName,std::vector<std::string>& attributeNames)
 {
   FUNCTION_TRACE
@@ -791,6 +835,8 @@ bool ConfigurationFile::getSubAttributes(const char *attributeName,std::vector<s
 
 
 
+/*! \brief Returns the name of the main configuration file. */
+
 std::string ConfigurationFile::getFilename()
 {
   try
@@ -808,6 +854,8 @@ std::string ConfigurationFile::getFilename()
 
 
 
+
+/*! \brief Returns true if an attribute matching the given name (or its prefix path) exists. */
 
 bool ConfigurationFile::findAttribute(const char *attributeName)
 {
@@ -837,6 +885,8 @@ bool ConfigurationFile::findAttribute(const char *attributeName)
 
 
 
+/*! \brief Sets or updates the value of the named attribute. */
+
 void ConfigurationFile::setAttributeValue(const char *attributeName,std::string& attributeValue)
 {
   FUNCTION_TRACE
@@ -864,6 +914,8 @@ void ConfigurationFile::setAttributeValue(const char *attributeName,std::string&
 
 
 
+/*! \brief Prints the configuration filename and all its attributes to the given stream. */
+
 void ConfigurationFile::print(std::ostream& stream,uint level,uint optionFlags)
 {
   FUNCTION_TRACE
@@ -890,6 +942,8 @@ void ConfigurationFile::print(std::ostream& stream,uint level,uint optionFlags)
 
 
 
+
+/*! \brief Expands $(NAME) references in the given value using attributes or environment variables. */
 
 std::string ConfigurationFile::parseValue(const std::string& value)
 {
@@ -948,6 +1002,8 @@ std::string ConfigurationFile::parseValue(const std::string& value)
 
 
 
+
+/*! \brief Expands %(NAME) references in the given value using attributes, environment variables, or special tokens like DIR. */
 
 std::string ConfigurationFile::parseConstValue(const std::string& value)
 {
@@ -1010,6 +1066,8 @@ std::string ConfigurationFile::parseConstValue(const std::string& value)
 
 
 
+
+/*! \brief Strips comments from the input buffer and pads delimiters with spaces in the output buffer. */
 
 void ConfigurationFile::removeComments(char *st,UInt64 *positions,char *newst,UInt64 *newpositions,int len)
 {
@@ -1111,6 +1169,8 @@ void ConfigurationFile::removeComments(char *st,UInt64 *positions,char *newst,UI
 
 
 
+/*! \brief Builds row/column position information for each character in the input buffer. */
+
 void ConfigurationFile::setPositions(char *st,UInt64 *positions,int len)
 {
   FUNCTION_TRACE
@@ -1139,6 +1199,8 @@ void ConfigurationFile::setPositions(char *st,UInt64 *positions,int len)
 
 
 
+
+/*! \brief Tokenises the input buffer into whitespace-separated words with their source positions. */
 
 void ConfigurationFile::getWords(char *st,UInt64 *positions,std::vector<std::string>& words,std::vector<UInt64>& wordPositions)
 {
@@ -1190,6 +1252,8 @@ void ConfigurationFile::getWords(char *st,UInt64 *positions,std::vector<std::str
 
 
 
+
+/*! \brief Parses an attribute value (scalar, structure, list, or array) starting at the given word position. */
 
 int ConfigurationFile::readValue(std::vector<std::string>& words,std::vector<UInt64>& wordPositions,int len,int pos,const std::string& path)
 {
@@ -1349,6 +1413,8 @@ int ConfigurationFile::readValue(std::vector<std::string>& words,std::vector<UIn
 
 
 
+/*! \brief Removes every attribute whose name matches the given fnmatch pattern. */
+
 void ConfigurationFile::removeAttributes(const char *pattern)
 {
   try
@@ -1374,6 +1440,8 @@ void ConfigurationFile::removeAttributes(const char *pattern)
 
 
 
+
+/*! \brief Parses one attribute definition or directive (\@include, \@ifdef, etc.) from the word stream. */
 
 int ConfigurationFile::readAttribute(std::vector<std::string>& words,std::vector<UInt64>& wordPositions,int len,int pos,const std::string& path,int index)
 {

@@ -130,6 +130,8 @@ void LocalSection::setMessagePtr(Message *message)
 
 
 
+/*! \brief The method sets the local data buffer and its size. */
+
 void LocalSection::setData(T::Data_ptr data,std::size_t size)
 {
   try
@@ -177,6 +179,8 @@ bool LocalSection::getProperty(uint propertyId,Int64& value)
 
 
 
+
+/*! \brief The method collects the local section properties into the given vector. */
 
 void LocalSection::getProperties(T::PropertySettingVec& properties)
 {
@@ -396,6 +400,8 @@ std::uint8_t LocalSection::getNumberOfSection() const
 
 
 
+/*! \brief The method returns the pointer to the local data buffer. */
+
 T::Data_ptr LocalSection::getDataPtr() const
 {
   try
@@ -410,6 +416,8 @@ T::Data_ptr LocalSection::getDataPtr() const
 
 
 
+
+/*! \brief The method returns the size of the local data buffer in bytes. */
 
 std::size_t LocalSection::getDataSize() const
 {
@@ -429,7 +437,7 @@ std::size_t LocalSection::getDataSize() const
 
 /*! \brief The method prints the content of the current object into the given stream.
 
-        \param ostream      The output stream.
+        \param stream      The output stream.
         \param level        The print level (used when printing multi-level structures).
         \param optionFlags  The printing options expressed in flag-bits.
 */

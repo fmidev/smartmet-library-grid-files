@@ -223,6 +223,8 @@ void ProductSection::getAttributeList(const std::string& prefix,T::AttributeList
 
 
 
+/*! \brief The method returns the value of the named product section attribute. */
+
 bool ProductSection::getAttributeValue(const char *attributeName, std::string& attributeValue) const
 {
   try
@@ -327,6 +329,8 @@ bool ProductSection::getAttributeValue(const char *attributeName, std::string& a
 
 
 
+
+/*! \brief The method returns true if the named attribute matches the given value. */
 
 bool ProductSection::hasAttributeValue(const char *attributeName, const char *attributeValue) const
 {
@@ -531,6 +535,8 @@ bool ProductSection::getProperty(uint propertyId,Int64& value)
 
 
 
+
+/*! \brief The method collects the product section properties into the given vector. */
 
 void ProductSection::getProperties(T::PropertySettingVec& properties)
 {
@@ -1248,7 +1254,7 @@ std::uint8_t ProductSection::getTimeRangeIndicator() const
 
 
 
-/*! \brief The method returns the number included in average, when {@link mTimeRangeIndicator}
+/*! \brief The method returns the number included in average, when getTimeRangeIndicator()
     indicates an average or accumulation. Otherwise the returned value is zero.
 */
 
@@ -1552,6 +1558,8 @@ T::TimeString ProductSection::getForecastTime() const
 
 
 
+/*! \brief The method sets the GRIB table version. */
+
 void ProductSection::setTableVersion(std::uint8_t tableVersion)
 {
   try
@@ -1567,6 +1575,8 @@ void ProductSection::setTableVersion(std::uint8_t tableVersion)
 
 
 
+
+/*! \brief The method sets the generating centre identifier. */
 
 void ProductSection::setCentre(std::uint8_t centre)
 {
@@ -1584,6 +1594,8 @@ void ProductSection::setCentre(std::uint8_t centre)
 
 
 
+/*! \brief The method sets the generating process identifier. */
+
 void ProductSection::setGeneratingProcessIdentifier(std::uint8_t generatingProcessIdentifier)
 {
   try
@@ -1599,6 +1611,8 @@ void ProductSection::setGeneratingProcessIdentifier(std::uint8_t generatingProce
 
 
 
+
+/*! \brief The method sets the grid definition number. */
 
 void ProductSection::setGridDefinitionNumber(std::uint8_t gridDefinitionNumber)
 {
@@ -1616,6 +1630,8 @@ void ProductSection::setGridDefinitionNumber(std::uint8_t gridDefinitionNumber)
 
 
 
+/*! \brief The method sets the section flags. */
+
 void ProductSection::setSectionFlags(std::uint8_t sectionFlags)
 {
   try
@@ -1631,6 +1647,8 @@ void ProductSection::setSectionFlags(std::uint8_t sectionFlags)
 
 
 
+
+/*! \brief The method sets the indicator of parameter. */
 
 void ProductSection::setIndicatorOfParameter(std::uint8_t indicatorOfParameter)
 {
@@ -1648,6 +1666,8 @@ void ProductSection::setIndicatorOfParameter(std::uint8_t indicatorOfParameter)
 
 
 
+/*! \brief The method sets the indicator of type of level. */
+
 void ProductSection::setIndicatorOfTypeOfLevel(std::uint8_t indicatorOfTypeOfLevel)
 {
   try
@@ -1663,6 +1683,8 @@ void ProductSection::setIndicatorOfTypeOfLevel(std::uint8_t indicatorOfTypeOfLev
 
 
 
+
+/*! \brief The method sets the level value. */
 
 void ProductSection::setLevel(std::uint16_t level)
 {
@@ -1680,6 +1702,8 @@ void ProductSection::setLevel(std::uint16_t level)
 
 
 
+/*! \brief The method sets the year of century of the reference time. */
+
 void ProductSection::setYearOfCentury(std::uint8_t yearOfCentury)
 {
   try
@@ -1695,6 +1719,8 @@ void ProductSection::setYearOfCentury(std::uint8_t yearOfCentury)
 
 
 
+
+/*! \brief The method sets the month of the reference time. */
 
 void ProductSection::setMonth(std::uint8_t month)
 {
@@ -1720,6 +1746,8 @@ void ProductSection::setMonth(std::uint8_t month)
 
 
 
+/*! \brief The method sets the day of the reference time. */
+
 void ProductSection::setDay(std::uint8_t day)
 {
   try
@@ -1743,6 +1771,8 @@ void ProductSection::setDay(std::uint8_t day)
 
 
 
+
+/*! \brief The method sets the hour of the reference time. */
 
 void ProductSection::setHour(std::uint8_t hour)
 {
@@ -1768,6 +1798,8 @@ void ProductSection::setHour(std::uint8_t hour)
 
 
 
+/*! \brief The method sets the minute of the reference time. */
+
 void ProductSection::setMinute(std::uint8_t minute)
 {
   try
@@ -1792,6 +1824,8 @@ void ProductSection::setMinute(std::uint8_t minute)
 
 
 
+/*! \brief The method sets the unit of time range. */
+
 void ProductSection::setUnitOfTimeRange(std::uint8_t unitOfTimeRange)
 {
   try
@@ -1807,6 +1841,8 @@ void ProductSection::setUnitOfTimeRange(std::uint8_t unitOfTimeRange)
 
 
 
+
+/*! \brief The method sets the P1 time period value. */
 
 void ProductSection::setP1(std::uint8_t p1)
 {
@@ -1824,6 +1860,8 @@ void ProductSection::setP1(std::uint8_t p1)
 
 
 
+/*! \brief The method sets the P2 time period value. */
+
 void ProductSection::setP2(std::uint8_t p2)
 {
   try
@@ -1839,6 +1877,8 @@ void ProductSection::setP2(std::uint8_t p2)
 
 
 
+
+/*! \brief The method sets the time range indicator. */
 
 void ProductSection::setTimeRangeIndicator(std::uint8_t timeRangeIndicator)
 {
@@ -1856,6 +1896,8 @@ void ProductSection::setTimeRangeIndicator(std::uint8_t timeRangeIndicator)
 
 
 
+/*! \brief The method sets the number included in average. */
+
 void ProductSection::setNumberIncludedInAverage(std::uint16_t numberIncludeInAverage)
 {
   try
@@ -1871,6 +1913,8 @@ void ProductSection::setNumberIncludedInAverage(std::uint16_t numberIncludeInAve
 
 
 
+
+/*! \brief The method sets the number missing from averages or accumulations. */
 
 void ProductSection::setNumberMissingFromAveragesOrAccumulations(std::uint8_t numberMissingFromAveragesOrAccumulations)
 {
@@ -1888,6 +1932,8 @@ void ProductSection::setNumberMissingFromAveragesOrAccumulations(std::uint8_t nu
 
 
 
+/*! \brief The method sets the century of the reference time of data. */
+
 void ProductSection::setCenturyOfReferenceTimeOfData(std::uint8_t centuryOfReferenceTimeOfData)
 {
   try
@@ -1903,6 +1949,8 @@ void ProductSection::setCenturyOfReferenceTimeOfData(std::uint8_t centuryOfRefer
 
 
 
+
+/*! \brief The method sets the sub-centre identifier. */
 
 void ProductSection::setSubCentre(std::uint8_t subCentre)
 {
@@ -1920,6 +1968,8 @@ void ProductSection::setSubCentre(std::uint8_t subCentre)
 
 
 
+/*! \brief The method sets the decimal scale factor. */
+
 void ProductSection::setDecimalScaleFactor(std::uint16_t decimalScaleFactor)
 {
   try
@@ -1936,6 +1986,8 @@ void ProductSection::setDecimalScaleFactor(std::uint16_t decimalScaleFactor)
 
 
 
+/*! \brief The method sets the forecast type. */
+
 void ProductSection::setForecastType(short forecastType)
 {
   try
@@ -1951,6 +2003,8 @@ void ProductSection::setForecastType(short forecastType)
 
 
 
+
+/*! \brief The method sets the forecast number. */
 
 void ProductSection::setForecastNumber(short forecastNuber)
 {
@@ -1970,7 +2024,7 @@ void ProductSection::setForecastNumber(short forecastNuber)
 
 /*! \brief The method prints the content of the current object into the given stream.
 
-        \param ostream      The output stream.
+        \param stream      The output stream.
         \param level        The print level (used when printing multi-level structures).
         \param optionFlags  The printing options expressed in flag-bits.
 */

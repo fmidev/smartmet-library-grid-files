@@ -11,6 +11,8 @@ namespace Map
 Topography topography;
 
 
+/*! \brief Converts an ARGB pixel value into a grayscale intensity using the luminance formula. */
+
 inline unsigned char argb_to_gray(uint argb)
 {
   uint r = (argb & 0xFF0000) >> 16;
@@ -23,6 +25,8 @@ inline unsigned char argb_to_gray(uint argb)
 
 
 
+
+/*! \brief The constructor of the class. */
 
 Topography::Topography()
 {
@@ -64,6 +68,8 @@ Topography::Topography()
 
 
 
+/*! \brief The destructor of the class. */
+
 Topography::~Topography()
 {
   try
@@ -83,6 +89,8 @@ Topography::~Topography()
 
 
 
+
+/*! \brief Initializes the topography data by reading the configuration file and loading masks/shadings. */
 
 void Topography::init(const char* configFile,bool initLandSeaMask,bool initLandShading,bool initSeaShading)
 {
@@ -117,6 +125,8 @@ void Topography::init(const char* configFile,bool initLandSeaMask,bool initLandS
 
 
 
+/*! \brief Returns true/false flags indicating whether each coordinate is on land. */
+
 void Topography::isLand(const T::Coordinate_vec& coordinates,std::vector<bool>& land)
 {
   try
@@ -136,6 +146,8 @@ void Topography::isLand(const T::Coordinate_vec& coordinates,std::vector<bool>& 
 
 
 
+
+/*! \brief Returns 1.0/0.0 values indicating whether each coordinate is on land. */
 
 void Topography::getLand(const T::Coordinate_vec& coordinates,std::vector<float>& land)
 {
@@ -161,6 +173,8 @@ void Topography::getLand(const T::Coordinate_vec& coordinates,std::vector<float>
 
 
 
+/*! \brief Returns the shading values for all of the given coordinates. */
+
 void Topography::getShading(const T::Coordinate_vec& coordinates,std::vector<float>& shadings)
 {
   try
@@ -181,6 +195,8 @@ void Topography::getShading(const T::Coordinate_vec& coordinates,std::vector<flo
 
 
 
+
+/*! \brief Returns land shading values for each coordinate, with missing values on sea points. */
 
 void Topography::getLandShading(const T::Coordinate_vec& coordinates,std::vector<float>& shadings)
 {
@@ -205,6 +221,8 @@ void Topography::getLandShading(const T::Coordinate_vec& coordinates,std::vector
 
 
 
+/*! \brief Returns sea shading values for each coordinate, with missing values on land points. */
+
 void Topography::getSeaShading(const T::Coordinate_vec& coordinates,std::vector<float>& shadings)
 {
   try
@@ -228,6 +246,8 @@ void Topography::getSeaShading(const T::Coordinate_vec& coordinates,std::vector<
 
 
 
+
+/*! \brief Loads the land-sea mask bitmap from the configured file. */
 
 void Topography::loadLandSeaMask()
 {
@@ -280,6 +300,8 @@ void Topography::loadLandSeaMask()
 
 
 
+/*! \brief Loads the land-shading PNG image from the configured file and converts it to float values. */
+
 void Topography::loadLandShading()
 {
   try
@@ -310,53 +332,6 @@ void Topography::loadLandShading()
     {
       mLandShading = new float[mLandShading_size];
 
-#if 0
-      uint div = 5;
-      uint dd = div*div;
-      uint nw = image.width / div;
-      uint nh = image.height / div;
-
-      uint ns = nw*nh;
-      uint *newimage = new uint[ns];
-
-      uint c = 0;
-      for (uint y=0; y<nh; y++)
-      {
-        uint yy = y * div;
-        for (uint x=0; x<nw; x++)
-        {
-          uint aa = 0,rr = 0, gg = 0, bb = 0;
-
-          uint xx = x * div;
-
-          for (uint yt=0; yt<div; yt++)
-          {
-            for (uint xt=0; xt<div; xt++)
-            {
-              uint p = (yy+yt)*image.width + xx + xt;
-              uint col = image.pixel[p];
-
-              uint a = (col & 0xFF000000) >> 24;
-              uint r = (col & 0x00FF0000) >> 16;
-              uint g = (col & 0x0000FF00) >> 8;
-              uint b = (col & 0x000000FF);
-
-              aa += a;
-              rr += r;
-              gg += g;
-              bb += b;
-            }
-          }
-          //newimage[c] = ((aa/100) << 24) + ((rr/100) << 16) + ((gg/100) << 8) + (bb/100);
-          newimage[c] = 0xFF000000 + (((uint)(rr/dd)) << 16) + (((uint)(gg/dd)) << 8) + (uint)(bb/dd);
-          c++;
-        }
-      }
-
-      png_save("/tmp/land-shading_lr.png",newimage,nw,nh,9);
-      delete [] newimage;
-#endif
-
       for (uint t=0; t<mLandShading_size; t++)
       {
         uint col = image.pixel[t];
@@ -379,6 +354,8 @@ void Topography::loadLandShading()
 
 
 
+
+/*! \brief Loads the sea-shading PNG image from the configured file and converts it to float values. */
 
 void Topography::loadSeaShading()
 {
@@ -409,53 +386,6 @@ void Topography::loadSeaShading()
     if (mSeaShading_size > 0)
     {
       mSeaShading = new float[mSeaShading_size];
-
-#if 0
-      uint div = 5;
-      uint dd = div*div;
-      uint nw = image.width / div;
-      uint nh = image.height / div;
-
-      uint ns = nw*nh;
-      uint *newimage = new uint[ns];
-
-      uint c = 0;
-      for (uint y=0; y<nh; y++)
-      {
-        uint yy = y * div;
-        for (uint x=0; x<nw; x++)
-        {
-          uint aa = 0,rr = 0, gg = 0, bb = 0;
-
-          uint xx = x * div;
-
-          for (uint yt=0; yt<div; yt++)
-          {
-            for (uint xt=0; xt<div; xt++)
-            {
-              uint p = (yy+yt)*image.width + xx + xt;
-              uint col = image.pixel[p];
-
-              uint a = (col & 0xFF000000) >> 24;
-              uint r = (col & 0x00FF0000) >> 16;
-              uint g = (col & 0x0000FF00) >> 8;
-              uint b = (col & 0x000000FF);
-
-              aa += a;
-              rr += r;
-              gg += g;
-              bb += b;
-            }
-          }
-          //newimage[c] = ((aa/100) << 24) + ((rr/100) << 16) + ((gg/100) << 8) + (bb/100);
-          newimage[c] = 0xFF000000 + (((uint)(rr/dd)) << 16) + (((uint)(gg/dd)) << 8) + (uint)(bb/dd);
-          c++;
-        }
-      }
-
-      png_save("/tmp/sea-shading_lr.png",newimage,nw,nh,9);
-      delete [] newimage;
-#endif
 
       for (uint t=0; t<mSeaShading_size; t++)
       {

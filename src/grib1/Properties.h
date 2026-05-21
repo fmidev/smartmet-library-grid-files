@@ -12,6 +12,19 @@ namespace SmartMet
 namespace GRIB1
 {
 
+
+// ====================================================================================
+/*! \brief Registry of numeric property IDs for GRIB 1 message fields.
+ *
+ *  Maps property names (strings) to compact numeric IDs so that GRIB 1 section classes
+ *  can get/set individual GRIB fields by a stable integer key rather than by method
+ *  name.  Nested classes group the IDs per GRIB section; IDs are allocated sequentially
+ *  across sections so they are globally unique within the GRIB 1 namespace.
+ *
+ *  The global singleton \c gribProperty is pre-populated at startup with all known
+ *  property name-to-ID mappings. */
+// ====================================================================================
+
 class Property
 {
   public:
@@ -28,7 +41,7 @@ class Property
 
     constexpr static const uint FirstProperty                       = 1000;
 
-    class IndicatorSection
+    class IndicatorSection  //!< Property IDs for Section 0 (Indicator Section) fields.
     {
       public:
         constexpr static const uint FirstProperty                   = Property::FirstProperty;
@@ -36,7 +49,7 @@ class Property
         constexpr static const uint LastProperty                    = FirstProperty + 0;
     };
 
-    class ProductSection
+    class ProductSection  //!< Property IDs for Section 1 (Product Definition Section) fields.
     {
       public:
         constexpr static const uint FirstProperty                   = IndicatorSection::LastProperty + 1;
@@ -67,7 +80,7 @@ class Property
         constexpr static const uint LastProperty                    = FirstProperty + 99;
     };
 
-    class DataSection
+    class DataSection  //!< Property IDs for Section 4 (Binary Data Section) fields.
     {
       public:
         constexpr static const uint FirstProperty                   = ProductSection::LastProperty + 1;
@@ -79,7 +92,7 @@ class Property
         constexpr static const uint LastProperty                    = FirstProperty + 4;
     };
 
-    class GridSection
+    class GridSection  //!< Property IDs for Section 2 (Grid Description Section) fields.
     {
       public:
         constexpr static const uint FirstProperty                   = DataSection::LastProperty + 1;
@@ -210,7 +223,7 @@ class Property
 };  // class Property
 
 
-extern Property gribProperty;
+extern Property gribProperty;  //!< Global singleton pre-populated with all GRIB 1 property name-to-ID mappings.
 
 }  // namespace GRIB1
 }  // namespace SmartMet

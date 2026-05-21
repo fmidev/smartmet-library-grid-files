@@ -9,6 +9,8 @@ namespace Identification
 {
 
 
+/*! \brief The constructor of the class. */
+
 FmiParameterId_newbase::FmiParameterId_newbase()
 {
   try
@@ -25,6 +27,8 @@ FmiParameterId_newbase::FmiParameterId_newbase()
 
 
 
+/*! \brief The destructor of the class. */
+
 FmiParameterId_newbase::~FmiParameterId_newbase()
 {
   try
@@ -40,6 +44,8 @@ FmiParameterId_newbase::~FmiParameterId_newbase()
 
 
 
+
+/*! \brief Prints the content of the object into the given stream. */
 
 void FmiParameterId_newbase::print(std::ostream& stream,uint level,uint optionFlags) const
 {

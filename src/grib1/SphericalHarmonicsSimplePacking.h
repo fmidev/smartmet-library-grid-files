@@ -10,6 +10,14 @@ namespace GRIB1
 {
 
 
+// ====================================================================================
+/*! \brief GRIB 1 spherical harmonics simple-packing decoder.
+ *
+ *  Decodes spectral data encoded with the simpler spherical harmonics packing variant.
+ *  All coefficients are uniformly packed using the standard simple-packing scale
+ *  parameters from the Data Section (no complex unpacked coefficient sub-range). */
+// ====================================================================================
+
 class SphericalHarmonicsSimplePacking : public DataDefinition
 {
   public:

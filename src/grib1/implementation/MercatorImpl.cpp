@@ -252,6 +252,8 @@ T::Dimensions MercatorImpl::getGridDimensions() const
 
 
 
+/*! \brief Returns the grid cell width and height in kilometres. */
+
 bool MercatorImpl::getGridMetricCellSize(double& width,double& height) const
 {
   try
@@ -384,6 +386,7 @@ bool MercatorImpl::reverseYDirection() const
 
 
 
+/*! \brief Collects all property settings for this Mercator grid into the given vector. */
 
 void MercatorImpl::getProperties(T::PropertySettingVec& properties)
 {
@@ -569,6 +572,7 @@ void MercatorImpl::initSpatialReference()
 
 
 
+/*! \brief Prints a human-readable dump of this Mercator grid definition. */
 
 void MercatorImpl::print(std::ostream& stream,uint level,uint optionFlags) const
 {

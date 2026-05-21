@@ -9,6 +9,8 @@ namespace Identification
 {
 
 
+/*! \brief The constructor of the class. */
+
 ProcessingTypeDef::ProcessingTypeDef()
 {
   try
@@ -23,6 +25,8 @@ ProcessingTypeDef::ProcessingTypeDef()
 
 
 
+
+/*! \brief The destructor of the class. */
 
 ProcessingTypeDef::~ProcessingTypeDef()
 {
@@ -39,6 +43,8 @@ ProcessingTypeDef::~ProcessingTypeDef()
 
 
 
+
+/*! \brief Prints the content of the object into the given stream. */
 
 void ProcessingTypeDef::print(std::ostream& stream,uint level,uint optionFlags) const
 {

@@ -65,7 +65,7 @@ class BitmapSection : public GRID::MessageSection
 
     T::Data_ptr     getBitmapDataPtr() const;
     std::size_t     getBitmapDataSizeInBytes() const;
-    Int64       getHash();
+    Int64           getHash();
     void            getIndexVector(uint numOfValues,T::IndexVector& indexVector);
 
     void            setNumberOfUnusedBits(std::uint8_t unusedBits);
@@ -92,7 +92,7 @@ class BitmapSection : public GRID::MessageSection
     /*! \brief The number of unused bits at end of the section. */
     std::uint8_t    mNumberOfUnusedBits;
 
-    bool            mReleaseData;
+    bool            mReleaseData;    //!< If true, free the bitmap data buffer on destruction.
 
     /*! \brief The table reference. If the value is zero, a bitmap follows. If the octets contain a number,
         it refers to a predetermined bitmap provided. */
@@ -104,11 +104,11 @@ class BitmapSection : public GRID::MessageSection
     /*! \brief The bitmap size in bytes. */
     std::size_t     mBitmapDataSizeInBytes;
 
-    Int64       mHash;
+    Int64           mHash;           //!< Cached hash of the bitmap content (0 = not yet computed).
 };
 
 
-typedef std::shared_ptr<BitmapSection> BitmapSect_sptr;
+typedef std::shared_ptr<BitmapSection> BitmapSect_sptr;  //!< Shared ownership pointer to a BitmapSection.
 
 }  // namespace GRIB1
 }  // namespace SmartMet

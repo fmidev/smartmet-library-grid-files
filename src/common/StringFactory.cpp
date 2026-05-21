@@ -11,6 +11,8 @@ StringFactory stringFactory;
 
 
 
+/*! \brief Default constructor that allocates the string table. */
+
 StringFactory::StringFactory()
 {
   try
@@ -31,6 +33,8 @@ StringFactory::StringFactory()
 
 
 
+
+/*! \brief Destructor that frees all interned strings and the string table. */
 
 StringFactory::~StringFactory()
 {
@@ -63,6 +67,8 @@ StringFactory::~StringFactory()
 
 
 
+
+/*! \brief Interns a C-string and returns its index in the string table. */
 
 uint StringFactory::create(const char *str)
 {
@@ -120,6 +126,8 @@ uint StringFactory::create(const char *str)
 
 
 
+/*! \brief Interns a std::string and returns its index in the string table. */
+
 uint StringFactory::create(std::string str)
 {
   try
@@ -135,6 +143,8 @@ uint StringFactory::create(std::string str)
 
 
 
+
+/*! \brief Returns the interned string at the given index, or nullptr. */
 
 pchar StringFactory::operator[](uint index)
 {

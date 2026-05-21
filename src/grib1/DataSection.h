@@ -106,25 +106,26 @@ class DataSection : public GRID::MessageSection
     /*! \brief The length of the section. */
     std::uint32_t     mSectionLength;
 
-    std::uint8_t      mFlags;
-    std::int16_t      mBinaryScaleFactor;
-    std::float_t      mReferenceValue;
-    std::uint8_t      mBitsPerValue;
-    DataDefintionUptr mDataDefinition;
-    T::Data_ptr       mDataPtr;
-    std::size_t       mDataSize;
-    std::size_t       mDataSizeMax;
-    bool              mReleaseData;
+    std::uint8_t      mFlags;             //!< Packing/encoding flags (Code Table 11, octet 4 high nibble).
+    std::int16_t      mBinaryScaleFactor; //!< Binary scale factor E (octet 5-6).
+    std::float_t      mReferenceValue;    //!< Reference value R — minimum of packed values (octets 7-10).
+    std::uint8_t      mBitsPerValue;      //!< Number of bits per packed value (octet 11).
+    DataDefintionUptr mDataDefinition;    //!< Packing strategy (SimplePacking, SecondOrderPacking, etc.).
+    T::Data_ptr       mDataPtr;           //!< Pointer to the (memory-mapped) packed binary data.
+    std::size_t       mDataSize;          //!< Actual size of the packed data in bytes.
+    std::size_t       mDataSizeMax;       //!< Allocated (maximum) buffer size in bytes.
+    bool              mReleaseData;       //!< If true, free the data buffer on destruction.
 };
 
 
 
+/*! \brief High-nibble flag bits in the Data Section flags octet (Code Table 11). */
 enum DataSection_flags
 {
-  SphercicalHarmonicCoefficients = 1 << 7,
-  ComplexPacking                 = 1 << 6,
-  IntegerValues                  = 1 << 5,
-  AdditionalFlags                = 1 << 4
+  SphercicalHarmonicCoefficients = 1 << 7,  //!< Data contains spherical harmonic coefficients.
+  ComplexPacking                 = 1 << 6,  //!< Complex (second-order) packing is used.
+  IntegerValues                  = 1 << 5,  //!< Grid values are integers rather than floats.
+  AdditionalFlags                = 1 << 4   //!< Additional flags present in octet 14.
 };
 
 
@@ -148,19 +149,20 @@ enum DataSection_flags
  ------11 3rd-order    "         "         " .
 */
 
+/*! \brief Bit flags for the extended flags byte (octet 14) in second-order packing. */
 enum DataSection_additionalFlags
 {
-  MatrixOfValues                 = 64,
-  SecondaryBitmapsPresent        = 32,
-  DifferentValueWidths           = 16,
-  GeneralExtendedPacking         = 8,
-  BoustrophedonicOrdering        = 4,
-  SpatialDifferencingPlus2       = 2,
-  SpatialDifferencingPlus1       = 1
+  MatrixOfValues                 = 64,  //!< Matrix of values at each grid point.
+  SecondaryBitmapsPresent        = 32,  //!< Secondary bit-map present.
+  DifferentValueWidths           = 16,  //!< Second-order values have different bit-widths.
+  GeneralExtendedPacking         = 8,   //!< General extended second-order packing in use.
+  BoustrophedonicOrdering        = 4,   //!< Boustrophedonic (zigzag) ordering in Section 4.
+  SpatialDifferencingPlus2       = 2,   //!< 2nd-order spatial differencing applied.
+  SpatialDifferencingPlus1       = 1    //!< 1st-order spatial differencing applied.
 };
 
 
-typedef std::shared_ptr<DataSection> DataSect_sptr;
+typedef std::shared_ptr<DataSection> DataSect_sptr;  //!< Shared ownership pointer to a DataSection.
 
 
 }  // namespace GRIB1

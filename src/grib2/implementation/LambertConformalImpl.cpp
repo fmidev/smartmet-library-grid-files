@@ -79,6 +79,8 @@ LambertConformalImpl::~LambertConformalImpl()
 
 
 
+/*! \brief Initializes derived projection parameters (start coordinates and direction increments). */
+
 void LambertConformalImpl::init() const
 {
   try
@@ -166,6 +168,8 @@ void LambertConformalImpl::read(MemoryReader& memoryReader)
 
 
 
+
+/*! \brief Appends the projection-specific property settings to the given vector. */
 
 void LambertConformalImpl::getProperties(T::PropertySettingVec& properties)
 {
@@ -480,6 +484,8 @@ T::Dimensions LambertConformalImpl::getGridDimensions() const
 
 
 
+/*! \brief Returns the number of columns in the original grid. */
+
 std::size_t LambertConformalImpl::getGridColumnCount() const
 {
   try
@@ -494,6 +500,8 @@ std::size_t LambertConformalImpl::getGridColumnCount() const
 
 
 
+
+/*! \brief Returns the number of rows in the original grid. */
 
 std::size_t LambertConformalImpl::getGridRowCount() const
 {
@@ -510,6 +518,8 @@ std::size_t LambertConformalImpl::getGridRowCount() const
 
 
 
+
+/*! \brief Returns the metric grid cell width and height. */
 
 bool LambertConformalImpl::getGridMetricCellSize(double& width,double& height) const
 {
@@ -775,7 +785,7 @@ void LambertConformalImpl::initSpatialReference()
 
 /*! \brief The method prints the content of the current object into the given stream.
 
-        \param ostream      The output stream.
+        \param stream      The output stream.
         \param level        The print level (used when printing multi-level structures).
         \param optionFlags  The printing options expressed in flag-bits.
 */

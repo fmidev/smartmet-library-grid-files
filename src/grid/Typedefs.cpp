@@ -8,6 +8,8 @@ namespace T
 {
 
 
+/*! \brief Returns the human-readable string name corresponding to a FileType enum value. */
+
 std::string get_fileTypeString(FileType fileType)
 {
   try
@@ -48,6 +50,8 @@ std::string get_fileTypeString(FileType fileType)
 
 
 
+
+/*! \brief Returns the string name of the given area interpolation method. */
 
 std::string get_areaInterpolationMethodString(short interpolationMethod)
 {
@@ -91,6 +95,8 @@ std::string get_areaInterpolationMethodString(short interpolationMethod)
 
 
 
+/*! \brief Returns the string name of the given time interpolation method. */
+
 std::string get_timeInterpolationMethodString(short interpolationMethod)
 {
   try
@@ -129,6 +135,8 @@ std::string get_timeInterpolationMethodString(short interpolationMethod)
 
 
 
+
+/*! \brief Returns the string name of the given level interpolation method. */
 
 std::string get_levelInterpolationMethodString(short interpolationMethod)
 {
@@ -171,6 +179,8 @@ std::string get_levelInterpolationMethodString(short interpolationMethod)
 
 
 
+
+/*! \brief Returns the string name of the given grid projection enum value. */
 
 std::string get_gridProjectionString(GridProjection projection)
 {

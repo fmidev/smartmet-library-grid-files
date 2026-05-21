@@ -99,7 +99,7 @@ class GridSection : public GRID::MessageSection
     T::GridProjection     getGridProjection() const;
     std::size_t           getGridColumnCount() const;
     std::size_t           getGridRowCount() const;
-    T::SpatialRef_sptr     getSpatialReference() const;
+    T::SpatialRef_sptr    getSpatialReference() const;
     std::string           getWKT();
     std::string           getProj4();
     void                  initSpatialReference();
@@ -138,7 +138,7 @@ class GridSection : public GRID::MessageSection
     /*! \brief The pointer to the GridDefinition object. */
     GridDefinition_sptr   mGridDefinition;
 
-    std::vector<std::uint32_t>  mVerticalCoordinates;
+    std::vector<std::uint32_t>  mVerticalCoordinates;  //!< Optional list of vertical coordinate parameters (NV entries).
 
     /*! \brief The length of the section. */
     std::uint32_t         mSectionLength;
@@ -158,7 +158,7 @@ class GridSection : public GRID::MessageSection
 };
 
 
-typedef std::shared_ptr<GridSection> GridSect_sptr;
+typedef std::shared_ptr<GridSection> GridSect_sptr;  //!< Shared ownership pointer to a GridSection.
 
 }  // namespace GRIB1
 }  // namespace SmartMet

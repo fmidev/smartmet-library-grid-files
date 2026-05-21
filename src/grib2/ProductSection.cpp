@@ -153,6 +153,8 @@ void ProductSection::getAttributeList(const std::string& prefix,T::AttributeList
 
 
 
+/*! \brief The method returns the value of the named product section attribute. */
+
 bool ProductSection::getAttributeValue(const char *attributeName, std::string& attributeValue) const
 {
   try
@@ -173,6 +175,8 @@ bool ProductSection::getAttributeValue(const char *attributeName, std::string& a
 
 
 
+
+/*! \brief The method returns true if the named attribute matches the given value. */
 
 bool ProductSection::hasAttributeValue(const char *attributeName, const char *attributeValue) const
 {
@@ -253,6 +257,8 @@ bool ProductSection::getProperty(uint propertyId,Int64& value)
 
 
 
+
+/*! \brief The method collects the product section properties into the given vector. */
 
 void ProductSection::getProperties(T::PropertySettingVec& properties)
 {
@@ -534,6 +540,8 @@ std::uint8_t ProductSection::getNumberOfSection() const
 
 
 
+/*! \brief The method returns the number of vertical coordinate values. */
+
 T::UInt16_opt ProductSection::getNV() const
 {
   try
@@ -548,6 +556,8 @@ T::UInt16_opt ProductSection::getNV() const
 
 
 
+
+/*! \brief The method returns the product definition template number. */
 
 std::uint16_t ProductSection::getProductDefinitionTemplateNumber() const
 {
@@ -596,6 +606,8 @@ T::TimeString ProductSection::getForecastTime(T::TimeString referenceTime) const
 
 
 
+/*! \brief The method returns the GRIB parameter category. */
+
 const T::UInt8_opt ProductSection::getGribParameterCategory() const
 {
   try
@@ -615,6 +627,8 @@ const T::UInt8_opt ProductSection::getGribParameterCategory() const
 
 
 
+
+/*! \brief The method returns the GRIB parameter number. */
 
 const T::UInt8_opt ProductSection::getGribParameterNumber() const
 {
@@ -757,6 +771,8 @@ T::ForecastNumber ProductSection::getForecastNumber() const
 
 
 
+/*! \brief The method sets the number of vertical coordinate values. */
+
 void ProductSection::setNV(T::UInt16_opt nv)
 {
   try
@@ -774,6 +790,8 @@ void ProductSection::setNV(T::UInt16_opt nv)
 
 
 
+
+/*! \brief The method sets the product definition using the given template id. */
 
 void ProductSection::setProductDefinition(std::uint16_t productTemplateId)
 {
@@ -800,6 +818,8 @@ void ProductSection::setProductDefinition(std::uint16_t productTemplateId)
 
 
 
+
+/*! \brief The method creates a ProductDefinition object for the given product template id. */
 
 ProductDefinition* ProductSection::createProductDefinition(std::uint16_t productTemplateId)
 {
@@ -976,6 +996,8 @@ ProductDefinition* ProductSection::createProductDefinition(std::uint16_t product
 
 
 
+/*! \brief The method returns the product definition object. */
+
 ProductDefinition* ProductSection::getProductDefinition() const
 {
   try
@@ -990,6 +1012,8 @@ ProductDefinition* ProductSection::getProductDefinition() const
 
 
 
+
+/*! \brief The method returns the generating process identifier. */
 
 T::UInt8_opt ProductSection::getGeneratingProcessIdentifier() const
 {
@@ -1013,7 +1037,7 @@ T::UInt8_opt ProductSection::getGeneratingProcessIdentifier() const
 
 /*! \brief The method prints the content of the current object into the given stream.
 
-        \param ostream      The output stream.
+        \param stream      The output stream.
         \param level        The print level (used when printing multi-level structures).
         \param optionFlags  The printing options expressed in flag-bits.
 */

@@ -257,6 +257,8 @@ T::Dimensions MercatorImpl::getGridDimensions() const
 
 
 
+/*! \brief Returns the metric grid cell width and height. */
+
 bool MercatorImpl::getGridMetricCellSize(double& width,double& height) const
 {
   try
@@ -336,6 +338,8 @@ bool MercatorImpl::getGridPointByOriginalCoordinates(double x,double y,double& g
 
 
 
+
+/*! \brief Appends the projection-specific property settings to the given vector. */
 
 void MercatorImpl::getProperties(T::PropertySettingVec& properties)
 {
@@ -538,7 +542,7 @@ void MercatorImpl::initSpatialReference()
 
 /*! \brief The method prints the content of the current object into the given stream.
 
-        \param ostream      The output stream.
+        \param stream      The output stream.
         \param level        The print level (used when printing multi-level structures).
         \param optionFlags  The printing options expressed in flag-bits.
 */

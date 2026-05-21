@@ -9,6 +9,8 @@
 namespace SmartMet
 {
 
+/*! \brief Default constructor for DataFetcher. */
+
 DataFetcher::DataFetcher()
 {
   mDebugEnabled = false;
@@ -16,6 +18,8 @@ DataFetcher::DataFetcher()
 
 
 
+
+/*! \brief Destructor for DataFetcher. */
 
 DataFetcher::~DataFetcher()
 {
@@ -25,6 +29,8 @@ DataFetcher::~DataFetcher()
 
 
 
+/*! \brief Stub for retrieving file size; must be implemented in subclasses. */
+
 Int64 DataFetcher::getFileSize(uint serverType,uint protocol,const char *server,const char *filename)
 {
   throw Fmi::Exception(BCP,"This method should be implemented in child classes!");
@@ -32,6 +38,8 @@ Int64 DataFetcher::getFileSize(uint serverType,uint protocol,const char *server,
 
 
 
+
+/*! \brief Stub for retrieving file headers; must be implemented in subclasses. */
 
 void DataFetcher::getFileHeaders(uint serverType,uint protocol,const char *server,const char *filename,std::map<std::string,std::string>& headers)
 {
@@ -41,6 +49,8 @@ void DataFetcher::getFileHeaders(uint serverType,uint protocol,const char *serve
 
 
 
+/*! \brief Stub for fetching file data; must be implemented in subclasses. */
+
 int DataFetcher::getData(uint serverType,uint protocol,const char *server,const char *filename,std::size_t filePosition,int dataSize,char *dataPtr)
 {
   throw Fmi::Exception(BCP,"This method should be implemented in child classes!");
@@ -49,6 +59,8 @@ int DataFetcher::getData(uint serverType,uint protocol,const char *server,const 
 
 
 
+/*! \brief Stub for listing files in a directory; must be implemented in subclasses. */
+
 void DataFetcher::getFileList(uint serverType,uint protocol,const char *server,const char *dir,std::vector<std::string> &filePatterns,std::vector<FileRec>& fileList)
 {
   throw Fmi::Exception(BCP,"This method should be implemented in child classes!");
@@ -56,12 +68,16 @@ void DataFetcher::getFileList(uint serverType,uint protocol,const char *server,c
 
 
 
+/*! \brief Enables or disables debug output for the data fetcher. */
+
 void DataFetcher::setDebugEnabled(bool enabled)
 {
   mDebugEnabled = enabled;
 }
 
 
+
+/*! \brief Loads server access credentials from the given file. */
 
 void DataFetcher::setAccessFile(const char *filename)
 {
@@ -79,6 +95,8 @@ void DataFetcher::setAccessFile(const char *filename)
 
 
 
+
+/*! \brief Parses an access credentials file into the given access map. */
 
 void DataFetcher::loadAccessFile(const char *filename,AccessMap& mAccessMap)
 {
@@ -162,6 +180,8 @@ void DataFetcher::loadAccessFile(const char *filename,AccessMap& mAccessMap)
 
 
 
+/*! \brief Adds an access credentials entry for the given server. */
+
 void DataFetcher::addAccessInfo(const char *server,uint authenticationMethod,const char *username,const char *password)
 {
   FUNCTION_TRACE
@@ -183,6 +203,8 @@ void DataFetcher::addAccessInfo(const char *server,uint authenticationMethod,con
 
 
 
+
+/*! \brief Returns the access credentials for the given server, or nullptr. */
 
 DataFetcher::AccessInfo* DataFetcher::getAccessInfo(const char *server)
 {
@@ -207,6 +229,8 @@ DataFetcher::AccessInfo* DataFetcher::getAccessInfo(const char *server)
 
 
 
+
+/*! \brief Parses raw HTTP header text into a key/value map. */
 
 void DataFetcher::parseHeaders(char *data,int dataSize,std::map<std::string,std::string>& headers)
 {
@@ -264,6 +288,8 @@ void DataFetcher::parseHeaders(char *data,int dataSize,std::map<std::string,std:
 }
 
 
+
+/*! \brief Splits a URL string into protocol, server, and filename parts. */
 
 void DataFetcher::splitUrl(const char *urlStr,uint& protocol,std::string& server,std::string& filename)
 {

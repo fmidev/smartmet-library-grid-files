@@ -174,7 +174,7 @@ bool RotatedGaussian::hasAttributeValue(const char *attributeName, const char *a
 
 /*! \brief The method prints the content of the current object into the given stream.
 
-    \param ostream      The output stream.
+    \param stream      The output stream.
     \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */

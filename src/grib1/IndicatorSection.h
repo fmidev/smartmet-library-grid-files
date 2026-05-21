@@ -79,13 +79,13 @@ class IndicatorSection : public GRID::MessageSection
     /*! \brief The section start position in the file. */
     T::FilePosition mFilePosition;
 
-    uchar           mIdentifier[4];
-    std::uint32_t   mTotalLength;
-    std::uint8_t    mEditionNumber;
+    uchar           mIdentifier[4];  //!< GRIB magic bytes ("GRIB", octets 1-4).
+    std::uint32_t   mTotalLength;    //!< Total length of the GRIB message in octets (octets 5-7).
+    std::uint8_t    mEditionNumber;  //!< GRIB edition number (octet 8).
 };
 
 
-typedef std::shared_ptr<IndicatorSection> IndicatorSect_sptr;
+typedef std::shared_ptr<IndicatorSection> IndicatorSect_sptr;  //!< Shared ownership pointer to an IndicatorSection.
 
 }  // namespace GRIB1
 }  // namespace SmartMet

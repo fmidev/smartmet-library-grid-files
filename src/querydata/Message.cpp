@@ -90,6 +90,8 @@ Message::Message(const Message& message)
 
 
 
+/*! \brief Constructs the message from grid file, QueryData file and message info metadata. */
+
 Message::Message(GRID::GridFile *gridFile,QueryDataFile *queryDataFile,T::MessageIndex messageIndex,QueryData::MessageInfo& messageInfo)
 {
   FUNCTION_TRACE
@@ -322,6 +324,8 @@ T::FilePosition Message::getFilePosition() const
 
 
 
+
+/*! \brief Returns the file type identifier of the current message. */
 
 T::FileType Message::getMessageType() const
 {
@@ -562,6 +566,8 @@ T::Dimensions Message::getGridDimensions() const
 
 
 
+/*! \brief Returns the number of rows in the original grid. */
+
 std::size_t Message::getGridRowCount() const
 {
   FUNCTION_TRACE
@@ -584,10 +590,9 @@ std::size_t Message::getGridRowCount() const
 
 
 
-/*! \brief The method returns the number of columns used in the given original grid row.
+/*! \brief The method returns the number of columns used in the original grid.
 
-        \param row    The grid row index (= j-position).
-        \return       The number of columns in the given grid row.
+        \return       The number of columns in the grid.
 */
 
 std::size_t Message::getGridColumnCount() const
@@ -697,6 +702,8 @@ bool Message::isGridGlobal() const
 
 
 
+/*! \brief Returns true when wind vector components are expressed relative to grid axes. */
+
 bool Message::isRelativeUV() const
 {
   FUNCTION_TRACE
@@ -745,6 +752,8 @@ T::GeometryId Message::getGridGeometryId() const
 
 
 
+/*! \brief Returns the average grid cell width and height. */
+
 void Message::getGridCellAverageSize(double& width,double& height) const
 {
   FUNCTION_TRACE
@@ -764,6 +773,8 @@ void Message::getGridCellAverageSize(double& width,double& height) const
 
 
 
+
+/*! \brief Returns the metric grid cell width and height. */
 
 bool Message::getGridMetricCellSize(double& width,double& height) const
 {
@@ -787,6 +798,8 @@ bool Message::getGridMetricCellSize(double& width,double& height) const
 
 
 
+/*! \brief Returns the overall metric size of the grid in meters. */
+
 bool Message::getGridMetricSize(double& width,double& height) const
 {
   FUNCTION_TRACE
@@ -809,6 +822,8 @@ bool Message::getGridMetricSize(double& width,double& height) const
 
 
 
+/*! \brief Returns the four corner coordinates of the grid in the metric projection. */
+
 bool Message::getGridMetricArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight)
 {
   FUNCTION_TRACE
@@ -830,6 +845,8 @@ bool Message::getGridMetricArea(T::Coordinate& topLeft,T::Coordinate& topRight,T
 
 
 
+
+/*! \brief Returns the four corner coordinates of the grid as latlon coordinates. */
 
 bool Message::getGridLatLonArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight)
 {
@@ -890,7 +907,7 @@ std::string Message::getGridGeometryString() const
    It is also possible that we might want to use our own geometry identifiers and this method allows us to set it
    in place.
 
-        \param   The grid geometry identifier.
+        \param geometryId  The grid geometry identifier.
 */
 
 void Message::setGridGeometryId(T::GeometryId geometryId)
@@ -1114,6 +1131,8 @@ bool Message::getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lo
 
 
 
+/*! \brief Resolves a list of latlon coordinates into grid point coordinates. */
+
 void Message::getGridPointListByLatLonCoordinates(T::Coordinate_vec& latlon,T::Coordinate_vec& points) const
 {
   FUNCTION_TRACE
@@ -1164,6 +1183,8 @@ bool Message::getGridPointByLatLonCoordinates(double lat,double lon,double& grid
 
 
 
+
+/*! \brief Resolves a latlon coordinate into a grid point coordinate without using the cache. */
 
 bool Message::getGridPointByLatLonCoordinatesNoCache(double lat,double lon,double& grid_i,double& grid_j)  const
 {
@@ -1345,91 +1366,6 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
   try
   {
     return mQueryDataFile->getGridValue(mParameterIndex,mLevelIndex,mTimeIndex,grid_i,grid_j);
-#if 0
-    //printf("  ** getGridValueByOriginalGridPoint %u,%u\n",grid_i,grid_j);
-
-    if (grid_i >= mColumns)
-      grid_i = grid_i % mColumns;
-
-    if (grid_i >= mColumns || grid_j >= mRows)
-      return ParamValueMissing;
-
-    int typeSize[] = {0,1,1,2,4,4,8};
-
-    UInt64 idx = (grid_j*mColumnMultiplier+grid_i*mRowMultiplier)*typeSize[mDataType];
-    if (idx >= (mMessageSize + typeSize[mDataType]))
-      return ParamValueMissing;
-
-    switch (mDataType)
-    {
-      case 1:  // byte
-      {
-        uchar *v = (uchar*)(mDataStartPtr + idx);
-        if ((T::ParamValue)(*v) == mMissingValue)
-          return ParamValueMissing;
-
-        return mScaleFactor*(T::ParamValue)(*v) + mBaseValue;
-      }
-      break;
-
-      case 2:  // char
-      {
-        char *v = (char*)(mDataStartPtr + idx);
-        if ((T::ParamValue)(*v) == mMissingValue)
-          return ParamValueMissing;
-
-        return mScaleFactor*(T::ParamValue)(*v) + mBaseValue;
-      }
-      break;
-
-      case 3:  // short
-      {
-        short *v = (short*)(mDataStartPtr + idx);
-        short val = ntohs(*v);
-        if ((T::ParamValue)val == mMissingValue)
-          return ParamValueMissing;
-
-        return mScaleFactor*(T::ParamValue)val + mBaseValue;
-      }
-      break;
-
-      case 4:  // int
-      {
-        int *v = (int*)(mDataStartPtr + idx);
-        int val = ntohl(*v);
-        if ((T::ParamValue)val == mMissingValue)
-          return ParamValueMissing;
-
-        return mScaleFactor*(T::ParamValue)val + mBaseValue;
-      }
-      break;
-
-      case 5:  // float
-      {
-        int *v = (int*)(mDataStartPtr + idx);
-        int vv = ntohl(*v);
-        float *val = (float*)&vv;
-        if ((T::ParamValue)(*val) == mMissingValue)
-          return ParamValueMissing;
-
-        return mScaleFactor*(T::ParamValue)(*val) + mBaseValue;
-      }
-      break;
-
-      case 6:  // double
-      {
-        Int64 *v = (Int64*)(mDataStartPtr + idx);
-        Int64 vv = ntohll(*v);
-        double *val = (double*)&vv;
-        if ((T::ParamValue)(*val) == mMissingValue)
-          return ParamValueMissing;
-
-        return mScaleFactor*(T::ParamValue)(*val) + mBaseValue;
-      }
-      break;
-    }
-#endif
-    return ParamValueMissing;
   }
   catch (...)
   {
@@ -1612,6 +1548,8 @@ std::string Message::getWKT() const
 
 
 
+/*! \brief Returns the PROJ.4 projection string of the current grid. */
+
 std::string Message::getProj4() const
 {
   try
@@ -1733,6 +1671,8 @@ T::ForecastNumber Message::getForecastNumber() const
 
 
 
+/*! \brief Locks the message data in memory (no-op for this format). */
+
 void Message::lockData()
 {
   //throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
@@ -1742,6 +1682,8 @@ void Message::lockData()
 
 
 
+/*! \brief Releases a memory lock on the message data (no-op for this format). */
+
 void Message::unlockData()
 {
   //throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
@@ -1750,6 +1692,8 @@ void Message::unlockData()
 
 
 
+
+/*! \brief Returns true if the message has been read into memory. */
 
 bool Message::isRead()
 {
@@ -1768,6 +1712,8 @@ bool Message::isRead()
 
 
 
+
+/*! \brief Reads the message data from the previously assigned grid file (currently disabled). */
 
 void Message::read()
 {
@@ -1846,7 +1792,7 @@ void Message::write(DataWriter& dataWriter)
 
 /*! \brief The method prints the content of the current object into the given stream.
 
-        \param ostream      The output stream.
+        \param stream      The output stream.
         \param level        The print level (used when printing multi-level structures).
         \param optionFlags  The printing options expressed in flag-bits.
 */

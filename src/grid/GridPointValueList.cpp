@@ -18,6 +18,8 @@ GridPointValue::ComparisonMethod gridPointValue_comparisonMethod = GridPointValu
 
 
 
+/*! \brief qsort comparator that compares two GridPointValue pointers using the current method. */
+
 int gridPointValue_compare(const void *_val1,const void *_val2)
 {
   if (_val1 != nullptr  &&  _val2 != nullptr)
@@ -32,6 +34,8 @@ int gridPointValue_compare(const void *_val1,const void *_val2)
 
 
 
+
+/*! \brief The constructor of the class. */
 
 GridPointValueList::GridPointValueList()
 {
@@ -52,6 +56,8 @@ GridPointValueList::GridPointValueList()
 
 
 
+
+/*! \brief Copy constructor that deep-copies the contents of the source list. */
 
 GridPointValueList::GridPointValueList(GridPointValueList& gridPointValueList)
 {
@@ -81,6 +87,8 @@ GridPointValueList::GridPointValueList(GridPointValueList& gridPointValueList)
 
 
 
+/*! \brief Const copy constructor that deep-copies the contents of the source list. */
+
 GridPointValueList::GridPointValueList(const GridPointValueList& gridPointValueList)
 {
   try
@@ -109,6 +117,8 @@ GridPointValueList::GridPointValueList(const GridPointValueList& gridPointValueL
 
 
 
+/*! \brief The destructor of the class. */
+
 GridPointValueList::~GridPointValueList()
 {
   try
@@ -136,6 +146,8 @@ GridPointValueList::~GridPointValueList()
 
 
 
+
+/*! \brief Assignment operator that replaces this list with a copy of the source list. */
 
 GridPointValueList& GridPointValueList::operator=(GridPointValueList& gridPointValueList)
 {
@@ -171,6 +183,8 @@ GridPointValueList& GridPointValueList::operator=(GridPointValueList& gridPointV
 
 
 
+/*! \brief Const assignment operator that replaces this list with a copy of the source list. */
+
 GridPointValueList& GridPointValueList::operator=(const GridPointValueList& gridPointValueList)
 {
   try
@@ -203,6 +217,8 @@ GridPointValueList& GridPointValueList::operator=(const GridPointValueList& grid
 
 
 
+
+/*! \brief Adds a grid point value to the list, preserving the configured sort order. */
 
 void GridPointValueList::addGridPointValue(GridPointValue *gridPointValue)
 {
@@ -252,6 +268,8 @@ void GridPointValueList::addGridPointValue(GridPointValue *gridPointValue)
 
 
 
+/*! \brief Empties the list, optionally releasing the owned grid point value objects. */
+
 void GridPointValueList::clear()
 {
   try
@@ -280,6 +298,8 @@ void GridPointValueList::clear()
 
 
 
+
+/*! \brief Grows the internal storage array to the given capacity. */
 
 void GridPointValueList::increaseSize(uint newSize)
 {
@@ -324,6 +344,8 @@ void GridPointValueList::increaseSize(uint newSize)
 
 
 
+
+/*! \brief Returns the index of the entry that is closest to the given value under the comparison method. */
 
 int GridPointValueList::getClosestIndex(GridPointValue::ComparisonMethod comparisonMethod,GridPointValue& gridPointValue)
 {
@@ -402,6 +424,8 @@ int GridPointValueList::getClosestIndex(GridPointValue::ComparisonMethod compari
 
 
 
+/*! \brief Returns the grid point value at the given index, or nullptr if the index is out of range. */
+
 GridPointValue* GridPointValueList::getGridPointValueByIndex(uint index)
 {
   try
@@ -421,6 +445,8 @@ GridPointValue* GridPointValueList::getGridPointValueByIndex(uint index)
 
 
 
+/*! \brief Returns the grid point value at the given index without bounds checking. */
+
 GridPointValue* GridPointValueList::getGridPointValueByIndexNoCheck(uint index)
 {
   try
@@ -436,6 +462,8 @@ GridPointValue* GridPointValueList::getGridPointValueByIndexNoCheck(uint index)
 
 
 
+
+/*! \brief Finds the grid point value matching the given file, message and coordinates. */
 
 GridPointValue* GridPointValueList::getGridPointValueByFileMessageAndPoint(T::FileId fileId,T::MessageIndex messageIndex,double x,double y)
 {
@@ -459,6 +487,8 @@ GridPointValue* GridPointValueList::getGridPointValueByFileMessageAndPoint(T::Fi
 
 
 
+/*! \brief Finds the grid point value matching the given coordinates, level and time. */
+
 GridPointValue* GridPointValueList::getGridPointValueByPointAndTime(double x,double y,T::ParamLevel level,time_t time)
 {
   try
@@ -481,6 +511,8 @@ GridPointValue* GridPointValueList::getGridPointValueByPointAndTime(double x,dou
 
 
 
+
+/*! \brief Returns the most recent grid point value at the given point and level strictly before the given time. */
 
 GridPointValue* GridPointValueList::getPreviousGridPointValueByPointAndTime(double x,double y,T::ParamLevel level,time_t time)
 {
@@ -508,6 +540,8 @@ GridPointValue* GridPointValueList::getPreviousGridPointValueByPointAndTime(doub
 
 
 
+/*! \brief Returns the earliest grid point value at the given point and level strictly after the given time. */
+
 GridPointValue* GridPointValueList::getNextGridPointValueByPointAndTime(double x,double y,T::ParamLevel level,time_t time)
 {
   try
@@ -533,6 +567,8 @@ GridPointValue* GridPointValueList::getNextGridPointValueByPointAndTime(double x
 
 
 
+
+/*! \brief Computes the bounding rectangle of all grid point coordinates in the list. */
 
 void GridPointValueList::getGridPointValueArea(double& minX,double& minY,double& maxX,double& maxY)
 {
@@ -568,6 +604,8 @@ void GridPointValueList::getGridPointValueArea(double& minX,double& minY,double&
 
 
 
+/*! \brief Copies all grid point values matching the given point and level into the target list. */
+
 void GridPointValueList::getGridPointValueListByPoint(double x,double y,T::ParamLevel level,GridPointValueList& gridPointValueList)
 {
   try
@@ -589,6 +627,8 @@ void GridPointValueList::getGridPointValueListByPoint(double x,double y,T::Param
 
 
 
+
+/*! \brief Copies all grid point values located inside the given rectangle and level into the target list. */
 
 void GridPointValueList::getGridPointValueListByArea(double minX,double minY,double maxX,double maxY,T::ParamLevel level,GridPointValueList& gridPointValueList)
 {
@@ -614,6 +654,8 @@ void GridPointValueList::getGridPointValueListByArea(double minX,double minY,dou
 
 
 
+/*! \brief Copies all grid point values matching the given time into the target list. */
+
 void GridPointValueList::getGridPointValueListByTime(time_t time,GridPointValueList& gridPointValueList)
 {
   try
@@ -635,6 +677,8 @@ void GridPointValueList::getGridPointValueListByTime(time_t time,GridPointValueL
 
 
 
+
+/*! \brief Copies all grid point values whose timestamps fall in the given range into the target list. */
 
 void GridPointValueList::getGridPointValueListByTimeRange(time_t startTime,time_t endTime,GridPointValueList& gridPointValueList)
 {
@@ -658,6 +702,8 @@ void GridPointValueList::getGridPointValueListByTimeRange(time_t startTime,time_
 
 
 
+/*! \brief Copies all grid point values whose values fall in the given range into the target list. */
+
 void GridPointValueList::getGridPointValueListByValueRange(T::ParamValue minValue,T::ParamValue maxValue,GridPointValueList& gridPointValueList)
 {
   try
@@ -680,6 +726,8 @@ void GridPointValueList::getGridPointValueListByValueRange(T::ParamValue minValu
 
 
 
+/*! \brief Returns the number of grid point values currently stored in the list. */
+
 uint GridPointValueList::getLength()
 {
   try
@@ -695,6 +743,8 @@ uint GridPointValueList::getLength()
 
 
 
+
+/*! \brief Removes the grid point value at the given index from the list. */
 
 bool GridPointValueList::deleteGridPointValueByIndex(uint index)
 {
@@ -727,6 +777,8 @@ bool GridPointValueList::deleteGridPointValueByIndex(uint index)
 
 
 
+/*! \brief Returns whether the list owns and releases its grid point value objects. */
+
 bool GridPointValueList::getReleaseObjects()
 {
   try
@@ -741,6 +793,8 @@ bool GridPointValueList::getReleaseObjects()
 
 
 
+
+/*! \brief Sets whether the list owns and releases its grid point value objects. */
 
 void GridPointValueList::setReleaseObjects(bool releaseObjects)
 {
@@ -757,6 +811,8 @@ void GridPointValueList::setReleaseObjects(bool releaseObjects)
 
 
 
+
+/*! \brief Sets the comparison method and re-sorts the list accordingly. */
 
 void GridPointValueList::setComparisonMethod(GridPointValue::ComparisonMethod comparisonMethod)
 {
@@ -779,6 +835,8 @@ void GridPointValueList::setComparisonMethod(GridPointValue::ComparisonMethod co
 
 
 
+
+/*! \brief Sorts the list using the specified comparison method. */
 
 void GridPointValueList::sort(GridPointValue::ComparisonMethod comparisonMethod)
 {
@@ -805,6 +863,8 @@ void GridPointValueList::sort(GridPointValue::ComparisonMethod comparisonMethod)
 
 
 
+/*! \brief Returns the maximum value among all grid point values in the list. */
+
 T::ParamValue GridPointValueList::getMaxValue()
 {
   try
@@ -830,6 +890,8 @@ T::ParamValue GridPointValueList::getMaxValue()
 
 
 
+
+/*! \brief Returns the maximum value among grid point values matching the given time. */
 
 T::ParamValue GridPointValueList::getMaxValueByTime(time_t time)
 {
@@ -861,6 +923,8 @@ T::ParamValue GridPointValueList::getMaxValueByTime(time_t time)
 
 
 
+/*! \brief Returns the minimum value among all grid point values in the list. */
+
 T::ParamValue GridPointValueList::getMinValue()
 {
   try
@@ -886,6 +950,8 @@ T::ParamValue GridPointValueList::getMinValue()
 
 
 
+
+/*! \brief Returns the minimum value among grid point values matching the given time. */
 
 T::ParamValue GridPointValueList::getMinValueByTime(time_t time)
 {
@@ -917,6 +983,8 @@ T::ParamValue GridPointValueList::getMinValueByTime(time_t time)
 
 
 
+/*! \brief Returns the arithmetic mean of all grid point values in the list. */
+
 T::ParamValue GridPointValueList::getAverageValue()
 {
   try
@@ -942,6 +1010,8 @@ T::ParamValue GridPointValueList::getAverageValue()
 
 
 
+
+/*! \brief Returns the arithmetic mean of grid point values matching the given time. */
 
 T::ParamValue GridPointValueList::getAverageValueByTime(time_t time)
 {
@@ -974,6 +1044,8 @@ T::ParamValue GridPointValueList::getAverageValueByTime(time_t time)
 
 
 
+/*! \brief Counts grid point values whose values fall in the given range. */
+
 uint GridPointValueList::getNumOfValuesInValueRange(T::ParamValue minValue,T::ParamValue maxValue)
 {
   try
@@ -1000,6 +1072,8 @@ uint GridPointValueList::getNumOfValuesInValueRange(T::ParamValue minValue,T::Pa
 
 
 
+
+/*! \brief Linearly interpolates the value at the given point and level for the requested time. */
 
 T::ParamValue GridPointValueList::getTimeInterpolatedValue(double x,double y,T::ParamLevel level,time_t time)
 {
@@ -1047,6 +1121,8 @@ T::ParamValue GridPointValueList::getTimeInterpolatedValue(double x,double y,T::
 
 
 
+/*! \brief Generates a time series of interpolated values at the given point and level. */
+
 void GridPointValueList::getGridPointValueListByTimeSteps(double x,double y,T::ParamLevel level,time_t startTime,uint numberOfSteps,uint stepSizeInSeconds,GridPointValueList& gridPointValueList)
 {
   try
@@ -1068,6 +1144,8 @@ void GridPointValueList::getGridPointValueListByTimeSteps(double x,double y,T::P
 
 
 
+
+/*! \brief Prints the contents of the list into the given stream. */
 
 void GridPointValueList::print(std::ostream& stream,uint level,uint optionFlags)
 {

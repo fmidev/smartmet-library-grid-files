@@ -34,6 +34,8 @@ typedef unsigned char uchar;
 
 
 
+/*! \brief qsort comparator that orders two double coordinate values in ascending order. */
+
 int compare_coordinates(const void *p1, const void *p2)
 {
   const double *v1 = (const double*)p1;
@@ -50,6 +52,8 @@ int compare_coordinates(const void *p1, const void *p2)
 
 
 
+/*! \brief Returns the smaller of two integer values. */
+
 int int_min(int _val1,int _val2)
 {
   if (_val1 < _val2)
@@ -60,6 +64,8 @@ int int_min(int _val1,int _val2)
 
 
 
+
+/*! \brief Parses an ARGB color string in hex or comma-separated form into a packed 32-bit color. */
 
 uint argb(const char *colStr)
 {
@@ -102,6 +108,8 @@ uint argb(const char *colStr)
 
 // ********************************************* JPEG *********************************************************
 
+
+/*! \brief Writes a 32-bit pixel buffer to disk as a JPEG file at the given quality. */
 
 void jpeg_save(const char *filename, uint *image, int image_height,int image_width, int quality)
 {
@@ -192,6 +200,8 @@ typedef struct my_error_mgr* my_error_ptr;
 
 
 
+/*! \brief libjpeg error_exit replacement that prints the message and jumps to the setjmp recovery point. */
+
 METHODDEF(void) my_error_exit (j_common_ptr cinfo)
 {
   // ### cinfo->err really points to a my_error_mgr struct, so coerce pointer
@@ -211,6 +221,8 @@ METHODDEF(void) my_error_exit (j_common_ptr cinfo)
 
 
 
+
+/*! \brief Loads a JPEG file from disk into the given CImage, converting color components to RGB. */
 
 int jpg_load(const char *_filename,CImage& _image)
 {
@@ -441,6 +453,8 @@ uchar *image_data = nullptr;
 
 
 
+/*! \brief Placeholder that would print the libpng and zlib version information. */
+
 void readpng_version_info(void)
 {
 //  fprintf(moutput,"Compiled with libpng %s; using libpng %s.\n",PNG_LIBPNG_VER_STRING, png_libpng_ver);
@@ -451,6 +465,8 @@ void readpng_version_info(void)
 
 
 
+
+/*! \brief Initializes libpng for reading from the given file and returns the image dimensions. */
 
 int readpng_init(FILE *infile, uint *pWidth, uint *pHeight)
 {
@@ -494,6 +510,8 @@ int readpng_init(FILE *infile, uint *pWidth, uint *pHeight)
 
 
 
+
+/*! \brief Retrieves the PNG file's background color, normalized to 8-bit RGB. */
 
 int readpng_get_bgcolor(uchar *red, uchar *green, uchar *blue)
 {
@@ -541,6 +559,8 @@ int readpng_get_bgcolor(uchar *red, uchar *green, uchar *blue)
 
 
 
+
+/*! \brief Decodes the PNG image into a freshly allocated pixel buffer applying gamma correction. */
 
 uchar *readpng_get_image(double display_exponent, int *pChannels, uint *pRowbytes)
 {
@@ -611,6 +631,8 @@ uchar *readpng_get_image(double display_exponent, int *pChannels, uint *pRowbyte
 
 
 
+/*! \brief Releases libpng read structures and optionally the decoded image buffer. */
+
 void readpng_cleanup(int free_image_data)
 {
   if (free_image_data && image_data)
@@ -630,6 +652,8 @@ void readpng_cleanup(int free_image_data)
 
 
 
+
+/*! \brief Loads a PNG file from disk into the given CImage with BGRA byte ordering. */
 
 int png_load(const char *_filename,CImage& _image)
 {
@@ -718,6 +742,8 @@ int png_load(const char *_filename,CImage& _image)
 
 
 
+/*! \brief Loads a PNG file from disk into a vector of packed pixels and returns its dimensions. */
+
 int png_load(const char *_filename,std::vector<uint>& _image,uint& _width,uint& _height)
 {
   try
@@ -800,11 +826,15 @@ static void writepng_error_handler(png_structp png_ptr, png_const_charp msg);
 
 
 
+/*! \brief Placeholder that would print libpng writer version information. */
+
 void writepng_version_info(void)
 {
 }
 
 
+
+/*! \brief Opens a PNG file for streaming row-by-row write and returns an opaque handle. */
 
 void* png_writeOpen(const char *_filename,int image_width,int image_height,int compressionLevel)
 {
@@ -844,6 +874,8 @@ void* png_writeOpen(const char *_filename,int image_width,int image_height,int c
 
 
 
+/*! \brief Writes a single image row through the previously opened PNG write handle. */
+
 int png_writeImageRow(void *_handle,uchar *_row)
 {
   CImageHandle_png *handle = (CImageHandle_png*)_handle;
@@ -854,6 +886,8 @@ int png_writeImageRow(void *_handle,uchar *_row)
 
 
 
+
+/*! \brief Finalizes the PNG output, closes the file and releases the write handle. */
 
 int png_writeClose(void *_handle)
 {
@@ -870,6 +904,8 @@ int png_writeClose(void *_handle)
 
 
 
+/*! \brief libpng error handler that terminates the process on PNG write failures. */
+
 static void writepng_error_handler(png_structp png_ptr, png_const_charp msg)
 {
   exit(-1);
@@ -877,6 +913,8 @@ static void writepng_error_handler(png_structp png_ptr, png_const_charp msg)
 
 
 
+
+/*! \brief Opens an in-memory PNG writer backed by the given buffer and returns an opaque handle. */
 
 void* png_writeOpenMem(char *buffer,int bufferSize,int image_width,int image_height,int compressionLevel)
 {
@@ -913,6 +951,8 @@ void* png_writeOpenMem(char *buffer,int bufferSize,int image_width,int image_hei
 }
 
 
+/*! \brief Finalizes the in-memory PNG, releases the handle and returns the number of bytes written. */
+
 int png_writeCloseMem(void *_handle)
 {
   CImageHandle_png *handle = (CImageHandle_png*)_handle;
@@ -924,6 +964,8 @@ int png_writeCloseMem(void *_handle)
   return sz;
 }
 
+
+/*! \brief Writes a 32-bit pixel buffer to disk as a PNG file using the given compression level. */
 
 int png_save(const char *filename,uint *image,int image_width,int image_height,int compressionLevel)
 {
@@ -961,12 +1003,16 @@ int png_save(const char *filename,uint *image,int image_width,int image_height,i
 
 
 
+/*! \brief Writes a 32-bit pixel buffer to disk as a PNG file using the default compression level. */
+
 int png_save(const char *filename,uint *image,int image_width,int image_height)
 {
   return png_save(filename,image,image_width,image_height,9);
 }
 
 
+
+/*! \brief Encodes a 32-bit pixel buffer as PNG into the given memory buffer at the chosen compression level. */
 
 int png_saveMem(char *buffer,int bufferSize,uint *image,int image_width,int image_height,int compressionLevel)
 {
@@ -1002,71 +1048,18 @@ int png_saveMem(char *buffer,int bufferSize,uint *image,int image_width,int imag
 
 
 
+/*! \brief Encodes a 32-bit pixel buffer as PNG into the given memory buffer using the default compression level. */
+
 int png_saveMem(char *buffer,int bufferSize,uint *image,int image_width,int image_height)
 {
   return png_saveMem(buffer,bufferSize,image,image_width,image_height,9);
 }
 
 
-#if 0
-int webp_anim_save(const char *filename,uint **image,int image_width,int image_height,int numberOfImages,int timeStepMsec)
-{
-  try
-  {
-    // Images must be in RGBA format (=> byte order A,B,G,R)
 
-    WebPAnimEncoderOptions enc_options;
-    WebPAnimEncoderOptionsInit(&enc_options);
-    WebPAnimEncoder* enc = WebPAnimEncoderNew(image_width, image_height, &enc_options);
 
-    int dt = timeStepMsec;
-    int ts = dt;
 
-    for (int t=0; t<numberOfImages; t++)
-    {
-      WebPConfig config;
-      WebPConfigInit(&config);
-      WebPPicture frame;
-
-      WebPPictureInitInternal(&frame, WEBP_ENCODER_ABI_VERSION);
-      frame.width = image_width;
-      frame.height= image_height;
-
-      WebPPictureImportRGBA(&frame,(uint8_t*)image[t],image_width*4);
-      WebPAnimEncoderAdd(enc,&frame,ts, &config);
-      WebPPictureFree(&frame);
-
-      ts = ts + dt;
-    }
-
-    WebPData out;
-    out.size = 0;
-    out.bytes = nullptr;
-    WebPAnimEncoderAssemble(enc,&out);
-    WebPAnimEncoderDelete(enc);
-
-    if (out.size &&  out.bytes)
-    {
-      FILE *file = fopen(filename,"w");
-      if (!file)
-      {
-        Fmi::Exception exception (BCP,"Cannot create a file!",nullptr);
-        exception.addParameter("Filename",filename);
-        throw exception;
-      }
-      fwrite(out.bytes,1,out.size,file);
-      fclose(file);
-    }
-    WebPDataClear(&out);
-    return 0;
-  }
-  catch (Fmi::Exception& e)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-#endif
-
+/*! \brief Encodes a series of RGBA images into an animated WebP file with per-frame time steps. */
 
 int webp_anim_save(const char *filename,
                         uint **image,
@@ -1163,6 +1156,8 @@ int webp_anim_save(const char *filename,
 
 
 
+
+/*! \brief Encodes a series of ARGB images into an animated WebP file after converting to RGBA. */
 
 int webp_anim_save_ARGB(const char *filename,
                         uint **image,
@@ -1277,87 +1272,10 @@ int webp_anim_save_ARGB(const char *filename,
 }
 
 
-#if 0
-int webp_anim_save_ARGB(const char *filename,uint **image,int image_width,int image_height,int numberOfImages,int timeStepMsec)
-{
-  try
-  {
-    // Images must be in ARGB format (=> byte order A,R,G,B)
-
-    WebPAnimEncoderOptions enc_options;
-    WebPAnimEncoderOptionsInit(&enc_options);
-    WebPAnimEncoder* enc = WebPAnimEncoderNew(image_width, image_height, &enc_options);
-
-    int dt = timeStepMsec;
-    int ts = dt;
-
-    uint sz = image_width * image_height;
-    uint *newImage[numberOfImages];
-    for (int t=0; t<numberOfImages; t++)
-      newImage[numberOfImages] = NULL;
-
-    for (int t=0; t<numberOfImages; t++)
-    {
-      WebPConfig config;
-      WebPConfigInit(&config);
-      config.quality = 90;
-      config.lossless = 0; // 1 = lossless
-
-      WebPPicture frame;
-
-      WebPPictureInitInternal(&frame, WEBP_ENCODER_ABI_VERSION);
-      frame.width = image_width;
-      frame.height= image_height;
-
-      newImage[t] = new uint[sz];
-      for (uint s=0; s<sz;s++)
-      {
-        uint oldCol = image[t][s];
-        uint newCol = (oldCol & 0xFF000000) + ((oldCol & 0xFF0000) >> 16) + (oldCol & 0x00FF00) + ((oldCol & 0xFF) << 16);
-        newImage[t][s] = newCol;
-      }
-
-      WebPPictureImportRGBA(&frame,(uint8_t*)newImage[t],image_width*4);
-      WebPAnimEncoderAdd(enc,&frame,ts, &config);
-      WebPPictureFree(&frame);
-
-      ts = ts + dt;
-    }
-
-    WebPData out;
-    out.size = 0;
-    out.bytes = nullptr;
-    WebPAnimEncoderAssemble(enc,&out);
-    WebPAnimEncoderDelete(enc);
-
-    if (out.size &&  out.bytes)
-    {
-      FILE *file = fopen(filename,"w");
-      if (!file)
-      {
-        Fmi::Exception exception (BCP,"Cannot create a file!",nullptr);
-        exception.addParameter("Filename",filename);
-        throw exception;
-      }
-      fwrite(out.bytes,1,out.size,file);
-      fclose(file);
-    }
-
-    for (int t=0; t<numberOfImages; t++)
-    {
-      delete [] newImage[t];
-    }
-    WebPDataClear(&out);
-    return 0;
-  }
-  catch (Fmi::Exception& e)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-#endif
 
 
+
+/*! \brief Alpha-blends two ARGB pixel arrays into a destination array using the top layer's alpha. */
 
 void merge_ARGB_arrays(uint32_t *top, uint32_t *bottom, uint32_t *newArray,uint32_t size)
 {
@@ -1390,6 +1308,8 @@ void merge_ARGB_arrays(uint32_t *top, uint32_t *bottom, uint32_t *newArray,uint3
 }
 
 
+
+/*! \brief Reads and alpha-composites a list of PNG files in order and writes the result as a new PNG. */
 
 void mergePngFiles(const char *newFile,std::vector<std::string>& fileList)
 {
@@ -1454,6 +1374,8 @@ void mergePngFiles(const char *newFile,std::vector<std::string>& fileList)
 
 
 
+/*! \brief Renders a single OGR geometry to an image and saves it as a JPEG file. */
+
 void saveGeometryAsJpeg(const char *_filename,int width,int height,uint backgroundColor,uint drawColor,uint fillColor,const OGRGeometry *geom,bool autoscale)
 {
   try
@@ -1504,6 +1426,8 @@ void saveGeometryAsJpeg(const char *_filename,int width,int height,uint backgrou
 
 
 
+
+/*! \brief Renders a collection of OGR geometries into a shared image and saves it as a JPEG file. */
 
 void saveGeometryAsJpeg(const char *_filename,int width,int height,uint backgroundColor,uint drawColor,uint fillColor,std::vector<std::shared_ptr<OGRGeometry>> geomVec,bool autoscale)
 {

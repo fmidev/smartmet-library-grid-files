@@ -13,6 +13,8 @@ namespace SmartMet
 
 
 
+/*! \brief Default constructor for Log. */
+
 Log::Log()
 {
   try
@@ -32,6 +34,8 @@ Log::Log()
 
 
 
+
+/*! \brief Destructor that closes the log file if open. */
 
 Log::~Log()
 {
@@ -54,6 +58,8 @@ Log::~Log()
 
 
 
+
+/*! \brief Initialises the log with enable flag, filename, and size limits. */
 
 void Log::init(bool _enabled,const char *_filename,uint _maxSize,uint _truncateSize)
 {
@@ -91,6 +97,8 @@ void Log::init(bool _enabled,const char *_filename,uint _maxSize,uint _truncateS
 
 
 
+/*! \brief Opens the log file for writing, truncating any existing contents. */
+
 void Log::open()
 {
   try
@@ -118,6 +126,8 @@ void Log::open()
 
 
 
+
+/*! \brief Opens the log file for appending. */
 
 void Log::openForAppend()
 {
@@ -147,6 +157,8 @@ void Log::openForAppend()
 
 
 
+/*! \brief Closes the currently open log file. */
+
 void Log::close()
 {
   try
@@ -167,6 +179,8 @@ void Log::close()
 
 
 
+
+/*! \brief Clears the log file by reopening it from scratch. */
 
 void Log::clear()
 {
@@ -195,6 +209,8 @@ void Log::clear()
 
 
 
+/*! \brief Disables logging and closes the log file. */
+
 void Log::disable()
 {
   try
@@ -211,6 +227,8 @@ void Log::disable()
 
 
 
+
+/*! \brief Enables logging and opens the log file for appending. */
 
 void Log::enable()
 {
@@ -229,6 +247,8 @@ void Log::enable()
 
 
 
+/*! \brief Returns whether logging is currently enabled. */
+
 bool Log::isEnabled()
 {
   try
@@ -244,6 +264,8 @@ bool Log::isEnabled()
 
 
 
+
+/*! \brief Returns the underlying open file handle. */
 
 FILE* Log::getFileHandle()
 {
@@ -261,6 +283,8 @@ FILE* Log::getFileHandle()
 
 
 
+/*! \brief Returns the log file name. */
+
 std::string Log::getFileName()
 {
   try
@@ -276,6 +300,8 @@ std::string Log::getFileName()
 
 
 
+
+/*! \brief Returns the configured maximum log file size. */
 
 uint Log::getMaxSize()
 {
@@ -293,6 +319,8 @@ uint Log::getMaxSize()
 
 
 
+/*! \brief Returns the configured truncate size for the log file. */
+
 uint Log::getTruncateSize()
 {
   try
@@ -309,6 +337,8 @@ uint Log::getTruncateSize()
 
 
 
+/*! \brief Increments and returns the next unique event counter value. */
+
 UInt64 Log::getEventCounter()
 {
   try
@@ -324,6 +354,8 @@ UInt64 Log::getEventCounter()
 
 
 
+
+/*! \brief Returns the current size of the log file in bytes. */
 
 uint Log::getSize()
 {
@@ -345,6 +377,8 @@ uint Log::getSize()
 
 
 
+/*! \brief Acquires the log's thread lock. */
+
 void  Log::lock()
 {
   try
@@ -361,6 +395,8 @@ void  Log::lock()
 
 
 
+/*! \brief Releases the log's thread lock. */
+
 void  Log::unlock()
 {
   try
@@ -376,6 +412,8 @@ void  Log::unlock()
 
 
 
+
+/*! \brief Writes a plain event string to the log. */
 
 void Log::print(const char *_event)
 {
@@ -397,6 +435,8 @@ void Log::print(const char *_event)
 
 
 
+
+/*! \brief Writes a timestamped event string to the log. */
 
 void Log::print(time_t _time,const char *_event)
 {
@@ -421,6 +461,8 @@ void Log::print(time_t _time,const char *_event)
 
 
 
+/*! \brief Writes a timestamped event with file, line, and function context. */
+
 void Log::print(time_t _time,const char *_filename,uint _line,const char *_function,const char *_event)
 {
   try
@@ -444,6 +486,8 @@ void Log::print(time_t _time,const char *_filename,uint _line,const char *_funct
 
 
 
+/*! \brief Writes a block of raw bytes to the log. */
+
 void Log::print(void *_data,uint _size)
 {
   try
@@ -464,6 +508,8 @@ void Log::print(void *_data,uint _size)
 
 
 
+
+/*! \brief Truncates the log file to the configured size when it exceeds the limit. */
 
 void Log::truncate()
 {

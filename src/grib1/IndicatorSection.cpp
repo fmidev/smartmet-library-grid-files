@@ -123,6 +123,8 @@ bool IndicatorSection::getProperty(uint propertyId,Int64& value)
 
 
 
+/*! \brief The method collects the indicator section properties into the given vector. */
+
 void IndicatorSection::getProperties(T::PropertySettingVec& properties)
 {
   try
@@ -356,6 +358,8 @@ std::uint8_t IndicatorSection::getSectionNumber() const
 
 
 
+/*! \brief The method returns the GRIB edition number. */
+
 std::uint8_t IndicatorSection::getEditionNumber() const
 {
   try
@@ -372,6 +376,8 @@ std::uint8_t IndicatorSection::getEditionNumber() const
 
 
 
+/*! \brief The method returns the total length of the GRIB message. */
+
 std::uint32_t IndicatorSection::getTotalLength() const
 {
   try
@@ -387,6 +393,8 @@ std::uint32_t IndicatorSection::getTotalLength() const
 
 
 
+
+/*! \brief The method sets the total length of the GRIB message. */
 
 void IndicatorSection::setTotalLength(std::uint32_t length)
 {
@@ -406,7 +414,7 @@ void IndicatorSection::setTotalLength(std::uint32_t length)
 
 /*! \brief The method prints the content of the current object into the given stream.
 
-        \param ostream      The output stream.
+        \param stream      The output stream.
         \param level        The print level (used when printing multi-level structures).
         \param optionFlags  The printing options expressed in flag-bits.
 */

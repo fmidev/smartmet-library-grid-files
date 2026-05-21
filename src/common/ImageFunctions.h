@@ -11,12 +11,21 @@
 namespace SmartMet
 {
 
+/*! \brief qsort-compatible comparator for coordinate pairs (x,y doubles). */
 extern int compare_coordinates(const void *p1, const void *p2);
 
+
+// ====================================================================================
+/*! \brief Simple RGBA pixel buffer holding width×height 32-bit pixels (ARGB layout).
+ *
+ *  Manages heap-allocated pixel memory; owns the buffer except when constructed from
+ *  an external `_pixel` pointer. */
+// ====================================================================================
 
 class CImage
 {
   public:
+    /*! \brief Construct an empty (0×0) image with no pixel buffer. */
     CImage()
     {
       width = 0;
@@ -24,6 +33,7 @@ class CImage
       pixel = nullptr;
     }
 
+    /*! \brief Deep-copy constructor. */
     CImage(const CImage& image)
     {
       width = image.width;
@@ -37,6 +47,9 @@ class CImage
       }
     }
 
+    /*! \brief Allocate a width×height pixel buffer filled with opaque white (0xFFFFFFFF).
+     *  \param[in] _width   Image width in pixels.
+     *  \param[in] _height  Image height in pixels. */
     CImage(int _width,int _height)
     {
       width = _width;
@@ -51,6 +64,10 @@ class CImage
       }
     }
 
+    /*! \brief Wrap an external pixel buffer (does NOT take ownership).
+     *  \param[in] _width   Image width.
+     *  \param[in] _height  Image height.
+     *  \param[in] _pixel   Existing pixel array (caller retains ownership). */
     CImage(int _width,int _height,uint *_pixel)
     {
       width = _width;
@@ -82,54 +99,62 @@ class CImage
       return *this;
     }
 
-    int       width;
-    int       height;
-    uint      *pixel;
+    int       width;   //!< Image width in pixels
+    int       height;  //!< Image height in pixels
+    uint      *pixel;  //!< ARGB pixel buffer (row-major, top-to-bottom)
 };
 
 
 
-// The function reads a JPG image into the memory.
-
+/*! \brief Load a JPEG file into a CImage.  \return 0 on success. */
 int  jpg_load(const char *_filename,CImage& _image);
 
-
-// The function writes an image data to the JPEG file.
-
+/*! \brief Write a pixel buffer to a JPEG file at the given quality (1–100). */
 void jpeg_save(const char *filename,uint *image,int image_height,int image_width,int quality);
 
-// The function reads a PNG image into the memory.
-
+/*! \brief Load a PNG file into a CImage.  \return 0 on success. */
 int  png_load(const char *_filename,CImage& _image);
+//! \overload (loads into a vector with separate width/height output)
 int  png_load(const char *_filename,std::vector<uint>& _image,uint& _width,uint& _height);
 
-// The function writes an image data to the PNG file.
-
+/*! \brief Write a pixel buffer to a PNG file (default compression).  \return 0 on success. */
 int  png_save(const char *filename,uint *image,int image_width,int image_height);
+//! \overload (with explicit zlib compression level 0–9)
 int  png_save(const char *filename,uint *image,int image_width,int image_height,int compressionLevel);
 
+/*! \brief Encode a pixel buffer as PNG into a pre-allocated memory buffer.
+ *  \return Encoded byte count, or -1 on error. */
 int  png_saveMem(char *buffer,int bufferSize,uint *image,int image_width,int image_height);
+//! \overload (with explicit compression level)
 int  png_saveMem(char *buffer,int bufferSize,uint *image,int image_width,int image_height,int compressionLevel);
 
+/*! \brief Alpha-composite and merge a list of PNG files into a single output PNG. */
 void mergePngFiles(const char *newFile,std::vector<std::string>& fileList);
+
+/*! \brief Alpha-composite two ARGB pixel arrays element-wise into \p newArray.
+ *  \param[in]  top       Foreground pixel array.
+ *  \param[in]  bottom    Background pixel array.
+ *  \param[out] newArray  Composited output.
+ *  \param[in]  size      Number of pixels. */
 void merge_ARGB_arrays(uint32_t *top, uint32_t *bottom, uint32_t *newArray,uint32_t size);
 
+/*! \brief Save a multi-frame WebP animation (RGB channels). */
 int  webp_anim_save(const char *filename,uint **image,int image_width,int image_height,int numberOfImages,std::vector<int>& timeStepMsec);
+/*! \brief Save a multi-frame WebP animation (ARGB with alpha channel). */
 int  webp_anim_save_ARGB(const char *filename,uint **image,int image_width,int image_height,int numberOfImages,std::vector<int>& timeStepMsec);
 
-
-// The function converts RGB color component (Red,Green,Blue) to a single RGB value.
-// An individual color should have a value that is the range 0..255.
-
+/*! \brief Pack red, green, blue components (0–255 each) into a single 32-bit RGB value. */
 uint rgb(uint red, uint green, uint blue);
 
-
-// The function converts HSV (Hue, Saturatio, Value) color to a RGB color. Each
-// HSV component should have value that is in the range 0..255.
-
+/*! \brief Render a single OGR geometry into a JPEG image file. */
 void saveGeometryAsJpeg(const char *_filename,int width,int height,uint backgroundColor,uint drawColor,uint fillColor,const OGRGeometry *geom,bool autoscale);
+//! \overload (renders a list of geometries)
 void saveGeometryAsJpeg(const char *_filename,int width,int height,uint backgroundColor,uint drawColor,uint fillColor,std::vector<std::shared_ptr<OGRGeometry>> geomVec,bool autoscale);
 
+/*! \brief Alpha-composite two ARGB pixels using standard "over" blending.
+ *  \param[in] top     Foreground ARGB pixel.
+ *  \param[in] bottom  Background ARGB pixel.
+ *  \return Composited ARGB pixel. */
 inline uint32_t merge_ARGB(uint32_t top, uint32_t bottom)
 {
   if (!(top & 0xFF000000))
@@ -170,6 +195,7 @@ inline uint32_t merge_ARGB(uint32_t top, uint32_t bottom)
 }
 
 
+/*! \brief Parse a colour string (e.g. "0xFF8800", "#FF8800", "255,128,0") into ARGB. */
 uint argb(const char *colStr);
 
 inline uint argb(std::string& colStr)
@@ -190,6 +216,7 @@ inline uint rgb(uchar red, uchar green, uchar blue)
 }
 
 
+/*! \brief Convert CMYK components (0.0–1.0 each) to a packed RGB value. */
 inline uint cmyk2rgb(double _c, double _m, double _y, double _k)
 {
   double r = (255.0 - _c*255) * (1.0 - _k);
@@ -202,6 +229,11 @@ inline uint cmyk2rgb(double _c, double _m, double _y, double _k)
 
 
 
+/*! \brief Convert HSV components (0–255 each) to a packed RGB value.
+ *  \param[in] hue        Hue (0–255, maps to 0°–360°).
+ *  \param[in] saturation Saturation (0–255).
+ *  \param[in] value      Value/brightness (0–255).
+ *  \return Packed RGB value. */
 inline uint hsv_to_rgb(unsigned char hue, unsigned char saturation, unsigned char value)
 {
   if (saturation == 0)

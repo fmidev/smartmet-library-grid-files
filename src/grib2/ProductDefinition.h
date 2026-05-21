@@ -19,7 +19,15 @@ namespace SmartMet
 namespace GRIB2
 {
 
-// Base class for product definitions
+// ====================================================================================
+/*! \brief Abstract base class for GRIB 2 product definition templates (Section 4).
+ *
+ *  Each concrete subclass (generated from eccodes product template definitions)
+ *  represents one Product Definition Template 4.x.  It exposes virtual accessors
+ *  for the common forecast metadata (time, level, parameter category/number) and
+ *  delegates sub-structure access through typed settings objects (ParameterSettings,
+ *  HorizontalSettings, StatisticalSettings, etc.). */
+// ====================================================================================
 
 class ProductDefinition
 {
@@ -103,7 +111,7 @@ class ProductDefinition
 };
 
 
-typedef std::shared_ptr<ProductDefinition> ProductDefinition_sptr;
+typedef std::shared_ptr<ProductDefinition> ProductDefinition_sptr;  //!< Shared ownership pointer to a ProductDefinition.
 
 
 

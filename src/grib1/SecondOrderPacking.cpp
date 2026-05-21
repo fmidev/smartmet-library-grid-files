@@ -70,6 +70,8 @@ SecondOrderPacking::~SecondOrderPacking()
 
 
 
+/*! \brief The method creates a new SecondOrderPacking instance copying the current state. */
+
 DataDefinition* SecondOrderPacking::createDataDefinition() const
 {
   try
@@ -85,6 +87,8 @@ DataDefinition* SecondOrderPacking::createDataDefinition() const
 
 
 
+
+/*! \brief The method returns the packing method identifier (second order packing). */
 
 PackingMethod SecondOrderPacking::getPackingMethod() const
 {
@@ -150,6 +154,8 @@ void SecondOrderPacking::write(DataWriter& dataWriter)
 
 
 
+
+/*! \brief The method decodes the second-order packed values from the message data. */
 
 void SecondOrderPacking::decodeValues(Message *message,T::ParamValue_vec& decodedValues) const
 {
@@ -281,6 +287,8 @@ void SecondOrderPacking::decodeValues(Message *message,T::ParamValue_vec& decode
 
 
 
+/*! \brief The method decodes second-order packed values row by row. */
+
 void SecondOrderPacking::decodeValues_rowByRow(
     std::size_t numOfValues,
     T::Dimensions dimensions,
@@ -308,6 +316,8 @@ void SecondOrderPacking::decodeValues_rowByRow(
 
 
 
+
+/*! \brief The method decodes second-order packed values using a constant bit width. */
 
 void SecondOrderPacking::decodeValues_constantWidth(
     std::size_t numOfValues,
@@ -337,6 +347,8 @@ void SecondOrderPacking::decodeValues_constantWidth(
 
 
 
+/*! \brief The method decodes second-order packed values using variable bit widths. */
+
 void SecondOrderPacking::decodeValues_differentWidth(
     std::size_t numOfValues,
     T::Dimensions dimensions,
@@ -364,6 +376,8 @@ void SecondOrderPacking::decodeValues_differentWidth(
 
 
 
+
+/*! \brief The method decodes second-order packed values with spatial differencing. */
 
 void SecondOrderPacking::decodeValues_SPD(
     std::size_t numOfValues,
@@ -609,7 +623,7 @@ void SecondOrderPacking::decodeValues_SPD(
 
 /*! \brief The method prints the content of the current object into the given stream.
 
-        \param ostream      The output stream.
+        \param stream      The output stream.
         \param level        The print level (used when printing multi-level structures).
         \param optionFlags  The printing options expressed in flag-bits.
 */

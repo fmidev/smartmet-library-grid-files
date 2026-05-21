@@ -27,10 +27,7 @@ namespace GRIB2
 {
 
 
-/*! \brief The constructor of the class.
-
-        \param message  A pointer to the message object.
-*/
+/*! \brief The constructor of the class. */
 
 RepresentationSection::RepresentationSection()
 {
@@ -178,6 +175,8 @@ bool RepresentationSection::getProperty(uint propertyId,Int64& value)
 
 
 
+
+/*! \brief The method collects the representation section properties into the given vector. */
 
 void RepresentationSection::getProperties(T::PropertySettingVec& properties)
 {
@@ -433,6 +432,8 @@ std::uint8_t RepresentationSection::getNumberOfSection() const
 
 
 
+/*! \brief The method returns the number of values in the representation section. */
+
 std::uint32_t RepresentationSection::getNumberOfValues() const
 {
   try
@@ -452,6 +453,8 @@ std::uint32_t RepresentationSection::getNumberOfValues() const
 
 
 
+/*! \brief The method sets the number of values in the representation section. */
+
 void RepresentationSection::setNumberOfValues(std::uint32_t numOfValues)
 {
   try
@@ -467,23 +470,8 @@ void RepresentationSection::setNumberOfValues(std::uint32_t numOfValues)
 
 
 
-/*
-std::string RepresentationSection::getDataRepresentationString() const
-{
-  try
-  {
-    std::uint8_t tablesVersion = mMessage->getTablesVersion();
-    return Identification::gridDef.getGribTableValue(2,tablesVersion,"5.0",getDataRepresentationTemplateNumber());
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-*/
 
-
-
+/*! \brief The method returns the data representation template number. */
 
 std::uint16_t RepresentationSection::getDataRepresentationTemplateNumber() const
 {
@@ -500,6 +488,8 @@ std::uint16_t RepresentationSection::getDataRepresentationTemplateNumber() const
 
 
 
+
+/*! \brief The method returns the decoded value at the given index. */
 
 bool RepresentationSection::getValueByIndex(uint index,T::ParamValue& value) const
 {
@@ -520,6 +510,8 @@ bool RepresentationSection::getValueByIndex(uint index,T::ParamValue& value) con
 
 
 
+/*! \brief The method decodes the packed values into the given vector. */
+
 void RepresentationSection::decodeValues(T::ParamValue_vec& decodedValues) const
 {
   try
@@ -536,6 +528,8 @@ void RepresentationSection::decodeValues(T::ParamValue_vec& decodedValues) const
 
 
 
+
+/*! \brief The method encodes the given values via the representation definition. */
 
 void RepresentationSection::encodeValues(Message *message,T::ParamValue_vec& values)
 {
@@ -556,6 +550,8 @@ void RepresentationSection::encodeValues(Message *message,T::ParamValue_vec& val
 
 
 
+/*! \brief The method returns the representation definition shared pointer. */
+
 RepresentationDefinition_sptr RepresentationSection::getRepresentationDefinition()
 {
   try
@@ -571,6 +567,8 @@ RepresentationDefinition_sptr RepresentationSection::getRepresentationDefinition
 
 
 
+
+/*! \brief The method sets the representation definition using the given pointer. */
 
 void RepresentationSection::setRepresentationDefinition(RepresentationDefinition *representationDefinition)
 {
@@ -591,6 +589,8 @@ void RepresentationSection::setRepresentationDefinition(RepresentationDefinition
 
 
 
+
+/*! \brief The method sets the representation definition using the given template number. */
 
 void RepresentationSection::setRepresentationDefinition(std::uint16_t templateNumber)
 {
@@ -616,6 +616,8 @@ void RepresentationSection::setRepresentationDefinition(std::uint16_t templateNu
 
 
 
+
+/*! \brief The method creates a RepresentationDefinition object for the given template number. */
 
 RepresentationDefinition* RepresentationSection::createRepresentationDefinition(std::uint16_t templateNumber)
 {
@@ -679,7 +681,7 @@ RepresentationDefinition* RepresentationSection::createRepresentationDefinition(
 
 /*! \brief The method prints the content of the current object into the given stream.
 
-        \param ostream      The output stream.
+        \param stream      The output stream.
         \param level        The print level (used when printing multi-level structures).
         \param optionFlags  The printing options expressed in flag-bits.
 */
@@ -694,7 +696,6 @@ void RepresentationSection::print(std::ostream& stream,uint level,uint optionFla
     stream << space(level) << "- numberOfSection                  = " << toString(mNumberOfSection) << "\n";
     stream << space(level) << "- numberOfValues                   = " << toString(getNumberOfValues()) << "\n";
     stream << space(level) << "- dataRepresentationTemplateNumber = " << toString(getDataRepresentationTemplateNumber()) << "\n";
-    //stream << space(level) << "- dataRepresentationString         = " << getDataRepresentationString() << "\n";
 
     if (mRepresentationDefinition)
       mRepresentationDefinition->print(stream,level+1,optionFlags);

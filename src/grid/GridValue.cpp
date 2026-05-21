@@ -9,6 +9,8 @@ namespace T
 {
 
 
+/*! \brief Default constructor that initializes coordinates and value to zero. */
+
 GridValue::GridValue()
 {
   try
@@ -26,25 +28,8 @@ GridValue::GridValue()
 
 
 
-/*
-GridValue::GridValue(const GridValue& gridValue)
-{
-  try
-  {
-    mX = gridValue.mX;
-    mY = gridValue.mY;
-    mValue = gridValue.mValue;
-    mValueString = gridValue.mValueString;
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-*/
 
-
-
+/*! \brief Constructs a GridValue at the given coordinates with the given numeric value. */
 
 GridValue::GridValue(double x,double y, T::ParamValue value)
 {
@@ -63,6 +48,8 @@ GridValue::GridValue(double x,double y, T::ParamValue value)
 
 
 
+
+/*! \brief Constructs a GridValue at the given coordinates with a string value. */
 
 GridValue::GridValue(double x,double y, std::string& valueString)
 {
@@ -83,6 +70,8 @@ GridValue::GridValue(double x,double y, std::string& valueString)
 
 
 
+/*! \brief Constructs a GridValue at the given coordinates with a C-string value. */
+
 GridValue::GridValue(double x,double y, const char *valueString)
 {
   try
@@ -101,6 +90,8 @@ GridValue::GridValue(double x,double y, const char *valueString)
 
 
 
+
+/*! \brief Constructs a GridValue with both numeric and string value representations. */
 
 GridValue::GridValue(double x,double y, T::ParamValue value, std::string& valueString)
 {
@@ -121,6 +112,8 @@ GridValue::GridValue(double x,double y, T::ParamValue value, std::string& valueS
 
 
 
+/*! \brief Constructs a GridValue with both numeric and C-string value representations. */
+
 GridValue::GridValue(double x,double y, T::ParamValue value, const char *valueString)
 {
   try
@@ -140,6 +133,8 @@ GridValue::GridValue(double x,double y, T::ParamValue value, const char *valueSt
 
 
 
+/*! \brief The destructor of the class. */
+
 GridValue::~GridValue()
 {
   try
@@ -155,6 +150,8 @@ GridValue::~GridValue()
 
 
 
+
+/*! \brief Prints the contents of the grid value into the given stream. */
 
 void GridValue::print(std::ostream& stream,uint level,uint optionFlags)
 {

@@ -9,6 +9,8 @@ namespace T
 {
 
 
+/*! \brief Default constructor for AttributeList. */
+
 AttributeList::AttributeList()
 {
   try
@@ -24,6 +26,8 @@ AttributeList::AttributeList()
 
 
 
+
+/*! \brief Copy constructor for AttributeList. */
 
 AttributeList::AttributeList(const AttributeList& attributeList)
 {
@@ -47,6 +51,8 @@ AttributeList::AttributeList(const AttributeList& attributeList)
 
 
 
+/*! \brief Destructor that frees all owned attributes. */
+
 AttributeList::~AttributeList()
 {
   try
@@ -69,6 +75,8 @@ AttributeList::~AttributeList()
 
 
 
+
+/*! \brief Assignment operator that deep-copies attributes from another list. */
 
 AttributeList& AttributeList::operator=(const AttributeList& attributeList)
 {
@@ -97,6 +105,8 @@ AttributeList& AttributeList::operator=(const AttributeList& attributeList)
 
 
 
+/*! \brief Adds an existing attribute pointer to the list. */
+
 void  AttributeList::addAttribute(Attribute *attribute)
 {
   try
@@ -111,6 +121,8 @@ void  AttributeList::addAttribute(Attribute *attribute)
 
 
 
+
+/*! \brief Creates and adds a new attribute from a C-string name and value. */
 
 void AttributeList::addAttribute(const char *name,std::string value)
 {
@@ -128,6 +140,8 @@ void AttributeList::addAttribute(const char *name,std::string value)
 
 
 
+/*! \brief Creates and adds a new attribute from the given name and value. */
+
 void AttributeList::addAttribute(const std::string& name,const std::string& value)
 {
   try
@@ -143,6 +157,8 @@ void AttributeList::addAttribute(const std::string& name,const std::string& valu
 
 
 
+
+/*! \brief Updates an existing attribute value or adds a new attribute. */
 
 void AttributeList::setAttribute(const char *name,const std::string& value)
 {
@@ -171,6 +187,8 @@ void AttributeList::setAttribute(const char *name,const std::string& value)
 
 
 
+/*! \brief Updates an existing attribute value or adds a new attribute. */
+
 void AttributeList::setAttribute(const std::string& name,const std::string& value)
 {
   try
@@ -198,6 +216,8 @@ void AttributeList::setAttribute(const std::string& name,const std::string& valu
 
 
 
+/*! \brief Sets whether attribute name comparisons are case-sensitive. */
+
 void AttributeList::setCaseSensitive(bool caseSensitive)
 {
   try
@@ -213,6 +233,8 @@ void AttributeList::setCaseSensitive(bool caseSensitive)
 
 
 
+
+/*! \brief Removes and deletes all attributes from the list. */
 
 void AttributeList::clear()
 {
@@ -236,6 +258,8 @@ void AttributeList::clear()
 
 
 
+/*! \brief Returns the number of attributes in the list. */
+
 unsigned int AttributeList::getLength() const
 {
   try
@@ -251,6 +275,8 @@ unsigned int AttributeList::getLength() const
 
 
 
+
+/*! \brief Returns the attribute matching the given name, or nullptr if not found. */
 
 Attribute* AttributeList::getAttribute(const char *name) const
 {
@@ -274,6 +300,8 @@ Attribute* AttributeList::getAttribute(const char *name) const
 
 
 
+
+/*! \brief Returns the first attribute whose name ends with the given suffix. */
 
 Attribute* AttributeList::getAttributeByNameEnd(const char *nameEnd) const
 {
@@ -309,6 +337,8 @@ Attribute* AttributeList::getAttributeByNameEnd(const char *nameEnd) const
 
 
 
+/*! \brief Collects all attribute values matching the given name into the vector. */
+
 size_t AttributeList::getAttributeValues(const char *name,std::vector<std::string>& values) const
 {
   try
@@ -332,6 +362,8 @@ size_t AttributeList::getAttributeValues(const char *name,std::vector<std::strin
 
 
 
+/*! \brief Returns the attribute at the given index, or nullptr if out of range. */
+
 Attribute* AttributeList::getAttributeByIndex(unsigned int index) const
 {
   try
@@ -352,6 +384,8 @@ Attribute* AttributeList::getAttributeByIndex(unsigned int index) const
 
 
 
+
+/*! \brief Returns the attribute name at the given index, or nullptr if out of range. */
 
 const char* AttributeList::getAttributeNameByIndex(unsigned int index) const
 {
@@ -374,6 +408,8 @@ const char* AttributeList::getAttributeNameByIndex(unsigned int index) const
 
 
 
+
+/*! \brief Returns the value of the attribute matching the given name, or nullptr. */
 
 const char* AttributeList::getAttributeValue(const char *name) const
 {
@@ -398,6 +434,8 @@ const char* AttributeList::getAttributeValue(const char *name) const
 
 
 
+/*! \brief Returns the attribute value at the given index, or nullptr if out of range. */
+
 const char* AttributeList::getAttributeValueByIndex(unsigned int index) const
 {
   try
@@ -420,6 +458,8 @@ const char* AttributeList::getAttributeValueByIndex(unsigned int index) const
 
 
 
+/*! \brief Returns a hash value combining the hashes of all attributes. */
+
 std::size_t AttributeList::getHash()
 {
   try
@@ -439,6 +479,8 @@ std::size_t AttributeList::getHash()
 
 
 
+
+/*! \brief Prints all attributes in the list to the given stream. */
 
 void AttributeList::print(std::ostream& stream,uint level,uint optionFlags) const
 {

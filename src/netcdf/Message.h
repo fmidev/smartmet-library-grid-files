@@ -10,36 +10,49 @@ namespace SmartMet
 namespace NetCDF
 {
 
+/*! \brief Metadata record describing one NetCDF variable/level/time slice as a grid message.
+ *
+ *  Populated by NetCdfFile::createMessageInfoList() and passed to the Message constructor. */
 struct MessageInfo
 {
-  std::uint64_t      mFilePosition;
-  uint               mMessageSize;
-  T::FileType        mMessageType;
-  uint               mColumns;
-  uint               mRows;
-  uint               mRowMultiplier;
-  uint               mColumnMultiplier;
-  uint               mLevels;
-  uchar              mDataType;
-  double             mBaseValue;
-  double             mScaleFactor;
-  std::string        mParameterName;
-  std::string        mParameterStandardName;
-  T::ParamLevelId    mParameterLevelId;
-  T::ParamLevel      mParameterLevel;
-  std::string        mParameterUnits;
-  T::ForecastType    mForecastType;
-  T::ForecastNumber  mForecastNumber;
-  time_t             mForecastTimeT;
-  T::ParamValue      mMissingValue;
-  T::GridProjection  mProjectionId;
-  int                mGeometryId;
+  std::uint64_t      mFilePosition;          //!< Byte offset of the variable data in the NetCDF file.
+  uint               mMessageSize;           //!< Size of the encoded data block in bytes.
+  T::FileType        mMessageType;           //!< File type tag (always NetCDF for this struct).
+  uint               mColumns;              //!< Number of grid columns (longitude dimension).
+  uint               mRows;                 //!< Number of grid rows (latitude dimension).
+  uint               mRowMultiplier;        //!< Sub-sampling stride in the row direction.
+  uint               mColumnMultiplier;     //!< Sub-sampling stride in the column direction.
+  uint               mLevels;               //!< Number of vertical levels in the variable.
+  uchar              mDataType;             //!< NetCDF data type code for the stored values.
+  double             mBaseValue;            //!< add_offset attribute value.
+  double             mScaleFactor;          //!< scale_factor attribute value.
+  std::string        mParameterName;        //!< NetCDF variable long_name or name.
+  std::string        mParameterStandardName;//!< CF standard_name of the variable.
+  T::ParamLevelId    mParameterLevelId;     //!< FMI level type identifier.
+  T::ParamLevel      mParameterLevel;       //!< Level value (pressure, height, etc.).
+  std::string        mParameterUnits;       //!< CF units attribute string.
+  T::ForecastType    mForecastType;         //!< Forecast type code.
+  T::ForecastNumber  mForecastNumber;       //!< Ensemble member or perturbation number.
+  time_t             mForecastTimeT;        //!< Forecast valid time as a Unix timestamp.
+  T::ParamValue      mMissingValue;         //!< Fill/missing value used for undefined grid points.
+  T::GridProjection  mProjectionId;         //!< Grid projection type.
+  int                mGeometryId;           //!< FMI geometry identifier.
 };
 
 typedef std::vector<MessageInfo> MessageInfoVec;
 
 class NetCdfFile;
 
+
+// ====================================================================================
+/*! \brief NetCDF message — adapts one NetCDF variable/level/time slice to the
+ *  GRID::Message interface.
+ *
+ *  Constructed by NetCdfFile::read() for each detected variable slice; metadata is
+ *  provided via a MessageInfo record.  Values are decoded on first access and then
+ *  served through the standard grid value accessors inherited from GRID::Message.
+ *  The underlying NetCDF data may be scaled (add_offset / scale_factor). */
+// ====================================================================================
 
 class Message : public GRID::Message
 {
@@ -120,35 +133,35 @@ class Message : public GRID::Message
 
   protected:
 
-    std::uint64_t       mFilePosition;
-    uint                mColumns;
-    uint                mRows;
-    uint                mRowMultiplier;
-    uint                mColumnMultiplier;
-    double              mBaseValue;
-    double              mScaleFactor;
-    std::string         mParameterName;
-    std::string         mParameterUnits;
-    std::string         mVariableName;
-    T::ForecastType     mForecastType;
-    T::ForecastNumber   mForecastNumber;
-    std::string         mForecastTime;
-    time_t              mForecastTimeT;
-    T::ParamValue       mMissingValue;
-    T::GridProjection   mProjectionId;
-    GRID::GridFile*     mGridFile;
-    uchar*              mDataStartPtr;
-    uchar*              mDataEndPtr;
-    NetCdfFile*         mNetCdfFile;
-    GRIB2::GridDef_sptr mGeometryDef;
-    uchar               mDataType;
-    bool                mIsRead;
+    std::uint64_t       mFilePosition;    //!< Byte offset of the variable slice in the file.
+    uint                mColumns;         //!< Number of grid columns.
+    uint                mRows;            //!< Number of grid rows.
+    uint                mRowMultiplier;   //!< Sub-sampling stride in the row direction.
+    uint                mColumnMultiplier;//!< Sub-sampling stride in the column direction.
+    double              mBaseValue;       //!< add_offset attribute value.
+    double              mScaleFactor;     //!< scale_factor attribute value.
+    std::string         mParameterName;   //!< Human-readable parameter name.
+    std::string         mParameterUnits;  //!< CF units string.
+    std::string         mVariableName;    //!< NetCDF variable name.
+    T::ForecastType     mForecastType;    //!< Forecast type code.
+    T::ForecastNumber   mForecastNumber;  //!< Ensemble member or perturbation number.
+    std::string         mForecastTime;    //!< Forecast valid time as an ISO-8601 string.
+    time_t              mForecastTimeT;   //!< Forecast valid time as a Unix timestamp.
+    T::ParamValue       mMissingValue;    //!< Fill/missing value for undefined grid points.
+    T::GridProjection   mProjectionId;    //!< Grid projection type.
+    GRID::GridFile*     mGridFile;        //!< Owning GridFile (not owned by this object).
+    uchar*              mDataStartPtr;    //!< Start of the memory-mapped data region.
+    uchar*              mDataEndPtr;      //!< One-past-end of the memory-mapped data region.
+    NetCdfFile*         mNetCdfFile;      //!< Parser object that decoded the NetCDF metadata.
+    GRIB2::GridDef_sptr mGeometryDef;    //!< Grid geometry definition derived from projection metadata.
+    uchar               mDataType;        //!< NetCDF storage type code for the packed values.
+    bool                mIsRead;          //!< True after grid values have been decoded.
 };
 
 
 
-typedef Message* MessagePtr;
-typedef std::vector<MessagePtr> MessagePtr_vec;
+typedef Message* MessagePtr;                   //!< Non-owning pointer to a NetCDF Message.
+typedef std::vector<MessagePtr> MessagePtr_vec; //!< Vector of non-owning NetCDF Message pointers.
 
 
 }  // namespace NetCDF

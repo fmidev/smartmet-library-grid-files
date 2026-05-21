@@ -118,6 +118,8 @@ void PolarStereographicImpl::read(MemoryReader& memoryReader)
 
 
 
+/*! \brief Appends the projection-specific property settings to the given vector. */
+
 void PolarStereographicImpl::getProperties(T::PropertySettingVec& properties)
 {
   try
@@ -383,6 +385,8 @@ T::Dimensions PolarStereographicImpl::getGridDimensions() const
 
 
 
+/*! \brief Returns the number of columns in the original grid. */
+
 std::size_t PolarStereographicImpl::getGridColumnCount() const
 {
   try
@@ -397,6 +401,8 @@ std::size_t PolarStereographicImpl::getGridColumnCount() const
 
 
 
+
+/*! \brief Returns the number of rows in the original grid. */
 
 std::size_t PolarStereographicImpl::getGridRowCount() const
 {
@@ -413,6 +419,8 @@ std::size_t PolarStereographicImpl::getGridRowCount() const
 
 
 
+
+/*! \brief Returns the metric grid cell width and height. */
 
 bool PolarStereographicImpl::getGridMetricCellSize(double& width,double& height) const
 {
@@ -431,6 +439,8 @@ bool PolarStereographicImpl::getGridMetricCellSize(double& width,double& height)
 
 
 
+
+/*! \brief Initializes derived projection parameters (start coordinates and direction increments). */
 
 void PolarStereographicImpl::init() const
 {
@@ -681,7 +691,7 @@ void PolarStereographicImpl::initSpatialReference()
 
 /*! \brief The method prints the content of the current object into the given stream.
 
-        \param ostream      The output stream.
+        \param stream      The output stream.
         \param level        The print level (used when printing multi-level structures).
         \param optionFlags  The printing options expressed in flag-bits.
 */

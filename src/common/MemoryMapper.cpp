@@ -31,6 +31,8 @@ MemoryMapper memoryMapper;
 
 
 
+/*! \brief Thread entry point that runs the MemoryMapper fault handler loop. */
+
 void* fault_handler_thread(void *arg)
 {
   MemoryMapper *mapper = (MemoryMapper*)arg;
@@ -41,6 +43,8 @@ void* fault_handler_thread(void *arg)
 
 
 
+/*! \brief Thread entry point that runs the MemoryMapper fault processing loop. */
+
 void* fault_processing_thread(void *arg)
 {
   MemoryMapper *mapper = (MemoryMapper*)arg;
@@ -48,6 +52,8 @@ void* fault_processing_thread(void *arg)
   pthread_exit(nullptr);
   return nullptr;
 }
+
+/*! \brief Converts a Unix file mode bitmask into a human-readable rwx permission string. */
 
 std::string permission_string(mode_t mode)
 {
@@ -64,6 +70,8 @@ std::string permission_string(mode_t mode)
   return permissions;
 }
   
+
+/*! \brief Constructs the MemoryMapper with default configuration values. */
 
 MemoryMapper::MemoryMapper()
 {
@@ -100,6 +108,8 @@ MemoryMapper::MemoryMapper()
 
 
 
+/*! \brief Destructor; signals worker threads to stop and frees mapper resources. */
+
 MemoryMapper::~MemoryMapper()
 {
   FUNCTION_TRACE
@@ -119,6 +129,8 @@ MemoryMapper::~MemoryMapper()
 
 
 
+
+/*! \brief Inserts a new memory-mapping descriptor into the sorted mapping list. */
 
 void MemoryMapper::addMapInfo(MapInfo_sptr mapInfo)
 {
@@ -161,6 +173,8 @@ void MemoryMapper::addMapInfo(MapInfo_sptr mapInfo)
 
 
 
+
+/*! \brief Returns the index of the mapping whose memory pointer is closest to the given address. */
 
 int MemoryMapper::getClosestIndex(char *address)
 {
@@ -222,6 +236,8 @@ int MemoryMapper::getClosestIndex(char *address)
 
 
 
+/*! \brief Returns true when the userfaultfd-based memory mapper is enabled. */
+
 bool MemoryMapper::isEnabled()
 {
   return mEnabled;
@@ -229,6 +245,8 @@ bool MemoryMapper::isEnabled()
 
 
 
+
+/*! \brief Returns true when page prefetching/premapping is enabled. */
 
 bool MemoryMapper::isPremapEnabled()
 {
@@ -241,6 +259,8 @@ bool MemoryMapper::isPremapEnabled()
 
 
 
+/*! \brief Sets the maximum number of page-fault processing threads. */
+
 void MemoryMapper::setMaxProcessingThreads(uint maxThreads)
 {
   mMaxProcessingThreads = maxThreads;
@@ -249,6 +269,8 @@ void MemoryMapper::setMaxProcessingThreads(uint maxThreads)
 
 
 
+/*! \brief Sets the maximum number of buffered userfault messages. */
+
 void MemoryMapper::setMaxMessages(uint maxMessages)
 {
   mMaxMessages = maxMessages;
@@ -256,6 +278,8 @@ void MemoryMapper::setMaxMessages(uint maxMessages)
 
 
 
+
+/*! \brief Sets the size of the in-memory page cache used for prefetched data. */
 
 void MemoryMapper::setPageCacheSize(std::size_t pageCacheSize)
 {
@@ -266,6 +290,8 @@ void MemoryMapper::setPageCacheSize(std::size_t pageCacheSize)
 
 
 
+/*! \brief Sets the maximum number of open file handles used by the filesystem fetcher. */
+
 void MemoryMapper::setFileHandleLimit(std::size_t fileHandleLimit)
 {
   mFileHandleLimit = fileHandleLimit;
@@ -274,6 +300,8 @@ void MemoryMapper::setFileHandleLimit(std::size_t fileHandleLimit)
 
 
 
+/*! \brief Enables or disables page prefetching/premapping. */
+
 void MemoryMapper::setPremapEnabled(bool enabled)
 {
   mPremapEnabled = enabled;
@@ -281,6 +309,8 @@ void MemoryMapper::setPremapEnabled(bool enabled)
 
 
 
+
+/*! \brief Registers authentication credentials for a remote server on all data fetchers. */
 
 void MemoryMapper::addAccessInfo(const char *server,uint authenticationMethod,const char *username,const char *password)
 {
@@ -302,6 +332,8 @@ void MemoryMapper::addAccessInfo(const char *server,uint authenticationMethod,co
 
 
 
+/*! \brief Sets the path to the file containing remote-server access credentials. */
+
 void MemoryMapper::setAccessFile(const char *filename)
 {
   FUNCTION_TRACE
@@ -318,6 +350,8 @@ void MemoryMapper::setAccessFile(const char *filename)
 
 
 
+
+/*! \brief Enables the userfaultfd memory mapper and starts background fault-handling threads. */
 
 void MemoryMapper::setEnabled(bool enabled)
 {
@@ -410,6 +444,8 @@ void MemoryMapper::setEnabled(bool enabled)
 
 
 
+
+/*! \brief Memory-maps the file described by the given MapInfo, using userfaultfd when enabled. */
 
 void MemoryMapper::map(MapInfo_sptr info)
 {
@@ -511,6 +547,8 @@ void MemoryMapper::map(MapInfo_sptr info)
 
 
 
+/*! \brief Releases the memory mapping described by the given MapInfo. */
+
 void MemoryMapper::unmap(MapInfo_sptr info)
 {
   FUNCTION_TRACE
@@ -556,6 +594,8 @@ void MemoryMapper::unmap(MapInfo_sptr info)
 
 
 
+/*! \brief Returns the MapInfo whose mapping starts at the given memory address, or nullptr. */
+
 MapInfo_sptr MemoryMapper::getMapInfo(char *address)
 {
   FUNCTION_TRACE
@@ -581,6 +621,8 @@ MapInfo_sptr MemoryMapper::getMapInfo(char *address)
 
 Int64 premapCnt = 0;
 
+
+/*! \brief Prefetches and caches the pages covering the given address range. */
 
 void MemoryMapper::premap(char *startAddress,char *endAddress)
 {
@@ -692,6 +734,8 @@ void MemoryMapper::premap(char *startAddress,char *endAddress)
 
 
 
+/*! \brief Spawns the fault-handler and fault-processing background threads. */
+
 void MemoryMapper::startFaultHandler()
 {
   try
@@ -714,6 +758,8 @@ void MemoryMapper::startFaultHandler()
 
 
 
+/*! \brief Signals the fault-handler threads to stop and waits for them to exit. */
+
 void MemoryMapper::stopFaultHandler()
 {
   try
@@ -735,6 +781,8 @@ void MemoryMapper::stopFaultHandler()
 
 
 
+
+/*! \brief Returns the file size queried from the appropriate data fetcher for the server type. */
 
 Int64 MemoryMapper::getFileSize(uint serverType,uint protocol,const char *server,const char *filename)
 {
@@ -767,6 +815,8 @@ Int64 MemoryMapper::getFileSize(uint serverType,uint protocol,const char *server
 
 
 
+
+/*! \brief Fetches a block of data from the page cache or the underlying data fetcher. */
 
 int MemoryMapper::getData(MapInfo_sptr info,std::size_t filePosition,int dataSize,char *dataPtr)
 {
@@ -824,6 +874,8 @@ int MemoryMapper::getData(MapInfo_sptr info,std::size_t filePosition,int dataSiz
 
 
 
+
+/*! \brief Worker thread loop that resolves userfaultfd page faults by copying data pages. */
 
 void MemoryMapper::faultProcessingThread()
 {
@@ -977,6 +1029,8 @@ void MemoryMapper::faultProcessingThread()
 
 
 
+/*! \brief Reader thread loop that polls userfaultfd and queues page-fault messages for processing. */
+
 void MemoryMapper::faultHandlerThread()
 {
   try
@@ -1075,6 +1129,8 @@ void MemoryMapper::faultHandlerThread()
 
 
 
+
+/*! \brief Adds the mapper's current runtime state as attributes under the given parent node. */
 
 void MemoryMapper::getStateAttributes(std::shared_ptr<T::AttributeNode> parent)
 {

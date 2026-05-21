@@ -94,6 +94,8 @@ SimplePacking::~SimplePacking()
 
 
 
+/*! \brief The method returns the packing method identifier (simple packing). */
+
 PackingMethod SimplePacking::getPackingMethod() const
 {
   try
@@ -110,6 +112,8 @@ PackingMethod SimplePacking::getPackingMethod() const
 
 
 
+/*! \brief The method creates a new SimplePacking instance copying the current state. */
+
 DataDefinition* SimplePacking::createDataDefinition() const
 {
   try
@@ -125,6 +129,8 @@ DataDefinition* SimplePacking::createDataDefinition() const
 
 
 
+
+/*! \brief The method initializes the packing parameters from the given message. */
 
 void SimplePacking::init(Message *message) const
 {
@@ -161,6 +167,8 @@ void SimplePacking::init(Message *message) const
 
 
 
+
+/*! \brief The method returns the decoded value at the given index. */
 
 bool SimplePacking::getValueByIndex(Message *message,uint index,T::ParamValue& value) const
 {
@@ -247,6 +255,8 @@ bool SimplePacking::getValueByIndex(Message *message,uint index,T::ParamValue& v
 
 
 
+
+/*! \brief The method decodes the simple-packed values from the message data. */
 
 void SimplePacking::decodeValues(Message *message,T::ParamValue_vec& decodedValues) const
 {
@@ -510,6 +520,8 @@ void SimplePacking::decodeValues(Message *message,T::ParamValue_vec& decodedValu
 
 
 
+/*! \brief The method encodes the given values using simple packing into the message data. */
+
 void SimplePacking::encodeValues(Message *message,T::ParamValue_vec& values)
 {
   try
@@ -622,7 +634,7 @@ void SimplePacking::encodeValues(Message *message,T::ParamValue_vec& values)
 
 /*! \brief The method prints the content of the current object into the given stream.
 
-        \param ostream      The output stream.
+        \param stream      The output stream.
         \param level        The print level (used when printing multi-level structures).
         \param optionFlags  The printing options expressed in flag-bits.
 */

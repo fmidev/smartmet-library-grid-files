@@ -23,18 +23,14 @@ namespace GRID
 {
 
 // ====================================================================================
-/*!
-  \brief This class is used for caching grid values. This is usually needed in order
-  to guarantee fast data processing.
-
-  The basic idea behind the cache is that when grid values are stored into the cache
-  by the "addValues()" method, the current method returns a cache key that can be
-  used later to get the cached information. So, instead of saving the actual values
-  the caller needs to save only the cache key.
-
-  On the other hand, the caller does not need to fetch all the grid values at the same
-  time, because its possible to request values by their index.
-*/
+/*! \brief Cache for decoded grid value vectors.
+ *
+ *  Stores `T::ParamValue_vec` arrays keyed by an opaque integer handle returned by
+ *  `addValues()`.  Callers retain the key and retrieve individual values via
+ *  `getValue()` or the full vector via `getValues()`.  Eviction is LRU by access
+ *  counter and is bounded by both entry count (`maxLen`) and total byte size
+ *  (`maxSize`).  An optional file-backed mode writes each entry to a temporary
+ *  memory-mapped file, reducing heap pressure for large grids. */
 // ====================================================================================
 
 typedef UInt64 UInt64;
@@ -46,10 +42,20 @@ typedef UInt64 UInt64;
 typedef uchar *puchar;
 
 
+// ====================================================================================
+/*! \brief Single entry in the ValueCache holding one decoded grid value array.
+ *
+ *  When a cache directory is set the values are written to a temporary file and
+ *  memory-mapped read-only, so the heap is not charged for large grids.  Without
+ *  a cache directory the values are held in a heap-allocated array.  The destructor
+ *  closes and removes the backing file when the file-backed mode is used. */
+// ====================================================================================
+
 class ValueCacheEntry
 {
   public:
 
+    /*! \brief Construct an empty (invalid) entry. */
     ValueCacheEntry()
     {
       mKey = 0;
@@ -59,6 +65,11 @@ class ValueCacheEntry
       mSize = 0;
     }
 
+    /*! \brief Construct an entry that stores \p values under \p key.
+     *  \param[in] key     Opaque cache key assigned by ValueCache.
+     *  \param[in] values  Grid values to store.
+     *  \param[in] fname   If non-null, write values to this file and memory-map it;
+     *                     otherwise copy values into a heap array. */
     ValueCacheEntry(uint key,T::ParamValue_vec& values,const char *fname)
     {
       mKey =  key;
@@ -130,17 +141,28 @@ class ValueCacheEntry
       }
     }
 
-    uint               mKey;
-    UInt64             mAccessCounter;
-    std::string        mFilename;
-    MappedFile*        mMappedFile;
-    T::ParamValue*     mGrid;
-    uint               mSize;
+    uint               mKey;           //!< Opaque key assigned when the entry was inserted
+    UInt64             mAccessCounter; //!< Logical access time; used for LRU eviction
+    std::string        mFilename;      //!< Backing file path (non-empty only in file-cache mode)
+    MappedFile*        mMappedFile;    //!< Memory-mapped view of the backing file (nullptr in heap mode)
+    T::ParamValue*     mGrid;          //!< Pointer to the value array (mapped or heap)
+    uint               mSize;         //!< Number of elements in mGrid
 };
 
 
 typedef ValueCacheEntry* ValueCacheEntry_ptr;
 
+
+// ====================================================================================
+/*! \brief Thread-safe LRU cache for decoded grid value vectors.
+ *
+ *  Decoded `T::ParamValue_vec` arrays are stored by `addValues()`, which returns an
+ *  opaque integer key.  Individual values are retrieved with the inline `getValue()`
+ *  and full arrays with `getValues()`.  The cache is bounded by both the maximum
+ *  number of entries (`maxLen`) and total byte size (`maxSize`); the least-recently
+ *  used entry is evicted when either limit is exceeded.  A global instance
+ *  `valueCache` is defined at the bottom of this header. */
+// ====================================================================================
 
 class ValueCache
 {
@@ -148,14 +170,49 @@ class ValueCache
                 ValueCache();
     virtual     ~ValueCache();
 
+    /*! \brief Store a decoded grid value vector.
+     *  \param[in] values  Values to cache.
+     *  \return Opaque key for later retrieval; 0 on failure. */
     uint        addValues(T::ParamValue_vec& values);
+
+    /*! \brief Retrieve a complete value vector by key.
+     *  \param[in]  key     Key returned by addValues().
+     *  \param[out] values  Populated with the cached values.
+     *  \return True if the entry is still in the cache; false if it was evicted. */
     bool        getValues(uint key,T::ParamValue_vec& values);
+
+    /*! \brief Remove the entry with the given key from the cache.
+     *  \param[in] key  Key returned by addValues(). */
     void        deleteValues(uint key);
+
+    /*! \brief Compute the minimum and maximum of a cached value vector.
+     *  \param[in]  key       Key returned by addValues().
+     *  \param[out] minValue  Minimum value found (excluding missing values).
+     *  \param[out] maxValue  Maximum value found (excluding missing values).
+     *  \return True if the entry is still in the cache; false if it was evicted. */
     bool        getMinAndMaxValues(uint key,T::ParamValue& minValue,T::ParamValue& maxValue);
+
+    /*! \brief Fill \p statistics with cache hit/miss counters.
+     *  \param[out] statistics  Receives the current cache statistics. */
     void        getCacheStats(Fmi::Cache::CacheStatistics& statistics) const;
+
+    /*! \brief Populate \p parent with an attribute sub-tree describing internal state.
+     *  \param[in,out] parent  Attribute node that receives cache state attributes. */
     void        getStateAttributes(std::shared_ptr<T::AttributeNode> parent);
+
+    /*! \brief Initialise the cache with given limits (heap mode).
+     *  \param[in] maxLen   Maximum number of entries.
+     *  \param[in] maxSize  Maximum total size in megabytes. */
     void        init(uint maxLen,UInt64 maxSize);
+
+    /*! \brief Initialise the cache with given limits and optional file-cache mode.
+     *  \param[in] maxLen            Maximum number of entries.
+     *  \param[in] maxSize           Maximum total size in megabytes.
+     *  \param[in] fileCacheEnabled  If true, values are written to temporary files. */
     void        init(uint maxLen,UInt64 maxSize,bool fileCacheEnabled);
+
+    /*! \brief Set the directory used for temporary backing files (enables file-cache mode).
+     *  \param[in] cacheDir  Path to an existing writable directory. */
     void        setCacheDir(const char *cacheDir);
 
   protected:
@@ -167,41 +224,25 @@ class ValueCache
     uint        getEmpty();
 
 
-    /*! \brief The max number of value vectors that can be stored into the cache. */
-    uint        mMaxLength;
-
-    /*! \brief The max size of value vectors expressed in mega bytes. */
-    UInt64      mMaxSize;
-
-    /*! \brief The counter that is used for generating an access key when a new value vector is stored */
-    uint        mKeyCounter;
-
-    UInt64      mAccessCounter;
-
-    bool        mFileCacheEnabled;
-
-    ValueCacheEntry_ptr*    mEntryList;
-    std::string             mCacheDir;
-    Fmi::Cache::CacheStats  mCacheStats;
-
-    ModificationLock        mModificationLock;
+    uint        mMaxLength;          //!< Maximum number of entries allowed in the cache
+    UInt64      mMaxSize;            //!< Maximum total size of cached data in megabytes
+    uint        mKeyCounter;         //!< Monotonically increasing counter used to generate cache keys
+    UInt64      mAccessCounter;      //!< Global access clock; incremented on each cache hit
+    bool        mFileCacheEnabled;   //!< True when values are written to temporary backing files
+    ValueCacheEntry_ptr*    mEntryList;       //!< Fixed-size array of entry pointers (length = mMaxLength)
+    std::string             mCacheDir;        //!< Directory for temporary backing files
+    Fmi::Cache::CacheStats  mCacheStats;      //!< Hit/miss counters
+    ModificationLock        mModificationLock; //!< Guards concurrent reads and writes
 
 
   public:
 
-    /*! \brief This method can be used for fetching a single parameter value from the cache according
-        to the cache key and the value index. If the grid values are still in the cache then the requested
-        value is returned in the 'value' parameter and the method returns 'true'. However, if the grid
-        values are not in the cache anymore then the method returns 'false'. In this case the caller should
-        decode grid values again and possible store them to the cache again.
-
-            \param key    The access key to the cached value vector
-            \param index  The index of the cached value vector.
-            \param value  The returned parameter value.
-            \return       The method returns 'true' if the value vector is still in the cache.
-
-     */
-
+    /*! \brief Fetch a single value from a cached grid by key and element index.
+     *  \param[in]  key    Key returned by addValues().
+     *  \param[in]  index  Zero-based element index within the cached vector.
+     *  \param[out] value  Receives the requested grid value.
+     *  \return True if the entry is still in the cache; false if it was evicted
+     *          (caller should re-decode and re-store). */
     inline bool getValue(uint key,uint index,T::ParamValue& value)
     {
       try

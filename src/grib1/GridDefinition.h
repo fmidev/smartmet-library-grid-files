@@ -23,7 +23,16 @@ namespace SmartMet
 namespace GRIB1
 {
 
-// Base class for grid definitions
+// ====================================================================================
+/*! \brief Abstract base class for GRIB 1 grid definitions.
+ *
+ *  Derived classes (LatLonImpl, RotatedLatLonImpl, PolarStereographicImpl, etc.) in
+ *  the implementation/ directory encode the projection-specific parameters from the
+ *  Grid Description Section and override the coordinate-conversion virtuals.
+ *
+ *  Common services provided here include: lazy coordinate caching, OGR spatial
+ *  reference management, grid-hash computation, and property get/set dispatch. */
+// ====================================================================================
 
 class GridDefinition
 {
@@ -133,8 +142,8 @@ class GridDefinition
     /*! \brief The spatial reference. */
      T::SpatialRef_sptr         mSpatialReference;
 
-     double                     mEarth_semiMajor;
-     double                     mEarth_semiMinor;
+     double                     mEarth_semiMajor;  //!< Override for the ellipsoid semi-major axis (metres).
+     double                     mEarth_semiMinor;  //!< Override for the ellipsoid semi-minor axis (metres).
 
      /*! \brief The hash of the grid. */
      mutable T::Hash            mHash;
@@ -149,13 +158,13 @@ class GridDefinition
      bool                       mGlobal;
 };
 
-typedef GridDefinition* GridDef_ptr;
-typedef std::shared_ptr<GridDefinition> GridDef_sptr;
-typedef std::shared_ptr<GridDefinition> GridDefinition_sptr;
-typedef std::vector<GridDef_ptr> GridDef_pvec;
-typedef std::map<uint,GridDef_ptr> GridDefinition_pmap;
-typedef std::map<std::string,GridDef_ptr> GridDef_map;
-typedef std::map<std::string,GridDef_sptr> GridDef_spmap;
+typedef GridDefinition* GridDef_ptr;                          //!< Non-owning pointer to a GridDefinition.
+typedef std::shared_ptr<GridDefinition> GridDef_sptr;         //!< Shared ownership pointer to a GridDefinition.
+typedef std::shared_ptr<GridDefinition> GridDefinition_sptr;  //!< Alias for GridDef_sptr.
+typedef std::vector<GridDef_ptr> GridDef_pvec;                //!< Vector of non-owning GridDefinition pointers.
+typedef std::map<uint,GridDef_ptr> GridDefinition_pmap;       //!< Map from uint key to non-owning GridDefinition pointer.
+typedef std::map<std::string,GridDef_ptr> GridDef_map;        //!< Map from string key to non-owning GridDefinition pointer.
+typedef std::map<std::string,GridDef_sptr> GridDef_spmap;     //!< Map from string key to shared GridDefinition pointer.
 
 extern Fmi::Cache::CacheStats latlonCoordinateCache_stats;
 extern Fmi::Cache::CacheStats originalCoordinateCache_stats;

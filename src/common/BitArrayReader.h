@@ -7,31 +7,46 @@ namespace SmartMet
 {
 
 
-/*!
-  \brief The class is used for reading data in bits. The idea is that we
-  can read one or several bits at the same time and the read position is updated
-  every time when bits are read.
-
-  This class is very useful for example for handling bitmap information or to read
-  data which must be handled as bits rather than bytes. For example, when data is
-  compressed it is quite typical that information is stored as a sequence of bits
-  without caring the byte borders.
-*/
+// ====================================================================================
+/*! \brief Sequential bit-level reader over a byte array.
+ *
+ *  Provides MSB-first single-bit and multi-bit extraction methods.  Used when
+ *  GRIB data sections store values as bit-packed fields that span byte boundaries
+ *  (e.g. simple-packing, bitmap sections). */
+// ====================================================================================
 
 class BitArrayReader
 {
   public:
+    /*! \brief Construct a reader over a bit buffer.
+     *  \param[in] data          Byte array containing the bits to read.
+     *  \param[in] numberOfBits  Total number of readable bits. */
                BitArrayReader(const unsigned char *data,UInt64 numberOfBits);
     virtual    ~BitArrayReader();
 
+    /*! \brief Return the total number of bits in the buffer. */
     UInt64     getNumberOfBits();
+    /*! \brief Return the current bit read position. */
     UInt64     getReadPosition();
+    /*! \brief Set the current bit read position.
+     *  \param[in] readPosition  New position (zero-based bit index). */
     void       setReadPosition(UInt64 readPosition);
-    //bool       readBit();
+
+    /*! \brief Read \p numberOfBits bits and return the signed value.
+     *  \param[in]  numberOfBits  Number of bits to read (1–32).
+     *  \param[out] value         Receives the decoded signed value. */
     void       readBits(unsigned int numberOfBits,int& value);
-    // void       readBits(unsigned int numberOfBits,unsigned int& value);
+
+    /*! \brief Read \p numberOfBits bits and return an unsigned 64-bit value.
+     *  \param[in]  numberOfBits  Number of bits to read (1–64).
+     *  \param[out] value         Receives the decoded value. */
     void       readBits(unsigned int numberOfBits,UInt64& value);
-    void       readBits(unsigned int numberOfBits,int *_array,unsigned int arraySize);
+
+    /*! \brief Read \p numberOfBits bits into each element of an array.
+     *  \param[in]  numberOfBits  Bits per element.
+     *  \param[out] array         Destination array.
+     *  \param[in]  arraySize     Number of elements to read. */
+    void       readBits(unsigned int numberOfBits,int *array,unsigned int arraySize);
 
   protected:
 
@@ -48,6 +63,8 @@ class BitArrayReader
 
   public:
 
+    /*! \brief Read and return one bit, advancing the read position.
+     *  \return True if the bit is 1; false if 0. */
     inline bool readBit()
     {
       try
@@ -79,6 +96,7 @@ class BitArrayReader
       }
     }
 
+    /*! \brief Read one bit without bounds checking (faster inner-loop variant). */
     inline bool readBitNoCheck()
     {
       try
@@ -100,13 +118,9 @@ class BitArrayReader
     }
 
 
-    /*! \brief The method reads a number of bits from the bit array/stream and
-        returns the result in the 'value' parameter.
-
-            \param numberOfBits   The number of bits to read.
-            \param value          The result value of the read bits.
-    */
-
+    /*! \brief Read \p numberOfBits bits and return an unsigned int value.
+     *  \param[in]  numberOfBits  Number of bits to read (1–32).
+     *  \param[out] value         Receives the decoded unsigned value. */
     inline void readBits(unsigned int numberOfBits,unsigned int& value)
     {
       try

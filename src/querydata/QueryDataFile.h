@@ -10,6 +10,15 @@ namespace SmartMet
 namespace QueryData
 {
 
+// ====================================================================================
+/*! \brief Adapter that opens an NFmiQueryData file and enumerates its parameter/level/
+ *  time slices as GRID messages.
+ *
+ *  Loads the file via newbase NFmiFastQueryInfo on construction.  A MessageInfoVec
+ *  is produced by read(), one entry per slice.  QueryData::Message objects then call
+ *  back into getGridValue() to retrieve individual data values at runtime. */
+// ====================================================================================
+
 class QueryDataFile
 {
   public:
@@ -50,14 +59,14 @@ class QueryDataFile
     uint                getGeometryId();
 
 
-    NFmiQueryData*      mQueryDataFile;
-    NFmiFastQueryInfo*  mFastQueryInfo;
-    std::string         mFilename;
+    NFmiQueryData*      mQueryDataFile;  //!< Loaded newbase QueryData object.
+    NFmiFastQueryInfo*  mFastQueryInfo;  //!< Fast index over mQueryDataFile for O(1) slice access.
+    std::string         mFilename;       //!< Path to the QueryData file.
 };
 
 
 
-typedef QueryDataFile* QueryDataFilePtr;
+typedef QueryDataFile* QueryDataFilePtr;  //!< Non-owning pointer to a QueryDataFile.
 
 
 }  // namespace QueryData

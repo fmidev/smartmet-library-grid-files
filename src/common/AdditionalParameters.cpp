@@ -15,6 +15,8 @@ namespace SmartMet
 {
 
 
+/*! \brief Constructs the AdditionalParameters with timezone, locale and formatters. */
+
 AdditionalParameters::AdditionalParameters(
     const Fmi::TimeZones& timezones,
     const std::locale& locale,
@@ -40,6 +42,8 @@ AdditionalParameters::AdditionalParameters(
 
 
 
+/*! \brief Destructor for AdditionalParameters. */
+
 AdditionalParameters::~AdditionalParameters()
 {
   FUNCTION_TRACE
@@ -48,6 +52,8 @@ AdditionalParameters::~AdditionalParameters()
 
 
 
+
+/*! \brief Checks whether the given parameter name is a built-in additional parameter. */
 
 bool AdditionalParameters::isAdditionalParameter(const char *parameterName)
 {
@@ -124,6 +130,8 @@ bool AdditionalParameters::isAdditionalParameter(const char *parameterName)
 
 
 
+
+/*! \brief Returns the value of a location-based additional parameter. */
 
 bool AdditionalParameters::getParameterValueByLocation(
     std::string parameterName,
@@ -283,6 +291,8 @@ bool AdditionalParameters::getParameterValueByLocation(
 
 
 
+
+/*! \brief Returns the value of a location- and time-based additional parameter. */
 
 bool AdditionalParameters::getParameterValueByLocationAndTime(
     std::string parameterName,
@@ -558,6 +568,8 @@ bool AdditionalParameters::getParameterValueByLocationAndTime(
 
 
 
+/*! \brief Formats a local date/time using the given C-style format string. */
+
 std::string AdditionalParameters::formatDate(
     Fmi::LocalDateTime& ldt,
     std::locale& llocale,
@@ -578,6 +590,8 @@ std::string AdditionalParameters::formatDate(
 
 
 
+
+/*! \brief Formats a local date/time using the given std::string format. */
 
 std::string AdditionalParameters::formatDate(
     Fmi::LocalDateTime& ldt,

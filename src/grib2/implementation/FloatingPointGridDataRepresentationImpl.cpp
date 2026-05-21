@@ -87,6 +87,8 @@ void FloatingPointGridDataRepresentationImpl::read(MemoryReader& memoryReader)
 
 
 
+/*! \brief Decodes the floating-point grid values into a vector of parameter values. */
+
 void FloatingPointGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec& decodedValues) const
 {
   try

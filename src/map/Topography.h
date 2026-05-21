@@ -14,6 +14,19 @@ namespace Map
 {
 
 
+// ====================================================================================
+/*! \brief Global topography service providing land/sea classification and elevation
+ *  shading for arbitrary geographic coordinates.
+ *
+ *  Three datasets are managed independently and loaded on first use:
+ *  - Land-sea mask  (binary bit-plane, used for isLand() queries)
+ *  - Land shading   (float elevation image for terrain shading)
+ *  - Sea shading    (float depth/colour image for ocean shading)
+ *
+ *  All datasets are rectangular pixel grids covering the full globe
+ *  (−180..+180 lon, −90..+90 lat) loaded from files named in the configuration. */
+// ====================================================================================
+
 class Topography
 {
   public:
@@ -36,41 +49,42 @@ class Topography
 
   protected:
 
-    bool        mInitialized;
+    bool        mInitialized;             //!< True after init() has been called.
 
-    float*      mLandShading;
-    std::string mLandShading_file;
-    uint        mLandShading_width;
-    uint        mLandShading_height;
-    bool        mLandShading_initialized;
-    uint        mLandShading_size;
-    double      mLandShading_dx;
-    double      mLandShading_dy;
+    float*      mLandShading;             //!< Flat pixel array for land elevation shading.
+    std::string mLandShading_file;        //!< Path to the land-shading raster file.
+    uint        mLandShading_width;       //!< Width of the land-shading raster in pixels.
+    uint        mLandShading_height;      //!< Height of the land-shading raster in pixels.
+    bool        mLandShading_initialized; //!< True once the land-shading raster is loaded.
+    uint        mLandShading_size;        //!< Total number of pixels (width * height).
+    double      mLandShading_dx;          //!< Pixels per degree of longitude.
+    double      mLandShading_dy;          //!< Pixels per degree of latitude.
 
-    float*      mSeaShading;
-    std::string mSeaShading_file;
-    uint        mSeaShading_width;
-    uint        mSeaShading_height;
-    bool        mSeaShading_initialized;
-    uint        mSeaShading_size;
-    double      mSeaShading_dx;
-    double      mSeaShading_dy;
+    float*      mSeaShading;              //!< Flat pixel array for sea depth/colour shading.
+    std::string mSeaShading_file;         //!< Path to the sea-shading raster file.
+    uint        mSeaShading_width;        //!< Width of the sea-shading raster in pixels.
+    uint        mSeaShading_height;       //!< Height of the sea-shading raster in pixels.
+    bool        mSeaShading_initialized;  //!< True once the sea-shading raster is loaded.
+    uint        mSeaShading_size;         //!< Total number of pixels (width * height).
+    double      mSeaShading_dx;           //!< Pixels per degree of longitude.
+    double      mSeaShading_dy;           //!< Pixels per degree of latitude.
 
 
-    BitLine     mLandSeaMask;
-    std::string mLandSeaMask_file;
-    uint        mLandSeaMask_width;
-    uint        mLandSeaMask_height;
-    bool        mLandSeaMask_initialized;
-    double      mLandSeaMask_size;
-    double      mLandSeaMask_dx;
-    double      mLandSeaMask_dy;
+    BitLine     mLandSeaMask;             //!< Packed bit-plane (1 = land, 0 = sea) for the land-sea mask.
+    std::string mLandSeaMask_file;        //!< Path to the land-sea mask raster file.
+    uint        mLandSeaMask_width;       //!< Width of the land-sea mask in pixels.
+    uint        mLandSeaMask_height;      //!< Height of the land-sea mask in pixels.
+    bool        mLandSeaMask_initialized; //!< True once the land-sea mask is loaded.
+    double      mLandSeaMask_size;        //!< Total number of bits (width * height).
+    double      mLandSeaMask_dx;          //!< Pixels per degree of longitude.
+    double      mLandSeaMask_dy;          //!< Pixels per degree of latitude.
 
-    ConfigurationFile mConfigurationFile;
-    ModificationLock  mModificationLock;
+    ConfigurationFile mConfigurationFile; //!< Parsed configuration file supplying raster paths.
+    ModificationLock  mModificationLock;  //!< Read/write lock guarding lazy dataset loading.
 
   public:
 
+    /*! \brief Return true if the given lon/lat coordinate falls on land. */
     inline bool isLand(double lon,double lat)
     {
       if (!mLandSeaMask_initialized)
@@ -97,6 +111,7 @@ class Topography
     }
 
 
+    /*! \brief Return the shading value for lon/lat, selecting land or sea shading automatically. */
     inline float getShading(double lon,double lat)
     {
       if (isLand(lon,lat))
@@ -106,6 +121,7 @@ class Topography
     }
 
 
+    /*! \brief Return the land elevation shading value at lon/lat (0 if outside the raster). */
     inline float getLandShading(double lon,double lat)
     {
       if (!mLandShading_initialized)
@@ -122,6 +138,7 @@ class Topography
     }
 
 
+    /*! \brief Return the sea depth shading value at lon/lat (0 if outside the raster). */
     inline float getSeaShading(double lon,double lat)
     {
       if (!mSeaShading_initialized)
@@ -141,7 +158,7 @@ class Topography
 
 };
 
-extern Topography topography;
+extern Topography topography;  //!< Global singleton topography instance initialised from the grid-files configuration.
 
 
 }  // namespace Map

@@ -12,6 +12,8 @@ namespace GRID
 IndexCache indexCache;
 
 
+/*! \brief The constructor of the class. */
+
 IndexCache::IndexCache()
 {
   try
@@ -28,6 +30,8 @@ IndexCache::IndexCache()
 
 
 
+/*! \brief The destructor of the class. */
+
 IndexCache::~IndexCache()
 {
   try
@@ -43,6 +47,8 @@ IndexCache::~IndexCache()
 
 
 
+
+/*! \brief Inserts an index vector into the cache under the given hash, sorted by hash. */
 
 void IndexCache::addIndexVector(Int64 hash,T::IndexVector& indexVector)
 {
@@ -96,6 +102,8 @@ void IndexCache::addIndexVector(Int64 hash,T::IndexVector& indexVector)
 
 
 
+/*! \brief Retrieves the cached index vector for the given hash. */
+
 bool IndexCache::getIndexVector(Int64 hash,T::IndexVector& indexVector)
 {
   try
@@ -123,6 +131,8 @@ bool IndexCache::getIndexVector(Int64 hash,T::IndexVector& indexVector)
 
 
 
+/*! \brief Returns true if the cache contains an index vector for the given hash. */
+
 bool IndexCache::findIndexVector(Int64 hash)
 {
   try
@@ -147,6 +157,8 @@ bool IndexCache::findIndexVector(Int64 hash)
 
 
 
+
+/*! \brief Retrieves a single index value at the given position from the cached vector. */
 
 bool IndexCache::getIndex(Int64 hash,uint pos,int& index)
 {
@@ -176,6 +188,8 @@ bool IndexCache::getIndex(Int64 hash,uint pos,int& index)
 
 
 
+/*! \brief Returns the position in the hash vector closest to the given hash, with locking. */
+
 int IndexCache::getClosestIndexByHash(Int64 hash)
 {
   try
@@ -191,6 +205,8 @@ int IndexCache::getClosestIndexByHash(Int64 hash)
 
 
 
+
+/*! \brief Performs a binary search for the hash position without acquiring the lock. */
 
 int IndexCache::getClosestIndexByHashNoLock(Int64 hash)
 {
@@ -238,6 +254,8 @@ int IndexCache::getClosestIndexByHashNoLock(Int64 hash)
 
 
 
+
+/*! \brief Evicts the cache entry with the oldest access time. */
 
 void IndexCache::removeOldest()
 {

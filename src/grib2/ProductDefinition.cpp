@@ -10,6 +10,8 @@ namespace GRIB2
 {
 
 
+/*! \brief The constructor of the class. */
+
 ProductDefinition::ProductDefinition()
 {
 }
@@ -37,6 +39,8 @@ ProductDefinition::~ProductDefinition()
 
 
 
+
+/*! \brief The method creates a new ProductDefinition instance of the current type. */
 
 ProductDefinition* ProductDefinition::createProductDefinition() const
 {
@@ -96,6 +100,8 @@ bool ProductDefinition::getProperty(uint propertyId,Int64& value)
 
 
 
+/*! \brief The method collects the product definition properties into the given vector. */
+
 void ProductDefinition::getProperties(T::PropertySettingVec& properties)
 {
   try
@@ -119,6 +125,8 @@ void ProductDefinition::getProperties(T::PropertySettingVec& properties)
 
 
 
+
+/*! \brief The method collects the parameter settings properties into the given vector. */
 
 void ProductDefinition::getProperties_ParameterSettings(T::PropertySettingVec& properties)
 {
@@ -166,6 +174,8 @@ void ProductDefinition::getProperties_ParameterSettings(T::PropertySettingVec& p
 
 
 
+/*! \brief The method collects the horizontal settings properties into the given vector. */
+
 void ProductDefinition::getProperties_HorizontalSettings(T::PropertySettingVec& properties)
 {
   try
@@ -201,6 +211,8 @@ void ProductDefinition::getProperties_HorizontalSettings(T::PropertySettingVec& 
 
 
 
+
+/*! \brief The method collects the statistical settings properties into the given vector. */
 
 void ProductDefinition::getProperties_StatisticalSettings(T::PropertySettingVec& properties)
 {
@@ -262,6 +274,8 @@ void ProductDefinition::getProperties_StatisticalSettings(T::PropertySettingVec&
 
 
 
+/*! \brief The method collects the EPS settings properties into the given vector. */
+
 void ProductDefinition::getProperties_EpsSettings(T::PropertySettingVec& properties)
 {
   try
@@ -289,6 +303,8 @@ void ProductDefinition::getProperties_EpsSettings(T::PropertySettingVec& propert
 
 
 
+/*! \brief The method collects the derived settings properties into the given vector. */
+
 void ProductDefinition::getProperties_DerivedSettings(T::PropertySettingVec& properties)
 {
   try
@@ -312,6 +328,8 @@ void ProductDefinition::getProperties_DerivedSettings(T::PropertySettingVec& pro
 
 
 
+
+/*! \brief The method collects the rectangular cluster settings properties into the given vector. */
 
 void ProductDefinition::getProperties_RectangularClusterSettings(T::PropertySettingVec& properties)
 {
@@ -373,6 +391,8 @@ void ProductDefinition::getProperties_RectangularClusterSettings(T::PropertySett
 
 
 
+/*! \brief The method collects the probability settings properties into the given vector. */
+
 void ProductDefinition::getProperties_ProbabilitySettings(T::PropertySettingVec& properties)
 {
   try
@@ -412,6 +432,8 @@ void ProductDefinition::getProperties_ProbabilitySettings(T::PropertySettingVec&
 
 
 
+/*! \brief The method collects the percentile settings properties into the given vector. */
+
 void ProductDefinition::getProperties_PercentileSettings(T::PropertySettingVec& properties)
 {
   try
@@ -432,6 +454,8 @@ void ProductDefinition::getProperties_PercentileSettings(T::PropertySettingVec& 
 
 
 
+
+/*! \brief The method collects the categorical settings properties into the given vector. */
 
 void ProductDefinition::getProperties_CategoricalSettings(T::PropertySettingVec& properties)
 {
@@ -471,6 +495,8 @@ void ProductDefinition::getProperties_CategoricalSettings(T::PropertySettingVec&
 
 
 
+
+/*! \brief The method returns the Int64 value of the given parameter settings property. */
 
 bool ProductDefinition::getProperty_ParameterSettings(uint propertyId,Int64& value)
 {
@@ -531,6 +557,8 @@ bool ProductDefinition::getProperty_ParameterSettings(uint propertyId,Int64& val
 
 
 
+/*! \brief The method returns the Int64 value of the given horizontal settings property. */
+
 bool ProductDefinition::getProperty_HorizontalSettings(uint propertyId,Int64& value)
 {
   try
@@ -577,6 +605,8 @@ bool ProductDefinition::getProperty_HorizontalSettings(uint propertyId,Int64& va
 
 
 
+
+/*! \brief The method returns the Int64 value of the given statistical settings property. */
 
 bool ProductDefinition::getProperty_StatisticalSettings(uint propertyId,Int64& value)
 {
@@ -657,6 +687,8 @@ bool ProductDefinition::getProperty_StatisticalSettings(uint propertyId,Int64& v
 
 
 
+/*! \brief The method returns the Int64 value of the given EPS settings property. */
+
 bool ProductDefinition::getProperty_EpsSettings(uint propertyId,Int64& value)
 {
   try
@@ -692,6 +724,8 @@ bool ProductDefinition::getProperty_EpsSettings(uint propertyId,Int64& value)
 
 
 
+/*! \brief The method returns the Int64 value of the given derived settings property. */
+
 bool ProductDefinition::getProperty_DerivedSettings(uint propertyId,Int64& value)
 {
   try
@@ -722,6 +756,8 @@ bool ProductDefinition::getProperty_DerivedSettings(uint propertyId,Int64& value
 
 
 
+
+/*! \brief The method returns the Int64 value of the given rectangular cluster settings property. */
 
 bool ProductDefinition::getProperty_RectangularClusterSettings(uint propertyId,Int64& value)
 {
@@ -802,6 +838,8 @@ bool ProductDefinition::getProperty_RectangularClusterSettings(uint propertyId,I
 
 
 
+/*! \brief The method returns the Int64 value of the given probability settings property. */
+
 bool ProductDefinition::getProperty_ProbabilitySettings(uint propertyId,Int64& value)
 {
   try
@@ -853,6 +891,8 @@ bool ProductDefinition::getProperty_ProbabilitySettings(uint propertyId,Int64& v
 
 
 
+/*! \brief The method returns the Int64 value of the given percentile settings property. */
+
 bool ProductDefinition::getProperty_PercentileSettings(uint propertyId,Int64& value)
 {
   try
@@ -879,6 +919,8 @@ bool ProductDefinition::getProperty_PercentileSettings(uint propertyId,Int64& va
 
 
 
+
+/*! \brief The method returns the Int64 value of the given categorical settings property. */
 
 bool ProductDefinition::getProperty_CategoricalSettings(uint propertyId,Int64& value)
 {
@@ -981,6 +1023,8 @@ bool ProductDefinition::setProperty(uint propertyId,Int64 value)
 
 
 
+/*! \brief The method sets the Int64 value of the given parameter settings property. */
+
 bool ProductDefinition::setProperty_ParameterSettings(uint propertyId,Int64 value)
 {
   try
@@ -1040,6 +1084,8 @@ bool ProductDefinition::setProperty_ParameterSettings(uint propertyId,Int64 valu
 
 
 
+/*! \brief The method sets the Int64 value of the given horizontal settings property. */
+
 bool ProductDefinition::setProperty_HorizontalSettings(uint propertyId,Int64 value)
 {
   try
@@ -1086,6 +1132,8 @@ bool ProductDefinition::setProperty_HorizontalSettings(uint propertyId,Int64 val
 
 
 
+
+/*! \brief The method sets the Int64 value of the given statistical settings property. */
 
 bool ProductDefinition::setProperty_StatisticalSettings(uint propertyId,Int64 value)
 {
@@ -1166,6 +1214,8 @@ bool ProductDefinition::setProperty_StatisticalSettings(uint propertyId,Int64 va
 
 
 
+/*! \brief The method sets the Int64 value of the given EPS settings property. */
+
 bool ProductDefinition::setProperty_EpsSettings(uint propertyId,Int64 value)
 {
   try
@@ -1201,6 +1251,8 @@ bool ProductDefinition::setProperty_EpsSettings(uint propertyId,Int64 value)
 
 
 
+/*! \brief The method sets the Int64 value of the given derived settings property. */
+
 bool ProductDefinition::setProperty_DerivedSettings(uint propertyId,Int64 value)
 {
   try
@@ -1231,6 +1283,8 @@ bool ProductDefinition::setProperty_DerivedSettings(uint propertyId,Int64 value)
 
 
 
+
+/*! \brief The method sets the Int64 value of the given rectangular cluster settings property. */
 
 bool ProductDefinition::setProperty_RectangularClusterSettings(uint propertyId,Int64 value)
 {
@@ -1311,6 +1365,8 @@ bool ProductDefinition::setProperty_RectangularClusterSettings(uint propertyId,I
 
 
 
+/*! \brief The method sets the Int64 value of the given probability settings property. */
+
 bool ProductDefinition::setProperty_ProbabilitySettings(uint propertyId,Int64 value)
 {
   try
@@ -1362,6 +1418,8 @@ bool ProductDefinition::setProperty_ProbabilitySettings(uint propertyId,Int64 va
 
 
 
+/*! \brief The method sets the Int64 value of the given percentile settings property. */
+
 bool ProductDefinition::setProperty_PercentileSettings(uint propertyId,Int64 value)
 {
   try
@@ -1388,6 +1446,8 @@ bool ProductDefinition::setProperty_PercentileSettings(uint propertyId,Int64 val
 
 
 
+
+/*! \brief The method sets the Int64 value of the given categorical settings property. */
 
 bool ProductDefinition::setProperty_CategoricalSettings(uint propertyId,Int64 value)
 {
@@ -1440,6 +1500,8 @@ bool ProductDefinition::setProperty_CategoricalSettings(uint propertyId,Int64 va
 
 
 
+/*! \brief The method collects the attributeList details related to the product definition. */
+
 void ProductDefinition::getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const
 {
 }
@@ -1447,6 +1509,8 @@ void ProductDefinition::getAttributeList(const std::string& prefix,T::AttributeL
 
 
 
+
+/*! \brief The method returns true if the named attribute matches the given value. */
 
 bool ProductDefinition::hasAttributeValue(const char *attributeName, const char *attributeValue) const
 {
@@ -1457,6 +1521,8 @@ bool ProductDefinition::hasAttributeValue(const char *attributeName, const char 
 
 
 
+/*! \brief The method returns the value of the named product definition attribute. */
+
 bool ProductDefinition::getAttributeValue(const char *attributeName, std::string& attributeValue) const
 {
   return false;
@@ -1466,6 +1532,8 @@ bool ProductDefinition::getAttributeValue(const char *attributeName, std::string
 
 
 
+/*! \brief The method returns the product definition template number. */
+
 uint ProductDefinition::getTemplateNumber() const
 {
   throw Fmi::Exception(BCP,"Not implemented!");
@@ -1474,6 +1542,8 @@ uint ProductDefinition::getTemplateNumber() const
 
 
 
+
+/*! \brief The method returns the GRIB parameter category. */
 
 const T::UInt8_opt ProductDefinition::getGribParameterCategory() const
 {
@@ -1500,6 +1570,8 @@ const T::UInt8_opt ProductDefinition::getGribParameterCategory() const
 
 
 
+/*! \brief The method returns the GRIB parameter number. */
+
 const T::UInt8_opt ProductDefinition::getGribParameterNumber() const
 {
   try
@@ -1524,6 +1596,8 @@ const T::UInt8_opt ProductDefinition::getGribParameterNumber() const
 
 
 
+
+/*! \brief The method returns the generating process identifier. */
 
 T::UInt8_opt ProductDefinition::getGeneratingProcessIdentifier() const
 {
@@ -1653,6 +1727,8 @@ T::ParamLevelId ProductDefinition::getGribParameterLevelId() const
 
 
 
+/*! \brief The method computes the forecast start time from parameter settings. */
+
 T::TimeString ProductDefinition::countForecastStartTime(T::TimeString referenceTime,const ParameterSettings& parameter) const
 {
   try
@@ -1731,6 +1807,8 @@ T::TimeString ProductDefinition::countForecastStartTime(T::TimeString referenceT
 
 
 
+
+/*! \brief The method computes the forecast start time from postprocessing settings. */
 
 T::TimeString ProductDefinition::countForecastStartTime(T::TimeString referenceTime,const PostprocSettings& parameter) const
 {
@@ -1811,6 +1889,8 @@ T::TimeString ProductDefinition::countForecastStartTime(T::TimeString referenceT
 
 
 
+/*! \brief The method computes the forecast end time from statistical settings. */
+
 T::TimeString ProductDefinition::countForecastEndTime(const StatisticalSettings& stat) const
 {
   try
@@ -1835,6 +1915,8 @@ T::TimeString ProductDefinition::countForecastEndTime(const StatisticalSettings&
 
 
 
+/*! \brief The method returns the horizontal settings if available. */
+
 HorizontalSettings* ProductDefinition::getHorizontal() const
 {
   // The method is possible implemented in a child class.
@@ -1845,6 +1927,8 @@ HorizontalSettings* ProductDefinition::getHorizontal() const
 
 
 
+/*! \brief The method returns the parameter settings if available. */
+
 ParameterSettings*  ProductDefinition::getParameter() const
 {
   // The method is possible implemented in a child class.
@@ -1853,6 +1937,8 @@ ParameterSettings*  ProductDefinition::getParameter() const
 
 
 
+
+/*! \brief The method returns the statistical settings if available. */
 
 StatisticalSettings* ProductDefinition::getStatistical() const
 {
@@ -1864,6 +1950,8 @@ StatisticalSettings* ProductDefinition::getStatistical() const
 
 
 
+/*! \brief The method returns the EPS settings if available. */
+
 EpsSettings* ProductDefinition::getEps() const
 {
   // The method is possible implemented in a child class.
@@ -1873,6 +1961,8 @@ EpsSettings* ProductDefinition::getEps() const
 
 
 
+
+/*! \brief The method returns the derived settings if available. */
 
 DerivedSettings* ProductDefinition::getDerived() const
 {
@@ -1884,6 +1974,8 @@ DerivedSettings* ProductDefinition::getDerived() const
 
 
 
+/*! \brief The method returns the rectangular cluster settings if available. */
+
 RectangularClusterSettings* ProductDefinition::getRectangularCluster() const
 {
   // The method is possible implemented in a child class.
@@ -1893,6 +1985,8 @@ RectangularClusterSettings* ProductDefinition::getRectangularCluster() const
 
 
 
+
+/*! \brief The method returns the probability settings if available. */
 
 ProbabilitySettings* ProductDefinition::getProbability() const
 {
@@ -1904,6 +1998,8 @@ ProbabilitySettings* ProductDefinition::getProbability() const
 
 
 
+/*! \brief The method returns the percentile settings if available. */
+
 PercentileSettings* ProductDefinition::getPercentile() const
 {
   // The method is possible implemented in a child class.
@@ -1914,6 +2010,8 @@ PercentileSettings* ProductDefinition::getPercentile() const
 
 
 
+/*! \brief The method returns the categorical settings if available. */
+
 CategoricalSettings* ProductDefinition::getCategorical() const
 {
   // The method is possible implemented in a child class.
@@ -1923,6 +2021,8 @@ CategoricalSettings* ProductDefinition::getCategorical() const
 
 
 
+
+/*! \brief The method returns the postprocessing settings if available. */
 
 PostprocSettings* ProductDefinition::getPostproc() const
 {
@@ -1936,7 +2036,7 @@ PostprocSettings* ProductDefinition::getPostproc() const
 
 /*! \brief The method prints the content of the current object into the given stream.
 
-        \param ostream      The output stream.
+        \param stream      The output stream.
         \param level        The print level (used when printing multi-level structures).
         \param optionFlags  The printing options expressed in flag-bits.
 */

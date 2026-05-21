@@ -69,6 +69,8 @@ T::ParamValue GeoTiffFile::getGridValue(uint paramIndex,uint levelIndex,uint tim
 */
 
 
+/*! \brief Reads the GeoTIFF header and iterates all IFDs to populate the message info list. */
+
 void GeoTiffFile::read(MemoryReader& memoryReader,MessageInfoVec& messageInfoList)
 {
   try
@@ -106,6 +108,8 @@ void GeoTiffFile::read(MemoryReader& memoryReader,MessageInfoVec& messageInfoLis
 
 
 
+
+/*! \brief Reads a single GeoTIFF Image File Directory and produces MessageInfo entries for its grids. */
 
 void GeoTiffFile::readIFD(MemoryReader& memoryReader,MessageInfoVec& messageInfoList)
 {
@@ -366,7 +370,7 @@ void GeoTiffFile::readIFD(MemoryReader& memoryReader,MessageInfoVec& messageInfo
 
 /*! \brief The method prints the content of the current object into the given stream.
 
-        \param ostream      The output stream.
+        \param stream      The output stream.
         \param level        The print level (used when printing multi-level structures).
         \param optionFlags  The printing options expressed in flag-bits.
 */

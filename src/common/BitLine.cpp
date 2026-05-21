@@ -7,6 +7,8 @@
 namespace SmartMet
 {
 
+/*! \brief Default constructor for BitLine. */
+
 BitLine::BitLine()
 {
   try
@@ -24,6 +26,8 @@ BitLine::BitLine()
 
 
 
+
+/*! \brief Constructs a BitLine from a raw bit buffer of given size. */
 
 BitLine::BitLine(uchar *bits,uint numOfBits)
 {
@@ -44,6 +48,8 @@ BitLine::BitLine(uchar *bits,uint numOfBits)
 
 
 
+
+/*! \brief Copy constructor for BitLine. */
 
 BitLine::BitLine(BitLine& bitLine)
 {
@@ -69,6 +75,8 @@ BitLine::BitLine(BitLine& bitLine)
 
 
 
+/*! \brief Destructor that releases the change positions array. */
+
 BitLine::~BitLine()
 {
   if (changes)
@@ -78,6 +86,8 @@ BitLine::~BitLine()
 
 
 
+
+/*! \brief Assignment operator that deep-copies the other BitLine. */
 
 void BitLine::operator=(BitLine& bitLine)
 {
@@ -110,6 +120,8 @@ void BitLine::operator=(BitLine& bitLine)
 
 
 
+/*! \brief Returns the number of bits represented by this BitLine. */
+
 uint BitLine::getLength()
 {
   try
@@ -125,6 +137,8 @@ uint BitLine::getLength()
 
 
 
+
+/*! \brief Returns true if every bit in the line is zero. */
 
 bool BitLine::isAllZeros()
 {
@@ -144,6 +158,8 @@ bool BitLine::isAllZeros()
 
 
 
+
+/*! \brief Returns true if every bit in the line is one. */
 
 bool BitLine::isAllOnes()
 {
@@ -166,6 +182,8 @@ bool BitLine::isAllOnes()
 
 
 
+
+/*! \brief Returns the change position at the given index. */
 
 uint BitLine::getChange(uint index)
 {
@@ -196,6 +214,8 @@ uint BitLine::getChange(uint index)
 
 
 
+/*! \brief Returns the total number of bit transitions in the line. */
+
 uint BitLine::getChangeCount()
 {
   try
@@ -211,6 +231,8 @@ uint BitLine::getChangeCount()
 
 
 
+
+/*! \brief Returns the number of bit transitions within the given range. */
 
 uint BitLine::getChangeCount(uint startPos,uint endPos)
 {
@@ -257,6 +279,8 @@ uint BitLine::getChangeCount(uint startPos,uint endPos)
 
 
 
+
+/*! \brief Fills the buffer with bit transition positions within the given range. */
 
 uint BitLine::getChanges(uint startPos,uint endPos,uint* changePositions)
 {
@@ -309,6 +333,8 @@ uint BitLine::getChanges(uint startPos,uint endPos,uint* changePositions)
 
 
 
+/*! \brief Returns the largest gap between consecutive bit transitions. */
+
 uint BitLine::getMaxChange()
 {
   try
@@ -337,6 +363,8 @@ uint BitLine::getMaxChange()
 
 
 
+
+/*! \brief Sets the BitLine value from an explicit list of change positions. */
 
 void BitLine::setValue(uint numOfBits,uint* changePositions,uint numOfChanges,bool release)
 {
@@ -372,6 +400,8 @@ void BitLine::setValue(uint numOfBits,uint* changePositions,uint numOfChanges,bo
 
 
 
+
+/*! \brief Builds the BitLine by scanning a raw bit buffer for transitions. */
 
 void BitLine::setValue(uchar *bits,uint numOfBits)
 {
@@ -419,6 +449,8 @@ void BitLine::setValue(uchar *bits,uint numOfBits)
 
 
 
+/*! \brief Reads the BitLine from a file given by name. */
+
 void BitLine::readFromFile(const char *filename)
 {
   try
@@ -442,6 +474,8 @@ void BitLine::readFromFile(const char *filename)
 
 
 
+
+/*! \brief Reads the BitLine from the given open FILE stream. */
 
 void BitLine::readFromFile(FILE *file)
 {
@@ -492,6 +526,8 @@ void BitLine::readFromFile(FILE *file)
 
 
 
+/*! \brief Writes the BitLine to a file given by name. */
+
 void BitLine::writeToFile(const char *filename)
 {
   try
@@ -519,6 +555,8 @@ void BitLine::writeToFile(const char *filename)
 
 
 
+
+/*! \brief Writes the BitLine to the given open FILE stream. */
 
 void BitLine::writeToFile(FILE *file)
 {

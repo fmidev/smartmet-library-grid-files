@@ -122,6 +122,7 @@ class ProductSection : public GRID::MessageSection
 
   public:
 
+    /*! \brief Product Definition Template numbers (Code Table 4.0). */
     class Template
     {
       public:
@@ -181,7 +182,7 @@ class ProductSection : public GRID::MessageSection
 };
 
 
-typedef std::shared_ptr<ProductSection> ProductSect_sptr;
+typedef std::shared_ptr<ProductSection> ProductSect_sptr;  //!< Shared ownership pointer to a ProductSection.
 
 
 }  // namespace GRIB2

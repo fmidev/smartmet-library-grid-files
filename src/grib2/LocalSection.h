@@ -89,11 +89,11 @@ class LocalSection : public GRID::MessageSection
     /*! \brief The section number. */
     T::UInt8_opt    mNumberOfSection;
 
-    bool            mReleaseData;
+    bool            mReleaseData;   //!< If true, free the local-use data buffer on destruction.
 };
 
 
-typedef std::shared_ptr<LocalSection> LocalSect_sptr;
+typedef std::shared_ptr<LocalSection> LocalSect_sptr;  //!< Shared ownership pointer to a LocalSection.
 
 
 }  // namespace GRIB2

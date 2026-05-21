@@ -16,6 +16,8 @@ RequestCounter requestCounter;
 
 
 
+/*! \brief Default constructor for RequestCounter. */
+
 RequestCounter::RequestCounter()
 {
   FUNCTION_TRACE
@@ -34,6 +36,8 @@ RequestCounter::RequestCounter()
 
 
 
+/*! \brief Destructor for RequestCounter. */
+
 RequestCounter::~RequestCounter()
 {
 }
@@ -41,6 +45,8 @@ RequestCounter::~RequestCounter()
 
 
 
+
+/*! \brief Clears all request counters and resets the total. */
 
 void RequestCounter::clearCounters()
 {
@@ -60,6 +66,8 @@ void RequestCounter::clearCounters()
 
 
 
+
+/*! \brief Scales all request counters by the given multiplier. */
 
 void RequestCounter::multiplyCounters(double multiplier)
 {
@@ -92,6 +100,8 @@ void RequestCounter::multiplyCounters(double multiplier)
 
 
 
+/*! \brief Returns the sorted list of top request counters. */
+
 TopList RequestCounter::getTopRequestCounters()
 {
   FUNCTION_TRACE
@@ -108,6 +118,8 @@ TopList RequestCounter::getTopRequestCounters()
 
 
 
+
+/*! \brief Returns the total number of counted requests. */
 
 UInt64 RequestCounter::getTotalRequests()
 {
@@ -126,6 +138,8 @@ UInt64 RequestCounter::getTotalRequests()
 
 
 
+/*! \brief Resets the total request counter to zero. */
+
 void RequestCounter::resetTotalRequests()
 {
   FUNCTION_TRACE
@@ -142,6 +156,8 @@ void RequestCounter::resetTotalRequests()
 
 
 
+
+/*! \brief Increments the request counter associated with the given key. */
 
 void RequestCounter::incCounter(UInt64 key)
 {
@@ -174,6 +190,8 @@ void RequestCounter::incCounter(UInt64 key)
 
 
 
+
+/*! \brief Increments the hit counter for the given geometry index. */
 
 void RequestCounter::incGeometryHitCounter(uint geometryId,uint index)
 {
@@ -214,6 +232,8 @@ void RequestCounter::incGeometryHitCounter(uint geometryId,uint index)
 
 
 
+/*! \brief Sets the hit counter for the given geometry index. */
+
 void RequestCounter::setGeometryHitCounter(uint geometryId,uint index,uint count)
 {
   FUNCTION_TRACE
@@ -252,6 +272,8 @@ void RequestCounter::setGeometryHitCounter(uint geometryId,uint index,uint count
 
 
 
+/*! \brief Returns the hit counter map for the given geometry. */
+
 HitCounter RequestCounter::getGeometryHitCounters(uint geometryId)
 {
   FUNCTION_TRACE
@@ -279,6 +301,8 @@ HitCounter RequestCounter::getGeometryHitCounters(uint geometryId)
 
 
 
+/*! \brief Returns the current request count for the given key. */
+
 uint RequestCounter::getCounter(UInt64 key)
 {
   FUNCTION_TRACE
@@ -303,6 +327,8 @@ uint RequestCounter::getCounter(UInt64 key)
 
 
 
+/*! \brief Enables or disables request counting. */
+
 void RequestCounter::setCountingEnabled(bool _enabled)
 {
   FUNCTION_TRACE
@@ -320,6 +346,8 @@ void RequestCounter::setCountingEnabled(bool _enabled)
 
 
 
+/*! \brief Returns whether request counting is currently enabled. */
+
 bool RequestCounter::isCountingEnabled()
 {
   FUNCTION_TRACE
@@ -336,6 +364,8 @@ bool RequestCounter::isCountingEnabled()
 
 
 
+
+/*! \brief Rebuilds the top requests list from the current counters. */
 
 void RequestCounter::updateTopCounters()
 {
@@ -365,6 +395,8 @@ void RequestCounter::updateTopCounters()
 
 
 
+
+/*! \brief Writes the geometry hit counters to a CSV file. */
 
 void RequestCounter::saveGeometryHitCounters(const char *filename)
 {
@@ -399,6 +431,8 @@ void RequestCounter::saveGeometryHitCounters(const char *filename)
 
 
 
+
+/*! \brief Loads the geometry hit counters from a CSV file. */
 
 void RequestCounter::loadGeometryHitCounters(const char *filename)
 {

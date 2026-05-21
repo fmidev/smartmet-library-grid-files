@@ -19,6 +19,8 @@ namespace SmartMet
 {
 
 
+/*! \brief Default constructor that initializes the underlying curl handle. */
+
 HttpsClient::HttpsClient()
 {
   FUNCTION_TRACE
@@ -37,6 +39,8 @@ HttpsClient::HttpsClient()
 
 
 
+/*! \brief Destructor that releases the underlying curl handle. */
+
 HttpsClient::~HttpsClient()
 {
   FUNCTION_TRACE
@@ -47,6 +51,8 @@ HttpsClient::~HttpsClient()
 
 
 
+
+/*! \brief Fetches HTTPS response headers for the given URL via curl. */
 
 int HttpsClient::getHeaderData(const char *server,const char *filename,int dataSize,char *dataPtr)
 {
@@ -110,6 +116,8 @@ int HttpsClient::getHeaderData(const char *server,const char *filename,int dataS
 
 
 
+
+/*! \brief Fetches a byte range from a remote HTTPS URL via curl. */
 
 int HttpsClient::getData(const char *server,const char *filename,std::size_t filePosition,int dataSize,char *dataPtr)
 {

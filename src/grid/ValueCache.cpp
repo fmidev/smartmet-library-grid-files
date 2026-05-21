@@ -86,6 +86,8 @@ void ValueCache::init(uint maxLen,UInt64 maxSize)
 
 
 
+/*! \brief Reinitializes the cache with the given size limits and file-cache mode. */
+
 void ValueCache::init(uint maxLen,UInt64 maxSize,bool fileCacheEnabled)
 {
   try
@@ -112,6 +114,8 @@ void ValueCache::init(uint maxLen,UInt64 maxSize,bool fileCacheEnabled)
 
 
 
+
+/*! \brief Sets the on-disk cache directory and removes any stale cache files from it. */
 
 void ValueCache::setCacheDir(const char *cacheDir)
 {
@@ -158,6 +162,8 @@ void ValueCache::setCacheDir(const char *cacheDir)
 
 
 
+/*! \brief Populates the given statistics map with this cache's metrics. */
+
 void ValueCache::getCacheStats(Fmi::Cache::CacheStatistics& statistics) const
 {
   try
@@ -173,6 +179,8 @@ void ValueCache::getCacheStats(Fmi::Cache::CacheStatistics& statistics) const
 
 
 
+
+/*! \brief Adds the current cache configuration and usage attributes to the given parent node. */
 
 void ValueCache::getStateAttributes(std::shared_ptr<T::AttributeNode> parent)
 {
@@ -197,6 +205,8 @@ void ValueCache::getStateAttributes(std::shared_ptr<T::AttributeNode> parent)
 
 
 
+
+/*! \brief Returns an available cache slot key, evicting the least-recently-used entry if needed. */
 
 uint ValueCache::getEmpty()
 {
@@ -242,6 +252,8 @@ uint ValueCache::getEmpty()
 
 
 
+
+/*! \brief Evicts the cache entry with the lowest access counter. */
 
 void ValueCache::deleteOldest()
 {
@@ -316,6 +328,8 @@ void ValueCache::clear()
 
 
 
+/*! \brief Returns the current size of all cached entries in bytes. */
+
 UInt64 ValueCache::getSizeInBytes()
 {
   try
@@ -343,6 +357,8 @@ UInt64 ValueCache::getSizeInBytes()
 
 
 
+
+/*! \brief Evicts entries until the cache size is within the configured limit. */
 
 void ValueCache::checkLimits()
 {
@@ -468,6 +484,8 @@ bool ValueCache::getValues(uint key,T::ParamValue_vec& values)
 
 
 
+
+/*! \brief Deletes the cached value vector identified by the given key. */
 
 void ValueCache::deleteValues(uint key)
 {

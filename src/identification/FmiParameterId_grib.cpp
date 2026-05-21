@@ -9,6 +9,8 @@ namespace Identification
 {
 
 
+/*! \brief The constructor of the class. */
+
 FmiParameterId_grib::FmiParameterId_grib()
 {
   try
@@ -23,6 +25,8 @@ FmiParameterId_grib::FmiParameterId_grib()
 
 
 
+
+/*! \brief The destructor of the class. */
 
 FmiParameterId_grib::~FmiParameterId_grib()
 {
@@ -39,6 +43,8 @@ FmiParameterId_grib::~FmiParameterId_grib()
 
 
 
+
+/*! \brief Prints the content of the object into the given stream. */
 
 void FmiParameterId_grib::print(std::ostream& stream,uint level,uint optionFlags) const
 {

@@ -10,7 +10,15 @@ namespace SmartMet
 namespace GRIB2
 {
 
-// Base class for data definitions
+// ====================================================================================
+/*! \brief Abstract base class for GRIB 2 data-packing strategy tags.
+ *
+ *  Concrete subclasses in the implementation/ directory (e.g. GridDataRepresentation,
+ *  JpegGridDataRepresentation, PngGridDataRepresentation, etc.) supply a
+ *  getTemplateNumber() matching a Data Representation Template 5.x number.
+ *  The RepresentationSection owns one DataDefinition and uses it only to query
+ *  the template number for serialisation. */
+// ====================================================================================
 
 class DataDefinition
 {

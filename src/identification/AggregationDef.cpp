@@ -9,6 +9,8 @@ namespace Identification
 {
 
 
+/*! \brief The constructor of the class. */
+
 AggregationDef::AggregationDef()
 {
   try
@@ -23,6 +25,8 @@ AggregationDef::AggregationDef()
 
 
 
+
+/*! \brief The destructor of the class. */
 
 AggregationDef::~AggregationDef()
 {
@@ -39,6 +43,8 @@ AggregationDef::~AggregationDef()
 
 
 
+
+/*! \brief Prints the content of the object into the given stream. */
 
 void AggregationDef::print(std::ostream& stream,uint level,uint optionFlags) const
 {

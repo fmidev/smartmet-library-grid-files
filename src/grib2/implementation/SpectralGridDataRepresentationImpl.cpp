@@ -96,6 +96,8 @@ void SpectralGridDataRepresentationImpl::read(MemoryReader& memoryReader)
 
 
 
+/*! \brief Decodes the spectrally-packed grid values into a vector of parameter values. */
+
 void SpectralGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec& decodedValues) const
 {
   try

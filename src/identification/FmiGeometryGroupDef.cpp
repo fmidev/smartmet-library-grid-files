@@ -10,6 +10,8 @@ namespace Identification
 
 
 
+/*! \brief The constructor of the class. */
+
 FmiGeometryGroupDef::FmiGeometryGroupDef()
 {
   try
@@ -26,6 +28,8 @@ FmiGeometryGroupDef::FmiGeometryGroupDef()
 
 
 
+/*! \brief The destructor of the class. */
+
 FmiGeometryGroupDef::~FmiGeometryGroupDef()
 {
   try
@@ -41,6 +45,8 @@ FmiGeometryGroupDef::~FmiGeometryGroupDef()
 
 
 
+
+/*! \brief Prints the content of the object into the given stream. */
 
 void FmiGeometryGroupDef::print(std::ostream& stream,uint level,uint optionFlags) const
 {

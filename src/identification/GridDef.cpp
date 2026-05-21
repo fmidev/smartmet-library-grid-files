@@ -80,17 +80,6 @@ namespace
 
 GridDef gridDef;
 
-/*
-struct CoordinateRec
-{
-  public:
-    T::Coordinate_svec latlonCoordinates;
-    T::Coordinate_svec originalCoordinates;
-};
-
-Fmi::Cache::Cache<std::size_t,CoordinateRec> coordinateVecCache(400);
-*/
-
 
 /*! \brief The constructor of the class. */
 
@@ -133,17 +122,6 @@ GridDef::~GridDef()
   FUNCTION_TRACE
   try
   {
-    /*
-    for (auto it=mGridDefinitions1.begin(); it!=mGridDefinitions1.end(); ++it)
-    {
-      delete (it->second);
-    }
-
-    for (auto it=mGridDefinitions2.begin(); it!=mGridDefinitions2.end(); ++it)
-    {
-      delete (it->second);
-    }
-    */
   }
   catch (...)
   {
@@ -154,6 +132,8 @@ GridDef::~GridDef()
 
 
 
+
+/*! \brief Initializes the registry from the given configuration file. */
 
 void GridDef::init(const char* configFile)
 {
@@ -234,6 +214,8 @@ void GridDef::init(const char* configFile)
 
 
 
+/*! \brief Checks whether the configuration files have been modified and reloads them if needed. */
+
 void GridDef::updateCheck()
 {
   FUNCTION_TRACE
@@ -267,6 +249,8 @@ void GridDef::updateCheck()
 
 
 
+/*! \brief Returns the latest modification time across the given files. */
+
 time_t GridDef::getModificationTime(string_vec& files)
 {
   FUNCTION_TRACE
@@ -291,6 +275,8 @@ time_t GridDef::getModificationTime(string_vec& files)
 
 
 
+
+/*! \brief Reloads GRIB parameter definitions when their files have been modified. */
 
 void GridDef::updateGrib()
 {
@@ -318,6 +304,8 @@ void GridDef::updateGrib()
 
 
 
+/*! \brief Reloads GRIB1 parameter definitions when their files have been modified. */
+
 void GridDef::updateGrib1()
 {
   FUNCTION_TRACE
@@ -344,6 +332,8 @@ void GridDef::updateGrib1()
 
 
 
+/*! \brief Reloads GRIB2 parameter definitions when their files have been modified. */
+
 void GridDef::updateGrib2()
 {
   FUNCTION_TRACE
@@ -369,6 +359,8 @@ void GridDef::updateGrib2()
 
 
 
+
+/*! \brief Reloads FMI definition files (parameters, geometries, levels, mappings) when modified. */
 
 void GridDef::updateFmi()
 {
@@ -515,13 +507,6 @@ void GridDef::updateFmi()
     tt = getModificationTime(mFmi_geometryDef_files);
     if (tt != mFmi_geometryDef_modificationTime)
     {
-      /*
-      for (auto it = mGridDefinitions1.begin(); it != mGridDefinitions1.end(); ++it)
-        delete (it->second);
-
-      for (auto it = mGridDefinitions2.begin(); it != mGridDefinitions2.end(); ++it)
-        delete (it->second);
-      */
       mGridDefinitions1.clear();
       mGridDefinitions2.clear();
 
@@ -542,6 +527,8 @@ void GridDef::updateFmi()
 
 
 
+
+/*! \brief Reloads newbase parameter definitions when their files have been modified. */
 
 void GridDef::updateNewbase()
 {
@@ -571,6 +558,8 @@ void GridDef::updateNewbase()
 
 
 
+/*! \brief Reloads NetCDF parameter definitions when their files have been modified. */
+
 void GridDef::updateNetCdf()
 {
   FUNCTION_TRACE
@@ -598,6 +587,8 @@ void GridDef::updateNetCdf()
 
 
 
+/*! \brief Returns the number of loaded GRIB1 parameter definitions. */
+
 uint GridDef::getGrib1ParameterDefCount()
 {
   FUNCTION_TRACE
@@ -617,6 +608,8 @@ uint GridDef::getGrib1ParameterDefCount()
 
 
 
+
+/*! \brief Fetches a GRIB1 parameter definition by GRIB parameter id (copy out). */
 
 bool GridDef::getGrib1ParameterDefById(T::GribParamId gribParamId,Grib1ParameterDef& paramDef)
 {
@@ -643,6 +636,8 @@ bool GridDef::getGrib1ParameterDefById(T::GribParamId gribParamId,Grib1Parameter
 
 
 
+/*! \brief Fetches a GRIB1 parameter definition by FMI parameter id (copy out). */
+
 bool GridDef::getGrib1ParameterDefByFmiId(T::FmiParamId fmiParamId,Grib1ParameterDef& paramDef)
 {
   FUNCTION_TRACE
@@ -668,6 +663,8 @@ bool GridDef::getGrib1ParameterDefByFmiId(T::FmiParamId fmiParamId,Grib1Paramete
 
 
 
+/*! \brief Fetches a GRIB1 parameter definition by index (copy out). */
+
 bool GridDef::getGrib1ParameterDefByIndex(uint index,Grib1ParameterDef& paramDef)
 {
   FUNCTION_TRACE
@@ -692,6 +689,8 @@ bool GridDef::getGrib1ParameterDefByIndex(uint index,Grib1ParameterDef& paramDef
 
 
 
+/*! \brief Returns a pointer to the GRIB1 parameter definition for the given GRIB parameter id. */
+
 Grib1ParamDef_cptr GridDef::getGrib1ParameterDefById(T::GribParamId gribParamId)
 {
   FUNCTION_TRACE
@@ -714,6 +713,8 @@ Grib1ParamDef_cptr GridDef::getGrib1ParameterDefById(T::GribParamId gribParamId)
 
 
 
+/*! \brief Returns a pointer to the GRIB1 parameter definition for the given FMI parameter id. */
+
 Grib1ParamDef_cptr GridDef::getGrib1ParameterDefByFmiId(T::FmiParamId fmiParamId)
 {
   FUNCTION_TRACE
@@ -735,6 +736,8 @@ Grib1ParamDef_cptr GridDef::getGrib1ParameterDefByFmiId(T::FmiParamId fmiParamId
 
 
 
+/*! \brief Returns the number of loaded GRIB2 parameter definitions. */
+
 uint GridDef::getGrib2ParameterDefCount()
 {
   FUNCTION_TRACE
@@ -754,6 +757,8 @@ uint GridDef::getGrib2ParameterDefCount()
 
 
 
+
+/*! \brief Fetches a GRIB2 parameter definition by GRIB parameter id (copy out). */
 
 bool GridDef::getGrib2ParameterDefById(T::GribParamId gribParamId,Grib2ParameterDef& paramDef)
 {
@@ -780,6 +785,8 @@ bool GridDef::getGrib2ParameterDefById(T::GribParamId gribParamId,Grib2Parameter
 
 
 
+/*! \brief Fetches a GRIB2 parameter definition by FMI parameter id (copy out). */
+
 bool GridDef::getGrib2ParameterDefByFmiId(T::FmiParamId fmiParamId,Grib2ParameterDef& paramDef)
 {
   FUNCTION_TRACE
@@ -804,6 +811,8 @@ bool GridDef::getGrib2ParameterDefByFmiId(T::FmiParamId fmiParamId,Grib2Paramete
 
 
 
+
+/*! \brief Fetches the GRIB parameter mapping entry for the given FMI parameter id (copy out). */
 
 bool GridDef::getGribParameterMappingByFmiId(T::FmiParamId fmiParamId,FmiParameterId_grib& def)
 {
@@ -830,6 +839,8 @@ bool GridDef::getGribParameterMappingByFmiId(T::FmiParamId fmiParamId,FmiParamet
 
 
 
+/*! \brief Fetches a GRIB2 parameter definition by index (copy out). */
+
 bool GridDef::getGrib2ParameterDefByIndex(uint index,Grib2ParameterDef& paramDef)
 {
   FUNCTION_TRACE
@@ -854,6 +865,8 @@ bool GridDef::getGrib2ParameterDefByIndex(uint index,Grib2ParameterDef& paramDef
 
 
 
+/*! \brief Returns a pointer to the GRIB2 parameter definition for the given GRIB parameter id. */
+
 Grib2ParamDef_cptr GridDef::getGrib2ParameterDefById(T::GribParamId gribParamId)
 {
   FUNCTION_TRACE
@@ -876,6 +889,8 @@ Grib2ParamDef_cptr GridDef::getGrib2ParameterDefById(T::GribParamId gribParamId)
 
 
 
+/*! \brief Returns a pointer to the GRIB2 parameter definition for the given FMI parameter id. */
+
 Grib2ParamDef_cptr GridDef::getGrib2ParameterDefByFmiId(T::FmiParamId fmiParamId)
 {
   FUNCTION_TRACE
@@ -896,6 +911,8 @@ Grib2ParamDef_cptr GridDef::getGrib2ParameterDefByFmiId(T::FmiParamId fmiParamId
 
 
 
+
+/*! \brief Loads GRIB parameter definitions from the given CSV file. */
 
 void GridDef::loadGribParameterDefinitions(const char *filename)
 {
@@ -972,6 +989,8 @@ void GridDef::loadGribParameterDefinitions(const char *filename)
 
 
 
+/*! \brief Fetches a generic GRIB parameter definition by GRIB parameter id (copy out). */
+
 bool GridDef::getGribParameterDefById(T::GribParamId gribParamId,GribParameterDef&  paramDef)
 {
   FUNCTION_TRACE
@@ -996,6 +1015,8 @@ bool GridDef::getGribParameterDefById(T::GribParamId gribParamId,GribParameterDe
 
 
 
+
+/*! \brief Fetches a generic GRIB parameter definition by parameter name (copy out). */
 
 bool GridDef::getGribParameterDefByName(const std::string& gribParamName,GribParameterDef&  paramDef)
 {
@@ -1022,6 +1043,8 @@ bool GridDef::getGribParameterDefByName(const std::string& gribParamName,GribPar
 
 
 
+/*! \brief Returns a pointer to the generic GRIB parameter definition for the given GRIB parameter id. */
+
 GribParamDef_cptr GridDef::getGribParameterDefById(T::GribParamId gribParamId)
 {
   FUNCTION_TRACE
@@ -1044,6 +1067,8 @@ GribParamDef_cptr GridDef::getGribParameterDefById(T::GribParamId gribParamId)
 
 
 
+/*! \brief Returns a pointer to the generic GRIB parameter definition for the given parameter name. */
+
 GribParamDef_cptr GridDef::getGribParameterDefByName(const std::string& gribParamName)
 {
   FUNCTION_TRACE
@@ -1065,6 +1090,8 @@ GribParamDef_cptr GridDef::getGribParameterDefByName(const std::string& gribPara
 
 
 
+
+/*! \brief Fetches an FMI geometry group definition by producer name and group type (copy out). */
 
 bool GridDef::getFmiGeometryGroupDef(const char *producerName,uint groupType,FmiGeometryGroupDef& geometryGroupDef)
 {
@@ -1091,6 +1118,8 @@ bool GridDef::getFmiGeometryGroupDef(const char *producerName,uint groupType,Fmi
 
 
 
+/*! \brief Fetches an FMI geometry group definition by geometry group id (copy out). */
+
 bool GridDef::getFmiGeometryGroupDef(uint geometryGroupId,FmiGeometryGroupDef& geometryGroupDef)
 {
   FUNCTION_TRACE
@@ -1115,6 +1144,8 @@ bool GridDef::getFmiGeometryGroupDef(uint geometryGroupId,FmiGeometryGroupDef& g
 
 
 
+
+/*! \brief Returns the FMI geometry groups of the given type that contain the geometry id. */
 
 void GridDef::getFmiGeometryGroupsByGeometryId(int geometryId,uint groupType,std::vector<uint>& groupIdentifiers)
 {
@@ -1145,6 +1176,8 @@ void GridDef::getFmiGeometryGroupsByGeometryId(int geometryId,uint groupType,std
 
 
 
+/*! \brief Returns all FMI geometry groups that contain the given geometry id (vector). */
+
 void GridDef::getFmiGeometryGroupsByGeometryId(int geometryId,std::vector<uint>& groupIdentifiers)
 {
   FUNCTION_TRACE
@@ -1171,6 +1204,8 @@ void GridDef::getFmiGeometryGroupsByGeometryId(int geometryId,std::vector<uint>&
 
 
 
+
+/*! \brief Returns all FMI geometry groups that contain the given geometry id (set). */
 
 void GridDef::getFmiGeometryGroupsByGeometryId(int geometryId,std::set<uint>& groupIdentifiers)
 {
@@ -1199,6 +1234,8 @@ void GridDef::getFmiGeometryGroupsByGeometryId(int geometryId,std::set<uint>& gr
 
 
 
+/*! \brief Fetches an FMI level definition by level id (copy out). */
+
 bool GridDef::getFmiLevelDef(uint levelId,LevelDef& levelDef)
 {
   FUNCTION_TRACE
@@ -1223,6 +1260,8 @@ bool GridDef::getFmiLevelDef(uint levelId,LevelDef& levelDef)
 
 
 
+
+/*! \brief Fetches an FMI aggregation definition by aggregation id (copy out). */
 
 bool GridDef::getFmiAggregationDef(int aggregationId,AggregationDef& aggregationDef)
 {
@@ -1249,6 +1288,8 @@ bool GridDef::getFmiAggregationDef(int aggregationId,AggregationDef& aggregation
 
 
 
+/*! \brief Fetches an FMI processing type definition by id (copy out). */
+
 bool GridDef::getFmiProcessingTypeDef(int processingTypeId,ProcessingTypeDef& processingTypeDef)
 {
   FUNCTION_TRACE
@@ -1273,6 +1314,8 @@ bool GridDef::getFmiProcessingTypeDef(int processingTypeId,ProcessingTypeDef& pr
 
 
 
+
+/*! \brief Fetches an FMI forecast type definition by id (copy out). */
 
 bool GridDef::getFmiForecastTypeDef(int forecastTypeId,ForecastTypeDef& forecastTypeDef)
 {
@@ -1299,6 +1342,8 @@ bool GridDef::getFmiForecastTypeDef(int forecastTypeId,ForecastTypeDef& forecast
 
 
 
+/*! \brief Returns a pointer to the FMI geometry group definition for the given producer and group type. */
+
 FmiGeomGroupDef_cptr GridDef::getFmiGeometryGroupDef(const char *producerName,uint groupType)
 {
   FUNCTION_TRACE
@@ -1320,6 +1365,8 @@ FmiGeomGroupDef_cptr GridDef::getFmiGeometryGroupDef(const char *producerName,ui
 
 
 
+
+/*! \brief Returns a pointer to the FMI geometry group definition for the given geometry group id. */
 
 FmiGeomGroupDef_cptr GridDef::getFmiGeometryGroupDef(uint geometryGroupId)
 {
@@ -1343,6 +1390,8 @@ FmiGeomGroupDef_cptr GridDef::getFmiGeometryGroupDef(uint geometryGroupId)
 
 
 
+/*! \brief Returns a pointer to the FMI level definition for the given level id. */
+
 LevelDef_cptr GridDef::getFmiLevelDef(uint levelId)
 {
   FUNCTION_TRACE
@@ -1364,6 +1413,8 @@ LevelDef_cptr GridDef::getFmiLevelDef(uint levelId)
 
 
 
+
+/*! \brief Returns a pointer to the FMI forecast type definition for the given forecast type id. */
 
 ForecastTypeDef_cptr GridDef::getFmiForecastTypeDef(int forecastTypeId)
 {
@@ -1387,6 +1438,8 @@ ForecastTypeDef_cptr GridDef::getFmiForecastTypeDef(int forecastTypeId)
 
 
 
+/*! \brief Returns a pointer to the FMI processing type definition for the given processing type id. */
+
 ProcessingTypeDef_cptr GridDef::getFmiProcessingTypeDef(int processingTypeId)
 {
   FUNCTION_TRACE
@@ -1408,6 +1461,8 @@ ProcessingTypeDef_cptr GridDef::getFmiProcessingTypeDef(int processingTypeId)
 
 
 
+
+/*! \brief Loads GRIB1 parameter definitions from the given CSV file. */
 
 void GridDef::loadGrib1ParameterDefs(const char *filename)
 {
@@ -1488,6 +1543,8 @@ void GridDef::loadGrib1ParameterDefs(const char *filename)
 
 
 
+
+/*! \brief Loads GRIB2 parameter definitions from the given CSV file. */
 
 void GridDef::loadGrib2ParameterDefs(const char *filename)
 {
@@ -1570,6 +1627,8 @@ void GridDef::loadGrib2ParameterDefs(const char *filename)
 
 
 
+/*! \brief Loads FMI level definitions from the given CSV file. */
+
 void GridDef::loadFmiLevelDefinitions(const char *filename)
 {
   FUNCTION_TRACE
@@ -1647,6 +1706,8 @@ void GridDef::loadFmiLevelDefinitions(const char *filename)
 
 
 
+/*! \brief Loads FMI geometry group definitions from the given CSV file. */
+
 void GridDef::loadFmiGeometryGroupDefinitions(const char *filename)
 {
   FUNCTION_TRACE
@@ -1721,6 +1782,8 @@ void GridDef::loadFmiGeometryGroupDefinitions(const char *filename)
 
 
 
+/*! \brief Loads FMI forecast type definitions from the given CSV file. */
+
 void GridDef::loadFmiForecastTypeDefinitions(const char *filename)
 {
   FUNCTION_TRACE
@@ -1791,6 +1854,8 @@ void GridDef::loadFmiForecastTypeDefinitions(const char *filename)
 
 
 
+
+/*! \brief Loads FMI processing type definitions from the given CSV file. */
 
 void GridDef::loadFmiProcessingTypeDefinitions(const char *filename)
 {
@@ -1863,6 +1928,8 @@ void GridDef::loadFmiProcessingTypeDefinitions(const char *filename)
 
 
 
+/*! \brief Loads FMI aggregation definitions from the given CSV file. */
+
 void GridDef::loadFmiAggregationDefinitions(const char *filename)
 {
   FUNCTION_TRACE
@@ -1933,6 +2000,8 @@ void GridDef::loadFmiAggregationDefinitions(const char *filename)
 
 
 
+
+/*! \brief Loads the FMI parameter mappings to GRIB parameters from the given CSV file. */
 
 void GridDef::loadFmiParameterId_grib(const char *filename)
 {
@@ -2020,6 +2089,8 @@ void GridDef::loadFmiParameterId_grib(const char *filename)
 
 
 
+
+/*! \brief Loads the FMI parameter mappings to newbase parameters from the given CSV file. */
 
 void GridDef::loadFmiParameterId_newbase(const char *filename)
 {
@@ -2122,6 +2193,8 @@ void GridDef::loadFmiParameterId_newbase(const char *filename)
 
 
 
+/*! \brief Loads the FMI parameter mappings to NetCDF parameters from the given CSV file. */
+
 void GridDef::loadFmiParameterId_netCdf(const char *filename)
 {
   FUNCTION_TRACE
@@ -2211,6 +2284,8 @@ void GridDef::loadFmiParameterId_netCdf(const char *filename)
 
 
 
+/*! \brief Loads FMI parameter definitions from the given CSV file. */
+
 void GridDef::loadFmiParameterDefinitions(const char *filename)
 {
   FUNCTION_TRACE
@@ -2299,6 +2374,8 @@ void GridDef::loadFmiParameterDefinitions(const char *filename)
 
 
 
+/*! \brief Loads the FMI level mappings to GRIB1 levels from the given CSV file. */
+
 void GridDef::loadFmiLevelId_grib1(const char *filename)
 {
   FUNCTION_TRACE
@@ -2379,6 +2456,8 @@ void GridDef::loadFmiLevelId_grib1(const char *filename)
 
 
 
+
+/*! \brief Loads the FMI level mappings to GRIB2 levels from the given CSV file. */
 
 void GridDef::loadFmiLevelId_grib2(const char *filename)
 {
@@ -2461,6 +2540,8 @@ void GridDef::loadFmiLevelId_grib2(const char *filename)
 
 
 
+/*! \brief Loads the FMI level mappings to newbase levels from the given CSV file. */
+
 void GridDef::loadFmiLevelId_newbase(const char *filename)
 {
   FUNCTION_TRACE
@@ -2531,6 +2612,8 @@ void GridDef::loadFmiLevelId_newbase(const char *filename)
 
 
 
+/*! \brief Returns the FMI level id corresponding to the given newbase level id. */
+
 uint GridDef::getFmiLevelIdByNewbaseLevelId(uint newbaseLevelId)
 {
   FUNCTION_TRACE
@@ -2551,6 +2634,8 @@ uint GridDef::getFmiLevelIdByNewbaseLevelId(uint newbaseLevelId)
 
 
 
+
+/*! \brief Loads newbase parameter definitions from the given CSV file. */
 
 void GridDef::loadNewbaseParameterDefinitions(const char *filename)
 {
@@ -2625,6 +2710,8 @@ void GridDef::loadNewbaseParameterDefinitions(const char *filename)
 
 
 
+/*! \brief Loads NetCDF parameter definitions from the given CSV file. */
+
 void GridDef::loadNetCdfParameterDefinitions(const char *filename)
 {
   FUNCTION_TRACE
@@ -2696,6 +2783,8 @@ void GridDef::loadNetCdfParameterDefinitions(const char *filename)
 
 
 
+/*! \brief Returns the latlon corner coordinates of the given grid geometry. */
+
 bool GridDef::getGridLatLonAreaByGeometryId(T::GeometryId geometryId,T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight)
 {
   FUNCTION_TRACE
@@ -2724,6 +2813,8 @@ bool GridDef::getGridLatLonAreaByGeometryId(T::GeometryId geometryId,T::Coordina
 
 
 
+
+/*! \brief Returns the average grid cell width and height for the given geometry. */
 
 bool GridDef::getGridCellAverageSizeByGeometryId(T::GeometryId geometryId,double& width,double& height)
 {
@@ -2758,6 +2849,8 @@ bool GridDef::getGridCellAverageSizeByGeometryId(T::GeometryId geometryId,double
 
 
 
+/*! \brief Returns the grid coordinates in the original projection for the given geometry. */
+
 T::Coordinate_svec GridDef::getGridOriginalCoordinatesByGeometryId(T::GeometryId  geometryId)
 {
   FUNCTION_TRACE
@@ -2783,6 +2876,8 @@ T::Coordinate_svec GridDef::getGridOriginalCoordinatesByGeometryId(T::GeometryId
 
 
 
+
+/*! \brief Returns the latlon coordinates of all grid points for the given geometry. */
 
 T::Coordinate_svec GridDef::getGridLatLonCoordinatesByGeometryId(T::GeometryId  geometryId)
 {
@@ -2815,13 +2910,13 @@ T::Coordinate_svec GridDef::getGridLatLonCoordinatesByGeometryId(T::GeometryId  
 
 
 
+/*! \brief Resolves grid coordinates in the original projection from the given geometry attributes. */
+
 void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeList,T::Coordinate_svec& latLonCoordinates,T::CoordinateType coordinateType,T::Coordinate_svec& coordinates,uint& width,uint& height)
 {
   FUNCTION_TRACE
   try
   {
-    //printf("getGridOriginalCoordinatesByGeometry\n");
-    //attributeList.print(std::cout,0,0);
     const char *crsStr = attributeList.getAttributeValue("grid.crs");
     const char *proj4Str = attributeList.getAttributeValue("grid.proj4");
     const char *originalCrsStr = attributeList.getAttributeValue("grid.original.crs");
@@ -3117,19 +3212,6 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
           attributeList.setAttribute("grid.cell.height",Fmi::to_string(fabs(dy/1000)));
         }
 
-        /*
-        std::size_t hash = attributeList.getHash();
-        auto it = coordinateVecCache.find(hash);
-        if (it)
-        {
-          latLonCoordinates = it->latlonCoordinates;
-          coordinates = it->originalCoordinates;
-
-          if (!coordinates &&  latLonCoordinates  &&  targetIsLatlon)
-            coordinates = latLonCoordinates;
-        }
-        */
-
         if (!latLonCoordinates || latLonCoordinates->size() == 0)
         {
           uint sz = width*height;
@@ -3173,14 +3255,6 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
           {
             latLonCoordinates->emplace_back(getLongitude(lon[t]),lat[t]);
           }
-
-          /*
-          CoordinateRec rec;
-          rec.latlonCoordinates = latLonCoordinates;
-          rec.originalCoordinates = coordinates;
-          coordinateVecCache.insert(hash,rec);
-          printf("COORDCACHE %ld\n",coordinateVecCache.size());
-          */
         }
       }
     }
@@ -3195,13 +3269,13 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
 
 
 
+/*! \brief Resolves grid latlon coordinates from the given geometry attributes. */
+
 void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList,T::Coordinate_svec& latLonCoordinates,uint& width,uint& height)
 {
   FUNCTION_TRACE
   try
   {
-    // printf("getGridLatLonCoordinatesByGeometry\n");
-    // attributeList.print(std::cout,0,0);
     const char *crsStr = attributeList.getAttributeValue("grid.crs");
     const char *proj4Str = attributeList.getAttributeValue("grid.proj4Str");
     const char *originalCrsStr = attributeList.getAttributeValue("grid.original.crs");
@@ -3504,13 +3578,6 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
         }
 
 
-        /*
-        std::size_t hash = attributeList.getHash();
-        auto it = coordinateVecCache.find(hash);
-        if (it)
-          latLonCoordinates = it->latlonCoordinates;
-         */
-
         if (!latLonCoordinates || latLonCoordinates->size() == 0)
         {
           uint sz = width*height;
@@ -3547,12 +3614,6 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
           {
             latLonCoordinates->emplace_back(getLongitude(lon[t]),lat[t]);
           }
-/*
-          CoordinateRec rec;
-          rec.latlonCoordinates = latLonCoordinates;
-          coordinateVecCache.insert(hash,rec);
-          printf("COORDCACHE %ld\n",coordinateVecCache.size());
-*/
         }
       }
     }
@@ -3566,7 +3627,6 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
       if (targetIsLatlon)
         attributeList.setAttribute("grid.bbox",tmp);
     }
-    //attributeList.print(std::cout,0,0);
   }
   catch (...)
   {
@@ -3577,6 +3637,8 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
 
 
 
+
+/*! \brief Returns the GRIB1 grid definition for the given geometry id. */
 
 GRIB1::GridDef_sptr GridDef::getGrib1DefinitionByGeometryId(int geometryId)
 {
@@ -3601,6 +3663,8 @@ GRIB1::GridDef_sptr GridDef::getGrib1DefinitionByGeometryId(int geometryId)
 
 
 
+/*! \brief Returns the GRIB1 grid definition matching the given GRIB1 message. */
+
 GRIB1::GridDef_sptr GridDef::getGrib1Definition(GRIB1::Message& message)
 {
   FUNCTION_TRACE
@@ -3624,6 +3688,8 @@ GRIB1::GridDef_sptr GridDef::getGrib1Definition(GRIB1::Message& message)
 
 
 
+/*! \brief Returns the GRIB1 grid definition matching the given geometry string (C string). */
+
 GRIB1::GridDef_sptr GridDef::getGrib1DefinitionByGeometryString(const char *geometryStr)
 {
   FUNCTION_TRACE
@@ -3644,6 +3710,8 @@ GRIB1::GridDef_sptr GridDef::getGrib1DefinitionByGeometryString(const char *geom
 
 
 
+
+/*! \brief Returns the GRIB1 grid definition matching the given geometry string. */
 
 GRIB1::GridDef_sptr GridDef::getGrib1DefinitionByGeometryString(std::string& geometryStr)
 {
@@ -3666,6 +3734,8 @@ GRIB1::GridDef_sptr GridDef::getGrib1DefinitionByGeometryString(std::string& geo
 
 
 
+/*! \brief Returns the GRIB2 grid definition matching the given geometry string (C string). */
+
 GRIB2::GridDef_sptr GridDef::getGrib2DefinitionByGeometryString(const char *geometryStr)
 {
   FUNCTION_TRACE
@@ -3687,6 +3757,8 @@ GRIB2::GridDef_sptr GridDef::getGrib2DefinitionByGeometryString(const char *geom
 
 
 
+/*! \brief Returns the GRIB2 grid definition matching the given geometry string. */
+
 GRIB2::GridDef_sptr GridDef::getGrib2DefinitionByGeometryString(std::string& geometryStr)
 {
   FUNCTION_TRACE
@@ -3707,6 +3779,8 @@ GRIB2::GridDef_sptr GridDef::getGrib2DefinitionByGeometryString(std::string& geo
 
 
 
+
+/*! \brief Returns the GRIB2 grid definition matching the given GRIB2 message. */
 
 GRIB2::GridDef_sptr GridDef::getGrib2Definition(GRIB2::Message& message)
 {
@@ -3731,6 +3805,8 @@ GRIB2::GridDef_sptr GridDef::getGrib2Definition(GRIB2::Message& message)
 
 
 
+/*! \brief Returns the GRIB2 grid definition for the given geometry id. */
+
 GRIB2::GridDef_sptr GridDef::getGrib2DefinitionByGeometryId(int geometryId)
 {
   FUNCTION_TRACE
@@ -3751,6 +3827,8 @@ GRIB2::GridDef_sptr GridDef::getGrib2DefinitionByGeometryId(int geometryId)
 
 
 
+
+/*! \brief Returns the geometry id for the grid in the given GRIB1 message. */
 
 int GridDef::getGrib1GeometryId(GRIB1::Message& message)
 {
@@ -3776,6 +3854,8 @@ int GridDef::getGrib1GeometryId(GRIB1::Message& message)
 
 
 
+/*! \brief Returns the geometry id for the grid in the given GRIB2 message. */
+
 int GridDef::getGrib2GeometryId(GRIB2::Message& message)
 {
   FUNCTION_TRACE
@@ -3799,6 +3879,8 @@ int GridDef::getGrib2GeometryId(GRIB2::Message& message)
 
 
 
+
+/*! \brief Returns the geometry name for the given geometry id. */
 
 bool GridDef::getGeometryNameById(T::GeometryId geometryId,std::string& name)
 {
@@ -3824,6 +3906,8 @@ bool GridDef::getGeometryNameById(T::GeometryId geometryId,std::string& name)
 
 
 
+
+/*! \brief Returns the X and Y scan direction flags for the given geometry. */
 
 bool GridDef::getGridDirectionsByGeometryId(T::GeometryId  geometryId,bool& reverseXDirection,bool& reverseYDirection)
 {
@@ -3860,6 +3944,8 @@ bool GridDef::getGridDirectionsByGeometryId(T::GeometryId  geometryId,bool& reve
 
 
 
+
+/*! \brief Returns the grid points lying on a sparse latlon line grid for the given geometry. */
 
 T::Coordinate_svec GridDef::getGridLatLonCoordinateLinePointsByGeometryId(T::GeometryId  geometryId)
 {
@@ -3913,6 +3999,8 @@ T::Coordinate_svec GridDef::getGridLatLonCoordinateLinePointsByGeometryId(T::Geo
 
 
 
+/*! \brief Returns the column and row counts for the given grid geometry. */
+
 bool GridDef::getGridDimensionsByGeometryId(T::GeometryId  geometryId,uint& cols,uint& rows)
 {
   FUNCTION_TRACE
@@ -3957,6 +4045,8 @@ bool GridDef::getGridDimensionsByGeometryId(T::GeometryId  geometryId,uint& cols
 
 
 
+/*! \brief Converts latlon coordinates to grid coordinates for the given geometry. */
+
 bool GridDef::getGridPointByGeometryIdAndLatLonCoordinates(T::GeometryId  geometryId,double lat,double lon,double& grid_i,double& grid_j)
 {
   FUNCTION_TRACE
@@ -3984,6 +4074,8 @@ bool GridDef::getGridPointByGeometryIdAndLatLonCoordinates(T::GeometryId  geomet
 
 
 
+
+/*! \brief Returns the latlon coordinates for the given geometry (output via shared vector). */
 
 bool GridDef::getGridLatLonCoordinatesByGeometryId(T::GeometryId  geometryId,T::Coordinate_svec& coordinates)
 {
@@ -4019,6 +4111,8 @@ bool GridDef::getGridLatLonCoordinatesByGeometryId(T::GeometryId  geometryId,T::
 
 
 
+/*! \brief Returns the set of all known geometry ids. */
+
 void GridDef::getGeometryIdList(std::set<T::GeometryId>& geometryIdList)
 {
   FUNCTION_TRACE
@@ -4049,6 +4143,8 @@ void GridDef::getGeometryIdList(std::set<T::GeometryId>& geometryIdList)
 
 
 
+/*! \brief Returns the geometry ids whose grid covers the given latlon point. */
+
 void GridDef::getGeometryIdListByLatLon(double lat,double lon,std::set<T::GeometryId>& geometryIdList)
 {
   FUNCTION_TRACE
@@ -4067,11 +4163,6 @@ void GridDef::getGeometryIdListByLatLon(double lat,double lon,std::set<T::Geomet
         T::GeometryId geometryId = it->second->getGridGeometryId();
         geometryIdList.insert(geometryId);
       }
-      else
-      {
-        //if ((*it)->getGridGeometryId() == 1078)
-        //  printf("*** Not found %f,%f\n",lat,lon);
-      }
     }
 
     for (auto it=mGridDefinitions1.begin(); it!=mGridDefinitions1.end(); ++it)
@@ -4084,11 +4175,6 @@ void GridDef::getGeometryIdListByLatLon(double lat,double lon,std::set<T::Geomet
         T::GeometryId geometryId = it->second->getGridGeometryId();
         geometryIdList.insert(geometryId);
       }
-      else
-      {
-        //if ((*it)->getGridGeometryId() == 1078)
-        //  printf("*** NOT FOUND %f,%f\n",lat,lon);
-      }
     }
   }
   catch (...)
@@ -4100,6 +4186,8 @@ void GridDef::getGeometryIdListByLatLon(double lat,double lon,std::set<T::Geomet
 
 
 
+
+/*! \brief Loads geometry definitions from the given file. */
 
 void GridDef::loadGeometryDefinitions(const char *filename)
 {
@@ -4154,6 +4242,8 @@ void GridDef::loadGeometryDefinitions(const char *filename)
 
 
 
+
+/*! \brief Parses a GRIB1 grid definition from the given configuration line. */
 
 GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
 {
@@ -4680,6 +4770,8 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
 
 
 
+
+/*! \brief Parses a GRIB2 grid definition from the given configuration line. */
 
 GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
 {
@@ -5296,6 +5388,8 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
 
 
 
+/*! \brief Returns a pointer to the GRIB parameter mapping for the given FMI parameter id. */
+
 FmiParamId_grib_cptr GridDef::getGribParameterMappingByFmiId(T::FmiParamId fmiParamId)
 {
   FUNCTION_TRACE
@@ -5316,6 +5410,8 @@ FmiParamId_grib_cptr GridDef::getGribParameterMappingByFmiId(T::FmiParamId fmiPa
 
 
 
+
+/*! \brief Returns the GRIB parameter id for the given GRIB1 message. */
 
 T::GribParamId GridDef::getGribParameterId(GRIB1::Message& message)
 {
@@ -5386,6 +5482,8 @@ T::GribParamId GridDef::getGribParameterId(GRIB1::Message& message)
 
 
 
+/*! \brief Returns the GRIB parameter id for the given GRIB2 message. */
+
 T::GribParamId GridDef::getGribParameterId(GRIB2::Message& message)
 {
   FUNCTION_TRACE
@@ -5453,6 +5551,8 @@ T::GribParamId GridDef::getGribParameterId(GRIB2::Message& message)
 
 
 
+/*! \brief Returns the GRIB1 level mapping for the given FMI level id. */
+
 bool GridDef::getGrib1LevelDef(uint fmiLevelId,FmiLevelId_grib& def)
 {
   FUNCTION_TRACE
@@ -5478,6 +5578,8 @@ bool GridDef::getGrib1LevelDef(uint fmiLevelId,FmiLevelId_grib& def)
 
 
 
+
+/*! \brief Returns the GRIB2 level mapping for the given FMI level id. */
 
 bool GridDef::getGrib2LevelDef(uint fmiLevelId,FmiLevelId_grib& def)
 {
@@ -5505,6 +5607,8 @@ bool GridDef::getGrib2LevelDef(uint fmiLevelId,FmiLevelId_grib& def)
 
 
 
+/*! \brief Returns the GRIB parameter name for the given GRIB1 message. */
+
 std::string GridDef::getGribParameterName(GRIB1::Message& message)
 {
   FUNCTION_TRACE
@@ -5530,6 +5634,8 @@ std::string GridDef::getGribParameterName(GRIB1::Message& message)
 
 
 
+/*! \brief Returns the GRIB parameter name for the given GRIB2 message. */
+
 std::string GridDef::getGribParameterName(GRIB2::Message& message)
 {
   FUNCTION_TRACE
@@ -5554,6 +5660,8 @@ std::string GridDef::getGribParameterName(GRIB2::Message& message)
 
 
 
+
+/*! \brief Returns the FMI parameter id for the given GRIB1 message. */
 
 T::FmiParamId GridDef::getFmiParameterId(GRIB1::Message& message)
 {
@@ -5587,6 +5695,8 @@ T::FmiParamId GridDef::getFmiParameterId(GRIB1::Message& message)
 
 
 
+/*! \brief Returns the FMI parameter id for the given GRIB2 message. */
+
 T::FmiParamId GridDef::getFmiParameterId(GRIB2::Message& message)
 {
   FUNCTION_TRACE
@@ -5617,6 +5727,8 @@ T::FmiParamId GridDef::getFmiParameterId(GRIB2::Message& message)
 
 
 
+
+/*! \brief Returns the FMI level id for the given GRIB1 message. */
 
 T::ParamLevelId GridDef::getFmiLevelId(GRIB1::Message& message)
 {
@@ -5658,6 +5770,8 @@ T::ParamLevelId GridDef::getFmiLevelId(GRIB1::Message& message)
 
 
 
+/*! \brief Returns the FMI level id for the given GRIB2 message. */
+
 T::ParamLevelId GridDef::getFmiLevelId(GRIB2::Message& message)
 {
   FUNCTION_TRACE
@@ -5698,6 +5812,8 @@ T::ParamLevelId GridDef::getFmiLevelId(GRIB2::Message& message)
 
 
 
+/*! \brief Returns the FMI parameter id for the given FMI parameter name. */
+
 T::FmiParamId GridDef::getFmiParameterIdByFmiName(const std::string& fmiParamName)
 {
   FUNCTION_TRACE
@@ -5721,6 +5837,8 @@ T::FmiParamId GridDef::getFmiParameterIdByFmiName(const std::string& fmiParamNam
 
 
 
+
+/*! \brief Returns the FMI parameter id for the given newbase parameter name. */
 
 T::FmiParamId GridDef::getFmiParameterIdByNewbaseName(const std::string& newbaseParamName)
 {
@@ -5751,6 +5869,8 @@ T::FmiParamId GridDef::getFmiParameterIdByNewbaseName(const std::string& newbase
 
 
 
+/*! \brief Returns the FMI parameter id for the given NetCDF parameter name. */
+
 T::FmiParamId GridDef::getFmiParameterIdByNetCdfName(const std::string& netCdfParamName)
 {
   FUNCTION_TRACE
@@ -5776,6 +5896,8 @@ T::FmiParamId GridDef::getFmiParameterIdByNetCdfName(const std::string& netCdfPa
 
 
 
+/*! \brief Returns the FMI parameter id for the given newbase parameter id. */
+
 T::FmiParamId GridDef::getFmiParameterIdByNewbaseId(T::NewbaseParamId newbaseParamId)
 {
   FUNCTION_TRACE
@@ -5800,6 +5922,8 @@ T::FmiParamId GridDef::getFmiParameterIdByNewbaseId(T::NewbaseParamId newbasePar
 
 
 
+/*! \brief Returns the FMI parameter id for the given GRIB parameter id. */
+
 T::FmiParamId GridDef::getFmiParameterIdByGribId(T::GribParamId gribParamId)
 {
   FUNCTION_TRACE
@@ -5823,6 +5947,8 @@ T::FmiParamId GridDef::getFmiParameterIdByGribId(T::GribParamId gribParamId)
 
 
 
+/*! \brief Returns a pointer to the FMI aggregation definition for the given aggregation id. */
+
 AggregationDef_cptr GridDef::getFmiAggregationDef(int aggregationId)
 {
   FUNCTION_TRACE
@@ -5843,6 +5969,8 @@ AggregationDef_cptr GridDef::getFmiAggregationDef(int aggregationId)
 
 
 
+
+/*! \brief Returns a pointer to the FMI parameter definition for the given FMI parameter id. */
 
 FmiParamDef_cptr GridDef::getFmiParameterDefById(T::FmiParamId fmiParamId)
 {
@@ -5866,6 +5994,8 @@ FmiParamDef_cptr GridDef::getFmiParameterDefById(T::FmiParamId fmiParamId)
 
 
 
+/*! \brief Returns a pointer to the FMI parameter mapping for the given newbase parameter id. */
+
 FmiParamId_newbase_cptr GridDef::getFmiParameterMappingByNewbaseId(T::NewbaseParamId newbaseParamId)
 {
   FUNCTION_TRACE
@@ -5886,6 +6016,8 @@ FmiParamId_newbase_cptr GridDef::getFmiParameterMappingByNewbaseId(T::NewbasePar
 
 
 
+
+/*! \brief Returns a pointer to the FMI parameter mapping for the given NetCDF parameter name. */
 
 FmiParamId_netCdf_cptr GridDef::getFmiParameterMappingByNetCdfName(std::string& netCdfParamName)
 {
@@ -5909,6 +6041,8 @@ FmiParamId_netCdf_cptr GridDef::getFmiParameterMappingByNetCdfName(std::string& 
 
 
 
+/*! \brief Returns a pointer to the FMI parameter mapping for the given GRIB parameter id. */
+
 FmiParamId_grib_cptr GridDef::getFmiParameterMappingByGribId(T::GribParamId gribParamId)
 {
   FUNCTION_TRACE
@@ -5929,6 +6063,8 @@ FmiParamId_grib_cptr GridDef::getFmiParameterMappingByGribId(T::GribParamId grib
 
 
 
+
+/*! \brief Returns a pointer to the newbase parameter mapping for the given FMI parameter id. */
 
 FmiParamId_newbase_cptr GridDef::getNewbaseParameterMappingByFmiId(T::FmiParamId fmiParamId)
 {
@@ -5951,6 +6087,8 @@ FmiParamId_newbase_cptr GridDef::getNewbaseParameterMappingByFmiId(T::FmiParamId
 
 
 
+/*! \brief Returns a pointer to the NetCDF parameter mapping for the given FMI parameter id. */
+
 FmiParamId_netCdf_cptr GridDef::getNetCdfParameterMappingByFmiId(T::FmiParamId fmiParamId)
 {
   FUNCTION_TRACE
@@ -5971,6 +6109,8 @@ FmiParamId_netCdf_cptr GridDef::getNetCdfParameterMappingByFmiId(T::FmiParamId f
 
 
 
+
+/*! \brief Fetches a newbase parameter definition by FMI parameter id (copy out). */
 
 bool GridDef::getNewbaseParameterDefByFmiId(T::FmiParamId fmiParamId,NewbaseParameterDef& paramDef)
 {
@@ -5998,6 +6138,8 @@ bool GridDef::getNewbaseParameterDefByFmiId(T::FmiParamId fmiParamId,NewbasePara
 
 
 
+/*! \brief Fetches a NetCDF parameter definition by FMI parameter id (copy out). */
+
 bool GridDef::getNetCdfParameterDefByFmiId(T::FmiParamId fmiParamId,NetCdfParameterDef& paramDef)
 {
   FUNCTION_TRACE
@@ -6024,6 +6166,8 @@ bool GridDef::getNetCdfParameterDefByFmiId(T::FmiParamId fmiParamId,NetCdfParame
 
 
 
+/*! \brief Fetches a newbase parameter definition by newbase parameter name (copy out). */
+
 bool GridDef::getNewbaseParameterDefByName(const std::string& newbaseParamName,NewbaseParameterDef& paramDef)
 {
   FUNCTION_TRACE
@@ -6045,6 +6189,8 @@ bool GridDef::getNewbaseParameterDefByName(const std::string& newbaseParamName,N
 
 
 
+
+/*! \brief Fetches a NetCDF parameter definition by NetCDF parameter name (copy out). */
 
 bool GridDef::getNetCdfParameterDefByName(const std::string& netCdfParamName,NetCdfParameterDef& paramDef)
 {
@@ -6068,6 +6214,8 @@ bool GridDef::getNetCdfParameterDefByName(const std::string& netCdfParamName,Net
 
 
 
+/*! \brief Fetches the newbase parameter mapping for the given FMI parameter id (copy out). */
+
 bool GridDef::getNewbaseParameterMappingByFmiId(T::FmiParamId fmiParamId,FmiParameterId_newbase& paramMapping)
 {
   try
@@ -6089,6 +6237,8 @@ bool GridDef::getNewbaseParameterMappingByFmiId(T::FmiParamId fmiParamId,FmiPara
 
 
 
+
+/*! \brief Fetches the NetCDF parameter mapping for the given FMI parameter id (copy out). */
 
 bool GridDef::getNetCdfParameterMappingByFmiId(T::FmiParamId fmiParamId,FmiParameterId_netCdf& paramMapping)
 {
@@ -6112,6 +6262,8 @@ bool GridDef::getNetCdfParameterMappingByFmiId(T::FmiParamId fmiParamId,FmiParam
 
 
 
+/*! \brief Fetches a newbase parameter definition by newbase parameter id (copy out). */
+
 bool GridDef::getNewbaseParameterDefById(T::NewbaseParamId newbaseParamId,NewbaseParameterDef& paramDef)
 {
   FUNCTION_TRACE
@@ -6134,6 +6286,8 @@ bool GridDef::getNewbaseParameterDefById(T::NewbaseParamId newbaseParamId,Newbas
 
 
 
+/*! \brief Returns a pointer to the FMI parameter definition for the given newbase parameter id. */
+
 FmiParamDef_cptr GridDef::getFmiParameterDefByNewbaseId(T::NewbaseParamId newbaseParamId)
 {
   FUNCTION_TRACE
@@ -6154,6 +6308,8 @@ FmiParamDef_cptr GridDef::getFmiParameterDefByNewbaseId(T::NewbaseParamId newbas
 
 
 
+
+/*! \brief Returns a pointer to the FMI parameter definition for the given NetCDF parameter name. */
 
 FmiParamDef_cptr GridDef::getFmiParameterDefByNetCdfName(std::string& netCdfParamName)
 {
@@ -6176,6 +6332,8 @@ FmiParamDef_cptr GridDef::getFmiParameterDefByNetCdfName(std::string& netCdfPara
 
 
 
+/*! \brief Returns a pointer to the FMI parameter definition for the given GRIB parameter id. */
+
 FmiParamDef_cptr GridDef::getFmiParameterDefByGribId(T::GribParamId gribParamId)
 {
   FUNCTION_TRACE
@@ -6196,6 +6354,8 @@ FmiParamDef_cptr GridDef::getFmiParameterDefByGribId(T::GribParamId gribParamId)
 
 
 
+
+/*! \brief Returns a pointer to the FMI parameter definition for the given FMI parameter name. */
 
 FmiParamDef_cptr GridDef::getFmiParameterDefByName(const std::string& fmiParamName)
 {
@@ -6218,6 +6378,8 @@ FmiParamDef_cptr GridDef::getFmiParameterDefByName(const std::string& fmiParamNa
 
 
 
+
+/*! \brief Fetches an FMI parameter definition by FMI parameter id (copy out). */
 
 bool GridDef::getFmiParameterDefById(T::FmiParamId fmiParamId,FmiParameterDef& paramDef)
 {
@@ -6244,6 +6406,8 @@ bool GridDef::getFmiParameterDefById(T::FmiParamId fmiParamId,FmiParameterDef& p
 
 
 
+/*! \brief Fetches an FMI parameter definition by newbase parameter id (copy out). */
+
 bool GridDef::getFmiParameterDefByNewbaseId(T::NewbaseParamId newbaseParamId,FmiParameterDef& paramDef)
 {
   FUNCTION_TRACE
@@ -6268,6 +6432,8 @@ bool GridDef::getFmiParameterDefByNewbaseId(T::NewbaseParamId newbaseParamId,Fmi
 
 
 
+
+/*! \brief Fetches an FMI parameter definition by NetCDF parameter name (copy out). */
 
 bool GridDef::getFmiParameterDefByNetCdfName(std::string& netCdfParamName,FmiParameterDef& paramDef)
 {
@@ -6294,6 +6460,8 @@ bool GridDef::getFmiParameterDefByNetCdfName(std::string& netCdfParamName,FmiPar
 
 
 
+/*! \brief Fetches an FMI parameter definition by GRIB parameter id (copy out). */
+
 bool GridDef::getFmiParameterDefByGribId(T::GribParamId gribParamId,FmiParameterDef& paramDef)
 {
   FUNCTION_TRACE
@@ -6319,6 +6487,8 @@ bool GridDef::getFmiParameterDefByGribId(T::GribParamId gribParamId,FmiParameter
 
 
 
+/*! \brief Fetches an FMI parameter definition by FMI parameter name (copy out). */
+
 bool GridDef::getFmiParameterDefByName(const std::string& fmiParamName,FmiParameterDef& paramDef)
 {
   FUNCTION_TRACE
@@ -6343,6 +6513,8 @@ bool GridDef::getFmiParameterDefByName(const std::string& fmiParamName,FmiParame
 
 
 
+
+/*! \brief Returns the FMI parameter name for the given GRIB1 message. */
 
 std::string GridDef::getFmiParameterName(GRIB1::Message& message)
 {
@@ -6372,6 +6544,8 @@ std::string GridDef::getFmiParameterName(GRIB1::Message& message)
 
 
 
+/*! \brief Returns the FMI parameter name for the given GRIB2 message. */
+
 std::string GridDef::getFmiParameterName(GRIB2::Message& message)
 {
   FUNCTION_TRACE
@@ -6399,6 +6573,8 @@ std::string GridDef::getFmiParameterName(GRIB2::Message& message)
 
 
 
+
+/*! \brief Returns the FMI parameter description for the given GRIB1 message. */
 
 std::string GridDef::getFmiParameterDescription(GRIB1::Message& message)
 {
@@ -6428,6 +6604,8 @@ std::string GridDef::getFmiParameterDescription(GRIB1::Message& message)
 
 
 
+/*! \brief Returns the FMI parameter description for the given GRIB2 message. */
+
 std::string GridDef::getFmiParameterDescription(GRIB2::Message& message)
 {
   FUNCTION_TRACE
@@ -6455,6 +6633,8 @@ std::string GridDef::getFmiParameterDescription(GRIB2::Message& message)
 
 
 
+
+/*! \brief Returns the FMI parameter units for the given GRIB1 message. */
 
 std::string GridDef::getFmiParameterUnits(GRIB1::Message& message)
 {
@@ -6484,6 +6664,8 @@ std::string GridDef::getFmiParameterUnits(GRIB1::Message& message)
 
 
 
+/*! \brief Returns the FMI parameter units for the given GRIB2 message. */
+
 std::string GridDef::getFmiParameterUnits(GRIB2::Message& message)
 {
   FUNCTION_TRACE
@@ -6511,6 +6693,8 @@ std::string GridDef::getFmiParameterUnits(GRIB2::Message& message)
 
 
 
+
+/*! \brief Returns the FMI area interpolation method for the given GRIB1 message. */
 
 short GridDef::getFmiParameterInterpolationMethod(GRIB1::Message& message)
 {
@@ -6540,6 +6724,8 @@ short GridDef::getFmiParameterInterpolationMethod(GRIB1::Message& message)
 
 
 
+/*! \brief Returns the FMI area interpolation method for the given GRIB2 message. */
+
 short GridDef::getFmiParameterInterpolationMethod(GRIB2::Message& message)
 {
   FUNCTION_TRACE
@@ -6568,6 +6754,8 @@ short GridDef::getFmiParameterInterpolationMethod(GRIB2::Message& message)
 
 
 
+/*! \brief Returns a pointer to the newbase parameter definition for the given newbase parameter id. */
+
 NewbaseParamDef_cptr GridDef::getNewbaseParameterDefById(T::NewbaseParamId newbaseParamId)
 {
   FUNCTION_TRACE
@@ -6592,6 +6780,8 @@ NewbaseParamDef_cptr GridDef::getNewbaseParameterDefById(T::NewbaseParamId newba
 
 
 
+/*! \brief Returns a pointer to the newbase parameter definition for the given newbase parameter name. */
+
 NewbaseParamDef_cptr GridDef::getNewbaseParameterDefByName(const std::string& newbaseParamName)
 {
   FUNCTION_TRACE
@@ -6614,6 +6804,8 @@ NewbaseParamDef_cptr GridDef::getNewbaseParameterDefByName(const std::string& ne
 
 
 
+/*! \brief Returns a pointer to the NetCDF parameter definition for the given NetCDF parameter name. */
+
 NetCdfParamDef_cptr GridDef::getNetCdfParameterDefByName(const std::string& netCdfParamName)
 {
   FUNCTION_TRACE
@@ -6635,6 +6827,8 @@ NetCdfParamDef_cptr GridDef::getNetCdfParameterDefByName(const std::string& netC
 
 
 
+
+/*! \brief Returns the newbase parameter id for the given GRIB1 message. */
 
 T::NewbaseParamId GridDef::getNewbaseParameterId(GRIB1::Message& message)
 {
@@ -6664,6 +6858,8 @@ T::NewbaseParamId GridDef::getNewbaseParameterId(GRIB1::Message& message)
 
 
 
+/*! \brief Returns the newbase parameter id for the given GRIB2 message. */
+
 T::NewbaseParamId GridDef::getNewbaseParameterId(GRIB2::Message& message)
 {
   FUNCTION_TRACE
@@ -6691,6 +6887,8 @@ T::NewbaseParamId GridDef::getNewbaseParameterId(GRIB2::Message& message)
 
 
 
+
+/*! \brief Returns the newbase parameter name for the given GRIB1 message. */
 
 std::string GridDef::getNewbaseParameterName(GRIB1::Message& message)
 {
@@ -6720,6 +6918,8 @@ std::string GridDef::getNewbaseParameterName(GRIB1::Message& message)
 
 
 
+/*! \brief Returns the newbase parameter name for the given GRIB2 message. */
+
 std::string GridDef::getNewbaseParameterName(GRIB2::Message& message)
 {
   FUNCTION_TRACE
@@ -6748,6 +6948,8 @@ std::string GridDef::getNewbaseParameterName(GRIB2::Message& message)
 
 
 
+/*! \brief Returns the NetCDF parameter name for the given GRIB1 message. */
+
 std::string GridDef::getNetCdfParameterName(GRIB1::Message& message)
 {
   FUNCTION_TRACE
@@ -6774,6 +6976,8 @@ std::string GridDef::getNetCdfParameterName(GRIB1::Message& message)
 
 
 
+
+/*! \brief Returns the NetCDF parameter name for the given GRIB2 message. */
 
 std::string GridDef::getNetCdfParameterName(GRIB2::Message& message)
 {

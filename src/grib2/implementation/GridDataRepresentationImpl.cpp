@@ -118,6 +118,8 @@ void GridDataRepresentationImpl::read(MemoryReader& memoryReader)
 
 
 
+/*! \brief Initializes cached decoding parameters from the message packing settings. */
+
 void GridDataRepresentationImpl::init(Message *message) const
 {
   try
@@ -147,6 +149,8 @@ void GridDataRepresentationImpl::init(Message *message) const
 
 
 
+
+/*! \brief Decodes a single grid value at the given linear index from the packed data. */
 
 bool GridDataRepresentationImpl::getValueByIndex(Message *message,uint index,T::ParamValue& value) const
 {
@@ -224,6 +228,8 @@ bool GridDataRepresentationImpl::getValueByIndex(Message *message,uint index,T::
 
 
 
+
+/*! \brief Decodes all grid values of the message and writes them into the output vector. */
 
 void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec& decodedValues) const
 {
@@ -459,6 +465,8 @@ void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec
 
 
 
+
+/*! \brief Encodes the given grid values into the packed data buffer of the message. */
 
 void GridDataRepresentationImpl::encodeValues(Message *message,T::ParamValue_vec& values)
 {

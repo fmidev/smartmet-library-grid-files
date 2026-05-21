@@ -82,6 +82,8 @@ void LogarithmicGridDataRepresentationImpl::read(MemoryReader& memoryReader)
 
 
 
+/*! \brief Decodes the logarithmically packed grid values (not implemented). */
+
 void LogarithmicGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec& decodedValues) const
 {
   throw Fmi::Exception(BCP,"The method not implemented!");

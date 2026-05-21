@@ -6,6 +6,8 @@ namespace SmartMet
 {
 
 
+/*! \brief Default constructor for XmlElement. */
+
 XmlElement::XmlElement()
 {
   try
@@ -21,6 +23,8 @@ XmlElement::XmlElement()
 
 
 
+
+/*! \brief Constructs an XmlElement by parsing the given XML buffer. */
 
 XmlElement::XmlElement(const char *data,int size)
 {
@@ -39,6 +43,8 @@ XmlElement::XmlElement(const char *data,int size)
 
 
 
+/*! \brief Destructor that deletes all owned child elements. */
+
 XmlElement::~XmlElement()
 {
   for (auto it=elementList.begin(); it!=elementList.end();++it)
@@ -48,6 +54,8 @@ XmlElement::~XmlElement()
 }
 
 
+
+/*! \brief Prints this element and its children to the given stream. */
 
 void XmlElement::print(std::ostream& stream,uint level,uint optionFlags)
 {
@@ -70,6 +78,8 @@ void XmlElement::print(std::ostream& stream,uint level,uint optionFlags)
 }
 
 
+
+/*! \brief Extracts the tag name and type from a raw XML tag string. */
 
 int XmlElement::getTagNameAndType(const char *data,char *name,ParameterList& parameterList)
 {
@@ -128,6 +138,8 @@ int XmlElement::getTagNameAndType(const char *data,char *name,ParameterList& par
 
 
 
+
+/*! \brief Parses an XML buffer and populates the given root element. */
 
 void XmlElement::parseXml(const char *data,int size,XmlElement& xmlRoot)
 {

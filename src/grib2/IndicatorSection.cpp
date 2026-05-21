@@ -13,10 +13,7 @@ namespace GRIB2
 
 
 
-/*! \brief The constructor of the class.
-
-        \param message  A pointer to the message object.
-*/
+/*! \brief The constructor of the class. */
 
 IndicatorSection::IndicatorSection()
 {
@@ -104,6 +101,8 @@ void IndicatorSection::getAttributeList(const std::string& prefix,T::AttributeLi
 
 
 
+/*! \brief The method returns the value of the named indicator attribute. */
+
 bool IndicatorSection::getAttributeValue(const char *attributeName, std::string& attributeValue) const
 {
   try
@@ -124,6 +123,8 @@ bool IndicatorSection::getAttributeValue(const char *attributeName, std::string&
 
 
 
+
+/*! \brief The method returns true if the named attribute matches the given value. */
 
 bool IndicatorSection::hasAttributeValue(const char *attributeName, const char *attributeValue) const
 {
@@ -196,6 +197,8 @@ bool IndicatorSection::getProperty(uint propertyId,Int64& value)
 
 
 
+
+/*! \brief The method collects the indicator section properties into the given vector. */
 
 void IndicatorSection::getProperties(T::PropertySettingVec& properties)
 {
@@ -411,6 +414,8 @@ std::uint8_t IndicatorSection::getSectionNumber() const
 
 
 
+/*! \brief The method returns the reserved field value. */
+
 T::UInt16_opt IndicatorSection::getReserved() const
 {
   try
@@ -426,6 +431,8 @@ T::UInt16_opt IndicatorSection::getReserved() const
 
 
 
+
+/*! \brief The method returns the discipline value. */
 
 T::UInt8_opt IndicatorSection::getDiscipline() const
 {
@@ -443,6 +450,8 @@ T::UInt8_opt IndicatorSection::getDiscipline() const
 
 
 
+/*! \brief The method returns the GRIB edition number. */
+
 T::UInt8_opt IndicatorSection::getEditionNumber() const
 {
   try
@@ -459,6 +468,8 @@ T::UInt8_opt IndicatorSection::getEditionNumber() const
 
 
 
+/*! \brief The method returns the total length of the GRIB message. */
+
 std::uint64_t IndicatorSection::getTotalLength() const
 {
   try
@@ -473,6 +484,8 @@ std::uint64_t IndicatorSection::getTotalLength() const
 
 
 
+
+/*! \brief The method sets the discipline value. */
 
 void IndicatorSection::setDiscipline(std::uint8_t discipline)
 {
@@ -490,6 +503,8 @@ void IndicatorSection::setDiscipline(std::uint8_t discipline)
 
 
 
+/*! \brief The method sets the GRIB edition number. */
+
 void IndicatorSection::setEditionNumber(std::uint8_t editionNumber)
 {
   try
@@ -505,6 +520,8 @@ void IndicatorSection::setEditionNumber(std::uint8_t editionNumber)
 
 
 
+
+/*! \brief The method sets the total length of the GRIB message. */
 
 void IndicatorSection::setTotalLength(std::uint64_t totalLength)
 {
@@ -524,7 +541,7 @@ void IndicatorSection::setTotalLength(std::uint64_t totalLength)
 
 /*! \brief The method prints the content of the current object into the given stream.
 
-        \param ostream      The output stream.
+        \param stream      The output stream.
         \param level        The print level (used when printing multi-level structures).
         \param optionFlags  The printing options expressed in flag-bits.
 */

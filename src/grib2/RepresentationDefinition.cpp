@@ -9,6 +9,8 @@ namespace GRIB2
 {
 
 
+/*! \brief The constructor of the class. */
+
 RepresentationDefinition::RepresentationDefinition()
 {
 }
@@ -36,6 +38,8 @@ RepresentationDefinition::~RepresentationDefinition()
 
 
 
+
+/*! \brief The method creates a new RepresentationDefinition instance of the current type. */
 
 RepresentationDefinition* RepresentationDefinition::createRepresentationDefinition() const
 {
@@ -75,6 +79,8 @@ bool RepresentationDefinition::getProperty(uint propertyId,Int64& value)
 
 
 
+/*! \brief The method collects the representation definition properties into the given vector. */
+
 void RepresentationDefinition::getProperties(T::PropertySettingVec& properties)
 {
   try
@@ -91,6 +97,8 @@ void RepresentationDefinition::getProperties(T::PropertySettingVec& properties)
 
 
 
+
+/*! \brief The method collects the packing properties into the given vector. */
 
 void RepresentationDefinition::getProperties_Packing(T::PropertySettingVec& properties)
 {
@@ -121,6 +129,8 @@ void RepresentationDefinition::getProperties_Packing(T::PropertySettingVec& prop
 
 
 
+/*! \brief The method collects the original values properties into the given vector. */
+
 void RepresentationDefinition::getProperties_OriginalValues(T::PropertySettingVec& properties)
 {
   try
@@ -140,6 +150,8 @@ void RepresentationDefinition::getProperties_OriginalValues(T::PropertySettingVe
 
 
 
+
+/*! \brief The method returns the Int64 value of the given packing property. */
 
 bool RepresentationDefinition::getProperty_Packing(uint propertyId,Int64& value)
 {
@@ -182,6 +194,8 @@ bool RepresentationDefinition::getProperty_Packing(uint propertyId,Int64& value)
 
 
 
+
+/*! \brief The method returns the Int64 value of the given original values property. */
 
 bool RepresentationDefinition::getProperty_OriginalValues(uint propertyId,Int64& value)
 {
@@ -239,6 +253,8 @@ bool RepresentationDefinition::setProperty(uint propertyId,Int64 value)
 
 
 
+/*! \brief The method sets the Int64 value of the given packing property. */
+
 bool RepresentationDefinition::setProperty_Packing(uint propertyId,Int64 value)
 {
   try
@@ -278,6 +294,8 @@ bool RepresentationDefinition::setProperty_Packing(uint propertyId,Int64 value)
 
 
 
+/*! \brief The method sets the Int64 value of the given original values property. */
+
 bool RepresentationDefinition::setProperty_OriginalValues(uint propertyId,Int64 value)
 {
   try
@@ -305,6 +323,8 @@ bool RepresentationDefinition::setProperty_OriginalValues(uint propertyId,Int64 
 
 
 
+/*! \brief The method collects the attributeList details related to the representation definition. */
+
 void RepresentationDefinition::getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const
 {
 }
@@ -312,6 +332,8 @@ void RepresentationDefinition::getAttributeList(const std::string& prefix,T::Att
 
 
 
+
+/*! \brief The method returns the representation template number. */
 
 uint RepresentationDefinition::getTemplateNumber() const
 {
@@ -322,6 +344,8 @@ uint RepresentationDefinition::getTemplateNumber() const
 
 
 
+
+/*! \brief The method returns the decoded value at the given index. */
 
 bool RepresentationDefinition::getValueByIndex(Message *message,uint index,T::ParamValue& value) const
 {
@@ -339,6 +363,8 @@ bool RepresentationDefinition::getValueByIndex(Message *message,uint index,T::Pa
 
 
 
+/*! \brief The method returns the packing settings if available. */
+
 PackingSettings* RepresentationDefinition::getPacking() const
 {
   return nullptr;
@@ -347,6 +373,8 @@ PackingSettings* RepresentationDefinition::getPacking() const
 
 
 
+
+/*! \brief The method returns the original values settings if available. */
 
 OriginalValuesSettings*  RepresentationDefinition::getOriginalValues() const
 {
@@ -357,6 +385,8 @@ OriginalValuesSettings*  RepresentationDefinition::getOriginalValues() const
 
 
 
+/*! \brief The method decodes the packed values into the given vector. */
+
 void RepresentationDefinition::decodeValues(Message *message,T::ParamValue_vec& decodedValues) const
 {
   throw Fmi::Exception(BCP,"Not implemented!");
@@ -365,6 +395,8 @@ void RepresentationDefinition::decodeValues(Message *message,T::ParamValue_vec& 
 
 
 
+
+/*! \brief The method encodes the given values into the message data. */
 
 void RepresentationDefinition::encodeValues(Message *message,T::ParamValue_vec& values)
 {
@@ -405,7 +437,7 @@ void RepresentationDefinition::write(DataWriter& dataWriter)
 
 /*! \brief The method prints the content of the current object into the given stream.
 
-        \param ostream      The output stream.
+        \param stream      The output stream.
         \param level        The print level (used when printing multi-level structures).
         \param optionFlags  The printing options expressed in flag-bits.
 */

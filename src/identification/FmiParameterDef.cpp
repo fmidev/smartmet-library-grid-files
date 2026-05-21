@@ -10,6 +10,8 @@ namespace Identification
 
 
 
+/*! \brief The constructor of the class. */
+
 FmiParameterDef::FmiParameterDef()
 {
   try
@@ -29,6 +31,8 @@ FmiParameterDef::FmiParameterDef()
 
 
 
+/*! \brief The destructor of the class. */
+
 FmiParameterDef::~FmiParameterDef()
 {
   try
@@ -44,6 +48,8 @@ FmiParameterDef::~FmiParameterDef()
 
 
 
+
+/*! \brief Prints the content of the object into the given stream. */
 
 void FmiParameterDef::print(std::ostream& stream,uint level,uint optionFlags) const
 {

@@ -9,6 +9,8 @@ namespace T
 {
 
 
+/*! \brief The constructor of the class. */
+
 GridValueList::GridValueList()
 {
   try
@@ -22,6 +24,8 @@ GridValueList::GridValueList()
 
 
 
+
+/*! \brief Copy constructor that copies the underlying list of grid values. */
 
 GridValueList::GridValueList(const GridValueList& gridValueList)
 {
@@ -39,6 +43,8 @@ GridValueList::GridValueList(const GridValueList& gridValueList)
 
 
 
+/*! \brief The destructor of the class. */
+
 GridValueList::~GridValueList()
 {
   try
@@ -54,6 +60,8 @@ GridValueList::~GridValueList()
 
 
 
+
+/*! \brief Assignment operator that replaces this list with a copy of the source list. */
 
 GridValueList& GridValueList::operator=(const GridValueList& gridValueList)
 {
@@ -75,6 +83,8 @@ GridValueList& GridValueList::operator=(const GridValueList& gridValueList)
 
 
 
+/*! \brief Appends a grid value to the end of the list. */
+
 void GridValueList::addGridValue(GridValue& gridValue)
 {
   try
@@ -91,6 +101,8 @@ void GridValueList::addGridValue(GridValue& gridValue)
 
 
 
+/*! \brief Removes all grid values from the list. */
+
 void GridValueList::clear()
 {
   try
@@ -106,6 +118,8 @@ void GridValueList::clear()
 
 
 
+
+/*! \brief Returns a pointer to the grid value at the given index, or nullptr if out of range. */
 
 GridValue* GridValueList::getGridValuePtrByIndex(uint index) const
 {
@@ -125,6 +139,8 @@ GridValue* GridValueList::getGridValuePtrByIndex(uint index) const
 
 
 
+
+/*! \brief Copies the grid value at the given index into the output parameter. */
 
 bool GridValueList::getGridValueByIndex(uint index,GridValue& gridValue) const
 {
@@ -146,6 +162,8 @@ bool GridValueList::getGridValueByIndex(uint index,GridValue& gridValue) const
 
 
 
+/*! \brief Replaces the grid value at the given index with the supplied value. */
+
 bool GridValueList::setGridValueByIndex(uint index,GridValue& gridValue)
 {
   try
@@ -163,6 +181,8 @@ bool GridValueList::setGridValueByIndex(uint index,GridValue& gridValue)
 }
 
 
+
+/*! \brief Finds the grid value matching the given coordinates. */
 
 bool GridValueList::getGridValueByCoordinates(double x,double y,GridValue& gridValue) const
 {
@@ -187,6 +207,8 @@ bool GridValueList::getGridValueByCoordinates(double x,double y,GridValue& gridV
 
 
 
+
+/*! \brief Computes the bounding rectangle of all grid values in the list. */
 
 void GridValueList::getGridValueArea(double& minX,double& minY,double& maxX,double& maxY)
 {
@@ -223,6 +245,8 @@ void GridValueList::getGridValueArea(double& minX,double& minY,double& maxX,doub
 
 
 
+/*! \brief Returns the number of grid values currently stored in the list. */
+
 uint GridValueList::getLength() const
 {
   try
@@ -238,6 +262,8 @@ uint GridValueList::getLength() const
 
 
 
+
+/*! \brief Returns the maximum value among all grid values in the list, ignoring missing values. */
 
 T::ParamValue GridValueList::getMaxValue() const
 {
@@ -262,6 +288,8 @@ T::ParamValue GridValueList::getMaxValue() const
 
 
 
+/*! \brief Returns the minimum value among all grid values in the list, ignoring missing values. */
+
 T::ParamValue GridValueList::getMinValue() const
 {
   try
@@ -284,6 +312,8 @@ T::ParamValue GridValueList::getMinValue() const
 
 
 
+
+/*! \brief Returns the arithmetic mean of grid values in the list, ignoring missing values. */
 
 T::ParamValue GridValueList::getAverageValue() const
 {
@@ -316,6 +346,8 @@ T::ParamValue GridValueList::getAverageValue() const
 
 
 
+/*! \brief Counts grid values whose values fall in the given inclusive range. */
+
 uint GridValueList::getNumOfValuesInValueRange(T::ParamValue minValue,T::ParamValue maxValue) const
 {
   try
@@ -337,6 +369,8 @@ uint GridValueList::getNumOfValuesInValueRange(T::ParamValue minValue,T::ParamVa
 
 
 
+
+/*! \brief Prints the contents of the grid value list into the given stream. */
 
 void GridValueList::print(std::ostream& stream,uint level,uint optionFlags) const
 {

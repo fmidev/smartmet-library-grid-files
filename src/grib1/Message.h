@@ -40,6 +40,18 @@ namespace GRIB1
   --------------------------------------------------------------------------------------
  */
 
+// ====================================================================================
+/*! \brief GRIB edition 1 message — the main entry point for accessing GRIB 1 data.
+ *
+ *  Wraps the five GRIB 1 sections (Indicator, Product, Grid, Bitmap, Data) and
+ *  implements the full GRID::Message virtual interface: coordinate conversions, grid
+ *  metadata, parameter/level identification, and value decoding.
+ *
+ *  Sections are parsed lazily on first access via read(MemoryReader&) and cached
+ *  in shared_ptr members.  Grid value decode results are cached via GRID::ValueCache
+ *  keyed on mCacheKey / mOrigCacheKey. */
+// ====================================================================================
+
 class Message : public GRID::Message
 {
   public:
@@ -170,7 +182,7 @@ class Message : public GRID::Message
     /*! \brief The message start position in the file. */
     T::FilePosition     mFilePosition;
 
-    T::FilePosition     mOriginalFilePosition;
+    T::FilePosition     mOriginalFilePosition;  //!< File position before any in-place modifications.
 
     /*! \brief  A shared pointer to the IndicatorSection object. */
     IndicatorSect_sptr  mIndicatorSection;
@@ -193,7 +205,7 @@ class Message : public GRID::Message
     /*! \brief  A cache key that was used for caching the original grid data. */
     mutable uint        mOrigCacheKey;
 
-    time_t              mForecastTimeT;
+    time_t              mForecastTimeT;     //!< Cached forecast time as a Unix timestamp.
 
     /*! \brief Indicates if the message is already read. */
     bool                mIsRead;
@@ -201,24 +213,25 @@ class Message : public GRID::Message
     /*! \brief  A flag that indicates that the data decoding is impossible. */
     mutable bool        mValueDecodingFailed;
 
-    mutable bool        mDataLocked;
+    mutable bool        mDataLocked;        //!< True while a concurrent thread holds the data for read.
 
   public:
 
+    /*! \brief GRIB 1 section numbers used to identify each section in a message. */
     class SectionNumber
     {
       public:
-        static const uchar indicator_section = 0;
-        static const uchar product_section   = 1;
-        static const uchar grid_section      = 2;
-        static const uchar bitmap_section    = 3;
-        static const uchar data_section      = 4;
-        static const uchar end_section       = 5;
+        static const uchar indicator_section = 0;  //!< Section 0 — Indicator Section.
+        static const uchar product_section   = 1;  //!< Section 1 — Product Definition Section.
+        static const uchar grid_section      = 2;  //!< Section 2 — Grid Description Section.
+        static const uchar bitmap_section    = 3;  //!< Section 3 — Bitmap Section.
+        static const uchar data_section      = 4;  //!< Section 4 — Binary Data Section.
+        static const uchar end_section       = 5;  //!< Section 5 — End Section.
     };
 };
 
 
-typedef std::shared_ptr<Message> Message_sptr;
+typedef std::shared_ptr<Message> Message_sptr;  //!< Shared ownership pointer to a GRIB 1 Message.
 
 
 
