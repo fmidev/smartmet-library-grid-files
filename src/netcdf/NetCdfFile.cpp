@@ -853,12 +853,17 @@ void NetCdfFile::readPropertyList(MemoryReader& memoryReader)
     {
       uint nameLen = 0;
       memoryReader >> nameLen;
+      uint paddedLen = nameLen;
       if (nameLen > 0)
-        nameLen = ((nameLen-1)/4 + 1) * 4;
+        paddedLen = ((nameLen-1)/4 + 1) * 4;
 
       std::string name(nameLen, '\0');
-      for (uint n = 0; n<nameLen; n++)
-        name[n] = memoryReader.read_int8();
+      for (uint n = 0; n<paddedLen; n++)
+      {
+        auto val = memoryReader.read_int8();
+        if (n < nameLen)
+          name[n] = val;
+      }
 
       uint dimLen = 0;
       memoryReader >> dimLen;
@@ -919,12 +924,17 @@ void NetCdfFile::readPropertyList(MemoryReader& memoryReader)
       // Variable name
       uint nameLen = 0;
       memoryReader >> nameLen;
+      uint paddedLen = nameLen;
       if (nameLen > 0)
-        nameLen = ((nameLen-1)/4 + 1) * 4;
+        paddedLen = ((nameLen-1)/4 + 1) * 4;
 
       std::string varName(nameLen, '\0');
-      for (uint n = 0; n<nameLen; n++)
-        varName[n] = memoryReader.read_int8();
+      for (uint n = 0; n<paddedLen; n++)
+      {
+        auto val = memoryReader.read_int8();
+        if (n < nameLen)
+          varName[n] = val;
+      }
 
       variables.push_back(varName);
 
