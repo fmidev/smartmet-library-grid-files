@@ -4,7 +4,7 @@
 Summary: grid file handling library
 Name: %{SPECNAME}
 Version: 26.5.26
-Release: 1%{?dist}.fmi
+Release: 2%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
 URL: https://github.com/fmidev/smartmet-library-grid-files
@@ -100,6 +100,8 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Tue May 26 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.5.26-2.fmi
+- Fixes to handling coordinates
 * Tue May 26 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.5.26-1.fmi
 - Fixed NetCDF dimension/variable name parsing to strip 4-byte alignment padding
 * Wed May 20 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.5.20-1.fmi
