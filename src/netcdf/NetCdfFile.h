@@ -68,6 +68,23 @@ class NetCdfFile
 
   protected:
 
+    /*! \brief Identify the projection/geometry id for one grid variable by inspecting the
+     *  grid_mapping attribute and querying the geometry registry.  Handles polar-stereographic,
+     *  Lambert-azimuthal-equal-area, Lambert-conformal-conic, and lat/lon mappings; reports
+     *  unrecognised geometries to stdout. */
+    void        detectProjectionGeometry(
+                    const std::string& mappingName,
+                    const std::string& gridMapping,
+                    const std::string& xStandardName,
+                    const std::string& yStandardName,
+                    const class OGRSpatialReference& latlonSp,
+                    double startx, double starty,
+                    double dx, double dy,
+                    const char *sm,
+                    int& projectionId,
+                    int& geometryId);
+
+
     PropertyVec mPropertyList;   //!< All NetCDF global and variable attributes, keyed by name.
     FloatVec    mXCoordinates;  //!< Decoded x/longitude coordinate array.
     FloatVec    mYCoordinates;  //!< Decoded y/latitude coordinate array.

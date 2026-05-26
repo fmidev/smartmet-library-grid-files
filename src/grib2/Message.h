@@ -194,6 +194,24 @@ class Message : public GRID::Message
 
   private:
 
+    /*! \brief Allocate, register, and parse one GRIB2 section.  If the section's reported
+     *  length disagrees with the actual bytes consumed by section->read(), advance the
+     *  read position to the declared section boundary. */
+    template <typename SectionT>
+    void readGribSectionWithPosFixup(MemoryReader& memoryReader,std::shared_ptr<SectionT>& member)
+    {
+      SectionT *section = new SectionT();
+      section->setMessagePtr(this);
+      member.reset(section);
+      auto p1 = memoryReader.getReadPosition();
+      section->read(memoryReader);
+      auto p2 = memoryReader.getReadPosition();
+      auto len = section->getSectionLength();
+      if (len > 0 && (p1 + len) != p2)
+        memoryReader.setReadPosition(p1 + len);
+    }
+
+
     /*! \brief  The message start position in the file. */
     T::FilePosition     mFilePosition;
 

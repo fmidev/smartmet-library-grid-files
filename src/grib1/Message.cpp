@@ -527,86 +527,16 @@ void Message::read(MemoryReader& memoryReader)
 
     mFilePosition = memoryReader.getGlobalReadPosition();
 
-    auto rPos = memoryReader.getGlobalReadPosition();
-    try
-    {
-      IndicatorSection *section = new IndicatorSection();
-      section->setMessagePtr(this);
-      mIndicatorSection.reset(section);
-      section->read(memoryReader);
-    }
-    catch (...)
-    {
-      Fmi::Exception exception(BCP,"Indicator section creation failed!",nullptr);
-      exception.addParameter("Section start position",uint64_toHex(rPos));
-      throw exception;
-    }
-
-    rPos = memoryReader.getGlobalReadPosition();
-    try
-    {
-      ProductSection *section = new ProductSection();
-      section->setMessagePtr(this);
-      mProductSection.reset(section);
-      section->read(memoryReader);
-    }
-    catch (...)
-    {
-      Fmi::Exception exception(BCP,"Product section creation failed!",nullptr);
-      exception.addParameter("Section start position",uint64_toHex(rPos));
-      throw exception;
-    }
+    readGribSection(memoryReader,mIndicatorSection,"Indicator section creation failed!");
+    readGribSection(memoryReader,mProductSection,"Product section creation failed!");
 
     if (mProductSection->getSectionFlags() & 0x80)
-    {
-      rPos = memoryReader.getGlobalReadPosition();
-      try
-      {
-        GridSection *section = new GridSection();
-        section->setMessagePtr(this);
-        mGridSection.reset(section);
-        section->read(memoryReader);
-      }
-      catch (...)
-      {
-        Fmi::Exception exception(BCP,"Grid section creation failed!",nullptr);
-        exception.addParameter("Section start position",uint64_toHex(rPos));
-        throw exception;
-      }
-    }
+      readGribSection(memoryReader,mGridSection,"Grid section creation failed!");
 
     if (mProductSection->getSectionFlags() & 0x40)
-    {
-      rPos = memoryReader.getGlobalReadPosition();
-      try
-      {
-        BitmapSection *section = new BitmapSection();
-        section->setMessagePtr(this);
-        mBitmapSection.reset(section);
-        section->read(memoryReader);
-      }
-      catch (...)
-      {
-        Fmi::Exception exception(BCP,"Bitmap section creation failed!",nullptr);
-        exception.addParameter("Section start position",uint64_toHex(rPos));
-        throw exception;
-      }
-    }
+      readGribSection(memoryReader,mBitmapSection,"Bitmap section creation failed!");
 
-    rPos = memoryReader.getGlobalReadPosition();
-    try
-    {
-      DataSection *section = new DataSection();
-      section->setMessagePtr(this);
-      mDataSection.reset(section);
-      section->read(memoryReader);
-    }
-    catch (...)
-    {
-      Fmi::Exception exception(BCP,"Data section creation failed!",nullptr);
-      exception.addParameter("Section start position",uint64_toHex(rPos));
-      throw exception;
-    }
+    readGribSection(memoryReader,mDataSection,"Data section creation failed!");
 
     if (mFmiParameterId != 0)
     {

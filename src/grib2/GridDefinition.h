@@ -166,5 +166,24 @@ extern Fmi::Cache::CacheStats transformCache3_stats;
 extern T::SpatialRef_sptr latlonSpatialReference;
 
 
+/*! \brief Resize the GRIB2 coordinate-related global caches in place.  Each parameter
+ *  caps the corresponding cache; pass 0 to leave a cache at its current size.
+ *
+ *  Default initial sizes (set at static-init time): latlonCoordinateCache=1000,
+ *  originalCoordinateCache=1000, transformCache1=1000000, transformCache2=1000000,
+ *  transformCache3=400, spatialReferenceCache=1000.
+ *
+ *  The latlon and original coordinate caches hold full per-geometry coordinate vectors
+ *  and dominate memory in production: at 1000 entries × up to 16 MiB per entry they
+ *  can reach 16 GiB worst case.  Typical workloads use 5–50 distinct geometries, so
+ *  shrinking these is the highest-impact memory tuning knob. */
+void setCacheSizes(std::size_t latlonCoordinateCacheSize,
+                   std::size_t originalCoordinateCacheSize,
+                   std::size_t transformCache1Size,
+                   std::size_t transformCache2Size,
+                   std::size_t transformCache3Size,
+                   std::size_t spatialReferenceCacheSize);
+
+
 }  // namespace GRIB2
 }  // namespace SmartMet

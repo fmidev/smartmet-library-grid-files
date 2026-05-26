@@ -179,6 +179,29 @@ class Message : public GRID::Message
 
   private:
 
+    /*! \brief Allocate, register, and parse one GRIB section.  Wraps allocation,
+     *  setMessagePtr, member reset, and section->read() in a single call.  On failure
+     *  rethrows with the supplied error context and the position of the failed section. */
+    template <typename SectionT>
+    void readGribSection(MemoryReader& memoryReader,std::shared_ptr<SectionT>& member,const char *errorContext)
+    {
+      auto rPos = memoryReader.getGlobalReadPosition();
+      try
+      {
+        SectionT *section = new SectionT();
+        section->setMessagePtr(this);
+        member.reset(section);
+        section->read(memoryReader);
+      }
+      catch (...)
+      {
+        Fmi::Exception exception(BCP,errorContext,nullptr);
+        exception.addParameter("Section start position",uint64_toHex(rPos));
+        throw exception;
+      }
+    }
+
+
     /*! \brief The message start position in the file. */
     T::FilePosition     mFilePosition;
 

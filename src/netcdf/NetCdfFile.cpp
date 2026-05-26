@@ -1015,6 +1015,231 @@ void NetCdfFile::readPropertyList(MemoryReader& memoryReader)
 
 
 
+/*! \brief Identifies the projection and geometry id for one grid variable.  Dispatches
+ *  on the grid_mapping attribute and queries the geometry registry for a matching definition;
+ *  reports unrecognised geometries to stdout. */
+
+void NetCdfFile::detectProjectionGeometry(
+    const std::string& mappingName,
+    const std::string& gridMapping,
+    const std::string& xStandardName,
+    const std::string& yStandardName,
+    const OGRSpatialReference& latlonSp,
+    double startx, double starty,
+    double dx, double dy,
+    const char *sm,
+    int& projectionId,
+    int& geometryId)
+{
+  try
+  {
+    char projectionString[300];
+    projectionString[0] = '\0';
+
+    if (strcasecmp(mappingName.c_str(),"polar_stereographic") == 0 || strcasecmp(mappingName.c_str(),"stereographic") == 0)
+    {
+      // ***** PROJECTION: Polar stereograpic ***********************************************
+
+      projectionId = T::GridProjectionValue::PolarStereographic;
+
+      double longitude_of_projection_origin = 0.0;
+      getProperty(gridMapping + ".longitude_of_projection_origin", 0, longitude_of_projection_origin);
+
+      double latitude_of_projection_origin = 0.0;
+      getProperty(gridMapping + ".latitude_of_projection_origin", 0, latitude_of_projection_origin);
+
+      double scale_factor_at_projection_origin = 0.0;
+      getProperty(gridMapping + ".scale_factor_at_projection_origin", 0, scale_factor_at_projection_origin);
+
+      double straight_vertical_longitude_from_pole = 0.0;
+      getProperty(gridMapping + ".straight_vertical_longitude_from_pole", 0, straight_vertical_longitude_from_pole);
+
+      double false_easting = 0.0;
+      getProperty(gridMapping + ".false_easting", 0, false_easting);
+
+      double false_northing = 0.0;
+      getProperty(gridMapping + ".false_northing", 0, false_northing);
+
+      OGRSpatialReference sp;
+      sp.SetPS(latitude_of_projection_origin,longitude_of_projection_origin,scale_factor_at_projection_origin,false_easting,false_northing);
+
+      sp.SetTargetLinearUnits("PROJCS", SRS_UL_METER, 1.0);
+      sp.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
+
+      OGRCoordinateTransformation *transformation = OGRCreateCoordinateTransformation(&sp,&latlonSp);
+      transformation->Transform(1,&startx,&starty);
+      OCTDestroyCoordinateTransformation(transformation);
+
+      sprintf(projectionString,"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;description",
+          T::GridProjectionValue::PolarStereographic,(int)mXCoordinates.size(),(int)mYCoordinates.size(),
+          startx,starty,fabs(dx),fabs(dy),sm,straight_vertical_longitude_from_pole,latitude_of_projection_origin);
+
+      auto def = Identification::gridDef.getGrib2DefinitionByGeometryString(projectionString);
+      if (def)
+      {
+        geometryId = def->getGridGeometryId();
+      }
+      else
+      {
+        std::cout << "#### Geometry not found ####\n";
+        std::cout << "** Add the following line into the geometry definition file (=> fill id,name and description fields) :\n\n";
+        std::cout << projectionString << "\n";
+      }
+    }
+    else
+    if (strcasecmp(mappingName.c_str(),"lambert_azimuthal_equal_area") == 0)
+    {
+      // ***** PROJECTION: Lambert Azimuthal Equal Area *************************************
+
+      projectionId = T::GridProjectionValue::LambertAzimuthalEqualArea;
+
+      dx = mXCoordinates[1] - mXCoordinates[0];
+      dy = mYCoordinates[1] - mYCoordinates[0];
+
+      double longitude_of_projection_origin = 0.0;
+      getProperty(gridMapping + ".longitude_of_projection_origin", 0, longitude_of_projection_origin);
+
+      double latitude_of_projection_origin = 0.0;
+      getProperty(gridMapping + ".latitude_of_projection_origin", 0, latitude_of_projection_origin);
+
+      double false_easting = 0.0;
+      getProperty(gridMapping + ".false_easting", 0, false_easting);
+
+      double false_northing = 0.0;
+      getProperty(gridMapping + ".false_northing", 0, false_northing);
+
+      OGRSpatialReference sp;
+      sp.SetLAEA(latitude_of_projection_origin,longitude_of_projection_origin,false_easting,false_northing);
+      sp.SetTargetLinearUnits("PROJCS", SRS_UL_METER, 1.0);
+      sp.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
+
+      OGRCoordinateTransformation *transformation = OGRCreateCoordinateTransformation(&sp,&latlonSp);
+      transformation->Transform(1,&startx,&starty);
+      OCTDestroyCoordinateTransformation(transformation);
+
+      sprintf(projectionString,"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;description",
+          T::GridProjectionValue::LambertAzimuthalEqualArea,(int)mXCoordinates.size(),(int)mYCoordinates.size(),
+          startx,starty,fabs(dx),fabs(dy),sm,latitude_of_projection_origin,longitude_of_projection_origin);
+
+      auto def = Identification::gridDef.getGrib2DefinitionByGeometryString(projectionString);
+      if (def)
+      {
+        geometryId = def->getGridGeometryId();
+      }
+      else
+      {
+        char tmp[1000];
+        sprintf(tmp,"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;0.000000;0.000000;description",
+            T::GridProjectionValue::LambertAzimuthalEqualArea,(int)mXCoordinates.size(),(int)mYCoordinates.size(),
+            startx,starty,fabs(dx),fabs(dy),sm,latitude_of_projection_origin,longitude_of_projection_origin);
+        std::cout << "#### Geometry not found ####\n";
+        std::cout << "** Add the following line into the geometry definition file (=> fill id,name and description fields) :\n\n";
+        std::cout << tmp << "\n";
+      }
+    }
+    else
+    if (strcasecmp(mappingName.c_str(),"lambert_conformal_conic") == 0)
+    {
+      // ***** PROJECTION: Lambert Conformal *************************************
+
+      projectionId = T::GridProjectionValue::LambertConformal;
+
+      dx = (mXCoordinates[1] - mXCoordinates[0])*1000;
+      dy = (mYCoordinates[1] - mYCoordinates[0])*1000;
+
+      double standard_parallel = 0.0;
+      getProperty(gridMapping + ".standard_parallel", 0, standard_parallel);
+
+      double longitude_of_central_meridian = 0.0;
+      getProperty(gridMapping + ".longitude_of_central_meridian", 0, longitude_of_central_meridian);
+
+
+      double longitude_of_projection_origin = 0.0;
+      getProperty(gridMapping + ".longitude_of_projection_origin", 0, longitude_of_projection_origin);
+
+      double latitude_of_projection_origin = 0.0;
+      getProperty(gridMapping + ".latitude_of_projection_origin", 0, latitude_of_projection_origin);
+
+      double false_easting = 0.0;
+      getProperty(gridMapping + ".false_easting", 0, false_easting);
+
+      double false_northing = 0.0;
+      getProperty(gridMapping + ".false_northing", 0, false_northing);
+
+      double earth_radius = 6371229.0;
+      getProperty(gridMapping + ".earth_radius", 0, earth_radius);
+
+      OGRSpatialReference sp;
+      sp.SetLCC(standard_parallel,longitude_of_central_meridian,latitude_of_projection_origin,longitude_of_projection_origin,false_easting,false_northing);
+      sp.SetTargetLinearUnits("PROJCS", SRS_UL_METER, 1.0);
+      sp.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
+
+      OGRCoordinateTransformation *transformation = OGRCreateCoordinateTransformation(&sp,&latlonSp);
+      transformation->Transform(1,&startx,&starty);
+      OCTDestroyCoordinateTransformation(transformation);
+
+      double sx = 0.0;
+      double sy = -90.0;
+
+      //# LAMBERT CONFORMAL : projection,id,name,ni,nj,first_lon,first_lat,di,dj,scanning_mode,orientation,latin1,latin2,south_pole_lon,south_pole_lat,LaD,earthSemiMajor,earthSemiMinor,description
+      sprintf(projectionString,"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;%.6f;%.6f;%.6f;%.6f;description",
+        T::GridProjectionValue::LambertConformal,(int)mXCoordinates.size(),(int)mYCoordinates.size(),startx,starty,fabs(dx),fabs(dy),
+        sm,longitude_of_central_meridian,latitude_of_projection_origin,latitude_of_projection_origin,sx,sy,latitude_of_projection_origin);
+
+      auto def = Identification::gridDef.getGrib2DefinitionByGeometryString(projectionString);
+      if (def)
+      {
+        geometryId = def->getGridGeometryId();
+      }
+      else
+      {
+        char tmp[1000];
+        sprintf(tmp,"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;%.6f;%.6f;%.6f;%.6f;description",
+          T::GridProjectionValue::LambertConformal,(int)mXCoordinates.size(),(int)mYCoordinates.size(),startx,starty,fabs(dx),fabs(dy),
+          sm,longitude_of_central_meridian,latitude_of_projection_origin,latitude_of_projection_origin,sx,sy,latitude_of_projection_origin);
+        std::cout << "#### Geometry not found ####\n";
+        std::cout << "** Add the following line into the geometry definition file (=> fill id,name and description fields) :\n\n";
+        std::cout << tmp << "\n";
+      }
+    }
+    else
+    if (strcasecmp(mappingName.c_str(),"latitude_longitude") == 0 ||
+        (mappingName.empty() &&  strcasecmp(xStandardName.c_str(),"longitude") == 0   &&  strcasecmp(yStandardName.c_str(),"latitude") == 0))
+    {
+      // ***** PROJECTION: Latlon ***********************************************************
+
+      projectionId = T::GridProjectionValue::LatLon;
+
+      sprintf(projectionString,"%d;id;name;%u;%u;%.6f;%.6f;%.6f;%.6f;%s;description",
+        T::GridProjectionValue::LatLon,(int)mXCoordinates.size(),(int)mYCoordinates.size(),
+        startx,starty,fabs(dx),fabs(dy),sm);
+
+      auto def = Identification::gridDef.getGrib2DefinitionByGeometryString(projectionString);
+      if (def)
+      {
+        geometryId = def->getGridGeometryId();
+      }
+      else
+      {
+        char tmp[1000];
+        sprintf(tmp,"%d;id;name;%u;%u;%.6f;%.6f;%.6f;%.6f;%s;0.000000;0.000000;description",
+          T::GridProjectionValue::LatLon,(int)mXCoordinates.size(),(int)mYCoordinates.size(),
+          startx,starty,fabs(dx),fabs(dy),sm);
+        std::cout << "#### Geometry not found ####\n";
+        std::cout << "** Add the following line into the geometry definition file (=> fill id,name and description fields) :\n\n";
+        std::cout << tmp << "\n";
+      }
+    }
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
 /*! \brief Builds MessageInfo entries for each grid variable, time step and level in the file. */
 
 void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec& messageInfoList)
@@ -1462,8 +1687,6 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
               }
             }
 
-            char projectionString[300];
-            projectionString[0] = '\0';
             char sm[100];
             char *p = sm;
 
@@ -1478,202 +1701,8 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
               p += sprintf(p,"+y");
 
 
-            if (strcasecmp(mappingName.c_str(),"polar_stereographic") == 0 || strcasecmp(mappingName.c_str(),"stereographic") == 0)
-            {
-              // ***** PROJECTION: Polar stereograpic ***********************************************
-
-              projectionId = T::GridProjectionValue::PolarStereographic;
-
-              double longitude_of_projection_origin = 0.0;
-              getProperty(gridMapping + ".longitude_of_projection_origin", 0, longitude_of_projection_origin);
-
-              double latitude_of_projection_origin = 0.0;
-              getProperty(gridMapping + ".latitude_of_projection_origin", 0, latitude_of_projection_origin);
-
-              double scale_factor_at_projection_origin = 0.0;
-              getProperty(gridMapping + ".scale_factor_at_projection_origin", 0, scale_factor_at_projection_origin);
-
-              double straight_vertical_longitude_from_pole = 0.0;
-              getProperty(gridMapping + ".straight_vertical_longitude_from_pole", 0, straight_vertical_longitude_from_pole);
-
-              double false_easting = 0.0;
-              getProperty(gridMapping + ".false_easting", 0, false_easting);
-
-              double false_northing = 0.0;
-              getProperty(gridMapping + ".false_northing", 0, false_northing);
-
-              OGRSpatialReference sp;
-              sp.SetPS(latitude_of_projection_origin,longitude_of_projection_origin,scale_factor_at_projection_origin,false_easting,false_northing);
-
-              sp.SetTargetLinearUnits("PROJCS", SRS_UL_METER, 1.0);
-              sp.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
-
-              OGRCoordinateTransformation *transformation = OGRCreateCoordinateTransformation(&sp,&latlonSp);
-              transformation->Transform(1,&startx,&starty);
-              OCTDestroyCoordinateTransformation(transformation);
-
-              sprintf(projectionString,"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;description",
-                  T::GridProjectionValue::PolarStereographic,(int)mXCoordinates.size(),(int)mYCoordinates.size(),
-                  startx,starty,fabs(dx),fabs(dy),sm,straight_vertical_longitude_from_pole,latitude_of_projection_origin);
-
-              auto def = Identification::gridDef.getGrib2DefinitionByGeometryString(projectionString);
-              if (def)
-              {
-                geometryId = def->getGridGeometryId();
-              }
-              else
-              {
-                std::cout << "#### Geometry not found ####\n";
-                std::cout << "** Add the following line into the geometry definition file (=> fill id,name and description fields) :\n\n";
-                std::cout << projectionString << "\n";
-              }
-            }
-            else
-            if (strcasecmp(mappingName.c_str(),"lambert_azimuthal_equal_area") == 0)
-            {
-              // ***** PROJECTION: Lambert Azimuthal Equal Area *************************************
-
-              projectionId = T::GridProjectionValue::LambertAzimuthalEqualArea;
-
-              dx = mXCoordinates[1] - mXCoordinates[0];
-              dy = mYCoordinates[1] - mYCoordinates[0];
-
-              double longitude_of_projection_origin = 0.0;
-              getProperty(gridMapping + ".longitude_of_projection_origin", 0, longitude_of_projection_origin);
-
-              double latitude_of_projection_origin = 0.0;
-              getProperty(gridMapping + ".latitude_of_projection_origin", 0, latitude_of_projection_origin);
-
-              double false_easting = 0.0;
-              getProperty(gridMapping + ".false_easting", 0, false_easting);
-
-              double false_northing = 0.0;
-              getProperty(gridMapping + ".false_northing", 0, false_northing);
-
-              OGRSpatialReference sp;
-              sp.SetLAEA(latitude_of_projection_origin,longitude_of_projection_origin,false_easting,false_northing);
-              sp.SetTargetLinearUnits("PROJCS", SRS_UL_METER, 1.0);
-              sp.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
-
-              OGRCoordinateTransformation *transformation = OGRCreateCoordinateTransformation(&sp,&latlonSp);
-              transformation->Transform(1,&startx,&starty);
-              OCTDestroyCoordinateTransformation(transformation);
-
-              sprintf(projectionString,"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;description",
-                  T::GridProjectionValue::LambertAzimuthalEqualArea,(int)mXCoordinates.size(),(int)mYCoordinates.size(),
-                  startx,starty,fabs(dx),fabs(dy),sm,latitude_of_projection_origin,longitude_of_projection_origin);
-
-              auto def = Identification::gridDef.getGrib2DefinitionByGeometryString(projectionString);
-              if (def)
-              {
-                geometryId = def->getGridGeometryId();
-              }
-              else
-              {
-                char tmp[1000];
-                sprintf(tmp,"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;0.000000;0.000000;description",
-                    T::GridProjectionValue::LambertAzimuthalEqualArea,(int)mXCoordinates.size(),(int)mYCoordinates.size(),
-                    startx,starty,fabs(dx),fabs(dy),sm,latitude_of_projection_origin,longitude_of_projection_origin);
-                std::cout << "#### Geometry not found ####\n";
-                std::cout << "** Add the following line into the geometry definition file (=> fill id,name and description fields) :\n\n";
-                std::cout << tmp << "\n";
-              }
-            }
-            else
-            if (strcasecmp(mappingName.c_str(),"lambert_conformal_conic") == 0)
-            {
-              // ***** PROJECTION: Lambert Conformal *************************************
-
-              projectionId = T::GridProjectionValue::LambertConformal;
-
-              dx = (mXCoordinates[1] - mXCoordinates[0])*1000;
-              dy = (mYCoordinates[1] - mYCoordinates[0])*1000;
-
-              double standard_parallel = 0.0;
-              getProperty(gridMapping + ".standard_parallel", 0, standard_parallel);
-
-              double longitude_of_central_meridian = 0.0;
-              getProperty(gridMapping + ".longitude_of_central_meridian", 0, longitude_of_central_meridian);
-
-
-              double longitude_of_projection_origin = 0.0;
-              getProperty(gridMapping + ".longitude_of_projection_origin", 0, longitude_of_projection_origin);
-
-              double latitude_of_projection_origin = 0.0;
-              getProperty(gridMapping + ".latitude_of_projection_origin", 0, latitude_of_projection_origin);
-
-              double false_easting = 0.0;
-              getProperty(gridMapping + ".false_easting", 0, false_easting);
-
-              double false_northing = 0.0;
-              getProperty(gridMapping + ".false_northing", 0, false_northing);
-
-              double earth_radius = 6371229.0;
-              getProperty(gridMapping + ".earth_radius", 0, earth_radius);
-
-              OGRSpatialReference sp;
-              sp.SetLCC(standard_parallel,longitude_of_central_meridian,latitude_of_projection_origin,longitude_of_projection_origin,false_easting,false_northing);
-              sp.SetTargetLinearUnits("PROJCS", SRS_UL_METER, 1.0);
-              sp.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
-
-              OGRCoordinateTransformation *transformation = OGRCreateCoordinateTransformation(&sp,&latlonSp);
-              transformation->Transform(1,&startx,&starty);
-              OCTDestroyCoordinateTransformation(transformation);
-
-              double sx = 0.0;
-              double sy = -90.0;
-
-              //# LAMBERT CONFORMAL : projection,id,name,ni,nj,first_lon,first_lat,di,dj,scanning_mode,orientation,latin1,latin2,south_pole_lon,south_pole_lat,LaD,earthSemiMajor,earthSemiMinor,description
-              sprintf(projectionString,"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;%.6f;%.6f;%.6f;%.6f;description",
-                T::GridProjectionValue::LambertConformal,(int)mXCoordinates.size(),(int)mYCoordinates.size(),startx,starty,fabs(dx),fabs(dy),
-                sm,longitude_of_central_meridian,latitude_of_projection_origin,latitude_of_projection_origin,sx,sy,latitude_of_projection_origin);
-
-              //auto def = Identification::gridDef.getGrib2DefinitionByGeometryId(1093);
-              auto def = Identification::gridDef.getGrib2DefinitionByGeometryString(projectionString);
-              if (def)
-              {
-                geometryId = def->getGridGeometryId();
-              }
-              else
-              {
-                char tmp[1000];
-                sprintf(tmp,"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;%.6f;%.6f;%.6f;%.6f;description",
-                  T::GridProjectionValue::LambertConformal,(int)mXCoordinates.size(),(int)mYCoordinates.size(),startx,starty,fabs(dx),fabs(dy),
-                  sm,longitude_of_central_meridian,latitude_of_projection_origin,latitude_of_projection_origin,sx,sy,latitude_of_projection_origin);
-                std::cout << "#### Geometry not found ####\n";
-                std::cout << "** Add the following line into the geometry definition file (=> fill id,name and description fields) :\n\n";
-                std::cout << tmp << "\n";
-              }
-
-            }
-            else
-            if (strcasecmp(mappingName.c_str(),"latitude_longitude") == 0 ||
-                (mappingName.empty() &&  strcasecmp(xStandardName.c_str(),"longitude") == 0   &&  strcasecmp(yStandardName.c_str(),"latitude") == 0))
-            {
-              // ***** PROJECTION: Latlon ***********************************************************
-
-              projectionId = T::GridProjectionValue::LatLon;
-
-              sprintf(projectionString,"%d;id;name;%u;%u;%.6f;%.6f;%.6f;%.6f;%s;description",
-                T::GridProjectionValue::LatLon,(int)mXCoordinates.size(),(int)mYCoordinates.size(),
-                startx,starty,fabs(dx),fabs(dy),sm);
-
-              auto def = Identification::gridDef.getGrib2DefinitionByGeometryString(projectionString);
-              if (def)
-              {
-                geometryId = def->getGridGeometryId();
-              }
-              else
-              {
-                char tmp[1000];
-                sprintf(tmp,"%d;id;name;%u;%u;%.6f;%.6f;%.6f;%.6f;%s;0.000000;0.000000;description",
-                  T::GridProjectionValue::LatLon,(int)mXCoordinates.size(),(int)mYCoordinates.size(),
-                  startx,starty,fabs(dx),fabs(dy),sm);
-                std::cout << "#### Geometry not found ####\n";
-                std::cout << "** Add the following line into the geometry definition file (=> fill id,name and description fields) :\n\n";
-                std::cout << tmp << "\n";
-              }
-            }
+            detectProjectionGeometry(mappingName,gridMapping,xStandardName,yStandardName,latlonSp,
+                                     startx,starty,dx,dy,sm,projectionId,geometryId);
 
 
 

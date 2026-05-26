@@ -315,6 +315,19 @@ class GridDef
 
   protected:
 
+    GRIB1::GridDefinition*  createGrib1_LatLon(char* const field[], uint c);
+    GRIB1::GridDefinition*  createGrib1_RotatedLatLon(char* const field[], uint c);
+    GRIB1::GridDefinition*  createGrib1_Mercator(char* const field[], uint c);
+    GRIB1::GridDefinition*  createGrib1_PolarStereographic(char* const field[], uint c);
+    GRIB1::GridDefinition*  createGrib1_LambertConformal(char* const field[], uint c);
+
+    GRIB2::GridDefinition*  createGrib2_LatLon(char* const field[], uint c);
+    GRIB2::GridDefinition*  createGrib2_RotatedLatLon(char* const field[], uint c);
+    GRIB2::GridDefinition*  createGrib2_TransverseMercator(char* const field[], uint c);
+    GRIB2::GridDefinition*  createGrib2_PolarStereographic(char* const field[], uint c);
+    GRIB2::GridDefinition*  createGrib2_LambertConformal(char* const field[], uint c);
+    GRIB2::GridDefinition*  createGrib2_LambertAzimuthalEqualArea(char* const field[], uint c);
+
     void                    updateGrib();
     void                    updateGrib1();
     void                    updateGrib2();

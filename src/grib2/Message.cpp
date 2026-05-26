@@ -1335,120 +1335,38 @@ void Message::read(MemoryReader& memoryReader)
           switch (idx)
           {
             case SectionNumber::identification_section:
-            {
-              IdentificationSection *section = new IdentificationSection();
-              section->setMessagePtr(this);
-              mIdentificationSection.reset(section);
-              auto p1 = memoryReader.getReadPosition();
-              section->read(memoryReader);
-              auto p2 = memoryReader.getReadPosition();
-              auto len = section->getSectionLength();
-
-              if (len > 0  &&  (p1+len) != p2)
-                memoryReader.setReadPosition(p1+len);
-            }
-            break;
+              readGribSectionWithPosFixup(memoryReader,mIdentificationSection);
+              break;
 
             case SectionNumber::local_section:
-            {
-              LocalSection *section = new LocalSection();
-              section->setMessagePtr(this);
-              mLocalSection.reset(section);
-              auto p1 = memoryReader.getReadPosition();
-              section->read(memoryReader);
-              auto p2 = memoryReader.getReadPosition();
-              auto len = section->getSectionLength();
-
-              if (len > 0  &&  (p1+len) != p2)
-                memoryReader.setReadPosition(p1+len);
-            }
-            break;
+              readGribSectionWithPosFixup(memoryReader,mLocalSection);
+              break;
 
             case SectionNumber::grid_section:
-            {
-              GridSection *section = new GridSection();
-              section->setMessagePtr(this);
-              mGridSection.reset(section);
-              auto p1 = memoryReader.getReadPosition();
-              section->read(memoryReader);
-              auto p2 = memoryReader.getReadPosition();
-              auto len = section->getSectionLength();
-
-              if (len > 0  &&  (p1+len) != p2)
-                memoryReader.setReadPosition(p1+len);
-            }
-            break;
+              readGribSectionWithPosFixup(memoryReader,mGridSection);
+              break;
 
             case SectionNumber::product_section:
-            {
-              ProductSection *section = new ProductSection();
-              section->setMessagePtr(this);
-              mProductSection.reset(section);
-              auto p1 = memoryReader.getReadPosition();
-              section->read(memoryReader);
-              auto p2 = memoryReader.getReadPosition();
-              auto len = section->getSectionLength();
-
-              if (len > 0  &&  (p1+len) != p2)
-                memoryReader.setReadPosition(p1+len);
-            }
-            break;
+              readGribSectionWithPosFixup(memoryReader,mProductSection);
+              break;
 
             case SectionNumber::representation_section:
             {
+              // No position fixup: the section reader handles its own position.
               RepresentationSection *section = new RepresentationSection();
               section->setMessagePtr(this);
               mRepresentationSection.reset(section);
-              //auto p1 = memoryReader.getReadPosition();
               section->read(memoryReader);
-              //auto p2 = memoryReader.getReadPosition();
-              //auto len = section->getSectionLength();
             }
             break;
 
             case SectionNumber::bitmap_section:
-            {
-              BitmapSection *section = new BitmapSection();
-              section->setMessagePtr(this);
-              mBitmapSection.reset(section);
-              auto p1 = memoryReader.getReadPosition();
-              section->read(memoryReader);
-              /*
-              if (section->getBitmapDataSizeInBytes() > 0)
-              {
-                auto numOfValues = getGridOriginalValueCount();
-                auto hash = section->getHash();
-                T::IndexVector indexVector;
-                if (!GRID::indexCache.findIndexVector(hash))
-                {
-                  section->getIndexVector(numOfValues,indexVector);
-                  GRID::indexCache.addIndexVector(hash,indexVector);
-                }
-              }
-              */
-
-              auto p2 = memoryReader.getReadPosition();
-              auto len = section->getSectionLength();
-
-              if (len > 0  &&  (p1+len) != p2)
-                memoryReader.setReadPosition(p1+len);
-            }
-            break;
+              readGribSectionWithPosFixup(memoryReader,mBitmapSection);
+              break;
 
             case SectionNumber::data_section:
-            {
-              DataSection *section = new DataSection();
-              section->setMessagePtr(this);
-              mDataSection.reset(section);
-              auto p1 = memoryReader.getReadPosition();
-              section->read(memoryReader);
-              auto p2 = memoryReader.getReadPosition();
-              auto len = section->getSectionLength();
-
-              if (len > 0  &&  (p1+len) != p2)
-                memoryReader.setReadPosition(p1+len);
-            }
-            break;
+              readGribSectionWithPosFixup(memoryReader,mDataSection);
+              break;
 
             default:
             {

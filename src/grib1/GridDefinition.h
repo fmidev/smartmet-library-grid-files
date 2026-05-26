@@ -174,5 +174,19 @@ extern Fmi::Cache::CacheStats transformCache3_stats;
 
 extern T::SpatialRef_sptr latlonSpatialReference;
 
+
+/*! \brief Resize the GRIB1 coordinate-related global caches in place.  Each parameter
+ *  caps the corresponding cache; pass 0 to leave a cache at its current size.
+ *
+ *  Default initial sizes (set at static-init time): latlonCoordinateCache=1000,
+ *  originalCoordinateCache=1000, transformCache1=1000000, transformCache2=1000000,
+ *  transformCache3=400, spatialReferenceCache=1000. */
+void setCacheSizes(std::size_t latlonCoordinateCacheSize,
+                   std::size_t originalCoordinateCacheSize,
+                   std::size_t transformCache1Size,
+                   std::size_t transformCache2Size,
+                   std::size_t transformCache3Size,
+                   std::size_t spatialReferenceCacheSize);
+
 }  // namespace GRID
 }  // namespace SmartMet

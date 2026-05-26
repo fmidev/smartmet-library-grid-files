@@ -45,6 +45,24 @@ Fmi::Cache::Cache<std::size_t,T::SpatialRef_sptr> spatialReferenceCache(1000);
 
 T::SpatialRef_sptr latlonSpatialReference;
 
+
+/*! \brief Content Server: Resize the GRIB2 coordinate-related caches in place.  Pass 0 for any size to leave that cache unchanged. */
+
+void setCacheSizes(std::size_t latlonCoordinateCacheSize,
+                   std::size_t originalCoordinateCacheSize,
+                   std::size_t transformCache1Size,
+                   std::size_t transformCache2Size,
+                   std::size_t transformCache3Size,
+                   std::size_t spatialReferenceCacheSize)
+{
+  if (latlonCoordinateCacheSize > 0)   latlonCoordinateCache.resize(latlonCoordinateCacheSize);
+  if (originalCoordinateCacheSize > 0) originalCoordinateCache.resize(originalCoordinateCacheSize);
+  if (transformCache1Size > 0)         transformCache1.resize(transformCache1Size);
+  if (transformCache2Size > 0)         transformCache2.resize(transformCache2Size);
+  if (transformCache3Size > 0)         transformCache3.resize(transformCache3Size);
+  if (spatialReferenceCacheSize > 0)   spatialReferenceCache.resize(spatialReferenceCacheSize);
+}
+
 /*! \brief The constructor of the class. */
 
 GridDefinition::GridDefinition()

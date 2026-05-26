@@ -398,6 +398,14 @@ class MessageProcessing
     virtual void getGridValueVectorByTimeLevelAndCoordinateList(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::CoordinateType coordinateType,std::vector<T::Coordinate>& coordinates,T::AttributeList& attributeList,T::ParamValue_vec& values) const;
     //! \overload
     virtual void getGridValueVectorByTimeLevelAndCoordinateList(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::CoordinateType coordinateType,std::vector<T::Coordinate>& coordinates,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const;
+
+  protected:
+
+    /*! \brief Returns the coordinate vector for the requested coordinate type, fetched
+     *  from \p message.  The fetched share-ptr is stored in \p holder to keep the
+     *  vector alive while the returned raw pointer is in use.  Returns nullptr for
+     *  GRID_COORDINATES (the caller uses grid-index coordinates directly). */
+    T::Coordinate_vec* selectCoordinates(const GRID::Message& message,T::CoordinateType coordinateType,T::Coordinate_svec& holder) const;
 };
 
 
