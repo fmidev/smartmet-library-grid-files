@@ -3264,6 +3264,11 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,uint 
     if (s != nullptr)
       areaInterpolationMethod = toInt16(s);
 
+    bool geometryMatch = false;
+    const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
+    if (geometryIdStr != nullptr  &&  getGridGeometryId() == toInt32(geometryIdStr))
+      geometryMatch = true;
+
     if (gridSizeStr != nullptr)
     {
       double m = toDouble(gridSizeStr);
@@ -3293,17 +3298,20 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,uint 
         double x1 = 0.0, y1 = 0.0, x2 = 0.0, y2 = 0.0;
         uint px1 = 0,py1 = 0,px2 = d.nx()-1,py2 = d.ny()-1;
 
-        if (reverseYDirection())
+        if (!geometryMatch && reverseYDirection())
           px1 = 0,py1 = d.ny()-1,px2 = d.nx()-1,py2 = 0;
 
         char tmp[100];
         if (getGridLatLonCoordinatesByGridPoint(px1,py1,y1,x1)  &&  getGridLatLonCoordinatesByGridPoint(px2,py2,y2,x2))
         {
-          if (x2 < x1  &&  x2 < 0)
+          if (!geometryMatch)
+          {
+            if (x2 < x1  &&  x2 < 0)
               x2 += 360;
 
-          if (x2 < x1  && x1 >= 180)
-            x1 -= 360;
+            if (x2 < x1  && x1 >= 180)
+              x1 -= 360;
+          }
 
           sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
           attributeList.setAttribute("grid.llbox",tmp);
@@ -3315,14 +3323,17 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,uint 
         {
           if (getGridProjection() == T::GridProjectionValue::LatLon)
           {
-            if (x2 < x1  &&  x2 < 0)
-              x2 += 360;
+            if (!geometryMatch)
+            {
+              if (x2 < x1  &&  x2 < 0)
+                x2 += 360;
 
-            if (x2 < x1  && x1 >= 180)
-              x1 -= 360;
+              if (x2 < x1  && x1 >= 180)
+                x1 -= 360;
+            }
           }
 
-          if (reverseYDirection())
+          if (!geometryMatch && reverseYDirection())
           {
             double tmp = y1;
             y1 = y2;
@@ -3395,10 +3406,7 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,uint 
       attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
     }
 
-
-    const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
-
-    if (geometryIdStr != nullptr  &&  getGridGeometryId() == toInt32(geometryIdStr))
+    if (geometryMatch)
     {
       // The geometryId is same as the original geometry.
 
@@ -3406,6 +3414,8 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,uint 
       T::Dimensions  d = getGridDimensions();
       attributeList.setAttribute("grid.width",Fmi::to_string(d.nx()));
       attributeList.setAttribute("grid.height",Fmi::to_string(d.ny()));
+      attributeList.setAttribute("grid.reverseYDirection",Fmi::to_string((int)reverseYDirection()));
+      attributeList.setAttribute("grid.reverseXDirection",Fmi::to_string((int)reverseXDirection()));
       return;
     }
 
