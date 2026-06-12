@@ -357,6 +357,43 @@ bool GridDefinition::getGridLatLonArea(T::Coordinate& topLeft,T::Coordinate& top
 
 
 
+/*! \brief This method accepts grid points that fall a tiny fraction of a grid cell
+    outside the grid border due to floating point inaccuracy in coordinate
+    transformations (e.g. points exactly at the border after reprojection) by
+    clamping them onto the border.
+
+        \param d       The grid dimensions.
+        \param grid_i  The grid i-position, clamped onto the border on success.
+        \param grid_j  The grid j-position, clamped onto the border on success.
+        \return        Returns 'true' if the position was clamped onto the grid.
+*/
+
+static bool clampGridPointToBorder(const T::Dimensions& d,double& grid_i,double& grid_j)
+{
+  const double eps = 0.000001;
+
+  if (d.getDimensions() != 2)
+    return false;
+
+  double i = ((grid_i > -eps) && (grid_i < 0)) ? 0 : grid_i;
+  double j = ((grid_j > -eps) && (grid_j < 0)) ? 0 : grid_j;
+
+  if ((i == grid_i) && (j == grid_j))
+    return false;
+
+  if (i < 0 || j < 0 || i > C_DOUBLE(d.nx()-1) || j > C_DOUBLE(d.ny()-1))
+    return false;
+
+  grid_i = i;
+  grid_j = j;
+
+  return true;
+}
+
+
+
+
+
 /*! \brief The method converts a list of latlon coordinates into grid point coordinates. */
 
 void GridDefinition:: getGridPointListByLatLonCoordinates(T::Coordinate_vec& latlon,T::Coordinate_vec& points) const
@@ -408,10 +445,12 @@ void GridDefinition:: getGridPointListByLatLonCoordinates(T::Coordinate_vec& lat
     T::Coordinate_svec vec(new T::Coordinate_vec());
     vec->reserve(sz);
 
+    auto d = getGridDimensions();
+
     for (uint t=0; t<sz; t++)
     {
-      double i = 0,j = 0;
-      if (getGridPointByOriginalCoordinates(x[t],y[t],i,j))
+      double i = -1000,j = -1000;
+      if (getGridPointByOriginalCoordinates(x[t],y[t],i,j) || clampGridPointToBorder(d,i,j))
         vec->emplace_back(i,j);
       else
         vec->emplace_back(ParamValueMissing,ParamValueMissing);
@@ -2212,7 +2251,11 @@ bool GridDefinition::getGridPointByLatLonCoordinates(double lat,double lon,doubl
     double x = 0, y = 0;
     getGridOriginalCoordinatesByLatLonCoordinates(lat,lon,x,y);
 
-    if (getGridPointByOriginalCoordinates(x,y,grid_i,grid_j))
+    grid_i = -1000;
+    grid_j = -1000;
+
+    if (getGridPointByOriginalCoordinates(x,y,grid_i,grid_j) ||
+        clampGridPointToBorder(getGridDimensions(),grid_i,grid_j))
     {
       if (hash != 0)
       {
@@ -2253,7 +2296,12 @@ bool GridDefinition::getGridPointByLatLonCoordinatesNoCache(double lat,double lo
   {
     double x = 0, y = 0;
     getGridOriginalCoordinatesByLatLonCoordinatesNoCache(lat,lon,x,y);
-    return getGridPointByOriginalCoordinates(x,y,grid_i,grid_j);
+
+    grid_i = -1000;
+    grid_j = -1000;
+
+    return (getGridPointByOriginalCoordinates(x,y,grid_i,grid_j) ||
+            clampGridPointToBorder(getGridDimensions(),grid_i,grid_j));
   }
   catch (...)
   {

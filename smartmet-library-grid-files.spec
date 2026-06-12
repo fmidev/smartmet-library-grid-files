@@ -3,8 +3,8 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 26.5.26
-Release: 2%{?dist}.fmi
+Version: 26.6.12
+Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
 URL: https://github.com/fmidev/smartmet-library-grid-files
@@ -100,6 +100,11 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Fri Jun 12 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.6.12-1.fmi
+- Accept grid points falling a tiny fraction of a grid cell outside the grid border
+  due to floating point inaccuracy in coordinate transformations by clamping them
+  onto the border; fixes missing values at grid borders on native and resampled grids
+
 * Tue May 26 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.5.26-2.fmi
 - Fixes to handling coordinates
 * Tue May 26 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.5.26-1.fmi
