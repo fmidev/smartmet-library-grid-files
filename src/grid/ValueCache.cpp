@@ -483,6 +483,51 @@ bool ValueCache::getValues(uint key,T::ParamValue_vec& values)
 
 
 
+bool ValueCache::getValuesByIndexList(uint key,std::vector<uint>& indexList,T::ParamValue_vec& values)
+{
+  try
+  {
+    uint sz = indexList.size();
+    if (!sz)
+      return false;
+
+    uint idx = key % mMaxLength;
+
+    AutoReadLock lock(&mModificationLock);
+
+    ValueCacheEntry_ptr entry = mEntryList[idx];
+
+    if (!entry || entry->mKey != key || !entry->mGrid)
+    {
+      mCacheStats.misses++;
+      return false;
+    }
+
+    mCacheStats.hits++;
+
+    uint gsz = entry->mSize;
+    T::ParamValue *grid = entry->mGrid;
+
+    values.reserve(sz);
+    for (std::size_t t=0; t<sz; t++)
+    {
+      uint i = indexList[t];
+      if (i < gsz)
+        values.push_back(grid[i]);
+      else
+        values.push_back(ParamValueMissing);
+    }
+
+    entry->mAccessCounter = mAccessCounter++;
+    return true;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
 
 
 /*! \brief Deletes the cached value vector identified by the given key. */

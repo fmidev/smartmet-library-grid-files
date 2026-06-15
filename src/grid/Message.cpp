@@ -5062,6 +5062,29 @@ void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::ve
 
 
 
+void Message::getGridValuesByPointList(std::vector<T::Point>& gridPoints,T::ParamValue_vec& values) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    uint sz = gridPoints.size();
+    if (!sz)
+      return;
+
+    values.reserve(gridPoints.size());
+    for (uint t=0; t<sz; t++)
+    {
+      values.emplace_back(getGridValueByGridPoint(gridPoints[t].x(),gridPoints[t].y()));
+    }
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
 
 
 /*! \brief Returns grid point values inside the given polygon with value modification. */
@@ -5086,26 +5109,35 @@ void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::ve
         {
           double grid_i = 0;
           double grid_j = 0;
-          getGridPointByLatLonCoordinates(it->y(),it->x(),grid_i,grid_j);
-          newPolygonPoints.emplace_back(grid_i,grid_j);
+          if (getGridPointByLatLonCoordinates(it->y(),it->x(),grid_i,grid_j))
+            newPolygonPoints.emplace_back(grid_i,grid_j);
         }
 
         std::vector<T::Point> gridPoints;
         getPointsInsidePolygon(cols,rows,newPolygonPoints,gridPoints);
 
-        for (auto it=gridPoints.begin(); it != gridPoints.end(); ++it)
+        T::ParamValue_vec values;
+        getGridValuesByPointList(gridPoints,values);
+
+        uint sz1 = gridPoints.size();
+        uint sz2 = values.size();
+
+        if (sz1 == 0 || sz1 != sz2)
+          return;
+
+        for (uint t=0; t<sz1; t++)
         {
           T::GridValue rec;
 
           double lat = 0;
           double lon = 0;
-          if (getGridLatLonCoordinatesByGridPoint(it->x(),it->y(),lat,lon))
+          if (getGridLatLonCoordinatesByGridPoint(gridPoints[t].x(),gridPoints[t].y(),lat,lon))
           {
             rec.mX = lon;
             rec.mY = lat;
           }
 
-          rec.mValue = getGridValueByGridPoint(it->x(),it->y(),modificationOperation,modificationParameters);
+          rec.mValue = values[t];
           valueList.addGridValue(rec);
         }
       }
@@ -5121,17 +5153,22 @@ void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::ve
         std::vector<T::Point> gridPoints;
         getPointsInsidePolygon(k*cols,rows,polygonPoints,gridPoints);
 
-        for (auto it=gridPoints.begin(); it != gridPoints.end(); ++it)
+        T::ParamValue_vec values;
+        getGridValuesByPointList(gridPoints,values);
+
+        uint sz1 = gridPoints.size();
+        uint sz2 = values.size();
+
+        if (sz1 == 0 || sz1 != sz2)
+          return;
+
+        for (uint t=0; t<sz1; t++)
         {
           T::GridValue rec;
-
-          rec.mX = it->x();
-          rec.mY = it->y();
-          rec.mValue = getGridValueByGridPoint(it->x() % cols,it->y(),modificationOperation,modificationParameters);
+          rec.mX = gridPoints[t].x();
+          rec.mY = gridPoints[t].y();
+          rec.mValue = values[t];
           valueList.addGridValue(rec);
-
-          //double lat = 0,lon = 0;
-          //getGridLatLonCoordinatesByGridPosition(it->x() % cols,it->y(),lat,lon);
         }
       }
       break;
@@ -5152,19 +5189,28 @@ void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::ve
         std::vector<T::Point> gridPoints;
         getPointsInsidePolygon(cols,rows,newPolygonPoints,gridPoints);
 
-        for (auto it=gridPoints.begin(); it != gridPoints.end(); ++it)
+        T::ParamValue_vec values;
+        getGridValuesByPointList(gridPoints,values);
+
+        uint sz1 = gridPoints.size();
+        uint sz2 = values.size();
+
+        if (sz1 == 0 || sz1 != sz2)
+          return;
+
+        for (uint t=0; t<sz1; t++)
         {
           T::GridValue rec;
 
           double x = 0;
           double y = 0;
-          if (getGridOriginalCoordinatesByGridPoint(it->x(),it->y(),x,y))
+          if (getGridOriginalCoordinatesByGridPoint(gridPoints[t].x(),gridPoints[t].y(),x,y))
           {
             rec.mX = x;
             rec.mY = y;
           }
 
-          rec.mValue = getGridValueByGridPoint(it->x(),it->y(),modificationOperation,modificationParameters);
+          rec.mValue = values[t];
           valueList.addGridValue(rec);
         }
       }
@@ -5232,10 +5278,12 @@ void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std
 
           for (auto it = polygonPoints->begin(); it != polygonPoints->end(); ++it)
           {
+
             double grid_i = 0;
             double grid_j = 0;
-            getGridPointByLatLonCoordinates(it->y(),it->x(),grid_i,grid_j);
-            newPolygonPoints.emplace_back(grid_i,grid_j);
+
+            if (getGridPointByLatLonCoordinates(it->y(),it->x(),grid_i,grid_j))
+              newPolygonPoints.emplace_back(grid_i,grid_j);
           }
           newPolygonPath.emplace_back(newPolygonPoints);
         }
@@ -5243,19 +5291,28 @@ void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std
         std::vector<T::Point> gridPoints;
         getPointsInsidePolygonPath(cols,rows,newPolygonPath,gridPoints);
 
-        for (auto it=gridPoints.begin(); it != gridPoints.end(); ++it)
+        T::ParamValue_vec values;
+        getGridValuesByPointList(gridPoints,values);
+
+        uint sz1 = gridPoints.size();
+        uint sz2 = values.size();
+
+        if (sz1 == 0 || sz1 != sz2)
+          return;
+
+        for (uint t=0; t<sz1; t++)
         {
           T::GridValue rec;
 
           double lat = 0;
           double lon = 0;
-          if (getGridLatLonCoordinatesByGridPoint(it->x(),it->y(),lat,lon))
+          if (getGridLatLonCoordinatesByGridPoint(gridPoints[t].x(),gridPoints[t].y(),lat,lon))
           {
             rec.mX = lon;
             rec.mY = lat;
           }
 
-          rec.mValue = getGridValueByGridPoint(it->x(),it->y(),modificationOperation,modificationParameters);
+          rec.mValue = values[t];
           valueList.addGridValue(rec);
         }
       }
@@ -5267,13 +5324,21 @@ void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std
         std::vector<T::Point> gridPoints;
         getPointsInsidePolygonPath(cols,rows,polygonPath,gridPoints);
 
-        for (auto it=gridPoints.begin(); it != gridPoints.end(); ++it)
+        T::ParamValue_vec values;
+        getGridValuesByPointList(gridPoints,values);
+
+        uint sz1 = gridPoints.size();
+        uint sz2 = values.size();
+
+        if (sz1 == 0 || sz1 != sz2)
+          return;
+
+        for (uint t=0; t<sz1; t++)
         {
           T::GridValue rec;
-
-          rec.mX = it->x();
-          rec.mY = it->y();
-          rec.mValue = getGridValueByGridPoint(it->x(),it->y(),modificationOperation,modificationParameters);
+          rec.mX = gridPoints[t].x();
+          rec.mY = gridPoints[t].y();
+          rec.mValue = values[t];
           valueList.addGridValue(rec);
         }
       }
@@ -5301,19 +5366,28 @@ void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std
         std::vector<T::Point> gridPoints;
         getPointsInsidePolygonPath(cols,rows,newPolygonPath,gridPoints);
 
-        for (auto it=gridPoints.begin(); it != gridPoints.end(); ++it)
+        T::ParamValue_vec values;
+        getGridValuesByPointList(gridPoints,values);
+
+        uint sz1 = gridPoints.size();
+        uint sz2 = values.size();
+
+        if (sz1 == 0 || sz1 != sz2)
+          return;
+
+        for (uint t=0; t<sz1; t++)
         {
           T::GridValue rec;
 
-          double x = 0;
-          double y = 0;
-          if (getGridOriginalCoordinatesByGridPoint(it->x(),it->y(),x,y))
+          double lat = 0;
+          double lon = 0;
+          if (getGridLatLonCoordinatesByGridPoint(gridPoints[t].x(),gridPoints[t].y(),lat,lon))
           {
-            rec.mX = x;
-            rec.mY = y;
+            rec.mX = lon;
+            rec.mY = lat;
           }
 
-          rec.mValue = getGridValueByGridPoint(it->x(),it->y(),modificationOperation,modificationParameters);
+          rec.mValue = values[t];
           valueList.addGridValue(rec);
         }
       }

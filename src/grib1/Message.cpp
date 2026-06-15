@@ -2670,6 +2670,109 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
 
 
 
+void Message::getGridValuesByPointList(std::vector<T::Point>& gridPoints,T::ParamValue_vec& values) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    uint sz = gridPoints.size();
+    if (!sz)
+      return;
+
+    if (mDataSection == nullptr)
+      throw Fmi::Exception(BCP,"The 'mDataSection' attribute points to nullptr!");
+
+    if (mValueDecodingFailed)
+    {
+      // We have failed to decode parameter values
+      return;
+    }
+
+    values.reserve(gridPoints.size());
+
+
+    T::ParamValue value = 0;
+    if (mBitmapSection == nullptr  ||  mBitmapSection->getBitmapDataSizeInBytes() == 0)
+    {
+      if (mDataSection->getPackingMethod() == PackingMethod::SIMPLE_PACKING)
+      {
+        if (!mPremapped  &&  memoryMapper.isPremapEnabled())
+          premap();
+
+        for (uint t=0; t<sz; t++)
+        {
+          if (gridPoints[t].y() >= (int)mRowCount)
+            values.push_back(ParamValueMissing);
+
+          if (gridPoints[t].x() >= (int)mColumnCount &&  !isGridGlobal())
+            values.push_back(ParamValueMissing);
+
+          uint idx = gridPoints[t].y() * mColumnCount + (gridPoints[t].x() % mColumnCount);
+
+          if (mDataSection->getValueByIndex(idx,value))
+          {
+            values.push_back(value);
+
+            if (mGridFilePtr->hasMemoryMapperError())
+            {
+              Fmi::Exception exception(BCP,"Memory mapper has set fail flag for the current file!",nullptr);
+              exception.addParameter("Filename",mGridFilePtr->getFileName());
+              throw exception;
+            }
+          }
+        }
+        return;
+      }
+    }
+
+    if (mCacheKey > 0)
+    {
+      // Trying to find values from the decompression cache
+
+      std::vector<uint> indexList;
+      indexList.reserve(gridPoints.size());
+
+      for (uint t=0; t<sz; t++)
+      {
+        uint idx = gridPoints[t].y() * mColumnCount + (gridPoints[t].x() % mColumnCount);
+        indexList.push_back(idx);
+      }
+
+      if (GRID::valueCache.getValuesByIndexList(mCacheKey,indexList,values))
+        return;
+    }
+
+    // Fetching the whole grid and using its values
+
+    T::ParamValue_vec gridValues;
+    getGridValueVector(gridValues);
+    uint vsz = gridValues.size();
+
+    for (uint t=0; t<sz; t++)
+    {
+      if (gridPoints[t].y() >= (int)mRowCount)
+        values.push_back(ParamValueMissing);
+
+      if (gridPoints[t].x() >= (int)mColumnCount &&  !isGridGlobal())
+        values.push_back(ParamValueMissing);
+
+      uint idx = gridPoints[t].y() * mColumnCount + (gridPoints[t].x() % mColumnCount);
+      if (idx < vsz)
+        values.push_back(gridValues[idx]);
+      else
+        values.push_back(ParamValueMissing);
+    }
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
 /*! \brief The method returns all grid data values (also missing values) as the grid
     would be regular. in the case of an irregular grid, the grid rows are filled so that
     the grid looks like a regular grid.

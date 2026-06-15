@@ -452,7 +452,7 @@ void TransverseMercatorImpl::print(std::ostream& stream,uint level,uint optionFl
 {
   try
   {
-    //TransverseMercator::print(stream,level,optionFlags);
+    TransverseMercator::print(stream,level,optionFlags);
 
     stream << space(level+1) << "TransverseMercatorImpl\n";
 

@@ -181,6 +181,8 @@ class ValueCache
      *  \return True if the entry is still in the cache; false if it was evicted. */
     bool        getValues(uint key,T::ParamValue_vec& values);
 
+    bool        getValuesByIndexList(uint key,std::vector<uint>& indexList,T::ParamValue_vec& values);
+
     /*! \brief Remove the entry with the given key from the cache.
      *  \param[in] key  Key returned by addValues(). */
     void        deleteValues(uint key);

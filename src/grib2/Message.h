@@ -106,6 +106,7 @@ class Message : public GRID::Message
     std::size_t         getGridRowCount() const;
     T::ParamValue       getGridValueByGridPoint(uint grid_i,uint grid_j) const;
     void                getGridValueVector(T::ParamValue_vec& values) const;
+    void                getGridValuesByPointList(std::vector<T::Point>& gridPoints,T::ParamValue_vec& values) const;
     T::TimeString       getReferenceTime() const;
     T::SpatialRef_sptr  getSpatialReference() const;
     std::string         getWKT() const;

@@ -414,6 +414,8 @@ class Message
     //! \overload
     virtual void                getGridValueByPoint(T::CoordinateType coordinateType,double x,double y,short areaInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::ParamValue& value) const;
 
+    virtual void                getGridValuesByPointList(std::vector<T::Point>& gridPoints,T::ParamValue_vec& values) const;
+
     /*! \brief Collect all grid values within a circular area.
      *  \param[in]  coordinateType  Coordinate system of (origoX, origoY).
      *  \param[in]  origoX,origoY  Circle centre coordinates.
