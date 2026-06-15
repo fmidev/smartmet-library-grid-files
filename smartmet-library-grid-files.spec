@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 26.6.12
+Version: 26.6.15
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -21,10 +21,10 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %endif
 
 BuildRequires: rpm-build
-BuildRequires: smartmet-utils-devel >= 26.5.20
+BuildRequires: smartmet-utils-devel >= 26.5.22
 BuildRequires: smartmet-library-newbase-devel >= 26.2.4
-BuildRequires: smartmet-library-spine-devel >= 26.4.27
-BuildRequires: smartmet-library-macgyver >= 26.4.13
+BuildRequires: smartmet-library-spine-devel >= 26.6.9
+BuildRequires: smartmet-library-macgyver >= 26.6.6
 BuildRequires: smartmet-library-trax-devel >= 26.4.22
 BuildRequires: %{smartmet_boost}-devel
 BuildRequires: gcc-c++
@@ -51,8 +51,8 @@ Requires: libcurl
 Requires: openjpeg2
 Requires: libwebp13 >= 1.3.2
 Requires: smartmet-library-newbase >= 26.2.4
-Requires: smartmet-library-macgyver >= 26.4.13
-Requires: smartmet-library-spine >= 26.4.27
+Requires: smartmet-library-macgyver >= 26.6.6
+Requires: smartmet-library-spine >= 26.6.9
 Requires: smartmet-library-trax >= 26.4.22
 Requires: smartmet-topography-data >= 1.0.0
 
@@ -86,7 +86,7 @@ Provides: %{SPECNAME}-devel
 Requires: %{SPECNAME} = %{version}-%{release}
 Requires: smartmet-library-newbase-devel >= 26.2.4
 Requires: smartmet-library-spine-devel
-Requires: smartmet-library-macgyver >= 26.4.13
+Requires: smartmet-library-macgyver >= 26.6.6
 Requires: smartmet-library-trax-devel
 Requires: %{smartmet_boost}-devel
 Requires: libcurl-devel
@@ -100,11 +100,12 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Mon Jun 15 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.6.15-1.fmi
+- Improved multipoint fetching
 * Fri Jun 12 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.6.12-1.fmi
 - Accept grid points falling a tiny fraction of a grid cell outside the grid border
   due to floating point inaccuracy in coordinate transformations by clamping them
   onto the border; fixes missing values at grid borders on native and resampled grids
-
 * Tue May 26 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.5.26-2.fmi
 - Fixes to handling coordinates
 * Tue May 26 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.5.26-1.fmi
