@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 26.6.12
+Version: 26.6.15
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -100,6 +100,12 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Mon Jun 15 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.6.15-1.fmi
+- Normalize the scan order when fetching the original grid by direct copy, so data
+  stored north to south is no longer flipped (enables fast native data fetching)
+- Normalize the global latlon bounding box longitudes and cell size in the direct copy
+  so global grids encode correctly
+
 * Fri Jun 12 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.6.12-1.fmi
 - Accept grid points falling a tiny fraction of a grid cell outside the grid border
   due to floating point inaccuracy in coordinate transformations by clamping them
