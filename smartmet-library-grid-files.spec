@@ -21,11 +21,11 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %endif
 
 BuildRequires: rpm-build
-BuildRequires: smartmet-utils-devel >= 26.5.22
-BuildRequires: smartmet-library-newbase-devel >= 26.2.4
-BuildRequires: smartmet-library-spine-devel >= 26.6.9
-BuildRequires: smartmet-library-macgyver >= 26.6.6
-BuildRequires: smartmet-library-trax-devel >= 26.4.22
+BuildRequires: smartmet-utils-devel >= 26.6.17
+BuildRequires: smartmet-library-newbase-devel >= 26.6.24
+BuildRequires: smartmet-library-spine-devel >= 26.6.24
+BuildRequires: smartmet-library-macgyver >= 26.6.15
+BuildRequires: smartmet-library-trax-devel >= 26.6.23
 BuildRequires: %{smartmet_boost}-devel
 BuildRequires: gcc-c++
 BuildRequires: gdal312-devel
@@ -50,10 +50,10 @@ Requires: libaec
 Requires: libcurl
 Requires: openjpeg2
 Requires: libwebp13 >= 1.3.2
-Requires: smartmet-library-newbase >= 26.2.4
-Requires: smartmet-library-macgyver >= 26.6.6
-Requires: smartmet-library-spine >= 26.6.9
-Requires: smartmet-library-trax >= 26.4.22
+Requires: smartmet-library-newbase >= 26.6.24
+Requires: smartmet-library-macgyver >= 26.6.15
+Requires: smartmet-library-spine >= 26.6.24
+Requires: smartmet-library-trax >= 26.6.23
 Requires: smartmet-topography-data >= 1.0.0
 
 %description
@@ -84,9 +84,9 @@ rm -rf $RPM_BUILD_ROOT
 Summary: FMI Grid File library development files
 Provides: %{SPECNAME}-devel
 Requires: %{SPECNAME} = %{version}-%{release}
-Requires: smartmet-library-newbase-devel >= 26.2.4
+Requires: smartmet-library-newbase-devel >= 26.6.24
 Requires: smartmet-library-spine-devel
-Requires: smartmet-library-macgyver >= 26.6.6
+Requires: smartmet-library-macgyver >= 26.6.15
 Requires: smartmet-library-trax-devel
 Requires: %{smartmet_boost}-devel
 Requires: libcurl-devel
