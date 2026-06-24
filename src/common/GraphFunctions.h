@@ -118,6 +118,7 @@ void getIsolines(
     size_t smooth_degree,
     T::ByteData_vec& contours,
     int subdivide = 0,
+    int threads = 1,
     const Trax::SmoothOptions& smoothOptions = Trax::SmoothOptions());
 
 void getIsobands(
@@ -132,6 +133,7 @@ void getIsobands(
     size_t smooth_degree,
     T::ByteData_vec& contours,
     int subdivide = 0,
+    int threads = 1,
     const Trax::SmoothOptions& smoothOptions = Trax::SmoothOptions());
 
 bool getLineIntersectionPoint(

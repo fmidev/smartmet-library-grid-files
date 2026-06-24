@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 26.5.26
+Version: 26.6.24
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -100,6 +100,9 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Wed Jun 24 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.6.24-1.fmi
+- Added a contour.threads request attribute to parallelize contouring over row-bands
+
 * Tue May 26 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.5.26-1.fmi
 - Fixed NetCDF dimension/variable name parsing to strip 4-byte alignment padding
 * Wed May 20 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.5.20-1.fmi

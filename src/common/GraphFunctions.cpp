@@ -18,9 +18,11 @@
 #include <memory>
 #include <vector>
 
+#include <algorithm>
 #include <math.h>
 #include <sstream>
 #include <stack>
+#include <thread>
 
 #include <geos/io/WKBWriter.h>
 #include <geos/version.h>
@@ -38,6 +40,16 @@ namespace SmartMet
 typedef std::shared_ptr<geos::geom::Geometry> GeometryPtr;
 
 Fmi::Cache::Cache<std::size_t, std::vector<T::Point>> gridPointsCache(300);
+
+// Number of row-bands for parallel contouring, clamped to [1, number of cores] so contouring
+// never uses more threads than there are cores. 0/1 means single-threaded.
+static int clampContourThreads(int threads)
+{
+  if (threads <= 1)
+    return 1;
+  unsigned int cores = std::max(1U, std::thread::hardware_concurrency());
+  return std::min(threads, static_cast<int>(cores));
+}
 
 class TraxGrid: public Trax::Grid
 {
@@ -1181,7 +1193,7 @@ T::Polygon_vec getEnlargedPolygonPath(T::Polygon_vec &oldPath, double areaExtens
 /*! \brief Computes isolines for the given grid values and returns them as WKB-encoded contours. */
 
 void getIsolines(std::vector<float> &gridData, T::Coordinate_vec *coordinates, int width, int height, std::vector<float> &contourValues, short interpolationMethod,
-    size_t smooth_size, size_t smooth_degree, T::ByteData_vec &contours, int subdivide, const Trax::SmoothOptions &smoothOptions)
+    size_t smooth_size, size_t smooth_degree, T::ByteData_vec &contours, int subdivide, int threads, const Trax::SmoothOptions &smoothOptions)
 {
   try
   {
@@ -1197,6 +1209,7 @@ void getIsolines(std::vector<float> &gridData, T::Coordinate_vec *coordinates, i
     Trax::Contour contourer;
     contourer.interpolation((Trax::InterpolationType) interpolationMethod);
     contourer.subdivide(subdivide);
+    contourer.threads(clampContourThreads(threads));
 
     auto grid = std::make_shared<TraxGrid>(&gridData, coordinates, width, height);
 
@@ -1251,7 +1264,7 @@ void getIsolines(std::vector<float> &gridData, T::Coordinate_vec *coordinates, i
 /*! \brief Computes isobands for the given grid values and returns them as WKB-encoded contours. */
 
 void getIsobands(std::vector<float> &gridData, std::vector<T::Coordinate> *coordinates, int width, int height, std::vector<float> &contourLowValues,
-    std::vector<float> &contourHighValues, short interpolationMethod, size_t smooth_size, size_t smooth_degree, T::ByteData_vec &contours, int subdivide, const Trax::SmoothOptions &smoothOptions)
+    std::vector<float> &contourHighValues, short interpolationMethod, size_t smooth_size, size_t smooth_degree, T::ByteData_vec &contours, int subdivide, int threads, const Trax::SmoothOptions &smoothOptions)
 {
   try
   {
@@ -1267,6 +1280,7 @@ void getIsobands(std::vector<float> &gridData, std::vector<T::Coordinate> *coord
     Trax::Contour contourer;
     contourer.interpolation((Trax::InterpolationType) interpolationMethod);
     contourer.subdivide(subdivide);
+    contourer.threads(clampContourThreads(threads));
 
     auto grid = std::make_shared<TraxGrid>(&gridData, coordinates, width, height);
 

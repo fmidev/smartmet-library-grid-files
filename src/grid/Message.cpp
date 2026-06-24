@@ -22,6 +22,14 @@ namespace SmartMet
 namespace GRID
 {
 
+// Per-request number of row-bands for parallel contouring, taken from the request attributes
+// (default 1 = single-threaded). The value is clamped to the number of cores downstream.
+static int getContourThreads(T::AttributeList &attributeList)
+{
+  const char *str = attributeList.getAttributeValue("contour.threads");
+  return (str != nullptr) ? toInt32(str) : 1;
+}
+
 typedef std::vector<float> AngleList;
 typedef std::map<int,AngleList> AngleCache;
 
@@ -538,7 +546,7 @@ void Message::getGridIsobands(T::ParamValue_vec& contourLowValues,T::ParamValue_
         break;
     }
 
-    getIsobands(gridValues,coordinates.get(),d.nx(),d.ny(),contourLowValues,contourHighValues,interpolationType,smoothSize,smoothDegree,contours);
+    getIsobands(gridValues,coordinates.get(),d.nx(),d.ny(),contourLowValues,contourHighValues,interpolationType,smoothSize,smoothDegree,contours,0,getContourThreads(attributeList));
 
     attributeList.setAttribute("grid.width",Fmi::to_string(d.nx()));
     attributeList.setAttribute("grid.height",Fmi::to_string(d.ny()));
@@ -785,7 +793,7 @@ void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::P
         break;
     }
 
-    getIsobands(gridValues,coordinatePtr,width,height,contourLowValues,contourHighValues,interpolationType,smoothSize,smoothDegree,contours);
+    getIsobands(gridValues,coordinatePtr,width,height,contourLowValues,contourHighValues,interpolationType,smoothSize,smoothDegree,contours,0,getContourThreads(attributeList));
 
     attributeList.setAttribute("grid.width",Fmi::to_string(width));
     attributeList.setAttribute("grid.height",Fmi::to_string(height));
@@ -872,7 +880,7 @@ void Message::getGridIsobandsByGrid(T::ParamValue_vec& contourLowValues,T::Param
         break;
     }
 
-    getIsobands(gridValues,coordinatePtr,gridWidth,gridHeight,contourLowValues,contourHighValues,interpolationType,smoothSize,smoothDegree,contours);
+    getIsobands(gridValues,coordinatePtr,gridWidth,gridHeight,contourLowValues,contourHighValues,interpolationType,smoothSize,smoothDegree,contours,0,getContourThreads(attributeList));
 
     attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
     attributeList.setAttribute("grid.width",Fmi::to_string(gridWidth));
@@ -964,7 +972,7 @@ void Message::getGridIsolines(T::ParamValue_vec& contourValues,T::AttributeList&
         break;
     }
 
-    getIsolines(gridValues,coordinatePtr,d.nx(),d.ny(),contourValues,interpolationType,smoothSize,smoothDegree,contours);
+    getIsolines(gridValues,coordinatePtr,d.nx(),d.ny(),contourValues,interpolationType,smoothSize,smoothDegree,contours,0,getContourThreads(attributeList));
 
     attributeList.setAttribute("grid.width",Fmi::to_string(d.nx()));
     attributeList.setAttribute("grid.height",Fmi::to_string(d.ny()));
@@ -1211,7 +1219,7 @@ void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::Attr
         break;
     }
 
-    getIsolines(gridValues,coordinatePtr,width,height,contourValues,interpolationType,smoothSize,smoothDegree,contours);
+    getIsolines(gridValues,coordinatePtr,width,height,contourValues,interpolationType,smoothSize,smoothDegree,contours,0,getContourThreads(attributeList));
 
     attributeList.setAttribute("grid.width",Fmi::to_string(width));
     attributeList.setAttribute("grid.height",Fmi::to_string(height));
@@ -1299,7 +1307,7 @@ void Message::getGridIsolinesByGrid(T::ParamValue_vec& contourValues,uint gridWi
         break;
     }
 
-    getIsolines(gridValues,coordinatePtr,gridWidth,gridHeight,contourValues,interpolationType,smoothSize,smoothDegree,contours);
+    getIsolines(gridValues,coordinatePtr,gridWidth,gridHeight,contourValues,interpolationType,smoothSize,smoothDegree,contours,0,getContourThreads(attributeList));
 
     attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
     attributeList.setAttribute("grid.width",Fmi::to_string(gridWidth));
