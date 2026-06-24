@@ -3408,13 +3408,89 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,uint 
 
     if (geometryIdStr != nullptr  &&  getGridGeometryId() == toInt32(geometryIdStr))
     {
-      // The geometryId is same as the original geometry.
+      // The geometryId is the same as the original geometry, so the data can be fetched
+      // by a direct copy of the message values instead of sampling the grid point by point.
 
-      getGridValueVector(modificationOperation,modificationParameters,values);
-      T::Dimensions  d = getGridDimensions();
-      attributeList.setAttribute("grid.width",Fmi::to_string(d.nx()));
-      attributeList.setAttribute("grid.height",Fmi::to_string(d.ny()));
-      return;
+      T::Dimensions d = getGridDimensions();
+      uint nx = d.nx();
+      uint ny = d.ny();
+
+      if (d.getDimensions() == 2)
+      {
+        getGridValueVector(modificationOperation,modificationParameters,values);
+
+        if (values.size() == (std::size_t)nx * ny)
+        {
+          // getGridValueVector() returns the values in the message's own scanning order.
+          // The grid bounding box set above (and thus the rest of the pipeline and the
+          // download output) expects the values starting from the bounding box start
+          // corner, i.e. rows in increasing-latitude order. The bbox corners follow the
+          // message column order but are flipped in the row direction for messages stored
+          // from north to south, so reverse the row order here to match when needed.
+
+          if (reverseYDirection())
+          {
+            T::ParamValue_vec ordered(values.size());
+
+            for (uint j = 0; j < ny; j++)
+            {
+              const T::ParamValue *srcRow = &values[(ny - 1 - j) * nx];
+              std::copy(srcRow, srcRow + nx, &ordered[j * nx]);
+            }
+
+            values = std::move(ordered);
+          }
+
+          attributeList.setAttribute("grid.width",Fmi::to_string(nx));
+          attributeList.setAttribute("grid.height",Fmi::to_string(ny));
+
+          // For a global latlon grid the bounding box longitudes computed above are in the
+          // message's native range (e.g. 0..359.9). The generic path normalizes these to the
+          // [-180,180] range expected by the downstream encoder (getLongitude) and reports the
+          // cell size in degrees. Reproduce that here so global grids encode correctly without
+          // having to generate the full coordinate list.
+
+          if (isGridGlobal()  &&  getGridProjection() == T::GridProjectionValue::LatLon)
+          {
+            const char *cwd = attributeList.getAttributeValue("grid.original.cell.width.degrees");
+            const char *chd = attributeList.getAttributeValue("grid.original.cell.height.degrees");
+            if (cwd != nullptr  &&  chd != nullptr)
+            {
+              attributeList.setAttribute("grid.cell.width",cwd);
+              attributeList.setAttribute("grid.cell.height",chd);
+            }
+
+            const char *boxAttrs[] = { "grid.llbox", "grid.bbox" };
+            for (auto boxAttr : boxAttrs)
+            {
+              const char *boxStr = attributeList.getAttributeValue(boxAttr);
+              if (boxStr != nullptr)
+              {
+                std::vector<double> b;
+                splitString(boxStr,',',b);
+                if (b.size() == 4)
+                {
+                  for (int li : {0,2})
+                  {
+                    while (b[li] > 180) b[li] -= 360;
+                    while (b[li] <= -180) b[li] += 360;
+                  }
+                  char tmp[100];
+                  sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",b[0],b[1],b[2],b[3]);
+                  attributeList.setAttribute(boxAttr,tmp);
+                }
+              }
+            }
+          }
+
+          return;
+        }
+
+        // Not a plain nx*ny grid (e.g. reduced/quasi-regular); fall back to the generic
+        // point sampling path below.
+
+        values.clear();
+      }
     }
 
     uint width = 0;

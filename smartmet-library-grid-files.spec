@@ -4,7 +4,7 @@
 Summary: grid file handling library
 Name: %{SPECNAME}
 Version: 26.6.24
-Release: 3%{?dist}.fmi
+Release: 4%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
 URL: https://github.com/fmidev/smartmet-library-grid-files
@@ -100,6 +100,11 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Wed Jun 24 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.6.24-4.fmi
+- Normalize the scan order when fetching the original grid by direct copy, so data
+  stored north to south is no longer flipped (enables fast native data fetching)
+- Normalize the global latlon bounding box longitudes and cell size in the direct copy
+  so global grids encode correctly
 * Wed Jun 24 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.6.24-3.fmi
 - Assume WGS84 for GRIB2 earth shape 7 (producer-specified axes), since model runners
   commonly store the model sphere there instead of WGS84 and the data aligns with WGS84 maps
