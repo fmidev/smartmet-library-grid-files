@@ -4,7 +4,7 @@
 Summary: grid file handling library
 Name: %{SPECNAME}
 Version: 26.6.24
-Release: 4%{?dist}.fmi
+Release: 5%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
 URL: https://github.com/fmidev/smartmet-library-grid-files
@@ -100,6 +100,10 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Wed Jun 24 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.6.24-5.fmi
+- Fix grid.llbox regression for the full-grid geometry fast-path: set the bounding box from the
+  first/last storage points normalized with getLongitude, matching getGridLatLonCoordinatesByGeometry,
+  so global wrap-around grids no longer collapse to a 0.1-degree band downstream
 * Wed Jun 24 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.6.24-4.fmi
 - Normalize the scan order when fetching the original grid by direct copy, so data
   stored north to south is no longer flipped (enables fast native data fetching)

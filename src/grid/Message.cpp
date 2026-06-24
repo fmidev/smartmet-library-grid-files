@@ -625,19 +625,24 @@ void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::P
       if (llboxStr == nullptr)
       {
         double x1 = 0.0, y1 = 0.0, x2 = 0.0, y2 = 0.0;
-        uint px1 = 0,py1 = 0,px2 = d.nx()-1,py2 = d.ny()-1;
-
-        if (reverseYDirection())
-          px1 = 0,py1 = d.ny()-1,px2 = d.nx()-1,py2 = 0;
 
         char tmp[100];
-        if (getGridLatLonCoordinatesByGridPoint(px1,py1,y1,x1)  &&  getGridLatLonCoordinatesByGridPoint(px2,py2,y2,x2))
-        {
-          if (x2 < x1  &&  x2 < 0)
-              x2 += 360;
 
-          if (x2 < x1  && x1 >= 180)
-            x1 -= 360;
+        // Use the first and last grid points in storage order and normalize the
+        // longitudes to [-180,180]. This matches what
+        // GridDef::getGridLatLonCoordinatesByGeometry stores for the same
+        // attribute, so callers see a consistent grid.llbox regardless of which
+        // code path produced it (interpolation vs. the geometryId fast-path
+        // below). For a global grid such as ECG that wraps around 0, this keeps
+        // the second longitude slightly negative (e.g. -0.1) rather than
+        // pushing it to ~360, which downstream consumers rely on to detect the
+        // wrap.
+
+        if (getGridLatLonCoordinatesByGridPoint(0,0,y1,x1)  &&
+            getGridLatLonCoordinatesByGridPoint(d.nx()-1,d.ny()-1,y2,x2))
+        {
+          x1 = getLongitude(x1);
+          x2 = getLongitude(x2);
 
           sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
           attributeList.setAttribute("grid.llbox",tmp);
@@ -1057,19 +1062,24 @@ void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::Attr
       if (llboxStr == nullptr)
       {
         double x1 = 0.0, y1 = 0.0, x2 = 0.0, y2 = 0.0;
-        uint px1 = 0,py1 = 0,px2 = d.nx()-1,py2 = d.ny()-1;
-
-        if (reverseYDirection())
-          px1 = 0,py1 = d.ny()-1,px2 = d.nx()-1,py2 = 0;
 
         char tmp[100];
-        if (getGridLatLonCoordinatesByGridPoint(px1,py1,y1,x1)  &&  getGridLatLonCoordinatesByGridPoint(px2,py2,y2,x2))
-        {
-          if (x2 < x1  &&  x2 < 0)
-              x2 += 360;
 
-          if (x2 < x1  && x1 >= 180)
-            x1 -= 360;
+        // Use the first and last grid points in storage order and normalize the
+        // longitudes to [-180,180]. This matches what
+        // GridDef::getGridLatLonCoordinatesByGeometry stores for the same
+        // attribute, so callers see a consistent grid.llbox regardless of which
+        // code path produced it (interpolation vs. the geometryId fast-path
+        // below). For a global grid such as ECG that wraps around 0, this keeps
+        // the second longitude slightly negative (e.g. -0.1) rather than
+        // pushing it to ~360, which downstream consumers rely on to detect the
+        // wrap.
+
+        if (getGridLatLonCoordinatesByGridPoint(0,0,y1,x1)  &&
+            getGridLatLonCoordinatesByGridPoint(d.nx()-1,d.ny()-1,y2,x2))
+        {
+          x1 = getLongitude(x1);
+          x2 = getLongitude(x2);
 
           sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
           attributeList.setAttribute("grid.llbox",tmp);
@@ -1499,19 +1509,24 @@ void Message::getGridStreamlinesByGeometry(T::AttributeList& attributeList,uint 
       if (llboxStr == nullptr)
       {
         double x1 = 0.0, y1 = 0.0, x2 = 0.0, y2 = 0.0;
-        uint px1 = 0,py1 = 0,px2 = d.nx()-1,py2 = d.ny()-1;
-
-        if (reverseYDirection())
-          px1 = 0,py1 = d.ny()-1,px2 = d.nx()-1,py2 = 0;
 
         char tmp[100];
-        if (getGridLatLonCoordinatesByGridPoint(px1,py1,y1,x1)  &&  getGridLatLonCoordinatesByGridPoint(px2,py2,y2,x2))
-        {
-          if (x2 < x1  &&  x2 < 0)
-              x2 += 360;
 
-          if (x2 < x1  && x1 >= 180)
-            x1 -= 360;
+        // Use the first and last grid points in storage order and normalize the
+        // longitudes to [-180,180]. This matches what
+        // GridDef::getGridLatLonCoordinatesByGeometry stores for the same
+        // attribute, so callers see a consistent grid.llbox regardless of which
+        // code path produced it (interpolation vs. the geometryId fast-path
+        // below). For a global grid such as ECG that wraps around 0, this keeps
+        // the second longitude slightly negative (e.g. -0.1) rather than
+        // pushing it to ~360, which downstream consumers rely on to detect the
+        // wrap.
+
+        if (getGridLatLonCoordinatesByGridPoint(0,0,y1,x1)  &&
+            getGridLatLonCoordinatesByGridPoint(d.nx()-1,d.ny()-1,y2,x2))
+        {
+          x1 = getLongitude(x1);
+          x2 = getLongitude(x2);
 
           sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
           attributeList.setAttribute("grid.llbox",tmp);
@@ -3299,19 +3314,24 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,uint 
       if (llboxStr == nullptr  &&  centerStr == nullptr)
       {
         double x1 = 0.0, y1 = 0.0, x2 = 0.0, y2 = 0.0;
-        uint px1 = 0,py1 = 0,px2 = d.nx()-1,py2 = d.ny()-1;
-
-        if (reverseYDirection())
-          px1 = 0,py1 = d.ny()-1,px2 = d.nx()-1,py2 = 0;
 
         char tmp[100];
-        if (getGridLatLonCoordinatesByGridPoint(px1,py1,y1,x1)  &&  getGridLatLonCoordinatesByGridPoint(px2,py2,y2,x2))
-        {
-          if (x2 < x1  &&  x2 < 0)
-              x2 += 360;
 
-          if (x2 < x1  && x1 >= 180)
-            x1 -= 360;
+        // Use the first and last grid points in storage order and normalize the
+        // longitudes to [-180,180]. This matches what
+        // GridDef::getGridLatLonCoordinatesByGeometry stores for the same
+        // attribute, so callers see a consistent grid.llbox regardless of which
+        // code path produced it (interpolation vs. the geometryId fast-path
+        // below). For a global grid such as ECG that wraps around 0, this keeps
+        // the second longitude slightly negative (e.g. -0.1) rather than
+        // pushing it to ~360, which downstream consumers rely on to detect the
+        // wrap.
+
+        if (getGridLatLonCoordinatesByGridPoint(0,0,y1,x1)  &&
+            getGridLatLonCoordinatesByGridPoint(d.nx()-1,d.ny()-1,y2,x2))
+        {
+          x1 = getLongitude(x1);
+          x2 = getLongitude(x2);
 
           sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
           attributeList.setAttribute("grid.llbox",tmp);
