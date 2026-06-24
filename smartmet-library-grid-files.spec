@@ -4,7 +4,7 @@
 Summary: grid file handling library
 Name: %{SPECNAME}
 Version: 26.6.24
-Release: 2%{?dist}.fmi
+Release: 3%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
 URL: https://github.com/fmidev/smartmet-library-grid-files
@@ -100,6 +100,9 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Wed Jun 24 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.6.24-3.fmi
+- Assume WGS84 for GRIB2 earth shape 7 (producer-specified axes), since model runners
+  commonly store the model sphere there instead of WGS84 and the data aligns with WGS84 maps
 * Wed Jun 24 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.6.24-2.fmi
 - Keep spatial references alive while their coordinate converter is cached to prevent
   reuse of freed CRS addresses returning a converter built for the wrong projection

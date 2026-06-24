@@ -2317,6 +2317,12 @@ double GridDefinition::getMajorAxis(EarthShapeSettings& earthSettings)
         value = 6371229;
         break;
 
+      case 7: // Earth assumed oblate spheroid with major and minor axes specified by the data
+              // producer (in m). Model runners commonly store the model sphere here instead of
+              // WGS84, so the declared axes are unreliable and the data actually aligns with
+              // WGS84 maps. Assume WGS84. Return directly to bypass the snap-to-default clamp.
+        return 6378137.0;
+
       default:
         value = 6371229;
         break;
@@ -2400,6 +2406,9 @@ double GridDefinition::getMinorAxis(EarthShapeSettings& earthSettings)
       case 6: // Earth assumed spherical with radius of 6,371,229.0 m
         value = 0;
         break;
+
+      case 7: // Axes specified by producer (in m) are unreliable; assume WGS84 (see getMajorAxis).
+        return 6356752.314245;
 
       default:
         value = 0;
@@ -2490,6 +2499,9 @@ double GridDefinition::getFlattening(EarthShapeSettings& earthSettings)
       case 6: // Earth assumed spherical with radius of 6,371,229.0 m
         value = 0;
         break;
+
+      case 7: // Axes specified by producer (in m) are unreliable; assume WGS84 (see getMajorAxis).
+        return 1.0/298.257223563;
 
       default:
         value = 0;
