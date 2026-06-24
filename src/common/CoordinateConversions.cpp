@@ -36,6 +36,13 @@ bool convert(const std::shared_ptr<OGRSpatialReference> sr_from,const std::share
       return (*rec)->convert(nCount,x,y);
 
     std::shared_ptr<SmartMet::CoordinateConverter> tr(new SmartMet::CoordinateConverter(sr_from.get(),sr_to.get()));
+
+    // Keep the original spatial references alive for as long as this converter is cached.
+    // The cache key is the pair of CRS addresses; pinning them prevents a freed address
+    // from being reused by a different CRS, which would otherwise return this converter
+    // for the wrong projection.
+    tr->keepAlive(sr_from,sr_to);
+
     coordinateConverterCache.insert(hash,tr);
 
     return tr->convert(nCount,x,y);

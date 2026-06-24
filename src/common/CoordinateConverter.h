@@ -4,6 +4,7 @@
 #include "AutoThreadLock.h"
 #include <ogr_spatialref.h>
 #include <macgyver/Exception.h>
+#include <memory>
 
 namespace SmartMet
 {
@@ -50,6 +51,8 @@ class CoordinateConverter
       }
       r1.tv_sec = 0;
       r1.tv_nsec = 10;
+      mPinFrom = rec.mPinFrom;
+      mPinTo = rec.mPinTo;
     }
 
     /*! \brief Construct from two OGR spatial references.
@@ -66,6 +69,23 @@ class CoordinateConverter
       }
       r1.tv_sec = 0;
       r1.tv_nsec = 10;
+    }
+
+    /*! \brief Pin the original spatial references for the lifetime of this converter.
+     *
+     *  The converter-cache key is derived from the addresses of the source and target
+     *  spatial references. Once the original shared_ptr owners are released (e.g. the
+     *  spatialReferenceCache evicts them), the freed address can be reused by a
+     *  completely different CRS, after which the cache would return this converter for
+     *  the wrong projection. Holding the original shared_ptrs here keeps those addresses
+     *  reserved as long as the converter stays cached, so the key remains unique.
+     *  The transformations themselves use the internal clones (sr1/sr2); these pinned
+     *  references are kept solely to guarantee key stability. */
+    inline void keepAlive(const std::shared_ptr<OGRSpatialReference>& sr_from,
+                          const std::shared_ptr<OGRSpatialReference>& sr_to)
+    {
+      mPinFrom = sr_from;
+      mPinTo = sr_to;
     }
 
     ~CoordinateConverter()
@@ -130,6 +150,8 @@ class CoordinateConverter
     OGRSpatialReference *sr2;                                     //!< Target spatial reference (owned)
     ThreadLock threadLock[CONVERTER_COUNT];                       //!< Per-slot mutex
     timespec r1, r2;                                              //!< nanosleep spin interval
+    std::shared_ptr<OGRSpatialReference> mPinFrom;                //!< Pins source CRS address while cached
+    std::shared_ptr<OGRSpatialReference> mPinTo;                  //!< Pins target CRS address while cached
 };
 
 
