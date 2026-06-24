@@ -13,6 +13,14 @@ namespace SmartMet
 namespace GRID
 {
 
+// Per-request number of row-bands for parallel contouring, taken from the request attributes
+// (default 1 = single-threaded). The value is clamped to the number of cores downstream.
+static int getContourThreads(T::AttributeList &attributeList)
+{
+  const char *str = attributeList.getAttributeValue("contour.threads");
+  return (str != nullptr) ? toInt32(str) : 1;
+}
+
 
 /*! \brief The constructor of the class. */
 
@@ -113,7 +121,7 @@ void MessageProcessing::getGridIsobandsByLevel(const GRID::Message& message1,con
         break;
     }
 
-    getIsobands(gridValues,coordinatePtr,d.nx(),d.ny(),contourLowValues,contourHighValues,interpolationType,smoothSize,smoothDegree,contours);
+    getIsobands(gridValues,coordinatePtr,d.nx(),d.ny(),contourLowValues,contourHighValues,interpolationType,smoothSize,smoothDegree,contours,0,getContourThreads(attributeList));
 
     attributeList.setAttribute("grid.original.crs",message1.getWKT());
     attributeList.setAttribute("grid.original.proj4",message1.getProj4());
@@ -237,7 +245,7 @@ void MessageProcessing::getGridIsobandsByTime(const GRID::Message& message1,cons
         break;
     }
 
-    getIsobands(gridValues,coordinatePtr,d.nx(),d.ny(),contourLowValues,contourHighValues,interpolationType,smoothSize,smoothDegree,contours);
+    getIsobands(gridValues,coordinatePtr,d.nx(),d.ny(),contourLowValues,contourHighValues,interpolationType,smoothSize,smoothDegree,contours,0,getContourThreads(attributeList));
 
     attributeList.setAttribute("grid.timeInterpolationMethod",Fmi::to_string(timeInterpolationMethod));
     attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
@@ -457,7 +465,7 @@ void MessageProcessing::getGridIsobandsByLevelAndGeometry(const GRID::Message& m
         break;
     }
 
-    getIsobands(gridValues,coordinatePtr,width,height,contourLowValues,contourHighValues,interpolationType,smoothSize,smoothDegree,contours);
+    getIsobands(gridValues,coordinatePtr,width,height,contourLowValues,contourHighValues,interpolationType,smoothSize,smoothDegree,contours,0,getContourThreads(attributeList));
 
     attributeList.setAttribute("grid.original.crs",message1.getWKT());
     attributeList.setAttribute("grid.original.proj4",message1.getProj4());
@@ -571,7 +579,7 @@ void MessageProcessing::getGridIsobandsByLevelAndGrid(const GRID::Message& messa
     attributeList.setAttribute("contour.coordinateType",Fmi::to_string(coordinateType));
     attributeList.setAttribute("contour.interpolation.type",Fmi::to_string(interpolationType));
 
-    getIsobands(gridValues,coordinatePtr,gridWidth,gridHeight,contourLowValues,contourHighValues,interpolationType,smooth_size,smooth_degree,contours);
+    getIsobands(gridValues,coordinatePtr,gridWidth,gridHeight,contourLowValues,contourHighValues,interpolationType,smooth_size,smooth_degree,contours,0,getContourThreads(attributeList));
   }
   catch (...)
   {
@@ -674,7 +682,7 @@ void MessageProcessing::getGridIsobandsByTimeAndGrid(const GRID::Message& messag
     attributeList.setAttribute("contour.coordinateType",Fmi::to_string(coordinateType));
     attributeList.setAttribute("contour.interpolation.type",Fmi::to_string(interpolationType));
 
-    getIsobands(gridValues,coordinatePtr,gridWidth,gridHeight,contourLowValues,contourHighValues,interpolationType,smooth_size,smooth_degree,contours);
+    getIsobands(gridValues,coordinatePtr,gridWidth,gridHeight,contourLowValues,contourHighValues,interpolationType,smooth_size,smooth_degree,contours,0,getContourThreads(attributeList));
   }
   catch (...)
   {
@@ -901,7 +909,7 @@ void MessageProcessing::getGridIsobandsByTimeAndGeometry(const GRID::Message& me
         break;
     }
 
-    getIsobands(gridValues,coordinatePtr,width,height,contourLowValues,contourHighValues,interpolationType,smoothSize,smoothDegree,contours);
+    getIsobands(gridValues,coordinatePtr,width,height,contourLowValues,contourHighValues,interpolationType,smoothSize,smoothDegree,contours,0,getContourThreads(attributeList));
 
     attributeList.setAttribute("grid.original.crs",message1.getWKT());
     attributeList.setAttribute("grid.original.proj4",message1.getProj4());
@@ -1009,7 +1017,7 @@ void MessageProcessing::getGridIsobandsByTimeAndLevel(const GRID::Message& messa
         break;
     }
 
-    getIsobands(gridValues,coordinatePtr,d.nx(),d.ny(),contourLowValues,contourHighValues,interpolationType,smoothSize,smoothDegree,contours);
+    getIsobands(gridValues,coordinatePtr,d.nx(),d.ny(),contourLowValues,contourHighValues,interpolationType,smoothSize,smoothDegree,contours,0,getContourThreads(attributeList));
 
     attributeList.setAttribute("grid.timeInterpolationMethod",Fmi::to_string(timeInterpolationMethod));
     attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
@@ -1231,7 +1239,7 @@ void MessageProcessing::getGridIsobandsByTimeLevelAndGeometry(const GRID::Messag
         break;
     }
 
-    getIsobands(gridValues,coordinatePtr,width,height,contourLowValues,contourHighValues,interpolationType,smoothSize,smoothDegree,contours);
+    getIsobands(gridValues,coordinatePtr,width,height,contourLowValues,contourHighValues,interpolationType,smoothSize,smoothDegree,contours,0,getContourThreads(attributeList));
 
     attributeList.setAttribute("grid.original.crs",message1.getWKT());
     attributeList.setAttribute("grid.original.proj4",message1.getProj4());
@@ -1298,7 +1306,7 @@ void MessageProcessing::getGridIsobandsByTimeLevelAndGrid(const GRID::Message& m
     if (smoothDegreeStr != nullptr)
       smoothDegree = toSize_t(smoothDegreeStr);
 
-    getIsobands(gridValues,&gridLatLonCoordinates,gridWidth,gridHeight,contourLowValues,contourHighValues,interpolationType,smoothSize,smoothDegree,contours);
+    getIsobands(gridValues,&gridLatLonCoordinates,gridWidth,gridHeight,contourLowValues,contourHighValues,interpolationType,smoothSize,smoothDegree,contours,0,getContourThreads(attributeList));
 
     attributeList.setAttribute("grid.width",Fmi::to_string(gridWidth));
     attributeList.setAttribute("grid.height",Fmi::to_string(gridHeight));
@@ -1399,7 +1407,7 @@ void MessageProcessing::getGridIsolinesByTimeAndLevel(const GRID::Message& messa
         break;
     }
 
-    getIsolines(gridValues,coordinatePtr,d.nx(),d.ny(),contourValues,interpolationType,smoothSize,smoothDegree,contours);
+    getIsolines(gridValues,coordinatePtr,d.nx(),d.ny(),contourValues,interpolationType,smoothSize,smoothDegree,contours,0,getContourThreads(attributeList));
 
     attributeList.setAttribute("grid.timeInterpolationMethod",Fmi::to_string(timeInterpolationMethod));
     attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
@@ -1631,7 +1639,7 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGeometry(const GRID::Messag
         break;
     }
 
-    getIsolines(gridValues,coordinatePtr,width,height,contourValues,interpolationType,smoothSize,smoothDegree,contours);
+    getIsolines(gridValues,coordinatePtr,width,height,contourValues,interpolationType,smoothSize,smoothDegree,contours,0,getContourThreads(attributeList));
 
     attributeList.setAttribute("grid.original.crs",message1.getWKT());
     attributeList.setAttribute("grid.original.proj4",message1.getProj4());
@@ -1736,7 +1744,7 @@ void MessageProcessing::getGridIsolinesByLevel(const GRID::Message& message1,con
         break;
     }
 
-    getIsolines(gridValues,coordinatePtr,d.nx(),d.ny(),contourValues,interpolationType,smoothSize,smoothDegree,contours);
+    getIsolines(gridValues,coordinatePtr,d.nx(),d.ny(),contourValues,interpolationType,smoothSize,smoothDegree,contours,0,getContourThreads(attributeList));
 
     attributeList.setAttribute("grid.levelInterpolationMethod",Fmi::to_string(levelInterpolationMethod));
     attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
@@ -1840,7 +1848,7 @@ void MessageProcessing::getGridIsolinesByTime(const GRID::Message& message1,cons
         break;
     }
 
-    getIsolines(gridValues,coordinatePtr,d.nx(),d.ny(),contourValues,interpolationType,smoothSize,smoothDegree,contours);
+    getIsolines(gridValues,coordinatePtr,d.nx(),d.ny(),contourValues,interpolationType,smoothSize,smoothDegree,contours,0,getContourThreads(attributeList));
 
     attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
     attributeList.setAttribute("grid.width",Fmi::to_string(d.nx()));
@@ -2087,7 +2095,7 @@ void MessageProcessing::getGridIsolinesByLevelAndGeometry(const GRID::Message& m
         break;
     }
 
-    getIsolines(gridValues,coordinatePtr,width,height,contourValues,interpolationType,smoothSize,smoothDegree,contours);
+    getIsolines(gridValues,coordinatePtr,width,height,contourValues,interpolationType,smoothSize,smoothDegree,contours,0,getContourThreads(attributeList));
 
     attributeList.setAttribute("grid.original.crs",message1.getWKT());
     attributeList.setAttribute("grid.original.proj4",message1.getProj4());
@@ -2338,7 +2346,7 @@ void MessageProcessing::getGridIsolinesByTimeAndGeometry(const GRID::Message& me
         break;
     }
 
-    getIsolines(gridValues,coordinatePtr,width,height,contourValues,interpolationType,smoothSize,smoothDegree,contours);
+    getIsolines(gridValues,coordinatePtr,width,height,contourValues,interpolationType,smoothSize,smoothDegree,contours,0,getContourThreads(attributeList));
 
     attributeList.setAttribute("grid.original.crs",message1.getWKT());
     attributeList.setAttribute("grid.original.proj4",message1.getProj4());
@@ -2454,7 +2462,7 @@ void MessageProcessing::getGridIsolinesByLevelAndGrid(const GRID::Message& messa
     attributeList.setAttribute("contour.coordinateType",Fmi::to_string(coordinateType));
     attributeList.setAttribute("contour.interpolation.type",Fmi::to_string(interpolationType));
 
-    getIsolines(gridValues,coordinatePtr,gridWidth,gridHeight,contourValues,interpolationType,smooth_size,smooth_degree,contours);
+    getIsolines(gridValues,coordinatePtr,gridWidth,gridHeight,contourValues,interpolationType,smooth_size,smooth_degree,contours,0,getContourThreads(attributeList));
   }
   catch (...)
   {
@@ -2558,7 +2566,7 @@ void MessageProcessing::getGridIsolinesByTimeAndGrid(const GRID::Message& messag
     attributeList.setAttribute("contour.coordinateType",Fmi::to_string(coordinateType));
     attributeList.setAttribute("contour.interpolationt.type",Fmi::to_string(interpolationType));
 
-    getIsolines(gridValues,coordinatePtr,gridWidth,gridHeight,contourValues,interpolationType,smooth_size,smooth_degree,contours);
+    getIsolines(gridValues,coordinatePtr,gridWidth,gridHeight,contourValues,interpolationType,smooth_size,smooth_degree,contours,0,getContourThreads(attributeList));
   }
   catch (...)
   {
@@ -2618,7 +2626,7 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGrid(const GRID::Message& m
     if (smoothDegreeStr != nullptr)
       smoothDegree = toSize_t(smoothDegreeStr);
 
-    getIsolines(gridValues,&gridLatLonCoordinates,gridWidth,gridHeight,contourValues,interpolationType,smoothSize,smoothDegree,contours);
+    getIsolines(gridValues,&gridLatLonCoordinates,gridWidth,gridHeight,contourValues,interpolationType,smoothSize,smoothDegree,contours,0,getContourThreads(attributeList));
 
     attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
     attributeList.setAttribute("grid.width",Fmi::to_string(gridWidth));

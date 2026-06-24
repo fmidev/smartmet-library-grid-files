@@ -11,6 +11,7 @@
 
 #include <macgyver/Exception.h>
 #include <newbase/NFmiSvgPath.h>
+#include <trax/SmoothOptions.h>
 #include <set>
 #include <ogr_spatialref.h>
 
@@ -116,7 +117,9 @@ void getIsolines(
     size_t smooth_size,
     size_t smooth_degree,
     T::ByteData_vec& contours,
-    int subdivide = 0);
+    int subdivide = 0,
+    int threads = 1,
+    const Trax::SmoothOptions& smoothOptions = Trax::SmoothOptions());
 
 void getIsobands(
     std::vector<float>& gridData,
@@ -129,7 +132,9 @@ void getIsobands(
     size_t smooth_size,
     size_t smooth_degree,
     T::ByteData_vec& contours,
-    int subdivide = 0);
+    int subdivide = 0,
+    int threads = 1,
+    const Trax::SmoothOptions& smoothOptions = Trax::SmoothOptions());
 
 bool getLineIntersectionPoint(
     double x1,double y1,double x2,double y2,  // Line 1
