@@ -8,6 +8,9 @@
 #include "ShowFunction.h"
 
 #include <macgyver/Exception.h>
+#include <macgyver/ThreadName.h>
+#include <atomic>
+#include <fmt/format.h>
 #include <iostream>
 #include <linux/userfaultfd.h>
 #include <sys/mman.h>
@@ -35,6 +38,7 @@ MemoryMapper memoryMapper;
 
 void* fault_handler_thread(void *arg)
 {
+  Fmi::set_thread_name("mmap-fault");
   MemoryMapper *mapper = (MemoryMapper*)arg;
   mapper->faultHandlerThread();
   pthread_exit(nullptr);
@@ -47,6 +51,8 @@ void* fault_handler_thread(void *arg)
 
 void* fault_processing_thread(void *arg)
 {
+  static std::atomic<unsigned> counter{0};
+  Fmi::set_thread_name(fmt::format("mmap-flt-{}", ++counter));
   MemoryMapper *mapper = (MemoryMapper*)arg;
   mapper->faultProcessingThread();
   pthread_exit(nullptr);

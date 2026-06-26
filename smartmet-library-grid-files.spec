@@ -3,8 +3,8 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 26.6.24
-Release: 5%{?dist}.fmi
+Version: 26.6.26
+Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
 URL: https://github.com/fmidev/smartmet-library-grid-files
@@ -100,6 +100,9 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Fri Jun 26 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> 26.6.26-1.fmi
+- Thread naming: Named the memory-mapper fault handler and processing threads
+
 * Wed Jun 24 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.6.24-5.fmi
 - Fix grid.llbox regression for the full-grid geometry fast-path: set the bounding box from the
   first/last storage points normalized with getLongitude, matching getGridLatLonCoordinatesByGeometry,
