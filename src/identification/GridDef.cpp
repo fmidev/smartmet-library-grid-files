@@ -3038,7 +3038,12 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
         std::vector<double> cc;
 
         OGRSpatialReference sr_latlon;
-        sr_latlon.importFromEPSG(4326);
+        // Use the well-known WGS84 geographic CRS rather than importFromEPSG(4326);
+        // the latter carries an authority (lat,lon) axis order that older GDAL/PROJ
+        // versions may not fully override with the traditional axis mapping, which
+        // can make the latlon->projected transform fail and leave the coordinates
+        // unchanged (then used as projected metres, producing a degenerate grid).
+        sr_latlon.SetWellKnownGeogCS("WGS84");
         sr_latlon.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
 
         OGRSpatialReference sr;
@@ -3091,8 +3096,13 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
           double lon2 = aa[2];
           double lat2 = aa[3];
 
-          reverseTransformation->Transform(1,&lon1,&lat1);
-          reverseTransformation->Transform(1,&lon2,&lat2);
+          int ok1 = 0, ok2 = 0;
+          int rc1 = reverseTransformation->Transform(1, &lon1, &lat1, nullptr, &ok1);
+          int rc2 = reverseTransformation->Transform(1, &lon2, &lat2, nullptr, &ok2);
+
+          // Do not silently use an unchanged (failed) result as projected coordinates
+          if (!(rc1 && ok1 && rc2 && ok2))
+            throw Fmi::Exception(BCP, "Failed to transform latlon bbox to the requested crs");
 
           cc.emplace_back(lon1);
           cc.emplace_back(lat1);
@@ -3405,7 +3415,12 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
         std::vector<double> cc;
 
         OGRSpatialReference sr_latlon;
-        sr_latlon.importFromEPSG(4326);
+        // Use the well-known WGS84 geographic CRS rather than importFromEPSG(4326);
+        // the latter carries an authority (lat,lon) axis order that older GDAL/PROJ
+        // versions may not fully override with the traditional axis mapping, which
+        // can make the latlon->projected transform fail and leave the coordinates
+        // unchanged (then used as projected metres, producing a degenerate grid).
+        sr_latlon.SetWellKnownGeogCS("WGS84");
         sr_latlon.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
 
         OGRSpatialReference sr;
@@ -3457,8 +3472,13 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
           double lon2 = aa[2];
           double lat2 = aa[3];
 
-          reverseTransformation->Transform(1,&lon1,&lat1);
-          reverseTransformation->Transform(1,&lon2,&lat2);
+          int ok1 = 0, ok2 = 0;
+          int rc1 = reverseTransformation->Transform(1, &lon1, &lat1, nullptr, &ok1);
+          int rc2 = reverseTransformation->Transform(1, &lon2, &lat2, nullptr, &ok2);
+
+          // Do not silently use an unchanged (failed) result as projected coordinates
+          if (!(rc1 && ok1 && rc2 && ok2))
+            throw Fmi::Exception(BCP, "Failed to transform latlon bbox to the requested crs");
 
           cc.emplace_back(lon1);
           cc.emplace_back(lat1);
