@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 26.6.26
+Version: 26.6.30
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -100,6 +100,13 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Tue Jun 30 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> 26.6.30-1.fmi
+- Fix vertically flipped download output for north-to-south stored grids on the full-grid geometry
+  fast-path: the direct-copy path reverses the data rows to south-to-north but the grid.llbox/grid.bbox
+  latitudes (taken from storage corners) were left in north-to-south order, so the encoder produced a
+  north-to-south header over south-to-north data. Swap the box latitudes to match the reordered data,
+  keeping the getLongitude longitude normalization intact
+
 * Fri Jun 26 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> 26.6.26-1.fmi
 - Thread naming: Named the memory-mapper fault handler and processing threads
 

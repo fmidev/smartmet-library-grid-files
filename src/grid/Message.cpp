@@ -3459,6 +3459,36 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,uint 
             }
 
             values = std::move(ordered);
+
+            // The data rows were just reversed to increasing-latitude (south->north)
+            // order, but grid.llbox/grid.bbox set above were taken from the message
+            // storage corners (0,0)/(nx-1,ny-1) and still describe the latitudes in
+            // north->south order. Swap the box latitudes so they stay consistent with
+            // the reordered data; otherwise the download encoder builds a north->south
+            // header (jScansPositively=0) over south->north data and the grid comes out
+            // vertically flipped. Latitude only: the longitude normalization (storage
+            // corners + getLongitude, here and in the block above) is intentionally kept.
+
+            if (getGridProjection() == T::GridProjectionValue::LatLon)
+            {
+              const char *boxAttrs[] = { "grid.llbox", "grid.bbox" };
+              for (auto boxAttr : boxAttrs)
+              {
+                const char *boxStr = attributeList.getAttributeValue(boxAttr);
+                if (boxStr != nullptr)
+                {
+                  std::vector<double> b;
+                  splitString(boxStr,',',b);
+                  if (b.size() == 4)
+                  {
+                    std::swap(b[1],b[3]);
+                    char tmp[100];
+                    sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",b[0],b[1],b[2],b[3]);
+                    attributeList.setAttribute(boxAttr,tmp);
+                  }
+                }
+              }
+            }
           }
 
           attributeList.setAttribute("grid.width",Fmi::to_string(nx));
