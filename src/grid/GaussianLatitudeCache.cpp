@@ -203,6 +203,7 @@ double* GaussianLatitudeCache::getLatitudes(uint nj,long n)
         lastAccess = c;
         return mLatitudes[c];
       }
+      c++;
     }
 
     if (c == GaussianLatitudeCacheSize)
