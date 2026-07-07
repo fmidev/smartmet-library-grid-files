@@ -74,20 +74,20 @@ void IndexCache::addIndexVector(Int64 hash,T::IndexVector& indexVector)
       mHashVector.insert(mHashVector.begin(),hash);
       mTimeVector.insert(mTimeVector.begin(),time(nullptr));
       mVector.insert(mVector.begin(),indexVector);
-      return;
     }
-
+    else
     if (idx >= C_INT(mHashVector.size()))
     {
       mHashVector.emplace_back(hash);
       mTimeVector.emplace_back(time(nullptr));
       mVector.emplace_back(indexVector);
-      return;
     }
-
-    mHashVector.insert(mHashVector.begin()+idx+1,hash);
-    mTimeVector.insert(mTimeVector.begin()+idx+1,time(nullptr));
-    mVector.insert(mVector.begin()+idx+1,indexVector);
+    else
+    {
+      mHashVector.insert(mHashVector.begin()+idx+1,hash);
+      mTimeVector.insert(mTimeVector.begin()+idx+1,time(nullptr));
+      mVector.insert(mVector.begin()+idx+1,indexVector);
+    }
 
     if (mVector.size() >  mMaxSize)
       removeOldest();
