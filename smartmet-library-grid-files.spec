@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 26.6.30
+Version: 26.7.10
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -100,6 +100,11 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Fri Jul 10 2026 Andris Pavēnis <andris.pavenis@fmi.fi> 26.7.10-1.fmi
+- 2 bugs fixed by Anthropic Fable 5
+  IndexCache::addIndexVector: three of four insert branches bypass the 500-entry limit check
+  GaussianLatitudeCache::getLatitudes has a while loop that never increments its counter — a latent hang
+
 * Tue Jun 30 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> 26.6.30-1.fmi
 - Fix vertically flipped download output for north-to-south stored grids on the full-grid geometry
   fast-path: the direct-copy path reverses the data rows to south-to-north but the grid.llbox/grid.bbox
