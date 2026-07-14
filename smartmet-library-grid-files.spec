@@ -23,8 +23,8 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: rpm-build
 BuildRequires: smartmet-utils-devel >= 26.6.24
 BuildRequires: smartmet-library-newbase-devel >= 26.6.26
-BuildRequires: smartmet-library-spine-devel >= 26.6.30
-BuildRequires: smartmet-library-macgyver >= 26.6.26
+BuildRequires: smartmet-library-spine-devel >= 26.7.10
+BuildRequires: smartmet-library-macgyver >= 26.7.9
 BuildRequires: smartmet-library-trax-devel >= 26.6.26
 BuildRequires: %{smartmet_boost}-devel
 BuildRequires: gcc-c++
@@ -51,8 +51,8 @@ Requires: libcurl
 Requires: openjpeg2
 Requires: libwebp13 >= 1.3.2
 Requires: smartmet-library-newbase >= 26.6.26
-Requires: smartmet-library-macgyver >= 26.6.26
-Requires: smartmet-library-spine >= 26.6.30
+Requires: smartmet-library-macgyver >= 26.7.9
+Requires: smartmet-library-spine >= 26.7.10
 Requires: smartmet-library-trax >= 26.6.26
 Requires: smartmet-topography-data >= 1.0.0
 
@@ -86,7 +86,7 @@ Provides: %{SPECNAME}-devel
 Requires: %{SPECNAME} = %{version}-%{release}
 Requires: smartmet-library-newbase-devel >= 26.6.26
 Requires: smartmet-library-spine-devel
-Requires: smartmet-library-macgyver >= 26.6.26
+Requires: smartmet-library-macgyver >= 26.7.9
 Requires: smartmet-library-trax-devel
 Requires: %{smartmet_boost}-devel
 Requires: libcurl-devel
