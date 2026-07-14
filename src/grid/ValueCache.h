@@ -10,6 +10,8 @@
 #include "../common/AutoReadLock.h"
 #include "../common/AutoWriteLock.h"
 
+#include <atomic>
+#include <cstddef>
 #include <string>
 #include <vector>
 
@@ -142,7 +144,7 @@ class ValueCacheEntry
     }
 
     uint               mKey;           //!< Opaque key assigned when the entry was inserted
-    UInt64             mAccessCounter; //!< Logical access time; used for LRU eviction
+    std::atomic<UInt64> mAccessCounter; //!< Logical access time; used for LRU eviction (updated under the shared read lock, hence atomic)
     std::string        mFilename;      //!< Backing file path (non-empty only in file-cache mode)
     MappedFile*        mMappedFile;    //!< Memory-mapped view of the backing file (nullptr in heap mode)
     T::ParamValue*     mGrid;          //!< Pointer to the value array (mapped or heap)
@@ -229,11 +231,13 @@ class ValueCache
     uint        mMaxLength;          //!< Maximum number of entries allowed in the cache
     UInt64      mMaxSize;            //!< Maximum total size of cached data in megabytes
     uint        mKeyCounter;         //!< Monotonically increasing counter used to generate cache keys
-    UInt64      mAccessCounter;      //!< Global access clock; incremented on each cache hit
+    std::atomic<UInt64> mAccessCounter; //!< Global access clock; incremented on each cache hit (bumped under the shared read lock, hence atomic)
     bool        mFileCacheEnabled;   //!< True when values are written to temporary backing files
     ValueCacheEntry_ptr*    mEntryList;       //!< Fixed-size array of entry pointers (length = mMaxLength)
     std::string             mCacheDir;        //!< Directory for temporary backing files
-    Fmi::Cache::CacheStats  mCacheStats;      //!< Hit/miss counters
+    Fmi::Cache::CacheStats  mCacheStats;      //!< Cache metrics; hit/miss fields are populated from the atomic counters below when reported
+    std::atomic<std::size_t> mCacheHits;      //!< Cache hit counter (incremented under the shared read lock, hence atomic)
+    std::atomic<std::size_t> mCacheMisses;    //!< Cache miss counter (incremented under the shared read lock, hence atomic)
     ModificationLock        mModificationLock; //!< Guards concurrent reads and writes
 
 
@@ -262,7 +266,7 @@ class ValueCache
         {
           // The value vector is cached with a different key.
 
-          mCacheStats.misses++;
+          mCacheMisses.fetch_add(1,std::memory_order_relaxed);
           return false;
         }
 
@@ -278,8 +282,8 @@ class ValueCache
         value = entry->mGrid[index];
 
         // Updating the access time of the current value vector.
-        entry->mAccessCounter = mAccessCounter++;
-        mCacheStats.hits++;
+        entry->mAccessCounter.store(mAccessCounter.fetch_add(1,std::memory_order_relaxed),std::memory_order_relaxed);
+        mCacheHits.fetch_add(1,std::memory_order_relaxed);
 
         return true;
       }

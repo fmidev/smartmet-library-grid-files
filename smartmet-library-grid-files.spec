@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 26.7.10
+Version: 26.7.14
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -100,6 +100,14 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Tue Jul 14 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> 26.7.14-1.fmi
+- GRIB2: batch getGridValueVectorByLatLonCoordinateList so a coordinate list is
+  resolved with a single decompression-cache access instead of one locked
+  ValueCache::getValue() per grid point; results are identical to the per-point path
+- ValueCache: fix data race on the hit/miss counters and the LRU access clock, which
+  were updated with non-atomic increments while holding only the shared read lock;
+  they are now relaxed std::atomic counters
+
 * Fri Jul 10 2026 Andris Pavēnis <andris.pavenis@fmi.fi> 26.7.10-1.fmi
 - 2 bugs fixed by Anthropic Fable 5
   IndexCache::addIndexVector: three of four insert branches bypass the 500-entry limit check

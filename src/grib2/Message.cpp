@@ -17,11 +17,14 @@
 #include <macgyver/Exception.h>
 #include "../common/GeneralFunctions.h"
 #include "../common/GeneralDefinitions.h"
+#include "../common/InterpolationFunctions.h"
 #include "../common/MemoryMapper.h"
 #include "../identification/GridDef.h"
 #include "../common/ShowFunction.h"
 #include <iostream>
+#include <set>
 #include <sys/mman.h>
+#include <macgyver/FastMath.h>
 #include <macgyver/StringConversion.h>
 
 
@@ -3728,6 +3731,215 @@ void Message::getGridValuesByPointList(std::vector<T::Point>& gridPoints,T::Para
   catch (...)
   {
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+/*! \brief Returns interpolated grid values for a list of latlon coordinates.
+
+    This overrides the generic per-point implementation in GRID::Message. The generic
+    version fetches every grid point with a separate GRID::ValueCache::getValue() call,
+    each taking the cache's read lock; for a rendered tile that is tens of thousands of
+    lock acquisitions plus the same number of writes to the shared LRU/stats counters.
+
+    Here the whole stencil (one grid point per output for the point methods, the four
+    bilinear corners for the rest) is resolved in a single batched cache access and the
+    interpolation is done locally. The uint index arithmetic mirrors
+    getGridValueByGridPoint() exactly, so the results are identical to the generic path.
+
+    Only the decompression-cache case is specialised: value modifications, undecodable
+    messages and uncompressed simple-packed grids (which the generic path already serves
+    without locking) are delegated back to GRID::Message. */
+
+void Message::getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate>& coordinates,short areaInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    // Value modifications and undecodable messages stay on the generic per-point path.
+    if (!modificationParameters.empty()  ||  mValueDecodingFailed)
+    {
+      GRID::Message::getGridValueVectorByLatLonCoordinateList(coordinates,areaInterpolationMethod,modificationOperation,modificationParameters,values);
+      return;
+    }
+
+    // Uncompressed simple-packed grids are read straight from mapped memory with no
+    // lock in the generic path, so there is nothing to batch there.
+    if ((mBitmapSection == nullptr  ||  mBitmapSection->getBitmapDataSizeInBytes() == 0)
+        &&  mRepresentationSection->getDataRepresentationTemplateNumber() == RepresentationSection::Template::GridDataRepresentation)
+    {
+      GRID::Message::getGridValueVectorByLatLonCoordinateList(coordinates,areaInterpolationMethod,modificationOperation,modificationParameters,values);
+      return;
+    }
+
+    T::Coordinate_vec points;
+    getGridPointListByLatLonCoordinates(coordinates,points);
+
+    uint pn = points.size();
+    values.reserve(pn);
+    if (pn == 0)
+      return;
+
+    const uint w = mColumnCount;
+    const uint h = mRowCount;
+    const bool global = isGridGlobal();
+    const uint INVALID = 0xFFFFFFFFu;
+
+    // Flat grid index for an integer grid point, mirroring getGridValueByGridPoint().
+    // INVALID marks an out-of-range point, which resolves to ParamValueMissing.
+    auto flatIndex = [&](uint gi,uint gj) -> uint
+    {
+      if (gj >= h)
+        return INVALID;
+      if (gi >= w  &&  !global)
+        return INVALID;
+      return gj * w + (gi % w);
+    };
+
+    const bool fourCorners = (areaInterpolationMethod == T::AreaInterpolationMethod::Linear  ||
+                              areaInterpolationMethod == T::AreaInterpolationMethod::Min  ||
+                              areaInterpolationMethod == T::AreaInterpolationMethod::Max);
+
+    // Collect the flat indices of every stencil point needed.
+    std::vector<uint> indexList;
+    indexList.reserve(fourCorners ? pn * 4 : pn);
+
+    for (auto it = points.begin(); it != points.end(); ++it)
+    {
+      double x = it->x();
+      double y = it->y();
+      uint x1 = C_UINT(Fmi::floor(x));
+      uint y1 = C_UINT(Fmi::floor(y));
+      uint x2 = x1 + 1;
+      uint y2 = y1 + 1;
+
+      if (fourCorners)
+      {
+        indexList.push_back(flatIndex(x1,y1));
+        indexList.push_back(flatIndex(x2,y1));
+        indexList.push_back(flatIndex(x1,y2));
+        indexList.push_back(flatIndex(x2,y2));
+      }
+      else if (areaInterpolationMethod == T::AreaInterpolationMethod::None)
+      {
+        indexList.push_back(flatIndex(x1,y1));
+      }
+      else
+      {
+        // Nearest / External / default: mirror getGridValueByGridPoint_nearest() corner
+        // selection, then fetch only the chosen corner.
+        double dist_x1 = x - C_DOUBLE(x1);
+        double dist_x2 = C_DOUBLE(x2) - x;
+        double dist_y1 = y - C_DOUBLE(y1);
+        double dist_y2 = C_DOUBLE(y2) - y;
+
+        uint gi = x2;
+        uint gj = y2;
+        if (dist_x1 == 0  &&  dist_y1 == 0)
+        {
+          gi = C_UINT(round(x));
+          gj = C_UINT(round(y));
+        }
+        else
+        {
+          double q11 = dist_x1*dist_x1 + dist_y1*dist_y1;
+          double q21 = dist_x2*dist_x2 + dist_y1*dist_y1;
+          double q12 = dist_x1*dist_x1 + dist_y2*dist_y2;
+          double q22 = dist_x2*dist_x2 + dist_y2*dist_y2;
+
+          if (q11 < q21  &&  q11 <= q12  &&  q11 <= q22)      { gi = x1; gj = y1; }
+          else if (q21 < q11  &&  q21 <= q12  &&  q21 <= q22) { gi = x2; gj = y1; }
+          else if (q12 < q11  &&  q12 <= q21  &&  q12 <= q22) { gi = x1; gj = y2; }
+        }
+        indexList.push_back(flatIndex(gi,gj));
+      }
+    }
+
+    // Resolve every stencil value in a single pass, mirroring the source precedence of
+    // getGridValueByGridPoint() (decompression cache, then whole-grid fallback).
+    T::ParamValue_vec fetched;
+    uint n = indexList.size();
+    fetched.reserve(n);
+
+    bool resolved = false;
+    if (mCacheKey > 0)
+    {
+      if (GRID::valueCache.getValuesByIndexList(mCacheKey,indexList,fetched))
+        resolved = true;
+      else
+        fetched.clear();
+    }
+
+    if (!resolved)
+    {
+      // Not in the cache yet: decode the whole grid once (this also populates the cache
+      // for subsequent calls) and index into it locally.
+      T::ParamValue_vec grid;
+      getGridValueVector(grid);
+      uint gsz = grid.size();
+      for (uint k=0; k<n; k++)
+      {
+        uint i = indexList[k];
+        fetched.push_back(i < gsz ? grid[i] : ParamValueMissing);
+      }
+    }
+
+    if (fetched.size() != n)
+    {
+      // Defensive: if the batched fetch did not return the expected count, fall back to
+      // the generic per-point path rather than risk a mismatched result.
+      values.clear();
+      GRID::Message::getGridValueVectorByLatLonCoordinateList(coordinates,areaInterpolationMethod,modificationOperation,modificationParameters,values);
+      return;
+    }
+
+    if (!fourCorners)
+    {
+      // None / Nearest / External: one fetched value per output point.
+      for (uint t=0; t<pn; t++)
+        values.emplace_back(fetched[t]);
+      return;
+    }
+
+    // Linear / Min / Max: combine the four bilinear corners per output point.
+    for (uint t=0; t<pn; t++)
+    {
+      T::ParamValue val_q11 = fetched[t*4 + 0];  // (x1,y1)
+      T::ParamValue val_q21 = fetched[t*4 + 1];  // (x2,y1)
+      T::ParamValue val_q12 = fetched[t*4 + 2];  // (x1,y2)
+      T::ParamValue val_q22 = fetched[t*4 + 3];  // (x2,y2)
+
+      if (areaInterpolationMethod == T::AreaInterpolationMethod::Linear)
+      {
+        double x = points[t].x();
+        double y = points[t].y();
+        uint x1 = C_UINT(Fmi::floor(x));
+        uint y1 = C_UINT(Fmi::floor(y));
+        uint x2 = x1 + 1;
+        uint y2 = y1 + 1;
+        values.emplace_back(linearInterpolation(x,y,x1,y1,x2,y2,val_q11,val_q21,val_q22,val_q12));
+      }
+      else
+      {
+        std::set<T::ParamValue> vals;
+        vals.insert(val_q11);
+        vals.insert(val_q21);
+        vals.insert(val_q12);
+        vals.insert(val_q22);
+        if (areaInterpolationMethod == T::AreaInterpolationMethod::Min)
+          values.emplace_back(*vals.begin());
+        else
+          values.emplace_back(*vals.rbegin());
+      }
+    }
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
   }
 }
 

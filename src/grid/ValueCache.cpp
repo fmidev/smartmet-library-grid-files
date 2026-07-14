@@ -37,6 +37,8 @@ ValueCache::ValueCache()
     mCacheStats.hits = 0;
     mCacheStats.misses = 0;
 
+    mCacheHits.store(0);
+    mCacheMisses.store(0);
   }
   catch (...)
   {
@@ -168,7 +170,10 @@ void ValueCache::getCacheStats(Fmi::Cache::CacheStatistics& statistics) const
 {
   try
   {
-    statistics.insert(std::make_pair("Grid-files::gridData_cache", mCacheStats));
+    Fmi::Cache::CacheStats stats = mCacheStats;
+    stats.hits = mCacheHits.load(std::memory_order_relaxed);
+    stats.misses = mCacheMisses.load(std::memory_order_relaxed);
+    statistics.insert(std::make_pair("Grid-files::gridData_cache", stats));
   }
   catch (...)
   {
@@ -318,6 +323,9 @@ void ValueCache::clear()
     mCacheStats.inserts = 0;
     mCacheStats.hits = 0;
     mCacheStats.misses = 0;
+
+    mCacheHits.store(0);
+    mCacheMisses.store(0);
   }
   catch (...)
   {
@@ -459,11 +467,11 @@ bool ValueCache::getValues(uint key,T::ParamValue_vec& values)
 
     if (!entry || entry->mKey != key || !entry->mGrid)
     {
-      mCacheStats.misses++;
+      mCacheMisses.fetch_add(1,std::memory_order_relaxed);
       return false;
     }
 
-    mCacheStats.hits++;
+    mCacheHits.fetch_add(1,std::memory_order_relaxed);
 
     uint sz = entry->mSize;
     T::ParamValue *grid = entry->mGrid;
@@ -499,11 +507,11 @@ bool ValueCache::getValuesByIndexList(uint key,std::vector<uint>& indexList,T::P
 
     if (!entry || entry->mKey != key || !entry->mGrid)
     {
-      mCacheStats.misses++;
+      mCacheMisses.fetch_add(1,std::memory_order_relaxed);
       return false;
     }
 
-    mCacheStats.hits++;
+    mCacheHits.fetch_add(1,std::memory_order_relaxed);
 
     uint gsz = entry->mSize;
     T::ParamValue *grid = entry->mGrid;
