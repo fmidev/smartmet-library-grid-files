@@ -2933,6 +2933,7 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
     const char *gridCellWidthDegrStr = attributeList.getAttributeValue("grid.original.cell.width.degrees");
     const char *gridCellHeightDegrStr = attributeList.getAttributeValue("grid.original.cell.height.degrees");
     const char *gridOriginalProjectionStr = attributeList.getAttributeValue("grid.original.projectionType");
+    const char *flipped = attributeList.getAttributeValue("grid.flipped");
 
     if (geometryIdStr == nullptr  &&  geometryStringStr == nullptr  &&  urnStr == nullptr  &&  crsStr == nullptr)
       return;
@@ -2955,7 +2956,36 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
       if (!def)
         return;
 
-      latLonCoordinates = def->getGridLatLonCoordinates();
+      if (flipped)
+      {
+        auto originalCoords = def->getGridLatLonCoordinates();
+        int sz = originalCoords->size();
+
+        if (sz)
+        {
+          T::Coordinate_svec newCoords(new T::Coordinate_vec());
+          newCoords->reserve(sz);
+
+          T::Dimensions d = def->getGridDimensions();
+          int nx = d.nx();
+          int ny = d.ny();
+
+          for (int y = ny-1; y >= 0; y--)
+          {
+            for (int x = 0; x < nx; x++)
+            {
+              auto cc = (*originalCoords)[y*nx + x];
+              newCoords->emplace_back(cc);
+            }
+          }
+
+          latLonCoordinates = newCoords;
+        }
+      }
+      else
+      {
+        latLonCoordinates = def->getGridLatLonCoordinates();
+      }
     }
 
 
@@ -3304,6 +3334,7 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
     const char *gridCellWidthDegrStr = attributeList.getAttributeValue("grid.original.cell.width.degrees");
     const char *gridCellHeightDegrStr = attributeList.getAttributeValue("grid.original.cell.height.degrees");
     const char *gridOriginalProjectionStr = attributeList.getAttributeValue("grid.original.projectionType");
+    const char *flipped = attributeList.getAttributeValue("grid.flipped");
 
     if (geometryIdStr == nullptr  &&  geometryStringStr == nullptr  &&  urnStr == nullptr  &&  crsStr == nullptr)
       return;
@@ -3333,13 +3364,42 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
       if (!def)
         return;
 
-      latLonCoordinates = def->getGridLatLonCoordinates();
+      if (flipped)
+      {
+        auto originalCoords = def->getGridLatLonCoordinates();
+        int sz = originalCoords->size();
+
+        if (sz)
+        {
+          T::Coordinate_svec newCoords(new T::Coordinate_vec());
+          newCoords->reserve(sz);
+
+          T::Dimensions d = def->getGridDimensions();
+          int nx = d.nx();
+          int ny = d.ny();
+
+          for (int y = ny-1; y >= 0; y--)
+          {
+            for (int x = 0; x < nx; x++)
+            {
+              auto cc = (*originalCoords)[y*nx + x];
+              newCoords->emplace_back(cc);
+            }
+          }
+
+          latLonCoordinates = newCoords;
+        }
+      }
+      else
+      {
+        latLonCoordinates = def->getGridLatLonCoordinates();
+      }
     }
 
 
     // Checking if the geometry is defigned by the geometry string
 
-    if (geometryStringStr)
+    if (!def &&  geometryStringStr)
     {
       auto defPtr =  Identification::gridDef.createGrib2GridDefinition(geometryStringStr);
       if (!defPtr)
@@ -3643,8 +3703,12 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
       int last = latLonCoordinates->size() - 1;
       char tmp[100];
       sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",(*latLonCoordinates)[0].x(),(*latLonCoordinates)[0].y(),(*latLonCoordinates)[last].x(),(*latLonCoordinates)[last].y());
-      attributeList.setAttribute("grid.llbox",tmp);
-      if (targetIsLatlon)
+
+
+      if (!flipped)
+        attributeList.setAttribute("grid.llbox",tmp);
+
+      if (targetIsLatlon &&  !flipped)
         attributeList.setAttribute("grid.bbox",tmp);
     }
   }

@@ -3423,7 +3423,6 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,uint 
       attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
     }
 
-
     const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
 
     if (geometryIdStr != nullptr  &&  getGridGeometryId() == toInt32(geometryIdStr))
@@ -3459,6 +3458,8 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,uint 
             }
 
             values = std::move(ordered);
+
+            attributeList.setAttribute("grid.flipped","1");
 
             // The data rows were just reversed to increasing-latitude (south->north)
             // order, but grid.llbox/grid.bbox set above were taken from the message
