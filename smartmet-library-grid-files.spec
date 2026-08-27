@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 26.7.14
+Version: 26.8.27
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -100,6 +100,9 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Thu Aug 27 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.8.27-1.fmi
+- Flip returned grid coordinates when the data is flipped
+
 * Tue Jul 14 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> 26.7.14-1.fmi
 - GRIB2: batch getGridValueVectorByLatLonCoordinateList so a coordinate list is
   resolved with a single decompression-cache access instead of one locked
