@@ -165,6 +165,13 @@ void JpegGridDataRepresentationImpl::decodeValues(Message* message,
     jas_matrix_t* matrix = jas_matrix_create(height, width);
     jas_image_readcmpt(image, 0, 0, 0, width, height, matrix);
 
+    // Number of decoded samples available in the matrix. The unpack loops below index
+    // matrix->data_ with a running counter that must never exceed this, otherwise a
+    // crafted JPEG-2000 image smaller than the declared grid causes an OOB heap read.
+    if (width <= 0 || height <= 0)
+      throw Fmi::Exception(BCP, "Invalid JPEG-2000 image dimensions!");
+    const std::size_t jpegSampleCount = static_cast<std::size_t>(width) * static_cast<std::size_t>(height);
+
     // Vector to return
     decodedValues.clear();
     decodedValues.reserve(numOfValues);
@@ -209,6 +216,8 @@ void JpegGridDataRepresentationImpl::decodeValues(Message* message,
       {
         if (bitmapReader.readBit())
         {
+          if (pos >= jpegSampleCount)
+            throw Fmi::Exception(BCP, "JPEG-2000 image has fewer samples than the bitmap requires!");
           int X = matrix->data_[pos];
           double Y = RDfac + X * EDfac;
           decodedValues.emplace_back(Y);
@@ -222,6 +231,8 @@ void JpegGridDataRepresentationImpl::decodeValues(Message* message,
     }
     else
     {
+      if (numOfValues > jpegSampleCount)
+        throw Fmi::Exception(BCP, "JPEG-2000 image has fewer samples than the declared value count!");
       for (int i = 0; i < C_INT(numOfValues); i++)
       {
         int X = matrix->data_[i];

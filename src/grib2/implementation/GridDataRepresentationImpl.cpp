@@ -240,9 +240,17 @@ void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec
     std::size_t dataSize = message->getDataSize();
     T::Data_ptr bitmap = message->getBitmapDataPtr();
 
-
     if (numOfValues == 0)
       return;
+
+    // Guard against a bitmap shorter than the grid implies: every bitmap[i/8] read below
+    // uses i in [0,numOfValues), so the bitmap must hold at least ceil(numOfValues/8) bytes.
+    if (bitmap != nullptr)
+    {
+      std::size_t bitmapSizeInBytes = message->getBitmapDataSizeInBytes();
+      if (bitmapSizeInBytes < (numOfValues + 7) / 8)
+        throw Fmi::Exception(BCP,"GRIB2 bitmap is too short for the declared value count!");
+    }
 
     // Vector to return
     decodedValues.clear();

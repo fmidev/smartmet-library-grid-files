@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 26.8.27
+Version: 26.8.30
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -100,6 +100,13 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Sat Aug 30 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.8.30-1.fmi
+- Security: hardened GRIB decoders against crafted messages (heap overflow / OOB reads).
+  Enforce that GRIB2 complex-packing group sizes sum to the declared value count, bound
+  GRIB2 bitmap reads by the bitmap length, bound JPEG-2000 sample reads by the image size,
+  bound the PNG read callback by the input buffer, replace GRIB1 second-order stack VLAs
+  with heap vectors and validate the group/differencing descriptors, and guard nx*ny
+  overflow in the value count.
 * Thu Aug 27 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.8.27-1.fmi
 - Flip returned grid coordinates when the data is flipped
 
