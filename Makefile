@@ -134,19 +134,19 @@ install:
 	@mkdir -p $(includedir)/$(INCDIR)/map
 	@mkdir -p $(includedir)/$(INCDIR)/netcdf
 	@mkdir -p $(includedir)/$(INCDIR)/querydata
-	@cp src/common/*.h $(includedir)/$(INCDIR)/common
-	@cp src/geotiff/*.h $(includedir)/$(INCDIR)/geotiff
-	@cp src/grid/*.h $(includedir)/$(INCDIR)/grid
-	@cp src/grib1/*.h $(includedir)/$(INCDIR)/grib1
-	@cp src/grib1/definition/*.h $(includedir)/$(INCDIR)/grib1/definition
-	@cp src/grib1/implementation/*.h $(includedir)/$(INCDIR)/grib1/implementation
-	@cp src/grib2/*.h $(includedir)/$(INCDIR)/grib2
-	@cp src/grib2/definition/*.h $(includedir)/$(INCDIR)/grib2/definition
-	@cp src/grib2/implementation/*.h $(includedir)/$(INCDIR)/grib2/implementation
-	@cp src/identification/*.h $(includedir)/$(INCDIR)/identification	
-	@cp src/map/*.h $(includedir)/$(INCDIR)/map	
-	@cp src/netcdf/*.h $(includedir)/$(INCDIR)/netcdf	
-	@cp src/querydata/*.h $(includedir)/$(INCDIR)/querydata	
+	$(INSTALL_DATA) src/common/*.h $(includedir)/$(INCDIR)/common
+	$(INSTALL_DATA) src/geotiff/*.h $(includedir)/$(INCDIR)/geotiff
+	$(INSTALL_DATA) src/grid/*.h $(includedir)/$(INCDIR)/grid
+	$(INSTALL_DATA) src/grib1/*.h $(includedir)/$(INCDIR)/grib1
+	$(INSTALL_DATA) src/grib1/definition/*.h $(includedir)/$(INCDIR)/grib1/definition
+	$(INSTALL_DATA) src/grib1/implementation/*.h $(includedir)/$(INCDIR)/grib1/implementation
+	$(INSTALL_DATA) src/grib2/*.h $(includedir)/$(INCDIR)/grib2
+	$(INSTALL_DATA) src/grib2/definition/*.h $(includedir)/$(INCDIR)/grib2/definition
+	$(INSTALL_DATA) src/grib2/implementation/*.h $(includedir)/$(INCDIR)/grib2/implementation
+	$(INSTALL_DATA) src/identification/*.h $(includedir)/$(INCDIR)/identification	
+	$(INSTALL_DATA) src/map/*.h $(includedir)/$(INCDIR)/map
+	$(INSTALL_DATA) src/netcdf/*.h $(includedir)/$(INCDIR)/netcdf
+	$(INSTALL_DATA) src/querydata/*.h $(includedir)/$(INCDIR)/querydata
 	@mkdir -p $(libdir)
 	$(INSTALL_PROG) $(LIBFILE) $(libdir)/$(LIBFILE)
 
