@@ -528,6 +528,44 @@ bool LatLonImpl::getGridLatLonCoordinatesByGridPosition(double grid_i,double gri
 
 
 
+/*! \brief The method returns the grid latlon coordinates of the given grid points (= integer coordinates).
+    The coordinates are calculated directly from the grid definition, so no coordinate
+    transformation is needed.
+
+        \param gridPoints   The grid points (i,j).
+        \param coordinates  The latlon coordinates (x = longitude, y = latitude) are returned in this parameter.
+        \param found        The method sets 'true' for each point whose coordinates were returned.
+*/
+
+void LatLonImpl::getGridLatLonCoordinatesByGridPointList(std::vector<T::Point>& gridPoints,T::Coordinate_vec& coordinates,std::vector<bool>& found) const
+{
+  try
+  {
+    std::size_t sz = gridPoints.size();
+    coordinates.assign(sz,T::Coordinate(0,0));
+    found.assign(sz,false);
+
+    for (std::size_t t=0; t<sz; t++)
+    {
+      double lat = 0;
+      double lon = 0;
+      if (getGridLatLonCoordinatesByGridPoint(gridPoints[t].x(),gridPoints[t].y(),lat,lon))
+      {
+        coordinates[t] = T::Coordinate(lon,lat);
+        found[t] = true;
+      }
+    }
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
 /*! \brief The method returns the grid original (projection) coordinates in the given grid point (= integer coordinates).
 
         \param grid_i  The grid i-coordinate.

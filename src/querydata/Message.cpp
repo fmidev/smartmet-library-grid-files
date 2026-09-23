@@ -976,6 +976,39 @@ bool Message::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double
 
 
 
+/*! \brief The method returns the grid latlon coordinates of the given grid points (= integer coordinates).
+
+        \param gridPoints   The grid points (i,j).
+        \param coordinates  The latlon coordinates (x = longitude, y = latitude) are returned in this parameter.
+        \param found        The method sets 'true' for each point whose coordinates were returned.
+*/
+
+void Message::getGridLatLonCoordinatesByGridPointList(std::vector<T::Point>& gridPoints,T::Coordinate_vec& coordinates,std::vector<bool>& found) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (!mGeometryDef)
+    {
+      coordinates.assign(gridPoints.size(),T::Coordinate(0,0));
+      found.assign(gridPoints.size(),false);
+      return;
+    }
+
+    mGeometryDef->getGridLatLonCoordinatesByGridPointList(gridPoints,coordinates,found);
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
+}
+
+
+
+
+
 /*! \brief The method returns the grid latlon coordinates in the given grid position (= double coordinates).
 
         \param grid_i  The grid i-coordinate.

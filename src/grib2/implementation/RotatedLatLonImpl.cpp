@@ -438,6 +438,46 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPosition(double grid_i,dou
 
 
 
+/*! \brief The method returns the grid original (rotated latlon) coordinates of the given grid points
+    (= integer coordinates). The coordinates are calculated directly from the grid definition.
+
+        \param gridPoints  The grid points (i,j).
+        \param x           The x-coordinates in the original projection are returned in this parameter.
+        \param y           The y-coordinates in the original projection are returned in this parameter.
+        \param found       The method sets 'true' for each point whose coordinates were returned.
+*/
+
+void RotatedLatLonImpl::getGridOriginalCoordinatesByGridPointList(std::vector<T::Point>& gridPoints,std::vector<double>& x,std::vector<double>& y,std::vector<bool>& found) const
+{
+  try
+  {
+    std::size_t sz = gridPoints.size();
+    x.assign(sz,0);
+    y.assign(sz,0);
+    found.assign(sz,false);
+
+    for (std::size_t t=0; t<sz; t++)
+    {
+      double xx = 0;
+      double yy = 0;
+      if (getGridOriginalCoordinatesByGridPoint(gridPoints[t].x(),gridPoints[t].y(),xx,yy))
+      {
+        x[t] = xx;
+        y[t] = yy;
+        found[t] = true;
+      }
+    }
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
 /*! \brief The method returns the grid original (projection) coordinates in the given grid point (= integer coordinates).
 
         \param grid_i  The grid i-coordinate.

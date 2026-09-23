@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 26.9.16
+Version: 26.9.23
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -100,6 +100,12 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Wed Sep 23 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.9.23-1.fmi
+- Faster area queries (getGridValueListByCircle/Polygon): grid point coordinates are now transformed in one batch instead of one point at a time, avoiding per-point cache lookups, locks and PROJ calls
+- New virtual method getGridLatLonCoordinatesByGridPointList (ABI change)
+- Fixed getGridValuesByPointList returning extra or missing values for out-of-grid points
+- Fixed a data race in CoordinateConverter transformation slot selection
+
 * Wed Sep 16 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.9.16-1.fmi
 - Repackaged due to Fmi::Cache::Cache locking changes
 - Fixed the build and devel dependencies to require smartmet-library-macgyver-devel

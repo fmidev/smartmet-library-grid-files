@@ -2559,6 +2559,35 @@ bool Message::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double
 
 
 
+/*! \brief The method returns the grid latlon coordinates of the given grid points (= integer coordinates).
+
+        \param gridPoints   The grid points (i,j).
+        \param coordinates  The latlon coordinates (x = longitude, y = latitude) are returned in this parameter.
+        \param found        The method sets 'true' for each point whose coordinates were returned.
+*/
+
+void Message::getGridLatLonCoordinatesByGridPointList(std::vector<T::Point>& gridPoints,T::Coordinate_vec& coordinates,std::vector<bool>& found) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mGridSection == nullptr)
+      throw Fmi::Exception(BCP,"The 'mGridSection' attribute points to nullptr!");
+
+    mGridSection->getGridLatLonCoordinatesByGridPointList(gridPoints,coordinates,found);
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
+}
+
+
+
+
+
 /*! \brief The method returns the grid latlon coordinates in the given grid position (= double coordinates).
 
         \param grid_i  The grid i-coordinate.
@@ -3664,11 +3693,11 @@ void Message::getGridValuesByPointList(std::vector<T::Point>& gridPoints,T::Para
 
         for (uint t=0; t<sz; t++)
         {
-          if (gridPoints[t].y() >= (int)mRowCount)
+          if (gridPoints[t].y() >= (int)mRowCount || (gridPoints[t].x() >= (int)mColumnCount &&  !isGridGlobal()))
+          {
             values.push_back(ParamValueMissing);
-
-          if (gridPoints[t].x() >= (int)mColumnCount &&  !isGridGlobal())
-            values.push_back(ParamValueMissing);
+            continue;
+          }
 
           uint idx = gridPoints[t].y() * mColumnCount + (gridPoints[t].x() % mColumnCount);
 
@@ -3682,6 +3711,10 @@ void Message::getGridValuesByPointList(std::vector<T::Point>& gridPoints,T::Para
               exception.addParameter("Filename",mGridFilePtr->getFileName());
               throw exception;
             }
+          }
+          else
+          {
+            values.push_back(getGridValueByGridPoint(gridPoints[t].x(),gridPoints[t].y()));
           }
         }
         return;
@@ -3715,11 +3748,11 @@ void Message::getGridValuesByPointList(std::vector<T::Point>& gridPoints,T::Para
 
     for (uint t=0; t<sz; t++)
     {
-      if (gridPoints[t].y() >= (int)mRowCount)
+      if (gridPoints[t].y() >= (int)mRowCount || (gridPoints[t].x() >= (int)mColumnCount &&  !isGridGlobal()))
+      {
         values.push_back(ParamValueMissing);
-
-      if (gridPoints[t].x() >= (int)mColumnCount &&  !isGridGlobal())
-        values.push_back(ParamValueMissing);
+        continue;
+      }
 
       uint idx = gridPoints[t].y() * mColumnCount + (gridPoints[t].x() % mColumnCount);
       if (idx < vsz)
