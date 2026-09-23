@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 26.9.16
+Version: 26.9.23
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -21,10 +21,10 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %endif
 
 BuildRequires: rpm-build
-BuildRequires: smartmet-utils-devel >= 26.6.24
-BuildRequires: smartmet-library-newbase-devel >= 26.6.26
-BuildRequires: smartmet-library-spine-devel >= 26.7.10
-BuildRequires: smartmet-library-macgyver-devel >= 26.9.16
+BuildRequires: smartmet-utils-devel >= 26.9.3
+BuildRequires: smartmet-library-newbase-devel >= 26.9.23
+BuildRequires: smartmet-library-spine-devel >= 26.9.23
+BuildRequires: smartmet-library-macgyver-devel >= 26.9.23
 BuildRequires: smartmet-library-trax-devel >= 26.6.26
 BuildRequires: %{smartmet_boost}-devel
 BuildRequires: gcc-c++
@@ -50,9 +50,9 @@ Requires: libaec
 Requires: libcurl
 Requires: openjpeg2
 Requires: libwebp13 >= 1.3.2
-Requires: smartmet-library-newbase >= 26.6.26
-Requires: smartmet-library-macgyver >= 26.9.16
-Requires: smartmet-library-spine >= 26.7.10
+Requires: smartmet-library-newbase >= 26.9.23
+Requires: smartmet-library-macgyver >= 26.9.23
+Requires: smartmet-library-spine >= 26.9.23
 Requires: smartmet-library-trax >= 26.6.26
 Requires: smartmet-topography-data >= 1.0.0
 
@@ -84,9 +84,9 @@ rm -rf $RPM_BUILD_ROOT
 Summary: FMI Grid File library development files
 Provides: %{SPECNAME}-devel
 Requires: %{SPECNAME} = %{version}-%{release}
-Requires: smartmet-library-newbase-devel >= 26.6.26
+Requires: smartmet-library-newbase-devel >= 26.9.23
 Requires: smartmet-library-spine-devel
-Requires: smartmet-library-macgyver-devel >= 26.9.16
+Requires: smartmet-library-macgyver-devel >= 26.9.23
 Requires: smartmet-library-trax-devel
 Requires: %{smartmet_boost}-devel
 Requires: libcurl-devel
@@ -100,6 +100,9 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Wed Sep 23 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.9.23-1.fmi
+- Repackaged since moving from boost::shared_lock to std::shared_lock
+
 * Wed Sep 16 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.9.16-1.fmi
 - Repackaged due to Fmi::Cache::Cache locking changes
 - Fixed the build and devel dependencies to require smartmet-library-macgyver-devel
