@@ -6,7 +6,8 @@
 // instead of doing a separate cache lookup and coordinate transformation for each point.
 //
 // The test also checks that getGridValueListByCircle returns values for every point of the
-// circle, i.e. that getGridValuesByPointList returns exactly one value per grid point.
+// circle, i.e. that getGridValuesByPointList returns exactly one value per grid point, and that
+// a repeated circle query served from the circle point cache gives the same result.
 //
 // The test needs the ECMWF global thunderstorm-probability grid from smartmet-test-data and a
 // grid-files configuration with FMI geometry definitions (provided by the
@@ -127,6 +128,37 @@ int main()
                 rec.mX, rec.mY);
         return 1;
       }
+    }
+
+    // The second call uses the cached circle points and must give exactly the same result
+
+    T::GridValueList list2;
+    msg->getGridValueListByCircle(T::CoordinateTypeValue::LATLON_COORDINATES, lon0, lat0, radius, list2);
+
+    if (list2.getLength() != len)
+    {
+      fprintf(stderr, "FAIL GridPointListCoordinatesTest: cached circle has %u points, expected %u\n",
+              list2.getLength(), len);
+      return 1;
+    }
+
+    for (uint t = 0; t < len; t++)
+    {
+      T::GridValue rec1;
+      T::GridValue rec2;
+      list.getGridValueByIndex(t, rec1);
+      list2.getGridValueByIndex(t, rec2);
+      if (rec1.mX != rec2.mX || rec1.mY != rec2.mY || rec1.mValue != rec2.mValue)
+      {
+        fprintf(stderr, "FAIL GridPointListCoordinatesTest: cached circle point %u differs\n", t);
+        return 1;
+      }
+    }
+
+    if (GRID::circlePointCache_stats.hits == 0)
+    {
+      fprintf(stderr, "FAIL GridPointListCoordinatesTest: circle point cache was not used\n");
+      return 1;
     }
 
     printf("PASS GridPointListCoordinatesTest: %zu points match the single point method, "

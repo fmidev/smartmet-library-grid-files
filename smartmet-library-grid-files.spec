@@ -102,6 +102,7 @@ FMI Grid File library development files
 %changelog
 * Wed Sep 23 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.9.23-1.fmi
 - Faster area queries (getGridValueListByCircle/Polygon): grid point coordinates are now transformed in one batch instead of one point at a time, avoiding per-point cache lookups, locks and PROJ calls
+- Latlon circle queries cache the grid points inside the circle per geometry, so all times, levels and parameters of the same model share them
 - New virtual method getGridLatLonCoordinatesByGridPointList (ABI change)
 - Fixed getGridValuesByPointList returning extra or missing values for out-of-grid points
 - Fixed a data race in CoordinateConverter transformation slot selection

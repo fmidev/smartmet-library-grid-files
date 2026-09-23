@@ -12,6 +12,7 @@
 #include <macgyver/Exception.h>
 #include <macgyver/FastMath.h>
 #include <macgyver/Cache.h>
+#include <macgyver/Hash.h>
 
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
@@ -56,6 +57,24 @@ typedef std::vector<std::vector<T::Coordinate>> PolygonCoordinates;
 typedef std::shared_ptr<PolygonCoordinates> PolygonCoordinates_sptr;
 
 Fmi::Cache::Cache<std::size_t,PolygonCoordinates_sptr> polygonCoordinateCache(10000);
+
+// The grid points inside a latlon circle and their latlon coordinates. The points depend only on
+// the grid geometry and the circle, so they are shared by all messages with the same geometry
+// (i.e. all times, levels and parameters of the same model).
+
+struct CirclePoints
+{
+  std::vector<T::Point> points;
+  T::Coordinate_vec coordinates;
+};
+
+typedef std::shared_ptr<const CirclePoints> CirclePoints_sptr;
+
+// A 200 km circle on a 2.5 km grid has about 20000 points (~0.5 MB)
+#define CIRCLE_POINT_CACHE_SIZE 100
+
+Fmi::Cache::CacheStats circlePointCache_stats(Fmi::SecondClock::universal_time(),CIRCLE_POINT_CACHE_SIZE,0,0,0,0);
+Fmi::Cache::Cache<std::size_t,CirclePoints_sptr> circlePointCache(CIRCLE_POINT_CACHE_SIZE);
 
 
 
@@ -5065,27 +5084,104 @@ void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double o
       case T::CoordinateTypeValue::UNKNOWN:
       case T::CoordinateTypeValue::LATLON_COORDINATES:
       {
-        double lon1,lat1,lon2,lat2;
-        latLon_bboxByCenter(origoX,origoY,dd,dd,lon1,lat1,lon2,lat2);
+        // The circle points depend only on the grid geometry. They are cached only when the
+        // geometry is identified, since the grid hash alone does not cover all projection details.
 
-        std::vector<T::Coordinate> polygonPoints;
-        polygonPoints.emplace_back(lon1,lat1);
-        polygonPoints.emplace_back(lon2,lat1);
-        polygonPoints.emplace_back(lon2,lat2);
-        polygonPoints.emplace_back(lon1,lat2);
+        std::size_t hash = 0;
+        T::GeometryId geometryId = getGridGeometryId();
+        if (geometryId != 0)
+        {
+          Fmi::hash_merge(hash,geometryId);
+          Fmi::hash_merge(hash,getGridHash());
+          Fmi::hash_merge(hash,cols);
+          Fmi::hash_merge(hash,rows);
+          Fmi::hash_merge(hash,origoX);
+          Fmi::hash_merge(hash,origoY);
+          Fmi::hash_merge(hash,radius);
+        }
 
-        T::GridValueList tmpValueList;
-        getGridValueListByPolygon(coordinateType,polygonPoints,modificationOperation,modificationParameters,tmpValueList);
+        CirclePoints_sptr circle;
+        if (hash != 0)
+        {
+          auto it = circlePointCache.find(hash);
+          if (it)
+          {
+            circlePointCache_stats.hits++;
+            circle = *it;
+          }
+          else
+          {
+            circlePointCache_stats.misses++;
+          }
+        }
 
-        uint len = tmpValueList.getLength();
-        for (uint t=0; t<len; t++)
+        if (!circle)
+        {
+          double lon1,lat1,lon2,lat2;
+          latLon_bboxByCenter(origoX,origoY,dd,dd,lon1,lat1,lon2,lat2);
+
+          std::vector<T::Coordinate> polygonPoints;
+          polygonPoints.emplace_back(lon1,lat1);
+          polygonPoints.emplace_back(lon2,lat1);
+          polygonPoints.emplace_back(lon2,lat2);
+          polygonPoints.emplace_back(lon1,lat2);
+
+          // Same grid points as in getGridValueListByPolygon()
+
+          std::vector<T::Coordinate> newPolygonPoints;
+          for (auto it = polygonPoints.begin(); it != polygonPoints.end(); ++it)
+          {
+            double grid_i = 0;
+            double grid_j = 0;
+            if (getGridPointByLatLonCoordinates(it->y(),it->x(),grid_i,grid_j))
+              newPolygonPoints.emplace_back(grid_i,grid_j);
+          }
+
+          std::vector<T::Point> gridPoints;
+          getPointsInsidePolygon(cols,rows,newPolygonPoints,gridPoints);
+
+          T::Coordinate_vec coordinates;
+          std::vector<bool> found;
+          getGridLatLonCoordinatesByGridPointList(gridPoints,coordinates,found);
+
+          auto newCircle = std::make_shared<CirclePoints>();
+          std::size_t sz = gridPoints.size();
+          for (std::size_t t=0; t<sz; t++)
+          {
+            // Points without coordinates are at (0,0) as in getGridValueListByPolygon()
+            T::Coordinate c = found[t] ? coordinates[t] : T::Coordinate(0,0);
+            if (latlon_distance(origoY,origoX,c.y(),c.x()) <= radius)
+            {
+              newCircle->points.push_back(gridPoints[t]);
+              newCircle->coordinates.push_back(c);
+            }
+          }
+
+          circle = newCircle;
+
+          if (hash != 0)
+          {
+            circlePointCache.insert(hash,circle);
+            circlePointCache_stats.inserts++;
+            circlePointCache_stats.size = circlePointCache.size();
+          }
+        }
+
+        std::vector<T::Point> gridPoints = circle->points;
+        T::ParamValue_vec values;
+        getGridValuesByPointList(gridPoints,values);
+
+        std::size_t sz = circle->points.size();
+        if (values.size() != sz)
+          return;
+
+        for (std::size_t t=0; t<sz; t++)
         {
           T::GridValue rec;
-          if (tmpValueList.getGridValueByIndex(t,rec))
-          {
-            if (latlon_distance(origoY,origoX,rec.mY,rec.mX) <= radius)
-              valueList.addGridValue(rec);
-          }
+          rec.mX = circle->coordinates[t].x();
+          rec.mY = circle->coordinates[t].y();
+          rec.mValue = values[t];
+          valueList.addGridValue(rec);
         }
       }
       break;

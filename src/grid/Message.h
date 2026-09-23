@@ -18,6 +18,7 @@
 #include "../common/MemoryReader.h"
 #include "../common/StringFactory.h"
 
+#include <macgyver/CacheStats.h>
 #include <vector>
 #include <string>
 #include <memory>
@@ -986,6 +987,7 @@ typedef std::vector<MessagePtr> MessagePtr_vec;
 
 extern std::vector<double> EMPTY_DOUBLE_VEC;
 extern std::vector<Message*> EMPTY_MSG_VEC;
+extern Fmi::Cache::CacheStats circlePointCache_stats;  //!< Statistics of the latlon circle point cache
 
 
 
