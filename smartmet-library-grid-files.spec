@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 26.9.23
+Version: 26.9.24
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -24,7 +24,7 @@ BuildRequires: rpm-build
 BuildRequires: smartmet-utils-devel >= 26.6.24
 BuildRequires: smartmet-library-newbase-devel >= 26.6.26
 BuildRequires: smartmet-library-spine-devel >= 26.7.10
-BuildRequires: smartmet-library-macgyver-devel >= 26.9.16
+BuildRequires: smartmet-library-macgyver-devel >= 26.9.24
 BuildRequires: smartmet-library-trax-devel >= 26.6.26
 BuildRequires: %{smartmet_boost}-devel
 BuildRequires: gcc-c++
@@ -51,7 +51,7 @@ Requires: libcurl
 Requires: openjpeg2
 Requires: libwebp13 >= 1.3.2
 Requires: smartmet-library-newbase >= 26.6.26
-Requires: smartmet-library-macgyver >= 26.9.16
+Requires: smartmet-library-macgyver >= 26.9.24
 Requires: smartmet-library-spine >= 26.7.10
 Requires: smartmet-library-trax >= 26.6.26
 Requires: smartmet-topography-data >= 1.0.0
@@ -86,7 +86,7 @@ Provides: %{SPECNAME}-devel
 Requires: %{SPECNAME} = %{version}-%{release}
 Requires: smartmet-library-newbase-devel >= 26.6.26
 Requires: smartmet-library-spine-devel
-Requires: smartmet-library-macgyver-devel >= 26.9.16
+Requires: smartmet-library-macgyver-devel >= 26.9.24
 Requires: smartmet-library-trax-devel
 Requires: %{smartmet_boost}-devel
 Requires: libcurl-devel
@@ -100,6 +100,12 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Thu Sep 24 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.9.24-1.fmi
+- Use Fmi::Cache::ClockCache for the internal caches: find() no longer takes an exclusive lock,
+  which removes lock contention on repeated point transformations (3.2x faster point queries
+  with 16 threads). Build with -DGRID_FILES_LRU_CACHE to use the LRU Fmi::Cache::Cache instead
+- Requires macgyver 26.9.24 for ClockCache
+
 * Wed Sep 23 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.9.23-1.fmi
 - Faster area queries (getGridValueListByCircle/Polygon): grid point coordinates are now transformed in one batch instead of one point at a time, avoiding per-point cache lookups, locks and PROJ calls
 - Latlon circle queries cache the grid points inside the circle per geometry, so all times, levels and parameters of the same model share them

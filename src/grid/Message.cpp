@@ -12,6 +12,7 @@
 #include <macgyver/Exception.h>
 #include <macgyver/FastMath.h>
 #include <macgyver/Cache.h>
+#include "../common/GridCache.h"
 #include <macgyver/Hash.h>
 
 
@@ -56,7 +57,7 @@ std::vector<Message*> EMPTY_MSG_VEC;
 typedef std::vector<std::vector<T::Coordinate>> PolygonCoordinates;
 typedef std::shared_ptr<PolygonCoordinates> PolygonCoordinates_sptr;
 
-Fmi::Cache::Cache<std::size_t,PolygonCoordinates_sptr> polygonCoordinateCache(10000);
+SmartMet::GridCache<std::size_t,PolygonCoordinates_sptr> polygonCoordinateCache(10000);
 
 // The grid points inside a latlon circle and their latlon coordinates. The points depend only on
 // the grid geometry and the circle, so they are shared by all messages with the same geometry
@@ -74,7 +75,7 @@ typedef std::shared_ptr<const CirclePoints> CirclePoints_sptr;
 #define CIRCLE_POINT_CACHE_SIZE 100
 
 Fmi::Cache::CacheStats circlePointCache_stats(Fmi::SecondClock::universal_time(),CIRCLE_POINT_CACHE_SIZE,0,0,0,0);
-Fmi::Cache::Cache<std::size_t,CirclePoints_sptr> circlePointCache(CIRCLE_POINT_CACHE_SIZE);
+SmartMet::GridCache<std::size_t,CirclePoints_sptr> circlePointCache(CIRCLE_POINT_CACHE_SIZE);
 
 
 

@@ -2,6 +2,7 @@
 #include "Properties.h"
 #include <macgyver/Exception.h>
 #include <macgyver/Cache.h>
+#include "../common/GridCache.h"
 #include "../common/GeneralFunctions.h"
 #include "../common/GeneralDefinitions.h"
 #include "../common/AutoWriteLock.h"
@@ -24,22 +25,22 @@ namespace GRIB1
 #define TRANSFORM_VEC_CACHE_SIZE 400
 
 Fmi::Cache::CacheStats latlonCoordinateCache_stats;
-Fmi::Cache::Cache<uint,T::Coordinate_svec> latlonCoordinateCache(COORDINATE_VEC_CACHE_SIZE);
+SmartMet::GridCache<uint,T::Coordinate_svec> latlonCoordinateCache(COORDINATE_VEC_CACHE_SIZE);
 
 Fmi::Cache::CacheStats originalCoordinateCache_stats;
-Fmi::Cache::Cache<uint,T::Coordinate_svec> originalCoordinateCache(COORDINATE_VEC_CACHE_SIZE);
+SmartMet::GridCache<uint,T::Coordinate_svec> originalCoordinateCache(COORDINATE_VEC_CACHE_SIZE);
 
 
 Fmi::Cache::CacheStats transformCache1_stats;
-Fmi::Cache::Cache<std::size_t,T::Coordinate> transformCache1(1000000);
+SmartMet::GridCache<std::size_t,T::Coordinate> transformCache1(1000000);
 
 Fmi::Cache::CacheStats transformCache2_stats;
-Fmi::Cache::Cache<std::size_t,T::Coordinate> transformCache2(1000000);
+SmartMet::GridCache<std::size_t,T::Coordinate> transformCache2(1000000);
 
 Fmi::Cache::CacheStats transformCache3_stats;
-Fmi::Cache::Cache<std::size_t,T::Coordinate_svec> transformCache3(TRANSFORM_VEC_CACHE_SIZE);
+SmartMet::GridCache<std::size_t,T::Coordinate_svec> transformCache3(TRANSFORM_VEC_CACHE_SIZE);
 
-Fmi::Cache::Cache<std::size_t,T::SpatialRef_sptr> spatialReferenceCache(1000);
+SmartMet::GridCache<std::size_t,T::SpatialRef_sptr> spatialReferenceCache(1000);
 
 T::SpatialRef_sptr latlonSpatialReference;
 T::SpatialRef_sptr sr_wgs84_world_mercator;

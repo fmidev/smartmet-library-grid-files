@@ -29,6 +29,7 @@
 #include <macgyver/Exception.h>
 #include <macgyver/FastMath.h>
 #include <macgyver/Cache.h>
+#include "GridCache.h"
 #include <boost/algorithm/string/replace.hpp>
 #include <macgyver/Hash.h>
 
@@ -39,7 +40,7 @@ namespace SmartMet
 
 typedef std::shared_ptr<geos::geom::Geometry> GeometryPtr;
 
-Fmi::Cache::Cache<std::size_t, std::vector<T::Point>> gridPointsCache(300);
+SmartMet::GridCache<std::size_t, std::vector<T::Point>> gridPointsCache(300);
 
 // Number of row-bands for parallel contouring, clamped to [1, number of cores] so contouring
 // never uses more threads than there are cores. 0/1 means single-threaded.
