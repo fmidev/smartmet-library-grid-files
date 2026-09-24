@@ -3,3 +3,4 @@ libsmartmet-grid-files.so
 obj/
 /.vscode
 test/*Test
+.cache

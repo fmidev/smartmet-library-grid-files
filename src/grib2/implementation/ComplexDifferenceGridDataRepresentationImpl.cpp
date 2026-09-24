@@ -96,7 +96,7 @@ void ComplexDifferenceGridDataRepresentationImpl::decodeValues(Message *message,
     T::Data_ptr data = message->getDataPtr();
     std::size_t dataSize = message->getDataSize();
     T::Data_ptr bitmap = message->getBitmapDataPtr();
-    //std::size_t bitmapSizeInBytes = message->getBitmapDataSizeInBytes();
+    std::size_t bitmapSizeInBytes = message->getBitmapDataSizeInBytes();
 
     //if (data == nullptr)
       //throw Fmi::Exception(BCP,"The 'data' pointer points to nullptr!");
@@ -116,9 +116,9 @@ void ComplexDifferenceGridDataRepresentationImpl::decodeValues(Message *message,
     int extraDescrBits = *mNumberOfOctetsExtraDescriptors * 8;
     int non = 0;
 
-    if (numberOfGroups == 0 || data == nullptr)
+    if (numberOfGroups <= 0 || data == nullptr)
     {
-      // The number of groups is zero, so all values are set to 'ref'.
+      // The number of groups is zero (or invalid), so all values are set to 'ref'.
 
       for (std::size_t i=0; i<numberOfValues; i++)
          decodedValues.emplace_back(ref);
@@ -267,6 +267,29 @@ void ComplexDifferenceGridDataRepresentationImpl::decodeValues(Message *message,
     groupSize[numberOfGroups-1] = *mTrueLengthOfLastGroup;
 
 
+    // ### Validating the (attacker-controllable) group descriptors before unpacking.
+    // The unpack loops below write dataValue[n] / missingDataValue[n] with n running over
+    // the cumulative sum of the group sizes. Both arrays are only 'numberOfValues' long,
+    // so a crafted GRIB2 message whose group sizes sum to more than numberOfValues would
+    // cause a heap buffer overflow. Enforce the GRIB2 invariant that the group lengths sum
+    // exactly to the declared value count, and that the per-group bit widths are sane.
+
+    std::size_t totalGroupValues = 0;
+    for (int g=0; g<numberOfGroups; g++)
+    {
+      if (groupSize[g] < 0)
+        throw Fmi::Exception(BCP,"Invalid GRIB2 complex-packing group size (negative)!");
+
+      if (groupValueSize[g] < 0 || groupValueSize[g] > 32)
+        throw Fmi::Exception(BCP,"Invalid GRIB2 complex-packing group value width!");
+
+      totalGroupValues += static_cast<std::size_t>(groupSize[g]);
+    }
+
+    if (totalGroupValues != numberOfValues)
+      throw Fmi::Exception(BCP,"GRIB2 complex-packing group sizes do not sum to the expected value count!");
+
+
 
     // ### Unpacking the data values from the groups.
 
@@ -384,7 +407,8 @@ void ComplexDifferenceGridDataRepresentationImpl::decodeValues(Message *message,
     if (*mOrderOfSpatialDifferencing == 1)
     {
       std::size_t itemp = 0;
-      dataValue[0] = ival1;
+      if (numberOfValues >= 1)
+        dataValue[0] = ival1;
       if (*mMissingValueManagementUsed == 0)
         itemp = numberOfValues;        // no missing values
       else
@@ -400,8 +424,10 @@ void ComplexDifferenceGridDataRepresentationImpl::decodeValues(Message *message,
     if (*mOrderOfSpatialDifferencing == 2)
     {
       std::size_t itemp = 0;
-      dataValue[0] = ival1;
-      dataValue[1] = ival2;
+      if (numberOfValues >= 1)
+        dataValue[0] = ival1;
+      if (numberOfValues >= 2)
+        dataValue[1] = ival2;
       if (*mMissingValueManagementUsed == 0)
         itemp = numberOfValues;        // no missing values
       else
@@ -461,6 +487,10 @@ void ComplexDifferenceGridDataRepresentationImpl::decodeValues(Message *message,
       std::size_t n = 0;
       for (std::size_t i = 0; i < numberOfValues; i++)
       {
+        // Guard against a bitmap that is shorter than the grid implies (OOB read).
+        if ((i / 8) >= bitmapSizeInBytes)
+          throw Fmi::Exception(BCP,"GRIB2 bitmap is too short for the declared value count!");
+
         if ((bitmap[i / 8] & bitmask[i % 8]) == 0)
         {
           decodedValues.emplace_back(ParamValueMissing);

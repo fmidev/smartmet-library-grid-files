@@ -6,6 +6,8 @@
 #include "../common/BitArrayReader.h"
 #include "../common/MemoryReader.h"
 
+#include <vector>
+
 
 namespace SmartMet
 {
@@ -411,12 +413,27 @@ void SecondOrderPacking::decodeValues_SPD(
     uint widthOfLengths = 0;
     uint NL = 0;
     uint widthOfSPD = 0;
-    uint SPD[orderOfSPD+1];
     uint totalWidth = 0;
     uint totalLength = 0;
-    uint groupLength[numberOfGroups];
-    uint groupValue[numberOfGroups];
-    uint valueSize[numberOfGroups];
+
+    // Validate the (attacker-controllable) descriptors before allocating. The group arrays
+    // used to be stack VLAs sized by numberOfGroups, and SPD by orderOfSPD; a crafted GRIB1
+    // message could blow the stack. Allocate on the heap instead and reject implausible
+    // sizes. orderOfSPD is a 2-bit spatial-differencing order (only 1..3 are meaningful),
+    // and each group holds at least one value so numberOfGroups cannot exceed numOfValues.
+    if (orderOfSPD > 3)
+      throw Fmi::Exception(BCP,"Invalid GRIB1 second-order spatial differencing order!");
+
+    if (numberOfGroups == 0 || numberOfGroups > numOfValues)
+      throw Fmi::Exception(BCP,"Invalid GRIB1 second-order group count!");
+
+    if (numOfValues < orderOfSPD)
+      throw Fmi::Exception(BCP,"GRIB1 second-order value count is smaller than the differencing order!");
+
+    std::vector<uint> SPD(orderOfSPD+1, 0);
+    std::vector<uint> groupLength(numberOfGroups, 0);
+    std::vector<uint> groupValue(numberOfGroups, 0);
+    std::vector<uint> valueSize(numberOfGroups, 0);
 
     double *dataValues = new double[numOfValues];
     std::unique_ptr<double[]> dataValues_delete(dataValues);
@@ -473,7 +490,10 @@ void SecondOrderPacking::decodeValues_SPD(
     }
 
 
-    if (totalLength > numOfValues)
+    // The unpack loop writes dataValues[c] with c starting at orderOfSPD and advancing by
+    // totalLength, so the highest index is orderOfSPD + totalLength - 1. dataValues holds
+    // numOfValues elements, so guard the full range (overflow-safe) to avoid a heap overflow.
+    if (totalLength > numOfValues - orderOfSPD)
     {
       throw Fmi::Exception(BCP,"Total length is bigger than number of the values!");
     }

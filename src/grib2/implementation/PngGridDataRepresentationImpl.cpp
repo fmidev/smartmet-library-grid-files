@@ -28,6 +28,14 @@ typedef struct png_read_callback_data
 static void png_read_callback(png_structp png,png_bytep data, png_size_t length)
 {
   png_read_callback_data* p = (png_read_callback_data*)png_get_io_ptr(png);
+  // Bound the read against the input buffer. A crafted PNG can make libpng request more
+  // bytes than the (memory-mapped) GRIB data holds; without this check the memcpy reads
+  // out of bounds. The overflow-safe form avoids wrap-around in offset+length.
+  if (p == nullptr || p->buffer == nullptr || length > p->length || p->offset > p->length - length)
+  {
+    png_error(png, "PNG read past end of input buffer");
+    return;
+  }
   memcpy(data,p->buffer+p->offset,length);
   p->offset += length;
 }

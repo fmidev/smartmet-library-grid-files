@@ -1362,7 +1362,15 @@ std::size_t GridSection::getGridOriginalValueCount() const
   {
     auto d = getGridDimensions();
     if (d.getDimensions() == 2)
-      return d.ny() * d.nx();
+    {
+      // Overflow-safe nx*ny: this value count drives buffer allocations and decode-loop
+      // bounds throughout the library, so a wrap-around here could desynchronise them.
+      std::size_t nx = d.nx();
+      std::size_t ny = d.ny();
+      if (nx != 0 && ny > (SIZE_MAX / nx))
+        throw Fmi::Exception(BCP,"GRIB2 grid dimensions nx*ny overflow!");
+      return ny * nx;
+    }
 
     return 0;
   }
