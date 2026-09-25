@@ -1886,7 +1886,7 @@ MessagePos_vec GridFile::searchMessageLocations(MemoryReader& memoryReader,uint 
         memoryReader >> totalLength;
 
       // The value of the total length contains also 16 bytes in the beginning of the section 0.
-      if ((memoryReader.getReadPosition() + totalLength-16) > memoryReader.getDataSize())
+      if (totalLength < 16 || (totalLength-16) > (memoryReader.getDataSize() - memoryReader.getReadPosition()))
       {
         valid = false;
         //Fmi::Exception exception(BCP,"The GRIB size ('totalLength') is out of the limits!");

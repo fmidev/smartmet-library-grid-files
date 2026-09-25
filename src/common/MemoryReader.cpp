@@ -294,7 +294,7 @@ void MemoryReader::setReadPosition(UInt64 _pos)
 {
   try
   {
-    if ((startPtr + _pos) > endPtr)
+    if (_pos > C_UINT64(endPtr - startPtr))
     {
       Fmi::Exception exception(BCP,"The value of the '_pos' parameter is out of the range!");
       exception.addParameter("size",std::to_string(getDataSize()));
@@ -1443,7 +1443,7 @@ void MemoryReader::read_data(unsigned char *_data,UInt64 _size)
 {
   try
   {
-    if ((readPtr + _size) > endPtr)
+    if (_size > C_UINT64(endPtr - readPtr))
     {
       Fmi::Exception exception(BCP,"Trying to read outside of the given memory area!");
       if (startPtr != parentPtr)
@@ -1475,7 +1475,7 @@ void MemoryReader::read_null(UInt64 _size)
 {
   try
   {
-    if ((readPtr + _size) > endPtr)
+    if (_size > C_UINT64(endPtr - readPtr))
     {
       Fmi::Exception exception(BCP,"Trying to read outside of the given memory area!");
       if (startPtr != parentPtr)
