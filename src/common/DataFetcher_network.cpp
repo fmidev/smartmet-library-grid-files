@@ -9,6 +9,7 @@
 #include <curl/curl.h>
 
 #include "ShowFunction.h"
+#include <vector>
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
 
 
@@ -305,7 +306,8 @@ void DataFetcher_network::getFileList_S3(uint protocol,const char *server,const 
   try
   {
     int dataSize = 1000000;
-    char data[dataSize];
+    std::vector<char> dataVec(dataSize);
+    char *data = dataVec.data();
     bool truncated = false;
     std::string lastKey;
     std::string fname;

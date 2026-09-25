@@ -480,7 +480,8 @@ void copyFile(const char *sourceFileName,const char *targetFileName,bool& shutdo
       throw exception;
     }
 
-    char buf[1000000];
+    std::vector<char> bufVec(1000000);
+    char *buf = bufVec.data();
     int nr;
     while (!shutdownRequested && (nr = fread(buf,1,1000000,sFile)) > 0)
     {
