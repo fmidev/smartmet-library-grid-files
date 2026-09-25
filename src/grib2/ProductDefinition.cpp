@@ -1746,50 +1746,37 @@ T::TimeString ProductDefinition::countForecastStartTime(T::TimeString referenceT
     if (!indicator)
       throw Fmi::Exception(BCP, "The 'parameter.indicatorOfUnitOfTimeRange' value not defined!");
 
-    int ft = *forecastTimeP;
-    int forecastTime = ft;
-    if (ft < 0)
-      forecastTime = -ft;
+    // The forecast time comes from the message, compute in 64 bits and reject absurd values
+    const int ft = *forecastTimeP;
+    std::int64_t forecastTime = ft;
+    if (forecastTime < 0)
+      forecastTime = -forecastTime;
 
-    Fmi::TimeDuration dt;
-
+    std::int64_t unitSeconds = 0;
     switch (*indicator)
     {
-      case 0: // m Minute
-        dt = Fmi::TimeDuration(0,forecastTime,0);
-        break;
-
-      case 1: //  h Hour
-        dt = Fmi::TimeDuration(forecastTime,0,0);
-        break;
-
-      case 2: //  D Day
-        dt = Fmi::TimeDuration(24*forecastTime,0,0);
-        break;
-
-      case 3: //  M Month
-      case 4: //  Y Year
-      case 5: //  10Y Decade (10 years)
-      case 6: //  30Y Normal (30 years)
-      case 7: //  C Century (100 years)
+      case 0:   unitSeconds = 60; break;          //  m Minute
+      case 1:   unitSeconds = 3600; break;        //  h Hour
+      case 2:   unitSeconds = 24 * 3600; break;   //  D Day
+      case 3:   //  M Month
+      case 4:   //  Y Year
+      case 5:   //  10Y Decade (10 years)
+      case 6:   //  30Y Normal (30 years)
+      case 7:   //  C Century (100 years)
         throw Fmi::Exception(BCP, "Not implemented!");
-
-      case 10: //  3h 3 hours
-        dt = Fmi::TimeDuration(3*forecastTime,0,0);
-        break;
-
-      case 11: //  6h 6 hours
-        dt = Fmi::TimeDuration(6*forecastTime,0,0);
-        break;
-
-      case 12: //  12h 12 hours
-        dt = Fmi::TimeDuration(12*forecastTime,0,0);
-        break;
-
-      case 13: //  s Second
-        dt = Fmi::TimeDuration(0,0,forecastTime);
-        break;
+      case 10:  unitSeconds = 3 * 3600; break;    //  3h 3 hours
+      case 11:  unitSeconds = 6 * 3600; break;    //  6h 6 hours
+      case 12:  unitSeconds = 12 * 3600; break;   //  12h 12 hours
+      case 13:  unitSeconds = 1; break;           //  s Second
     }
+
+    const std::int64_t totalSeconds = forecastTime * unitSeconds;
+    if (totalSeconds > 200LL * 366 * 24 * 3600)
+      throw Fmi::Exception(BCP, "The forecast time is out of range!");
+
+    Fmi::TimeDuration dt(static_cast<int>(totalSeconds / 3600),
+                         static_cast<int>((totalSeconds % 3600) / 60),
+                         static_cast<int>(totalSeconds % 60));
 
     if (ft >= 0)
       tt = refTime + dt;
