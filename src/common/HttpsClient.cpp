@@ -68,11 +68,10 @@ int HttpsClient::getHeaderData(const char *server,const char *filename,int dataS
     response.maxSize = dataSize;
     response.dataSize = 0;
 
-    char url[1000];
-    sprintf(url,"https://%s%s",server,filename);
+    const std::string url = std::string("https://") + server + filename;
     //printf("URL [%s]\n",url);
 
-    curl_easy_setopt(curl, CURLOPT_URL,url);
+    curl_easy_setopt(curl, CURLOPT_URL,url.c_str());
     curl_easy_setopt(curl, CURLOPT_PROXY,"");
     curl_easy_setopt(curl, CURLOPT_HTTPGET, 1L);
     curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
@@ -133,11 +132,10 @@ int HttpsClient::getData(const char *server,const char *filename,std::size_t fil
     response.maxSize = dataSize;
     response.dataSize = 0;
 
-    char url[1000];
-    sprintf(url,"https://%s%s",server,filename);
+    const std::string url = std::string("https://") + server + filename;
     //printf("URL [%s]\n",url);
 
-    curl_easy_setopt(curl, CURLOPT_URL,url);
+    curl_easy_setopt(curl, CURLOPT_URL,url.c_str());
     curl_easy_setopt(curl, CURLOPT_PROXY,"");
     curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
     curl_easy_setopt(curl, CURLOPT_HTTPGET, 1L);
