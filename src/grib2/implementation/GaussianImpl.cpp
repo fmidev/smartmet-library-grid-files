@@ -171,7 +171,7 @@ T::Dimensions GaussianImpl::getGridDimensions() const
     if (!mGaussian.getGrid()->getNi() || !mGaussian.getGrid()->getNj())
       return T::Dimensions();
 
-    return T::Dimensions(*mGaussian.getGrid()->getNi(),*mGaussian.getGrid()->getNi());
+    return T::Dimensions(*mGaussian.getGrid()->getNi(),*mGaussian.getGrid()->getNj());
   }
   catch (...)
   {

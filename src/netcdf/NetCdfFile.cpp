@@ -1385,7 +1385,7 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
               }
               else
               {
-                if (((int)itemCount/xCount) == yCount)
+                if (xCount > 0 && ((int)itemCount/xCount) == yCount)
                 {
                   FloatVec coordinates;
                   readValues(memoryReader,type,itemCount,offset,baseValue,scaleFactor*yScale,coordinates);

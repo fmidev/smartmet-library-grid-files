@@ -2,6 +2,7 @@
 #include <macgyver/Exception.h>
 #include "../common/CoordinateConversions.h"
 
+#include <mutex>
 #include <string>
 #include <vector>
 
@@ -12,6 +13,9 @@ namespace GRID
 {
 
 GaussianLatitudeCache gaussianLatitudeCache;
+
+// Serializes cache lookups and insertions, the cache is shared by all threads
+static std::mutex gaussianLatitudeCacheMutex;
 
 
 
@@ -172,7 +176,7 @@ GaussianLatitudeCache::~GaussianLatitudeCache()
     for (uint t=0; t<GaussianLatitudeCacheSize; t++)
     {
       if (mLatitudes[t] != nullptr)
-        delete mLatitudes[t];
+        delete[] mLatitudes[t];
     }
   }
   catch (...)
@@ -192,13 +196,27 @@ double* GaussianLatitudeCache::getLatitudes(uint nj,long n)
 {
   try
   {
-    if (mLatitudes[lastAccess] != nullptr  &&  mLatitudes_number[lastAccess] == nj)
+    // The algorithm always produces all 2*N latitudes
+    if (n <= 0 || n > 0x7FFFFFFF || nj == 0 || C_UINT64(nj) > C_UINT64(2*n))
+    {
+      Fmi::Exception exception(BCP,"Invalid Gaussian grid dimensions!");
+      exception.addParameter("nj",std::to_string(nj));
+      exception.addParameter("N",std::to_string(n));
+      throw exception;
+    }
+
+    // The same number of rows may come from different N values in subgrids
+    const long key = (n << 32) | nj;
+
+    std::lock_guard<std::mutex> lock(gaussianLatitudeCacheMutex);
+
+    if (mLatitudes[lastAccess] != nullptr  &&  mLatitudes_number[lastAccess] == key)
       return mLatitudes[lastAccess];
 
     uint c = 0;
     while (c < GaussianLatitudeCacheSize  &&  mLatitudes[c] != nullptr)
     {
-      if (mLatitudes_number[c] == nj)
+      if (mLatitudes_number[c] == key)
       {
         lastAccess = c;
         return mLatitudes[c];
@@ -206,15 +224,22 @@ double* GaussianLatitudeCache::getLatitudes(uint nj,long n)
       c++;
     }
 
-    if (c == GaussianLatitudeCacheSize)
+    auto *lats = new double[2*n];
+    if (gaussian_getLatitudes(n,lats) != 0)
     {
-      c = GaussianLatitudeCacheSize-1;
-      delete mLatitudes[c];
+      delete[] lats;
+      throw Fmi::Exception(BCP,"Gaussian latitude iteration did not converge!");
     }
 
-    mLatitudes[c] = new double[nj];
-    mLatitudes_number[c] = nj;
-    gaussian_getLatitudes(n,mLatitudes[c]);
+    if (c == GaussianLatitudeCacheSize)
+    {
+      // Other threads may still be using the evicted array, hence it is intentionally
+      // not released. This can happen only with more than GaussianLatitudeCacheSize grids.
+      c = GaussianLatitudeCacheSize-1;
+    }
+
+    mLatitudes[c] = lats;
+    mLatitudes_number[c] = key;
     lastAccess = c;
     return mLatitudes[c];
   }

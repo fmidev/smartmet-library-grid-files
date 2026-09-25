@@ -452,8 +452,11 @@ void SecondOrderPacking::decodeValues_SPD(
       bitArrayReader.readBits(widthOfSPD,SPD[t]);
     }
 
+    if (widthOfSPD == 0 || widthOfSPD > 32)
+      throw Fmi::Exception(BCP,"Invalid GRIB1 second-order spatial differencing width!");
+
     double bias = SPD[orderOfSPD];
-    uint max = 1 << (widthOfSPD-1);
+    uint max = 1U << (widthOfSPD-1);
     if (SPD[orderOfSPD] > max)
       bias = -(C_DOUBLE(SPD[orderOfSPD]) - C_DOUBLE(max));
 
@@ -608,7 +611,8 @@ void SecondOrderPacking::decodeValues_SPD(
       uint inc = nx;
       uint count = nx;
 
-      while (count < numOfValues)
+      // Only complete rows can be reversed
+      while (nx > 0 && count + nx <= numOfValues)
       {
         uint left = 0;
         uint right = nx-1;
