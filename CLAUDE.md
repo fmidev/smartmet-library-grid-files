@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-**smartmet-library-grid-files** — a C++ library providing a unified interface for reading GRIB1, GRIB2, NetCDF, and QueryData grid files. It acts as a driver/adapter layer so that upper libraries and services can access any grid format through the same API without knowing the underlying file structure.
+**smartmet-library-grid-files** — a C++ library providing a unified interface for reading GRIB1, GRIB2, NetCDF, QueryData and GeoTIFF grid files. It acts as a driver/adapter layer so that upper libraries and services can access any grid format through the same API without knowing the underlying file structure.
 
 Part of the SmartMet Server ecosystem (Finnish Meteorological Institute).
 
@@ -22,7 +22,9 @@ make create_def     # Regenerate auto-generated GRIB definition classes
 make delete_def     # Clean auto-generated definitions
 ```
 
-No test directory exists in this repository — tests are currently absent.
+`test/` holds standalone regression programs (`*Test.cpp`, plain `main`) that print SKIP and succeed when their fixtures (smartmet-test-data GRIBs, grid engine test config) are missing.
+
+Full developer documentation: `docs/developer-guide.md`.
 
 ## Dependencies
 
@@ -41,7 +43,8 @@ GRID::GridFile          — Entry point; memory-maps a file, detects format, cre
        ├─ GRIB1::Message
        ├─ GRIB2::Message
        ├─ NetCDF::Message
-       └─ QueryData::Message
+       ├─ QueryData::Message
+       └─ GeoTiff::Message
 ```
 
 `GRID::Message` (src/grid/Message.h) is the central abstraction — all format-specific classes override its virtual methods. `GRID::GridFile` auto-detects the file format and creates the appropriate message type.
@@ -59,6 +62,7 @@ GRID::GridFile          — Entry point; memory-maps a file, detects format, cre
 | `identification/` | Parameter/geometry/level mapping engine. `GridDef` is the central registry mapping between GRIB, NetCDF, Newbase, and FMI identifiers |
 | `netcdf/` | NetCDF adapter — lightweight wrapper creating `Message` objects from NetCDF variables |
 | `querydata/` | QueryData adapter — wraps FMI's native `NFmiQueryData` format |
+| `geotiff/` | GeoTIFF adapter |
 | `map/` | Topography support: land/sea masks, elevation shading |
 
 ### Auto-generated code
@@ -86,7 +90,7 @@ Mappings are defined in CSV files under `cfg/` and loaded at runtime via `cfg/gr
 
 - **Memory mapping with userfaultfd**: `MemoryMapper` supports lazy page-fault-driven loading from local and remote (HTTP/S3) sources, with prefetching and authentication
 - **Coordinate caching**: Expensive projection transformations are cached for repeated access
-- **Format detection**: `GridFile` reads magic bytes to identify format (GRIB="GRIB" with edition byte, NetCDF="CDF"/"\x89HDF", QueryData=FMI header)
+- **Format detection**: `GridFile` reads magic bytes to identify format (GRIB="GRIB" with edition byte, NetCDF="CDF" (classic only; HDF5-based NetCDF-4 is not detected), GeoTIFF="II"/"MM", QueryData=FMI header)
 - **Geometry groups**: Support for time-varying grid resolutions via geometry group definitions
 
 ## .clang-format
