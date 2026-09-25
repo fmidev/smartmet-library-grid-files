@@ -1111,6 +1111,9 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
             for (auto itm = dd->second.begin(); itm != dd->second.end(); ++itm)
             {
               int i = atoi(itm->c_str());
+              // The dimension index comes from the file
+              if (i < 0 || C_UINT64(i) >= dl->second.size() || C_UINT64(i) >= dn->second.size())
+                throw Fmi::Exception(BCP,"Invalid NetCDF dimension index!");
               int ii = atoi(dl->second[i].c_str());
               std::string n = dn->second[i].c_str();
               //printf("DIM [%s][%s][%s]\n",itm->c_str(),dl->second[i].c_str(),dn->second[i].c_str());
@@ -1351,6 +1354,11 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
               getProperty(levelName + ".items", 0, itemCount);
 
               readValues(memoryReader,type,itemCount,offset,baseValue,scaleFactor,levelList);
+
+              // The level values are stored as integers
+              for (auto lv : levelList)
+                if (!std::isfinite(lv) || std::fabs(lv) > 2e9)
+                  throw Fmi::Exception(BCP,"Invalid NetCDF level value!");
             }
             else
             {
