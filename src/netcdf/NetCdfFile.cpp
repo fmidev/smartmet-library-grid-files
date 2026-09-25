@@ -80,6 +80,10 @@ void NetCdfFile::readAttribute(MemoryReader& memoryReader,std::string& attrName,
     uint attrCount = 0;
     memoryReader >> attrCount;
 
+    // Every element takes at least one byte of the remaining data
+    if (C_UINT64(attrCount) > C_UINT64(memoryReader.getEndPtr() - memoryReader.getReadPtr()))
+      throw Fmi::Exception(BCP,"Invalid NetCDF attribute value count!");
+
     memoryReader.setNetworkByteOrder(true);
 
     switch (attrType)
@@ -861,6 +865,10 @@ void NetCdfFile::readPropertyList(MemoryReader& memoryReader)
     {
       uint nameLen = 0;
       memoryReader >> nameLen;
+      // The length comes from the file, it must fit in the remaining data
+      if (C_UINT64(nameLen) > C_UINT64(memoryReader.getEndPtr() - memoryReader.getReadPtr()))
+        throw Fmi::Exception(BCP,"Invalid NetCDF name length!");
+
       uint paddedLen = nameLen;
       if (nameLen > 0)
         paddedLen = ((nameLen-1)/4 + 1) * 4;
@@ -932,6 +940,10 @@ void NetCdfFile::readPropertyList(MemoryReader& memoryReader)
       // Variable name
       uint nameLen = 0;
       memoryReader >> nameLen;
+      // The length comes from the file, it must fit in the remaining data
+      if (C_UINT64(nameLen) > C_UINT64(memoryReader.getEndPtr() - memoryReader.getReadPtr()))
+        throw Fmi::Exception(BCP,"Invalid NetCDF name length!");
+
       uint paddedLen = nameLen;
       if (nameLen > 0)
         paddedLen = ((nameLen-1)/4 + 1) * 4;
@@ -1214,7 +1226,13 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
             std::string gridMapping;
             getProperty(*it + ".grid_mapping", 0, gridMapping);
 
-            uint dataSize = xCount * yCount * typeSize[dataType];
+            // The dimensions come from the file
+            if (xCount <= 0 || yCount <= 0)
+              throw Fmi::Exception(BCP,"Invalid NetCDF grid dimensions!");
+            const UInt64 dataSize64 = C_UINT64(xCount) * C_UINT64(yCount) * C_UINT64(typeSize[dataType]);
+            if (dataSize64 > 0xFFFFFFFFULL)
+              throw Fmi::Exception(BCP,"NetCDF grid is too large!");
+            uint dataSize = C_UINT(dataSize64);
 
 
             if (!xUnits.empty())
@@ -1697,6 +1715,9 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
             {
               for (auto lIt = levelList.begin(); lIt != levelList.end(); lIt++)
               {
+                if (C_UINT64(dataStartOffset) + dataSize > memoryReader.getDataSize())
+                  throw Fmi::Exception(BCP,"NetCDF data is outside of the file!");
+
                 MessageInfo msg;
                 msg.mProjectionId = projectionId;
                 msg.mMessageType = T::FileTypeValue::NetCdf3;
