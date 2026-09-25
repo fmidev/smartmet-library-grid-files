@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 26.9.24
+Version: 26.9.25
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -100,6 +100,11 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Fri Sep 25 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.9.25-1.fmi
+- Fixed misspelt attribute keys set by MessageProcessing (contour.interpolationt.type,
+  grid.ogiginal.relativeUV)
+- Removed a redundant madvise(MADV_DONTDUMP) call; Fmi::MappedFile already applies it
+
 * Thu Sep 24 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.9.24-1.fmi
 - Security: hardened GRIB decoders against crafted messages (heap overflow / OOB reads).
   Enforce that GRIB2 complex-packing group sizes sum to the declared value count, bound

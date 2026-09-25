@@ -495,13 +495,8 @@ void MemoryMapper::map(MapInfo_sptr info)
         //mFileModificationTime = getFileModificationTime(mFileName.c_str());
         info->memoryPtr = const_cast<char*>(info->mappedFile->const_data());
 
-        if (madvise(info->memoryPtr, info->allocatedSize, MADV_DONTDUMP) != 0)
-        {
-          munmap(info->memoryPtr, info->allocatedSize);
-          info->memoryPtr = NULL;
-          info->allocatedSize = 0;
-          throw Fmi::Exception(BCP,"Core dump limitation (madvise) failed!");
-        }
+        // Fmi::MappedFile already applies MADV_DONTDUMP to the whole mapping, so the mapped
+        // grid file is kept out of core dumps without a separate madvise() call here.
 
         return;
       }
