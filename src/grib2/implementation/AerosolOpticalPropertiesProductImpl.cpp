@@ -1,5 +1,7 @@
 #include "AerosolOpticalPropertiesProductImpl.h"
 #include <macgyver/Exception.h>
+
+#include <utility>
 #include "../../common/GeneralFunctions.h"
 
 
@@ -135,7 +137,7 @@ T::TimeString AerosolOpticalPropertiesProductImpl::countForecastStartTime(T::Tim
 {
   try
   {
-    T::TimeStamp refTime = toTimeStamp(referenceTime);
+    T::TimeStamp refTime = toTimeStamp(std::move(referenceTime));
     T::TimeStamp tt = refTime;
 
     auto forecastTimeP = mParameterAerosolOptical.getForecastTime();

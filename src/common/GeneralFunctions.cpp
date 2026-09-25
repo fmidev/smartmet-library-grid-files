@@ -2769,10 +2769,10 @@ std::string getFileDir(const std::string& filename)
   try
   {
     std::string fname = getAbsoluteFilePath(filename);
-    std::string::size_type n = fname.rfind("/");
+    std::string::size_type n = fname.rfind('/');
     if (n != std::string::npos) return fname.substr(0, n);
 
-    n = fname.rfind("\\");
+    n = fname.rfind('\\');
     if (n != std::string::npos) return fname.substr(0, n);
 
     return std::string("");
@@ -4386,7 +4386,7 @@ std::string replaceVariables(const std::string& str,std::map<std::string,std::st
       p1 = val.find("$(");
       if (p1 != std::string::npos)
       {
-        std::size_t p2 = val.find(")",p1+1);
+        std::size_t p2 = val.find(')',p1+1);
         if (p2 != std::string::npos)
         {
           std::string var = val.substr(p1+2,p2-p1-2);

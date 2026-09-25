@@ -664,7 +664,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,std::vector<
         if (attr->mName[len] == '.')
         {
           std::string itm;
-          std::size_t p = attr->mName.find(".",len+1);
+          std::size_t p = attr->mName.find('.',len+1);
 
           if (p != std::string::npos)
           {
@@ -726,7 +726,7 @@ uint ConfigurationFile::getArraySize(const char *attributeName)
         {
           std::string itm;
 
-          std::size_t p = attr->mName.find(".",len+1);
+          std::size_t p = attr->mName.find('.',len+1);
           if (p != std::string::npos)
             itm = attr->mName.substr(len+1,p-len-1);
           else
@@ -776,7 +776,7 @@ bool ConfigurationFile::getAttributeFields(const char *attributeName,std::set<st
         if (attr->mName[len] == '.')
         {
           std::string itm;
-          std::size_t p = attr->mName.find(".",len+1);
+          std::size_t p = attr->mName.find('.',len+1);
           if (p != std::string::npos)
             itm = attr->mName.substr(len+1,p-len-1);
           else
@@ -971,7 +971,7 @@ std::string ConfigurationFile::parseValue(const std::string& value)
       p1 = val.find("$(");
       if (p1 != std::string::npos)
       {
-        std::size_t p2 = val.find(")",p1+1);
+        std::size_t p2 = val.find(')',p1+1);
         if (p2 != std::string::npos)
         {
           std::string var = val.substr(p1+2,p2-p1-2);
@@ -1031,7 +1031,7 @@ std::string ConfigurationFile::parseConstValue(const std::string& value)
       p1 = val.find("%(");
       if (p1 != std::string::npos)
       {
-        std::size_t p2 = val.find(")",p1+1);
+        std::size_t p2 = val.find(')',p1+1);
         if (p2 != std::string::npos)
         {
           std::string var = val.substr(p1+2,p2-p1-2);

@@ -24,6 +24,7 @@
 #include "../common/ShowFunction.h"
 #include <iostream>
 #include <set>
+#include <utility>
 #include <sys/mman.h>
 #include <macgyver/FastMath.h>
 #include <macgyver/StringConversion.h>
@@ -2024,7 +2025,7 @@ void Message::setBitmapSection(BitmapSect_sptr bitmapSection)
   FUNCTION_TRACE
   try
   {
-    mBitmapSection = bitmapSection;
+    mBitmapSection = std::move(bitmapSection);
   }
   catch (...)
   {
@@ -2072,7 +2073,7 @@ void Message::setIdentificationSection(IdentifSect_sptr identificationSection)
   FUNCTION_TRACE
   try
   {
-    mIdentificationSection = identificationSection;
+    mIdentificationSection = std::move(identificationSection);
   }
   catch (...)
   {
@@ -2120,7 +2121,7 @@ void Message::setGridSection(GridSect_sptr gridSection)
   FUNCTION_TRACE
   try
   {
-    mGridSection = gridSection;
+    mGridSection = std::move(gridSection);
   }
   catch (...)
   {
@@ -2168,7 +2169,7 @@ void Message::setRepresentationSection(RepresentSect_sptr representationSection)
   FUNCTION_TRACE
   try
   {
-    mRepresentationSection = representationSection;
+    mRepresentationSection = std::move(representationSection);
   }
   catch (...)
   {
@@ -2216,7 +2217,7 @@ void Message::setIndicatorSection(IndicatorSect_sptr indicatorSection)
   FUNCTION_TRACE
   try
   {
-    mIndicatorSection = indicatorSection;
+    mIndicatorSection = std::move(indicatorSection);
   }
   catch (...)
   {
@@ -2264,7 +2265,7 @@ void Message::setLocalSection(LocalSect_sptr localSection)
   FUNCTION_TRACE
   try
   {
-    mLocalSection = localSection;
+    mLocalSection = std::move(localSection);
   }
   catch (...)
   {
@@ -2312,7 +2313,7 @@ void Message::setProductSection(ProductSect_sptr productSection)
   FUNCTION_TRACE
   try
   {
-    mProductSection = productSection;
+    mProductSection = std::move(productSection);
   }
   catch (...)
   {
@@ -2360,7 +2361,7 @@ void Message::setDataSection(DataSect_sptr dataSection)
   FUNCTION_TRACE
   try
   {
-    mDataSection = dataSection;
+    mDataSection = std::move(dataSection);
   }
   catch (...)
   {
@@ -2417,7 +2418,7 @@ void Message::setPreviousBitmapSection(BitmapSect_sptr previousBitmapSection)
       {
         if (*indicator == refers_to_earlier_bitmap)
         {
-          mPreviousBitmapSection = previousBitmapSection;
+          mPreviousBitmapSection = std::move(previousBitmapSection);
         }
       }
     }

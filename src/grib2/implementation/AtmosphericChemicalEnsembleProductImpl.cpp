@@ -1,5 +1,7 @@
 #include "AtmosphericChemicalEnsembleProductImpl.h"
 #include <macgyver/Exception.h>
+
+#include <utility>
 #include "../../common/GeneralFunctions.h"
 
 
@@ -135,7 +137,7 @@ T::TimeString AtmosphericChemicalEnsembleProductImpl::countForecastStartTime(T::
 {
   try
   {
-    T::TimeStamp refTime = toTimeStamp(referenceTime);
+    T::TimeStamp refTime = toTimeStamp(std::move(referenceTime));
     T::TimeStamp tt = refTime;
 
     auto forecastTimeP = mParameterChemical.getForecastTime();

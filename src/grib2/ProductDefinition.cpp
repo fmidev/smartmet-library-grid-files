@@ -1,6 +1,8 @@
 #include "ProductDefinition.h"
 #include "Properties.h"
 #include <macgyver/Exception.h>
+
+#include <utility>
 #include "../common/GeneralFunctions.h"
 
 
@@ -1733,7 +1735,7 @@ T::TimeString ProductDefinition::countForecastStartTime(T::TimeString referenceT
 {
   try
   {
-    T::TimeStamp refTime = toTimeStamp(referenceTime);
+    T::TimeStamp refTime = toTimeStamp(std::move(referenceTime));
     T::TimeStamp tt = refTime;
 
     auto forecastTimeP = parameter.getForecastTime();
@@ -1801,7 +1803,7 @@ T::TimeString ProductDefinition::countForecastStartTime(T::TimeString referenceT
 {
   try
   {
-    T::TimeStamp refTime = toTimeStamp(referenceTime);
+    T::TimeStamp refTime = toTimeStamp(std::move(referenceTime));
     T::TimeStamp tt = refTime;
 
     auto forecastTimeP = parameter.getForecastTime();
