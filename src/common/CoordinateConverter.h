@@ -131,6 +131,12 @@ class CoordinateConverter
     {
       uint idx = getTransform();
       AutoThreadLock lock(&threadLock[idx]);
+      // The transformation cannot be created for all coordinate systems
+      if (transformation[idx] == nullptr)
+      {
+        tranformationInProgress[idx].store(false,std::memory_order_release);
+        return false;
+      }
       bool ok = transformation[idx]->Transform(nCount,x,y);
       tranformationInProgress[idx].store(false,std::memory_order_release);
       return ok;
