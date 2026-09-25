@@ -1310,6 +1310,10 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
             if (itemCount > 1)
               tc = 1;
 
+            // Every time step needs data, so the step count cannot exceed the file size
+            if (timeCount < 0 || C_UINT64(tc) * std::max<UInt64>(1, timeValues.size()) > memoryReader.getDataSize())
+              throw Fmi::Exception(BCP,"Invalid NetCDF time dimension!");
+
             for (uint t=0; t<tc; t++)
             {
               for (auto v = timeValues.begin(); v != timeValues.end(); ++v)
