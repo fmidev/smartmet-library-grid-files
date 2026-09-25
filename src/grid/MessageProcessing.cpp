@@ -330,7 +330,7 @@ void MessageProcessing::getGridIsobandsByLevelAndGeometry(const GRID::Message& m
         if (message1.reverseYDirection())
           px1 = 0,py1 = d.ny()-1,px2 = d.nx()-1,py2 = 0;
 
-        char tmp[100];
+        char tmp[1400];  // four %.15f values of any magnitude
         if (message1.getGridLatLonCoordinatesByGridPoint(px1,py1,y1,x1)  &&  message1.getGridLatLonCoordinatesByGridPoint(px2,py2,y2,x2))
         {
           if (x2 < x1  &&  x2 < 0)
@@ -393,7 +393,7 @@ void MessageProcessing::getGridIsobandsByLevelAndGeometry(const GRID::Message& m
 
           latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
 
-          char tmp[200];
+          char tmp[1400];  // four %.15f values of any magnitude
           sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",lon1,lat1,lon2,lat2);
           attributeList.setAttribute("grid.llbox",tmp);
         }
@@ -757,7 +757,7 @@ void MessageProcessing::getGridIsobandsByTimeAndGeometry(const GRID::Message& me
         if (message1.reverseYDirection())
           px1 = 0,py1 = d.ny()-1,px2 = d.nx()-1,py2 = 0;
 
-        char tmp[100];
+        char tmp[1400];  // four %.15f values of any magnitude
         if (message1.getGridLatLonCoordinatesByGridPoint(px1,py1,y1,x1)  &&  message1.getGridLatLonCoordinatesByGridPoint(px2,py2,y2,x2))
         {
           if (x2 < x1  &&  x2 < 0)
@@ -820,7 +820,7 @@ void MessageProcessing::getGridIsobandsByTimeAndGeometry(const GRID::Message& me
 
           latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
 
-          char tmp[200];
+          char tmp[1400];  // four %.15f values of any magnitude
           sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",lon1,lat1,lon2,lat2);
           attributeList.setAttribute("grid.llbox",tmp);
         }
@@ -1104,7 +1104,7 @@ void MessageProcessing::getGridIsobandsByTimeLevelAndGeometry(const GRID::Messag
         if (message1.reverseYDirection())
           px1 = 0,py1 = d.ny()-1,px2 = d.nx()-1,py2 = 0;
 
-        char tmp[100];
+        char tmp[1400];  // four %.15f values of any magnitude
         if (message1.getGridLatLonCoordinatesByGridPoint(px1,py1,y1,x1)  &&  message1.getGridLatLonCoordinatesByGridPoint(px2,py2,y2,x2))
         {
           if (x2 < x1  &&  x2 < 0)
@@ -1167,7 +1167,7 @@ void MessageProcessing::getGridIsobandsByTimeLevelAndGeometry(const GRID::Messag
 
           latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
 
-          char tmp[200];
+          char tmp[1400];  // four %.15f values of any magnitude
           sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",lon1,lat1,lon2,lat2);
           attributeList.setAttribute("grid.llbox",tmp);
         }
@@ -1494,7 +1494,7 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGeometry(const GRID::Messag
         if (message1.reverseYDirection())
           px1 = 0,py1 = d.ny()-1,px2 = d.nx()-1,py2 = 0;
 
-        char tmp[100];
+        char tmp[1400];  // four %.15f values of any magnitude
         if (message1.getGridLatLonCoordinatesByGridPoint(px1,py1,y1,x1)  &&  message1.getGridLatLonCoordinatesByGridPoint(px2,py2,y2,x2))
         {
           if (x2 < x1  &&  x2 < 0)
@@ -1557,7 +1557,7 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGeometry(const GRID::Messag
 
           latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
 
-          char tmp[200];
+          char tmp[1400];  // four %.15f values of any magnitude
           sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",lon1,lat1,lon2,lat2);
           attributeList.setAttribute("grid.llbox",tmp);
         }
@@ -1933,7 +1933,7 @@ void MessageProcessing::getGridIsolinesByLevelAndGeometry(const GRID::Message& m
         if (message1.reverseYDirection())
           px1 = 0,py1 = d.ny()-1,px2 = d.nx()-1,py2 = 0;
 
-        char tmp[100];
+        char tmp[1400];  // four %.15f values of any magnitude
         if (message1.getGridLatLonCoordinatesByGridPoint(px1,py1,y1,x1)  &&  message1.getGridLatLonCoordinatesByGridPoint(px2,py2,y2,x2))
         {
           if (x2 < x1  &&  x2 < 0)
@@ -1996,7 +1996,7 @@ void MessageProcessing::getGridIsolinesByLevelAndGeometry(const GRID::Message& m
 
           latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
 
-          char tmp[200];
+          char tmp[1400];  // four %.15f values of any magnitude
           sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",lon1,lat1,lon2,lat2);
           attributeList.setAttribute("grid.llbox",tmp);
         }
@@ -2183,7 +2183,7 @@ void MessageProcessing::getGridIsolinesByTimeAndGeometry(const GRID::Message& me
         if (message1.reverseYDirection())
           px1 = 0,py1 = d.ny()-1,px2 = d.nx()-1,py2 = 0;
 
-        char tmp[100];
+        char tmp[1400];  // four %.15f values of any magnitude
         if (message1.getGridLatLonCoordinatesByGridPoint(px1,py1,y1,x1)  &&  message1.getGridLatLonCoordinatesByGridPoint(px2,py2,y2,x2))
         {
           if (x2 < x1  &&  x2 < 0)
@@ -2246,7 +2246,7 @@ void MessageProcessing::getGridIsolinesByTimeAndGeometry(const GRID::Message& me
 
           latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
 
-          char tmp[200];
+          char tmp[1400];  // four %.15f values of any magnitude
           sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",lon1,lat1,lon2,lat2);
           attributeList.setAttribute("grid.llbox",tmp);
         }
@@ -2824,7 +2824,7 @@ void MessageProcessing::getGridStreamlinesByTimeLevelAndGeometry(const GRID::Mes
         if (message1.reverseYDirection())
           px1 = 0,py1 = d.ny()-1,px2 = d.nx()-1,py2 = 0;
 
-        char tmp[100];
+        char tmp[1400];  // four %.15f values of any magnitude
         if (message1.getGridLatLonCoordinatesByGridPoint(px1,py1,y1,x1)  &&  message1.getGridLatLonCoordinatesByGridPoint(px2,py2,y2,x2))
         {
           if (x2 < x1  &&  x2 < 0)
@@ -2887,7 +2887,7 @@ void MessageProcessing::getGridStreamlinesByTimeLevelAndGeometry(const GRID::Mes
 
           latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
 
-          char tmp[200];
+          char tmp[1400];  // four %.15f values of any magnitude
           sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",lon1,lat1,lon2,lat2);
           attributeList.setAttribute("grid.llbox",tmp);
         }
@@ -3307,7 +3307,7 @@ void MessageProcessing::getGridStreamlinesByLevelAndGeometry(const GRID::Message
         if (message1.reverseYDirection())
           px1 = 0,py1 = d.ny()-1,px2 = d.nx()-1,py2 = 0;
 
-        char tmp[100];
+        char tmp[1400];  // four %.15f values of any magnitude
         if (message1.getGridLatLonCoordinatesByGridPoint(px1,py1,y1,x1)  &&  message1.getGridLatLonCoordinatesByGridPoint(px2,py2,y2,x2))
         {
           if (x2 < x1  &&  x2 < 0)
@@ -3370,7 +3370,7 @@ void MessageProcessing::getGridStreamlinesByLevelAndGeometry(const GRID::Message
 
           latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
 
-          char tmp[200];
+          char tmp[1400];  // four %.15f values of any magnitude
           sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",lon1,lat1,lon2,lat2);
           attributeList.setAttribute("grid.llbox",tmp);
         }
@@ -3566,7 +3566,7 @@ void MessageProcessing::getGridStreamlinesByTimeAndGeometry(const GRID::Message&
         if (message1.reverseYDirection())
           px1 = 0,py1 = d.ny()-1,px2 = d.nx()-1,py2 = 0;
 
-        char tmp[100];
+        char tmp[1400];  // four %.15f values of any magnitude
         if (message1.getGridLatLonCoordinatesByGridPoint(px1,py1,y1,x1)  &&  message1.getGridLatLonCoordinatesByGridPoint(px2,py2,y2,x2))
         {
           if (x2 < x1  &&  x2 < 0)
@@ -3629,7 +3629,7 @@ void MessageProcessing::getGridStreamlinesByTimeAndGeometry(const GRID::Message&
 
           latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
 
-          char tmp[200];
+          char tmp[1400];  // four %.15f values of any magnitude
           sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",lon1,lat1,lon2,lat2);
           attributeList.setAttribute("grid.llbox",tmp);
         }
