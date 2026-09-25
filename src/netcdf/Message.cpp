@@ -1556,7 +1556,7 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
     int typeSize[] = {0,1,1,2,4,4,8};
 
     UInt64 idx = (grid_j*mColumnMultiplier+grid_i*mRowMultiplier)*typeSize[mDataType];
-    if (idx >= (mMessageSize + typeSize[mDataType]))
+    if (idx + typeSize[mDataType] > mMessageSize)
       return ParamValueMissing;
 
     switch (mDataType)
