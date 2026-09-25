@@ -9,6 +9,7 @@
 #include <macgyver/FastMath.h>
 #include <ogr_spatialref.h>
 #include <vector>
+#include <cmath>
 
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
@@ -1001,6 +1002,9 @@ void NetCdfFile::readPropertyList(MemoryReader& memoryReader)
       else
         offset = memoryReader.read_uint64();
 
+      if (ncType < 1 || ncType > 6)
+        throw Fmi::Exception(BCP,"Invalid NetCDF variable type!");
+
       uint items = vSize/typeSize[ncType];
 
       insertProperty(varName + ".type", ncType);
@@ -1289,6 +1293,9 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
             {
               for (auto v = timeValues.begin(); v != timeValues.end(); ++v)
               {
+                // The values come from the file, they must be convertible to time_t
+                if (!std::isfinite(*v) || std::fabs(*v) > 1e12)
+                  throw Fmi::Exception(BCP,"Invalid NetCDF time value!");
                 time_t ttt = (time_t)(*v)*(time_t)unitSize+(time_t)t*(time_t)unitSize;
                 //printf("TimeT %ld %f %ld\n",ttt,*v,unitSize);
                 time_t tt = getGregorianTimeT(year,month,day,hour,minute,second,ttt);
