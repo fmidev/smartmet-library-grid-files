@@ -1779,20 +1779,17 @@ void NetCdfFile::getAttributeList(const char *variableName,const std::string& pr
       const char *s = pr->first.c_str();
       if (strncasecmp(s,variableName,len) == 0 &&  s[len] == '.')
       {
-        char value[10000];
-        char *p = value;
-        *p = '\0';
+        // The attribute names and values come from the file and may be long
+        std::string value;
         for (auto it = pr->second.begin(); it != pr->second.end(); ++it)
         {
           if (it != pr->second.begin())
-            p += sprintf(p," ");
-
-          p += sprintf(p,"%s",(*it).c_str());
+            value += " ";
+          value += *it;
         }
 
-        char name[300];
-        sprintf(name, "%s%s", prefix.c_str(),s);
-        attributeList.addAttribute(name, value);
+        std::string name = prefix + s;
+        attributeList.addAttribute(name.c_str(), value);
       }
     }
   }
