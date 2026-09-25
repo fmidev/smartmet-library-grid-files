@@ -8,6 +8,7 @@
 #include <macgyver/Exception.h>
 #include <macgyver/FastMath.h>
 #include <ogr_spatialref.h>
+#include <vector>
 
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
@@ -55,15 +56,21 @@ void NetCdfFile::readAttribute(MemoryReader& memoryReader,std::string& attrName,
   {
     uint nameLen = 0;
     memoryReader >> nameLen;
+
+    // The length comes from the file, it must fit in the remaining data
+    const UInt64 remaining = C_UINT64(memoryReader.getEndPtr() - memoryReader.getReadPtr());
+    if (C_UINT64(nameLen) > remaining)
+      throw Fmi::Exception(BCP,"Invalid NetCDF attribute name length!");
+
     if (nameLen > 0)
       nameLen = ((nameLen-1)/4 + 1) * 4;
 
-    char name[nameLen+1];
+    std::string name;
+    name.reserve(nameLen);
     for (uint n = 0; n<nameLen; n++)
-      name[n] = memoryReader.read_int8();
+      name += static_cast<char>(memoryReader.read_int8());
 
-    name[nameLen] = '\0';
-    attrName = name;
+    attrName = name.c_str();
 
 
     uint attrType = 0;
@@ -1462,7 +1469,7 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
               }
             }
 
-            char projectionString[300];
+            char projectionString[4000];
             projectionString[0] = '\0';
             char sm[100];
             char *p = sm;
@@ -1512,7 +1519,7 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
               transformation->Transform(1,&startx,&starty);
               OCTDestroyCoordinateTransformation(transformation);
 
-              sprintf(projectionString,"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;description",
+              snprintf(projectionString,sizeof(projectionString),"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;description",
                   T::GridProjectionValue::PolarStereographic,(int)mXCoordinates.size(),(int)mYCoordinates.size(),
                   startx,starty,fabs(dx),fabs(dy),sm,straight_vertical_longitude_from_pole,latitude_of_projection_origin);
 
@@ -1559,7 +1566,7 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
               transformation->Transform(1,&startx,&starty);
               OCTDestroyCoordinateTransformation(transformation);
 
-              sprintf(projectionString,"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;description",
+              snprintf(projectionString,sizeof(projectionString),"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;description",
                   T::GridProjectionValue::LambertAzimuthalEqualArea,(int)mXCoordinates.size(),(int)mYCoordinates.size(),
                   startx,starty,fabs(dx),fabs(dy),sm,latitude_of_projection_origin,longitude_of_projection_origin);
 
@@ -1570,8 +1577,8 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
               }
               else
               {
-                char tmp[1000];
-                sprintf(tmp,"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;0.000000;0.000000;description",
+                char tmp[4000];
+                snprintf(tmp,sizeof(tmp),"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;0.000000;0.000000;description",
                     T::GridProjectionValue::LambertAzimuthalEqualArea,(int)mXCoordinates.size(),(int)mYCoordinates.size(),
                     startx,starty,fabs(dx),fabs(dy),sm,latitude_of_projection_origin,longitude_of_projection_origin);
                 std::cout << "#### Geometry not found ####\n";
@@ -1624,7 +1631,7 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
               double sy = -90.0;
 
               //# LAMBERT CONFORMAL : projection,id,name,ni,nj,first_lon,first_lat,di,dj,scanning_mode,orientation,latin1,latin2,south_pole_lon,south_pole_lat,LaD,earthSemiMajor,earthSemiMinor,description
-              sprintf(projectionString,"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;%.6f;%.6f;%.6f;%.6f;description",
+              snprintf(projectionString,sizeof(projectionString),"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;%.6f;%.6f;%.6f;%.6f;description",
                 T::GridProjectionValue::LambertConformal,(int)mXCoordinates.size(),(int)mYCoordinates.size(),startx,starty,fabs(dx),fabs(dy),
                 sm,longitude_of_central_meridian,latitude_of_projection_origin,latitude_of_projection_origin,sx,sy,latitude_of_projection_origin);
 
@@ -1636,8 +1643,8 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
               }
               else
               {
-                char tmp[1000];
-                sprintf(tmp,"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;%.6f;%.6f;%.6f;%.6f;description",
+                char tmp[4000];
+                snprintf(tmp,sizeof(tmp),"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;%.6f;%.6f;%.6f;%.6f;description",
                   T::GridProjectionValue::LambertConformal,(int)mXCoordinates.size(),(int)mYCoordinates.size(),startx,starty,fabs(dx),fabs(dy),
                   sm,longitude_of_central_meridian,latitude_of_projection_origin,latitude_of_projection_origin,sx,sy,latitude_of_projection_origin);
                 std::cout << "#### Geometry not found ####\n";
@@ -1654,7 +1661,7 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
 
               projectionId = T::GridProjectionValue::LatLon;
 
-              sprintf(projectionString,"%d;id;name;%u;%u;%.6f;%.6f;%.6f;%.6f;%s;description",
+              snprintf(projectionString,sizeof(projectionString),"%d;id;name;%u;%u;%.6f;%.6f;%.6f;%.6f;%s;description",
                 T::GridProjectionValue::LatLon,(int)mXCoordinates.size(),(int)mYCoordinates.size(),
                 startx,starty,fabs(dx),fabs(dy),sm);
 
@@ -1665,8 +1672,8 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
               }
               else
               {
-                char tmp[1000];
-                sprintf(tmp,"%d;id;name;%u;%u;%.6f;%.6f;%.6f;%.6f;%s;0.000000;0.000000;description",
+                char tmp[4000];
+                snprintf(tmp,sizeof(tmp),"%d;id;name;%u;%u;%.6f;%.6f;%.6f;%.6f;%s;0.000000;0.000000;description",
                   T::GridProjectionValue::LatLon,(int)mXCoordinates.size(),(int)mYCoordinates.size(),
                   startx,starty,fabs(dx),fabs(dy),sm);
                 std::cout << "#### Geometry not found ####\n";
