@@ -3765,7 +3765,7 @@ double gregorian_to_jd(int year, int month, int day)
   try
   {
     return (1721425.5 - 1) +
-           (365 * (year - 1)) +
+           (365.0 * (year - 1.0)) +
            floor((year - 1) / 4) +
            (-floor((year - 1) / 100)) +
            floor((year - 1) / 400) +
@@ -3789,6 +3789,10 @@ void jdnToGregorian(double jd,int& year, int& month, int& day)
 {
   try
   {
+    // The year must fit into an int
+    if (!std::isfinite(jd) || std::fabs(jd) > 1e9)
+      throw Fmi::Exception(BCP,"Julian day number is out of range!");
+
     double wjd = floor(jd - 0.5) + 0.5;
     double depoch = wjd - 1721425.5;
     double quadricent = floor(depoch / 146097);
