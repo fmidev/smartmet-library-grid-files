@@ -90,7 +90,7 @@ Mappings are defined in CSV files under `cfg/` and loaded at runtime via `cfg/gr
 
 - **Memory mapping with userfaultfd**: `MemoryMapper` supports lazy page-fault-driven loading from local and remote (HTTP/S3) sources, with prefetching and authentication
 - **Coordinate caching**: Expensive projection transformations are cached for repeated access
-- **Format detection**: `GridFile` reads magic bytes to identify format (GRIB="GRIB" with edition byte, NetCDF="CDF" (classic only; HDF5-based NetCDF-4 is not detected), GeoTIFF="II"/"MM", QueryData=FMI header)
+- **Format detection**: `GridFile` reads magic bytes to identify format (GRIB="GRIB" with edition byte, NetCDF="CDF", GeoTIFF="II"/"MM", QueryData=FMI header)
 - **Geometry groups**: Support for time-varying grid resolutions via geometry group definitions
 
 ## .clang-format

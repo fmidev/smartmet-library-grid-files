@@ -474,7 +474,7 @@ The library relies on global objects. Know them before you write tests or tools:
 |--------|--------|--------------------------|
 | `Identification::gridDef` | `identification/GridDef.h` | Mapping registry. **You must call `init(configFile)` before reading any GRIB file.** Parsing calls into it, and uninitialised lookups throw. |
 | `GRID::valueCache` | `grid/ValueCache.h` | Decoded value vectors, keyed by an opaque `uint`. `init(maxEntries, maxMegaBytes[, fileBacked])`. With `setCacheDir()`, entries are written to temporary files and mmapped, so they do not count against the heap. |
-| `GRID::indexCache` | `grid/IndexCache.h` | Index vectors keyed by hash. Nothing uses it at the moment: its only caller, bitmap index caching in `GRIB2::Message::read`, is commented out. |
+| `GRID::indexCache` | `grid/IndexCache.h` | Index vectors keyed by hash. Currently unused. |
 | `GRID::gaussianLatitudeCache` | `grid/GaussianLatitudeCache.h` | Gaussian latitudes per N. |
 | `memoryMapper` | `common/MemoryMapper.h` | See [§10](#10-memory-mapping-and-remote-files). |
 | `stringFactory` | `common/StringFactory.h` | String interning. `Message` stores parameter names and units as `uint` ids (`mFmiParameterName` …). Use `stringFactory[id]` to get the `const char*`. Strings are never freed. |
@@ -622,24 +622,12 @@ often in unrelated-looking places. When you do this:
 
 ## 16. Known pitfalls
 
-* **GRIB2 messages with repeated sections are not supported.** A GRIB2 message may
-  hold several fields by repeating sections 2–7 (or 3–7, or 4–7) before `7777`.
-  `GridFile::readGrib2Message()` tries to read each repetition as a new message, but
-  the repetition has no `GRIB` header and the code that copied the missing sections
-  from the previous field is commented out. The read fails with "The product section
-  is missing!" and the whole file fails to load.
-* **NetCDF-4 (HDF5) files are not detected.** Detection only recognises the `CDF`
-  magic (classic CDF-1/CDF-2), and it labels those files `FileTypeValue::NetCdf4`
-  even though the enum comment says NetCdf4 means HDF5. HDF5-based files fall through
-  to the GRIB scan and yield no messages.
 * **Missing geometry means geometry id 0.** A message with an unknown geometry still
   loads (with a stdout hint, see [§6](#6-parameter-identification-griddef)), but
   geometry-based queries on it fail. Check the logs for `GRIB2 Geometry not configured`.
 * **`Message*` lifetime.** Pointers are invalidated when the file is remapped after a
   mapping error ([§5](#5-reading-a-file-the-full-path)), and when the owning `GridFile`
   is destroyed.
-* **Decode failures are sticky.** After one failure, a message returns empty vectors
-  until its `GridFile` is recreated.
 * **GRIB Earth-shape metadata is unreliable.** See [§8](#8-coordinates-and-projections).
 * **Tests skip silently** when fixtures are absent ([§2](#2-building-and-testing)).
 * See also [gis-spatialreference-migration.md](gis-spatialreference-migration.md) for
