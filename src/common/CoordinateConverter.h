@@ -4,6 +4,7 @@
 #include "AutoThreadLock.h"
 #include <ogr_spatialref.h>
 #include <macgyver/Exception.h>
+#include <atomic>
 #include <memory>
 
 namespace SmartMet
@@ -112,11 +113,9 @@ class CoordinateConverter
       {
         for (uint t=0; t<CONVERTER_COUNT; t++)
         {
-          if (!tranformationInProgress[t])
-          {
-            tranformationInProgress[t] = true;
+          if (!tranformationInProgress[t].load(std::memory_order_relaxed) &&
+              !tranformationInProgress[t].exchange(true,std::memory_order_acquire))
             return t;
-          }
         }
         nanosleep(&r1,&r2);
       }
@@ -132,20 +131,15 @@ class CoordinateConverter
     {
       uint idx = getTransform();
       AutoThreadLock lock(&threadLock[idx]);
-      if (transformation[idx]->Transform(nCount,x,y))
-      {
-        tranformationInProgress[idx] = false;
-        return true;
-      }
-
-      tranformationInProgress[idx] = false;
-      return false;
+      bool ok = transformation[idx]->Transform(nCount,x,y);
+      tranformationInProgress[idx].store(false,std::memory_order_release);
+      return ok;
     }
 
   protected:
 
     OGRCoordinateTransformation *transformation[CONVERTER_COUNT]; //!< OGR transformation objects per slot
-    bool tranformationInProgress[CONVERTER_COUNT];                //!< True while slot is in use
+    std::atomic<bool> tranformationInProgress[CONVERTER_COUNT];   //!< True while slot is in use
     OGRSpatialReference *sr1;                                     //!< Source spatial reference (owned)
     OGRSpatialReference *sr2;                                     //!< Target spatial reference (owned)
     ThreadLock threadLock[CONVERTER_COUNT];                       //!< Per-slot mutex

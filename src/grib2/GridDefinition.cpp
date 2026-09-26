@@ -3,6 +3,7 @@
 #include "../common/CoordinateConversions.h"
 #include <macgyver/Exception.h>
 #include <macgyver/Cache.h>
+#include "../common/GridCache.h"
 #include "../common/ShowFunction.h"
 #include "../common/AutoWriteLock.h"
 #include "../common/AutoReadLock.h"
@@ -26,22 +27,22 @@ namespace GRIB2
 #define TRANSFORM_VEC_CACHE_SIZE 400
 
 Fmi::Cache::CacheStats latlonCoordinateCache_stats;
-Fmi::Cache::Cache<uint,T::Coordinate_svec> latlonCoordinateCache(COORDINATE_VEC_CACHE_SIZE);
+SmartMet::GridCache<uint,T::Coordinate_svec> latlonCoordinateCache(COORDINATE_VEC_CACHE_SIZE);
 
 Fmi::Cache::CacheStats originalCoordinateCache_stats;
-Fmi::Cache::Cache<uint,T::Coordinate_svec> originalCoordinateCache(COORDINATE_VEC_CACHE_SIZE);
+SmartMet::GridCache<uint,T::Coordinate_svec> originalCoordinateCache(COORDINATE_VEC_CACHE_SIZE);
 
 
 Fmi::Cache::CacheStats transformCache1_stats;
-Fmi::Cache::Cache<std::size_t,T::Coordinate> transformCache1(1000000);
+SmartMet::GridCache<std::size_t,T::Coordinate> transformCache1(1000000);
 
 Fmi::Cache::CacheStats transformCache2_stats;
-Fmi::Cache::Cache<std::size_t,T::Coordinate> transformCache2(1000000);
+SmartMet::GridCache<std::size_t,T::Coordinate> transformCache2(1000000);
 
 Fmi::Cache::CacheStats transformCache3_stats;
-Fmi::Cache::Cache<std::size_t,T::Coordinate_svec> transformCache3(TRANSFORM_VEC_CACHE_SIZE);
+SmartMet::GridCache<std::size_t,T::Coordinate_svec> transformCache3(TRANSFORM_VEC_CACHE_SIZE);
 
-Fmi::Cache::Cache<std::size_t,T::SpatialRef_sptr> spatialReferenceCache(1000);
+SmartMet::GridCache<std::size_t,T::SpatialRef_sptr> spatialReferenceCache(1000);
 
 T::SpatialRef_sptr latlonSpatialReference;
 
@@ -1266,6 +1267,61 @@ bool GridDefinition::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid
 
 
 
+/*! \brief The method returns the grid original (projection) coordinates of the given grid points (= integer coordinates).
+    The result is the same as calling getGridOriginalCoordinatesByGridPoint() for each point, but
+    the coordinate vector is fetched only once.
+
+        \param gridPoints  The grid points (i,j).
+        \param x           The x-coordinates in the original projection are returned in this parameter.
+        \param y           The y-coordinates in the original projection are returned in this parameter.
+        \param found       The method sets 'true' for each point whose coordinates were returned.
+*/
+
+void GridDefinition::getGridOriginalCoordinatesByGridPointList(std::vector<T::Point>& gridPoints,std::vector<double>& x,std::vector<double>& y,std::vector<bool>& found) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    std::size_t sz = gridPoints.size();
+    x.assign(sz,0);
+    y.assign(sz,0);
+    found.assign(sz,false);
+    if (sz == 0)
+      return;
+
+    auto rows = getGridRowCount();
+    auto cols = getGridColumnCount();
+
+    T::Coordinate_svec originalCoordinates = getGridOriginalCoordinates();
+    std::size_t csz = originalCoordinates->size();
+
+    for (std::size_t t=0; t<sz; t++)
+    {
+      uint grid_i = gridPoints[t].x();
+      uint grid_j = gridPoints[t].y();
+
+      if (grid_i >= cols || grid_j >= rows)
+        continue;
+
+      std::size_t c = C_UINT64(grid_j) * cols + grid_i;
+      if (c >= csz)
+        continue;
+
+      x[t] = (*originalCoordinates)[c].x();
+      y[t] = (*originalCoordinates)[c].y();
+      found[t] = true;
+    }
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
 /*! \brief The method returns the grid original (projection) coordinates in the given grid position (= double coordinates).
 
         \param grid_i  The grid i-coordinate.
@@ -1724,6 +1780,92 @@ bool GridDefinition::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j
       return true;
     }
     return false;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+/*! \brief The method returns the grid latlon coordinates of the given grid points (= integer coordinates).
+    The result is the same as calling getGridLatLonCoordinatesByGridPoint() for each point, but
+    the original coordinates are fetched once and transformed to latlon with a single call. Points
+    that cannot be handled this way are passed to getGridLatLonCoordinatesByGridPoint().
+
+        \param gridPoints   The grid points (i,j).
+        \param coordinates  The latlon coordinates (x = longitude, y = latitude) are returned in this parameter.
+        \param found        The method sets 'true' for each point whose coordinates were returned.
+*/
+
+void GridDefinition::getGridLatLonCoordinatesByGridPointList(std::vector<T::Point>& gridPoints,T::Coordinate_vec& coordinates,std::vector<bool>& found) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    std::size_t sz = gridPoints.size();
+    coordinates.assign(sz,T::Coordinate(0,0));
+    found.assign(sz,false);
+    if (sz == 0)
+      return;
+
+    std::vector<double> x;
+    std::vector<double> y;
+    std::vector<bool> original;
+    getGridOriginalCoordinatesByGridPointList(gridPoints,x,y,original);
+
+    // Collecting the points with known original coordinates into one transformation
+
+    std::vector<std::size_t> pos;
+    std::vector<double> lon;
+    std::vector<double> lat;
+    pos.reserve(sz);
+    lon.reserve(sz);
+    lat.reserve(sz);
+
+    for (std::size_t t=0; t<sz; t++)
+    {
+      if (original[t])
+      {
+        pos.push_back(t);
+        lon.push_back(x[t]);
+        lat.push_back(y[t]);
+      }
+    }
+
+    if (!pos.empty())
+    {
+      // OGR marks the points that failed to transform with HUGE_VAL, the others are valid
+      convert(mSpatialReference,latlonSpatialReference,pos.size(),lon.data(),lat.data());
+
+      for (std::size_t k=0; k<pos.size(); k++)
+      {
+        if (std::isfinite(lon[k]) && std::isfinite(lat[k]))
+        {
+          coordinates[pos[k]] = T::Coordinate(lon[k],lat[k]);
+          found[pos[k]] = true;
+        }
+      }
+    }
+
+    // The remaining points (if any) are processed one by one
+
+    for (std::size_t t=0; t<sz; t++)
+    {
+      if (!found[t])
+      {
+        double pLat = 0;
+        double pLon = 0;
+        if (getGridLatLonCoordinatesByGridPoint(gridPoints[t].x(),gridPoints[t].y(),pLat,pLon))
+        {
+          coordinates[t] = T::Coordinate(pLon,pLat);
+          found[t] = true;
+        }
+      }
+    }
   }
   catch (...)
   {

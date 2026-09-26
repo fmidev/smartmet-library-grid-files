@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 26.9.25
+Version: 26.9.26
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -24,7 +24,7 @@ BuildRequires: rpm-build
 BuildRequires: smartmet-utils-devel >= 26.9.3
 BuildRequires: smartmet-library-newbase-devel >= 26.9.23
 BuildRequires: smartmet-library-spine-devel >= 26.9.23
-BuildRequires: smartmet-library-macgyver-devel >= 26.9.23
+BuildRequires: smartmet-library-macgyver-devel >= 26.9.26
 BuildRequires: smartmet-library-trax-devel >= 26.6.26
 BuildRequires: %{smartmet_boost}-devel
 BuildRequires: gcc-c++
@@ -51,7 +51,7 @@ Requires: libcurl
 Requires: openjpeg2
 Requires: libwebp13 >= 1.3.2
 Requires: smartmet-library-newbase >= 26.9.23
-Requires: smartmet-library-macgyver >= 26.9.23
+Requires: smartmet-library-macgyver >= 26.9.26
 Requires: smartmet-library-spine >= 26.9.23
 Requires: smartmet-library-trax >= 26.6.26
 Requires: smartmet-topography-data >= 1.0.0
@@ -86,7 +86,7 @@ Provides: %{SPECNAME}-devel
 Requires: %{SPECNAME} = %{version}-%{release}
 Requires: smartmet-library-newbase-devel >= 26.9.23
 Requires: smartmet-library-spine-devel
-Requires: smartmet-library-macgyver-devel >= 26.9.23
+Requires: smartmet-library-macgyver-devel >= 26.9.26
 Requires: smartmet-library-trax-devel
 Requires: %{smartmet_boost}-devel
 Requires: libcurl-devel
@@ -100,6 +100,12 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Sat Sep 26 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.9.26-1.fmi
+- Use Fmi::Cache::ClockCache for the internal caches: find() no longer takes an exclusive lock,
+  which removes lock contention on repeated point transformations (3.2x faster point queries
+  with 16 threads). Build with -DGRID_FILES_LRU_CACHE to use the LRU Fmi::Cache::Cache instead
+- Requires macgyver 26.9.26 for ClockCache
+
 * Fri Sep 25 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.9.25-1.fmi
 - Fixed misspelt attribute keys set by MessageProcessing (contour.interpolationt.type,
   grid.ogiginal.relativeUV)
@@ -115,6 +121,14 @@ FMI Grid File library development files
 
 * Wed Sep 23 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.9.23-1.fmi
 - Repackaged since moving from boost::shared_lock to std::shared_lock
+
+* Wed Sep 23 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.9.23-1.fmi
+- Faster area queries (getGridValueListByCircle/Polygon): grid point coordinates are now transformed in one batch instead of one point at a time, avoiding per-point cache lookups, locks and PROJ calls
+- Latlon circle queries cache the grid points inside the circle per geometry, so all times, levels and parameters of the same model share them
+- New virtual method getGridLatLonCoordinatesByGridPointList (ABI change)
+- Fixed getGridValuesByPointList returning extra or missing values for out-of-grid points
+- Fixed a data race in CoordinateConverter transformation slot selection
+>>>>>>> clock-cache
 
 * Wed Sep 16 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.9.16-1.fmi
 - Repackaged due to Fmi::Cache::Cache locking changes

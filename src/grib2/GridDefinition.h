@@ -3,6 +3,7 @@
 #include "../common/Coordinate.h"
 #include "../common/CoordinateConversions.h"
 #include "../common/Dimensions.h"
+#include "../common/Point.h"
 #include "../grid/Typedefs.h"
 #include "../common/DataWriter.h"
 #include "../common/MemoryReader.h"
@@ -51,6 +52,7 @@ class GridDefinition
     virtual bool                getGridLatLonArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight);
     virtual T::Coordinate_svec  getGridLatLonCoordinates() const;
     virtual bool                getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const;
+    virtual void                getGridLatLonCoordinatesByGridPointList(std::vector<T::Point>& gridPoints,T::Coordinate_vec& coordinates,std::vector<bool>& found) const;
     virtual bool                getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j,double& lat,double& lon) const;
     virtual bool                getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,double& lat,double& lon) const;
     virtual bool                getGridMetricArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight);
@@ -59,6 +61,7 @@ class GridDefinition
     virtual T::Coordinate_svec  getGridOriginalCoordinates() const;
     virtual T::Coordinate_svec  getGridOriginalCoordinatesNoCache() const;
     virtual bool                getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,double& x,double& y) const;
+    virtual void                getGridOriginalCoordinatesByGridPointList(std::vector<T::Point>& gridPoints,std::vector<double>& x,std::vector<double>& y,std::vector<bool>& found) const;
     virtual bool                getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const;
     virtual bool                getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lon,double& x,double& y) const;
     virtual bool                getGridOriginalCoordinatesByLatLonCoordinatesNoCache(double lat,double lon,double& x,double& y) const;

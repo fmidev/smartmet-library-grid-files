@@ -2701,11 +2701,11 @@ void Message::getGridValuesByPointList(std::vector<T::Point>& gridPoints,T::Para
 
         for (uint t=0; t<sz; t++)
         {
-          if (gridPoints[t].y() >= (int)mRowCount)
+          if (gridPoints[t].y() >= (int)mRowCount || (gridPoints[t].x() >= (int)mColumnCount &&  !isGridGlobal()))
+          {
             values.push_back(ParamValueMissing);
-
-          if (gridPoints[t].x() >= (int)mColumnCount &&  !isGridGlobal())
-            values.push_back(ParamValueMissing);
+            continue;
+          }
 
           uint idx = gridPoints[t].y() * mColumnCount + (gridPoints[t].x() % mColumnCount);
 
@@ -2719,6 +2719,10 @@ void Message::getGridValuesByPointList(std::vector<T::Point>& gridPoints,T::Para
               exception.addParameter("Filename",mGridFilePtr->getFileName());
               throw exception;
             }
+          }
+          else
+          {
+            values.push_back(getGridValueByGridPoint(gridPoints[t].x(),gridPoints[t].y()));
           }
         }
         return;
@@ -2750,11 +2754,11 @@ void Message::getGridValuesByPointList(std::vector<T::Point>& gridPoints,T::Para
 
     for (uint t=0; t<sz; t++)
     {
-      if (gridPoints[t].y() >= (int)mRowCount)
+      if (gridPoints[t].y() >= (int)mRowCount || (gridPoints[t].x() >= (int)mColumnCount &&  !isGridGlobal()))
+      {
         values.push_back(ParamValueMissing);
-
-      if (gridPoints[t].x() >= (int)mColumnCount &&  !isGridGlobal())
-        values.push_back(ParamValueMissing);
+        continue;
+      }
 
       uint idx = gridPoints[t].y() * mColumnCount + (gridPoints[t].x() % mColumnCount);
       if (idx < vsz)

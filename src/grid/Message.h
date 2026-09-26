@@ -18,6 +18,7 @@
 #include "../common/MemoryReader.h"
 #include "../common/StringFactory.h"
 
+#include <macgyver/CacheStats.h>
 #include <vector>
 #include <string>
 #include <memory>
@@ -289,6 +290,14 @@ class Message
      *  \param[out] lat,lon        Latitude and longitude in degrees.
      *  \return True on success. */
     virtual bool                getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const;
+
+    /*! \brief Convert a list of integer grid indices to lat/lon coordinates in one call.
+     *  Equivalent to calling getGridLatLonCoordinatesByGridPoint() for each point, but
+     *  implementations may batch the coordinate transformation.
+     *  \param[in]  gridPoints   Zero-based column and row indices.
+     *  \param[out] coordinates  Lon/lat (x/y) coordinate for each point.
+     *  \param[out] found        True for each point whose coordinates were found. */
+    virtual void                getGridLatLonCoordinatesByGridPointList(std::vector<T::Point>& gridPoints,T::Coordinate_vec& coordinates,std::vector<bool>& found) const;
 
     /*! \brief Convert fractional grid position to lat/lon coordinates.
      *  \param[in]  grid_i,grid_j  Fractional column and row position.
@@ -978,6 +987,7 @@ typedef std::vector<MessagePtr> MessagePtr_vec;
 
 extern std::vector<double> EMPTY_DOUBLE_VEC;
 extern std::vector<Message*> EMPTY_MSG_VEC;
+extern Fmi::Cache::CacheStats circlePointCache_stats;  //!< Statistics of the latlon circle point cache
 
 
 
