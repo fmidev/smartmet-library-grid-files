@@ -128,7 +128,6 @@ FMI Grid File library development files
 - New virtual method getGridLatLonCoordinatesByGridPointList (ABI change)
 - Fixed getGridValuesByPointList returning extra or missing values for out-of-grid points
 - Fixed a data race in CoordinateConverter transformation slot selection
->>>>>>> clock-cache
 
 * Wed Sep 16 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.9.16-1.fmi
 - Repackaged due to Fmi::Cache::Cache locking changes
