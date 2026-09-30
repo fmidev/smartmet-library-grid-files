@@ -1,4 +1,5 @@
 #include "Message.h"
+#include <ctime>
 #include "BitmapSection.h"
 #include "DataSection.h"
 #include "../common/Dimensions.h"
@@ -24,6 +25,19 @@
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
 
+namespace
+{
+// Decoding is not retried for this many seconds after it has failed. The
+// failure may be transient, for example if the file was still being written,
+// so the message must not stay empty for the rest of its lifetime.
+constexpr time_t kDecodingRetryDelay = 60;
+
+bool decodingFailedRecently(time_t theFailureTime)
+{
+  return theFailureTime != 0 && time(nullptr) < theFailureTime + kDecodingRetryDelay;
+}
+}  // namespace
+
 namespace SmartMet
 {
 namespace GRIB1
@@ -46,7 +60,7 @@ Message::Message()
     mCacheKey = 0;
     mOrigCacheKey = 0;
     mOriginalFilePosition = 0;
-    mValueDecodingFailed = false;
+    mValueDecodingFailedTime = 0;
     mIsRead = false;
     mFileType = T::FileTypeValue::Grib1;
     mForecastTimeT = 0;
@@ -82,7 +96,7 @@ Message::Message(GRID::GridFile *gridFile,T::MessageIndex messageIndex,GRID::Mes
     mCacheKey = 0;
     mOrigCacheKey = 0;
     mOriginalFilePosition = 0;
-    mValueDecodingFailed = false;
+    mValueDecodingFailedTime = 0;
     mIsRead = false;
     mFileType = T::FileTypeValue::Grib1;
     mForecastTimeT = messageInfo.mForecastTime;
@@ -146,7 +160,7 @@ Message::Message(const Message& other)
 
     mCacheKey = 0;
     mOrigCacheKey = 0;
-    mValueDecodingFailed = other.mValueDecodingFailed;
+    mValueDecodingFailedTime = other.mValueDecodingFailedTime;
     mDataLocked = false;
   }
   catch (...)
@@ -2600,7 +2614,7 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
       throw Fmi::Exception(BCP,"The 'mDataSection' attribute points to nullptr!");
 
 
-    if (mValueDecodingFailed)
+    if (decodingFailedRecently(mValueDecodingFailedTime))
     {
       // We have failed to decode parameter values
       return ParamValueMissing;
@@ -2682,7 +2696,7 @@ void Message::getGridValuesByPointList(std::vector<T::Point>& gridPoints,T::Para
     if (mDataSection == nullptr)
       throw Fmi::Exception(BCP,"The 'mDataSection' attribute points to nullptr!");
 
-    if (mValueDecodingFailed)
+    if (decodingFailedRecently(mValueDecodingFailedTime))
     {
       // We have failed to decode parameter values
       return;
@@ -2796,7 +2810,7 @@ void Message::getGridValueVector(T::ParamValue_vec& values) const
       throw Fmi::Exception(BCP,"The 'mGridSection' attribute points to nullptr!");
 
     values.clear();
-    if (mValueDecodingFailed)
+    if (decodingFailedRecently(mValueDecodingFailedTime))
     {
       // We have tried to decode parameter values, but failed. It does not make
       // sense to try again.
@@ -2834,7 +2848,7 @@ void Message::getGridValueVector(T::ParamValue_vec& values) const
     {
       Fmi::Exception exception(BCP,"Operation failed!",nullptr);
       exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
-      mValueDecodingFailed = true;
+      mValueDecodingFailedTime = time(nullptr);
       if (mGridFilePtr->hasMemoryMapperError())
         throw exception;
       else
@@ -2874,7 +2888,7 @@ void Message::getGridOriginalValueVector(T::ParamValue_vec& values) const
       throw Fmi::Exception(BCP,"The 'mDataSection' attribute points to nullptr!");
 
     values.clear();
-    if (mValueDecodingFailed)
+    if (decodingFailedRecently(mValueDecodingFailedTime))
     {
       // We have tried to decode parameter values, but failed. It does not make
       // sense to try again.
@@ -2909,7 +2923,7 @@ void Message::getGridOriginalValueVector(T::ParamValue_vec& values) const
     {
       Fmi::Exception exception(BCP,"Operation failed!",nullptr);
       exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
-      mValueDecodingFailed = true;
+      mValueDecodingFailedTime = time(nullptr);
       if (mGridFilePtr->hasMemoryMapperError())
         throw exception;
       else

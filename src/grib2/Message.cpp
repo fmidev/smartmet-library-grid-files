@@ -1,4 +1,5 @@
 #include "Message.h"
+#include <ctime>
 #include "BitmapSection.h"
 #include "DataSection.h"
 #include "GridSection.h"
@@ -31,6 +32,19 @@
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
 
 
+namespace
+{
+// Decoding is not retried for this many seconds after it has failed. The
+// failure may be transient, for example if the file was still being written,
+// so the message must not stay empty for the rest of its lifetime.
+constexpr time_t kDecodingRetryDelay = 60;
+
+bool decodingFailedRecently(time_t theFailureTime)
+{
+  return theFailureTime != 0 && time(nullptr) < theFailureTime + kDecodingRetryDelay;
+}
+}  // namespace
+
 namespace SmartMet
 {
 namespace GRIB2
@@ -50,7 +64,7 @@ Message::Message()
     mCacheKey = 0;
     mOrigCacheKey = 0;
     mOriginalFilePosition = 0;
-    mValueDecodingFailed = false;
+    mValueDecodingFailedTime = 0;
     mIsRead = false;
     mMessageSize = 0;
     mDataLocked = false;
@@ -88,7 +102,7 @@ Message::Message(GRID::GridFile *gridFile,T::MessageIndex messageIndex,GRID::Mes
     mCacheKey = 0;
     mOrigCacheKey = 0;
     mOriginalFilePosition = 0;
-    mValueDecodingFailed = false;
+    mValueDecodingFailedTime = 0;
     mIsRead = false;
     mDataLocked = false;
     mFileType = T::FileTypeValue::Grib2;
@@ -176,7 +190,7 @@ Message::Message(const Message& other)
     mCacheKey = 0;
     mOrigCacheKey = 0;
     mOriginalFilePosition = other.mOriginalFilePosition;
-    mValueDecodingFailed = other.mValueDecodingFailed;
+    mValueDecodingFailedTime = other.mValueDecodingFailedTime;
     mDataLocked = false;
   }
   catch (...)
@@ -3166,10 +3180,9 @@ void Message::getGridValueVector(T::ParamValue_vec& values) const
 
     values.clear();
 
-    if (mValueDecodingFailed)
+    if (decodingFailedRecently(mValueDecodingFailedTime))
     {
-      // We have tried earlier to decode parameter values and failed. So, it
-      // does not make sense to try again.
+      // Decoding the values failed a moment ago. Do not retry yet.
       return;
     }
 
@@ -3202,7 +3215,7 @@ void Message::getGridValueVector(T::ParamValue_vec& values) const
       exception.addParameter("Filename",mGridFilePtr->getFileName());
       exception.addParameter("File position",Fmi::to_string(getFilePosition()));
       exception.addParameter("File size",Fmi::to_string((long)mGridFilePtr->getSize()));
-      mValueDecodingFailed = true;
+      mValueDecodingFailedTime = time(nullptr);
 
       if (mGridFilePtr->hasMemoryMapperError())
         throw exception;
@@ -3245,10 +3258,9 @@ void Message::getGridOriginalValueVector(T::ParamValue_vec& values) const
 
     values.clear();
 
-    if (mValueDecodingFailed)
+    if (decodingFailedRecently(mValueDecodingFailedTime))
     {
-      // We have tried earlier to decode parameter values and failed. So, it
-      // does not make sense to try again.
+      // Decoding the values failed a moment ago. Do not retry yet.
       return;
     }
 
@@ -3277,7 +3289,7 @@ void Message::getGridOriginalValueVector(T::ParamValue_vec& values) const
     {
       Fmi::Exception exception(BCP,"Operation failed!",nullptr);
       exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
-      mValueDecodingFailed = true;
+      mValueDecodingFailedTime = time(nullptr);
 
       if (mGridFilePtr->hasMemoryMapperError())
         throw exception;
@@ -3594,7 +3606,7 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
   FUNCTION_TRACE
   try
   {
-    if (mValueDecodingFailed)
+    if (decodingFailedRecently(mValueDecodingFailedTime))
     {
       // We have failed to decode parameter values
       return ParamValueMissing;
@@ -3673,7 +3685,7 @@ void Message::getGridValuesByPointList(std::vector<T::Point>& gridPoints,T::Para
     if (!sz)
       return;
 
-    if (mValueDecodingFailed)
+    if (decodingFailedRecently(mValueDecodingFailedTime))
     {
       // We have failed to decode parameter values
       return;
@@ -3792,7 +3804,7 @@ void Message::getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate
   try
   {
     // Value modifications and undecodable messages stay on the generic per-point path.
-    if (!modificationParameters.empty()  ||  mValueDecodingFailed)
+    if (!modificationParameters.empty()  ||  decodingFailedRecently(mValueDecodingFailedTime))
     {
       GRID::Message::getGridValueVectorByLatLonCoordinateList(coordinates,areaInterpolationMethod,modificationOperation,modificationParameters,values);
       return;
