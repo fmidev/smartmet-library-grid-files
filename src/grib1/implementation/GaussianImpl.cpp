@@ -271,8 +271,9 @@ bool GaussianImpl::getGridPointByOriginalCoordinates(double x,double y,double& g
     latLow += 90;
     latHigh += 90;
 
+    // An exact hit on a grid latitude gives latLow == latHigh
     double latDiff = aLat-latLow;
-    double j = t + latDiff / (latHigh-latLow);
+    double j = (latHigh == latLow ? C_DOUBLE(t) : t + latDiff / (latHigh-latLow));
 
     grid_i = i;
     grid_j = j;
