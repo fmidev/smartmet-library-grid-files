@@ -239,6 +239,8 @@ void MemoryReader::setReadPtr(unsigned char *_readPtr)
 
     if (_readPtr < startPtr  ||  _readPtr > endPtr)
       throw Fmi::Exception(BCP,"The value of the '_readPtr' parameter is out of the range!");
+
+    readPtr = _readPtr;
   }
   catch (...)
   {
