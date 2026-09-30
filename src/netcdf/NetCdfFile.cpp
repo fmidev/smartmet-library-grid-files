@@ -1685,7 +1685,7 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
               {
                 MessageInfo msg;
                 msg.mProjectionId = projectionId;
-                msg.mMessageType = T::FileTypeValue::NetCdf4;
+                msg.mMessageType = T::FileTypeValue::NetCdf3;
                 msg.mGeometryId = geometryId;
                 msg.mFilePosition = dataStartOffset;
                 msg.mMessageSize = dataSize;

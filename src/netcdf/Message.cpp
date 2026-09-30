@@ -31,7 +31,7 @@ Message::Message()
     mDataEndPtr = nullptr;
     mMessageIndex = 0;
     mFilePosition = 0;
-    mFileType = T::FileTypeValue::NetCdf4;
+    mFileType = T::FileTypeValue::NetCdf3;
     mColumns = 0;
     mRows = 0;
     mRowMultiplier = 0;

@@ -1806,11 +1806,17 @@ MessagePos_vec GridFile::searchMessageLocations(MemoryReader& memoryReader,uint 
 
     auto fileStartPtr = memoryReader.getReadPtr();
 
+    // Classic NetCDF (CDF-1 / CDF-2), the only NetCDF format the reader supports
     if (memoryReader.peek_string("CDF"))
     {
-      gribs.emplace_back(T::FileTypeValue::NetCdf4,0);
+      gribs.emplace_back(T::FileTypeValue::NetCdf3,0);
       return gribs;
     }
+
+    // NetCDF-4 files are HDF5 files, which the NetCDF reader does not support.
+    // An HDF5 container may still hold GRIB messages, so it is searched like
+    // any other file, and rejected only if no GRIB messages are found.
+    const bool isHdf5 = memoryReader.peek_string("\x89HDF\r\n\x1a\n");
 
     const uchar qd[] = {0x40,0x24,0xB0,0xA3,0x51,0};
     if (memoryReader.peek_string((const char*)qd))
@@ -1837,7 +1843,7 @@ MessagePos_vec GridFile::searchMessageLocations(MemoryReader& memoryReader,uint 
       int spos = memoryReader.search_string("GRIB");
 
       if (spos < 0)
-        return gribs;
+        break;
 
       memoryReader.setReadPosition(memoryReader.getReadPosition()+spos);
 
@@ -1898,6 +1904,13 @@ MessagePos_vec GridFile::searchMessageLocations(MemoryReader& memoryReader,uint 
         memoryReader.setReadPtr(startPtr);
         memoryReader.read_null(1);
       }
+    }
+
+    if (isHdf5 && gribs.empty())
+    {
+      Fmi::Exception exception(BCP,"NetCDF-4 (HDF5) files are not supported, only classic NetCDF files are!");
+      exception.addParameter("Filename",getFileName());
+      throw exception;
     }
 
     return gribs;
@@ -2106,7 +2119,13 @@ uchar GridFile::readMessageType(MemoryReader& memoryReader)
       // This is a NetCDF file.
 
       if (d[3] == 1 || d[3] == 2)
-        return T::FileTypeValue::NetCdf4;
+        return T::FileTypeValue::NetCdf3;
+    }
+
+    if (d[0] == 0x89 && d[1] == 'H' && d[2] == 'D' && d[3] == 'F' && d[4] == '\r' && d[5] == '\n' && d[6] == 0x1A && d[7] == '\n')
+    {
+      // This is a HDF5 file, for example NetCDF-4.
+      return T::FileTypeValue::NetCdf4;
     }
 
     if (d[0] == 0x40 &&  d[1] == 0x24  &&  d[2] == 0xB0  &&  d[3] == 0xA3  &&  d[4] == 0x51)
