@@ -32,6 +32,11 @@ class GaussianLatitudeCache
      *  \return Pointer to the latitude array, or nullptr if (nj,n) is not cached. */
     double*   getLatitudes(uint nj,long n);
 
+    /*! \brief Return the index of the first row of an nj row grid in the array of all
+     *  2*N Gaussian latitudes: the latitude closest to the northernmost grid latitude.
+     *  This is 0 for global grids; sub-area grids start further south. */
+    uint      getFirstRow(uint nj,long n,double northLat);
+
     /*! \brief Find the cached Gaussian latitudes bracketing a given latitude.
      *  \param[in]  nj       Number of latitude rows.
      *  \param[in]  n        Gaussian N parameter.
@@ -40,6 +45,9 @@ class GaussianLatitudeCache
      *  \param[out] latHigh  Upper bracketing latitude.
      *  \return Index of the lower bracket, or -1 if not found. */
     int       getClosestLatitudes(uint nj,long n,double lat,double& latLow,double& latHigh);
+
+    /*! \brief As above for a grid whose first row is the given row of all 2*N latitudes. */
+    int       getClosestLatitudes(uint nj,long n,uint firstRow,double lat,double& latLow,double& latHigh);
 
   protected:
 

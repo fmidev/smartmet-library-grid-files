@@ -2,6 +2,7 @@
 #include <macgyver/Exception.h>
 #include "../common/CoordinateConversions.h"
 
+#include <cmath>
 #include <mutex>
 #include <string>
 #include <vector>
@@ -255,14 +256,46 @@ double* GaussianLatitudeCache::getLatitudes(uint nj,long n)
 
 /*! \brief Finds the two Gaussian latitudes that bracket the given latitude. */
 
-int GaussianLatitudeCache::getClosestLatitudes(uint nj,long n,double lat,double& latLow,double& latHigh)
+uint GaussianLatitudeCache::getFirstRow(uint nj,long n,double northLat)
 {
   try
   {
-    if (nj == 0)
+    double *lats = getLatitudes(nj,n);
+    const long rows = 2*n;
+    if (C_INT64(nj) >= rows)
+      return 0;
+
+    uint best = 0;
+    for (long k = 1; k <= rows - C_INT64(nj); k++)
+    {
+      if (fabs(lats[k] - northLat) < fabs(lats[best] - northLat))
+        best = C_UINT(k);
+    }
+    return best;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+int GaussianLatitudeCache::getClosestLatitudes(uint nj,long n,double lat,double& latLow,double& latHigh)
+{
+  return getClosestLatitudes(nj,n,0,lat,latLow,latHigh);
+}
+
+
+
+int GaussianLatitudeCache::getClosestLatitudes(uint nj,long n,uint firstRow,double lat,double& latLow,double& latHigh)
+{
+  try
+  {
+    if (nj == 0 || C_INT64(firstRow) + nj > 2*n)
       return -1;
 
-    double *lats = getLatitudes(nj,n);
+    double *lats = getLatitudes(nj,n) + firstRow;
     int endp = C_INT(nj-1);
 
     if (lat > lats[0] || lat < lats[endp])
