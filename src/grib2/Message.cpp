@@ -1281,6 +1281,151 @@ void Message::read()
 
 
 
+/*! \brief Read the sections a repeated field inherits from the earlier fields of its message.
+
+    The read position must be at the first section of a field which repeats
+    sections 2-7, 3-7 or 4-7 of a GRIB2 message. The method finds the start of
+    the enclosing message, walks the section headers of the earlier fields and
+    reads the latest indicator, identification, local and grid sections, and the
+    latest bitmap section which defines a bitmap (a repeated field may refer to
+    it with bitmap indicator 254). The read position is restored.
+
+        \param memoryReader  This object controls the access to the memory mapped file.
+        \return              True if the position is inside a GRIB2 message at a section
+                             boundary, false otherwise (nothing is read).
+*/
+
+bool Message::readInheritedSections(MemoryReader& memoryReader)
+{
+  FUNCTION_TRACE
+  try
+  {
+    unsigned char* startPtr = memoryReader.getStartPtr();
+    unsigned char* readPtr = memoryReader.getReadPtr();
+    unsigned char* endPtr = memoryReader.getEndPtr();
+
+    if (readPtr + 5 > endPtr || readPtr < startPtr + 16)
+      return false;
+
+    auto be32 = [](const unsigned char* p) -> std::uint64_t
+    { return (std::uint64_t(p[0]) << 24) | (std::uint64_t(p[1]) << 16) | (std::uint64_t(p[2]) << 8) | p[3]; };
+
+    // Only sections 2-4 can start a repeated field
+    const auto first = readPtr[4];
+    if (first < SectionNumber::local_section || first > SectionNumber::product_section)
+      return false;
+
+    // Find the enclosing GRIB2 message: the nearest indicator section before the
+    // read position whose total length covers it.
+    unsigned char* msgPtr = nullptr;
+    for (unsigned char* p = readPtr - 16; p >= startPtr; --p)
+    {
+      if (p[0] == 'G' && p[1] == 'R' && p[2] == 'I' && p[3] == 'B' && p[7] == 2)
+      {
+        std::uint64_t totalLength = 0;
+        for (int i = 8; i < 16; i++)
+          totalLength = (totalLength << 8) | p[i];
+        if (p + totalLength > readPtr)
+          msgPtr = p;
+        break;
+      }
+      if (p == startPtr)
+        break;
+    }
+
+    if (msgPtr == nullptr)
+      return false;
+
+    // Walk the section headers up to the read position
+    unsigned char* identificationPtr = nullptr;
+    unsigned char* localPtr = nullptr;
+    unsigned char* gridPtr = nullptr;
+    unsigned char* bitmapPtr = nullptr;
+
+    unsigned char* p = msgPtr + 16;
+    while (p < readPtr)
+    {
+      if (p + 6 > endPtr)
+        return false;
+      const auto len = be32(p);
+      const auto num = p[4];
+      if (len < 5)
+        return false;
+      if (num == SectionNumber::identification_section)
+        identificationPtr = p;
+      else if (num == SectionNumber::local_section)
+        localPtr = p;
+      else if (num == SectionNumber::grid_section)
+        gridPtr = p;
+      else if (num == SectionNumber::bitmap_section && p[5] == 0)
+        bitmapPtr = p;  // bitmap indicator 0 = a bitmap follows
+      p += len;
+    }
+
+    // The read position must be at a section boundary of the message
+    if (p != readPtr || gridPtr == nullptr || identificationPtr == nullptr)
+      return false;
+
+    const auto readPos = memoryReader.getReadPosition();
+
+    memoryReader.setReadPtr(msgPtr);
+    {
+      IndicatorSection* section = new IndicatorSection();
+      section->setMessagePtr(this);
+      mIndicatorSection.reset(section);
+      section->read(memoryReader);
+    }
+
+    memoryReader.setReadPtr(identificationPtr);
+    {
+      IdentificationSection* section = new IdentificationSection();
+      section->setMessagePtr(this);
+      mIdentificationSection.reset(section);
+      section->read(memoryReader);
+    }
+
+    // A repeated field starting with section 2 or 3 has its own local and grid sections
+    if (localPtr != nullptr && first > SectionNumber::local_section)
+    {
+      memoryReader.setReadPtr(localPtr);
+      LocalSection* section = new LocalSection();
+      section->setMessagePtr(this);
+      mLocalSection.reset(section);
+      section->read(memoryReader);
+    }
+
+    if (first > SectionNumber::grid_section)
+    {
+      memoryReader.setReadPtr(gridPtr);
+      GridSection* section = new GridSection();
+      section->setMessagePtr(this);
+      mGridSection.reset(section);
+      section->read(memoryReader);
+    }
+
+    if (bitmapPtr != nullptr)
+    {
+      memoryReader.setReadPtr(bitmapPtr);
+      BitmapSection* section = new BitmapSection();
+      section->setMessagePtr(this);
+      BitmapSect_sptr bitmap(section);
+      section->read(memoryReader);
+      setPreviousBitmapSection(bitmap);
+    }
+
+    memoryReader.setReadPosition(readPos);
+    return true;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
 /*! \brief The method reads and initializes all data related to the current message object.
 
         \param memoryReader  This object controls the access to the memory mapped file.
@@ -1301,6 +1446,13 @@ void Message::read(MemoryReader& memoryReader)
     // Index of the section processed last (=none)
     std::uint8_t last_idx = 0u;
     bool begin = false;
+
+    // A GRIB2 message may contain several fields, each repeating sections 2-7,
+    // 3-7 or 4-7 of the message. A field which does not start with the
+    // indicator section is such a repetition: it inherits the missing sections
+    // from the fields before it, and its own sections are read from here on.
+    if (!memoryReader.peek_string("GRIB") && readInheritedSections(memoryReader))
+      begin = true;
 
     while (true)
     {

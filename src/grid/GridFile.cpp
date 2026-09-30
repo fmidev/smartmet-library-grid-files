@@ -1333,7 +1333,16 @@ GRID::Message* GridFile::createMessage(T::MessageIndex messageIndex,GRID::Messag
     }
 
     MemoryReader memoryReader(reinterpret_cast<unsigned char*>(startAddr),reinterpret_cast<unsigned char*>(endAddr));
-    uchar fileType = readMessageType(memoryReader);
+
+    // A GRIB2 field which repeats sections of its message does not start with
+    // "GRIB" but with a section header, so its type cannot be sniffed from it.
+    const bool startsWithGrib = (messageInfo.mMessageSize >= 4 && memcmp(startAddr,"GRIB",4) == 0);
+    uchar fileType = 0;
+    if (!startsWithGrib && messageInfo.mMessageType == T::FileTypeValue::Grib2)
+      fileType = T::FileTypeValue::Grib2;
+    else
+      fileType = readMessageType(memoryReader);
+
     if (fileType == 0)
     {
       MemoryReader memoryReader2(reinterpret_cast<unsigned char*>(mMemoryMapInfo->memoryPtr),reinterpret_cast<unsigned char*>(endAddr));
@@ -1567,14 +1576,18 @@ void GridFile::read(MemoryReader& memoryReader,uint maxMessages)
       MemoryReader memoryReader2(ptr,endAddr);
       memoryReader2.setParentPtr(startAddr);
 
+      // A GRIB2 message may contain several fields, each of which becomes a
+      // message of its own, so the message index is not the GRIB message index.
+      const T::MessageIndex nextIndex = (mMessages.empty() ? 0 : mMessages.rbegin()->first + 1);
+
       switch (gribs[i].first)
       {
         case T::FileTypeValue::Grib1:
-          readGrib1Message(memoryReader2,i);
+          readGrib1Message(memoryReader2,nextIndex);
           break;
 
         case T::FileTypeValue::Grib2:
-          readGrib2Message(memoryReader2,i);
+          readGrib2Message(memoryReader2,nextIndex);
           break;
 
         case T::FileTypeValue::NetCdf3:
@@ -1736,23 +1749,10 @@ void GridFile::readGrib2Message(MemoryReader& memoryReader, T::MessageIndex mess
       GRIB2::Message *message = new GRIB2::Message();
       message->setGridFilePtr(this);
       message->setMessageIndex(messageIndex);
+      // A field after the first one repeats sections 2-7, 3-7 or 4-7 of the
+      // message. Message::read() recognizes this and takes the other sections
+      // from the earlier fields.
       message->read(memoryReader);
-
-      // Complete the sections from the previous message
-      if (!mMessages.empty())
-      {
-        if (messageIndex > 0)
-        {
-          auto msg = mMessages.find(messageIndex-1);
-          if (msg != mMessages.end())
-          {
-            /*
-            if (msg->second != nullptr)
-              message->copyMissingSections(*msg->second);
-              */
-          }
-        }
-      }
 
       // Some bitmap sections refer to earlier ones
       if (message->getBitmapSection() != nullptr &&  message->getBitmapSection()->getBitmapDataPtr() != nullptr)
@@ -1770,6 +1770,9 @@ void GridFile::readGrib2Message(MemoryReader& memoryReader, T::MessageIndex mess
 
       message->initParameterInfo();
       mMessages.insert(std::pair<uint,Message*>(messageIndex,message));
+
+      // The next field of the same GRIB2 message gets the next message index
+      messageIndex++;
     }
   }
   catch (...)

@@ -197,6 +197,8 @@ class Message : public GRID::Message
 
   private:
 
+    bool                readInheritedSections(MemoryReader& memoryReader);
+
     /*! \brief  The message start position in the file. */
     T::FilePosition     mFilePosition;
 
