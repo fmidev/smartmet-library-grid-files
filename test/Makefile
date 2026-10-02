@@ -56,5 +56,5 @@ synthetic:
 
 .PHONY: synthetic
 
-$(PROG) : % : %.cpp Makefile TestCommon.h ../libsmartmet-grid-files.so
+$(PROG) : % : %.cpp Makefile $(wildcard *.h) ../libsmartmet-grid-files.so
 	$(CXX) $(CFLAGS) $(DEFINES) -o $@ $@.cpp $(INCLUDES) $(LIBS)
