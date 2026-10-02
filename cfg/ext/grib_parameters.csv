@@ -1,0 +1,7 @@
+#################################################################################
+#
+# This file defines additional GRIB parameters common to all GRIB editions, in the
+# same format as ../grib_parameters.csv. It is listed in grid-files.conf so that
+# local definitions can be added without editing the main file.
+#
+#################################################################################
