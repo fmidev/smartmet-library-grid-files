@@ -4387,6 +4387,10 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
           int lastLatitude = 0;
           int iInc = C_INT(round(toDouble(field[7]) * 1000));
           int jInc = C_INT(round(toDouble(field[8]) * 1000));
+          // The last grid point from the exact increments: GRIB1 increments are whole
+          // millidegrees, and n times a rounded increment can overshoot a whole cell
+          int iSpan = C_INT(round((ni-1) * toDouble(field[7]) * 1000));
+          int jSpan = C_INT(round((nj-1) * toDouble(field[8]) * 1000));
           char *scanningMode = field[9];
           double earthSemiMajor = toDouble(field[10]);
           double earthSemiMinor = toDouble(field[11]);
@@ -4396,29 +4400,29 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
           GRIB1::ScanningModeSettings scanningMode1;
           if (strcasecmp(scanningMode,"+x+y") == 0)
           {
-            lastLongitude = longitude + ni*iInc - iInc;
-            lastLatitude = latitude + nj*jInc - jInc;
+            lastLongitude = longitude + iSpan;
+            lastLatitude = latitude + jSpan;
             scanningMode1.setScanningMode(0x40);
           }
           else
           if (strcasecmp(scanningMode,"-x+y") == 0)
           {
-            lastLongitude = longitude - ni*iInc + iInc;
-            lastLatitude = latitude + nj*jInc - jInc;
+            lastLongitude = longitude - iSpan;
+            lastLatitude = latitude + jSpan;
             scanningMode1.setScanningMode(0x80+0x40);
           }
           else
           if (strcasecmp(scanningMode,"+x-y") == 0)
           {
-            lastLongitude = longitude + ni*iInc - iInc;
-            lastLatitude = latitude - nj*jInc + jInc;
+            lastLongitude = longitude + iSpan;
+            lastLatitude = latitude - jSpan;
             scanningMode1.setScanningMode(0);
           }
           else
           if (strcasecmp(scanningMode,"-x-y") == 0)
           {
-            lastLongitude = longitude - ni*iInc + iInc;
-            lastLatitude = latitude - nj*jInc + jInc;
+            lastLongitude = longitude - iSpan;
+            lastLatitude = latitude - jSpan;
             scanningMode1.setScanningMode(0x80);
           }
 
@@ -4471,6 +4475,10 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
           int lastLatitude = 0;
           int iInc = C_INT(round(toDouble(field[7]) * 1000));
           int jInc = C_INT(round(toDouble(field[8]) * 1000));
+          // The last grid point from the exact increments: GRIB1 increments are whole
+          // millidegrees, and n times a rounded increment can overshoot a whole cell
+          int iSpan = C_INT(round((ni-1) * toDouble(field[7]) * 1000));
+          int jSpan = C_INT(round((nj-1) * toDouble(field[8]) * 1000));
           char *scanningMode = field[9];
           int longitudeOfSouthernPole = C_INT(round(toDouble(field[10])*1000));
           int latitudeOfSouthernPole = C_INT(round(toDouble(field[11])*1000));
@@ -4486,29 +4494,29 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
 
           if (strcasecmp(scanningMode,"+x+y") == 0)
           {
-            lastLongitude = longitude + ni*iInc - iInc;
-            lastLatitude = latitude + nj*jInc - jInc;
+            lastLongitude = longitude + iSpan;
+            lastLatitude = latitude + jSpan;
             scanningMode1.setScanningMode(0x40);
           }
           else
           if (strcasecmp(scanningMode,"-x+y") == 0)
           {
-            lastLongitude = longitude - ni*iInc + iInc;
-            lastLatitude = latitude + nj*jInc - jInc;
+            lastLongitude = longitude - iSpan;
+            lastLatitude = latitude + jSpan;
             scanningMode1.setScanningMode(0x80+0x40);
           }
           else
           if (strcasecmp(scanningMode,"+x-y") == 0)
           {
-            lastLongitude = longitude + ni*iInc - iInc;
-            lastLatitude = latitude - nj*jInc + jInc;
+            lastLongitude = longitude + iSpan;
+            lastLatitude = latitude - jSpan;
             scanningMode1.setScanningMode(0);
           }
           else
           if (strcasecmp(scanningMode,"-x-y") == 0)
           {
-            lastLongitude = longitude - ni*iInc + iInc;
-            lastLatitude = latitude - nj*jInc + jInc;
+            lastLongitude = longitude - iSpan;
+            lastLatitude = latitude - jSpan;
             scanningMode1.setScanningMode(0x80);
           }
 

@@ -113,13 +113,18 @@ void RotatedLatLonImpl::init() const
       if ((flags & 0x20) == 0  &&  mLatLon.getGrid()->getLongitudeOfLastGridPoint())
       {
         // i direction increment not given
-        dx = (mEndX-mStartX)/mNi;
+        double endX = mEndX;
+        if (endX < mStartX)
+          endX += 360;
+        if (mNi > 1)
+          dx = (endX-mStartX)/(mNi-1);
       }
 
       if ((flags & 0x10) == 0  &&  mLatLon.getGrid()->getLatitudeOfLastGridPoint())
       {
-        // j direction increment not given
-        dy = (mEndY-mStartY)/mNj;
+        // j direction increment not given. The sign comes from the scanning mode below.
+        if (mNj > 1)
+          dy = std::fabs(mEndY-mStartY)/(mNj-1);
       }
     }
 
@@ -770,15 +775,23 @@ bool RotatedLatLonImpl::getGridPointByOriginalCoordinates(double x,double y,doub
 {
   try
   {
+    // The coordinates used to be rounded to 0.01 degrees here, which moved the grid point by
+    // up to 0.005 degrees, i.e. half a grid cell on a 0.01 degree grid.
     double aLon = getLongitude(x);
-    if ((int)(100*aLon) < (int)(100*mStartX))
+    if (aLon < mStartX - 1e-6)
       aLon += 360;
 
-    double latDiff = (round(y*100) - round(mStartY*100)) / 100;
-    double lonDiff = (round(aLon*100) - round(mStartX*100)) / 100;
+    double latDiff = y - mStartY;
+    double lonDiff = aLon - mStartX;
 
     grid_i = lonDiff / mDx;
     grid_j = latDiff / mDy;
+
+    // Round-off puts points on the first row or column slightly outside the grid
+    if (grid_i < 0 && grid_i > -1e-4)
+      grid_i = 0;
+    if (grid_j < 0 && grid_j > -1e-4)
+      grid_j = 0;
 
     if (grid_i < 0 ||  grid_j < 0  ||  grid_i >= C_DOUBLE(mNi) ||  grid_j >= C_DOUBLE(mNj))
       return false;
