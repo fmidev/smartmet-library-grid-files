@@ -1,5 +1,6 @@
 #!/bin/sh
-# Generates the NetCDF and GeoTIFF fixtures of OtherFormatsTest (needs ncgen and GDAL).
+# Generates the NetCDF fixture of OtherFormatsTest (needs ncgen). The grid-files GeoTIFF
+# reader only reads FMI GeoTIFFs with private metadata tags, so it has no fixture here.
 # The values are a known function of the grid position, see OtherFormatsTest.cpp.
 set -e
 cd "$(dirname "$0")"
@@ -41,13 +42,3 @@ data:
 """ % ", ".join(vals))
 PY
 ncgen -k classic -o netcdf_latlon.nc netcdf_latlon.cdl
-
-# ---- GeoTIFF: 8 x 6 pixels, EPSG:4326, pixel centres lon 20..27, lat 65..60 ----
-python3 - <<'PY'
-with open("geotiff_latlon.xyz", "w") as f:
-    for j, lat in enumerate(range(65, 59, -1)):
-        for i, lon in enumerate(range(20, 28)):
-            f.write("%d %d %.2f\n" % (lon, lat, 100 + i * 2 + j * 10))
-PY
-gdal_translate -q -of GTiff -a_srs EPSG:4326 -ot Float32 geotiff_latlon.xyz geotiff_latlon.tif
-rm -f geotiff_latlon.tif.aux.xml
