@@ -125,6 +125,7 @@ FMI Grid File library development files
 - GRIB1 Gaussian grids return coordinates by grid point
 - Nearest time interpolation of point values no longer always chooses the earlier time
 - Bounded GRIB2 repeated field and point list lengths by the data (found by fuzzing)
+- GeoTIFF metadata is read into a heap buffer instead of a stack array sized by the file
 - Tests use Boost.Test, run in CI and fail when their fixtures are missing; new tests decode
   synthetic GRIB1/GRIB2 files of all common grid types and packings against ecCodes, and
   round-trip coordinates for every configured geometry

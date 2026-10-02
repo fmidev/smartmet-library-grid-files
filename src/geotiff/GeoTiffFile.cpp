@@ -297,7 +297,8 @@ void GeoTiffFile::readIFD(MemoryReader& memoryReader,MessageInfoVec& messageInfo
     Int64 rp = memoryReader.getReadPosition();
 
     std::vector<std::string> lines;
-    char buf[metaSize+1];
+    // Heap buffer: the size comes from the file (a stack array of that size could overflow)
+    std::vector<char> buf(static_cast<std::size_t>(metaSize) + 1);
     memoryReader.setReadPosition(metaOffset);
     uint c = 0;
     for (uint t=0; t<metaSize; t++)
@@ -307,7 +308,7 @@ void GeoTiffFile::readIFD(MemoryReader& memoryReader,MessageInfoVec& messageInfo
       {
         buf[c] = '\0';
         if (c > 0)
-          lines.push_back(std::string(buf));
+          lines.push_back(std::string(buf.data()));
 
         c = 0;
       }
@@ -319,7 +320,7 @@ void GeoTiffFile::readIFD(MemoryReader& memoryReader,MessageInfoVec& messageInfo
     }
     buf[c] = '\0';
     if (c > 0)
-      lines.push_back(std::string(buf));
+      lines.push_back(std::string(buf.data()));
 
     memoryReader.setReadPosition(rp);
 
