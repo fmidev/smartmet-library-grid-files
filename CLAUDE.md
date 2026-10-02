@@ -22,7 +22,7 @@ make create_def     # Regenerate auto-generated GRIB definition classes
 make delete_def     # Clean auto-generated definitions
 ```
 
-`test/` holds Boost.Test programs (`*Test.cpp`, one executable each, shared helpers in `TestCommon.h`). Tests use the repository configuration `cfg/grid-files.conf`; tests needing installed smartmet-test-data GRIBs FAIL when they are missing; set `GRID_TEST_ALLOW_SKIP=1` to skip them instead. `GribDecodeTest` checks every `test/synthetic/*.grib` against the ecCodes-decoded `*.ref` next to it (regenerate with `make -C test synthetic`, needs eccodes-devel); `GeometryRoundTripTest` round-trips coordinates for every geometry in `cfg/`.
+`test/` holds Boost.Test programs (`*Test.cpp`, one executable each, shared helpers in `TestCommon.h`). Tests use the repository configuration `cfg/grid-files.conf`; tests needing installed smartmet-test-data GRIBs FAIL when they are missing; set `GRID_TEST_ALLOW_SKIP=1` to skip them instead. `GribDecodeTest` checks every `test/synthetic/*.grib` against the ecCodes-decoded `*.ref` next to it (regenerate with `make -C test synthetic`, needs eccodes-devel); `GeometryRoundTripTest` round-trips coordinates for every geometry in `cfg/`; `OtherFormatsTest` decodes a classic NetCDF fixture (`test/synthetic/make_other.sh`) and compares a QueryData file with newbase.
 
 Full developer documentation: `docs/developer-guide.md`.
 
