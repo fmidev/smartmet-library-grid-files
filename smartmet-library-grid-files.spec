@@ -3,8 +3,8 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 26.9.26
-Release: 2%{?dist}.fmi
+Version: 26.10.2
+Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
 URL: https://github.com/fmidev/smartmet-library-grid-files
@@ -24,7 +24,7 @@ BuildRequires: rpm-build
 BuildRequires: smartmet-utils-devel >= 26.9.3
 BuildRequires: smartmet-library-newbase-devel >= 26.9.23
 BuildRequires: smartmet-library-spine-devel >= 26.9.23
-BuildRequires: smartmet-library-macgyver-devel >= 26.9.26
+BuildRequires: smartmet-library-macgyver-devel >= 26.10.2
 BuildRequires: smartmet-library-trax-devel >= 26.6.26
 BuildRequires: %{smartmet_boost}-devel
 BuildRequires: gcc-c++
@@ -51,7 +51,7 @@ Requires: libcurl
 Requires: openjpeg2
 Requires: libwebp13 >= 1.3.2
 Requires: smartmet-library-newbase >= 26.9.23
-Requires: smartmet-library-macgyver >= 26.9.26
+Requires: smartmet-library-macgyver >= 26.10.2
 Requires: smartmet-library-spine >= 26.9.23
 Requires: smartmet-library-trax >= 26.6.26
 Requires: smartmet-topography-data >= 1.0.0
@@ -86,7 +86,7 @@ Provides: %{SPECNAME}-devel
 Requires: %{SPECNAME} = %{version}-%{release}
 Requires: smartmet-library-newbase-devel >= 26.9.23
 Requires: smartmet-library-spine-devel
-Requires: smartmet-library-macgyver-devel >= 26.9.26
+Requires: smartmet-library-macgyver-devel >= 26.10.2
 Requires: smartmet-library-trax-devel
 Requires: %{smartmet_boost}-devel
 Requires: libcurl-devel
@@ -100,6 +100,12 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Fri Oct 02 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.2-1.fmi
+- Use Fmi::Cache::Cache again instead of Fmi::Cache::ClockCache, which was removed from macgyver
+  26.10.2 since Fmi::Cache::Cache now uses the same CLOCK eviction. CLOCK is faster than LRU since
+  a cache hit only takes a shared lock
+- Removed GridCache.h and the GRID_FILES_LRU_CACHE build option
+
 * Sat Sep 26 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.9.26-2.fmi
 - Security: hardened GRIB decoders against crafted messages (heap overflow / OOB reads).
   Enforce that GRIB2 complex-packing group sizes sum to the declared value count, bound

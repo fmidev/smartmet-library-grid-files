@@ -8,7 +8,7 @@
 
 #include <macgyver/Exception.h>
 #include <macgyver/Cache.h>
-#include "GridCache.h"
+#include <macgyver/Cache.h>
 #include <macgyver/Hash.h>
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/filesystem/operations.hpp>
@@ -21,7 +21,7 @@
 #include <newbase/NFmiLocation.h>
 #include <unordered_map>
 
-SmartMet::GridCache<std::size_t,std::shared_ptr<SmartMet::CoordinateConverter>> coordinateConverterCache(10000);
+Fmi::Cache::Cache<std::size_t,std::shared_ptr<SmartMet::CoordinateConverter>> coordinateConverterCache(10000);
 
 
 
