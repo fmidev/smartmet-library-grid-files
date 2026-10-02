@@ -183,7 +183,11 @@ void SecondOrderPacking::decodeValues(Message *message,T::ParamValue_vec& decode
     // of this packing method should be close to grib2 complex packing, but still
     // there are some issues that are not clear at all.
 
-    if (flags & AdditionalFlags)
+    // Octet 14 always holds the extended flags of second order packing. ecCodes writes them
+    // without setting the "additional flags" bit 4 of octet 4 and also decodes them regardless
+    // of it, so the bit is not required here either. With no extended flags set none of the
+    // supported variants below matches and the field is rejected as before.
+    if ((flags & AdditionalFlags) || mExtendedFlags != 0)
     {
       bool secondOrderOfDifferentWidth = false;
       bool matrixOfValues = false;
@@ -274,7 +278,7 @@ void SecondOrderPacking::decodeValues(Message *message,T::ParamValue_vec& decode
     }
     else
     {
-      throw Fmi::Exception(BCP,"Additional flags not in use!");
+      throw Fmi::Exception(BCP,"Second order packing without extended flags is not supported!");
     }
 
     throw Fmi::Exception(BCP,"Not supported!");
