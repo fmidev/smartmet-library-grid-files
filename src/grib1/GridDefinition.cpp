@@ -607,7 +607,9 @@ bool GridDefinition::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid
 bool GridDefinition::getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const
 {
   FUNCTION_TRACE
-  throw Fmi::Exception(BCP,"Not implemented!");
+  // Not implemented for all grids (for example Gaussian grids). Returning false lets the
+  // callers fall back to the grid coordinate list instead of failing the whole request.
+  return false;
 }
 
 
