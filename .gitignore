@@ -4,3 +4,4 @@ obj/
 /.vscode
 test/*Test
 .cache
+test/synthetic/make_synthetic

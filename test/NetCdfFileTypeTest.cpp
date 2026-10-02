@@ -2,32 +2,34 @@
 // only supports the classic formats. GRIB messages inside an HDF5 container are
 // still found.
 
+#define BOOST_TEST_MODULE NetCdfFileTypeTest
+#include <boost/test/included/unit_test.hpp>
+
+#include "TestCommon.h"
 #include "../src/grid/GridFile.h"
+#include "../src/identification/GridDef.h"
+
 #include <fstream>
 #include <iterator>
-#include <vector>
-#include "../src/identification/GridDef.h"
-#include <macgyver/Exception.h>
-
-#include <sys/stat.h>
-#include <cstdio>
 #include <string>
-#include <unistd.h>
 
 using namespace SmartMet;
+using namespace GridTest;
 
 namespace
 {
-const char *CONFIG = "/usr/share/smartmet/test/grid/library/grid-files.conf";
-const char *GRIB = "/usr/share/smartmet/test/data/grib/ecgmta/ecgmta_pot_prcnt.grib";
-const char *HDF5_FIXTURE =
-    "/usr/share/smartmet/test/data/qdtools/input/netcdf/"
-    "C3S-SOILMOISTURE-L3S-SSMV-PASSIVE-DAILY-20160831000000-TCDR-v201706.0.0.nc";
+const std::string GRIB = testData("grib/ecgmta/ecgmta_pot_prcnt.grib");
+const std::string HDF5_FIXTURE = testData(
+    "qdtools/input/netcdf/"
+    "C3S-SOILMOISTURE-L3S-SSMV-PASSIVE-DAILY-20160831000000-TCDR-v201706.0.0.nc");
 
-bool exists(const char *path)
+// A file starting with the HDF5 signature
+std::string hdf5Header()
 {
-  struct stat st;
-  return stat(path, &st) == 0 && st.st_size > 0;
+  std::string data(512, '\0');
+  const unsigned char sig[] = {0x89, 'H', 'D', 'F', '\r', '\n', 0x1A, '\n'};
+  std::copy(std::begin(sig), std::end(sig), data.begin());
+  return data;
 }
 
 bool rejected(const std::string &filename)
@@ -43,82 +45,46 @@ bool rejected(const std::string &filename)
     return true;
   }
 }
+
+struct GridDefInit
+{
+  GridDefInit()
+  {
+    if (exists(CONFIG))
+      Identification::gridDef.init(CONFIG);
+  }
+};
 }  // namespace
 
-int main()
+BOOST_TEST_GLOBAL_FIXTURE(GridDefInit);
+
+BOOST_AUTO_TEST_CASE(hdf5_signature_is_rejected, *fixtures({CONFIG}))
 {
-  if (!exists(CONFIG))
-  {
-    printf("SKIP NetCdfFileTypeTest: %s not installed\n", CONFIG);
-    return 0;
-  }
+  requireFixture(CONFIG);
+  TempFile tmp(hdf5Header(), "netcdf4");
+  BOOST_TEST(rejected(tmp.name()));
+}
 
-  try
-  {
-    Identification::gridDef.init(CONFIG);
+BOOST_AUTO_TEST_CASE(grib_inside_hdf5_container_is_found, *fixtures({CONFIG, GRIB}))
+{
+  requireFixture(CONFIG);
+  requireFixture(GRIB);
+  std::ifstream in(GRIB, std::ios::binary);
+  std::string grib((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+  TempFile tmp(hdf5Header() + grib, "hdf5grib");
 
-    // A file with just the HDF5 signature
-    char tmpname[] = "/tmp/netcdf4-XXXXXX";
-    int fd = mkstemp(tmpname);
-    if (fd < 0)
-    {
-      fprintf(stderr, "FAIL NetCdfFileTypeTest: cannot create a temporary file\n");
-      return 1;
-    }
-    unsigned char data[512] = {0x89, 'H', 'D', 'F', '\r', '\n', 0x1A, '\n'};
-    const bool written = (write(fd, data, sizeof(data)) == sizeof(data));
-    close(fd);
-    const bool ok = written && rejected(tmpname);
-    unlink(tmpname);
-    if (!ok)
-    {
-      fprintf(stderr, "FAIL NetCdfFileTypeTest: HDF5 signature was not rejected\n");
-      return 1;
-    }
-
-    // An HDF5 container with GRIB messages inside it
-    if (exists(GRIB))
-    {
-      std::ifstream in(GRIB, std::ios::binary);
-      std::vector<char> grib((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
-      char tmpname2[] = "/tmp/hdf5grib-XXXXXX";
-      int fd2 = mkstemp(tmpname2);
-      if (fd2 < 0)
-      {
-        fprintf(stderr, "FAIL NetCdfFileTypeTest: cannot create a temporary file\n");
-        return 1;
-      }
-      bool ok2 = (write(fd2, data, sizeof(data)) == sizeof(data));
-      ok2 = ok2 && (write(fd2, grib.data(), grib.size()) == static_cast<ssize_t>(grib.size()));
-      close(fd2);
-      std::size_t n = 0;
-      if (ok2)
+  withFmiErrors(
+      [&]
       {
         GRID::GridFile gf;
-        gf.read(std::string(tmpname2));
-        n = gf.getNumberOfMessages();
-      }
-      unlink(tmpname2);
-      if (n == 0)
-      {
-        fprintf(stderr, "FAIL NetCdfFileTypeTest: GRIB inside an HDF5 container was not found\n");
-        return 1;
-      }
-    }
+        gf.read(tmp.name());
+        BOOST_TEST(gf.getNumberOfMessages() > 0U);
+      });
+}
 
-    if (exists(HDF5_FIXTURE) && !rejected(HDF5_FIXTURE))
-    {
-      fprintf(stderr, "FAIL NetCdfFileTypeTest: NetCDF-4 file was not rejected\n");
-      return 1;
-    }
-
-    printf("OK NetCdfFileTypeTest\n");
-    return 0;
-  }
-  catch (...)
-  {
-    Fmi::Exception e(BCP, "NetCdfFileTypeTest failed", nullptr);
-    e.printError();
-    return 1;
-  }
+BOOST_AUTO_TEST_CASE(netcdf4_file_is_rejected, *fixtures({CONFIG, HDF5_FIXTURE}))
+{
+  requireFixture(CONFIG);
+  requireFixture(HDF5_FIXTURE);
+  BOOST_TEST(rejected(HDF5_FIXTURE));
 }

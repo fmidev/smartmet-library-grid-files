@@ -9,167 +9,120 @@
 // circle, i.e. that getGridValuesByPointList returns exactly one value per grid point, and that
 // a repeated circle query served from the circle point cache gives the same result.
 //
-// The test needs the ECMWF global thunderstorm-probability grid from smartmet-test-data and a
-// grid-files configuration with FMI geometry definitions (provided by the
-// smartmet-engine-grid-test fixtures). It SKIPS (does not fail) when either is absent.
+// The test needs the ECMWF global thunderstorm-probability grid from smartmet-test-data and the
+// FMI geometry definitions in ../cfg.
 
+#define BOOST_TEST_MODULE GridPointListCoordinatesTest
+#include <boost/test/included/unit_test.hpp>
+
+#include "TestCommon.h"
 #include "../src/grid/GridFile.h"
 #include "../src/grid/Message.h"
 #include "../src/common/CoordinateConversions.h"
 #include "../src/identification/GridDef.h"
 
-#include <sys/stat.h>
-#include <cstdio>
 #include <string>
 #include <vector>
 
 using namespace SmartMet;
+using namespace GridTest;
 
 namespace
 {
-const char *CONFIG = "/usr/share/smartmet/test/grid/library/grid-files.conf";
-const char *GRIB = "/usr/share/smartmet/test/data/grib/ecgmta/ecgmta_pot_prcnt.grib";
-
-bool exists(const char *path)
-{
-  struct stat st;
-  return stat(path, &st) == 0 && st.st_size > 0;
-}
+const std::string GRIB = testData("grib/ecgmta/ecgmta_pot_prcnt.grib");
 }  // namespace
 
-int main()
+BOOST_AUTO_TEST_CASE(point_list_and_circle, *fixtures({CONFIG, GRIB}))
 {
-  if (!exists(CONFIG) || !exists(GRIB))
-  {
-    printf("SKIP GridPointListCoordinatesTest: test fixtures not installed\n");
-    printf("      need %s\n      need %s\n", CONFIG, GRIB);
-    return 0;
-  }
+  requireFixture(CONFIG);
+  requireFixture(GRIB);
 
-  try
-  {
-    Identification::gridDef.init(CONFIG);
-
-    GRID::GridFile gf;
-    gf.read(std::string(GRIB));
-
-    if (gf.getNumberOfMessages() == 0)
-    {
-      fprintf(stderr, "FAIL GridPointListCoordinatesTest: no messages in grib\n");
-      return 1;
-    }
-
-    GRID::Message *msg = gf.getMessageByIndex(0);
-    T::Dimensions d = msg->getGridDimensions();
-    int nx = d.nx();
-    int ny = d.ny();
-
-    // Points all over the grid, including the borders and points outside the grid
-
-    std::vector<T::Point> points;
-    for (int j = -1; j <= ny; j += 37)
-      for (int i = -1; i <= nx; i += 41)
-        points.emplace_back(i, j);
-    points.emplace_back(nx - 1, ny - 1);
-    points.emplace_back(nx, 0);
-    points.emplace_back(0, ny);
-
-    T::Coordinate_vec coordinates;
-    std::vector<bool> found;
-    msg->getGridLatLonCoordinatesByGridPointList(points, coordinates, found);
-
-    if (coordinates.size() != points.size() || found.size() != points.size())
-    {
-      fprintf(stderr, "FAIL GridPointListCoordinatesTest: result size mismatch\n");
-      return 1;
-    }
-
-    for (std::size_t t = 0; t < points.size(); t++)
-    {
-      double lat = 0;
-      double lon = 0;
-      bool ok = msg->getGridLatLonCoordinatesByGridPoint(points[t].x(), points[t].y(), lat, lon);
-
-      if (ok != found[t] || (ok && (lon != coordinates[t].x() || lat != coordinates[t].y())))
+  withFmiErrors(
+      []
       {
-        fprintf(stderr,
-                "FAIL GridPointListCoordinatesTest: point (%d,%d): single %d (%.10f,%.10f), "
-                "list %d (%.10f,%.10f)\n",
-                points[t].x(), points[t].y(), (int)ok, lon, lat, (int)found[t],
-                coordinates[t].x(), coordinates[t].y());
-        return 1;
-      }
-    }
+        Identification::gridDef.init(CONFIG);
 
-    // Every circle point must carry its own value and coordinates
+        GRID::GridFile gf;
+        gf.read(GRIB);
+        BOOST_TEST_REQUIRE(gf.getNumberOfMessages() > 0);
 
-    const double lon0 = 25.0;
-    const double lat0 = 60.0;
-    const double radius = 200;
+        GRID::Message *msg = gf.getMessageByIndex(0);
+        T::Dimensions d = msg->getGridDimensions();
+        int nx = d.nx();
+        int ny = d.ny();
 
-    T::GridValueList list;
-    msg->getGridValueListByCircle(T::CoordinateTypeValue::LATLON_COORDINATES, lon0, lat0, radius, list);
+        // Points all over the grid, including the borders and points outside the grid
 
-    uint len = list.getLength();
-    if (len == 0)
-    {
-      fprintf(stderr, "FAIL GridPointListCoordinatesTest: empty circle\n");
-      return 1;
-    }
+        std::vector<T::Point> points;
+        for (int j = -1; j <= ny; j += 37)
+          for (int i = -1; i <= nx; i += 41)
+            points.emplace_back(i, j);
+        points.emplace_back(nx - 1, ny - 1);
+        points.emplace_back(nx, 0);
+        points.emplace_back(0, ny);
 
-    for (uint t = 0; t < len; t++)
-    {
-      T::GridValue rec;
-      list.getGridValueByIndex(t, rec);
-      if (latlon_distance(lat0, lon0, rec.mY, rec.mX) > radius)
-      {
-        fprintf(stderr,
-                "FAIL GridPointListCoordinatesTest: circle point (%.5f,%.5f) is outside the circle\n",
-                rec.mX, rec.mY);
-        return 1;
-      }
-    }
+        T::Coordinate_vec coordinates;
+        std::vector<bool> found;
+        msg->getGridLatLonCoordinatesByGridPointList(points, coordinates, found);
 
-    // The second call uses the cached circle points and must give exactly the same result
+        BOOST_TEST_REQUIRE(coordinates.size() == points.size());
+        BOOST_TEST_REQUIRE(found.size() == points.size());
 
-    T::GridValueList list2;
-    msg->getGridValueListByCircle(T::CoordinateTypeValue::LATLON_COORDINATES, lon0, lat0, radius, list2);
+        for (std::size_t t = 0; t < points.size(); t++)
+        {
+          double lat = 0;
+          double lon = 0;
+          bool ok = msg->getGridLatLonCoordinatesByGridPoint(points[t].x(), points[t].y(), lat, lon);
+          BOOST_TEST_INFO("point (" << points[t].x() << "," << points[t].y() << ")");
+          BOOST_TEST(ok == found[t]);
+          if (ok && found[t])
+          {
+            BOOST_TEST(lon == coordinates[t].x());
+            BOOST_TEST(lat == coordinates[t].y());
+          }
+        }
 
-    if (list2.getLength() != len)
-    {
-      fprintf(stderr, "FAIL GridPointListCoordinatesTest: cached circle has %u points, expected %u\n",
-              list2.getLength(), len);
-      return 1;
-    }
+        // Every circle point must carry its own value and coordinates
 
-    for (uint t = 0; t < len; t++)
-    {
-      T::GridValue rec1;
-      T::GridValue rec2;
-      list.getGridValueByIndex(t, rec1);
-      list2.getGridValueByIndex(t, rec2);
-      if (rec1.mX != rec2.mX || rec1.mY != rec2.mY || rec1.mValue != rec2.mValue)
-      {
-        fprintf(stderr, "FAIL GridPointListCoordinatesTest: cached circle point %u differs\n", t);
-        return 1;
-      }
-    }
+        const double lon0 = 25.0;
+        const double lat0 = 60.0;
+        const double radius = 200;
 
-    if (GRID::circlePointCache_stats.hits == 0)
-    {
-      fprintf(stderr, "FAIL GridPointListCoordinatesTest: circle point cache was not used\n");
-      return 1;
-    }
+        T::GridValueList list;
+        msg->getGridValueListByCircle(
+            T::CoordinateTypeValue::LATLON_COORDINATES, lon0, lat0, radius, list);
 
-    printf("PASS GridPointListCoordinatesTest: %zu points match the single point method, "
-           "circle has %u points\n",
-           points.size(), len);
-    return 0;
-  }
-  catch (Fmi::Exception &e)
-  {
-    e.printError();
-    fprintf(stderr, "FAIL GridPointListCoordinatesTest: exception\n");
-    return 1;
-  }
+        uint len = list.getLength();
+        BOOST_TEST_REQUIRE(len > 0U);
+
+        for (uint t = 0; t < len; t++)
+        {
+          T::GridValue rec;
+          list.getGridValueByIndex(t, rec);
+          BOOST_TEST_INFO("circle point (" << rec.mX << "," << rec.mY << ")");
+          BOOST_TEST(latlon_distance(lat0, lon0, rec.mY, rec.mX) <= radius);
+        }
+
+        // The second call uses the cached circle points and must give exactly the same result
+
+        T::GridValueList list2;
+        msg->getGridValueListByCircle(
+            T::CoordinateTypeValue::LATLON_COORDINATES, lon0, lat0, radius, list2);
+
+        BOOST_TEST_REQUIRE(list2.getLength() == len);
+
+        for (uint t = 0; t < len; t++)
+        {
+          T::GridValue rec1;
+          T::GridValue rec2;
+          list.getGridValueByIndex(t, rec1);
+          list2.getGridValueByIndex(t, rec2);
+          BOOST_TEST_INFO("cached circle point " << t);
+          BOOST_TEST(rec1.mX == rec2.mX);
+          BOOST_TEST(rec1.mY == rec2.mY);
+          BOOST_TEST(rec1.mValue == rec2.mValue);
+        }
+
+        BOOST_TEST(GRID::circlePointCache_stats.hits > 0U, "circle point cache was not used");
+      });
 }

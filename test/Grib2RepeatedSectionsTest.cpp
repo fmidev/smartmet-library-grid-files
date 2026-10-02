@@ -1,35 +1,29 @@
-// A GRIB2_FIXTURE message may contain several fields, each repeating sections 2-7,
-// 3-7 or 4-7 of the message (WMO manual on codes, GRIB2_FIXTURE regulation 92.1.3).
+// A GRIB2 message may contain several fields, each repeating sections 2-7,
+// 3-7 or 4-7 of the message (WMO manual on codes, GRIB2 regulation 92.1.3).
 // The test assembles such a message from three single-field messages and
 // checks that every field is found and decoded both when the whole file is
 // read and when the fields are loaded lazily from their stored positions.
 
+#define BOOST_TEST_MODULE Grib2RepeatedSectionsTest
+#include <boost/test/included/unit_test.hpp>
+
+#include "TestCommon.h"
 #include "../src/grid/GridFile.h"
 #include "../src/grid/Message.h"
 #include "../src/identification/GridDef.h"
-#include <macgyver/Exception.h>
 
-#include <sys/stat.h>
 #include <cstdint>
-#include <cstdio>
 #include <fstream>
 #include <iterator>
 #include <string>
-#include <unistd.h>
 #include <vector>
 
 using namespace SmartMet;
+using namespace GridTest;
 
 namespace
 {
-const char *CONFIG = "/usr/share/smartmet/test/grid/library/grid-files.conf";
-const char *GRIB2_FIXTURE = "/usr/share/smartmet/test/data/grib/climate/tmax.grib";
-
-bool exists(const char *path)
-{
-  struct stat st;
-  return stat(path, &st) == 0 && st.st_size > 0;
-}
+const std::string GRIB2_FIXTURE = testData("grib/climate/tmax.grib");
 
 using Bytes = std::vector<unsigned char>;
 
@@ -64,88 +58,71 @@ bool same_values(GRID::Message *a, GRID::Message *b)
   b->getGridValueVector(vb);
   return !va.empty() && va == vb;
 }
-}  // namespace
 
-int main()
+// Assemble one message with three fields: field 1 has sections 1-7, field 2 repeats sections
+// 4-7 and field 3 repeats sections 3-7
+std::string assemble(const Bytes &file)
 {
-  if (!exists(CONFIG) || !exists(GRIB2_FIXTURE))
+  std::vector<const unsigned char *> msgs;
+  const unsigned char *p = file.data();
+  for (int i = 0; i < 3; i++)
   {
-    printf("SKIP Grib2RepeatedSectionsTest: test fixtures not installed\n");
-    return 0;
+    msgs.push_back(p);
+    p += be(p + 8, 8);
   }
 
-  try
-  {
-    Identification::gridDef.init(CONFIG);
+  auto s0 = sections(msgs[0]);
+  auto s1 = sections(msgs[1]);
+  auto s2 = sections(msgs[2]);
 
-    std::ifstream in(GRIB2_FIXTURE, std::ios::binary);
-    Bytes file((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+  Bytes body;
+  for (int i = 1; i <= 7; i++)
+    body.insert(body.end(), s0[i].begin(), s0[i].end());
+  for (int i = 4; i <= 7; i++)
+    body.insert(body.end(), s1[i].begin(), s1[i].end());
+  for (int i = 3; i <= 7; i++)
+    body.insert(body.end(), s2[i].begin(), s2[i].end());
 
-    // The first three messages of the fixture
-    std::vector<const unsigned char *> msgs;
-    const unsigned char *p = file.data();
-    for (int i = 0; i < 3; i++)
-    {
-      msgs.push_back(p);
-      p += be(p + 8, 8);
-    }
+  Bytes grib(msgs[0], msgs[0] + 16);
+  const std::uint64_t total = 16 + body.size() + 4;
+  for (int i = 0; i < 8; i++)
+    grib[8 + i] = static_cast<unsigned char>(total >> (8 * (7 - i)));
+  grib.insert(grib.end(), body.begin(), body.end());
+  for (char c : std::string("7777"))
+    grib.push_back(static_cast<unsigned char>(c));
 
-    auto s0 = sections(msgs[0]);
-    auto s1 = sections(msgs[1]);
-    auto s2 = sections(msgs[2]);
+  return std::string(grib.begin(), grib.end());
+}
+}  // namespace
 
-    // Field 1: sections 1-7, field 2: sections 4-7, field 3: sections 3-7
-    Bytes body;
-    for (int i = 1; i <= 7; i++)
-      body.insert(body.end(), s0[i].begin(), s0[i].end());
-    for (int i = 4; i <= 7; i++)
-      body.insert(body.end(), s1[i].begin(), s1[i].end());
-    for (int i = 3; i <= 7; i++)
-      body.insert(body.end(), s2[i].begin(), s2[i].end());
+BOOST_AUTO_TEST_CASE(repeated_sections, *fixtures({CONFIG, GRIB2_FIXTURE}))
+{
+  requireFixture(CONFIG);
+  requireFixture(GRIB2_FIXTURE);
 
-    Bytes grib(msgs[0], msgs[0] + 16);
-    const std::uint64_t total = 16 + body.size() + 4;
-    for (int i = 0; i < 8; i++)
-      grib[8 + i] = static_cast<unsigned char>(total >> (8 * (7 - i)));
-    grib.insert(grib.end(), body.begin(), body.end());
-    for (char c : std::string("7777"))
-      grib.push_back(static_cast<unsigned char>(c));
-
-    char tmpname[] = "/tmp/grib2repeated-XXXXXX";
-    int fd = mkstemp(tmpname);
-    if (fd < 0 || write(fd, grib.data(), grib.size()) != static_cast<ssize_t>(grib.size()))
-    {
-      fprintf(stderr, "FAIL Grib2RepeatedSectionsTest: cannot write a temporary file\n");
-      return 1;
-    }
-    close(fd);
-
-    GRID::GridFile original;
-    original.read(std::string(GRIB2_FIXTURE));
-
-    int ret = 0;
-    {
-      GRID::GridFile gf;
-      gf.read(std::string(tmpname));
-
-      if (gf.getNumberOfMessages() != 3)
+  withFmiErrors(
+      []
       {
-        fprintf(stderr, "FAIL Grib2RepeatedSectionsTest: expected 3 fields, got %u\n",
-                static_cast<unsigned>(gf.getNumberOfMessages()));
-        ret = 1;
-      }
-      else
-      {
+        Identification::gridDef.init(CONFIG);
+
+        std::ifstream in(GRIB2_FIXTURE, std::ios::binary);
+        Bytes file((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+        TempFile tmp(assemble(file), "grib2repeated");
+
+        GRID::GridFile original;
+        original.read(GRIB2_FIXTURE);
+
+        GRID::GridFile gf;
+        gf.read(tmp.name());
+        BOOST_TEST_REQUIRE(gf.getNumberOfMessages() == 3U);
+
         for (uint i = 0; i < 3; i++)
-          if (!same_values(gf.getMessageByIndex(i), original.getMessageByIndex(i)))
-          {
-            fprintf(stderr, "FAIL Grib2RepeatedSectionsTest: field %u differs\n", i);
-            ret = 1;
-          }
+          BOOST_TEST(same_values(gf.getMessageByIndex(i), original.getMessageByIndex(i)),
+                     "field " << i << " differs");
 
         // Lazy loading from the stored positions, as the grid engine does
         GRID::GridFile lazy;
-        lazy.setFileName(tmpname);
+        lazy.setFileName(tmp.name());
         for (uint i = 0; i < 3; i++)
         {
           GRID::MessageInfo info;
@@ -158,24 +135,9 @@ int main()
         for (uint i = 0; i < 3; i++)
         {
           auto *msg = lazy.getMessageByIndex(i);
-          if (msg == nullptr || !same_values(msg, original.getMessageByIndex(i)))
-          {
-            fprintf(stderr, "FAIL Grib2RepeatedSectionsTest: lazily loaded field %u differs\n", i);
-            ret = 1;
-          }
+          BOOST_TEST_REQUIRE(msg != nullptr);
+          BOOST_TEST(same_values(msg, original.getMessageByIndex(i)),
+                     "lazily loaded field " << i << " differs");
         }
-      }
-    }
-
-    unlink(tmpname);
-    if (ret == 0)
-      printf("OK Grib2RepeatedSectionsTest\n");
-    return ret;
-  }
-  catch (...)
-  {
-    Fmi::Exception e(BCP, "Grib2RepeatedSectionsTest failed", nullptr);
-    e.printError();
-    return 1;
-  }
+      });
 }

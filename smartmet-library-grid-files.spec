@@ -4,7 +4,7 @@
 Summary: grid file handling library
 Name: %{SPECNAME}
 Version: 26.10.2
-Release: 1%{?dist}.fmi
+Release: 2%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
 URL: https://github.com/fmidev/smartmet-library-grid-files
@@ -55,6 +55,17 @@ Requires: smartmet-library-macgyver >= 26.10.2
 Requires: smartmet-library-spine >= 26.9.23
 Requires: smartmet-library-trax >= 26.6.26
 Requires: smartmet-topography-data >= 1.0.0
+#TestRequires: %{smartmet_boost}-devel
+#TestRequires: gcc-c++
+#TestRequires: make
+#TestRequires: gdal312-devel
+#TestRequires: geos313-devel
+#TestRequires: libwebp13-devel >= 1.3.2
+#TestRequires: smartmet-library-macgyver-devel >= 26.10.2
+#TestRequires: smartmet-library-newbase-devel >= 26.9.23
+#TestRequires: smartmet-library-spine-devel >= 26.9.23
+#TestRequires: smartmet-library-trax-devel >= 26.6.26
+#TestRequires: smartmet-test-data >= 26.8.26
 
 %description
 FMI Grid File handling library
@@ -100,6 +111,22 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Fri Oct 02 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.2-2.fmi
+- Mercator grids no longer return inf coordinates (wrong latitude of origin)
+- Rotated latlon grid point searches no longer round coordinates to 0.01 degrees, which moved
+  the result by up to half a grid cell on fine grids
+- Fixed increments derived from the first and last grid points (n vs n-1, GRIB1 units) and made
+  GRIB1 rotated latlon coordinates and grid point searches use the same increments
+- GRIB1 latlon increments are refined from the first and last grid points, removing a drift of
+  up to a grid cell caused by the millidegree rounding of the coded increments
+- Points on the first row or column are no longer reported outside the grid due to round-off
+- GRIB2 files with reduced grids (optional list of numbers of points) can be read
+- GRIB1 second order packing written by ecCodes is decoded
+- GRIB1 Gaussian grids return coordinates by grid point
+- Tests use Boost.Test, run in CI and fail when their fixtures are missing; new tests decode
+  synthetic GRIB1/GRIB2 files of all common grid types and packings against ecCodes, and
+  round-trip coordinates for every configured geometry
+
 * Fri Oct 02 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.2-1.fmi
 - Use Fmi::Cache::Cache again instead of Fmi::Cache::ClockCache, which was removed from macgyver
   26.10.2 since Fmi::Cache::Cache now uses the same CLOCK eviction. CLOCK is faster than LRU since
