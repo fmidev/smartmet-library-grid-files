@@ -401,6 +401,11 @@ void GridSection::read(MemoryReader& memoryReader)
       if (pos > sectionEnd)
         throw Fmi::Exception(BCP,"The grid definition extends beyond the end of the grid section");
 
+      // The section length comes from the file: never read (or allocate) beyond the data
+      const auto available = static_cast<std::uint64_t>(memoryReader.getEndPtr() - memoryReader.getReadPtr());
+      if (sectionEnd - pos > available)
+        throw Fmi::Exception(BCP,"The grid section extends beyond the end of the data");
+
       const auto count = (sectionEnd - pos) / octets;
       mDataPoints.clear();
       mDataPoints.reserve(count);

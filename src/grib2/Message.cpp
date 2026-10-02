@@ -1326,7 +1326,8 @@ bool Message::readInheritedSections(MemoryReader& memoryReader)
         std::uint64_t totalLength = 0;
         for (int i = 8; i < 16; i++)
           totalLength = (totalLength << 8) | p[i];
-        if (p + totalLength > readPtr)
+        // Compare lengths, not pointers: a crafted length would overflow the pointer
+        if (totalLength > static_cast<std::uint64_t>(readPtr - p))
           msgPtr = p;
         break;
       }
@@ -1360,6 +1361,8 @@ bool Message::readInheritedSections(MemoryReader& memoryReader)
         gridPtr = p;
       else if (num == SectionNumber::bitmap_section && p[5] == 0)
         bitmapPtr = p;  // bitmap indicator 0 = a bitmap follows
+      if (len > static_cast<std::uint64_t>(endPtr - p))
+        return false;
       p += len;
     }
 
