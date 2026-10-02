@@ -8,6 +8,8 @@
 #include <macgyver/Exception.h>
 #include <macgyver/FastMath.h>
 #include <ogr_spatialref.h>
+#include <vector>
+#include <cmath>
 
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
@@ -55,15 +57,21 @@ void NetCdfFile::readAttribute(MemoryReader& memoryReader,std::string& attrName,
   {
     uint nameLen = 0;
     memoryReader >> nameLen;
+
+    // The length comes from the file, it must fit in the remaining data
+    const UInt64 remaining = C_UINT64(memoryReader.getEndPtr() - memoryReader.getReadPtr());
+    if (C_UINT64(nameLen) > remaining)
+      throw Fmi::Exception(BCP,"Invalid NetCDF attribute name length!");
+
     if (nameLen > 0)
       nameLen = ((nameLen-1)/4 + 1) * 4;
 
-    char name[nameLen+1];
+    std::string name;
+    name.reserve(nameLen);
     for (uint n = 0; n<nameLen; n++)
-      name[n] = memoryReader.read_int8();
+      name += static_cast<char>(memoryReader.read_int8());
 
-    name[nameLen] = '\0';
-    attrName = name;
+    attrName = name.c_str();
 
 
     uint attrType = 0;
@@ -71,6 +79,10 @@ void NetCdfFile::readAttribute(MemoryReader& memoryReader,std::string& attrName,
 
     uint attrCount = 0;
     memoryReader >> attrCount;
+
+    // Every element takes at least one byte of the remaining data
+    if (C_UINT64(attrCount) > C_UINT64(memoryReader.getEndPtr() - memoryReader.getReadPtr()))
+      throw Fmi::Exception(BCP,"Invalid NetCDF attribute value count!");
 
     memoryReader.setNetworkByteOrder(true);
 
@@ -853,6 +865,10 @@ void NetCdfFile::readPropertyList(MemoryReader& memoryReader)
     {
       uint nameLen = 0;
       memoryReader >> nameLen;
+      // The length comes from the file, it must fit in the remaining data
+      if (C_UINT64(nameLen) > C_UINT64(memoryReader.getEndPtr() - memoryReader.getReadPtr()))
+        throw Fmi::Exception(BCP,"Invalid NetCDF name length!");
+
       uint paddedLen = nameLen;
       if (nameLen > 0)
         paddedLen = ((nameLen-1)/4 + 1) * 4;
@@ -924,6 +940,10 @@ void NetCdfFile::readPropertyList(MemoryReader& memoryReader)
       // Variable name
       uint nameLen = 0;
       memoryReader >> nameLen;
+      // The length comes from the file, it must fit in the remaining data
+      if (C_UINT64(nameLen) > C_UINT64(memoryReader.getEndPtr() - memoryReader.getReadPtr()))
+        throw Fmi::Exception(BCP,"Invalid NetCDF name length!");
+
       uint paddedLen = nameLen;
       if (nameLen > 0)
         paddedLen = ((nameLen-1)/4 + 1) * 4;
@@ -993,6 +1013,9 @@ void NetCdfFile::readPropertyList(MemoryReader& memoryReader)
         offset = memoryReader.read_uint32();
       else
         offset = memoryReader.read_uint64();
+
+      if (ncType < 1 || ncType > 6)
+        throw Fmi::Exception(BCP,"Invalid NetCDF variable type!");
 
       uint items = vSize/typeSize[ncType];
 
@@ -1088,6 +1111,9 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
             for (auto itm = dd->second.begin(); itm != dd->second.end(); ++itm)
             {
               int i = atoi(itm->c_str());
+              // The dimension index comes from the file
+              if (i < 0 || C_UINT64(i) >= dl->second.size() || C_UINT64(i) >= dn->second.size())
+                throw Fmi::Exception(BCP,"Invalid NetCDF dimension index!");
               int ii = atoi(dl->second[i].c_str());
               std::string n = dn->second[i].c_str();
               //printf("DIM [%s][%s][%s]\n",itm->c_str(),dl->second[i].c_str(),dn->second[i].c_str());
@@ -1203,7 +1229,13 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
             std::string gridMapping;
             getProperty(*it + ".grid_mapping", 0, gridMapping);
 
-            uint dataSize = xCount * yCount * typeSize[dataType];
+            // The dimensions come from the file
+            if (xCount <= 0 || yCount <= 0)
+              throw Fmi::Exception(BCP,"Invalid NetCDF grid dimensions!");
+            const UInt64 dataSize64 = C_UINT64(xCount) * C_UINT64(yCount) * C_UINT64(typeSize[dataType]);
+            if (dataSize64 > 0xFFFFFFFFULL)
+              throw Fmi::Exception(BCP,"NetCDF grid is too large!");
+            uint dataSize = C_UINT(dataSize64);
 
 
             if (!xUnits.empty())
@@ -1278,10 +1310,17 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
             if (itemCount > 1)
               tc = 1;
 
+            // Every time step needs data, so the step count cannot exceed the file size
+            if (timeCount < 0 || C_UINT64(tc) * std::max<UInt64>(1, timeValues.size()) > memoryReader.getDataSize())
+              throw Fmi::Exception(BCP,"Invalid NetCDF time dimension!");
+
             for (uint t=0; t<tc; t++)
             {
               for (auto v = timeValues.begin(); v != timeValues.end(); ++v)
               {
+                // The values come from the file, they must be convertible to time_t
+                if (!std::isfinite(*v) || std::fabs(*v) > 1e12)
+                  throw Fmi::Exception(BCP,"Invalid NetCDF time value!");
                 time_t ttt = (time_t)(*v)*(time_t)unitSize+(time_t)t*(time_t)unitSize;
                 //printf("TimeT %ld %f %ld\n",ttt,*v,unitSize);
                 time_t tt = getGregorianTimeT(year,month,day,hour,minute,second,ttt);
@@ -1319,6 +1358,11 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
               getProperty(levelName + ".items", 0, itemCount);
 
               readValues(memoryReader,type,itemCount,offset,baseValue,scaleFactor,levelList);
+
+              // The level values are stored as integers
+              for (auto lv : levelList)
+                if (!std::isfinite(lv) || std::fabs(lv) > 2e9)
+                  throw Fmi::Exception(BCP,"Invalid NetCDF level value!");
             }
             else
             {
@@ -1385,7 +1429,7 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
               }
               else
               {
-                if (((int)itemCount/xCount) == yCount)
+                if (xCount > 0 && ((int)itemCount/xCount) == yCount)
                 {
                   FloatVec coordinates;
                   readValues(memoryReader,type,itemCount,offset,baseValue,scaleFactor*yScale,coordinates);
@@ -1462,7 +1506,7 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
               }
             }
 
-            char projectionString[300];
+            char projectionString[4000];
             projectionString[0] = '\0';
             char sm[100];
             char *p = sm;
@@ -1512,7 +1556,7 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
               transformation->Transform(1,&startx,&starty);
               OCTDestroyCoordinateTransformation(transformation);
 
-              sprintf(projectionString,"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;description",
+              snprintf(projectionString,sizeof(projectionString),"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;description",
                   T::GridProjectionValue::PolarStereographic,(int)mXCoordinates.size(),(int)mYCoordinates.size(),
                   startx,starty,fabs(dx),fabs(dy),sm,straight_vertical_longitude_from_pole,latitude_of_projection_origin);
 
@@ -1559,7 +1603,7 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
               transformation->Transform(1,&startx,&starty);
               OCTDestroyCoordinateTransformation(transformation);
 
-              sprintf(projectionString,"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;description",
+              snprintf(projectionString,sizeof(projectionString),"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;description",
                   T::GridProjectionValue::LambertAzimuthalEqualArea,(int)mXCoordinates.size(),(int)mYCoordinates.size(),
                   startx,starty,fabs(dx),fabs(dy),sm,latitude_of_projection_origin,longitude_of_projection_origin);
 
@@ -1570,8 +1614,8 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
               }
               else
               {
-                char tmp[1000];
-                sprintf(tmp,"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;0.000000;0.000000;description",
+                char tmp[4000];
+                snprintf(tmp,sizeof(tmp),"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;0.000000;0.000000;description",
                     T::GridProjectionValue::LambertAzimuthalEqualArea,(int)mXCoordinates.size(),(int)mYCoordinates.size(),
                     startx,starty,fabs(dx),fabs(dy),sm,latitude_of_projection_origin,longitude_of_projection_origin);
                 std::cout << "#### Geometry not found ####\n";
@@ -1624,7 +1668,7 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
               double sy = -90.0;
 
               //# LAMBERT CONFORMAL : projection,id,name,ni,nj,first_lon,first_lat,di,dj,scanning_mode,orientation,latin1,latin2,south_pole_lon,south_pole_lat,LaD,earthSemiMajor,earthSemiMinor,description
-              sprintf(projectionString,"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;%.6f;%.6f;%.6f;%.6f;description",
+              snprintf(projectionString,sizeof(projectionString),"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;%.6f;%.6f;%.6f;%.6f;description",
                 T::GridProjectionValue::LambertConformal,(int)mXCoordinates.size(),(int)mYCoordinates.size(),startx,starty,fabs(dx),fabs(dy),
                 sm,longitude_of_central_meridian,latitude_of_projection_origin,latitude_of_projection_origin,sx,sy,latitude_of_projection_origin);
 
@@ -1636,8 +1680,8 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
               }
               else
               {
-                char tmp[1000];
-                sprintf(tmp,"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;%.6f;%.6f;%.6f;%.6f;description",
+                char tmp[4000];
+                snprintf(tmp,sizeof(tmp),"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;%.6f;%.6f;%.6f;%.6f;description",
                   T::GridProjectionValue::LambertConformal,(int)mXCoordinates.size(),(int)mYCoordinates.size(),startx,starty,fabs(dx),fabs(dy),
                   sm,longitude_of_central_meridian,latitude_of_projection_origin,latitude_of_projection_origin,sx,sy,latitude_of_projection_origin);
                 std::cout << "#### Geometry not found ####\n";
@@ -1654,7 +1698,7 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
 
               projectionId = T::GridProjectionValue::LatLon;
 
-              sprintf(projectionString,"%d;id;name;%u;%u;%.6f;%.6f;%.6f;%.6f;%s;description",
+              snprintf(projectionString,sizeof(projectionString),"%d;id;name;%u;%u;%.6f;%.6f;%.6f;%.6f;%s;description",
                 T::GridProjectionValue::LatLon,(int)mXCoordinates.size(),(int)mYCoordinates.size(),
                 startx,starty,fabs(dx),fabs(dy),sm);
 
@@ -1665,8 +1709,8 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
               }
               else
               {
-                char tmp[1000];
-                sprintf(tmp,"%d;id;name;%u;%u;%.6f;%.6f;%.6f;%.6f;%s;0.000000;0.000000;description",
+                char tmp[4000];
+                snprintf(tmp,sizeof(tmp),"%d;id;name;%u;%u;%.6f;%.6f;%.6f;%.6f;%s;0.000000;0.000000;description",
                   T::GridProjectionValue::LatLon,(int)mXCoordinates.size(),(int)mYCoordinates.size(),
                   startx,starty,fabs(dx),fabs(dy),sm);
                 std::cout << "#### Geometry not found ####\n";
@@ -1683,9 +1727,12 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
             {
               for (auto lIt = levelList.begin(); lIt != levelList.end(); lIt++)
               {
+                if (C_UINT64(dataStartOffset) + dataSize > memoryReader.getDataSize())
+                  throw Fmi::Exception(BCP,"NetCDF data is outside of the file!");
+
                 MessageInfo msg;
                 msg.mProjectionId = projectionId;
-                msg.mMessageType = T::FileTypeValue::NetCdf4;
+                msg.mMessageType = T::FileTypeValue::NetCdf3;
                 msg.mGeometryId = geometryId;
                 msg.mFilePosition = dataStartOffset;
                 msg.mMessageSize = dataSize;
@@ -1772,20 +1819,17 @@ void NetCdfFile::getAttributeList(const char *variableName,const std::string& pr
       const char *s = pr->first.c_str();
       if (strncasecmp(s,variableName,len) == 0 &&  s[len] == '.')
       {
-        char value[10000];
-        char *p = value;
-        *p = '\0';
+        // The attribute names and values come from the file and may be long
+        std::string value;
         for (auto it = pr->second.begin(); it != pr->second.end(); ++it)
         {
           if (it != pr->second.begin())
-            p += sprintf(p," ");
-
-          p += sprintf(p,"%s",(*it).c_str());
+            value += " ";
+          value += *it;
         }
 
-        char name[300];
-        sprintf(name, "%s%s", prefix.c_str(),s);
-        attributeList.addAttribute(name, value);
+        std::string name = prefix + s;
+        attributeList.addAttribute(name.c_str(), value);
       }
     }
   }

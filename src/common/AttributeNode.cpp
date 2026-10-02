@@ -3,6 +3,8 @@
 #include <macgyver/Hash.h>
 #include <macgyver/Exception.h>
 
+#include <utility>
+
 
 
 namespace SmartMet
@@ -54,7 +56,7 @@ AttributeNode::AttributeNode(const char *name,std::string value)
   try
   {
     mName = name;
-    mValue = value;
+    mValue = std::move(value);
   }
   catch (...)
   {
@@ -129,7 +131,7 @@ std::shared_ptr<AttributeNode> AttributeNode::addAttribute(const char *name,std:
 {
   try
   {
-    std::shared_ptr<AttributeNode> rec(new AttributeNode(name,value));
+    std::shared_ptr<AttributeNode> rec(new AttributeNode(name,std::move(value)));
     mSubAttributes.push_back(rec);
     return rec;
   }

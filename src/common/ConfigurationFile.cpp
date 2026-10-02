@@ -15,7 +15,6 @@
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
 
 
-#define MAX_CONFIG_FILE_SIZE 100000
 
 namespace SmartMet
 {
@@ -170,11 +169,25 @@ void ConfigurationFile::readFile(const std::string& filename)
       throw exception;
     }
 
-    char st[MAX_CONFIG_FILE_SIZE];
-    char newst[MAX_CONFIG_FILE_SIZE];
-    UInt64 positions[MAX_CONFIG_FILE_SIZE];
-    UInt64 newpositions[MAX_CONFIG_FILE_SIZE];
-    int n = fread(st,1,MAX_CONFIG_FILE_SIZE,file);
+    // Read the whole file, the size is not limited
+    fseek(file,0,SEEK_END);
+    long fileSize = ftell(file);
+    fseek(file,0,SEEK_SET);
+    if (fileSize < 0)
+      fileSize = 0;
+
+    // Room for the terminating null character
+    std::vector<char> stVec(fileSize + 1);
+    // Separators are expanded to three characters when comments are removed
+    std::vector<char> newstVec(3 * fileSize + 1);
+    std::vector<UInt64> positionsVec(fileSize + 1);
+    std::vector<UInt64> newpositionsVec(3 * fileSize + 1);
+    char *st = stVec.data();
+    char *newst = newstVec.data();
+    UInt64 *positions = positionsVec.data();
+    UInt64 *newpositions = newpositionsVec.data();
+
+    int n = fread(st,1,fileSize,file);
     fclose(file);
 
     if (n > 0)
@@ -651,7 +664,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,std::vector<
         if (attr->mName[len] == '.')
         {
           std::string itm;
-          std::size_t p = attr->mName.find(".",len+1);
+          std::size_t p = attr->mName.find('.',len+1);
 
           if (p != std::string::npos)
           {
@@ -713,7 +726,7 @@ uint ConfigurationFile::getArraySize(const char *attributeName)
         {
           std::string itm;
 
-          std::size_t p = attr->mName.find(".",len+1);
+          std::size_t p = attr->mName.find('.',len+1);
           if (p != std::string::npos)
             itm = attr->mName.substr(len+1,p-len-1);
           else
@@ -763,7 +776,7 @@ bool ConfigurationFile::getAttributeFields(const char *attributeName,std::set<st
         if (attr->mName[len] == '.')
         {
           std::string itm;
-          std::size_t p = attr->mName.find(".",len+1);
+          std::size_t p = attr->mName.find('.',len+1);
           if (p != std::string::npos)
             itm = attr->mName.substr(len+1,p-len-1);
           else
@@ -958,7 +971,7 @@ std::string ConfigurationFile::parseValue(const std::string& value)
       p1 = val.find("$(");
       if (p1 != std::string::npos)
       {
-        std::size_t p2 = val.find(")",p1+1);
+        std::size_t p2 = val.find(')',p1+1);
         if (p2 != std::string::npos)
         {
           std::string var = val.substr(p1+2,p2-p1-2);
@@ -1018,7 +1031,7 @@ std::string ConfigurationFile::parseConstValue(const std::string& value)
       p1 = val.find("%(");
       if (p1 != std::string::npos)
       {
-        std::size_t p2 = val.find(")",p1+1);
+        std::size_t p2 = val.find(')',p1+1);
         if (p2 != std::string::npos)
         {
           std::string var = val.substr(p1+2,p2-p1-2);
@@ -1207,7 +1220,7 @@ void ConfigurationFile::getWords(char *st,UInt64 *positions,std::vector<std::str
   FUNCTION_TRACE
   try
   {
-    char buf[10000];
+    std::string buf;
     uint a = 0;
     uint c = 0;
     bool ind = false;
@@ -1218,17 +1231,17 @@ void ConfigurationFile::getWords(char *st,UInt64 *positions,std::vector<std::str
 
       if ((!ind  &&  st[a] <= ' '))
       {
-        buf[c] = '\0';
         if (c > 0)
         {
           words.emplace_back(buf);
           wordPositions.emplace_back(positions[a-c]);
         }
+        buf.clear();
         c = 0;
       }
       else
       {
-        buf[c] = st[a];
+        buf += st[a];
         c++;
       }
 
@@ -1237,7 +1250,6 @@ void ConfigurationFile::getWords(char *st,UInt64 *positions,std::vector<std::str
 
     if (c > 0)
     {
-      buf[c] = '\0';
       words.emplace_back(buf);
       wordPositions.emplace_back(positions[a-c]);
     }
@@ -1343,7 +1355,7 @@ int ConfigurationFile::readValue(std::vector<std::string>& words,std::vector<UIn
     else
     if (words[pos] == "[")
     {
-      char tmp[1000];
+      std::string tmp;
       uint index = 0;
       T::Attribute attr;
       attr.mName = path + "[]";
@@ -1358,8 +1370,8 @@ int ConfigurationFile::readValue(std::vector<std::string>& words,std::vector<UIn
         bool idxFound = true;
         while (idxFound)
         {
-          sprintf(tmp,"%s.%u",path.c_str(),index);
-          if (findAttribute(tmp))
+          tmp = path + "." + std::to_string(index);
+          if (findAttribute(tmp.c_str()))
             index++;
           else
             idxFound = false;
@@ -1370,7 +1382,7 @@ int ConfigurationFile::readValue(std::vector<std::string>& words,std::vector<UIn
       pos++;
       while (pos < len  &&  words[pos] != "]")
       {
-        sprintf(tmp,"%s.%u",path.c_str(),index);
+        tmp = path + "." + std::to_string(index);
         std::string newPath = tmp;
         pos = readValue(words,wordPositions,len,pos,newPath);
         index++;

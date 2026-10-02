@@ -1,4 +1,5 @@
 #include "Message.h"
+#include <ctime>
 #include "BitmapSection.h"
 #include "DataSection.h"
 #include "GridSection.h"
@@ -23,6 +24,7 @@
 #include "../common/ShowFunction.h"
 #include <iostream>
 #include <set>
+#include <utility>
 #include <sys/mman.h>
 #include <macgyver/FastMath.h>
 #include <macgyver/StringConversion.h>
@@ -30,6 +32,19 @@
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
 
+
+namespace
+{
+// Decoding is not retried for this many seconds after it has failed. The
+// failure may be transient, for example if the file was still being written,
+// so the message must not stay empty for the rest of its lifetime.
+constexpr time_t kDecodingRetryDelay = 60;
+
+bool decodingFailedRecently(time_t theFailureTime)
+{
+  return theFailureTime != 0 && time(nullptr) < theFailureTime + kDecodingRetryDelay;
+}
+}  // namespace
 
 namespace SmartMet
 {
@@ -50,7 +65,7 @@ Message::Message()
     mCacheKey = 0;
     mOrigCacheKey = 0;
     mOriginalFilePosition = 0;
-    mValueDecodingFailed = false;
+    mValueDecodingFailedTime = 0;
     mIsRead = false;
     mMessageSize = 0;
     mDataLocked = false;
@@ -88,7 +103,7 @@ Message::Message(GRID::GridFile *gridFile,T::MessageIndex messageIndex,GRID::Mes
     mCacheKey = 0;
     mOrigCacheKey = 0;
     mOriginalFilePosition = 0;
-    mValueDecodingFailed = false;
+    mValueDecodingFailedTime = 0;
     mIsRead = false;
     mDataLocked = false;
     mFileType = T::FileTypeValue::Grib2;
@@ -176,7 +191,7 @@ Message::Message(const Message& other)
     mCacheKey = 0;
     mOrigCacheKey = 0;
     mOriginalFilePosition = other.mOriginalFilePosition;
-    mValueDecodingFailed = other.mValueDecodingFailed;
+    mValueDecodingFailedTime = other.mValueDecodingFailedTime;
     mDataLocked = false;
   }
   catch (...)
@@ -1267,6 +1282,151 @@ void Message::read()
 
 
 
+/*! \brief Read the sections a repeated field inherits from the earlier fields of its message.
+
+    The read position must be at the first section of a field which repeats
+    sections 2-7, 3-7 or 4-7 of a GRIB2 message. The method finds the start of
+    the enclosing message, walks the section headers of the earlier fields and
+    reads the latest indicator, identification, local and grid sections, and the
+    latest bitmap section which defines a bitmap (a repeated field may refer to
+    it with bitmap indicator 254). The read position is restored.
+
+        \param memoryReader  This object controls the access to the memory mapped file.
+        \return              True if the position is inside a GRIB2 message at a section
+                             boundary, false otherwise (nothing is read).
+*/
+
+bool Message::readInheritedSections(MemoryReader& memoryReader)
+{
+  FUNCTION_TRACE
+  try
+  {
+    unsigned char* startPtr = memoryReader.getStartPtr();
+    unsigned char* readPtr = memoryReader.getReadPtr();
+    unsigned char* endPtr = memoryReader.getEndPtr();
+
+    if (readPtr + 5 > endPtr || readPtr < startPtr + 16)
+      return false;
+
+    auto be32 = [](const unsigned char* p) -> std::uint64_t
+    { return (std::uint64_t(p[0]) << 24) | (std::uint64_t(p[1]) << 16) | (std::uint64_t(p[2]) << 8) | p[3]; };
+
+    // Only sections 2-4 can start a repeated field
+    const auto first = readPtr[4];
+    if (first < SectionNumber::local_section || first > SectionNumber::product_section)
+      return false;
+
+    // Find the enclosing GRIB2 message: the nearest indicator section before the
+    // read position whose total length covers it.
+    unsigned char* msgPtr = nullptr;
+    for (unsigned char* p = readPtr - 16; p >= startPtr; --p)
+    {
+      if (p[0] == 'G' && p[1] == 'R' && p[2] == 'I' && p[3] == 'B' && p[7] == 2)
+      {
+        std::uint64_t totalLength = 0;
+        for (int i = 8; i < 16; i++)
+          totalLength = (totalLength << 8) | p[i];
+        if (p + totalLength > readPtr)
+          msgPtr = p;
+        break;
+      }
+      if (p == startPtr)
+        break;
+    }
+
+    if (msgPtr == nullptr)
+      return false;
+
+    // Walk the section headers up to the read position
+    unsigned char* identificationPtr = nullptr;
+    unsigned char* localPtr = nullptr;
+    unsigned char* gridPtr = nullptr;
+    unsigned char* bitmapPtr = nullptr;
+
+    unsigned char* p = msgPtr + 16;
+    while (p < readPtr)
+    {
+      if (p + 6 > endPtr)
+        return false;
+      const auto len = be32(p);
+      const auto num = p[4];
+      if (len < 5)
+        return false;
+      if (num == SectionNumber::identification_section)
+        identificationPtr = p;
+      else if (num == SectionNumber::local_section)
+        localPtr = p;
+      else if (num == SectionNumber::grid_section)
+        gridPtr = p;
+      else if (num == SectionNumber::bitmap_section && p[5] == 0)
+        bitmapPtr = p;  // bitmap indicator 0 = a bitmap follows
+      p += len;
+    }
+
+    // The read position must be at a section boundary of the message
+    if (p != readPtr || gridPtr == nullptr || identificationPtr == nullptr)
+      return false;
+
+    const auto readPos = memoryReader.getReadPosition();
+
+    memoryReader.setReadPtr(msgPtr);
+    {
+      IndicatorSection* section = new IndicatorSection();
+      section->setMessagePtr(this);
+      mIndicatorSection.reset(section);
+      section->read(memoryReader);
+    }
+
+    memoryReader.setReadPtr(identificationPtr);
+    {
+      IdentificationSection* section = new IdentificationSection();
+      section->setMessagePtr(this);
+      mIdentificationSection.reset(section);
+      section->read(memoryReader);
+    }
+
+    // A repeated field starting with section 2 or 3 has its own local and grid sections
+    if (localPtr != nullptr && first > SectionNumber::local_section)
+    {
+      memoryReader.setReadPtr(localPtr);
+      LocalSection* section = new LocalSection();
+      section->setMessagePtr(this);
+      mLocalSection.reset(section);
+      section->read(memoryReader);
+    }
+
+    if (first > SectionNumber::grid_section)
+    {
+      memoryReader.setReadPtr(gridPtr);
+      GridSection* section = new GridSection();
+      section->setMessagePtr(this);
+      mGridSection.reset(section);
+      section->read(memoryReader);
+    }
+
+    if (bitmapPtr != nullptr)
+    {
+      memoryReader.setReadPtr(bitmapPtr);
+      BitmapSection* section = new BitmapSection();
+      section->setMessagePtr(this);
+      BitmapSect_sptr bitmap(section);
+      section->read(memoryReader);
+      setPreviousBitmapSection(bitmap);
+    }
+
+    memoryReader.setReadPosition(readPos);
+    return true;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
 /*! \brief The method reads and initializes all data related to the current message object.
 
         \param memoryReader  This object controls the access to the memory mapped file.
@@ -1287,6 +1447,13 @@ void Message::read(MemoryReader& memoryReader)
     // Index of the section processed last (=none)
     std::uint8_t last_idx = 0u;
     bool begin = false;
+
+    // A GRIB2 message may contain several fields, each repeating sections 2-7,
+    // 3-7 or 4-7 of the message. A field which does not start with the
+    // indicator section is such a repetition: it inherits the missing sections
+    // from the fields before it, and its own sections are read from here on.
+    if (!memoryReader.peek_string("GRIB") && readInheritedSections(memoryReader))
+      begin = true;
 
     while (true)
     {
@@ -1858,7 +2025,7 @@ void Message::setBitmapSection(BitmapSect_sptr bitmapSection)
   FUNCTION_TRACE
   try
   {
-    mBitmapSection = bitmapSection;
+    mBitmapSection = std::move(bitmapSection);
   }
   catch (...)
   {
@@ -1906,7 +2073,7 @@ void Message::setIdentificationSection(IdentifSect_sptr identificationSection)
   FUNCTION_TRACE
   try
   {
-    mIdentificationSection = identificationSection;
+    mIdentificationSection = std::move(identificationSection);
   }
   catch (...)
   {
@@ -1954,7 +2121,7 @@ void Message::setGridSection(GridSect_sptr gridSection)
   FUNCTION_TRACE
   try
   {
-    mGridSection = gridSection;
+    mGridSection = std::move(gridSection);
   }
   catch (...)
   {
@@ -2002,7 +2169,7 @@ void Message::setRepresentationSection(RepresentSect_sptr representationSection)
   FUNCTION_TRACE
   try
   {
-    mRepresentationSection = representationSection;
+    mRepresentationSection = std::move(representationSection);
   }
   catch (...)
   {
@@ -2050,7 +2217,7 @@ void Message::setIndicatorSection(IndicatorSect_sptr indicatorSection)
   FUNCTION_TRACE
   try
   {
-    mIndicatorSection = indicatorSection;
+    mIndicatorSection = std::move(indicatorSection);
   }
   catch (...)
   {
@@ -2098,7 +2265,7 @@ void Message::setLocalSection(LocalSect_sptr localSection)
   FUNCTION_TRACE
   try
   {
-    mLocalSection = localSection;
+    mLocalSection = std::move(localSection);
   }
   catch (...)
   {
@@ -2146,7 +2313,7 @@ void Message::setProductSection(ProductSect_sptr productSection)
   FUNCTION_TRACE
   try
   {
-    mProductSection = productSection;
+    mProductSection = std::move(productSection);
   }
   catch (...)
   {
@@ -2194,7 +2361,7 @@ void Message::setDataSection(DataSect_sptr dataSection)
   FUNCTION_TRACE
   try
   {
-    mDataSection = dataSection;
+    mDataSection = std::move(dataSection);
   }
   catch (...)
   {
@@ -2251,7 +2418,7 @@ void Message::setPreviousBitmapSection(BitmapSect_sptr previousBitmapSection)
       {
         if (*indicator == refers_to_earlier_bitmap)
         {
-          mPreviousBitmapSection = previousBitmapSection;
+          mPreviousBitmapSection = std::move(previousBitmapSection);
         }
       }
     }
@@ -3166,10 +3333,9 @@ void Message::getGridValueVector(T::ParamValue_vec& values) const
 
     values.clear();
 
-    if (mValueDecodingFailed)
+    if (decodingFailedRecently(mValueDecodingFailedTime))
     {
-      // We have tried earlier to decode parameter values and failed. So, it
-      // does not make sense to try again.
+      // Decoding the values failed a moment ago. Do not retry yet.
       return;
     }
 
@@ -3202,7 +3368,7 @@ void Message::getGridValueVector(T::ParamValue_vec& values) const
       exception.addParameter("Filename",mGridFilePtr->getFileName());
       exception.addParameter("File position",Fmi::to_string(getFilePosition()));
       exception.addParameter("File size",Fmi::to_string((long)mGridFilePtr->getSize()));
-      mValueDecodingFailed = true;
+      mValueDecodingFailedTime = time(nullptr);
 
       if (mGridFilePtr->hasMemoryMapperError())
         throw exception;
@@ -3245,10 +3411,9 @@ void Message::getGridOriginalValueVector(T::ParamValue_vec& values) const
 
     values.clear();
 
-    if (mValueDecodingFailed)
+    if (decodingFailedRecently(mValueDecodingFailedTime))
     {
-      // We have tried earlier to decode parameter values and failed. So, it
-      // does not make sense to try again.
+      // Decoding the values failed a moment ago. Do not retry yet.
       return;
     }
 
@@ -3277,7 +3442,7 @@ void Message::getGridOriginalValueVector(T::ParamValue_vec& values) const
     {
       Fmi::Exception exception(BCP,"Operation failed!",nullptr);
       exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
-      mValueDecodingFailed = true;
+      mValueDecodingFailedTime = time(nullptr);
 
       if (mGridFilePtr->hasMemoryMapperError())
         throw exception;
@@ -3594,7 +3759,7 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
   FUNCTION_TRACE
   try
   {
-    if (mValueDecodingFailed)
+    if (decodingFailedRecently(mValueDecodingFailedTime))
     {
       // We have failed to decode parameter values
       return ParamValueMissing;
@@ -3673,7 +3838,7 @@ void Message::getGridValuesByPointList(std::vector<T::Point>& gridPoints,T::Para
     if (!sz)
       return;
 
-    if (mValueDecodingFailed)
+    if (decodingFailedRecently(mValueDecodingFailedTime))
     {
       // We have failed to decode parameter values
       return;
@@ -3792,7 +3957,7 @@ void Message::getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate
   try
   {
     // Value modifications and undecodable messages stay on the generic per-point path.
-    if (!modificationParameters.empty()  ||  mValueDecodingFailed)
+    if (!modificationParameters.empty()  ||  decodingFailedRecently(mValueDecodingFailedTime))
     {
       GRID::Message::getGridValueVectorByLatLonCoordinateList(coordinates,areaInterpolationMethod,modificationOperation,modificationParameters,values);
       return;

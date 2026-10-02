@@ -1,6 +1,7 @@
 #include "XmlElement.h"
 #include "GeneralFunctions.h"
 #include <macgyver/Exception.h>
+#include <vector>
 
 namespace SmartMet
 {
@@ -151,7 +152,9 @@ void XmlElement::parseXml(const char *data,int size,XmlElement& xmlRoot)
     int c = 0;
     int tagStart = -1;
     int valueStart = -1;
-    char buf[size];
+    // Room for the terminating null character when a tag ends at the last byte
+    std::vector<char> bufVec(size + 1);
+    char *buf = bufVec.data();
 
     while (c < size)
     {

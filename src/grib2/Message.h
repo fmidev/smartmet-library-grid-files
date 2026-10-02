@@ -197,6 +197,8 @@ class Message : public GRID::Message
 
   private:
 
+    bool                readInheritedSections(MemoryReader& memoryReader);
+
     /*! \brief  The message start position in the file. */
     T::FilePosition     mFilePosition;
 
@@ -240,8 +242,9 @@ class Message : public GRID::Message
     /*! \brief Indicates if the message is already read. */
     bool                mIsRead;
 
-    /*! \brief  A flag that indicates that the data decoding is impossible. */
-    mutable bool        mValueDecodingFailed;
+    /*! \brief  The time of the latest failed value decoding (0 = none). Decoding
+                is not retried for a while after a failure. */
+    mutable time_t      mValueDecodingFailedTime;
 
     mutable bool        mDataLocked;        //!< True while a concurrent thread holds the data for read.
 

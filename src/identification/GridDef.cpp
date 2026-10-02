@@ -3701,7 +3701,7 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
     if (latLonCoordinates && latLonCoordinates->size() > 0)
     {
       int last = latLonCoordinates->size() - 1;
-      char tmp[100];
+      char tmp[1400];  // four %.15f values of any magnitude
       sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",(*latLonCoordinates)[0].x(),(*latLonCoordinates)[0].y(),(*latLonCoordinates)[last].x(),(*latLonCoordinates)[last].y());
 
 

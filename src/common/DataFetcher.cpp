@@ -2,6 +2,7 @@
 #include "GeneralFunctions.h"
 #include <macgyver/Exception.h>
 #include "ShowFunction.h"
+#include <vector>
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
 
@@ -240,8 +241,8 @@ void DataFetcher::parseHeaders(char *data,int dataSize,std::map<std::string,std:
     if (dataSize <= 0)
       return;
 
-    char dat[dataSize];
-    memcpy(dat,data,dataSize);
+    std::vector<char> datVec(data,data + dataSize);
+    char *dat = datVec.data();
 
     int c = 0;
     char *p = dat;

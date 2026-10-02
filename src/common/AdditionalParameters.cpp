@@ -3,6 +3,7 @@
 #include "ShowFunction.h"
 
 #include <boost/cast.hpp>
+#include <utility>
 #include <macgyver/StringConversion.h>
 #include <macgyver/TimeParser.h>
 #include <macgyver/Astronomy.h>
@@ -149,7 +150,7 @@ bool AdditionalParameters::getParameterValueByLocation(
 
     if (param == "place")
     {
-      value = tag;
+      value = std::move(tag);
       //value = loc->name;
       return true;
     }

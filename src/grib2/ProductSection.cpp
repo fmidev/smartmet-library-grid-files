@@ -58,6 +58,7 @@
 #include "implementation/Product_73Impl.h"
 
 #include <iostream>
+#include <utility>
 #include <macgyver/StringConversion.h>
 
 namespace SmartMet
@@ -592,7 +593,7 @@ T::TimeString ProductSection::getForecastTime(T::TimeString referenceTime) const
     if (mProductDefinition == nullptr)
       throw Fmi::Exception(BCP,"The 'mProductDefinition' attribute points to nullptr!");
 
-    return mProductDefinition->getForecastTime(referenceTime);
+    return mProductDefinition->getForecastTime(std::move(referenceTime));
   }
   catch (...)
   {

@@ -105,7 +105,7 @@ uint QueryDataFile::getGeometryId()
   int cols = 0;
   int dx = 0;
   int dy = 0;
-  char projectionString[200];
+  char projectionString[4000];
   projectionString[0] = '\0';
 
   if (grid)
@@ -129,7 +129,7 @@ uint QueryDataFile::getGeometryId()
     case kNFmiYKJArea:
     case kNFmiGdalArea:
     {
-      sprintf(projectionString,"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;27.000000;0.000000;%.6f;%.6f;%.6f;%.6f;description",
+      snprintf(projectionString,sizeof(projectionString),"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;27.000000;0.000000;%.6f;%.6f;%.6f;%.6f;description",
           T::GridProjectionValue::TransverseMercator,
           cols,
           rows,
@@ -149,7 +149,7 @@ uint QueryDataFile::getGeometryId()
 
     case kNFmiStereographicArea:
     {
-      sprintf(projectionString,"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;description",
+      snprintf(projectionString,sizeof(projectionString),"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;description",
           T::GridProjectionValue::PolarStereographic,
           cols,
           rows,
@@ -169,7 +169,7 @@ uint QueryDataFile::getGeometryId()
       {
         double spole_x = 0.0;
         double spole_y = -90.0;
-        sprintf(projectionString,"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;%.6f;%.6f;%.6f;%.6f;description",
+        snprintf(projectionString,sizeof(projectionString),"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;%.6f;%.6f;%.6f;%.6f;description",
             T::GridProjectionValue::LambertConformal,
             cols,
             rows,
@@ -198,7 +198,7 @@ uint QueryDataFile::getGeometryId()
     {
       float dxx = (area->BottomRightLatLon().X() - area->BottomLeftLatLon().X()) / (float)(cols);
       float dyy = (area->TopLeftLatLon().Y() - area->BottomLeftLatLon().Y()) / (float)(rows-1);
-      sprintf(projectionString,"%d;id;name;%u;%u;%.6f;%.6f;%.6f;%.6f;%s;description",
+      snprintf(projectionString,sizeof(projectionString),"%d;id;name;%u;%u;%.6f;%.6f;%.6f;%.6f;%s;description",
         T::GridProjectionValue::LatLon,
         cols,
         rows,
@@ -228,7 +228,7 @@ uint QueryDataFile::getGeometryId()
         float dxx = (rotLon2 - rotLon1) / (float)(cols);
         float dyy = (rotLat2 - rotLat1) / (float)(rows-1);
         float angle = 0;
-        sprintf(projectionString,"%d;id;name;%u;%u;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;%.6f;description",
+        snprintf(projectionString,sizeof(projectionString),"%d;id;name;%u;%u;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;%.6f;description",
             T::GridProjectionValue::RotatedLatLon,
             cols,
             rows,

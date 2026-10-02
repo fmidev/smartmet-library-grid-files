@@ -480,7 +480,8 @@ void copyFile(const char *sourceFileName,const char *targetFileName,bool& shutdo
       throw exception;
     }
 
-    char buf[1000000];
+    std::vector<char> bufVec(1000000);
+    char *buf = bufVec.data();
     int nr;
     while (!shutdownRequested && (nr = fread(buf,1,1000000,sFile)) > 0)
     {
@@ -2768,10 +2769,10 @@ std::string getFileDir(const std::string& filename)
   try
   {
     std::string fname = getAbsoluteFilePath(filename);
-    std::string::size_type n = fname.rfind("/");
+    std::string::size_type n = fname.rfind('/');
     if (n != std::string::npos) return fname.substr(0, n);
 
-    n = fname.rfind("\\");
+    n = fname.rfind('\\');
     if (n != std::string::npos) return fname.substr(0, n);
 
     return std::string("");
@@ -3764,7 +3765,7 @@ double gregorian_to_jd(int year, int month, int day)
   try
   {
     return (1721425.5 - 1) +
-           (365 * (year - 1)) +
+           (365.0 * (year - 1.0)) +
            floor((year - 1) / 4) +
            (-floor((year - 1) / 100)) +
            floor((year - 1) / 400) +
@@ -3788,6 +3789,10 @@ void jdnToGregorian(double jd,int& year, int& month, int& day)
 {
   try
   {
+    // The year must fit into an int
+    if (!std::isfinite(jd) || std::fabs(jd) > 1e9)
+      throw Fmi::Exception(BCP,"Julian day number is out of range!");
+
     double wjd = floor(jd - 0.5) + 0.5;
     double depoch = wjd - 1721425.5;
     double quadricent = floor(depoch / 146097);
@@ -4381,7 +4386,7 @@ std::string replaceVariables(const std::string& str,std::map<std::string,std::st
       p1 = val.find("$(");
       if (p1 != std::string::npos)
       {
-        std::size_t p2 = val.find(")",p1+1);
+        std::size_t p2 = val.find(')',p1+1);
         if (p2 != std::string::npos)
         {
           std::string var = val.substr(p1+2,p2-p1-2);

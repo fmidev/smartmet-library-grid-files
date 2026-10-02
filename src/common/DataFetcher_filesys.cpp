@@ -5,6 +5,7 @@
 #include "AutoReadLock.h"
 #include "ShowFunction.h"
 #include <macgyver/Exception.h>
+#include <cstring>
 #include <sys/stat.h>
 #include <dirent.h>
 
@@ -197,13 +198,17 @@ int DataFetcher_filesys::getData(uint serverType,uint protocol,const char *serve
       AutoThreadLock lock(&fh->threadLock);
       if (fh->fileHandle)
       {
-        fseek(fh->fileHandle,filePosition,SEEK_SET);
+        if (fseek(fh->fileHandle,filePosition,SEEK_SET) != 0)
+          return 0;
+
         int n = fread(dataPtr,1,dataSize,fh->fileHandle);
         if (n < dataSize)
         {
           if (feof(fh->fileHandle))
           {
-            // We have reached the ene of the file
+            // We have reached the end of the file. The rest of the page must not contain
+            // stale data from earlier use of the buffer.
+            memset(dataPtr + n, 0, dataSize - n);
             return dataSize;
           }
           else

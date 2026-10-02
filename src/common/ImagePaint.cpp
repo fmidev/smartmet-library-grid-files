@@ -2,6 +2,7 @@
 #include "ImageFunctions.h"
 #include "MemoryReader.h"
 #include "ShowFunction.h"
+#include <vector>
 #include <macgyver/Exception.h>
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
@@ -380,7 +381,7 @@ void ImagePaint::paintPolygon(std::vector<T::Coordinate>& polygonPoints,uint _dr
     if (maxY >= mImageHeight)
       maxY = mImageHeight - 1;
 
-    double nodeX[10000] = {0};
+    std::vector<double> nodeX(10000, 0.0);
 
     for (int y = minY; y <= maxY; y++)
     {
@@ -400,16 +401,18 @@ void ImagePaint::paintPolygon(std::vector<T::Coordinate>& polygonPoints,uint _dr
         if ((yi < dy  &&  yj >= dy)  ||  (yj < dy &&  yi >= dy))
         {
           double xx = C_DOUBLE(xi + (y - yi)/(yj - yi)*(xj - xi));
+          if (nodes >= C_INT(nodeX.size()))
+            nodeX.resize(2 * nodeX.size());
           nodeX[nodes++] = C_DOUBLE(xx);
         }
         j = i;
       }
 
-      qsort(&nodeX, nodes, sizeof(double),compare_coordinates);
+      qsort(nodeX.data(), nodes, sizeof(double),compare_coordinates);
 
       for (int i=0; i<nodes; i+=2)
       {
-        if (nodeX[i] >= maxX  ||  (i+1) > nodes)
+        if (nodeX[i] >= maxX  ||  (i + 1) >= nodes)
           break;
 
         if (nodeX[i+1] > minX)
@@ -466,9 +469,9 @@ void ImagePaint::paintPolygonPath(std::vector<std::vector<T::Coordinate>>& polyg
     int maxY = 0;
     int minX = 0;
     int maxX = mImageWidth-1;
-    double nodeX[10000] = {0};
-    double pointsX[200000];
-    double pointsY[200000];
+    std::vector<double> nodeX(10000, 0.0);
+    std::vector<double> pointsX(200000);
+    std::vector<double> pointsY(200000);
 
     for (auto polygonPoints = polygonPath.begin(); polygonPoints != polygonPath.end(); ++polygonPoints)
     {
@@ -550,18 +553,20 @@ void ImagePaint::paintPolygonPath(std::vector<std::vector<T::Coordinate>>& polyg
           if ((yi < dy  &&  yj >= dy)  ||  (yj < dy &&  yi >= dy))
           {
             double xx = C_DOUBLE(xi + (y - yi)/(yj - yi)*(xj - xi));
+            if (nodes >= C_INT(nodeX.size()))
+              nodeX.resize(2 * nodeX.size());
             nodeX[nodes++] = C_DOUBLE(xx);
           }
           j = i;
         }
       }
-      qsort(&nodeX, nodes, sizeof(double),compare_coordinates);
+      qsort(nodeX.data(), nodes, sizeof(double),compare_coordinates);
 
       //  Fill the pixels between node pairs.
 
       for (int i=0; i<nodes; i+=2)
       {
-        if (nodeX[i] >= maxX  ||  (i+1) > nodes)
+        if (nodeX[i] >= maxX  ||  (i + 1) >= nodes)
           break;
 
         if (nodeX[i+1] > minX)

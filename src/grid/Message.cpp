@@ -646,7 +646,7 @@ void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::P
       {
         double x1 = 0.0, y1 = 0.0, x2 = 0.0, y2 = 0.0;
 
-        char tmp[100];
+        char tmp[1400];  // four %.15f values of any magnitude
 
         // Use the first and last grid points in storage order and normalize the
         // longitudes to [-180,180]. This matches what
@@ -718,7 +718,7 @@ void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::P
 
           latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
 
-          char tmp[200];
+          char tmp[1400];  // four %.15f values of any magnitude
           sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",lon1,lat1,lon2,lat2);
           attributeList.setAttribute("grid.llbox",tmp);
         }
@@ -1083,7 +1083,7 @@ void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::Attr
       {
         double x1 = 0.0, y1 = 0.0, x2 = 0.0, y2 = 0.0;
 
-        char tmp[100];
+        char tmp[1400];  // four %.15f values of any magnitude
 
         // Use the first and last grid points in storage order and normalize the
         // longitudes to [-180,180]. This matches what
@@ -1155,7 +1155,7 @@ void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::Attr
 
           latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
 
-          char tmp[200];
+          char tmp[1400];  // four %.15f values of any magnitude
           sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",lon1,lat1,lon2,lat2);
           attributeList.setAttribute("grid.llbox",tmp);
         }
@@ -1530,7 +1530,7 @@ void Message::getGridStreamlinesByGeometry(T::AttributeList& attributeList,uint 
       {
         double x1 = 0.0, y1 = 0.0, x2 = 0.0, y2 = 0.0;
 
-        char tmp[100];
+        char tmp[1400];  // four %.15f values of any magnitude
 
         // Use the first and last grid points in storage order and normalize the
         // longitudes to [-180,180]. This matches what
@@ -1602,7 +1602,7 @@ void Message::getGridStreamlinesByGeometry(T::AttributeList& attributeList,uint 
 
           latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
 
-          char tmp[200];
+          char tmp[1400];  // four %.15f values of any magnitude
           sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",lon1,lat1,lon2,lat2);
           attributeList.setAttribute("grid.llbox",tmp);
         }
@@ -3374,7 +3374,7 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,uint 
       {
         double x1 = 0.0, y1 = 0.0, x2 = 0.0, y2 = 0.0;
 
-        char tmp[100];
+        char tmp[1400];  // four %.15f values of any magnitude
 
         // Use the first and last grid points in storage order and normalize the
         // longitudes to [-180,180]. This matches what
@@ -3448,7 +3448,7 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,uint 
 
         latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
 
-        char tmp[200];
+        char tmp[1400];  // four %.15f values of any magnitude
         sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",lon1,lat1,lon2,lat2);
         attributeList.setAttribute("grid.llbox",tmp);
       }
@@ -3542,7 +3542,7 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,uint 
                   if (b.size() == 4)
                   {
                     std::swap(b[1],b[3]);
-                    char tmp[100];
+                    char tmp[1400];  // four %.15f values of any magnitude
                     sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",b[0],b[1],b[2],b[3]);
                     attributeList.setAttribute(boxAttr,tmp);
                   }
@@ -3585,7 +3585,7 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,uint 
                     while (b[li] > 180) b[li] -= 360;
                     while (b[li] <= -180) b[li] += 360;
                   }
-                  char tmp[100];
+                  char tmp[1400];  // four %.15f values of any magnitude
                   sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",b[0],b[1],b[2],b[3]);
                   attributeList.setAttribute(boxAttr,tmp);
                 }
@@ -3711,7 +3711,7 @@ void Message::getGridValueVectorByCrop(T::AttributeList& attributeList,uint modi
         getGridPointByLatLonCoordinates(lat1,lon1,x1,y1);
         getGridPointByLatLonCoordinates(lat2,lon2,x2,y2);
 
-        char tmp[200];
+        char tmp[1400];  // four %.15f values of any magnitude
         sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",lon1,lat1,lon2,lat2);
         attributeList.setAttribute("grid.crop.llbox",tmp);
       }
@@ -3810,7 +3810,7 @@ void Message::getGridValueVectorByCrop(T::AttributeList& attributeList,uint modi
       getGridOriginalCoordinatesByGridPoint(C_UINT(first->mX) % ww,C_UINT(first->mY),xx1,yy1);
       getGridOriginalCoordinatesByGridPoint(C_UINT(last->mX) % ww,C_UINT(last->mY),xx2,yy2);
 
-      char tmp[200];
+      char tmp[1400];  // four %.15f values of any magnitude
       sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",lon1,lat1,lon2,lat2);
       attributeList.setAttribute("grid.crop.llbox",tmp);
 

@@ -193,7 +193,7 @@ void Log::clear()
       file = nullptr;
     }
     open();
-    if (!enabled)
+    if (!enabled && file != nullptr)
     {
       fclose(file);
       file = nullptr;

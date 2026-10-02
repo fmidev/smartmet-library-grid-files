@@ -120,7 +120,11 @@ T::Coordinate_svec GaussianImpl::getGridOriginalCoordinatesNoCache() const
     if ((scanningMode & 0x80) != 0)
       iDirectionIncrement = -iDirectionIncrement;
 
-    double *lats = GRID::gaussianLatitudeCache.getLatitudes(nj,n);
+    // A sub-area grid starts at the Gaussian latitude of its northern edge
+    const double northLat = std::max(C_DOUBLE(mGridArea.getLatitudeOfFirstGridPoint()),
+                                     C_DOUBLE(mGridArea.getLatitudeOfLastGridPoint())) / 1000;
+    const uint firstRow = GRID::gaussianLatitudeCache.getFirstRow(nj,n,northLat);
+    double *lats = GRID::gaussianLatitudeCache.getLatitudes(nj,n) + firstRow;
 
     coordinateList->reserve(ni*nj);
 
@@ -256,15 +260,20 @@ bool GaussianImpl::getGridPointByOriginalCoordinates(double x,double y,double& g
     double latLow = 0;
     double latHigh = 0;
 
-    int t = GRID::gaussianLatitudeCache.getClosestLatitudes(nj,n,y,latLow,latHigh);
+    // A sub-area grid starts at the Gaussian latitude of its northern edge
+    const double northLat = std::max(C_DOUBLE(mGridArea.getLatitudeOfFirstGridPoint()),
+                                     C_DOUBLE(mGridArea.getLatitudeOfLastGridPoint())) / 1000;
+    const uint firstRow = GRID::gaussianLatitudeCache.getFirstRow(nj,n,northLat);
+    int t = GRID::gaussianLatitudeCache.getClosestLatitudes(nj,n,firstRow,y,latLow,latHigh);
     if (t < 0)
       return false;
 
     latLow += 90;
     latHigh += 90;
 
+    // An exact hit on a grid latitude gives latLow == latHigh
     double latDiff = aLat-latLow;
-    double j = t + latDiff / (latHigh-latLow);
+    double j = (latHigh == latLow ? C_DOUBLE(t) : t + latDiff / (latHigh-latLow));
 
     grid_i = i;
     grid_j = j;

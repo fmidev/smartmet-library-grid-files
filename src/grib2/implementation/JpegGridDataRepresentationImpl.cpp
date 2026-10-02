@@ -454,6 +454,12 @@ void JpegGridDataRepresentationImpl::decodeValues(Message *message, T::ParamValu
         //height = image->comps->h;
       }
 
+      if (image->numcomps < 1 || image->comps->data == nullptr)
+        throw Fmi::Exception(BCP, "JPEG-2000 image contains no data!");
+
+      // The decoded image size is independent of the GRIB value count
+      const std::size_t imageSize = C_UINT64(image->comps->w) * C_UINT64(image->comps->h);
+
       // Clear the output vector and reserve space
       decodedValues.clear();
       decodedValues.reserve(numOfValues);
@@ -487,6 +493,8 @@ void JpegGridDataRepresentationImpl::decodeValues(Message *message, T::ParamValu
         {
           if (bitmapReader.readBit())
           {
+            if (pos >= imageSize)
+              throw Fmi::Exception(BCP, "JPEG-2000 image contains fewer values than the bitmap!");
             int X = image->comps->data[pos];
             double Y = RDfac + X * EDfac;
             decodedValues.emplace_back(Y);
@@ -500,6 +508,9 @@ void JpegGridDataRepresentationImpl::decodeValues(Message *message, T::ParamValu
       }
       else
       {
+        if (imageSize < numOfValues)
+          throw Fmi::Exception(BCP, "JPEG-2000 image contains fewer values than the grid!");
+
         for (int t = 0; t < static_cast<int>(numOfValues); t++)
         {
           int X = image->comps->data[t];

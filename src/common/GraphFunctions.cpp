@@ -328,8 +328,7 @@ void getPointsInsidePolygon(int gridWidth, int gridHeight, T::Coordinate_vec &po
     if (maxY >= gridHeight)
       maxY = gridHeight - 1;
 
-    double nodeX[10000] =
-      { 0 };
+    std::vector<double> nodeX(10000, 0.0);
 
     for (int y = minY; y <= maxY; y++)
     {
@@ -349,16 +348,18 @@ void getPointsInsidePolygon(int gridWidth, int gridHeight, T::Coordinate_vec &po
         if ((yi < dy && yj >= dy) || (yj < dy && yi >= dy))
         {
           double xx = C_DOUBLE(xi + (y - yi) / (yj - yi) * (xj - xi));
+          if (nodes >= C_INT(nodeX.size()))
+            nodeX.resize(2 * nodeX.size());
           nodeX[nodes++] = C_DOUBLE(xx);
         }
         j = i;
       }
 
-      qsort(&nodeX, nodes, sizeof(double), compare_points);
+      qsort(nodeX.data(), nodes, sizeof(double), compare_points);
 
       for (int i = 0; i < nodes; i += 2)
       {
-        if (nodeX[i] >= maxX || (i + 1) > nodes)
+        if (nodeX[i] >= maxX || (i + 1) >= nodes)
           break;
 
         if (nodeX[i + 1] > minX)
@@ -443,10 +444,9 @@ void getPointsInsidePolygonPath(int gridWidth, int gridHeight, T::Polygon_vec &p
     int maxY = 0;
     int minX = 0;
     int maxX = gridWidth - 1;
-    double nodeX[10000] =
-      { 0 };
-    double pointsX[200000];
-    double pointsY[200000];
+    std::vector<double> nodeX(10000, 0.0);
+    std::vector<double> pointsX(200000);
+    std::vector<double> pointsY(200000);
 
     for (auto polygonPoints = polygonPath.begin(); polygonPoints != polygonPath.end(); ++polygonPoints)
     {
@@ -527,18 +527,20 @@ void getPointsInsidePolygonPath(int gridWidth, int gridHeight, T::Polygon_vec &p
           if ((yi < dy && yj >= dy) || (yj < dy && yi >= dy))
           {
             double xx = C_DOUBLE(xi + (y - yi) / (yj - yi) * (xj - xi));
+            if (nodes >= C_INT(nodeX.size()))
+              nodeX.resize(2 * nodeX.size());
             nodeX[nodes++] = C_DOUBLE(xx);
           }
           j = i;
         }
       }
-      qsort(&nodeX, nodes, sizeof(double), compare_points);
+      qsort(nodeX.data(), nodes, sizeof(double), compare_points);
 
       //  Fill the pixels between node pairs.
 
       for (int i = 0; i < nodes; i += 2)
       {
-        if (nodeX[i] >= maxX || (i + 1) > nodes)
+        if (nodeX[i] >= maxX || (i + 1) >= nodes)
           break;
 
         if (nodeX[i + 1] > minX)

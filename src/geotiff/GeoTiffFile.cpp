@@ -266,6 +266,12 @@ void GeoTiffFile::readIFD(MemoryReader& memoryReader,MessageInfoVec& messageInfo
     }
 
 
+    if (numOfGrids == 0)
+    {
+      Fmi::Exception exception(BCP,"The number of grids is not defined!",nullptr);
+      throw exception;
+    }
+
     uint rows = totalRows/numOfGrids;
     uint gridSize = totalSize/numOfGrids;
 

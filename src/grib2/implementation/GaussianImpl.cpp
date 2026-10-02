@@ -125,7 +125,13 @@ T::Coordinate_svec GaussianImpl::getGridOriginalCoordinatesNoCache() const
     if ((scanningMode & 0x80) != 0)
       iDirectionIncrement = -iDirectionIncrement;
 
-    double *lats = GRID::gaussianLatitudeCache.getLatitudes(nj,n);
+    // A sub-area grid starts at the Gaussian latitude of its northern edge
+    double northLat = 90;
+    if (mGaussian.getGrid()->getLatitudeOfFirstGridPoint() && mGaussian.getGrid()->getLatitudeOfLastGridPoint())
+      northLat = std::max(C_DOUBLE(*mGaussian.getGrid()->getLatitudeOfFirstGridPoint()),
+                          C_DOUBLE(*mGaussian.getGrid()->getLatitudeOfLastGridPoint())) / 1000000;
+    const uint firstRow = GRID::gaussianLatitudeCache.getFirstRow(nj,n,northLat);
+    double *lats = GRID::gaussianLatitudeCache.getLatitudes(nj,n) + firstRow;
 
     coordinateList->reserve(ni*nj);
 
@@ -171,7 +177,7 @@ T::Dimensions GaussianImpl::getGridDimensions() const
     if (!mGaussian.getGrid()->getNi() || !mGaussian.getGrid()->getNj())
       return T::Dimensions();
 
-    return T::Dimensions(*mGaussian.getGrid()->getNi(),*mGaussian.getGrid()->getNi());
+    return T::Dimensions(*mGaussian.getGrid()->getNi(),*mGaussian.getGrid()->getNj());
   }
   catch (...)
   {
@@ -266,15 +272,22 @@ bool GaussianImpl::getGridPointByOriginalCoordinates(double x,double y,double& g
     double latLow = 0;
     double latHigh = 0;
 
-    int t = GRID::gaussianLatitudeCache.getClosestLatitudes(nj,n,y,latLow,latHigh);
+    // A sub-area grid starts at the Gaussian latitude of its northern edge
+    double northLat = 90;
+    if (mGaussian.getGrid()->getLatitudeOfFirstGridPoint() && mGaussian.getGrid()->getLatitudeOfLastGridPoint())
+      northLat = std::max(C_DOUBLE(*mGaussian.getGrid()->getLatitudeOfFirstGridPoint()),
+                          C_DOUBLE(*mGaussian.getGrid()->getLatitudeOfLastGridPoint())) / 1000000;
+    const uint firstRow = GRID::gaussianLatitudeCache.getFirstRow(nj,n,northLat);
+    int t = GRID::gaussianLatitudeCache.getClosestLatitudes(nj,n,firstRow,y,latLow,latHigh);
     if (t < 0)
       return false;
 
     latLow += 90;
     latHigh += 90;
 
+    // An exact hit on a grid latitude gives latLow == latHigh
     double latDiff = aLat-latLow;
-    double j = t + latDiff / (latHigh-latLow);
+    double j = (latHigh == latLow ? C_DOUBLE(t) : t + latDiff / (latHigh-latLow));
 
     grid_i = i;
     grid_j = j;
