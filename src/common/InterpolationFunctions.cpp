@@ -1051,7 +1051,9 @@ void timeInterpolation(T::GridValueList& values1,T::GridValueList& values2,time_
           break;
 
         case T::TimeInterpolationMethod::Nearest:
-          if (diff1 < diff2)
+          // diff2 is the whole interval here: the nearest time is the first one when the new
+          // time is in the first half. (Comparing diff1 to diff2 always chose the first time.)
+          if (2 * diff1 <= diff2)
             valueList = values1;
           else
             valueList = values2;
