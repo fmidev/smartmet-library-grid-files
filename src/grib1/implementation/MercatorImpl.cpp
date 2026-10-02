@@ -315,6 +315,12 @@ bool MercatorImpl::getGridPointByOriginalCoordinates(double x,double y,double& g
     double i = xDiff / di;
     double j = yDiff / dj;
 
+    // Projection round-off puts points on the first row or column slightly outside the grid
+    if (i < 0 && i > -1e-4)
+      i = 0;
+    if (j < 0 && j > -1e-4)
+      j = 0;
+
     grid_i = i;
     grid_j = j;
 
@@ -517,7 +523,6 @@ void MercatorImpl::initSpatialReference()
       mSpatialReference.reset(new T::SpatialRef());
       addSpatialReference(mSpatialReference);
 
-      auto dfCenterLat = mGridArea.getLatitudeOfFirstGridPoint();
       auto dfCenterLong = mGridArea.getLongitudeOfFirstGridPoint();
 
       // ### Set geographic coordinate system.
@@ -542,14 +547,15 @@ void MercatorImpl::initSpatialReference()
 
       // ### Set the projection and the linear units for the projection.
 
-      double centerLat = C_DOUBLE(dfCenterLat) / 1000;
       double centerLon = C_DOUBLE(dfCenterLong) / 1000;
       double dfFalseEasting = 0.0;
       double dfFalseNorthing = 0.0;
       double latin = C_DOUBLE(mLatin)/1000;
 
-      //mSpatialReference->SetMercator(centerLat,centerLon,1.0,dfFalseEasting,dfFalseNorthing);
-      mSpatialReference->SetMercator2SP(latin,centerLat,centerLon,dfFalseEasting,dfFalseNorthing);
+      // The latitude of origin of Mercator is always the equator. Passing the latitude of the
+      // first grid point here made PROJ fail the inverse projection and all coordinates inf.
+      // The central meridian does not matter since the grid is positioned by its first point.
+      mSpatialReference->SetMercator2SP(latin,0.0,centerLon,dfFalseEasting,dfFalseNorthing);
       mSpatialReference->SetTargetLinearUnits("PROJCS", SRS_UL_METER, 1.0);
       mSpatialReference->SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
 

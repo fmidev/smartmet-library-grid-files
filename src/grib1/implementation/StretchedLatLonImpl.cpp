@@ -225,6 +225,12 @@ bool StretchedLatLonImpl::getGridPointByLatLonCoordinates(double lat,double lon,
     double i = lonDiff / iDirectionIncrement;
     double j = latDiff / jDirectionIncrement;
 
+    // Projection round-off puts points on the first row or column slightly outside the grid
+    if (i < 0 && i > -1e-4)
+      i = 0;
+    if (j < 0 && j > -1e-4)
+      j = 0;
+
     grid_i = i;
     grid_j = j;
 
