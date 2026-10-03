@@ -297,9 +297,10 @@ two lookups in the same request.
 3. It stores the result in `valueCache` **unless** the packing is simple packing (5.0)
    with no bitmap. Simple-packed values can be decoded straight from the mapping
    (`getValueByIndex`), so caching them would only cost memory.
-4. If decoding fails, it sets `mValueDecodingFailed`. Later calls return an empty
-   vector at once instead of retrying. The exception is printed, not thrown, unless the
-   memory mapper reported an I/O error.
+4. If decoding fails, it records the time in `mValueDecodingFailedTime`. Calls within
+   the next 60 seconds return an empty vector at once; after that decoding is retried,
+   since the failure may be transient (for example a file still being written). The
+   exception is printed, not thrown, unless the memory mapper reported an I/O error.
 
 Single-point reads (`getGridValueByGridPoint`) use the fastest path available: direct
 index decode for simple packing without a bitmap, then a cache lookup, and only then a
@@ -493,7 +494,7 @@ threads, so almost everything must be safe for concurrent readers:
 * `GridFile::mMemoryMappingLock` serialises mapping, remapping and lazy message creation.
 * `Message::mThreadLock` guards `read()` (lazy parsing) and the lazily computed members.
   Many accessors are `const` but fill `mutable` members (`mCacheKey`, `mPremapped`,
-  `mValueDecodingFailed`, …). Take the lock or use an atomic when you add another one.
+  `mValueDecodingFailedTime`, …). Take the lock or use an atomic when you add another one.
 * `GridDef` uses a `ModificationLock` (read/write) around every lookup and reload.
 * `ValueCache` has its own read/write lock. `getValues*` copy out while holding it.
 * The CRS and PROJ objects are the fragile part. An `OGRSpatialReference` must not be
@@ -553,8 +554,8 @@ Match the surrounding code:
 
   The nested `Fmi::Exception` chain is the stack trace users see in server logs, so add
   context parameters such as file name, message index or position. Do not catch and
-  ignore errors, except in the documented "decode failed, remember and return empty"
-  case.
+  ignore errors, except in the documented "decode failed, return empty and retry after
+  60 seconds" case.
 * **`FUNCTION_TRACE`.** Each `.cpp` defines it as `FUNCTION_TRACE_OFF` at the top.
   Switch one file to `FUNCTION_TRACE_ON` locally (and set `globalTraceLog`) to trace
   function entry and exit. Do not commit it on.
