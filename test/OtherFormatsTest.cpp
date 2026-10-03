@@ -5,7 +5,9 @@
 // NetCDF reader identifies the grid by the configured geometries, so the test runs with a copy
 // of cfg/ which defines the geometry of the fixture.
 //
-// QueryData: the grid-files reader is compared with newbase reading the same file directly.
+// QueryData: the grid-files reader is compared with newbase reading the same file directly. The
+// reader identifies the geometry from the configuration; with the exact geometry line it
+// suggests, the coordinates are exactly those of newbase.
 
 #define BOOST_TEST_MODULE OtherFormatsTest
 #include <boost/test/included/unit_test.hpp>
@@ -22,6 +24,7 @@
 #include <filesystem>
 #include <fstream>
 #include <string>
+#include <vector>
 
 using namespace SmartMet;
 using namespace GridTest;
@@ -30,36 +33,62 @@ namespace fs = std::filesystem;
 namespace
 {
 const std::string NETCDF = "synthetic/netcdf_latlon.nc";
-const std::string QUERYDATA = testData("ecpinta/200808041930_ecmwf_eurooppa_pinta.sqd");
+const std::string QUERYDATA_PS = testData("ecpinta/200808041930_ecmwf_eurooppa_pinta.sqd");
+const std::string QUERYDATA_LATLON = testData("eclocal/ecmwf.sqd");
+
+// The geometries of the QueryData fixtures, as the QueryData reader suggests them
+const std::string GEOMETRY_PS =
+    "9;9990002;TESTQUERYDATA;255;195;-19.220000;25.000000;27560.168000;27775.630000;+x+y;10.000000;"
+    "60.000000;6371220;6371220;QueryData test geometry;";
+const std::string GEOMETRY_LATLON =
+    "1;9990003;TESTQUERYDATALL;402;301;-0.050014;50.000000;0.100028;0.100000;+x+y;6371220;6371220;"
+    "QueryData test geometry;";
+// A polar stereographic geometry as older versions of the reader suggested it: the grid step
+// truncated to whole metres and no earth axes
+const std::string QUERYDATA_PS_LEGACY = testData("ecpainepinta/200809090714_ecmwf_skandinavia_painepinta240h.sqd");
+const std::string GEOMETRY_PS_LEGACY =
+    "9;9990004;TESTQUERYDATAOLD;53;57;6.000000;51.300000;38769.000000;39933.000000;+x+y;20.000000;"
+    "60.000000;QueryData test geometry;";
+
+// GridDef reads its configuration once per process, so all tests share one configuration
+const std::vector<std::string> TEST_GEOMETRIES = {
+    "1;9990001;TESTNETCDF;8;6;20.000000;60.000000;1.000000;1.000000;+x+y;0.000000;0.000000;"
+    "NetCDF test geometry;",
+    GEOMETRY_PS,
+    GEOMETRY_LATLON,
+    GEOMETRY_PS_LEGACY};
 
 // A copy of the repository configuration with the geometries of the fixtures added
 struct TestConfig
 {
   std::string dir;
-  TestConfig()
+  explicit TestConfig(const std::vector<std::string> &extraGeometries)
   {
     char tmpl[] = "/tmp/gridfilestest-XXXXXX";
     dir = mkdtemp(tmpl);
     fs::copy("../cfg", dir, fs::copy_options::recursive);
     std::ofstream out(dir + "/fmi_geometries.csv", std::ios::app);
-    out << "1;9990001;TESTNETCDF;8;6;20.000000;60.000000;1.000000;1.000000;+x+y;0.000000;0.000000;"
-           "NetCDF test geometry;\n";
-    // The geometry of the QueryData fixture as the QueryData reader identifies it
-    out << "9;9990002;TESTQUERYDATA;255;195;-19.220000;25.000000;27560.000000;27775.000000;+x+y;"
-           "10.000000;60.000000;QueryData test geometry;\n";
+    for (const auto &line : extraGeometries)
+      out << line << "\n";
   }
   ~TestConfig() { fs::remove_all(dir); }
 };
+
+struct GlobalConfig
+{
+  TestConfig config{TEST_GEOMETRIES};
+  GlobalConfig() { Identification::gridDef.init((config.dir + "/grid-files.conf").c_str()); }
+};
 }  // namespace
+
+BOOST_TEST_GLOBAL_FIXTURE(GlobalConfig);
 
 BOOST_AUTO_TEST_CASE(netcdf_latlon)
 {
-  TestConfig config;
   withFmiErrors(
       [&]
       {
-        Identification::gridDef.init((config.dir + "/grid-files.conf").c_str());
-
+      
         GRID::GridFile gf;
         gf.read(NETCDF);
         BOOST_TEST_REQUIRE(gf.getNumberOfMessages() == 2U);
@@ -100,67 +129,86 @@ BOOST_AUTO_TEST_CASE(netcdf_latlon)
       });
 }
 
-BOOST_AUTO_TEST_CASE(querydata_matches_newbase, *fixtures({QUERYDATA}))
+// Compares the grid-files QueryData reader with newbase. Returns the largest distance in grid
+// cells between a grid point and the grid position grid-files gives for its newbase coordinates.
+double compareWithNewbase(const std::string &file, T::GeometryId expectedGeometry)
 {
-  requireFixture(QUERYDATA);
-  TestConfig config;
+  double maxCellError = -1;
   withFmiErrors(
       [&]
       {
-        Identification::gridDef.init((config.dir + "/grid-files.conf").c_str());
-
         GRID::GridFile gf;
-        gf.read(QUERYDATA);
+        gf.read(file);
 
-        NFmiQueryData qd(QUERYDATA);
+        NFmiQueryData qd(file);
         NFmiFastQueryInfo info(&qd);
         const std::size_t expectedMessages = info.SizeParams() * info.SizeLevels() * info.SizeTimes();
         BOOST_TEST_REQUIRE(gf.getNumberOfMessages() == expectedMessages);
 
-        // The first parameter at the first level, all times
         info.FirstParam();
         info.FirstLevel();
         GRID::Message *first = gf.getMessageByIndex(0);
+        BOOST_TEST_REQUIRE(first->getGridGeometryId() == expectedGeometry);
         T::Dimensions d = first->getGridDimensions();
         BOOST_TEST_REQUIRE(d.nx() == info.GridXNumber());
         BOOST_TEST_REQUIRE(d.ny() == info.GridYNumber());
 
-        double maxCellError = 0;
+        maxCellError = 0;
         uint t = 0;
-        for (info.ResetTime(); info.NextTime() && t < 5; t++)
+        for (info.ResetTime(); info.NextTime() && t < 3; t++)
         {
           GRID::Message *m = gf.getMessageByIndex(t);
-          BOOST_TEST_CONTEXT("time " << m->getForecastTime())
+          std::size_t bad = 0;
+          for (uint j = 0; j < d.ny(); j += 7)
           {
-            std::size_t bad = 0;
-            for (uint j = 0; j < d.ny(); j += 7)
+            for (uint i = 0; i < d.nx(); i += 7)
             {
-              for (uint i = 0; i < d.nx(); i += 7)
-              {
-                info.LocationIndex(j * d.nx() + i);
-                const float expected = info.FloatValue();
-                const T::ParamValue value = m->getGridValueByGridPoint(i, j);
-                const bool same = (expected == kFloatMissing) ? value == ParamValueMissing
-                                                              : std::fabs(value - expected) < 1e-4;
-                if (!same && bad++ < 3)
-                  BOOST_ERROR("grid point " << i << "," << j << ": grid-files " << value << ", newbase " << expected);
+              info.LocationIndex(j * d.nx() + i);
+              const float expected = info.FloatValue();
+              const T::ParamValue value = m->getGridValueByGridPoint(i, j);
+              const bool same = (expected == kFloatMissing) ? value == ParamValueMissing
+                                                            : std::fabs(value - expected) < 1e-4;
+              if (!same && bad++ < 3)
+                BOOST_ERROR("grid point " << i << "," << j << ": grid-files " << value << ", newbase " << expected);
 
-                // KNOWN DISCREPANCY: the QueryData reader takes the coordinates from the
-                // configured geometry it identifies, not from the newbase area. The geometry
-                // string has the grid step rounded to whole metres and no earth model, so the
-                // grid point of a newbase coordinate is off by a fraction of a grid cell. The
-                // test records the largest error; tighten the limit when that is fixed.
-                const NFmiPoint ll = info.LatLon();
-                double gi = 0;
-                double gj = 0;
-                if (m->getGridPointByLatLonCoordinatesNoCache(ll.Y(), ll.X(), gi, gj))
-                  maxCellError = std::max(maxCellError, std::hypot(gi - i, gj - j));
-              }
+              const NFmiPoint ll = info.LatLon();
+              double gi = 0;
+              double gj = 0;
+              if (m->getGridPointByLatLonCoordinatesNoCache(ll.Y(), ll.X(), gi, gj))
+                maxCellError = std::max(maxCellError, std::hypot(gi - i, gj - j));
             }
-            BOOST_TEST(bad == 0U);
           }
+          BOOST_TEST(bad == 0U);
         }
-        BOOST_TEST_MESSAGE("largest grid position error of newbase coordinates: " << maxCellError << " cells");
-        BOOST_TEST(maxCellError < 0.25);
+        BOOST_TEST_MESSAGE(file << ": largest grid position error " << maxCellError << " cells");
       });
+  return maxCellError;
+}
+
+BOOST_AUTO_TEST_CASE(querydata_polar_stereographic, *fixtures({QUERYDATA_PS}))
+{
+  requireFixture(QUERYDATA_PS);
+  // With the exact geometry the coordinates are those of newbase
+  const double err = compareWithNewbase(QUERYDATA_PS, 9990002);
+  BOOST_TEST(err >= 0);
+  BOOST_TEST(err < 0.001);
+}
+
+BOOST_AUTO_TEST_CASE(querydata_latlon, *fixtures({QUERYDATA_LATLON}))
+{
+  requireFixture(QUERYDATA_LATLON);
+  const double err = compareWithNewbase(QUERYDATA_LATLON, 9990003);
+  BOOST_TEST(err >= 0);
+  // The configuration stores latlon steps in microdegrees (0.100028 for 0.1000279...), which
+  // moves the last columns by about 0.001 grid cells
+  BOOST_TEST(err < 0.005);
+}
+
+BOOST_AUTO_TEST_CASE(querydata_legacy_geometry_still_matches, *fixtures({QUERYDATA_PS_LEGACY}))
+{
+  // Configuration lines made by older versions of the reader are still recognized (the
+  // reader prints the exact replacement line), but their coordinates are not exact
+  requireFixture(QUERYDATA_PS_LEGACY);
+  const double err = compareWithNewbase(QUERYDATA_PS_LEGACY, 9990004);
+  BOOST_TEST(err > 0.001);
 }

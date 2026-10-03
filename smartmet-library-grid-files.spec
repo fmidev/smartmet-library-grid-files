@@ -4,7 +4,7 @@
 Summary: grid file handling library
 Name: %{SPECNAME}
 Version: 26.10.3
-Release: 1%{?dist}.fmi
+Release: 2%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
 URL: https://github.com/fmidev/smartmet-library-grid-files
@@ -111,6 +111,16 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Sat Oct 03 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.3-2.fmi
+- QueryData geometries are identified with the exact grid step (rounded only to the precision
+  of the geometry configuration). The step used to be truncated to whole metres in metric
+  projections and divided by the number of columns instead of intervals in latlon projections,
+  so the coordinates drifted from those of the data (up to a grid cell at the far edge)
+- Configuration lines made by older versions still match; the reader then prints the exact
+  replacement line once per geometry, as it does when the configured earth radius differs
+  from that of the data
+- The suggested line for a missing QueryData geometry includes the earth axes of the data
+
 * Sat Oct 03 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.3-1.fmi
 - Mercator grids no longer return inf coordinates (wrong latitude of origin)
 - Rotated latlon grid point searches no longer round coordinates to 0.01 degrees, which moved

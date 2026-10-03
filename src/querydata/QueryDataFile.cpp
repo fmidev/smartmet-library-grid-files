@@ -17,7 +17,10 @@
 
 #include <algorithm>
 #include <ctime>
+#include <cmath>
 #include <list>
+#include <mutex>
+#include <set>
 #include <string>
 
 
@@ -103,20 +106,44 @@ uint QueryDataFile::getGeometryId()
 
   int rows = 0;
   int cols = 0;
-  int dx = 0;
-  int dy = 0;
-  char projectionString[4000];
-  projectionString[0] = '\0';
+  double width = 0;   // metric width and height of the grid
+  double height = 0;
 
   if (grid)
   {
     cols = grid->XNumber();
     rows = grid->YNumber();
-    dx = (area->WorldXYWidth() / (grid->XNumber()-1));
-    dy = (area->WorldXYHeight() / (grid->YNumber()-1));
+    width = area->WorldXYWidth();
+    height = area->WorldXYHeight();
   }
 
+  if (cols < 2 || rows < 2)
+    return 0;
+
+  // The geometry is identified by its geometry string in the configuration. Two strings are
+  // made: the exact one, with the grid step rounded only to the precision the configuration
+  // stores, and the legacy one this method used to make (metric steps truncated to whole metres,
+  // latlon steps divided by the number of columns instead of the number of intervals). Old
+  // configuration lines made from the legacy string still match, but their coordinates drift
+  // from the data, so a warning tells which line to replace.
+
+  std::string exactString;
+  std::string legacyString;
+  bool earthInString = false;  // the transverse mercator string includes the earth axes
   const char *sm = "+x+y";
+  char buf[4000];
+
+  auto metricStrings = [&](const char *fmt, double precision, auto&&... params)
+  {
+    const double dxe = std::round(std::fabs(width / (cols-1)) * precision) / precision;
+    const double dye = std::round(std::fabs(height / (rows-1)) * precision) / precision;
+    const double dxl = static_cast<int>(width / (cols-1));
+    const double dyl = static_cast<int>(height / (rows-1));
+    snprintf(buf,sizeof(buf),fmt,cols,rows,area->BottomLeftLatLon().X(),area->BottomLeftLatLon().Y(),dxe,dye,sm,params...);
+    exactString = buf;
+    snprintf(buf,sizeof(buf),fmt,cols,rows,area->BottomLeftLatLon().X(),area->BottomLeftLatLon().Y(),std::fabs(dxl),std::fabs(dyl),sm,params...);
+    legacyString = buf;
+  };
 
   switch (classid)
   {
@@ -129,37 +156,18 @@ uint QueryDataFile::getGeometryId()
     case kNFmiYKJArea:
     case kNFmiGdalArea:
     {
-      snprintf(projectionString,sizeof(projectionString),"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;27.000000;0.000000;%.6f;%.6f;%.6f;%.6f;description",
-          T::GridProjectionValue::TransverseMercator,
-          cols,
-          rows,
-          area->BottomLeftLatLon().X(),
-          area->BottomLeftLatLon().Y(),
-          fabs(dx),
-          fabs(dy),
-          sm,
-          false_eastening,
-          false_northing,
-          sr.GetSemiMajor(),
-          sr.GetSemiMinor()
-          );
+      // The configuration stores the step in centimetres
+      metricStrings("8;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;27.000000;0.000000;%.6f;%.6f;%.6f;%.6f;description",
+          100.0,false_eastening,false_northing,sr.GetSemiMajor(),sr.GetSemiMinor());
+      earthInString = true;
     }
-    //std::cout << projectionString << "\n";
     break;
 
     case kNFmiStereographicArea:
     {
-      snprintf(projectionString,sizeof(projectionString),"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;description",
-          T::GridProjectionValue::PolarStereographic,
-          cols,
-          rows,
-          area->BottomLeftLatLon().X(),
-          area->BottomLeftLatLon().Y(),
-          fabs(dx),
-          fabs(dy),
-          sm,
-          part1[1],
-          part1[3]);
+      // The configuration stores the step in millimetres
+      if (part1.size() >= 4)
+        metricStrings("9;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;description",1000.0,part1[1],part1[3]);
     }
     break;
 
@@ -169,21 +177,10 @@ uint QueryDataFile::getGeometryId()
       {
         double spole_x = 0.0;
         double spole_y = -90.0;
-        snprintf(projectionString,sizeof(projectionString),"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;%.6f;%.6f;%.6f;%.6f;description",
-            T::GridProjectionValue::LambertConformal,
-            cols,
-            rows,
-            area->BottomLeftLatLon().X(),
-            area->BottomLeftLatLon().Y(),
-            fabs(dx),
-            fabs(dy),
-            sm,
-            part1[1],
-            part1[2],
-            part1[3],
-            spole_x,
-            spole_y,
-            part1[2]);
+        // The configuration stores the step in whole metres, so the legacy string is the exact one
+        metricStrings("10;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;%.6f;%.6f;%.6f;%.6f;description",
+            1.0,part1[1],part1[2],part1[3],spole_x,spole_y,part1[2]);
+        exactString = legacyString;
       }
     }
     break;
@@ -196,17 +193,21 @@ uint QueryDataFile::getGeometryId()
 
     case kNFmiLatLonArea:
     {
+      double w = area->BottomRightLatLon().X() - area->BottomLeftLatLon().X();
+      if (w < 0)
+        w += 360;
+      const double h = area->TopLeftLatLon().Y() - area->BottomLeftLatLon().Y();
+      snprintf(buf,sizeof(buf),"%d;id;name;%u;%u;%.6f;%.6f;%.6f;%.6f;%s;description",
+        T::GridProjectionValue::LatLon,cols,rows,area->BottomLeftLatLon().X(),area->BottomLeftLatLon().Y(),
+        std::fabs(w/(cols-1)),std::fabs(h/(rows-1)),sm);
+      exactString = buf;
+
       float dxx = (area->BottomRightLatLon().X() - area->BottomLeftLatLon().X()) / (float)(cols);
       float dyy = (area->TopLeftLatLon().Y() - area->BottomLeftLatLon().Y()) / (float)(rows-1);
-      snprintf(projectionString,sizeof(projectionString),"%d;id;name;%u;%u;%.6f;%.6f;%.6f;%.6f;%s;description",
-        T::GridProjectionValue::LatLon,
-        cols,
-        rows,
-        area->BottomLeftLatLon().X(),
-        area->BottomLeftLatLon().Y(),
-        fabs(dxx),
-        fabs(dyy),
-        sm);
+      snprintf(buf,sizeof(buf),"%d;id;name;%u;%u;%.6f;%.6f;%.6f;%.6f;%s;description",
+        T::GridProjectionValue::LatLon,cols,rows,area->BottomLeftLatLon().X(),area->BottomLeftLatLon().Y(),
+        fabs(dxx),fabs(dyy),sm);
+      legacyString = buf;
     }
     break;
 
@@ -222,24 +223,17 @@ uint QueryDataFile::getGeometryId()
         latlon_to_rotatedLatlon(area->BottomLeftLatLon().Y(),area->BottomLeftLatLon().X(),part1[1],part1[2],rotLat1,rotLon1);
         latlon_to_rotatedLatlon(area->TopRightLatLon().Y(),area->TopRightLatLon().X(),part1[1],part1[2],rotLat2,rotLon2);
 
-        //printf("AREA %f,%f %f,%f\n",rotLon1,rotLat1,rotLon2,rotLat2);
+        float angle = 0;
+        snprintf(buf,sizeof(buf),"%d;id;name;%u;%u;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;%.6f;description",
+            T::GridProjectionValue::RotatedLatLon,cols,rows,rotLon1,rotLat1,
+            std::fabs((rotLon2 - rotLon1) / (cols-1)),std::fabs((rotLat2 - rotLat1) / (rows-1)),sm,part1[2],part1[1],angle);
+        exactString = buf;
 
-        const char *sm = "+x+y";
         float dxx = (rotLon2 - rotLon1) / (float)(cols);
         float dyy = (rotLat2 - rotLat1) / (float)(rows-1);
-        float angle = 0;
-        snprintf(projectionString,sizeof(projectionString),"%d;id;name;%u;%u;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;%.6f;description",
-            T::GridProjectionValue::RotatedLatLon,
-            cols,
-            rows,
-            rotLon1,
-            rotLat1,
-            fabs(dxx),
-            fabs(dyy),
-            sm,
-            part1[2],
-            part1[1],
-            angle);
+        snprintf(buf,sizeof(buf),"%d;id;name;%u;%u;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;%.6f;description",
+            T::GridProjectionValue::RotatedLatLon,cols,rows,rotLon1,rotLat1,fabs(dxx),fabs(dyy),sm,part1[2],part1[1],angle);
+        legacyString = buf;
       }
     }
     break;
@@ -248,22 +242,69 @@ uint QueryDataFile::getGeometryId()
       break;
   }
 
-
-  if (projectionString[0] != '\0')
+  if (!exactString.empty())
   {
-    auto def = Identification::gridDef.getGrib2DefinitionByGeometryString(projectionString);
-    if (def)
+    // The configuration line for the exact geometry, including the earth axes of the data
+    std::string configLine = exactString;
+    if (!earthInString)
     {
-      return def->getGridGeometryId();
+      snprintf(buf,sizeof(buf),";%.10g;%.10g;description",sr.GetSemiMajor(),sr.GetSemiMinor());
+      configLine = exactString.substr(0,exactString.rfind(";description")) + buf;
     }
-    else
+
+    bool legacy = false;
+    auto def = Identification::gridDef.getGrib2DefinitionByGeometryString(exactString);
+    if (!def && legacyString != exactString)
+    {
+      def = Identification::gridDef.getGrib2DefinitionByGeometryString(legacyString);
+      legacy = (def != nullptr);
+    }
+
+    if (!def)
     {
       std::cout << "** MISSING GEOMETRY **\n";
       std::cout << "Add the following geometry into the geometry definition\n";
       std::cout << "file (=> fill id,name and description fields) :\n\n";
-      std::cout << projectionString << "\n\n";
+      std::cout << configLine << "\n\n";
       return 0;
     }
+
+    const auto geometryId = def->getGridGeometryId();
+
+    // The configured earth axes must be those of the data, otherwise the coordinates drift.
+    // A configuration line without them uses the GRIB default sphere.
+    double semiMajor = def->getEarthSemiMajor();
+    if (semiMajor == 0)
+      semiMajor = 6367470;
+
+    const bool earthMismatch = (!earthInString && std::fabs(semiMajor - sr.GetSemiMajor()) > 1);
+
+    if (legacy || earthMismatch)
+    {
+      static std::mutex warnedMutex;
+      static std::set<T::GeometryId> warned;
+      std::lock_guard<std::mutex> lock(warnedMutex);
+      if (warned.insert(geometryId).second)
+      {
+        std::string line = configLine;
+        auto p = line.find(";id;name;");
+        if (p != std::string::npos)
+        {
+          std::string name = "name";
+          Identification::gridDef.getGeometryNameById(geometryId,name);
+          line.replace(p,9,";" + std::to_string(geometryId) + ";" + name + ";");
+        }
+        std::cout << "** INEXACT GEOMETRY " << geometryId << " **\n";
+        if (legacy)
+          std::cout << "The configured grid step of the geometry is not exact (it was made by an older version).\n";
+        if (earthMismatch)
+          std::cout << "The configured earth radius of the geometry is " << semiMajor << ", the data uses " << sr.GetSemiMajor() << ".\n";
+        std::cout << "The coordinates drift from those of the data. Replace the geometry definition with:\n\n";
+        std::cout << line << "\n\n";
+      }
+    }
+
+    return geometryId;
   }
 
   std::cout << "****************** PROJECTION NOT SUPPORTED *********************** \n\n";
