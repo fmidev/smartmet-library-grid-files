@@ -3,8 +3,8 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 26.10.2
-Release: 2%{?dist}.fmi
+Version: 26.10.3
+Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
 URL: https://github.com/fmidev/smartmet-library-grid-files
@@ -111,7 +111,7 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
-* Fri Oct 02 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.2-2.fmi
+* Sat Oct 03 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.3-1.fmi
 - Mercator grids no longer return inf coordinates (wrong latitude of origin)
 - Rotated latlon grid point searches no longer round coordinates to 0.01 degrees, which moved
   the result by up to half a grid cell on fine grids
