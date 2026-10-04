@@ -66,6 +66,7 @@ Requires: smartmet-topography-data >= 1.0.0
 #TestRequires: smartmet-library-spine-devel >= 26.9.23
 #TestRequires: smartmet-library-trax-devel >= 26.6.26
 #TestRequires: smartmet-test-data >= 26.8.26
+#TestRequires: smartmet-qdtools-test-data >= 26.7.9
 
 %description
 FMI Grid File handling library
