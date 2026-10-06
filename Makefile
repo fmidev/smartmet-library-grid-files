@@ -82,6 +82,7 @@ INCLUDES := -Isrc $(INCLUDES)
 # The rules
 
 all: objdir $(LIBFILE)
+	$(MAKE) -C testdata $@
 
 #debug:
 #	make create_def;
@@ -111,6 +112,7 @@ clean:
 	rm -rf obj
 	rm -rf $(LIBFILE)
 	rm -rf doc/html
+	$(MAKE) -C testdata $@
 
 clean-install: 
 	rm -rf $(includedir)/$(INCDIR)/*
@@ -149,6 +151,7 @@ install:
 	@cp src/querydata/*.h $(includedir)/$(INCDIR)/querydata	
 	@mkdir -p $(libdir)
 	$(INSTALL_PROG) $(LIBFILE) $(libdir)/$(LIBFILE)
+	$(MAKE) -C testdata $@
 
 test:
 	+cd test && make test

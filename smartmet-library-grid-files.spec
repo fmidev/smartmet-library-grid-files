@@ -3,8 +3,8 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 26.10.3
-Release: 2%{?dist}.fmi
+Version: 26.10.6
+Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
 URL: https://github.com/fmidev/smartmet-library-grid-files
@@ -111,7 +111,27 @@ FMI Grid File library development files
 %defattr(0664,root,root,0775)
 %{_includedir}/smartmet/%{DIRNAME}
 
+%package -n %{SPECNAME}-test
+Summary: Grid configuration and Redis content for testing the grid libraries, engine and plugins
+Requires: %{SPECNAME} = %{version}-%{release}
+Provides: smartmet-engine-grid-test = %{version}-%{release}
+Obsoletes: smartmet-engine-grid-test < 26.10.6
+
+%description -n %{SPECNAME}-test
+Grid configuration (grid-files, grid engine) and a Redis content database for testing the grid
+libraries, the grid engine and the plugins using it
+
+%files -n %{SPECNAME}-test
+%defattr(0664,root,root,0775)
+%{_datadir}/smartmet/test/grid
+%attr(0755,root,root) %{_bindir}/smartmet-grid-test-config-creator
+
 %changelog
+* Tue Oct  6 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.6-1.fmi
+- New smartmet-library-grid-files-test package with the grid test configuration and
+  smartmet-grid-test-config-creator, moved here from smartmet-engine-grid-test so that
+  grid-content tests no longer depend on the grid engine
+
 * Sat Oct 03 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.3-2.fmi
 - QueryData geometries are identified with the exact grid step (rounded only to the precision
   of the geometry configuration). The step used to be truncated to whole metres in metric

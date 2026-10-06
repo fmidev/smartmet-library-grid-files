@@ -62,7 +62,7 @@ break these downstream packages at the source or ABI level. See
 make                 # builds libsmartmet-grid-files.so (checks for unresolved symbols)
 make test            # builds the library, then test/*Test.cpp against ../libsmartmet-grid-files.so
 make install         # headers -> $(includedir)/smartmet/grid-files/<module>/, lib -> $(libdir)
-make rpm             # smartmet-library-grid-files{,-devel}
+make rpm             # smartmet-library-grid-files{,-devel,-test}
 make doc             # Doxygen HTML into doc/html (the headers carry Doxygen comments)
 ```
 
@@ -84,14 +84,28 @@ Things to know:
 * **`make format` does nothing useful.** `.clang-format` has `DisableFormat: true`,
   and the target globs `grid-files/*.h`, which does not exist. Do not reformat files.
   The code has its own hand-aligned column style (see [§14](#14-coding-conventions)).
-* **Tests.** `test/` holds standalone programs (plain `main`, not Boost.Test) that
-  print `FAIL …` and return non-zero on failure. Tests that need real data read
-  fixtures from `/usr/share/smartmet/test/data/grib/...` (package
-  `smartmet-test-data`) and a grid-files configuration from
-  `/usr/share/smartmet/test/grid/library/grid-files.conf` (from the grid engine test
-  fixtures). If either is missing, they print `SKIP` and succeed. So a green
-  `make test` on a machine without the fixtures proves very little. Most behaviour is
-  exercised indirectly by the `engines/grid`, `grid-content` and plugin test suites.
+* **Tests.** `test/` holds Boost.Test programs (`*Test.cpp`, one executable each,
+  shared helpers in `TestCommon.h`) using the repository configuration
+  `cfg/grid-files.conf`. Tests needing GRIBs from `smartmet-test-data` fail when they are
+  missing, unless `GRID_TEST_ALLOW_SKIP=1` is set. Much behaviour is also exercised by
+  the grid-content, grid engine and plugin test suites.
+* **`testdata/` builds the `smartmet-library-grid-files-test` package**, the grid test
+  fixture used by the grid-content, grid engine and plugin tests. It lives here, at the
+  bottom of the grid stack, so that no library test depends on a package built above it.
+  It replaces `smartmet-engine-grid-test` (which it provides and obsoletes):
+  * `grid/engine/`: a test `grid-engine.conf`, mapping files, Lua files, aliases and a
+    producer file (installed to `/usr/share/smartmet/test/grid/engine/`);
+  * `grid/library/`: a test `grid-files.conf` with its CSVs
+    (`/usr/share/smartmet/test/grid/library/`);
+  * `grid/redis/`: a Redis dump (`redis-server.rdb`) with the content registry of the
+    GRIB files in `smartmet-test-data`, and a config template;
+  * `smartmet-grid-test-config-creator`: fills a template with values from a
+    configuration file and `-D name value` overrides. Plugin test Makefiles use it to
+    write a `redis.conf` with a free port and a private directory, then start their own
+    `redis-server`.
+
+  The dump is the content registry the tests see. Grid files added to the test data
+  are invisible to the tests until they are registered in it.
 
 ## 3. Source tree
 
