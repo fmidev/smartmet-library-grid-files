@@ -362,8 +362,9 @@ bool LambertAzimuthalEqualAreaImpl::getGridMetricCellSize(double& width,double& 
 {
   try
   {
-    width = C_DOUBLE(*mXDirectionGridLengthInMillimetres) / 1000;
-    height = C_DOUBLE(*mYDirectionGridLengthInMillimetres) / 1000;
+    // Kilometres like the other projections
+    width = C_DOUBLE(*mXDirectionGridLengthInMillimetres) / 1000000;
+    height = C_DOUBLE(*mYDirectionGridLengthInMillimetres) / 1000000;
     return true;
   }
   catch (...)
