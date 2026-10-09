@@ -114,6 +114,18 @@ T::GridProjection expectedProjection(const std::string &gridType)
   return it->second;
 }
 
+// Grid spacing (km) of the projected fixtures written by synthetic/make_synthetic.cpp,
+// zero for grids whose cell size is in degrees
+double expectedMetricCellSize(const std::string &gridType)
+{
+  static const std::map<std::string, double> sizes = {{"polar_stereographic", 50},
+                                                       {"lambert", 50},
+                                                       {"mercator", 100},
+                                                       {"lambert_azimuthal_equal_area", 100}};
+  auto it = sizes.find(gridType);
+  return (it == sizes.end() ? 0 : it->second);
+}
+
 // Values are 16-bit packed by ecCodes; both decoders must agree to float precision
 bool sameValue(double ref, T::ParamValue value)
 {
@@ -174,6 +186,18 @@ BOOST_DATA_TEST_CASE(decode, bdata::make(fixtureNames()), name)
         {
           BOOST_TEST(d.nx() == std::stoul(meta.at("Ni")));
           BOOST_TEST(d.ny() == std::stoul(meta.at("Nj")));
+        }
+
+        // ---- Metric cell size, reported in kilometres for all projected grids ----
+
+        const auto cellSize = expectedMetricCellSize(meta.at("gridType"));
+        double cellWidth = 0;
+        double cellHeight = 0;
+        BOOST_TEST(msg->getGridMetricCellSize(cellWidth, cellHeight) == (cellSize > 0));
+        if (cellSize > 0)
+        {
+          BOOST_TEST(std::fabs(cellWidth - cellSize) < 1e-6, "cell width " << cellWidth << " km");
+          BOOST_TEST(std::fabs(cellHeight - cellSize) < 1e-6, "cell height " << cellHeight << " km");
         }
 
         // ---- Values in storage order ----
