@@ -333,7 +333,7 @@ static void nopMemoryStream(void *handle)
 static opj_stream_t* createMemoryStream(StreamHandle& streamHandle)
 {
   if (!(streamHandle.stream = opj_stream_default_create(true)))
-    return (NULL);
+    return (nullptr);
 
   opj_stream_set_read_function(streamHandle.stream, readMemoryStream);
   opj_stream_set_seek_function(streamHandle.stream, seekMemoryStream);

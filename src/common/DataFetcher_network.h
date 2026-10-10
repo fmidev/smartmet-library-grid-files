@@ -33,16 +33,16 @@ class DataFetcher_network : public DataFetcher
 {
   public:
                   DataFetcher_network();
-    virtual       ~DataFetcher_network();
+    ~DataFetcher_network() override;
 
     //! \overload DataFetcher::getData()
-    int           getData(uint serverType,uint protocol,const char *server,const char *filename,std::size_t filePosition,int dataSize,char *dataPtr);
+    int           getData(uint serverType,uint protocol,const char *server,const char *filename,std::size_t filePosition,int dataSize,char *dataPtr) override;
     //! \overload DataFetcher::getFileList()
-    void          getFileList(uint serverType,uint protocol,const char *server,const char *dir,std::vector<std::string> &filePatterns,std::vector<FileRec>& fileList);
+    void          getFileList(uint serverType,uint protocol,const char *server,const char *dir,std::vector<std::string> &filePatterns,std::vector<FileRec>& fileList) override;
     //! \overload DataFetcher::getFileSize()
-    Int64         getFileSize(uint serverType,uint protocol,const char *server,const char *filename);
+    Int64         getFileSize(uint serverType,uint protocol,const char *server,const char *filename) override;
     //! \overload DataFetcher::getFileHeaders()
-    void          getFileHeaders(uint serverType,uint protocol,const char *server,const char *filename,std::map<std::string,std::string>& headers);
+    void          getFileHeaders(uint serverType,uint protocol,const char *server,const char *filename,std::map<std::string,std::string>& headers) override;
 
   protected:
 

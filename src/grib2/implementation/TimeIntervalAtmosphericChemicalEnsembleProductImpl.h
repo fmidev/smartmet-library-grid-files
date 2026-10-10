@@ -14,17 +14,17 @@ class TimeIntervalAtmosphericChemicalEnsembleProductImpl : public TimeIntervalAt
   public:
                         TimeIntervalAtmosphericChemicalEnsembleProductImpl();
                         TimeIntervalAtmosphericChemicalEnsembleProductImpl(const TimeIntervalAtmosphericChemicalEnsembleProductImpl& other);
-    virtual             ~TimeIntervalAtmosphericChemicalEnsembleProductImpl();
+    ~TimeIntervalAtmosphericChemicalEnsembleProductImpl() override;
 
-    ProductDefinition*  createProductDefinition() const;
+    ProductDefinition*  createProductDefinition() const override;
 
-    const T::UInt8_opt  getGribParameterCategory() const;
-    const T::UInt8_opt  getGribParameterNumber() const;
-    T::UInt8_opt        getGeneratingProcessIdentifier() const;
-    T::TimeString       getForecastTime(T::TimeString referenceTime) const;
-    T::ParamLevel       getGribParameterLevel() const;
-    T::ParamLevelId     getGribParameterLevelId() const;
-    void                read(MemoryReader& memoryReader);
+    const T::UInt8_opt  getGribParameterCategory() const override;
+    const T::UInt8_opt  getGribParameterNumber() const override;
+    T::UInt8_opt        getGeneratingProcessIdentifier() const override;
+    T::TimeString       getForecastTime(T::TimeString referenceTime) const override;
+    T::ParamLevel       getGribParameterLevel() const override;
+    T::ParamLevelId     getGribParameterLevelId() const override;
+    void                read(MemoryReader& memoryReader) override;
 
   protected:
 

@@ -87,7 +87,7 @@ int HttpsClient::getHeaderData(const char *server,const char *filename,int dataS
       curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
     }
 
-    struct curl_slist *headerList = NULL;
+    struct curl_slist *headerList = nullptr;
     headerList = curl_slist_append(headerList, "Range: bytes=0-0");
 
     headerList = addAuthenticationHeaders(server,filename,headerList);
@@ -150,7 +150,7 @@ int HttpsClient::getData(const char *server,const char *filename,std::size_t fil
       curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
     }
 
-    struct curl_slist *headerList = NULL;
+    struct curl_slist *headerList = nullptr;
 
     if ((int)filePosition != dataSize)
     {

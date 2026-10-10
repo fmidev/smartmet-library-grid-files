@@ -69,7 +69,7 @@ void TcpClient::openConnection(const char *serverAddress,int serverPort)
 
     struct sockaddr_in serv_addr;
     struct hostent *server = gethostbyname(serverAddress);
-    if(server == NULL)
+    if(server == nullptr)
     {
       Fmi::Exception exception(BCP,"Unknown server!");
       exception.addParameter("serverAddress",serverAddress);

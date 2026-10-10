@@ -464,7 +464,7 @@ void copyFile(const char *sourceFileName,const char *targetFileName,bool& shutdo
   try
   {
     FILE *sFile = fopen(sourceFileName,"r");
-    if (sFile == NULL)
+    if (sFile == nullptr)
     {
       Fmi::Exception exception(BCP, "Cannot open file for reading!", nullptr);
       exception.addParameter("sourceFileName",sourceFileName);
@@ -472,7 +472,7 @@ void copyFile(const char *sourceFileName,const char *targetFileName,bool& shutdo
     }
 
     FILE *tFile = fopen(targetFileName,"w");
-    if (tFile == NULL)
+    if (tFile == nullptr)
     {
       fclose(sFile);
       Fmi::Exception exception(BCP, "Cannot open file for writing!", nullptr);
@@ -769,7 +769,7 @@ time_t utcTimeToTimeT(const char *utcTime)
 {
   try
   {
-    if (utcTime == 0 || strlen(utcTime) != 15)
+    if (utcTime == nullptr || strlen(utcTime) != 15)
       throw Fmi::Exception(BCP, "Invalid timestamp format (expected YYYYMMDDTHHMMSS)!");
 
     struct tm tt;

@@ -1947,7 +1947,7 @@ GRID::Message* GridFile::getMessageByIndex(std::size_t index)
       // It seems that there have been problems with the current memory map.
       // We should wait some time before retrying the mapping.
 
-      if ((mMemoryMapInfo->mappingTime + 10) > time(0))
+      if ((mMemoryMapInfo->mappingTime + 10) > time(nullptr))
         return nullptr;
 
       // We should try to map the file again.
@@ -1959,7 +1959,7 @@ GRID::Message* GridFile::getMessageByIndex(std::size_t index)
         delete (msg->second);
       }
       mMessages.clear();
-      mMemoryMapInfo->memoryPtr = 0;
+      mMemoryMapInfo->memoryPtr = nullptr;
       mMemoryMapInfo->mappingError = false;
     }
 
@@ -2017,7 +2017,7 @@ GRID::Message* GridFile::getMessageByIndex(std::size_t index)
       if (mMessages.size() != mMessagePositions.size())
       {
         mMessages.clear();
-        mMemoryMapInfo->memoryPtr = 0;
+        mMemoryMapInfo->memoryPtr = nullptr;
         //for (auto it = mMessagePositions.begin(); it != mMessagePositions.end(); ++it)
         //  printf("** %d\n",it->first);
       }

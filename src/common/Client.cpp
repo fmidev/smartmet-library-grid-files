@@ -118,7 +118,7 @@ struct curl_slist* Client::addAuthenticationHeaders(const char *server,const cha
   {
     if (mAuthenticationMethod == 1)
     {
-      time_t currentTime = time(0);
+      time_t currentTime = time(nullptr);
 
       std::string timeStamp = utcTimeFromTimeT(currentTime);
       std::string date = timeStamp.substr(0,8);

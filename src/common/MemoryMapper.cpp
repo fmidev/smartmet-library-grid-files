@@ -460,7 +460,7 @@ void MemoryMapper::map(MapInfo_sptr info)
   {
     AutoWriteLock lock(&mModificationLock);
 
-    info->mappingTime = time(0);
+    info->mappingTime = time(nullptr);
 
     if (!mEnabled)
     {
@@ -511,11 +511,11 @@ void MemoryMapper::map(MapInfo_sptr info)
     }
 
     info->allocatedSize = (((info->fileSize + 100)/ mPageSize) + 1) * mPageSize;
-    info->memoryPtr = (char*)mmap(NULL, info->allocatedSize, PROT_READ, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+    info->memoryPtr = (char*)mmap(nullptr, info->allocatedSize, PROT_READ, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
 
     if (info->memoryPtr == MAP_FAILED)
     {
-      info->memoryPtr = 0;
+      info->memoryPtr = nullptr;
       Fmi::Exception exception(BCP,"mmap failed");
       exception.addParameter("allocatedSize",std::to_string(info->allocatedSize));
       exception.addParameter("filename",info->filename);
@@ -893,7 +893,7 @@ void MemoryMapper::faultProcessingThread()
 
     /* Create a page that will be copied into the faulting region. */
 
-    char *page = (char*)mmap(NULL, mPageSize, PROT_READ | PROT_WRITE,MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+    char *page = (char*)mmap(nullptr, mPageSize, PROT_READ | PROT_WRITE,MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
     if (page == MAP_FAILED)
       throw Fmi::Exception(BCP,"Memory map creation failed!");
 
@@ -1043,7 +1043,7 @@ void MemoryMapper::faultHandlerThread()
 
     /* Create a page that will be copied into the faulting region. */
 
-    char *page = (char*)mmap(NULL, mPageSize, PROT_READ | PROT_WRITE,MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+    char *page = (char*)mmap(nullptr, mPageSize, PROT_READ | PROT_WRITE,MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
     if (page == MAP_FAILED)
       throw Fmi::Exception(BCP,"Memory map creation failed!");
 

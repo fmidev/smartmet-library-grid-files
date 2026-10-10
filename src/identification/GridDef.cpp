@@ -3573,7 +3573,7 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
             double dyy = toDouble(gridCellHeightStr);
 
             int origProjectionType = 0;
-            if (gridOriginalProjectionStr != NULL)
+            if (gridOriginalProjectionStr != nullptr)
               origProjectionType = atoi(gridOriginalProjectionStr);
 
             if (targetIsLatlon)

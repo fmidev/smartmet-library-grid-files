@@ -559,7 +559,7 @@ void Log::truncate()
     // ### Moving to the correct position and making sure that we start from the beginning of the line.
 
     fseek(oldfile,pos,SEEK_SET);
-    if (fgets(st,10000,oldfile) != 0)
+    if (fgets(st,10000,oldfile) != nullptr)
     {
       int n;
       while ((n = fread(st,1,10000,oldfile)) > 0)

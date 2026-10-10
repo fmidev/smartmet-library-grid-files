@@ -24,7 +24,7 @@ namespace SmartMet
 DataFetcher_filesys::DataFetcher_filesys()
 {
   FUNCTION_TRACE
-  mLastChecked = time(0);
+  mLastChecked = time(nullptr);
   mFileHandleLimit = 10000;
 }
 
@@ -72,12 +72,12 @@ void DataFetcher_filesys::checkFileHandles()
   FUNCTION_TRACE
   try
   {
-    time_t interv = (time(0) - mLastChecked);
+    time_t interv = (time(nullptr) - mLastChecked);
     if (interv > CHECK_INTERVAL || (mFileHandles.size() > mFileHandleLimit  && interv > 30))
     {
       //printf("CHECK FILES %ld\n",mFileHandles.size());
       std::vector<std::string> deleteList;
-      mLastChecked = time(0);
+      mLastChecked = time(nullptr);
       time_t deleteLimit = mLastChecked - 600;
       if (mFileHandles.size() > mFileHandleLimit)
         deleteLimit = mLastChecked - 30;
@@ -89,7 +89,7 @@ void DataFetcher_filesys::checkFileHandles()
           if (it->second->threadLock.tryLock())
           {
             fclose(it->second->fileHandle);
-            it->second->fileHandle = NULL;
+            it->second->fileHandle = nullptr;
             deleteList.push_back(it->first);
             it->second->threadLock.unlock();
           }
@@ -123,7 +123,7 @@ FileHandle* DataFetcher_filesys::getFileHandle(const char *filename)
   FUNCTION_TRACE
   try
   {
-    time_t currentTime = time(0);
+    time_t currentTime = time(nullptr);
 
     {
       AutoReadLock lock(&mModificationLock);
@@ -138,7 +138,7 @@ FileHandle* DataFetcher_filesys::getFileHandle(const char *filename)
       }
     }
 
-    time_t interv = (time(0) - mLastChecked);
+    time_t interv = (time(nullptr) - mLastChecked);
 
     if (interv > CHECK_INTERVAL || (mFileHandles.size() > mFileHandleLimit  && interv > 30))
     {
@@ -159,7 +159,7 @@ FileHandle* DataFetcher_filesys::getFileHandle(const char *filename)
 
     auto *f = new FileHandle;
     f->fileHandle = fopen(filename,"r");
-    if (f->fileHandle != NULL)
+    if (f->fileHandle != nullptr)
     {
       f->lastUsed = currentTime;
       mFileHandles.insert(std::pair<std::string,FileHandle*>(filename,f));

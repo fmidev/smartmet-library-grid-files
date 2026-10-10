@@ -15,7 +15,7 @@ class TcpClient : public Client
 {
   public:
             TcpClient();
-    virtual ~TcpClient();
+    ~TcpClient() override;
 
     /*! \brief Open a TCP connection to the given server.
      *  \param[in] serverAddress  Hostname or IP address.

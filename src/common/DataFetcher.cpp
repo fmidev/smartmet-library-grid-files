@@ -213,14 +213,14 @@ DataFetcher::AccessInfo* DataFetcher::getAccessInfo(const char *server)
   try
   {
     if (mAccessMap.size() == 0)
-      return NULL;
+      return nullptr;
 
     std::string key = toLowerString(server);
     auto rec = mAccessMap.find(key);
     if (rec != mAccessMap.end())
       return &rec->second;
 
-    return NULL;
+    return nullptr;
   }
   catch (...)
   {

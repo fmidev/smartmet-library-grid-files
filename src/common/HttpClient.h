@@ -15,12 +15,12 @@ class HttpClient : public Client
 {
   public:
               HttpClient();
-    virtual   ~HttpClient();
+    ~HttpClient() override;
 
     //! \overload Client::getData()
-    int       getData(const char *server,const char *filename,std::size_t filePosition,int dataSize,char *dataPtr);
+    int       getData(const char *server,const char *filename,std::size_t filePosition,int dataSize,char *dataPtr) override;
     //! \overload Client::getHeaderData()
-    int       getHeaderData(const char *server,const char *filename,int dataSize,char *dataPtr);
+    int       getHeaderData(const char *server,const char *filename,int dataSize,char *dataPtr) override;
 
   protected:
 

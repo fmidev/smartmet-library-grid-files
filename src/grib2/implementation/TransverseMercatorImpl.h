@@ -13,21 +13,21 @@ class TransverseMercatorImpl : public TransverseMercator
   public:
                         TransverseMercatorImpl();
                         TransverseMercatorImpl(const TransverseMercatorImpl& other);
-    virtual             ~TransverseMercatorImpl();
+    ~TransverseMercatorImpl() override;
 
-    GridDefinition*     createGridDefinition() const;
+    GridDefinition*     createGridDefinition() const override;
 
-    T::Coordinate_svec  getGridOriginalCoordinatesNoCache() const;
-    T::Dimensions       getGridDimensions() const;
-    bool                getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;
-    bool                getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const;
-    std::string         getGridGeometryString() const;
-    bool                reverseXDirection() const;
-    bool                reverseYDirection() const;
+    T::Coordinate_svec  getGridOriginalCoordinatesNoCache() const override;
+    T::Dimensions       getGridDimensions() const override;
+    bool                getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const override;
+    bool                getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const override;
+    std::string         getGridGeometryString() const override;
+    bool                reverseXDirection() const override;
+    bool                reverseYDirection() const override;
 
-    void                initSpatialReference();
-    void                print(std::ostream& stream,uint level,uint optionFlags) const;
-    void                read(MemoryReader& memoryReader);
+    void                initSpatialReference() override;
+    void                print(std::ostream& stream,uint level,uint optionFlags) const override;
+    void                read(MemoryReader& memoryReader) override;
 
     double              mLongitude;
     double              mLatitude;
