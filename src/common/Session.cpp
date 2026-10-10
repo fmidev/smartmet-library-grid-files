@@ -59,10 +59,10 @@ void Session::setAttributes(std::string& attributes)
   {
     std::vector<std::string> list;
     splitString(attributes,';',list);
-    for (auto it=list.begin(); it != list.end(); it++)
+    for (auto & it : list)
     {
       std::vector<std::string> attr;
-      splitString(it->c_str(),'=',attr);
+      splitString(it.c_str(),'=',attr);
       if (attr.size() == 1)
       {
         setAttribute(attr[0].c_str(),"");
@@ -565,10 +565,10 @@ std::string Session::getUrlParameter()
   try
   {
     std::ostringstream output;
-    for (auto it = attributes.begin(); it != attributes.end(); ++it)
+    for (auto & attribute : attributes)
     {
-      if (it->first.substr(0,1) != "#")
-        output << it->first << "=" << it->second << ";";
+      if (attribute.first.substr(0,1) != "#")
+        output << attribute.first << "=" << attribute.second << ";";
     }
     return output.str();
   }
@@ -587,9 +587,9 @@ void Session::print(std::ostream& stream,uint level,uint optionFlags)
   try
   {
     stream << "SESSION:\n";
-    for (auto it = attributes.begin(); it != attributes.end(); ++it)
+    for (auto & attribute : attributes)
     {
-      stream << "  - " << it->first << "=" << it->second << "\n";
+      stream << "  - " << attribute.first << "=" << attribute.second << "\n";
     }
   }
   catch (...)

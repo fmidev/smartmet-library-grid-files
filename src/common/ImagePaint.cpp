@@ -364,9 +364,9 @@ void ImagePaint::paintPolygon(std::vector<T::Coordinate>& polygonPoints,uint _dr
     int minX = 0;
     int maxX = mImageWidth-1;
 
-    for (auto it = polygonPoints.begin(); it != polygonPoints.end(); ++it)
+    for (auto & polygonPoint : polygonPoints)
     {
-      double yp = round(it->y());
+      double yp = round(polygonPoint.y());
 
       if (yp < minY)
         minY = C_INT(yp);
@@ -473,17 +473,17 @@ void ImagePaint::paintPolygonPath(std::vector<std::vector<T::Coordinate>>& polyg
     std::vector<double> pointsX(200000);
     std::vector<double> pointsY(200000);
 
-    for (auto polygonPoints = polygonPath.begin(); polygonPoints != polygonPath.end(); ++polygonPoints)
+    for (auto & polygonPoints : polygonPath)
     {
-      uint numOfPoints = polygonPoints->size();
+      uint numOfPoints = polygonPoints.size();
 
       if (numOfPoints > 0)
       {
         // It the last polygon point is not same than the first point, then we should add it to the list.
 
-        if ((*polygonPoints)[0].x() != (*polygonPoints)[numOfPoints-1].x()  ||  (*polygonPoints)[0].y() != (*polygonPoints)[numOfPoints-1].y())
+        if (polygonPoints[0].x() != polygonPoints[numOfPoints-1].x()  ||  polygonPoints[0].y() != polygonPoints[numOfPoints-1].y())
         {
-          (*polygonPoints).emplace_back((*polygonPoints)[0]);
+          polygonPoints.emplace_back(polygonPoints[0]);
           numOfPoints++;
         }
 
@@ -491,12 +491,12 @@ void ImagePaint::paintPolygonPath(std::vector<std::vector<T::Coordinate>>& polyg
 
         for (uint t=1; t<numOfPoints; t++)
         {
-          paintLine((*polygonPoints)[t-1].x(),(*polygonPoints)[t-1].y(),(*polygonPoints)[t].x(),(*polygonPoints)[t].y(),_drawColor);
+          paintLine(polygonPoints[t-1].x(),polygonPoints[t-1].y(),polygonPoints[t].x(),polygonPoints[t].y(),_drawColor);
         }
 
         // Adding points that are inside the polygon line.
 
-        for (auto it = polygonPoints->begin(); it != polygonPoints->end(); ++it)
+        for (auto it = polygonPoints.begin(); it != polygonPoints.end(); ++it)
         {
           double yp = round(it->y());
 
@@ -521,12 +521,12 @@ void ImagePaint::paintPolygonPath(std::vector<std::vector<T::Coordinate>>& polyg
     {
       //  Build a list of nodes.
       int nodes = 0;
-      for (auto polygonPoints = polygonPath.begin(); polygonPoints != polygonPath.end(); ++polygonPoints)
+      for (auto & polygonPoints : polygonPath)
       {
-        uint numOfPoints = polygonPoints->size();
+        uint numOfPoints = polygonPoints.size();
 
         uint c = 0;
-        for (auto it = polygonPoints->begin(); it != polygonPoints->end(); ++it)
+        for (auto it = polygonPoints.begin(); it != polygonPoints.end(); ++it)
         {
           pointsX[c] = it->x();
           pointsY[c] = it->y();
@@ -1030,9 +1030,9 @@ void ImagePaint::paintWkb(double _mpx,double _mpy,double _dx,double _dy,T::ByteD
   FUNCTION_TRACE
   try
   {
-    for (auto it = _wkbVec.begin(); it != _wkbVec.end(); ++it)
+    for (auto & it : _wkbVec)
     {
-      paintWkb(_mpx,_mpy,_dx,_dy,*it);
+      paintWkb(_mpx,_mpy,_dx,_dy,it);
     }
   }
   catch (...)

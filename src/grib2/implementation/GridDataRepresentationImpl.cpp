@@ -493,18 +493,18 @@ void GridDataRepresentationImpl::encodeValues(Message *message,T::ParamValue_vec
     T::ParamValue minValue = ParamValueMissing;
     T::ParamValue maxValue = ParamValueMissing;
 
-    for (auto it = values.begin(); it != values.end(); ++it)
+    for (float & value : values)
     {
-      if ((*it) != ParamValueMissing)
+      if (value != ParamValueMissing)
       {
-        if (minValue == ParamValueMissing || ((*it) < minValue))
+        if (minValue == ParamValueMissing || (value < minValue))
         {
-          minValue = *it;
+          minValue = value;
         }
 
-        if (maxValue == ParamValueMissing || ((*it) > maxValue))
+        if (maxValue == ParamValueMissing || (value > maxValue))
         {
-          maxValue = *it;
+          maxValue = value;
         }
         valueCount++;
       }
@@ -563,11 +563,11 @@ void GridDataRepresentationImpl::encodeValues(Message *message,T::ParamValue_vec
     memset(data,0,dataSize);
     BitArrayWriter bitArrayWriter(data,totalBits);
 
-    for (auto it = values.begin(); it != values.end(); ++it)
+    for (float & value : values)
     {
-      if ((*it) != ParamValueMissing)
+      if (value != ParamValueMissing)
       {
-        float Y = *it;
+        float Y = value;
         float X = (Y - RDfac) / EDfac;
 
         auto v = C_UINT64(round(X));

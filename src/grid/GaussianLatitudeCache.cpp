@@ -174,10 +174,10 @@ GaussianLatitudeCache::~GaussianLatitudeCache()
 {
   try
   {
-    for (uint t=0; t<GaussianLatitudeCacheSize; t++)
+    for (auto & mLatitude : mLatitudes)
     {
-      if (mLatitudes[t] != nullptr)
-        delete[] mLatitudes[t];
+      if (mLatitude != nullptr)
+        delete[] mLatitude;
     }
   }
   catch (...)

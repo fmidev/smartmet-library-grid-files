@@ -144,9 +144,9 @@ GridFile::~GridFile()
   FUNCTION_TRACE
   try
   {
-    for (auto msg = mMessages.begin();  msg != mMessages.end(); ++msg)
+    for (auto & mMessage : mMessages)
     {
-      delete (msg->second);
+      delete (mMessage.second);
     }
 
     if (mNetCdfFile)
@@ -472,18 +472,18 @@ Int64 GridFile::countSize()
   try
   {
     Int64 fileSize = 0;
-    for (auto it = mMessagePositions.begin(); it != mMessagePositions.end(); ++it)
+    for (auto & mMessagePosition : mMessagePositions)
     {
-      Int64 fsize = it->second.mFilePosition + it->second.mMessageSize;
+      Int64 fsize = mMessagePosition.second.mFilePosition + mMessagePosition.second.mMessageSize;
       if (fileSize < fsize)
         fileSize = fsize;
     }
 
-    for (auto it = mMessages.begin(); it != mMessages.end(); ++it)
+    for (auto & mMessage : mMessages)
     {
-      if (it->second->getFileMemoryPtr() == nullptr)
+      if (mMessage.second->getFileMemoryPtr() == nullptr)
       {
-        Int64 fsize = it->second->getFilePosition() + it->second->getMessageSize();
+        Int64 fsize = mMessage.second->getFilePosition() + mMessage.second->getMessageSize();
         if (fileSize < fsize)
           fileSize = fsize;
       }
@@ -509,10 +509,10 @@ Int64 GridFile::getRequestCounters(RequestCounters& requestCounters)
   try
   {
     Int64 max = 0;
-    for (auto it = mMessages.begin(); it != mMessages.end(); ++it)
+    for (auto & mMessage : mMessages)
     {
-      UInt64 key = ((UInt64)mFileId << 24) + it->first;
-      Int64 cnt = it->second->getRequestCounter();
+      UInt64 key = ((UInt64)mFileId << 24) + mMessage.first;
+      Int64 cnt = mMessage.second->getRequestCounter();
       if (cnt > max)
         max = cnt;
 
@@ -538,8 +538,8 @@ void GridFile::resetRequestCounters()
   FUNCTION_TRACE
   try
   {
-    for (auto it = mMessages.begin(); it != mMessages.end(); ++it)
-      it->second->setRequestCounter((uint)((double)it->second->getRequestCounter()/100.0));
+    for (auto & mMessage : mMessages)
+      mMessage.second->setRequestCounter((uint)((double)mMessage.second->getRequestCounter()/100.0));
   }
   catch (...)
   {
@@ -1104,9 +1104,9 @@ void GridFile::write(DataWriter& dataWriter)
   FUNCTION_TRACE
   try
   {
-    for (auto msg = mMessages.begin();  msg != mMessages.end(); ++msg)
+    for (auto & mMessage : mMessages)
     {
-      msg->second->write(dataWriter);
+      mMessage.second->write(dataWriter);
     }
   }
   catch (...)
@@ -1261,9 +1261,9 @@ GRID::Message* GridFile::createMessage(T::MessageIndex messageIndex,GRID::Messag
         mNetCdfFile->read(memoryReader,messageInfoList);
 
         uint idx = 0;
-        for (auto it = messageInfoList.begin();it != messageInfoList.end(); ++it)
+        for (auto & it : messageInfoList)
         {
-          auto *message = new NetCDF::Message(this,mNetCdfFile,idx,*it);
+          auto *message = new NetCDF::Message(this,mNetCdfFile,idx,it);
           mMessages.insert(std::pair<uint,Message*>(idx,message));
           idx++;
         }
@@ -1290,9 +1290,9 @@ GRID::Message* GridFile::createMessage(T::MessageIndex messageIndex,GRID::Messag
         mQueryDataFile->read(messageInfoList);
 
         uint idx = 0;
-        for (auto it = messageInfoList.begin();it != messageInfoList.end(); ++it)
+        for (auto & it : messageInfoList)
         {
-          auto *message = new QueryData::Message(this,mQueryDataFile,idx,*it);
+          auto *message = new QueryData::Message(this,mQueryDataFile,idx,it);
           mMessages.insert(std::pair<uint,Message*>(idx,message));
           idx++;
         }
@@ -1319,9 +1319,9 @@ GRID::Message* GridFile::createMessage(T::MessageIndex messageIndex,GRID::Messag
         mGeoTiffFile->read(memoryReader,messageInfoList);
 
         uint idx = 0;
-        for (auto it = messageInfoList.begin();it != messageInfoList.end(); ++it)
+        for (auto & it : messageInfoList)
         {
-          auto *message = new GeoTiff::Message(this,mGeoTiffFile,idx,*it);
+          auto *message = new GeoTiff::Message(this,mGeoTiffFile,idx,it);
           mMessages.insert(std::pair<uint,Message*>(idx,message));
           idx++;
         }
@@ -1602,9 +1602,9 @@ void GridFile::read(MemoryReader& memoryReader,uint maxMessages)
             mNetCdfFile->read(memoryReader,messageInfoList);
 
             uint idx = 0;
-            for (auto it = messageInfoList.begin();it != messageInfoList.end(); ++it)
+            for (auto & it : messageInfoList)
             {
-              auto *message = new NetCDF::Message(this,mNetCdfFile,idx,*it);
+              auto *message = new NetCDF::Message(this,mNetCdfFile,idx,it);
               mMessages.insert(std::pair<uint,Message*>(idx,message));
               idx++;
               if (mMessages.size() >= maxMessages)
@@ -1623,9 +1623,9 @@ void GridFile::read(MemoryReader& memoryReader,uint maxMessages)
             QueryData::MessageInfoVec messageInfoList;
             mQueryDataFile->read(messageInfoList);
             uint idx = 0;
-            for (auto it = messageInfoList.begin();it != messageInfoList.end(); ++it)
+            for (auto & it : messageInfoList)
             {
-              auto *message = new QueryData::Message(this,mQueryDataFile,idx,*it);
+              auto *message = new QueryData::Message(this,mQueryDataFile,idx,it);
               mMessages.insert(std::pair<uint,Message*>(idx,message));
               idx++;
               if (mMessages.size() >= maxMessages)
@@ -1644,9 +1644,9 @@ void GridFile::read(MemoryReader& memoryReader,uint maxMessages)
             GeoTiff::MessageInfoVec messageInfoList;
             mGeoTiffFile->read(memoryReader,messageInfoList);
             uint idx = 0;
-            for (auto it = messageInfoList.begin();it != messageInfoList.end(); ++it)
+            for (auto & it : messageInfoList)
             {
-              auto *message = new GeoTiff::Message(this,mGeoTiffFile,idx,*it);
+              auto *message = new GeoTiff::Message(this,mGeoTiffFile,idx,it);
               mMessages.insert(std::pair<uint,Message*>(idx,message));
               idx++;
               if (mMessages.size() >= maxMessages)
@@ -1955,9 +1955,9 @@ GRID::Message* GridFile::getMessageByIndex(std::size_t index)
 
       memoryMapper.unmap(mMemoryMapInfo);
 
-      for (auto msg = mMessages.begin();  msg != mMessages.end(); ++msg)
+      for (auto & mMessage : mMessages)
       {
-        delete (msg->second);
+        delete (mMessage.second);
       }
       mMessages.clear();
       mMemoryMapInfo->memoryPtr = nullptr;
@@ -2194,10 +2194,10 @@ void GridFile::print(std::ostream& stream,uint level,uint optionFlags) const
     if (optionFlags & GRID::PrintFlag::no_messages)
       return;
 
-    for (auto msg = mMessages.begin();  msg != mMessages.end(); ++msg)
+    for (auto mMessage : mMessages)
     {
-      if (msg->second)
-        msg->second->print(stream,level+1,optionFlags);
+      if (mMessage.second)
+        mMessage.second->print(stream,level+1,optionFlags);
     }
   }
   catch (...)

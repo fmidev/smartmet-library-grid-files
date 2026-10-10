@@ -16,6 +16,7 @@
 #include <fmt/format.h>
 #include <cmath>
 #include <memory>
+#include <ranges>
 #include <vector>
 
 #include <algorithm>
@@ -311,9 +312,9 @@ void getPointsInsidePolygon(int gridWidth, int gridHeight, T::Coordinate_vec &po
     int minX = 0;
     int maxX = gridWidth - 1;
 
-    for (auto it = polygonPoints.begin(); it != polygonPoints.end(); ++it)
+    for (auto & polygonPoint : polygonPoints)
     {
-      double yp = round(it->y());
+      double yp = round(polygonPoint.y());
 
       if (yp < minY)
         minY = C_INT(yp);
@@ -391,10 +392,10 @@ void getPointsInsidePolygon(int gridWidth, int gridHeight, T::Coordinate_vec &po
 
     // Converting the list to the actual PointList.
 
-    for (auto it = cList.begin(); it != cList.end(); ++it)
+    for (unsigned long it : cList)
     {
-      int y = C_INT((*it) >> 32);
-      int x = C_INT((*it) & 0xFFFFFFFF);
+      int y = C_INT(it >> 32);
+      int x = C_INT(it & 0xFFFFFFFF);
 
       gridPoints.emplace_back(x, y);
     }
@@ -421,13 +422,13 @@ void getPointsInsidePolygonPath(int gridWidth, int gridHeight, T::Polygon_vec &p
     std::size_t hash = 0;
     Fmi::hash_merge(hash, gridWidth);
     Fmi::hash_merge(hash, gridHeight);
-    for (auto polygonPoints = polygonPath.begin(); polygonPoints != polygonPath.end(); ++polygonPoints)
+    for (auto & polygonPoints : polygonPath)
     {
-      uint numOfPoints = polygonPoints->size();
+      uint numOfPoints = polygonPoints.size();
       for (uint t = 0; t < numOfPoints; t++)
       {
-        Fmi::hash_merge(hash, (*polygonPoints)[t].x());
-        Fmi::hash_merge(hash, (*polygonPoints)[t].y());
+        Fmi::hash_merge(hash, polygonPoints[t].x());
+        Fmi::hash_merge(hash, polygonPoints[t].y());
       }
     }
 
@@ -448,17 +449,17 @@ void getPointsInsidePolygonPath(int gridWidth, int gridHeight, T::Polygon_vec &p
     std::vector<double> pointsX(200000);
     std::vector<double> pointsY(200000);
 
-    for (auto polygonPoints = polygonPath.begin(); polygonPoints != polygonPath.end(); ++polygonPoints)
+    for (auto & polygonPoints : polygonPath)
     {
-      uint numOfPoints = polygonPoints->size();
+      uint numOfPoints = polygonPoints.size();
 
       if (numOfPoints > 0)
       {
         // It the last polygon point is not same than the first point, then we should add it to the list.
 
-        if ((*polygonPoints)[0].x() != (*polygonPoints)[numOfPoints - 1].x() || (*polygonPoints)[0].y() != (*polygonPoints)[numOfPoints - 1].y())
+        if (polygonPoints[0].x() != polygonPoints[numOfPoints - 1].x() || polygonPoints[0].y() != polygonPoints[numOfPoints - 1].y())
         {
-          (*polygonPoints).emplace_back((*polygonPoints)[0]);
+          polygonPoints.emplace_back(polygonPoints[0]);
           numOfPoints++;
         }
 
@@ -466,12 +467,12 @@ void getPointsInsidePolygonPath(int gridWidth, int gridHeight, T::Polygon_vec &p
 
         for (uint t = 1; t < numOfPoints; t++)
         {
-          addLine((*polygonPoints)[t - 1].x(), (*polygonPoints)[t - 1].y(), (*polygonPoints)[t].x(), (*polygonPoints)[t].y(), cList);
+          addLine(polygonPoints[t - 1].x(), polygonPoints[t - 1].y(), polygonPoints[t].x(), polygonPoints[t].y(), cList);
         }
 
         // Adding points that are inside the polygon line.
 
-        for (auto it = polygonPoints->begin(); it != polygonPoints->end(); ++it)
+        for (auto it = polygonPoints.begin(); it != polygonPoints.end(); ++it)
         {
           double yp = round(it->y());
 
@@ -495,12 +496,12 @@ void getPointsInsidePolygonPath(int gridWidth, int gridHeight, T::Polygon_vec &p
     {
       //  Build a list of nodes.
       int nodes = 0;
-      for (auto polygonPoints = polygonPath.begin(); polygonPoints != polygonPath.end(); ++polygonPoints)
+      for (auto & polygonPoints : polygonPath)
       {
-        uint numOfPoints = polygonPoints->size();
+        uint numOfPoints = polygonPoints.size();
 
         uint c = 0;
-        for (auto it = polygonPoints->begin(); it != polygonPoints->end(); ++it)
+        for (auto it = polygonPoints.begin(); it != polygonPoints.end(); ++it)
         {
           pointsX[c] = it->x();
           pointsY[c] = it->y();
@@ -572,10 +573,10 @@ void getPointsInsidePolygonPath(int gridWidth, int gridHeight, T::Polygon_vec &p
 
     // Converting the list to the actual PointList.
 
-    for (auto it = cList.begin(); it != cList.end(); ++it)
+    for (unsigned long it : cList)
     {
-      int y = C_INT((*it) >> 32);
-      int x = C_INT((*it) & 0xFFFFFFFF);
+      int y = C_INT(it >> 32);
+      int x = C_INT(it & 0xFFFFFFFF);
 
       gridPoints.emplace_back(x, y);
     }
@@ -651,9 +652,9 @@ std::size_t getPolygonPathLength(T::Polygon_vec &polygonPath)
   try
   {
     std::size_t s = 0;
-    for (auto coordinates = polygonPath.begin(); coordinates != polygonPath.end(); ++coordinates)
+    for (auto & coordinates : polygonPath)
     {
-      s = s + coordinates->size();
+      s = s + coordinates.size();
     }
     return s;
   }
@@ -671,9 +672,9 @@ void convertToPointVector(T::Polygon_vec &polygonPath, T::Coordinate_vec &polygo
 {
   try
   {
-    for (auto coordinates = polygonPath.begin(); coordinates != polygonPath.end(); ++coordinates)
+    for (auto & coordinates : polygonPath)
     {
-      for (auto cc = coordinates->begin(); cc != coordinates->end(); ++cc)
+      for (auto cc = coordinates.begin(); cc != coordinates.end(); ++cc)
         polygonPoints.emplace_back(*cc);
     }
   }
@@ -693,9 +694,9 @@ void convertSvgPathToPolygonPath(NFmiSvgPath &svgPath, T::Polygon_vec &polygonPa
   {
     T::Coordinate_vec polygonPoints;
 
-    for (auto it = svgPath.begin(); it != svgPath.end(); ++it)
+    for (auto & it : svgPath)
     {
-      switch (it->itsType)
+      switch (it.itsType)
       {
         case NFmiSvgPath::kElementMoveto:
           if (polygonPoints.size() > 0)
@@ -703,7 +704,7 @@ void convertSvgPathToPolygonPath(NFmiSvgPath &svgPath, T::Polygon_vec &polygonPa
             polygonPath.emplace_back(polygonPoints);
             polygonPoints.clear();
           }
-          polygonPoints.emplace_back(it->itsX, it->itsY);
+          polygonPoints.emplace_back(it.itsX, it.itsY);
           break;
 
         case NFmiSvgPath::kElementClosePath:
@@ -721,7 +722,7 @@ void convertSvgPathToPolygonPath(NFmiSvgPath &svgPath, T::Polygon_vec &polygonPa
           break;
 
           case NFmiSvgPath::kElementLineto:
-          polygonPoints.emplace_back(it->itsX,it->itsY);
+          polygonPoints.emplace_back(it.itsX,it.itsY);
           break;
 
           case NFmiSvgPath::kElementNotValid:
@@ -1178,9 +1179,9 @@ T::Polygon_vec getEnlargedPolygonPath(T::Polygon_vec &oldPath, double areaExtens
   {
     T::Polygon_vec newPath;
 
-    for (auto coordinates = oldPath.begin(); coordinates != oldPath.end(); ++coordinates)
+    for (auto & coordinates : oldPath)
     {
-      T::Coordinate_vec newCoordinates = getEnlargedPolygon(*coordinates, areaExtensionX, areaExtensionY);
+      T::Coordinate_vec newCoordinates = getEnlargedPolygon(coordinates, areaExtensionX, areaExtensionY);
       newPath.emplace_back(newCoordinates);
     }
     return newPath;
@@ -1223,18 +1224,18 @@ void getIsolines(std::vector<float> &gridData, T::Coordinate_vec *coordinates, i
       input = Trax::smooth(grid, smoothOptions);
 
     Trax::IsolineValues isolineValues;
-    for (auto v = contourValues.begin(); v != contourValues.end(); v++)
-      isolineValues.add(*v);
+    for (float & contourValue : contourValues)
+      isolineValues.add(contourValue);
 
     auto result = contourer.isolines(*input, isolineValues);
 
     //ImagePaint paint(3600,1800,0xFFFFFF,0xFF0000,0x0000FF,false,false);
     if (result.size() > 0)
     {
-      for (auto g = result.begin(); g != result.end(); ++g)
+      for (auto & g : result)
       {
         std::ostringstream out;
-        g->wkb(out);
+        g.wkb(out);
         const auto &wkb = out.str();
         size_t size = wkb.length();
 
@@ -1401,11 +1402,11 @@ void getIsobands(std::vector<float> &gridData, std::vector<T::Coordinate> *coord
 
     if (result.size() > 0)
     {
-      for (auto g = result.begin(); g != result.end(); ++g)
+      for (auto & g : result)
       {
         std::ostringstream out;
 
-        g->wkb(out);
+        g.wkb(out);
         const auto &wkb = out.str();
         size_t size = wkb.length();
 
@@ -1948,10 +1949,10 @@ void getStreamlineImage(float *direction, float *value, uint *image, int width, 
         uint c = 0;
         if (cellCount >= minLength && value)
         {
-          for (auto it = coordinates.rbegin(); it != coordinates.rend(); ++it)
+          for (auto & coordinate : std::ranges::reverse_view(coordinates))
           {
-            int xx = (int) it->x();
-            int yy = (int) it->y();
+            int xx = (int) coordinate.x();
+            int yy = (int) coordinate.y();
             int idx = yy * width + xx;
 
             float val = value[idx];
@@ -1967,10 +1968,10 @@ void getStreamlineImage(float *direction, float *value, uint *image, int width, 
         }
 
         c = 0;
-        for (auto it = coordinates.rbegin(); it != coordinates.rend(); ++it)
+        for (auto & coordinate : std::ranges::reverse_view(coordinates))
         {
-          int xx = (int) it->x();
-          int yy = (int) it->y();
+          int xx = (int) coordinate.x();
+          int yy = (int) coordinate.y();
 
           int idx = yy * width + xx;
           if (idx < size)
@@ -2037,10 +2038,10 @@ void getStreamlineImage(float *direction, float *value, uint *image, int width, 
         int cellCount = findPath(direction, image, width, height, maxLength, 0, (double) x + 0.5, (double) y + 0.5, 0, 0, coordinates);
 
         uint c = 1;
-        for (auto it = coordinates.rbegin(); it != coordinates.rend(); ++it)
+        for (auto & coordinate : std::ranges::reverse_view(coordinates))
         {
-          int xx = (int) it->x();
-          int yy = (int) it->y();
+          int xx = (int) coordinate.x();
+          int yy = (int) coordinate.y();
 
           int idx = yy * width + xx;
           if (idx < size)
@@ -2087,10 +2088,10 @@ void getStreamlineImage(std::vector<float>& direction, float *value, uint *image
         int cellCount = findPath(direction, image, width, height, maxLength, 0, (double) x + 0.5, (double) y + 0.5, 0, 0, coordinates);
 
         uint c = 1;
-        for (auto it = coordinates.rbegin(); it != coordinates.rend(); ++it)
+        for (auto & coordinate : std::ranges::reverse_view(coordinates))
         {
-          int xx = (int) it->x();
-          int yy = (int) it->y();
+          int xx = (int) coordinate.x();
+          int yy = (int) coordinate.y();
 
           int idx = yy * width + xx;
           if (idx < size)
@@ -2243,9 +2244,9 @@ void getStreamlines(T::ParamValue_vec &gridValues, std::vector<T::Coordinate> *c
         }
         else
         {
-          for (auto point = lineCoordinates.begin(); point != lineCoordinates.end(); ++point)
+          for (auto & lineCoordinate : lineCoordinates)
           {
-            int idx = ((int) point->y()) * width + (int) point->x();
+            int idx = ((int) lineCoordinate.y()) * width + (int) lineCoordinate.x();
             if (idx >= 0 && idx < sz)
               image[idx] = 0;
           }

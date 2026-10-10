@@ -42,9 +42,9 @@ DataFetcher_network::~DataFetcher_network()
   try
   {
     AutoThreadLock lock(&mThreadLock);
-    for (auto convec = mClients.begin(); convec != mClients.end(); ++convec)
+    for (auto & mClient : mClients)
     {
-      for (auto con = convec->second.begin(); con != convec->second.end(); ++con)
+      for (auto con = mClient.second.begin(); con != mClient.second.end(); ++con)
       {
         delete (*con);
       }
@@ -104,13 +104,13 @@ Client* DataFetcher_network::getClient(const char *serverAddress,uint serverType
     {
       //printf("Connections %ld:%ld\n",mClients.size(),convec->second.size());
 
-      for (auto it = convec->second.begin();it != convec->second.end(); ++it)
+      for (auto & it : convec->second)
       {
-        if (!(*it)->isActive())
+        if (!it->isActive())
         {
-          (*it)->setActive(true);
-          (*it)->setDebugEnabled(mDebugEnabled);
-          return *it;
+          it->setActive(true);
+          it->setDebugEnabled(mDebugEnabled);
+          return it;
         }
       }
 
@@ -203,12 +203,12 @@ bool DataFetcher_network::getFileList(uint protocol,const char *server,XmlElemen
   try
   {
     bool truncated = false;
-    for (auto a = rootElement.elementList.begin(); a != rootElement.elementList.end(); ++a)
+    for (auto & a : rootElement.elementList)
     {
-      if (strcasecmp((*a)->tag.c_str(), "ListBucketResult") == 0)
+      if (strcasecmp(a->tag.c_str(), "ListBucketResult") == 0)
       {
         std::string name;
-        for (auto b = (*a)->elementList.begin(); b != (*a)->elementList.end(); ++b)
+        for (auto b = a->elementList.begin(); b != a->elementList.end(); ++b)
         {
           if (strcasecmp((*b)->tag.c_str(), "IsTruncated") == 0)
           {
@@ -226,25 +226,25 @@ bool DataFetcher_network::getFileList(uint protocol,const char *server,XmlElemen
             rec.serverType = ServerType::S3;
             rec.protocol = protocol;
             rec.server = server;
-            for (auto c = (*b)->elementList.begin(); c != (*b)->elementList.end(); ++c)
+            for (auto & c : (*b)->elementList)
             {
-              if (strcasecmp((*c)->tag.c_str(), "Key") == 0)
+              if (strcasecmp(c->tag.c_str(), "Key") == 0)
               {
                 if (truncated)
-                  lastKey = (*c)->value;
+                  lastKey = c->value;
 
-                rec.filename = "/" + name + "/" + (*c)->value;
+                rec.filename = "/" + name + "/" + c->value;
               }
               else
-              if (strcasecmp((*c)->tag.c_str(), "LastModified") == 0)
+              if (strcasecmp(c->tag.c_str(), "LastModified") == 0)
               {
-                auto tt = Fmi::TimeParser::parse((*c)->value);
+                auto tt = Fmi::TimeParser::parse(c->value);
                 rec.lastModified = toTimeT(tt);
               }
               else
-              if (strcasecmp((*c)->tag.c_str(), "Size") == 0)
+              if (strcasecmp(c->tag.c_str(), "Size") == 0)
               {
-                rec.size = atoll((*c)->value.c_str());
+                rec.size = atoll(c->value.c_str());
               }
             }
 

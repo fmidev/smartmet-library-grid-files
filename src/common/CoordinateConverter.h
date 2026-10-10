@@ -91,10 +91,10 @@ class CoordinateConverter
 
     ~CoordinateConverter()
     {
-      for (uint t=0; t<CONVERTER_COUNT; t++)
+      for (auto & t : transformation)
       {
-        if (transformation[t])
-          OCTDestroyCoordinateTransformation(transformation[t]);
+        if (t)
+          OCTDestroyCoordinateTransformation(t);
       }
 
       if (sr1 != nullptr)

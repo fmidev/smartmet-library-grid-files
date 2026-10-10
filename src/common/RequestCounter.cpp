@@ -3,6 +3,7 @@
 #include "ShowFunction.h"
 #include "GeneralFunctions.h"
 #include <macgyver/Exception.h>
+#include <ranges>
 #include <vector>
 
 
@@ -380,9 +381,9 @@ void RequestCounter::updateTopCounters()
 
     mTopRequestCounters.clear();
 
-    for (auto it = mRequestCounters.begin(); it != mRequestCounters.end(); ++it)
+    for (auto & mRequestCounter : mRequestCounters)
     {
-      mTopRequestCounters.insert(std::pair<uint,UInt64>(it->second,it->first));
+      mTopRequestCounters.insert(std::pair<uint,UInt64>(mRequestCounter.second,mRequestCounter.first));
     }
   }
   catch (...)
@@ -412,11 +413,11 @@ void RequestCounter::saveGeometryHitCounters(const char *filename)
       throw exception;
     }
 
-    for (auto geom = mGeometryHitCounter.rbegin(); geom != mGeometryHitCounter.rend(); ++geom)
+    for (auto & geom : std::ranges::reverse_view(mGeometryHitCounter))
     {
-      for (auto it = geom->second.begin();it != geom->second.end();++it)
+      for (auto it = geom.second.begin();it != geom.second.end();++it)
       {
-        fprintf(file,"%u;%u;%u\n",geom->first,it->first,it->second);
+        fprintf(file,"%u;%u;%u\n",geom.first,it->first,it->second);
       }
     }
     fclose(file);

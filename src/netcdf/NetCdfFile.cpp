@@ -1315,12 +1315,12 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
 
             for (uint t=0; t<tc; t++)
             {
-              for (auto v = timeValues.begin(); v != timeValues.end(); ++v)
+              for (double & timeValue : timeValues)
               {
                 // The values come from the file, they must be convertible to time_t
-                if (!std::isfinite(*v) || std::fabs(*v) > 1e12)
+                if (!std::isfinite(timeValue) || std::fabs(timeValue) > 1e12)
                   throw Fmi::Exception(BCP,"Invalid NetCDF time value!");
-                time_t ttt = (time_t)(*v)*(time_t)unitSize+(time_t)t*(time_t)unitSize;
+                time_t ttt = (time_t)timeValue*(time_t)unitSize+(time_t)t*(time_t)unitSize;
                 //printf("TimeT %ld %f %ld\n",ttt,*v,unitSize);
                 time_t tt = getGregorianTimeT(year,month,day,hour,minute,second,ttt);
                 timeList.push_back(tt);
@@ -1722,9 +1722,9 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
 
             // ##### Creating message infos ########################################
 
-            for (auto tIt = timeList.begin(); tIt != timeList.end(); tIt++)
+            for (long & tIt : timeList)
             {
-              for (auto lIt = levelList.begin(); lIt != levelList.end(); lIt++)
+              for (double & lIt : levelList)
               {
                 if (C_UINT64(dataStartOffset) + dataSize > memoryReader.getDataSize())
                   throw Fmi::Exception(BCP,"NetCDF data is outside of the file!");
@@ -1756,10 +1756,10 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
 
                 msg.mParameterUnits = dataUnits;
                 msg.mParameterLevelId = paramLevelId;
-                msg.mParameterLevel = *lIt;
+                msg.mParameterLevel = lIt;
                 msg.mForecastType = 1;
                 msg.mForecastNumber = 0;
-                msg.mForecastTimeT = *tIt;
+                msg.mForecastTimeT = tIt;
                 msg.mMissingValue = missingValue;
                 messageInfoList.push_back(msg);
                 dataStartOffset += dataSize;
@@ -1813,16 +1813,16 @@ void NetCdfFile::getAttributeList(const char *variableName,const std::string& pr
   try
   {
     uint len = strlen(variableName);
-    for (auto pr = mPropertyList.begin();pr != mPropertyList.end(); ++pr)
+    for (const auto & pr : mPropertyList)
     {
-      const char *s = pr->first.c_str();
+      const char *s = pr.first.c_str();
       if (strncasecmp(s,variableName,len) == 0 &&  s[len] == '.')
       {
         // The attribute names and values come from the file and may be long
         std::string value;
-        for (auto it = pr->second.begin(); it != pr->second.end(); ++it)
+        for (auto it = pr.second.begin(); it != pr.second.end(); ++it)
         {
-          if (it != pr->second.begin())
+          if (it != pr.second.begin())
             value += " ";
           value += *it;
         }
@@ -1855,10 +1855,10 @@ void NetCdfFile::print(std::ostream& stream,uint level,uint optionFlags) const
     stream << space(level) << "NetCdfFile\n";
     stream << space(level) << "- mPropertyList = \n";
 
-    for (auto pr = mPropertyList.begin();pr != mPropertyList.end(); ++pr)
+    for (const auto & pr : mPropertyList)
     {
-      stream << space(level+2) <<  pr->first << " : ";
-      for (auto it = pr->second.begin(); it != pr->second.end(); ++it)
+      stream << space(level+2) <<  pr.first << " : ";
+      for (auto it = pr.second.begin(); it != pr.second.end(); ++it)
       {
         stream << "[" << *it << "]";
       }

@@ -323,9 +323,9 @@ void MemoryMapper::addAccessInfo(const char *server,uint authenticationMethod,co
   FUNCTION_TRACE
   try
   {
-    for (auto it = mDataFetchers.begin(); it != mDataFetchers.end(); ++it)
+    for (auto & mDataFetcher : mDataFetchers)
     {
-      (it->second)->addAccessInfo(server,authenticationMethod,username,password);
+      (mDataFetcher.second)->addAccessInfo(server,authenticationMethod,username,password);
     }
   }
   catch (...)

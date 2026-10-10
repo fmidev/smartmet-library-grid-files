@@ -2575,15 +2575,15 @@ void Message::getGridMinAndMaxValues(T::ParamValue& minValue,T::ParamValue& maxV
     minValue = 1000000000;
     maxValue = -1000000000;
 
-    for (auto it = values.begin(); it != values.end(); ++it)
+    for (float & value : values)
     {
-      if (*it != ParamValueMissing)
+      if (value != ParamValueMissing)
       {
-        if (*it < minValue)
-          minValue = *it;
+        if (value < minValue)
+          minValue = value;
 
-        if (*it > maxValue)
-          maxValue = *it;
+        if (value > maxValue)
+          maxValue = value;
       }
     }
   }

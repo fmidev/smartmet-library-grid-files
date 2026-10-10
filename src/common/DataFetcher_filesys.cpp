@@ -36,12 +36,12 @@ DataFetcher_filesys::DataFetcher_filesys()
 DataFetcher_filesys::~DataFetcher_filesys()
 {
   FUNCTION_TRACE
-  for (auto it = mFileHandles.begin(); it != mFileHandles.end(); ++it)
+  for (auto & mFileHandle : mFileHandles)
   {
-    if (it->second->fileHandle)
-      fclose(it->second->fileHandle);
+    if (mFileHandle.second->fileHandle)
+      fclose(mFileHandle.second->fileHandle);
 
-    delete it->second;
+    delete mFileHandle.second;
   }
 }
 
@@ -82,23 +82,23 @@ void DataFetcher_filesys::checkFileHandles()
       if (mFileHandles.size() > mFileHandleLimit)
         deleteLimit = mLastChecked - 30;
 
-      for (auto it = mFileHandles.begin(); it != mFileHandles.end(); ++it)
+      for (auto & mFileHandle : mFileHandles)
       {
-        if (it->second->lastUsed < deleteLimit)
+        if (mFileHandle.second->lastUsed < deleteLimit)
         {
-          if (it->second->threadLock.tryLock())
+          if (mFileHandle.second->threadLock.tryLock())
           {
-            fclose(it->second->fileHandle);
-            it->second->fileHandle = nullptr;
-            deleteList.push_back(it->first);
-            it->second->threadLock.unlock();
+            fclose(mFileHandle.second->fileHandle);
+            mFileHandle.second->fileHandle = nullptr;
+            deleteList.push_back(mFileHandle.first);
+            mFileHandle.second->threadLock.unlock();
           }
         }
       }
 
-      for (auto it = deleteList.begin(); it != deleteList.end(); ++it)
+      for (auto & it : deleteList)
       {
-        auto itm = mFileHandles.find(*it);
+        auto itm = mFileHandles.find(it);
         if (itm != mFileHandles.end())
         {
           delete itm->second;

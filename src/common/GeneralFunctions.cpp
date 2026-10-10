@@ -20,6 +20,7 @@
 #include <boost/archive/iterators/binary_from_base64.hpp>
 #include <boost/archive/iterators/transform_width.hpp>
 #include <filesystem>
+#include <ranges>
 #include <set>
 #include <sstream>
 #include <string>
@@ -2671,10 +2672,10 @@ void splitNumbers(const char *str,std::vector<std::string>& numbers)
   std::vector<std::string> parts;
   splitString(str,'/',parts);
 
-  for (auto p = parts.begin(); p != parts.end(); ++p)
+  for (auto & part : parts)
   {
     std::vector<std::string> nums;
-    splitString(p->c_str(),'-',nums);
+    splitString(part.c_str(),'-',nums);
 
     if (nums.size() == 2  &&  nums[0] > " ")
     {
@@ -2688,7 +2689,7 @@ void splitNumbers(const char *str,std::vector<std::string>& numbers)
     }
     else
     {
-      numbers.emplace_back(*p);
+      numbers.emplace_back(part);
     }
   }
 }
@@ -2791,9 +2792,9 @@ bool patternMatch(const char *str, std::vector<std::string> &patterns)
 {
   try
   {
-    for (auto it = patterns.begin(); it != patterns.end(); ++it)
+    for (auto & pattern : patterns)
     {
-      if (fnmatch(it->c_str(), str, 0) == 0) return true;
+      if (fnmatch(pattern.c_str(), str, 0) == 0) return true;
     }
 
     return false;
@@ -3050,12 +3051,12 @@ void parseCoordinates(const std::string& coordinateStr,
     std::vector<std::string> partList;
 
     splitString(coordinateStr, separator2, partList);
-    for (auto it = partList.begin(); it != partList.end(); ++it)
+    for (auto & it : partList)
     {
       T::Coordinate_vec coordinateList;
 
       std::vector<double> cList;
-      splitString(*it, separator1, cList);
+      splitString(it, separator1, cList);
       size_t sz = cList.size();
       if ((sz % 2) == 0)
       {
@@ -3301,9 +3302,9 @@ void readEofLines(const char *filename,uint numberOfLines,std::vector<std::strin
     }
     fclose(file);
 
-    for (auto it = tmpLines.rbegin(); it != tmpLines.rend(); it++)
+    for (auto & tmpLine : std::ranges::reverse_view(tmpLines))
     {
-      lines.push_back(*it);
+      lines.push_back(tmpLine);
       if (lines.size() == numberOfLines)
         return;
     }
@@ -4346,8 +4347,8 @@ int signature_aws_s3_v4(const char *username,
   //for (uint t=0; t<32; t++) printf("%02x",signature[t]); printf("\n");
 
   char *p = hexSignature;
-  for (uint t=0; t<32; t++)
-    p += sprintf(p,"%02x",signature[t]);
+  for (unsigned char t : signature)
+    p += sprintf(p,"%02x",t);
 
   return 0;
 }
@@ -4365,8 +4366,8 @@ void hash_sha256(uchar *input,int inputLen,char *hexHash)
   SHA256_Final(hash, &sha256);
 
   char *p = hexHash;
-  for (uint t=0; t<SHA256_DIGEST_LENGTH; t++)
-    p += sprintf(p,"%02x",hash[t]);
+  for (unsigned char t : hash)
+    p += sprintf(p,"%02x",t);
 }
 
 

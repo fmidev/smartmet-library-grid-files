@@ -58,8 +58,8 @@ void FmiGeometryGroupDef::print(std::ostream& stream,uint level,uint optionFlags
     stream << space(level) << "- mProducerName      = " << mProducerName << "\n";
     stream << space(level) << "- mGeometryIdList    = \n";
 
-    for (auto it = mGeometryIdList.begin(); it != mGeometryIdList.end(); ++it)
-      stream << space(level) << "    * " << *it << "\n";
+    for (int it : mGeometryIdList)
+      stream << space(level) << "    * " << it << "\n";
   }
   catch (...)
   {

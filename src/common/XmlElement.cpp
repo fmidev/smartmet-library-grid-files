@@ -48,9 +48,9 @@ XmlElement::XmlElement(const char *data,int size)
 
 XmlElement::~XmlElement()
 {
-  for (auto it=elementList.begin(); it!=elementList.end();++it)
+  for (auto & it : elementList)
   {
-    delete (*it);
+    delete it;
   }
 }
 
@@ -67,8 +67,8 @@ void XmlElement::print(std::ostream& stream,uint level,uint optionFlags)
     stream << space(level+1) << "Value        : " << value << "\n";
     stream << space(level+1) << "ElementList  : \n";
 
-    for (auto it=elementList.begin(); it!=elementList.end();++it)
-      (*it)->print(stream,level+2,0);
+    for (auto & it : elementList)
+      it->print(stream,level+2,0);
 
     stream << space(level) << "END " << tag << "\n";
   }

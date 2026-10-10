@@ -3294,15 +3294,15 @@ void Message::getGridMinAndMaxValues(T::ParamValue& minValue,T::ParamValue& maxV
     minValue = 1000000000;
     maxValue = -1000000000;
 
-    for (auto it = values.begin(); it != values.end(); ++it)
+    for (float & value : values)
     {
-      if (*it != ParamValueMissing)
+      if (value != ParamValueMissing)
       {
-        if (*it < minValue)
-          minValue = *it;
+        if (value < minValue)
+          minValue = value;
 
-        if (*it > maxValue)
-          maxValue = *it;
+        if (value > maxValue)
+          maxValue = value;
       }
     }
   }
@@ -4008,10 +4008,10 @@ void Message::getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate
     std::vector<uint> indexList;
     indexList.reserve(fourCorners ? pn * 4 : pn);
 
-    for (auto it = points.begin(); it != points.end(); ++it)
+    for (auto & point : points)
     {
-      double x = it->x();
-      double y = it->y();
+      double x = point.x();
+      double y = point.y();
       uint x1 = C_UINT(Fmi::floor(x));
       uint y1 = C_UINT(Fmi::floor(y));
       uint x2 = x1 + 1;

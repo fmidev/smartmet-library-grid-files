@@ -114,9 +114,9 @@ void ConfigurationFile::addConfigurationFile(const std::string& filename)
 
     mIncludedConfigurationFiles.insert(filename);
     ConfigurationFile configFile(filename);
-    for (auto it=configFile.mAttributeList.begin(); it!=configFile.mAttributeList.end();++it)
+    for (auto & it : configFile.mAttributeList)
     {
-      mAttributeList.emplace_back(*it);
+      mAttributeList.emplace_back(it);
     }
   }
   catch (...)
@@ -278,11 +278,11 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,bool& attrib
   FUNCTION_TRACE
   try
   {
-    for (auto attr = mAttributeList.begin(); attr != mAttributeList.end(); ++attr)
+    for (auto & attr : mAttributeList)
     {
-      if (strcasecmp(attr->mName.c_str(),attributeName) == 0)
+      if (strcasecmp(attr.mName.c_str(),attributeName) == 0)
       {
-        std::string val = parseValue(attr->mValue);
+        std::string val = parseValue(attr.mValue);
 
         if (val.length() == 0)
         {
@@ -338,11 +338,11 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,double& attr
   FUNCTION_TRACE
   try
   {
-    for (auto attr = mAttributeList.begin(); attr != mAttributeList.end(); ++attr)
+    for (auto & attr : mAttributeList)
     {
-      if (strcasecmp(attr->mName.c_str(),attributeName) == 0)
+      if (strcasecmp(attr.mName.c_str(),attributeName) == 0)
       {
-        std::string val = parseValue(attr->mValue);
+        std::string val = parseValue(attr.mValue);
 
         if (val.length() == 0)
         {
@@ -459,11 +459,11 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,Int64& attri
   FUNCTION_TRACE
   try
   {
-    for (auto attr = mAttributeList.begin(); attr != mAttributeList.end(); ++attr)
+    for (auto & attr : mAttributeList)
     {
-      if (strcasecmp(attr->mName.c_str(),attributeName) == 0)
+      if (strcasecmp(attr.mName.c_str(),attributeName) == 0)
       {
-        std::string val = parseValue(attr->mValue);
+        std::string val = parseValue(attr.mValue);
 
         if (val.length() == 0)
         {
@@ -605,11 +605,11 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,std::string&
   FUNCTION_TRACE
   try
   {
-    for (auto attr = mAttributeList.begin(); attr != mAttributeList.end(); ++attr)
+    for (auto & attr : mAttributeList)
     {
-      if (strcasecmp(attr->mName.c_str(),attributeName) == 0)
+      if (strcasecmp(attr.mName.c_str(),attributeName) == 0)
       {
-        std::string val = parseValue(attr->mValue);
+        std::string val = parseValue(attr.mValue);
 
         auto len = val.length();
 
@@ -644,11 +644,11 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,std::vector<
   {
     bool exists = false;
     uint len = strlen(attributeName);
-    for (auto attr = mAttributeList.begin(); attr != mAttributeList.end(); ++attr)
+    for (auto & attr : mAttributeList)
     {
-      if (strncasecmp(attr->mName.c_str(),attributeName,len) == 0)
+      if (strncasecmp(attr.mName.c_str(),attributeName,len) == 0)
       {
-        if (attr->mName.length() == len)
+        if (attr.mName.length() == len)
         {
           // Attribute exists, but its value is not an array.
           Fmi::Exception exception(BCP,"The attribute value is not an array!");
@@ -656,15 +656,15 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,std::vector<
           throw exception;
         }
 
-        if (attr->mName.length() >= (len+2)  &&  attr->mName[len] == '['  &&  attr->mName[len+1] == ']')
+        if (attr.mName.length() >= (len+2)  &&  attr.mName[len] == '['  &&  attr.mName[len+1] == ']')
         {
           exists = true;
         }
         else
-        if (attr->mName[len] == '.')
+        if (attr.mName[len] == '.')
         {
           std::string itm;
-          std::size_t p = attr->mName.find('.',len+1);
+          std::size_t p = attr.mName.find('.',len+1);
 
           if (p != std::string::npos)
           {
@@ -674,7 +674,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,std::vector<
           }
 
           std::string val;
-          if (getAttributeValue(attr->mName.c_str(),val))
+          if (getAttributeValue(attr.mName.c_str(),val))
             attributeValueVec.emplace_back(val);
         }
       }
@@ -707,30 +707,30 @@ uint ConfigurationFile::getArraySize(const char *attributeName)
     int idx = -1;
     bool exists = false;
     uint len = strlen(attributeName);
-    for (auto attr = mAttributeList.begin(); attr != mAttributeList.end(); ++attr)
+    for (auto & attr : mAttributeList)
     {
-      if (strncasecmp(attr->mName.c_str(),attributeName,len) == 0)
+      if (strncasecmp(attr.mName.c_str(),attributeName,len) == 0)
       {
-        if (attr->mName.length() == len)
+        if (attr.mName.length() == len)
         {
           // Attribute exists, but its value is not an array.
           return 0;
         }
 
-        if (attr->mName.length() >= (len+2)  &&  attr->mName[len] == '['  &&  attr->mName[len+1] == ']')
+        if (attr.mName.length() >= (len+2)  &&  attr.mName[len] == '['  &&  attr.mName[len+1] == ']')
         {
           exists = true;
         }
         else
-        if (attr->mName[len] == '.')
+        if (attr.mName[len] == '.')
         {
           std::string itm;
 
-          std::size_t p = attr->mName.find('.',len+1);
+          std::size_t p = attr.mName.find('.',len+1);
           if (p != std::string::npos)
-            itm = attr->mName.substr(len+1,p-len-1);
+            itm = attr.mName.substr(len+1,p-len-1);
           else
-            itm = attr->mName.substr(len+1);
+            itm = attr.mName.substr(len+1);
 
           int i = atoi(itm.c_str());
           if (i > idx)
@@ -763,24 +763,24 @@ bool ConfigurationFile::getAttributeFields(const char *attributeName,std::set<st
   try
   {
     uint len = strlen(attributeName);
-    for (auto attr = mAttributeList.begin(); attr != mAttributeList.end(); ++attr)
+    for (auto & attr : mAttributeList)
     {
-      if (strncasecmp(attr->mName.c_str(),attributeName,len) == 0)
+      if (strncasecmp(attr.mName.c_str(),attributeName,len) == 0)
       {
-        if (attr->mName.length() == len)
+        if (attr.mName.length() == len)
         {
           // Attribute exists, but it does not have sub-attributes
           return true;
         }
 
-        if (attr->mName[len] == '.')
+        if (attr.mName[len] == '.')
         {
           std::string itm;
-          std::size_t p = attr->mName.find('.',len+1);
+          std::size_t p = attr.mName.find('.',len+1);
           if (p != std::string::npos)
-            itm = attr->mName.substr(len+1,p-len-1);
+            itm = attr.mName.substr(len+1,p-len-1);
           else
-            itm = attr->mName.substr(len+1);
+            itm = attr.mName.substr(len+1);
 
           attributeFields.insert(itm);
         }
@@ -812,19 +812,19 @@ bool ConfigurationFile::getSubAttributes(const char *attributeName,std::vector<s
   try
   {
     uint len = strlen(attributeName);
-    for (auto attr = mAttributeList.begin(); attr != mAttributeList.end(); ++attr)
+    for (auto & attr : mAttributeList)
     {
-      if (strncasecmp(attr->mName.c_str(),attributeName,len) == 0)
+      if (strncasecmp(attr.mName.c_str(),attributeName,len) == 0)
       {
-        if (attr->mName.length() == len)
+        if (attr.mName.length() == len)
         {
           // Attribute exists, but it does not have sub-attributes
           return true;
         }
 
-        if (attr->mName[len] == '.')
+        if (attr.mName[len] == '.')
         {
-          std::string itm = attr->mName.substr(len+1);
+          std::string itm = attr.mName.substr(len+1);
 
           attributeNames.emplace_back(itm);
         }
@@ -876,11 +876,11 @@ bool ConfigurationFile::findAttribute(const char *attributeName)
   try
   {
     uint len = strlen(attributeName);
-    for (auto attr = mAttributeList.begin(); attr != mAttributeList.end(); ++attr)
+    for (auto & attr : mAttributeList)
     {
-      if (strncasecmp(attr->mName.c_str(),attributeName,len) == 0)
+      if (strncasecmp(attr.mName.c_str(),attributeName,len) == 0)
       {
-        if (attr->mName.length() == len  ||  attr->mName[len] == '.' || attr->mName[len] == '[')
+        if (attr.mName.length() == len  ||  attr.mName[len] == '.' || attr.mName[len] == '[')
           return true;
       }
     }
@@ -905,11 +905,11 @@ void ConfigurationFile::setAttributeValue(const char *attributeName,std::string&
   FUNCTION_TRACE
   try
   {
-    for (auto attr = mAttributeList.begin(); attr != mAttributeList.end(); ++attr)
+    for (auto & attr : mAttributeList)
     {
-      if (strcasecmp(attr->mName.c_str(),attributeName) == 0)
+      if (strcasecmp(attr.mName.c_str(),attributeName) == 0)
       {
-        attr->mValue = attributeValue;
+        attr.mValue = attributeValue;
         return;
       }
     }
@@ -938,12 +938,12 @@ void ConfigurationFile::print(std::ostream& stream,uint level,uint optionFlags)
     stream << space(level) << "- mFilename            = " << mFilename << "\n";
     stream << space(level) << "- mAttributeList       = \n";
 
-    for (auto attr = mAttributeList.begin(); attr != mAttributeList.end(); ++attr)
+    for (auto & attr : mAttributeList)
     {
       if ((optionFlags & 0x0001) != 0)
-        stream << space(level) << "    * ATTR " << attr->mName << " = " << parseValue(attr->mValue) << "\n";
+        stream << space(level) << "    * ATTR " << attr.mName << " = " << parseValue(attr.mValue) << "\n";
       else
-        stream << space(level) << "    * ATTR " << attr->mName << " = " << attr->mValue << "\n";
+        stream << space(level) << "    * ATTR " << attr.mName << " = " << attr.mValue << "\n";
     }
   }
   catch (...)
@@ -1433,11 +1433,11 @@ void ConfigurationFile::removeAttributes(const char *pattern)
   {
     std::vector<T::Attribute>  newAttributeList;
 
-    for (auto attr = mAttributeList.begin(); attr != mAttributeList.end(); ++attr)
+    for (auto & attr : mAttributeList)
     {
-      if (fnmatch(pattern,attr->mName.c_str(),0) != 0)
+      if (fnmatch(pattern,attr.mName.c_str(),0) != 0)
       {
-        newAttributeList.emplace_back(*attr);
+        newAttributeList.emplace_back(attr);
       }
     }
     if (newAttributeList.size() != mAttributeList.size())

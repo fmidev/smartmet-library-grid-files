@@ -179,10 +179,10 @@ std::string Property::getPropertyName(uint id)
 {
   try
   {
-    for (auto it = propertyMap.begin(); it != propertyMap.end(); ++it)
+    for (auto & it : propertyMap)
     {
-      if (it->second == id)
-        return it->first;
+      if (it.second == id)
+        return it.first;
     }
 
     return "";

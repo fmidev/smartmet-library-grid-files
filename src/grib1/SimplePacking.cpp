@@ -536,18 +536,18 @@ void SimplePacking::encodeValues(Message *message,T::ParamValue_vec& values)
     T::ParamValue minValue = ParamValueMissing;
     T::ParamValue maxValue = ParamValueMissing;
 
-    for (auto it = values.begin(); it != values.end(); ++it)
+    for (float & value : values)
     {
-      if ((*it) != ParamValueMissing)
+      if (value != ParamValueMissing)
       {
-        if (minValue == ParamValueMissing || ((*it) < minValue))
+        if (minValue == ParamValueMissing || (value < minValue))
         {
-          minValue = *it;
+          minValue = value;
         }
 
-        if (maxValue == ParamValueMissing || ((*it) > maxValue))
+        if (maxValue == ParamValueMissing || (value > maxValue))
         {
-          maxValue = *it;
+          maxValue = value;
         }
         valueCount++;
       }
@@ -602,11 +602,11 @@ void SimplePacking::encodeValues(Message *message,T::ParamValue_vec& values)
     memset(data,0,dataSize);
     BitArrayWriter bitArrayWriter(data,totalBits);
 
-    for (auto it = values.begin(); it != values.end(); ++it)
+    for (float & value : values)
     {
-      if ((*it) != ParamValueMissing)
+      if (value != ParamValueMissing)
       {
-        double Y = *it;
+        double Y = value;
         double X = (Y - RDfac) / EDfac;
 
         auto v = C_UINT64(round(X));

@@ -1449,9 +1449,9 @@ void saveGeometryAsJpeg(const char *_filename,int width,int height,uint backgrou
       tmaxX = -1000000000;
       tmaxY = -1000000000;
 
-      for (auto g = geomVec.begin();g != geomVec.end(); ++g)
+      for (auto & g : geomVec)
       {
-        auto gg = g->get();
+        auto gg = g.get();
         auto* out = new unsigned char[gg->WkbSize()+10];
         gg->exportToWkb(wkbNDR,out,wkbVariantOldOgc);
 
@@ -1495,9 +1495,9 @@ void saveGeometryAsJpeg(const char *_filename,int width,int height,uint backgrou
     if (sy < sx)
       ss = sy;
 
-    for (auto g = geomVec.begin();g != geomVec.end(); ++g)
+    for (auto & g : geomVec)
     {
-      auto gg = g->get();
+      auto gg = g.get();
       auto* out = new unsigned char[gg->WkbSize()+10];
       gg->exportToWkb(wkbNDR,out,wkbVariantOldOgc);
       imagePaint.paintWkb(ss, ss, dx+10/ss, dy+10/ss,out,gg->WkbSize());
