@@ -11,8 +11,7 @@ namespace GRIB2
 /*! \brief The constructor of the class. */
 
 ForecastErrorImpl::ForecastErrorImpl()
-{
-}
+= default;
 
 
 
@@ -21,9 +20,8 @@ ForecastErrorImpl::ForecastErrorImpl()
 /*! \brief The copy constructor of the class. */
 
 ForecastErrorImpl::ForecastErrorImpl(const ForecastErrorImpl& other)
-:ForecastError(other)
-{
-}
+
+= default;
 
 
 
@@ -32,8 +30,7 @@ ForecastErrorImpl::ForecastErrorImpl(const ForecastErrorImpl& other)
 /*! \brief The destructor of the class. */
 
 ForecastErrorImpl::~ForecastErrorImpl()
-{
-}
+= default;
 
 
 

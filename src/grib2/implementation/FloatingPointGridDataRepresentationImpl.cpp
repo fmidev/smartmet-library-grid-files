@@ -15,8 +15,7 @@ const int bitmask[] = {128, 64, 32, 16, 8, 4, 2, 1};
 /*! \brief The constructor of the class. */
 
 FloatingPointGridDataRepresentationImpl::FloatingPointGridDataRepresentationImpl()
-{
-}
+= default;
 
 
 
@@ -25,9 +24,8 @@ FloatingPointGridDataRepresentationImpl::FloatingPointGridDataRepresentationImpl
 /*! \brief The copy constructor of the class. */
 
 FloatingPointGridDataRepresentationImpl::FloatingPointGridDataRepresentationImpl(const FloatingPointGridDataRepresentationImpl& other)
-:FloatingPointGridDataRepresentation(other)
-{
-}
+
+= default;
 
 
 
@@ -36,8 +34,7 @@ FloatingPointGridDataRepresentationImpl::FloatingPointGridDataRepresentationImpl
 /*! \brief The destructor of the class. */
 
 FloatingPointGridDataRepresentationImpl::~FloatingPointGridDataRepresentationImpl()
-{
-}
+= default;
 
 
 

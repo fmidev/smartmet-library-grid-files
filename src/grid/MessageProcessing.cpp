@@ -25,8 +25,7 @@ static int getContourThreads(T::AttributeList &attributeList)
 /*! \brief The constructor of the class. */
 
 MessageProcessing::MessageProcessing()
-{
-}
+= default;
 
 
 
@@ -34,8 +33,7 @@ MessageProcessing::MessageProcessing()
 /*! \brief The destructor of the class. */
 
 MessageProcessing::~MessageProcessing()
-{
-}
+= default;
 
 
 

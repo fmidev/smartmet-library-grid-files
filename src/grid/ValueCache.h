@@ -18,8 +18,8 @@
 namespace SmartMet
 {
 
-typedef boost::iostreams::mapped_file_params MappedFileParams;
-typedef Fmi::MappedFile MappedFile;
+using MappedFileParams = boost::iostreams::mapped_file_params;
+using MappedFile = Fmi::MappedFile;
 
 namespace GRID
 {
@@ -35,13 +35,13 @@ namespace GRID
  *  memory-mapped file, reducing heap pressure for large grids. */
 // ====================================================================================
 
-typedef UInt64 UInt64;
+using UInt64 = UInt64;
 
 #ifndef uchar
-  typedef unsigned char uchar;
+  using uchar = unsigned char;
 #endif
 
-typedef uchar *puchar;
+using puchar = uchar *;
 
 
 // ====================================================================================
@@ -152,7 +152,7 @@ class ValueCacheEntry
 };
 
 
-typedef ValueCacheEntry* ValueCacheEntry_ptr;
+using ValueCacheEntry_ptr = ValueCacheEntry*;
 
 
 // ====================================================================================

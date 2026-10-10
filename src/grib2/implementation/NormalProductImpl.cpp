@@ -11,8 +11,7 @@ namespace GRIB2
 /*! \brief The constructor of the class. */
 
 NormalProductImpl::NormalProductImpl()
-{
-}
+= default;
 
 
 
@@ -21,9 +20,8 @@ NormalProductImpl::NormalProductImpl()
 /*! \brief The copy constructor of the class. */
 
 NormalProductImpl::NormalProductImpl(const NormalProductImpl& other)
-:NormalProduct(other)
-{
-}
+
+= default;
 
 
 
@@ -31,8 +29,7 @@ NormalProductImpl::NormalProductImpl(const NormalProductImpl& other)
 /*! \brief The destructor of the class. */
 
 NormalProductImpl::~NormalProductImpl()
-{
-}
+= default;
 
 
 

@@ -38,7 +38,7 @@
 namespace SmartMet
 {
 
-typedef std::shared_ptr<geos::geom::Geometry> GeometryPtr;
+using GeometryPtr = std::shared_ptr<geos::geom::Geometry>;
 
 Fmi::Cache::Cache<std::size_t, std::vector<T::Point>> gridPointsCache(300);
 

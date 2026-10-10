@@ -16,7 +16,7 @@ struct Response
   uint maxSize;  //!< Allocated capacity of \p data
 };
 
-typedef std::map<std::string,Client_ptr_vec> Client_vecmap;
+using Client_vecmap = std::map<std::string,Client_ptr_vec>;
 
 
 

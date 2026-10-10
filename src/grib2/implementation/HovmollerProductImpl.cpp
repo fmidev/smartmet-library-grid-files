@@ -11,8 +11,7 @@ namespace GRIB2
 /*! \brief The constructor of the class. */
 
 HovmollerProductImpl::HovmollerProductImpl()
-{
-}
+= default;
 
 
 
@@ -21,9 +20,8 @@ HovmollerProductImpl::HovmollerProductImpl()
 /*! \brief The copy constructor of the class. */
 
 HovmollerProductImpl::HovmollerProductImpl(const HovmollerProductImpl& other)
-:HovmollerProduct(other)
-{
-}
+
+= default;
 
 
 
@@ -32,8 +30,7 @@ HovmollerProductImpl::HovmollerProductImpl(const HovmollerProductImpl& other)
 /*! \brief The destructor of the class. */
 
 HovmollerProductImpl::~HovmollerProductImpl()
-{
-}
+= default;
 
 
 

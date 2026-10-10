@@ -21,9 +21,8 @@ EquatorialAzimuthalEquidistantImpl::EquatorialAzimuthalEquidistantImpl()
 /*! \brief The copy constructor of the class. */
 
 EquatorialAzimuthalEquidistantImpl::EquatorialAzimuthalEquidistantImpl(const EquatorialAzimuthalEquidistantImpl& other)
-:EquatorialAzimuthalEquidistant(other)
-{
-}
+
+= default;
 
 
 
@@ -32,8 +31,7 @@ EquatorialAzimuthalEquidistantImpl::EquatorialAzimuthalEquidistantImpl(const Equ
 /*! \brief The destructor of the class. */
 
 EquatorialAzimuthalEquidistantImpl::~EquatorialAzimuthalEquidistantImpl()
-{
-}
+= default;
 
 
 

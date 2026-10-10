@@ -33,8 +33,8 @@ class FmiParameterId_grib
 };
 
 
-typedef std::vector<FmiParameterId_grib> FmiParamId_grib_vec;             //!< Ordered list of FMI↔GRIB mappings
-typedef std::unordered_map<uint,FmiParameterId_grib> FmiParamId_grib_umap; //!< Hash map keyed by FMI parameter ID
+using FmiParamId_grib_vec = std::vector<FmiParameterId_grib>;             //!< Ordered list of FMI↔GRIB mappings
+using FmiParamId_grib_umap = std::unordered_map<uint,FmiParameterId_grib>; //!< Hash map keyed by FMI parameter ID
 typedef const FmiParameterId_grib* FmiParamId_grib_cptr;                  //!< Non-owning const pointer
 
 

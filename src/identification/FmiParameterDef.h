@@ -37,8 +37,8 @@ class FmiParameterDef
     short         mDefaultPrecision;          //!< Default display precision (decimal places)
 };
 
-typedef std::vector<FmiParameterDef> FmiParamDef_vec;           //!< Ordered list of FMI parameter definitions
-typedef std::unordered_map<uint,FmiParameterDef> FmiParamDef_umap; //!< Hash map keyed by FMI parameter ID
+using FmiParamDef_vec = std::vector<FmiParameterDef>;           //!< Ordered list of FMI parameter definitions
+using FmiParamDef_umap = std::unordered_map<uint,FmiParameterDef>; //!< Hash map keyed by FMI parameter ID
 typedef const FmiParameterDef* FmiParamDef_cptr;                //!< Non-owning const pointer
 
 }

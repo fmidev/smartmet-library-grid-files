@@ -158,13 +158,13 @@ class GridDefinition
      bool                       mGlobal;
 };
 
-typedef GridDefinition* GridDef_ptr;                          //!< Non-owning pointer to a GridDefinition.
-typedef std::shared_ptr<GridDefinition> GridDef_sptr;         //!< Shared ownership pointer to a GridDefinition.
-typedef std::shared_ptr<GridDefinition> GridDefinition_sptr;  //!< Alias for GridDef_sptr.
-typedef std::vector<GridDef_ptr> GridDef_pvec;                //!< Vector of non-owning GridDefinition pointers.
-typedef std::map<uint,GridDef_ptr> GridDefinition_pmap;       //!< Map from uint key to non-owning GridDefinition pointer.
-typedef std::map<std::string,GridDef_ptr> GridDef_map;        //!< Map from string key to non-owning GridDefinition pointer.
-typedef std::map<std::string,GridDef_sptr> GridDef_spmap;     //!< Map from string key to shared GridDefinition pointer.
+using GridDef_ptr = GridDefinition*;                          //!< Non-owning pointer to a GridDefinition.
+using GridDef_sptr = std::shared_ptr<GridDefinition>;         //!< Shared ownership pointer to a GridDefinition.
+using GridDefinition_sptr = std::shared_ptr<GridDefinition>;  //!< Alias for GridDef_sptr.
+using GridDef_pvec = std::vector<GridDef_ptr>;                //!< Vector of non-owning GridDefinition pointers.
+using GridDefinition_pmap = std::map<uint,GridDef_ptr>;       //!< Map from uint key to non-owning GridDefinition pointer.
+using GridDef_map = std::map<std::string,GridDef_ptr>;        //!< Map from string key to non-owning GridDefinition pointer.
+using GridDef_spmap = std::map<std::string,GridDef_sptr>;     //!< Map from string key to shared GridDefinition pointer.
 
 extern Fmi::Cache::CacheStats latlonCoordinateCache_stats;
 extern Fmi::Cache::CacheStats originalCoordinateCache_stats;

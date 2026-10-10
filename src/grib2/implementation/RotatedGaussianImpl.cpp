@@ -22,9 +22,8 @@ RotatedGaussianImpl::RotatedGaussianImpl()
 /*! \brief The copy constructor of the class. */
 
 RotatedGaussianImpl::RotatedGaussianImpl(const RotatedGaussianImpl& other)
-:RotatedGaussian(other)
-{
-}
+
+= default;
 
 
 
@@ -33,8 +32,7 @@ RotatedGaussianImpl::RotatedGaussianImpl(const RotatedGaussianImpl& other)
 /*! \brief The destructor of the class. */
 
 RotatedGaussianImpl::~RotatedGaussianImpl()
-{
-}
+= default;
 
 
 

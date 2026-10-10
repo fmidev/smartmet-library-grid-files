@@ -24,8 +24,7 @@ ThreadLock AEC_threadLock;
 /*! \brief The constructor of the class. */
 
 SpectralGridDataRepresentationImpl::SpectralGridDataRepresentationImpl()
-{
-}
+= default;
 
 
 
@@ -34,9 +33,8 @@ SpectralGridDataRepresentationImpl::SpectralGridDataRepresentationImpl()
 /*! \brief The copy constructor of the class. */
 
 SpectralGridDataRepresentationImpl::SpectralGridDataRepresentationImpl(const SpectralGridDataRepresentationImpl& other)
-:SpectralGridDataRepresentation(other)
-{
-}
+
+= default;
 
 
 
@@ -45,8 +43,7 @@ SpectralGridDataRepresentationImpl::SpectralGridDataRepresentationImpl(const Spe
 /*! \brief The destructor of the class. */
 
 SpectralGridDataRepresentationImpl::~SpectralGridDataRepresentationImpl()
-{
-}
+= default;
 
 
 

@@ -79,8 +79,7 @@ RepresentationSection::RepresentationSection(const RepresentationSection& other)
 /*! \brief The destructor of the class. */
 
 RepresentationSection::~RepresentationSection()
-{
-}
+= default;
 
 
 

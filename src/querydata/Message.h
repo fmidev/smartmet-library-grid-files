@@ -28,7 +28,7 @@ struct MessageInfo
 };
 
 
-typedef std::vector<MessageInfo> MessageInfoVec;
+using MessageInfoVec = std::vector<MessageInfo>;
 
 class QueryDataFile;
 
@@ -144,8 +144,8 @@ class Message : public GRID::Message
 
 
 
-typedef Message* MessagePtr;                    //!< Non-owning pointer to a QueryData Message.
-typedef std::vector<MessagePtr> MessagePtr_vec;  //!< Vector of non-owning QueryData Message pointers.
+using MessagePtr = Message*;                    //!< Non-owning pointer to a QueryData Message.
+using MessagePtr_vec = std::vector<MessagePtr>;  //!< Vector of non-owning QueryData Message pointers.
 
 
 }  // namespace NetCDF

@@ -66,7 +66,7 @@ class QueryDataFile
 
 
 
-typedef QueryDataFile* QueryDataFilePtr;  //!< Non-owning pointer to a QueryDataFile.
+using QueryDataFilePtr = QueryDataFile*;  //!< Non-owning pointer to a QueryDataFile.
 
 
 }  // namespace QueryData

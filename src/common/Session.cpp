@@ -24,16 +24,14 @@ static const char *emptyStr = "\0";
 /*! \brief Default constructor for Session. */
 
 Session::Session()
-{
-}
+= default;
 
 
 
 /*! \brief Destructor for Session. */
 
 Session::~Session()
-{
-}
+= default;
 
 
 

@@ -33,8 +33,8 @@ class NewbaseParameterDef
 };
 
 typedef const NewbaseParameterDef* NewbaseParamDef_cptr;                   //!< Non-owning const pointer
-typedef std::vector<NewbaseParameterDef> NewbaseParamDef_vec;              //!< Ordered list of Newbase parameter definitions
-typedef std::map<uint,NewbaseParameterDef> NewbaseParamDef_umap;           //!< Ordered map keyed by Newbase parameter ID
+using NewbaseParamDef_vec = std::vector<NewbaseParameterDef>;              //!< Ordered list of Newbase parameter definitions
+using NewbaseParamDef_umap = std::map<uint,NewbaseParameterDef>;           //!< Ordered map keyed by Newbase parameter ID
 
 
 }

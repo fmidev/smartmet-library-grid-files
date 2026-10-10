@@ -11,8 +11,7 @@ namespace GRIB2
 /*! \brief The constructor of the class. */
 
 EnsembleReforecastImpl::EnsembleReforecastImpl()
-{
-}
+= default;
 
 
 
@@ -21,9 +20,8 @@ EnsembleReforecastImpl::EnsembleReforecastImpl()
 /*! \brief The copy constructor of the class. */
 
 EnsembleReforecastImpl::EnsembleReforecastImpl(const EnsembleReforecastImpl& other)
-:EnsembleReforecast(other)
-{
-}
+
+= default;
 
 
 
@@ -32,8 +30,7 @@ EnsembleReforecastImpl::EnsembleReforecastImpl(const EnsembleReforecastImpl& oth
 /*! \brief The destructor of the class. */
 
 EnsembleReforecastImpl::~EnsembleReforecastImpl()
-{
-}
+= default;
 
 
 

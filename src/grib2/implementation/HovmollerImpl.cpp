@@ -22,9 +22,8 @@ HovmollerImpl::HovmollerImpl()
 /*! \brief The copy constructor of the class. */
 
 HovmollerImpl::HovmollerImpl(const HovmollerImpl& other)
-:Hovmoller(other)
-{
-}
+
+= default;
 
 
 
@@ -33,8 +32,7 @@ HovmollerImpl::HovmollerImpl(const HovmollerImpl& other)
 /*! \brief The destructor of the class. */
 
 HovmollerImpl::~HovmollerImpl()
-{
-}
+= default;
 
 
 

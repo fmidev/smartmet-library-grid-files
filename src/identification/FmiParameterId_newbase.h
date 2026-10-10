@@ -32,8 +32,8 @@ class FmiParameterId_newbase
 };
 
 
-typedef std::vector<FmiParameterId_newbase> FmiParamId_newbase_vec;              //!< Ordered list of FMI↔Newbase mappings
-typedef std::unordered_map<uint,FmiParameterId_newbase> FmiParamId_newbase_umap; //!< Hash map keyed by FMI parameter ID
+using FmiParamId_newbase_vec = std::vector<FmiParameterId_newbase>;              //!< Ordered list of FMI↔Newbase mappings
+using FmiParamId_newbase_umap = std::unordered_map<uint,FmiParameterId_newbase>; //!< Hash map keyed by FMI parameter ID
 typedef const FmiParameterId_newbase* FmiParamId_newbase_cptr;                  //!< Non-owning const pointer
 
 

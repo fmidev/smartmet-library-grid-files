@@ -57,7 +57,7 @@ class DataFetcher
         std::string password;          //!< Password or token
     };
 
-    typedef std::map<std::string,AccessInfo> AccessMap; //!< Per-server credential map
+    using AccessMap = std::map<std::string,AccessInfo>; //!< Per-server credential map
 
   public:
                         DataFetcher();
@@ -144,7 +144,7 @@ class DataFetcher
     AccessMap           mAccessMap;    //!< Per-server authentication credentials
 };
 
-typedef std::shared_ptr<DataFetcher> DataFetcher_sptr;
-typedef std::map<uint,DataFetcher_sptr> DataFetcher_sptr_map;
+using DataFetcher_sptr = std::shared_ptr<DataFetcher>;
+using DataFetcher_sptr_map = std::map<uint,DataFetcher_sptr>;
 
 }  // namespace SmartMet

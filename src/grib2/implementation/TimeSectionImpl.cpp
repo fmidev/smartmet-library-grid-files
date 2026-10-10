@@ -22,9 +22,8 @@ TimeSectionImpl::TimeSectionImpl()
 /*! \brief The copy constructor of the class. */
 
 TimeSectionImpl::TimeSectionImpl(const TimeSectionImpl& other)
-:TimeSection(other)
-{
-}
+
+= default;
 
 
 
@@ -33,8 +32,7 @@ TimeSectionImpl::TimeSectionImpl(const TimeSectionImpl& other)
 /*! \brief The destructor of the class. */
 
 TimeSectionImpl::~TimeSectionImpl()
-{
-}
+= default;
 
 
 

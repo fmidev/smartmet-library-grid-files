@@ -32,8 +32,8 @@ class FmiParameterId_netCdf
 };
 
 
-typedef std::vector<FmiParameterId_netCdf> FmiParamId_netCdf_vec;              //!< Ordered list of FMI↔NetCDF mappings
-typedef std::unordered_map<uint,FmiParameterId_netCdf> FmiParamId_netCdf_umap; //!< Hash map keyed by FMI parameter ID
+using FmiParamId_netCdf_vec = std::vector<FmiParameterId_netCdf>;              //!< Ordered list of FMI↔NetCDF mappings
+using FmiParamId_netCdf_umap = std::unordered_map<uint,FmiParameterId_netCdf>; //!< Hash map keyed by FMI parameter ID
 typedef const FmiParameterId_netCdf* FmiParamId_netCdf_cptr;                  //!< Non-owning const pointer
 
 

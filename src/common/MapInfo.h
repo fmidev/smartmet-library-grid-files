@@ -11,10 +11,10 @@ namespace bf = std::filesystem;
 namespace SmartMet
 {
 
-typedef boost::iostreams::mapped_file_params MappedFileParams;
+using MappedFileParams = boost::iostreams::mapped_file_params;
 
 using Fmi::MappedFile;
-typedef std::unique_ptr<MappedFile> MappedFile_uptr;
+using MappedFile_uptr = std::unique_ptr<MappedFile>;
 
 
 // ====================================================================================
@@ -100,7 +100,7 @@ class MapInfo
     };
 };
 
-typedef std::shared_ptr<MapInfo> MapInfo_sptr;
+using MapInfo_sptr = std::shared_ptr<MapInfo>;
 
 
 }  // namespace SmartMet

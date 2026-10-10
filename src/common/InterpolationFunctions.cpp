@@ -7,7 +7,7 @@
 namespace SmartMet
 {
 
-typedef Int64 Int64;
+using Int64 = Int64;
 
 /*! \brief Linearly interpolates a value between two positions. */
 

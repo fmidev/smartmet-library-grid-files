@@ -27,7 +27,7 @@ class HttpClient : public Client
     CURL*     curl; //!< libcurl easy handle
 };
 
-typedef HttpClient* HttpClient_ptr;
-typedef std::vector<HttpClient_ptr> HttpClient_ptr_vec;
+using HttpClient_ptr = HttpClient*;
+using HttpClient_ptr_vec = std::vector<HttpClient_ptr>;
 
 }

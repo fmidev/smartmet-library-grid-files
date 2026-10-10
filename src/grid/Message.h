@@ -49,7 +49,7 @@ struct MessageInfo
   T::GeometryId      mGeometryId;         //!< Grid geometry identifier
 };
 
-typedef std::map<uint,MessageInfo> MessageInfo_map; //!< Map from message index to MessageInfo
+using MessageInfo_map = std::map<uint,MessageInfo>; //!< Map from message index to MessageInfo
 
 
 class GridFile;
@@ -982,8 +982,8 @@ class Operation
 };
 
 
-typedef Message* MessagePtr;
-typedef std::vector<MessagePtr> MessagePtr_vec;
+using MessagePtr = Message*;
+using MessagePtr_vec = std::vector<MessagePtr>;
 
 extern std::vector<double> EMPTY_DOUBLE_VEC;
 extern std::vector<Message*> EMPTY_MSG_VEC;

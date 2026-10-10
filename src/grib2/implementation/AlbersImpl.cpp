@@ -22,9 +22,8 @@ AlbersImpl::AlbersImpl()
 /*! \brief The copy constructor of the class. */
 
 AlbersImpl::AlbersImpl(const AlbersImpl& other)
-:Albers(other)
-{
-}
+
+= default;
 
 
 
@@ -33,8 +32,7 @@ AlbersImpl::AlbersImpl(const AlbersImpl& other)
 /*! \brief The destructor of the class. */
 
 AlbersImpl::~AlbersImpl()
-{
-}
+= default;
 
 
 

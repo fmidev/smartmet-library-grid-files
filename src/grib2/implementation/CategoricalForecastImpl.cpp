@@ -11,8 +11,7 @@ namespace GRIB2
 /*! \brief The constructor of the class. */
 
 CategoricalForecastImpl::CategoricalForecastImpl()
-{
-}
+= default;
 
 
 
@@ -21,9 +20,8 @@ CategoricalForecastImpl::CategoricalForecastImpl()
 /*! \brief The copy constructor of the class. */
 
 CategoricalForecastImpl::CategoricalForecastImpl(const CategoricalForecastImpl& other)
-:CategoricalForecast(other)
-{
-}
+
+= default;
 
 
 
@@ -32,8 +30,7 @@ CategoricalForecastImpl::CategoricalForecastImpl(const CategoricalForecastImpl& 
 /*! \brief The destructor of the class. */
 
 CategoricalForecastImpl::~CategoricalForecastImpl()
-{
-}
+= default;
 
 
 

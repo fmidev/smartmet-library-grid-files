@@ -30,7 +30,7 @@ class AggregationDef
 };
 
 
-typedef std::vector<AggregationDef> AggregationDef_vec;   //!< Ordered list of aggregation definitions
+using AggregationDef_vec = std::vector<AggregationDef>;   //!< Ordered list of aggregation definitions
 typedef const AggregationDef* AggregationDef_cptr;        //!< Non-owning const pointer
 
 

@@ -202,8 +202,7 @@ Message::Message(GRID::GridFile *gridFile,NetCdfFile *netCdfFile,T::MessageIndex
 /*! \brief The destructor of the class. */
 
 Message::~Message()
-{
-}
+= default;
 
 
 

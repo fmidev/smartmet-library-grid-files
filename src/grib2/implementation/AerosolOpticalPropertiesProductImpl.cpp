@@ -14,8 +14,7 @@ namespace GRIB2
 /*! \brief The constructor of the class. */
 
 AerosolOpticalPropertiesProductImpl::AerosolOpticalPropertiesProductImpl()
-{
-}
+= default;
 
 
 
@@ -24,9 +23,8 @@ AerosolOpticalPropertiesProductImpl::AerosolOpticalPropertiesProductImpl()
 /*! \brief The copy constructor of the class. */
 
 AerosolOpticalPropertiesProductImpl::AerosolOpticalPropertiesProductImpl(const AerosolOpticalPropertiesProductImpl& other)
-:AerosolOpticalPropertiesProduct(other)
-{
-}
+
+= default;
 
 
 
@@ -35,8 +33,7 @@ AerosolOpticalPropertiesProductImpl::AerosolOpticalPropertiesProductImpl(const A
 /*! \brief The destructor of the class. */
 
 AerosolOpticalPropertiesProductImpl::~AerosolOpticalPropertiesProductImpl()
-{
-}
+= default;
 
 
 

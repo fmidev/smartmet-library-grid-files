@@ -7,9 +7,9 @@
 namespace SmartMet
 {
 
-typedef char* pchar;                                         //!< Mutable C-string pointer
-typedef pchar* StringArray;                                  //!< Array of C-string pointers
-typedef std::unordered_map<std::string,uint> StringIndex;    //!< String → numeric id index
+using pchar = char*;                                         //!< Mutable C-string pointer
+using StringArray = pchar*;                                  //!< Array of C-string pointers
+using StringIndex = std::unordered_map<std::string,uint>;    //!< String → numeric id index
 
 // ====================================================================================
 /*! \brief Thread-safe string intern table.

@@ -32,8 +32,8 @@ class FmiGeometryGroupDef
     std::vector<int>  mGeometryIdList;       //!< Geometry IDs that belong to this group
 };
 
-typedef std::vector<FmiGeometryGroupDef> FmiGeomGroupDef_vec;              //!< Ordered list of geometry group definitions
-typedef std::unordered_map<uint,FmiGeometryGroupDef> FmiGeomGroupDef_umap; //!< Hash map keyed by geometry group ID
+using FmiGeomGroupDef_vec = std::vector<FmiGeometryGroupDef>;              //!< Ordered list of geometry group definitions
+using FmiGeomGroupDef_umap = std::unordered_map<uint,FmiGeometryGroupDef>; //!< Hash map keyed by geometry group ID
 typedef const FmiGeometryGroupDef* FmiGeomGroupDef_cptr;                   //!< Non-owning const pointer
 
 }

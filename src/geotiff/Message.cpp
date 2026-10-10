@@ -167,8 +167,7 @@ Message::Message(GRID::GridFile *gridFile,GeoTiffFile *geoTiffFile,T::MessageInd
 /*! \brief The destructor of the class. */
 
 Message::~Message()
-{
-}
+= default;
 
 
 

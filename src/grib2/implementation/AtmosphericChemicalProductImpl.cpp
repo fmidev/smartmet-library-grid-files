@@ -14,8 +14,7 @@ namespace GRIB2
 /*! \brief The constructor of the class. */
 
 AtmosphericChemicalProductImpl::AtmosphericChemicalProductImpl()
-{
-}
+= default;
 
 
 
@@ -24,9 +23,8 @@ AtmosphericChemicalProductImpl::AtmosphericChemicalProductImpl()
 /*! \brief The copy constructor of the class. */
 
 AtmosphericChemicalProductImpl::AtmosphericChemicalProductImpl(const AtmosphericChemicalProductImpl& other)
-:AtmosphericChemicalProduct(other)
-{
-}
+
+= default;
 
 
 
@@ -35,8 +33,7 @@ AtmosphericChemicalProductImpl::AtmosphericChemicalProductImpl(const Atmospheric
 /*! \brief The destructor of the class. */
 
 AtmosphericChemicalProductImpl::~AtmosphericChemicalProductImpl()
-{
-}
+= default;
 
 
 

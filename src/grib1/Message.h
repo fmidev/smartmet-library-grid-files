@@ -233,7 +233,7 @@ class Message : public GRID::Message
 };
 
 
-typedef std::shared_ptr<Message> Message_sptr;  //!< Shared ownership pointer to a GRIB 1 Message.
+using Message_sptr = std::shared_ptr<Message>;  //!< Shared ownership pointer to a GRIB 1 Message.
 
 
 

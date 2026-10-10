@@ -14,12 +14,12 @@ namespace GRIB2
 
 
 
-typedef struct png_read_callback_data
+using png_read_callback_data = struct png_read_callback_data
 {
     unsigned char* buffer;
     size_t         length;
     size_t         offset;
-} png_read_callback_data;
+};
 
 
 
@@ -47,8 +47,7 @@ static void png_read_callback(png_structp png,png_bytep data, png_size_t length)
 /*! \brief The constructor of the class. */
 
 PngGridDataRepresentationImpl::PngGridDataRepresentationImpl()
-{
-}
+= default;
 
 
 
@@ -57,9 +56,8 @@ PngGridDataRepresentationImpl::PngGridDataRepresentationImpl()
 /*! \brief The copy constructor of the class. */
 
 PngGridDataRepresentationImpl::PngGridDataRepresentationImpl(const PngGridDataRepresentationImpl& other)
-:PngGridDataRepresentation(other)
-{
-}
+
+= default;
 
 
 
@@ -68,8 +66,7 @@ PngGridDataRepresentationImpl::PngGridDataRepresentationImpl(const PngGridDataRe
 /*! \brief The destructor of the class. */
 
 PngGridDataRepresentationImpl::~PngGridDataRepresentationImpl()
-{
-}
+= default;
 
 
 

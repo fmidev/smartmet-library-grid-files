@@ -23,8 +23,7 @@ DataFetcher::DataFetcher()
 /*! \brief Destructor for DataFetcher. */
 
 DataFetcher::~DataFetcher()
-{
-}
+= default;
 
 
 

@@ -39,7 +39,7 @@ struct MessageInfo
   int                mGeometryId;           //!< FMI geometry identifier.
 };
 
-typedef std::vector<MessageInfo> MessageInfoVec;
+using MessageInfoVec = std::vector<MessageInfo>;
 
 class NetCdfFile;
 
@@ -161,8 +161,8 @@ class Message : public GRID::Message
 
 
 
-typedef Message* MessagePtr;                   //!< Non-owning pointer to a NetCDF Message.
-typedef std::vector<MessagePtr> MessagePtr_vec; //!< Vector of non-owning NetCDF Message pointers.
+using MessagePtr = Message*;                   //!< Non-owning pointer to a NetCDF Message.
+using MessagePtr_vec = std::vector<MessagePtr>; //!< Vector of non-owning NetCDF Message pointers.
 
 
 }  // namespace NetCDF

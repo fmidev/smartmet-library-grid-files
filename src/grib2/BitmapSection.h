@@ -104,7 +104,7 @@ class BitmapSection : public GRID::MessageSection
 };
 
 
-typedef std::shared_ptr<BitmapSection> BitmapSect_sptr;  //!< Shared ownership pointer to a BitmapSection.
+using BitmapSect_sptr = std::shared_ptr<BitmapSection>;  //!< Shared ownership pointer to a BitmapSection.
 
 }  // namespace GRIB2
 }  // namespace SmartMet

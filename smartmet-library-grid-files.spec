@@ -132,6 +132,7 @@ libraries, the grid engine and the plugins using it
 - The definition class generators run on PHP 8 and read the definitions from the given directory
 - Use auto and return {} where clang-tidy suggests it, no functional changes
 - Mark overriding methods override and use nullptr, no functional changes
+- Use = default and using declarations where clang-tidy suggests it, no functional changes
 
 * Thu Oct  8 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.8-2.fmi
 - GRIB2 Lambert azimuthal equal area grids report their metric cell size in kilometres

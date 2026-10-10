@@ -10,8 +10,8 @@ namespace NetCDF
 {
 
 
-typedef std::map<std::string,std::vector<std::string>> PropertyVec;  //!< Map from attribute/property name to its string values.
-typedef std::vector<float> FloatVec;                                  //!< Flat array of float coordinate or data values.
+using PropertyVec = std::map<std::string,std::vector<std::string>>;  //!< Map from attribute/property name to its string values.
+using FloatVec = std::vector<float>;                                  //!< Flat array of float coordinate or data values.
 
 
 // ====================================================================================
@@ -75,7 +75,7 @@ class NetCdfFile
 
 
 
-typedef NetCdfFile* NetCdfFilePtr;  //!< Non-owning pointer to a NetCdfFile.
+using NetCdfFilePtr = NetCdfFile*;  //!< Non-owning pointer to a NetCdfFile.
 
 
 }  // namespace NetCDF

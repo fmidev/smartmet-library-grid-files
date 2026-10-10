@@ -113,7 +113,7 @@ class GeoTiffFile
 
 
 
-typedef GeoTiffFile* GeoTiffFilePtr;
+using GeoTiffFilePtr = GeoTiffFile*;
 
 
 }  // namespace GeoTiff

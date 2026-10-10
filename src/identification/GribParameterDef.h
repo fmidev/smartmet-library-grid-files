@@ -31,7 +31,7 @@ class GribParameterDef
     std::string     mParameterUnits;        //!< Physical units (e.g. "K", "m s**-1")
 };
 
-typedef std::vector<GribParameterDef> GribParamDef_vec;  //!< Ordered list of GRIB parameter definitions
+using GribParamDef_vec = std::vector<GribParameterDef>;  //!< Ordered list of GRIB parameter definitions
 typedef const GribParameterDef* GribParamDef_cptr;       //!< Non-owning const pointer
 
 }

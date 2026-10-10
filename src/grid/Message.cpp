@@ -32,8 +32,8 @@ static int getContourThreads(T::AttributeList &attributeList)
   return (str != nullptr) ? toInt32(str) : 1;
 }
 
-typedef std::vector<float> AngleList;
-typedef std::map<int,AngleList> AngleCache;
+using AngleList = std::vector<float>;
+using AngleCache = std::map<int,AngleList>;
 
 AngleCache gridAngleCache;
 
@@ -54,8 +54,8 @@ std::vector<double> EMPTY_DOUBLE_VEC;
 std::vector<Message*> EMPTY_MSG_VEC;
 
 
-typedef std::vector<std::vector<T::Coordinate>> PolygonCoordinates;
-typedef std::shared_ptr<PolygonCoordinates> PolygonCoordinates_sptr;
+using PolygonCoordinates = std::vector<std::vector<T::Coordinate>>;
+using PolygonCoordinates_sptr = std::shared_ptr<PolygonCoordinates>;
 
 Fmi::Cache::Cache<std::size_t,PolygonCoordinates_sptr> polygonCoordinateCache(10000);
 
@@ -69,7 +69,7 @@ struct CirclePoints
   T::Coordinate_vec coordinates;
 };
 
-typedef std::shared_ptr<const CirclePoints> CirclePoints_sptr;
+using CirclePoints_sptr = std::shared_ptr<const CirclePoints>;
 
 // A 200 km circle on a 2.5 km grid has about 20000 points (~0.5 MB)
 #define CIRCLE_POINT_CACHE_SIZE 100
@@ -163,8 +163,7 @@ Message::Message(const Message& message)
 /*! \brief The destructor of the class. */
 
 Message::~Message()
-{
-}
+= default;
 
 
 

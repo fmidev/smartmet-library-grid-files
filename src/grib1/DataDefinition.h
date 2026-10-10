@@ -59,7 +59,7 @@ class DataDefinition
 };
 
 
-typedef std::unique_ptr<DataDefinition> DataDefintionUptr;  //!< Owning pointer to a DataDefinition.
+using DataDefintionUptr = std::unique_ptr<DataDefinition>;  //!< Owning pointer to a DataDefinition.
 
 }  // namespace GRIB1
 }  // namespace SmartMet

@@ -93,7 +93,7 @@ class LocalSection : public GRID::MessageSection
 };
 
 
-typedef std::shared_ptr<LocalSection> LocalSect_sptr;  //!< Shared ownership pointer to a LocalSection.
+using LocalSect_sptr = std::shared_ptr<LocalSection>;  //!< Shared ownership pointer to a LocalSection.
 
 
 }  // namespace GRIB2

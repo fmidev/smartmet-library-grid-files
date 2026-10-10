@@ -39,8 +39,7 @@ TransverseMercatorImpl::TransverseMercatorImpl(const TransverseMercatorImpl& oth
 /*! \brief The destructor of the class. */
 
 TransverseMercatorImpl::~TransverseMercatorImpl()
-{
-}
+= default;
 
 
 

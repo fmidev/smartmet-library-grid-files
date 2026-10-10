@@ -206,7 +206,7 @@ class GridSection : public GRID::MessageSection
     };
 };
 
-typedef std::shared_ptr<GridSection> GridSect_sptr;  //!< Shared ownership pointer to a GridSection.
+using GridSect_sptr = std::shared_ptr<GridSection>;  //!< Shared ownership pointer to a GridSection.
 
 }  // namespace GRIB2
 }  // namespace SmartMet

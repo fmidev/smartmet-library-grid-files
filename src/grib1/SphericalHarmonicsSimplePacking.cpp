@@ -12,8 +12,7 @@ namespace GRIB1
 /*! \brief The constructor of the class. */
 
 SphericalHarmonicsSimplePacking::SphericalHarmonicsSimplePacking()
-{
-}
+= default;
 
 
 
@@ -22,9 +21,8 @@ SphericalHarmonicsSimplePacking::SphericalHarmonicsSimplePacking()
 /*! \brief The copy constructor of the class. */
 
 SphericalHarmonicsSimplePacking::SphericalHarmonicsSimplePacking(const SphericalHarmonicsSimplePacking& other)
-:DataDefinition(other)
-{
-}
+
+= default;
 
 
 
@@ -33,8 +31,7 @@ SphericalHarmonicsSimplePacking::SphericalHarmonicsSimplePacking(const Spherical
 /*! \brief The destructor of the class. */
 
 SphericalHarmonicsSimplePacking::~SphericalHarmonicsSimplePacking()
-{
-}
+= default;
 
 
 

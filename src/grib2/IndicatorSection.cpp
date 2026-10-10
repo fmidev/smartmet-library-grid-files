@@ -65,8 +65,7 @@ IndicatorSection::IndicatorSection(const IndicatorSection& other)
 /*! \brief The destructor of the class. */
 
 IndicatorSection::~IndicatorSection()
-{
-}
+= default;
 
 
 

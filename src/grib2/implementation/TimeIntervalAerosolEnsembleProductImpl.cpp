@@ -11,8 +11,7 @@ namespace GRIB2
 /*! \brief The constructor of the class. */
 
 TimeIntervalAerosolEnsembleProductImpl::TimeIntervalAerosolEnsembleProductImpl()
-{
-}
+= default;
 
 
 
@@ -21,9 +20,8 @@ TimeIntervalAerosolEnsembleProductImpl::TimeIntervalAerosolEnsembleProductImpl()
 /*! \brief The copy constructor of the class. */
 
 TimeIntervalAerosolEnsembleProductImpl::TimeIntervalAerosolEnsembleProductImpl(const TimeIntervalAerosolEnsembleProductImpl& other)
-:TimeIntervalAerosolEnsembleProduct(other)
-{
-}
+
+= default;
 
 
 
@@ -32,8 +30,7 @@ TimeIntervalAerosolEnsembleProductImpl::TimeIntervalAerosolEnsembleProductImpl(c
 /*! \brief The destructor of the class. */
 
 TimeIntervalAerosolEnsembleProductImpl::~TimeIntervalAerosolEnsembleProductImpl()
-{
-}
+= default;
 
 
 

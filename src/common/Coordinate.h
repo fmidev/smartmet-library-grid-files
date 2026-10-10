@@ -52,10 +52,10 @@ class Coordinate
     double mY; //!< Vertical coordinate
 };
 
-typedef std::vector<T::Coordinate> Coordinate_vec;                           //!< Ordered list of coordinates
-typedef std::shared_ptr<std::vector<T::Coordinate>> Coordinate_svec;         //!< Shared coordinate list
-typedef std::vector<Coordinate_vec> AreaCoordinates;                         //!< Multi-ring polygon as lists of rings
-typedef std::vector<std::vector<T::Coordinate>> Polygon_vec;                 //!< List of closed polygon rings
+using Coordinate_vec = std::vector<T::Coordinate>;                           //!< Ordered list of coordinates
+using Coordinate_svec = std::shared_ptr<std::vector<T::Coordinate>>;         //!< Shared coordinate list
+using AreaCoordinates = std::vector<Coordinate_vec>;                         //!< Multi-ring polygon as lists of rings
+using Polygon_vec = std::vector<std::vector<T::Coordinate>>;                 //!< List of closed polygon rings
 
 
 }

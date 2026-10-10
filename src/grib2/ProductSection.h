@@ -182,7 +182,7 @@ class ProductSection : public GRID::MessageSection
 };
 
 
-typedef std::shared_ptr<ProductSection> ProductSect_sptr;  //!< Shared ownership pointer to a ProductSection.
+using ProductSect_sptr = std::shared_ptr<ProductSection>;  //!< Shared ownership pointer to a ProductSection.
 
 
 }  // namespace GRIB2

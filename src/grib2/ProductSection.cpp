@@ -121,8 +121,7 @@ ProductSection::ProductSection(const ProductSection& other)
 /*! \brief The destructor of the class. */
 
 ProductSection::~ProductSection()
-{
-}
+= default;
 
 
 

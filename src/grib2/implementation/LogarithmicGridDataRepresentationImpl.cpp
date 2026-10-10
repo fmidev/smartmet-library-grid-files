@@ -10,8 +10,7 @@ namespace GRIB2
 /*! \brief The constructor of the class. */
 
 LogarithmicGridDataRepresentationImpl::LogarithmicGridDataRepresentationImpl()
-{
-}
+= default;
 
 
 
@@ -20,9 +19,8 @@ LogarithmicGridDataRepresentationImpl::LogarithmicGridDataRepresentationImpl()
 /*! \brief The copy constructor of the class. */
 
 LogarithmicGridDataRepresentationImpl::LogarithmicGridDataRepresentationImpl(const LogarithmicGridDataRepresentationImpl& other)
-:LogarithmicGridDataRepresentation(other)
-{
-}
+
+= default;
 
 
 
@@ -31,8 +29,7 @@ LogarithmicGridDataRepresentationImpl::LogarithmicGridDataRepresentationImpl(con
 /*! \brief The destructor of the class. */
 
 LogarithmicGridDataRepresentationImpl::~LogarithmicGridDataRepresentationImpl()
-{
-}
+= default;
 
 
 

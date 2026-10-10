@@ -9,7 +9,7 @@ namespace SmartMet
 {
 
 
-typedef std::map<std::string,std::string> ParameterList; //!< XML element attribute map
+using ParameterList = std::map<std::string,std::string>; //!< XML element attribute map
 
 
 // ====================================================================================

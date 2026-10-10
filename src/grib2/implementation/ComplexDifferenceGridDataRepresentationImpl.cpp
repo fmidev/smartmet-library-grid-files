@@ -14,8 +14,7 @@ namespace GRIB2
 /*! \brief The constructor of the class. */
 
 ComplexDifferenceGridDataRepresentationImpl::ComplexDifferenceGridDataRepresentationImpl()
-{
-}
+= default;
 
 
 
@@ -24,9 +23,8 @@ ComplexDifferenceGridDataRepresentationImpl::ComplexDifferenceGridDataRepresenta
 /*! \brief The copy constructor of the class. */
 
 ComplexDifferenceGridDataRepresentationImpl::ComplexDifferenceGridDataRepresentationImpl(const ComplexDifferenceGridDataRepresentationImpl& other)
-:ComplexDifferenceGridDataRepresentation(other)
-{
-}
+
+= default;
 
 
 
@@ -35,8 +33,7 @@ ComplexDifferenceGridDataRepresentationImpl::ComplexDifferenceGridDataRepresenta
 /*! \brief The destructor of the class. */
 
 ComplexDifferenceGridDataRepresentationImpl::~ComplexDifferenceGridDataRepresentationImpl()
-{
-}
+= default;
 
 
 

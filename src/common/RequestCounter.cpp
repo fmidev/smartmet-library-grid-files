@@ -39,8 +39,7 @@ RequestCounter::RequestCounter()
 /*! \brief Destructor for RequestCounter. */
 
 RequestCounter::~RequestCounter()
-{
-}
+= default;
 
 
 

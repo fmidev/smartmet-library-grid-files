@@ -22,9 +22,8 @@ CrossSectionImpl::CrossSectionImpl()
 /*! \brief The copy constructor of the class. */
 
 CrossSectionImpl::CrossSectionImpl(const CrossSectionImpl& other)
-:CrossSection(other)
-{
-}
+
+= default;
 
 
 
@@ -33,8 +32,7 @@ CrossSectionImpl::CrossSectionImpl(const CrossSectionImpl& other)
 /*! \brief The destructor of the class. */
 
 CrossSectionImpl::~CrossSectionImpl()
-{
-}
+= default;
 
 
 

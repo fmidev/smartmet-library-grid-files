@@ -111,7 +111,7 @@ class ProductDefinition
 };
 
 
-typedef std::shared_ptr<ProductDefinition> ProductDefinition_sptr;  //!< Shared ownership pointer to a ProductDefinition.
+using ProductDefinition_sptr = std::shared_ptr<ProductDefinition>;  //!< Shared ownership pointer to a ProductDefinition.
 
 
 

@@ -41,8 +41,7 @@ NetCdfFile::NetCdfFile()
 /*! \brief The destructor of the class. */
 
 NetCdfFile::~NetCdfFile()
-{
-}
+= default;
 
 
 

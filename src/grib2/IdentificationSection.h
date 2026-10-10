@@ -177,7 +177,7 @@ class IdentificationSection : public GRID::MessageSection
     bool            mReleaseData;   //!< If true, free mDataPtr on destruction.
 };
 
-typedef std::shared_ptr<IdentificationSection> IdentifSect_sptr;  //!< Shared ownership pointer to an IdentificationSection.
+using IdentifSect_sptr = std::shared_ptr<IdentificationSection>;  //!< Shared ownership pointer to an IdentificationSection.
 
 }  // namespace GRIB2
 }  // namespace SmartMet

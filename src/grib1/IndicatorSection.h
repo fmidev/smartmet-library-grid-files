@@ -85,7 +85,7 @@ class IndicatorSection : public GRID::MessageSection
 };
 
 
-typedef std::shared_ptr<IndicatorSection> IndicatorSect_sptr;  //!< Shared ownership pointer to an IndicatorSection.
+using IndicatorSect_sptr = std::shared_ptr<IndicatorSection>;  //!< Shared ownership pointer to an IndicatorSection.
 
 }  // namespace GRIB1
 }  // namespace SmartMet

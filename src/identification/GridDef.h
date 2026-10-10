@@ -35,9 +35,9 @@ namespace SmartMet
 namespace Identification
 {
 
-typedef std::unordered_map<uint,std::string> GeometryNames;  //!< Map from geometry ID to geometry name
-typedef std::unordered_map<uint,uint> IdMap;                 //!< Generic uint→uint identifier mapping
-typedef std::unordered_map<std::string,uint> StringIdMap;    //!< String→uint identifier mapping
+using GeometryNames = std::unordered_map<uint,std::string>;  //!< Map from geometry ID to geometry name
+using IdMap = std::unordered_map<uint,uint>;                 //!< Generic uint→uint identifier mapping
+using StringIdMap = std::unordered_map<std::string,uint>;    //!< String→uint identifier mapping
 
 
 // ====================================================================================

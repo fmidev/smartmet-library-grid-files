@@ -11,8 +11,7 @@ namespace GRIB2
 /*! \brief The constructor of the class. */
 
 TimeIntervalCategoricalForecastImpl::TimeIntervalCategoricalForecastImpl()
-{
-}
+= default;
 
 
 
@@ -21,9 +20,8 @@ TimeIntervalCategoricalForecastImpl::TimeIntervalCategoricalForecastImpl()
 /*! \brief The copy constructor of the class. */
 
 TimeIntervalCategoricalForecastImpl::TimeIntervalCategoricalForecastImpl(const TimeIntervalCategoricalForecastImpl& other)
-:TimeIntervalCategoricalForecast(other)
-{
-}
+
+= default;
 
 
 
@@ -32,8 +30,7 @@ TimeIntervalCategoricalForecastImpl::TimeIntervalCategoricalForecastImpl(const T
 /*! \brief The destructor of the class. */
 
 TimeIntervalCategoricalForecastImpl::~TimeIntervalCategoricalForecastImpl()
-{
-}
+= default;
 
 
 

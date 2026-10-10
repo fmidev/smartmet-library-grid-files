@@ -9,7 +9,7 @@ namespace Identification
 
 /*! \brief List of GRIB key/value pairs (key as uint code, value as string) used to
  *  identify a level type in a GRIB message. */
-typedef std::vector<std::pair<uint,std::string>> ParameterList;
+using ParameterList = std::vector<std::pair<uint,std::string>>;
 
 
 // ====================================================================================
@@ -35,7 +35,7 @@ class FmiLevelId_grib
 };
 
 
-typedef std::vector<FmiLevelId_grib> FmiLevelId_grib_vec;  //!< Ordered list of FMI↔GRIB level mappings
+using FmiLevelId_grib_vec = std::vector<FmiLevelId_grib>;  //!< Ordered list of FMI↔GRIB level mappings
 typedef const FmiLevelId_grib* FmiLevelId_grib_cptr;       //!< Non-owning const pointer
 
 

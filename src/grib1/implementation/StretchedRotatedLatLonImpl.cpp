@@ -21,9 +21,8 @@ StretchedRotatedLatLonImpl::StretchedRotatedLatLonImpl()
 /*! \brief The copy constructor of the class. */
 
 StretchedRotatedLatLonImpl::StretchedRotatedLatLonImpl(const StretchedRotatedLatLonImpl& other)
-:StretchedRotatedLatLon(other)
-{
-}
+
+= default;
 
 
 
@@ -32,8 +31,7 @@ StretchedRotatedLatLonImpl::StretchedRotatedLatLonImpl(const StretchedRotatedLat
 /*! \brief The destructor of the class. */
 
 StretchedRotatedLatLonImpl::~StretchedRotatedLatLonImpl()
-{
-}
+= default;
 
 
 

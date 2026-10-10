@@ -11,8 +11,7 @@ namespace GRIB2
 /*! \brief The constructor of the class. */
 
 CharacterStringProductImpl::CharacterStringProductImpl()
-{
-}
+= default;
 
 
 
@@ -21,9 +20,8 @@ CharacterStringProductImpl::CharacterStringProductImpl()
 /*! \brief The copy constructor of the class. */
 
 CharacterStringProductImpl::CharacterStringProductImpl(const CharacterStringProductImpl& other)
-:CharacterStringProduct(other)
-{
-}
+
+= default;
 
 
 
@@ -32,8 +30,7 @@ CharacterStringProductImpl::CharacterStringProductImpl(const CharacterStringProd
 /*! \brief The destructor of the class. */
 
 CharacterStringProductImpl::~CharacterStringProductImpl()
-{
-}
+= default;
 
 
 

@@ -23,30 +23,30 @@ namespace SmartMet
 namespace T
 {
 
-typedef std::size_t   Hash;            //!< General-purpose hash value
-typedef std::uint32_t ProducerId;      //!< Numeric identifier for a data producer
-typedef std::uint64_t GenerationId;    //!< Identifier for a data generation (forecast run)
-typedef std::uint64_t FileId;          //!< Unique identifier for a grid file
-typedef std::uint64_t FilePosition;    //!< Byte offset within a grid file
-typedef std::string   ParamId;         //!< String parameter identifier (FMI name or numeric string)
-typedef std::uint32_t NewbaseParamId;  //!< FMI Newbase parameter identifier
-typedef std::uint32_t FmiParamId;      //!< FMI internal parameter identifier
-typedef std::uint32_t GribParamId;     //!< GRIB parameter identifier
-typedef std::int32_t  ParamLevel;      //!< Vertical level value
-typedef std::int16_t  ParamLevelId;    //!< Vertical level type identifier
-typedef std::int16_t  ForecastType;    //!< Forecast type code (deterministic, ensemble member, …)
-typedef std::int16_t  ForecastNumber;  //!< Ensemble member number (or -1 for deterministic)
-typedef std::int32_t  GeometryId;      //!< Grid geometry identifier
+using Hash = std::size_t;            //!< General-purpose hash value
+using ProducerId = std::uint32_t;      //!< Numeric identifier for a data producer
+using GenerationId = std::uint64_t;    //!< Identifier for a data generation (forecast run)
+using FileId = std::uint64_t;          //!< Unique identifier for a grid file
+using FilePosition = std::uint64_t;    //!< Byte offset within a grid file
+using ParamId = std::string;         //!< String parameter identifier (FMI name or numeric string)
+using NewbaseParamId = std::uint32_t;  //!< FMI Newbase parameter identifier
+using FmiParamId = std::uint32_t;      //!< FMI internal parameter identifier
+using GribParamId = std::uint32_t;     //!< GRIB parameter identifier
+using ParamLevel = std::int32_t;      //!< Vertical level value
+using ParamLevelId = std::int16_t;    //!< Vertical level type identifier
+using ForecastType = std::int16_t;    //!< Forecast type code (deterministic, ensemble member, …)
+using ForecastNumber = std::int16_t;  //!< Ensemble member number (or -1 for deterministic)
+using GeometryId = std::int32_t;      //!< Grid geometry identifier
 
 
-typedef std::uint32_t StorageId;     //!< Storage slot identifier
-typedef std::uint32_t SourceId;      //!< Data source identifier
-typedef std::uint32_t MessageIndex;  //!< Zero-based message index within a grid file
-typedef std::uint64_t EventId;       //!< Event sequence number
+using StorageId = std::uint32_t;     //!< Storage slot identifier
+using SourceId = std::uint32_t;      //!< Data source identifier
+using MessageIndex = std::uint32_t;  //!< Zero-based message index within a grid file
+using EventId = std::uint64_t;       //!< Event sequence number
 
 
-typedef float ParamValue;              //!< Grid parameter value type (32-bit float)
-typedef ParamValue* ParamValue_ptr;    //!< Raw pointer to a ParamValue array
+using ParamValue = float;              //!< Grid parameter value type (32-bit float)
+using ParamValue_ptr = ParamValue*;    //!< Raw pointer to a ParamValue array
 #define ParamValueMissing -16777216    //!< Sentinel value indicating a missing grid point
 
 
@@ -73,34 +73,34 @@ class PropertySetting
     std::string propertyValue; //!< Value serialised as a string
 };
 
-typedef std::vector<PropertySetting> PropertySettingVec; //!< List of property assignments
+using PropertySettingVec = std::vector<PropertySetting>; //!< List of property assignments
 
-typedef std::vector<ParamId>    ParamId_vec;        //!< List of string parameter identifiers
-typedef std::vector<ParamLevel> ParamLevel_vec;     //!< List of vertical level values
-typedef std::vector<ParamValue> ParamValue_vec;     //!< Dense grid value array
-typedef ParamValue_vec*         ParamValue_vec_ptr; //!< Pointer to a grid value array
-typedef std::vector<Coordinate> Coordinate_vec;     //!< List of (x,y) coordinate pairs
+using ParamId_vec = std::vector<ParamId>;        //!< List of string parameter identifiers
+using ParamLevel_vec = std::vector<ParamLevel>;     //!< List of vertical level values
+using ParamValue_vec = std::vector<ParamValue>;     //!< Dense grid value array
+using ParamValue_vec_ptr = ParamValue_vec*; //!< Pointer to a grid value array
+using Coordinate_vec = std::vector<Coordinate>;     //!< List of (x,y) coordinate pairs
 
-typedef std::vector<std::size_t> Index_vec;         //!< Generic index list
-typedef Fmi::DateTime            TimeStamp;         //!< Point-in-time type (boost::posix_time)
-typedef std::string              TimeString;        //!< ISO-8601 time string
+using Index_vec = std::vector<std::size_t>;         //!< Generic index list
+using TimeStamp = Fmi::DateTime;         //!< Point-in-time type (boost::posix_time)
+using TimeString = std::string;        //!< ISO-8601 time string
 
-typedef OGRSpatialReference                 SpatialRef;      //!< OGR spatial reference wrapper
-typedef std::shared_ptr<OGRSpatialReference> SpatialRef_sptr; //!< Shared spatial reference
-typedef unsigned char*                       Data_ptr;        //!< Raw byte pointer for packed grid data
+using SpatialRef = OGRSpatialReference;      //!< OGR spatial reference wrapper
+using SpatialRef_sptr = std::shared_ptr<OGRSpatialReference>; //!< Shared spatial reference
+using Data_ptr = unsigned char*;        //!< Raw byte pointer for packed grid data
 
-typedef std::vector<Data_ptr> Data_ptr_vec; //!< List of raw data pointers
+using Data_ptr_vec = std::vector<Data_ptr>; //!< List of raw data pointers
 
-typedef std::vector<int> IndexVector; //!< List of integer grid indices
+using IndexVector = std::vector<int>; //!< List of integer grid indices
 
-typedef std::uint64_t SessionId; //!< Unique identifier for a client session
+using SessionId = std::uint64_t; //!< Unique identifier for a client session
 
-typedef std::set<T::GeometryId>               GeometryId_set; //!< Set of geometry identifiers
+using GeometryId_set = std::set<T::GeometryId>; //!< Set of geometry identifiers
 
-typedef std::map<std::string,uint>            PropertyMap; //!< Map from property name to numeric id
-typedef std::vector<std::pair<std::string,uint>> PropertyVec; //!< Ordered list of (name, id) pairs
+using PropertyMap = std::map<std::string,uint>; //!< Map from property name to numeric id
+using PropertyVec = std::vector<std::pair<std::string,uint>>; //!< Ordered list of (name, id) pairs
 
-typedef uchar ParamKeyType; //!< Discriminant for the parameter identifier namespace in use
+using ParamKeyType = uchar; //!< Discriminant for the parameter identifier namespace in use
 
 /*! \brief Constants for ParamKeyType — identifies which identifier system a parameter key belongs to. */
 class ParamKeyTypeValue
@@ -120,7 +120,7 @@ class ParamKeyTypeValue
 };
 
 
-typedef uchar FileType; //!< Discriminant for the grid file format
+using FileType = uchar; //!< Discriminant for the grid file format
 
 /*! \brief Constants for FileType. */
 class FileTypeValue
@@ -223,7 +223,7 @@ class LevelInterpolationMethod
 };
 
 
-typedef uchar CoordinateType; //!< Discriminant for the coordinate system in use
+using CoordinateType = uchar; //!< Discriminant for the coordinate system in use
 
 /*! \brief Constants for CoordinateType. */
 class CoordinateTypeValue
@@ -239,7 +239,7 @@ class CoordinateTypeValue
 };
 
 
-typedef ushort GridProjection; //!< Numeric code identifying a map projection
+using GridProjection = ushort; //!< Numeric code identifying a map projection
 
 /*! \brief Constants for GridProjection — mirrors GRIB2 grid definition template numbers. */
 class GridProjectionValue

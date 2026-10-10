@@ -11,8 +11,7 @@ namespace GRIB2
 /*! \brief The constructor of the class. */
 
 EnsembleClusterDerivedForecastImpl::EnsembleClusterDerivedForecastImpl()
-{
-}
+= default;
 
 
 
@@ -21,9 +20,8 @@ EnsembleClusterDerivedForecastImpl::EnsembleClusterDerivedForecastImpl()
 /*! \brief The copy constructor of the class. */
 
 EnsembleClusterDerivedForecastImpl::EnsembleClusterDerivedForecastImpl(const EnsembleClusterDerivedForecastImpl& other)
-:EnsembleClusterDerivedForecast(other)
-{
-}
+
+= default;
 
 
 
@@ -32,8 +30,7 @@ EnsembleClusterDerivedForecastImpl::EnsembleClusterDerivedForecastImpl(const Ens
 /*! \brief The destructor of the class. */
 
 EnsembleClusterDerivedForecastImpl::~EnsembleClusterDerivedForecastImpl()
-{
-}
+= default;
 
 
 

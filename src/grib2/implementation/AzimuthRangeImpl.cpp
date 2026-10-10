@@ -24,9 +24,8 @@ AzimuthRangeImpl::AzimuthRangeImpl()
 /*! \brief The copy constructor of the class. */
 
 AzimuthRangeImpl::AzimuthRangeImpl(const AzimuthRangeImpl& other)
-:AzimuthRange(other)
-{
-}
+
+= default;
 
 
 
@@ -35,8 +34,7 @@ AzimuthRangeImpl::AzimuthRangeImpl(const AzimuthRangeImpl& other)
 /*! \brief The destructor of the class. */
 
 AzimuthRangeImpl::~AzimuthRangeImpl()
-{
-}
+= default;
 
 
 

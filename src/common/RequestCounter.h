@@ -16,10 +16,10 @@ namespace SmartMet
 {
 
 
-typedef std::unordered_map<uint,uint> HitCounter;           //!< grid-index → hit count map
-typedef std::map<uint,HitCounter> GeometryHitCounter;       //!< per-geometry hit counter map
-typedef std::unordered_map<UInt64,uint> KeyCounter;         //!< arbitrary-key → hit count map
-typedef std::multimap<uint,UInt64> TopList;                 //!< count → key sorted top-N list
+using HitCounter = std::unordered_map<uint,uint>;           //!< grid-index → hit count map
+using GeometryHitCounter = std::map<uint,HitCounter>;       //!< per-geometry hit counter map
+using KeyCounter = std::unordered_map<UInt64,uint>;         //!< arbitrary-key → hit count map
+using TopList = std::multimap<uint,UInt64>;                 //!< count → key sorted top-N list
 
 // ====================================================================================
 /*! \brief Thread-safe request counter for tracking data-access hot spots.

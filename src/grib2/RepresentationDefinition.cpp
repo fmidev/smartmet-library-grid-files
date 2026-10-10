@@ -12,8 +12,7 @@ namespace GRIB2
 /*! \brief The constructor of the class. */
 
 RepresentationDefinition::RepresentationDefinition()
-{
-}
+= default;
 
 
 
@@ -32,8 +31,7 @@ RepresentationDefinition::RepresentationDefinition(const RepresentationDefinitio
 /*! \brief The destructor of the class. */
 
 RepresentationDefinition::~RepresentationDefinition()
-{
-}
+= default;
 
 
 

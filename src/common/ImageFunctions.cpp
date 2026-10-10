@@ -30,7 +30,7 @@ namespace SmartMet
 {
 
 
-typedef unsigned char uchar;
+using uchar = unsigned char;
 
 
 
@@ -191,7 +191,7 @@ struct my_error_mgr
   jmp_buf setjmp_buffer;      // ### for return to caller
 };
 
-typedef struct my_error_mgr* my_error_ptr;
+using my_error_ptr = struct my_error_mgr*;
 
 
 
