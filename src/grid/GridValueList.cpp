@@ -188,7 +188,7 @@ bool GridValueList::getGridValueByCoordinates(double x,double y,GridValue& gridV
 {
   try
   {
-    for (const auto & it : mList)
+    for (const auto& it : mList)
     {
       if (it.mX == x  &&  it.mY == y)
       {
@@ -271,7 +271,7 @@ T::ParamValue GridValueList::getMaxValue() const
   {
     T::ParamValue max = ParamValueMissing;
 
-    for (const auto & it : mList)
+    for (const auto& it : mList)
     {
       if (it.mValue != ParamValueMissing  &&  (max == ParamValueMissing || it.mValue > max))
         max = it.mValue;
@@ -296,7 +296,7 @@ T::ParamValue GridValueList::getMinValue() const
   {
     T::ParamValue min = ParamValueMissing;
 
-    for (const auto & it : mList)
+    for (const auto& it : mList)
     {
       if (it.mValue != ParamValueMissing  &&  (min == ParamValueMissing || it.mValue < min))
         min = it.mValue;
@@ -322,7 +322,7 @@ T::ParamValue GridValueList::getAverageValue() const
     double total = 0;
     uint cnt = 0;
 
-    for (const auto & it : mList)
+    for (const auto& it : mList)
     {
       if (it.mValue != ParamValueMissing)
       {
@@ -353,7 +353,7 @@ uint GridValueList::getNumOfValuesInValueRange(T::ParamValue minValue,T::ParamVa
   try
   {
     uint cnt = 0;
-    for (const auto & it : mList)
+    for (const auto& it : mList)
     {
       if (it.mValue >= minValue  &&  it.mValue <= maxValue)
         cnt++;

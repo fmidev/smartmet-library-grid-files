@@ -4008,7 +4008,7 @@ void Message::getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate
     std::vector<uint> indexList;
     indexList.reserve(fourCorners ? pn * 4 : pn);
 
-    for (auto & point : points)
+    for (auto& point : points)
     {
       double x = point.x();
       double y = point.y();

@@ -36,7 +36,7 @@ DataFetcher_filesys::DataFetcher_filesys()
 DataFetcher_filesys::~DataFetcher_filesys()
 {
   FUNCTION_TRACE
-  for (auto & mFileHandle : mFileHandles)
+  for (auto& mFileHandle : mFileHandles)
   {
     if (mFileHandle.second->fileHandle)
       fclose(mFileHandle.second->fileHandle);
@@ -82,7 +82,7 @@ void DataFetcher_filesys::checkFileHandles()
       if (mFileHandles.size() > mFileHandleLimit)
         deleteLimit = mLastChecked - 30;
 
-      for (auto & mFileHandle : mFileHandles)
+      for (auto& mFileHandle : mFileHandles)
       {
         if (mFileHandle.second->lastUsed < deleteLimit)
         {
@@ -96,7 +96,7 @@ void DataFetcher_filesys::checkFileHandles()
         }
       }
 
-      for (auto & it : deleteList)
+      for (auto& it : deleteList)
       {
         auto itm = mFileHandles.find(it);
         if (itm != mFileHandles.end())

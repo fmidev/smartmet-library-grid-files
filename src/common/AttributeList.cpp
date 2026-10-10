@@ -465,7 +465,7 @@ std::size_t AttributeList::getHash()
   try
   {
     std::size_t hash = 0;
-    for (auto & it : mAttributeVector)
+    for (auto& it : mAttributeVector)
       Fmi::hash_merge(hash,it->getHash());
 
     return hash;

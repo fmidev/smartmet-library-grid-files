@@ -312,7 +312,7 @@ void getPointsInsidePolygon(int gridWidth, int gridHeight, T::Coordinate_vec &po
     int minX = 0;
     int maxX = gridWidth - 1;
 
-    for (auto & polygonPoint : polygonPoints)
+    for (auto& polygonPoint : polygonPoints)
     {
       double yp = round(polygonPoint.y());
 
@@ -422,7 +422,7 @@ void getPointsInsidePolygonPath(int gridWidth, int gridHeight, T::Polygon_vec &p
     std::size_t hash = 0;
     Fmi::hash_merge(hash, gridWidth);
     Fmi::hash_merge(hash, gridHeight);
-    for (auto & polygonPoints : polygonPath)
+    for (auto& polygonPoints : polygonPath)
     {
       uint numOfPoints = polygonPoints.size();
       for (uint t = 0; t < numOfPoints; t++)
@@ -449,7 +449,7 @@ void getPointsInsidePolygonPath(int gridWidth, int gridHeight, T::Polygon_vec &p
     std::vector<double> pointsX(200000);
     std::vector<double> pointsY(200000);
 
-    for (auto & polygonPoints : polygonPath)
+    for (auto& polygonPoints : polygonPath)
     {
       uint numOfPoints = polygonPoints.size();
 
@@ -496,7 +496,7 @@ void getPointsInsidePolygonPath(int gridWidth, int gridHeight, T::Polygon_vec &p
     {
       //  Build a list of nodes.
       int nodes = 0;
-      for (auto & polygonPoints : polygonPath)
+      for (auto& polygonPoints : polygonPath)
       {
         uint numOfPoints = polygonPoints.size();
 
@@ -652,7 +652,7 @@ std::size_t getPolygonPathLength(T::Polygon_vec &polygonPath)
   try
   {
     std::size_t s = 0;
-    for (auto & coordinates : polygonPath)
+    for (auto& coordinates : polygonPath)
     {
       s = s + coordinates.size();
     }
@@ -672,7 +672,7 @@ void convertToPointVector(T::Polygon_vec &polygonPath, T::Coordinate_vec &polygo
 {
   try
   {
-    for (auto & coordinates : polygonPath)
+    for (auto& coordinates : polygonPath)
     {
       for (auto cc = coordinates.begin(); cc != coordinates.end(); ++cc)
         polygonPoints.emplace_back(*cc);
@@ -694,7 +694,7 @@ void convertSvgPathToPolygonPath(NFmiSvgPath &svgPath, T::Polygon_vec &polygonPa
   {
     T::Coordinate_vec polygonPoints;
 
-    for (auto & it : svgPath)
+    for (auto& it : svgPath)
     {
       switch (it.itsType)
       {
@@ -1179,7 +1179,7 @@ T::Polygon_vec getEnlargedPolygonPath(T::Polygon_vec &oldPath, double areaExtens
   {
     T::Polygon_vec newPath;
 
-    for (auto & coordinates : oldPath)
+    for (auto& coordinates : oldPath)
     {
       T::Coordinate_vec newCoordinates = getEnlargedPolygon(coordinates, areaExtensionX, areaExtensionY);
       newPath.emplace_back(newCoordinates);
@@ -1232,7 +1232,7 @@ void getIsolines(std::vector<float> &gridData, T::Coordinate_vec *coordinates, i
     //ImagePaint paint(3600,1800,0xFFFFFF,0xFF0000,0x0000FF,false,false);
     if (result.size() > 0)
     {
-      for (auto & g : result)
+      for (auto& g : result)
       {
         std::ostringstream out;
         g.wkb(out);
@@ -1402,7 +1402,7 @@ void getIsobands(std::vector<float> &gridData, std::vector<T::Coordinate> *coord
 
     if (result.size() > 0)
     {
-      for (auto & g : result)
+      for (auto& g : result)
       {
         std::ostringstream out;
 
@@ -1949,7 +1949,7 @@ void getStreamlineImage(float *direction, float *value, uint *image, int width, 
         uint c = 0;
         if (cellCount >= minLength && value)
         {
-          for (auto & coordinate : std::ranges::reverse_view(coordinates))
+          for (auto& coordinate : std::ranges::reverse_view(coordinates))
           {
             int xx = (int) coordinate.x();
             int yy = (int) coordinate.y();
@@ -1968,7 +1968,7 @@ void getStreamlineImage(float *direction, float *value, uint *image, int width, 
         }
 
         c = 0;
-        for (auto & coordinate : std::ranges::reverse_view(coordinates))
+        for (auto& coordinate : std::ranges::reverse_view(coordinates))
         {
           int xx = (int) coordinate.x();
           int yy = (int) coordinate.y();
@@ -2038,7 +2038,7 @@ void getStreamlineImage(float *direction, float *value, uint *image, int width, 
         int cellCount = findPath(direction, image, width, height, maxLength, 0, (double) x + 0.5, (double) y + 0.5, 0, 0, coordinates);
 
         uint c = 1;
-        for (auto & coordinate : std::ranges::reverse_view(coordinates))
+        for (auto& coordinate : std::ranges::reverse_view(coordinates))
         {
           int xx = (int) coordinate.x();
           int yy = (int) coordinate.y();
@@ -2088,7 +2088,7 @@ void getStreamlineImage(std::vector<float>& direction, float *value, uint *image
         int cellCount = findPath(direction, image, width, height, maxLength, 0, (double) x + 0.5, (double) y + 0.5, 0, 0, coordinates);
 
         uint c = 1;
-        for (auto & coordinate : std::ranges::reverse_view(coordinates))
+        for (auto& coordinate : std::ranges::reverse_view(coordinates))
         {
           int xx = (int) coordinate.x();
           int yy = (int) coordinate.y();
@@ -2244,7 +2244,7 @@ void getStreamlines(T::ParamValue_vec &gridValues, std::vector<T::Coordinate> *c
         }
         else
         {
-          for (auto & lineCoordinate : lineCoordinates)
+          for (auto& lineCoordinate : lineCoordinates)
           {
             int idx = ((int) lineCoordinate.y()) * width + (int) lineCoordinate.x();
             if (idx >= 0 && idx < sz)

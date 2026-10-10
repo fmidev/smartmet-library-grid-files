@@ -259,7 +259,7 @@ time_t GridDef::getModificationTime(string_vec& files)
   try
   {
     time_t t = 0;
-    for (auto & file : files)
+    for (auto& file : files)
     {
       time_t tt = getFileModificationTime(file.c_str());
       if (tt > t)
@@ -289,7 +289,7 @@ void GridDef::updateGrib()
     if (tt != mGrib_parameterDef_modificationTime)
     {
       mGrib_parameterDef_records.clear();
-      for (auto & mGrib_parameterDef_file : mGrib_parameterDef_files)
+      for (auto& mGrib_parameterDef_file : mGrib_parameterDef_files)
       {
         loadGribParameterDefinitions(mGrib_parameterDef_file.c_str());
       }
@@ -317,7 +317,7 @@ void GridDef::updateGrib1()
     if (tt != mGrib1_parameterDef_modificationTime)
     {
       mGrib1_parameterDef_records.clear();
-      for (auto & mGrib1_parameterDef_file : mGrib1_parameterDef_files)
+      for (auto& mGrib1_parameterDef_file : mGrib1_parameterDef_files)
       {
         loadGrib1ParameterDefs(mGrib1_parameterDef_file.c_str());
       }
@@ -345,7 +345,7 @@ void GridDef::updateGrib2()
     if (tt != mGrib2_parameterDef_modificationTime)
     {
       mGrib2_parameterDef_records.clear();
-      for (auto & mGrib2_parameterDef_file : mGrib2_parameterDef_files)
+      for (auto& mGrib2_parameterDef_file : mGrib2_parameterDef_files)
       {
         loadGrib2ParameterDefs(mGrib2_parameterDef_file.c_str());
       }
@@ -374,7 +374,7 @@ void GridDef::updateFmi()
     {
       mFmi_parameterDef_records.clear();
       mFmiNameToId.clear();
-      for (auto & mFmi_parameterDef_file : mFmi_parameterDef_files)
+      for (auto& mFmi_parameterDef_file : mFmi_parameterDef_files)
       {
         loadFmiParameterDefinitions(mFmi_parameterDef_file.c_str());
       }
@@ -385,7 +385,7 @@ void GridDef::updateFmi()
     if (tt != mFmi_geometryGroupDef_modificationTime)
     {
       mFmi_geometryGroupDef_records.clear();
-      for (auto & mFmi_geometryGroupDef_file : mFmi_geometryGroupDef_files)
+      for (auto& mFmi_geometryGroupDef_file : mFmi_geometryGroupDef_files)
       {
         loadFmiGeometryGroupDefinitions(mFmi_geometryGroupDef_file.c_str());
       }
@@ -396,7 +396,7 @@ void GridDef::updateFmi()
     if (tt != mFmi_levelDef_modificationTime)
     {
       mFmi_levelDef_records.clear();
-      for (auto & mFmi_levelDef_file : mFmi_levelDef_files)
+      for (auto& mFmi_levelDef_file : mFmi_levelDef_files)
       {
         loadFmiLevelDefinitions(mFmi_levelDef_file.c_str());
       }
@@ -407,7 +407,7 @@ void GridDef::updateFmi()
     if (tt != mFmi_forecastTypeDef_modificationTime)
     {
       mFmi_forecastTypeDef_records.clear();
-      for (auto & mFmi_forecastTypeDef_file : mFmi_forecastTypeDef_files)
+      for (auto& mFmi_forecastTypeDef_file : mFmi_forecastTypeDef_files)
       {
         loadFmiForecastTypeDefinitions(mFmi_forecastTypeDef_file.c_str());
       }
@@ -418,7 +418,7 @@ void GridDef::updateFmi()
     if (tt != mFmi_processingTypeDef_modificationTime)
     {
       mFmi_processingTypeDef_records.clear();
-      for (auto & mFmi_processingTypeDef_file : mFmi_processingTypeDef_files)
+      for (auto& mFmi_processingTypeDef_file : mFmi_processingTypeDef_files)
       {
         loadFmiProcessingTypeDefinitions(mFmi_processingTypeDef_file.c_str());
       }
@@ -429,7 +429,7 @@ void GridDef::updateFmi()
     if (tt != mFmi_aggregationDef_modificationTime)
     {
       mFmi_aggregationDef_records.clear();
-      for (auto & mFmi_aggregationDef_file : mFmi_aggregationDef_files)
+      for (auto& mFmi_aggregationDef_file : mFmi_aggregationDef_files)
       {
         loadFmiAggregationDefinitions(mFmi_aggregationDef_file.c_str());
       }
@@ -441,7 +441,7 @@ void GridDef::updateFmi()
     {
       mFmi_parametersFromGrib_records.clear();
       mGribIdToFmiId.clear();
-      for (auto & mFmi_parametersFromGrib_file : mFmi_parametersFromGrib_files)
+      for (auto& mFmi_parametersFromGrib_file : mFmi_parametersFromGrib_files)
       {
         loadFmiParameterId_grib(mFmi_parametersFromGrib_file.c_str());
       }
@@ -454,7 +454,7 @@ void GridDef::updateFmi()
       mFmi_parametersFromNewbase_records.clear();
       mNewbaseIdToFmiId.clear();
       mFmiIdToNewbaseId.clear();
-      for (auto & mFmi_parametersFromNewbase_file : mFmi_parametersFromNewbase_files)
+      for (auto& mFmi_parametersFromNewbase_file : mFmi_parametersFromNewbase_files)
       {
         loadFmiParameterId_newbase(mFmi_parametersFromNewbase_file.c_str());
       }
@@ -466,7 +466,7 @@ void GridDef::updateFmi()
     {
       mFmi_parametersFromNetCdf_records.clear();
       mNetCdfNameToFmiId.clear();
-      for (auto & mFmi_parametersFromNetCdf_file : mFmi_parametersFromNetCdf_files)
+      for (auto& mFmi_parametersFromNetCdf_file : mFmi_parametersFromNetCdf_files)
       {
         loadFmiParameterId_netCdf(mFmi_parametersFromNetCdf_file.c_str());
       }
@@ -477,7 +477,7 @@ void GridDef::updateFmi()
     if (tt != mFmi_levelsFromGrib1_modificationTime)
     {
       mFmi_levelsFromGrib1_records.clear();
-      for (auto & mFmi_levelsFromGrib1_file : mFmi_levelsFromGrib1_files)
+      for (auto& mFmi_levelsFromGrib1_file : mFmi_levelsFromGrib1_files)
       {
         loadFmiLevelId_grib1(mFmi_levelsFromGrib1_file.c_str());
       }
@@ -488,7 +488,7 @@ void GridDef::updateFmi()
     if (tt != mFmi_levelsFromGrib2_modificationTime)
     {
       mFmi_levelsFromGrib2_records.clear();
-      for (auto & mFmi_levelsFromGrib2_file : mFmi_levelsFromGrib2_files)
+      for (auto& mFmi_levelsFromGrib2_file : mFmi_levelsFromGrib2_files)
       {
         loadFmiLevelId_grib2(mFmi_levelsFromGrib2_file.c_str());
       }
@@ -499,7 +499,7 @@ void GridDef::updateFmi()
     if (tt != mFmi_levelsFromNewbase_modificationTime)
     {
       mNewbaseLevelIdToFmiLevelId.clear();
-      for (auto & mFmi_levelsFromNewbase_file : mFmi_levelsFromNewbase_files)
+      for (auto& mFmi_levelsFromNewbase_file : mFmi_levelsFromNewbase_files)
       {
         loadFmiLevelId_newbase(mFmi_levelsFromNewbase_file.c_str());
       }
@@ -512,7 +512,7 @@ void GridDef::updateFmi()
       mGridDefinitions1.clear();
       mGridDefinitions2.clear();
 
-      for (auto & mFmi_geometryDef_file : mFmi_geometryDef_files)
+      for (auto& mFmi_geometryDef_file : mFmi_geometryDef_files)
       {
         loadGeometryDefinitions(mFmi_geometryDef_file.c_str());
       }
@@ -542,7 +542,7 @@ void GridDef::updateNewbase()
     {
       mNewbase_parameterDef_records.clear();
       mNewbaseNameToId.clear();
-      for (auto & mNewbase_parameterDef_file : mNewbase_parameterDef_files)
+      for (auto& mNewbase_parameterDef_file : mNewbase_parameterDef_files)
       {
         loadNewbaseParameterDefinitions(mNewbase_parameterDef_file.c_str());
       }
@@ -571,7 +571,7 @@ void GridDef::updateNetCdf()
     if (tt != mNetCdf_parameterDef_modificationTime)
     {
       mNetCdf_parameterDef_records.clear();
-      for (auto & mNetCdf_parameterDef_file : mNetCdf_parameterDef_files)
+      for (auto& mNetCdf_parameterDef_file : mNetCdf_parameterDef_files)
       {
         loadNetCdfParameterDefinitions(mNetCdf_parameterDef_file.c_str());
       }
@@ -698,7 +698,7 @@ Grib1ParamDef_cptr GridDef::getGrib1ParameterDefById(T::GribParamId gribParamId)
   FUNCTION_TRACE
   try
   {
-    for (auto & mGrib1_parameterDef_record : mGrib1_parameterDef_records)
+    for (auto& mGrib1_parameterDef_record : mGrib1_parameterDef_records)
     {
       if (mGrib1_parameterDef_record.mGribParameterId == gribParamId)
         return &mGrib1_parameterDef_record;
@@ -874,7 +874,7 @@ Grib2ParamDef_cptr GridDef::getGrib2ParameterDefById(T::GribParamId gribParamId)
   FUNCTION_TRACE
   try
   {
-    for (auto & mGrib2_parameterDef_record : mGrib2_parameterDef_records)
+    for (auto& mGrib2_parameterDef_record : mGrib2_parameterDef_records)
     {
       if (mGrib2_parameterDef_record.mGribParameterId == gribParamId)
         return &mGrib2_parameterDef_record;
@@ -1052,7 +1052,7 @@ GribParamDef_cptr GridDef::getGribParameterDefById(T::GribParamId gribParamId)
   FUNCTION_TRACE
   try
   {
-    for (auto & mGrib_parameterDef_record : mGrib_parameterDef_records)
+    for (auto& mGrib_parameterDef_record : mGrib_parameterDef_records)
     {
       if (mGrib_parameterDef_record.mGribParameterId == gribParamId)
         return &mGrib_parameterDef_record;
@@ -1076,7 +1076,7 @@ GribParamDef_cptr GridDef::getGribParameterDefByName(const std::string& gribPara
   FUNCTION_TRACE
   try
   {
-    for (auto & mGrib_parameterDef_record : mGrib_parameterDef_records)
+    for (auto& mGrib_parameterDef_record : mGrib_parameterDef_records)
     {
       if (strcasecmp(mGrib_parameterDef_record.mParameterName.c_str(),gribParamName.c_str()) == 0)
         return &mGrib_parameterDef_record;
@@ -1157,7 +1157,7 @@ void GridDef::getFmiGeometryGroupsByGeometryId(int geometryId,uint groupType,std
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    for (auto & mFmi_geometryGroupDef_record : mFmi_geometryGroupDef_records)
+    for (auto& mFmi_geometryGroupDef_record : mFmi_geometryGroupDef_records)
     {
       if (mFmi_geometryGroupDef_record.mGroupType == groupType)
       {
@@ -1188,7 +1188,7 @@ void GridDef::getFmiGeometryGroupsByGeometryId(int geometryId,std::vector<uint>&
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    for (auto & mFmi_geometryGroupDef_record : mFmi_geometryGroupDef_records)
+    for (auto& mFmi_geometryGroupDef_record : mFmi_geometryGroupDef_records)
     {
       for (auto gIt = mFmi_geometryGroupDef_record.mGeometryIdList.begin(); gIt != mFmi_geometryGroupDef_record.mGeometryIdList.end(); ++gIt)
       {
@@ -1217,7 +1217,7 @@ void GridDef::getFmiGeometryGroupsByGeometryId(int geometryId,std::set<uint>& gr
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    for (auto & mFmi_geometryGroupDef_record : mFmi_geometryGroupDef_records)
+    for (auto& mFmi_geometryGroupDef_record : mFmi_geometryGroupDef_records)
     {
       for (auto gIt = mFmi_geometryGroupDef_record.mGeometryIdList.begin(); gIt != mFmi_geometryGroupDef_record.mGeometryIdList.end(); ++gIt)
       {
@@ -1351,7 +1351,7 @@ FmiGeomGroupDef_cptr GridDef::getFmiGeometryGroupDef(const char *producerName,ui
   FUNCTION_TRACE
   try
   {
-    for (auto & mFmi_geometryGroupDef_record : mFmi_geometryGroupDef_records)
+    for (auto& mFmi_geometryGroupDef_record : mFmi_geometryGroupDef_records)
     {
       if (mFmi_geometryGroupDef_record.mGroupType == groupType  &&  strcasecmp(producerName,mFmi_geometryGroupDef_record.mProducerName.c_str())== 0)
         return &mFmi_geometryGroupDef_record;
@@ -1375,7 +1375,7 @@ FmiGeomGroupDef_cptr GridDef::getFmiGeometryGroupDef(uint geometryGroupId)
   FUNCTION_TRACE
   try
   {
-    for (auto & mFmi_geometryGroupDef_record : mFmi_geometryGroupDef_records)
+    for (auto& mFmi_geometryGroupDef_record : mFmi_geometryGroupDef_records)
     {
       if (mFmi_geometryGroupDef_record.mGeometryGroupId == geometryGroupId)
         return &mFmi_geometryGroupDef_record;
@@ -1399,7 +1399,7 @@ LevelDef_cptr GridDef::getFmiLevelDef(uint levelId)
   FUNCTION_TRACE
   try
   {
-    for (auto & mFmi_levelDef_record : mFmi_levelDef_records)
+    for (auto& mFmi_levelDef_record : mFmi_levelDef_records)
     {
       if (mFmi_levelDef_record.mLevelId == levelId)
         return &mFmi_levelDef_record;
@@ -1423,7 +1423,7 @@ ForecastTypeDef_cptr GridDef::getFmiForecastTypeDef(int forecastTypeId)
   FUNCTION_TRACE
   try
   {
-    for (auto & mFmi_forecastTypeDef_record : mFmi_forecastTypeDef_records)
+    for (auto& mFmi_forecastTypeDef_record : mFmi_forecastTypeDef_records)
     {
       if (mFmi_forecastTypeDef_record.mForecastTypeId == forecastTypeId)
         return &mFmi_forecastTypeDef_record;
@@ -1447,7 +1447,7 @@ ProcessingTypeDef_cptr GridDef::getFmiProcessingTypeDef(int processingTypeId)
   FUNCTION_TRACE
   try
   {
-    for (auto & mFmi_processingTypeDef_record : mFmi_processingTypeDef_records)
+    for (auto& mFmi_processingTypeDef_record : mFmi_processingTypeDef_records)
     {
       if (mFmi_processingTypeDef_record.mProcessingTypeId == processingTypeId)
         return &mFmi_processingTypeDef_record;
@@ -1520,7 +1520,7 @@ void GridDef::loadGrib1ParameterDefs(const char *filename)
             std::vector<std::string> partList;
             splitString(field[1],',',partList);
 
-            for (auto & it : partList)
+            for (auto& it : partList)
             {
               std::vector<std::string> list;
               splitString(it,'=',list);
@@ -1602,7 +1602,7 @@ void GridDef::loadGrib2ParameterDefs(const char *filename)
             std::vector<std::string> partList;
             splitString(field[1],',',partList);
 
-            for (auto & it : partList)
+            for (auto& it : partList)
             {
               std::vector<std::string> list;
               splitString(it,'=',list);
@@ -2432,7 +2432,7 @@ void GridDef::loadFmiLevelId_grib1(const char *filename)
             std::vector<std::string> partList;
             splitString(field[1],',',partList);
 
-            for (auto & it : partList)
+            for (auto& it : partList)
             {
               std::vector<std::string> list;
               splitString(it,'=',list);
@@ -2515,7 +2515,7 @@ void GridDef::loadFmiLevelId_grib2(const char *filename)
             std::vector<std::string> partList;
             splitString(field[1],',',partList);
 
-            for (auto & it : partList)
+            for (auto& it : partList)
             {
               std::vector<std::string> list;
               splitString(it,'=',list);
@@ -3731,7 +3731,7 @@ GRIB1::GridDef_sptr GridDef::getGrib1DefinitionByGeometryId(int geometryId)
   FUNCTION_TRACE
   try
   {
-    for (auto & it : mGridDefinitions1)
+    for (auto& it : mGridDefinitions1)
     {
       if (it.second->getGridGeometryId() == geometryId)
         return it.second;
@@ -3898,7 +3898,7 @@ GRIB2::GridDef_sptr GridDef::getGrib2DefinitionByGeometryId(int geometryId)
   FUNCTION_TRACE
   try
   {
-    for (auto & it : mGridDefinitions2)
+    for (auto& it : mGridDefinitions2)
     {
       if (it.second->getGridGeometryId() == geometryId)
         return it.second;
@@ -4207,13 +4207,13 @@ void GridDef::getGeometryIdList(std::set<T::GeometryId>& geometryIdList)
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    for (auto & it : mGridDefinitions2)
+    for (auto& it : mGridDefinitions2)
     {
       T::GeometryId geometryId = it.second->getGridGeometryId();
       geometryIdList.insert(geometryId);
     }
 
-    for (auto & it : mGridDefinitions1)
+    for (auto& it : mGridDefinitions1)
     {
       T::GeometryId geometryId = it.second->getGridGeometryId();
       geometryIdList.insert(geometryId);
@@ -4239,7 +4239,7 @@ void GridDef::getGeometryIdListByLatLon(double lat,double lon,std::set<T::Geomet
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    for (auto & it : mGridDefinitions2)
+    for (auto& it : mGridDefinitions2)
     {
       double grid_i = 0;
       double grid_j = 0;
@@ -4251,7 +4251,7 @@ void GridDef::getGeometryIdListByLatLon(double lat,double lon,std::set<T::Geomet
       }
     }
 
-    for (auto & it : mGridDefinitions1)
+    for (auto& it : mGridDefinitions1)
     {
       double grid_i = 0;
       double grid_j = 0;
@@ -5515,7 +5515,7 @@ T::GribParamId GridDef::getGribParameterId(GRIB1::Message& message)
     T::GribParamId parameterId = 0;
     uint maxPoints = 0;
 
-    for (auto & p : mGrib1_parameterDef_cache)
+    for (auto& p : mGrib1_parameterDef_cache)
     {
       uint requiredPoints = p.mParameterList.size();
       uint points = 0;
@@ -5534,7 +5534,7 @@ T::GribParamId GridDef::getGribParameterId(GRIB1::Message& message)
     }
 
     Grib1ParameterDef def;
-    for (auto & mGrib1_parameterDef_record : mGrib1_parameterDef_records)
+    for (auto& mGrib1_parameterDef_record : mGrib1_parameterDef_records)
     {
       uint requiredPoints = mGrib1_parameterDef_record.mParameterList.size();
       if (maxPoints < requiredPoints)
@@ -5585,7 +5585,7 @@ T::GribParamId GridDef::getGribParameterId(GRIB2::Message& message)
   {
     uint maxPoints = 0;
     T::GribParamId parameterId = 0;
-    for (auto & p : mGrib2_parameterDef_cache)
+    for (auto& p : mGrib2_parameterDef_cache)
     {
       uint requiredPoints = p.mParameterList.size();
       uint points = 0;
@@ -5603,7 +5603,7 @@ T::GribParamId GridDef::getGribParameterId(GRIB2::Message& message)
         return p.mGribParameterId;
     }
     Grib2ParameterDef def;
-    for (auto & mGrib2_parameterDef_record : mGrib2_parameterDef_records)
+    for (auto& mGrib2_parameterDef_record : mGrib2_parameterDef_records)
     {
       uint requiredPoints = mGrib2_parameterDef_record.mParameterList.size();
       if (maxPoints < requiredPoints)
@@ -5652,7 +5652,7 @@ bool GridDef::getGrib1LevelDef(uint fmiLevelId,FmiLevelId_grib& def)
   FUNCTION_TRACE
   try
   {
-    for (auto & mFmi_levelsFromGrib1_record : mFmi_levelsFromGrib1_records)
+    for (auto& mFmi_levelsFromGrib1_record : mFmi_levelsFromGrib1_records)
     {
       if (mFmi_levelsFromGrib1_record.mFmiLevelId == fmiLevelId)
       {
@@ -5680,7 +5680,7 @@ bool GridDef::getGrib2LevelDef(uint fmiLevelId,FmiLevelId_grib& def)
   FUNCTION_TRACE
   try
   {
-    for (auto & mFmi_levelsFromGrib2_record : mFmi_levelsFromGrib2_records)
+    for (auto& mFmi_levelsFromGrib2_record : mFmi_levelsFromGrib2_records)
     {
       if (mFmi_levelsFromGrib2_record.mFmiLevelId == fmiLevelId)
       {
@@ -5835,7 +5835,7 @@ T::ParamLevelId GridDef::getFmiLevelId(GRIB1::Message& message)
     int maxMatches = 0;
     FmiLevelId_grib def;
 
-    for (auto & mFmi_levelsFromGrib1_record : mFmi_levelsFromGrib1_records)
+    for (auto& mFmi_levelsFromGrib1_record : mFmi_levelsFromGrib1_records)
     {
       int matchesRequired = mFmi_levelsFromGrib1_record.mParameterList.size();
       int matchCount = 0;
@@ -5877,7 +5877,7 @@ T::ParamLevelId GridDef::getFmiLevelId(GRIB2::Message& message)
     int maxMatches = 0;
     FmiLevelId_grib def;
 
-    for (auto & mFmi_levelsFromGrib2_record : mFmi_levelsFromGrib2_records)
+    for (auto& mFmi_levelsFromGrib2_record : mFmi_levelsFromGrib2_records)
     {
       int matchesRequired = mFmi_levelsFromGrib2_record.mParameterList.size();
       int matchCount = 0;
@@ -6048,7 +6048,7 @@ AggregationDef_cptr GridDef::getFmiAggregationDef(int aggregationId)
   FUNCTION_TRACE
   try
   {
-    for (auto & mFmi_aggregationDef_record : mFmi_aggregationDef_records)
+    for (auto& mFmi_aggregationDef_record : mFmi_aggregationDef_records)
     {
       if (mFmi_aggregationDef_record.mAggregationId == aggregationId)
         return &mFmi_aggregationDef_record;

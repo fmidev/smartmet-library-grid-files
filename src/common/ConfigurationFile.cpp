@@ -114,7 +114,7 @@ void ConfigurationFile::addConfigurationFile(const std::string& filename)
 
     mIncludedConfigurationFiles.insert(filename);
     ConfigurationFile configFile(filename);
-    for (auto & it : configFile.mAttributeList)
+    for (auto& it : configFile.mAttributeList)
     {
       mAttributeList.emplace_back(it);
     }
@@ -278,7 +278,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,bool& attrib
   FUNCTION_TRACE
   try
   {
-    for (auto & attr : mAttributeList)
+    for (auto& attr : mAttributeList)
     {
       if (strcasecmp(attr.mName.c_str(),attributeName) == 0)
       {
@@ -338,7 +338,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,double& attr
   FUNCTION_TRACE
   try
   {
-    for (auto & attr : mAttributeList)
+    for (auto& attr : mAttributeList)
     {
       if (strcasecmp(attr.mName.c_str(),attributeName) == 0)
       {
@@ -459,7 +459,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,Int64& attri
   FUNCTION_TRACE
   try
   {
-    for (auto & attr : mAttributeList)
+    for (auto& attr : mAttributeList)
     {
       if (strcasecmp(attr.mName.c_str(),attributeName) == 0)
       {
@@ -605,7 +605,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,std::string&
   FUNCTION_TRACE
   try
   {
-    for (auto & attr : mAttributeList)
+    for (auto& attr : mAttributeList)
     {
       if (strcasecmp(attr.mName.c_str(),attributeName) == 0)
       {
@@ -644,7 +644,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,std::vector<
   {
     bool exists = false;
     uint len = strlen(attributeName);
-    for (auto & attr : mAttributeList)
+    for (auto& attr : mAttributeList)
     {
       if (strncasecmp(attr.mName.c_str(),attributeName,len) == 0)
       {
@@ -707,7 +707,7 @@ uint ConfigurationFile::getArraySize(const char *attributeName)
     int idx = -1;
     bool exists = false;
     uint len = strlen(attributeName);
-    for (auto & attr : mAttributeList)
+    for (auto& attr : mAttributeList)
     {
       if (strncasecmp(attr.mName.c_str(),attributeName,len) == 0)
       {
@@ -763,7 +763,7 @@ bool ConfigurationFile::getAttributeFields(const char *attributeName,std::set<st
   try
   {
     uint len = strlen(attributeName);
-    for (auto & attr : mAttributeList)
+    for (auto& attr : mAttributeList)
     {
       if (strncasecmp(attr.mName.c_str(),attributeName,len) == 0)
       {
@@ -812,7 +812,7 @@ bool ConfigurationFile::getSubAttributes(const char *attributeName,std::vector<s
   try
   {
     uint len = strlen(attributeName);
-    for (auto & attr : mAttributeList)
+    for (auto& attr : mAttributeList)
     {
       if (strncasecmp(attr.mName.c_str(),attributeName,len) == 0)
       {
@@ -876,7 +876,7 @@ bool ConfigurationFile::findAttribute(const char *attributeName)
   try
   {
     uint len = strlen(attributeName);
-    for (auto & attr : mAttributeList)
+    for (auto& attr : mAttributeList)
     {
       if (strncasecmp(attr.mName.c_str(),attributeName,len) == 0)
       {
@@ -905,7 +905,7 @@ void ConfigurationFile::setAttributeValue(const char *attributeName,std::string&
   FUNCTION_TRACE
   try
   {
-    for (auto & attr : mAttributeList)
+    for (auto& attr : mAttributeList)
     {
       if (strcasecmp(attr.mName.c_str(),attributeName) == 0)
       {
@@ -938,7 +938,7 @@ void ConfigurationFile::print(std::ostream& stream,uint level,uint optionFlags)
     stream << space(level) << "- mFilename            = " << mFilename << "\n";
     stream << space(level) << "- mAttributeList       = \n";
 
-    for (auto & attr : mAttributeList)
+    for (auto& attr : mAttributeList)
     {
       if ((optionFlags & 0x0001) != 0)
         stream << space(level) << "    * ATTR " << attr.mName << " = " << parseValue(attr.mValue) << "\n";
@@ -1433,7 +1433,7 @@ void ConfigurationFile::removeAttributes(const char *pattern)
   {
     std::vector<T::Attribute>  newAttributeList;
 
-    for (auto & attr : mAttributeList)
+    for (auto& attr : mAttributeList)
     {
       if (fnmatch(pattern,attr.mName.c_str(),0) != 0)
       {

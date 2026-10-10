@@ -42,7 +42,7 @@ DataFetcher_network::~DataFetcher_network()
   try
   {
     AutoThreadLock lock(&mThreadLock);
-    for (auto & mClient : mClients)
+    for (auto& mClient : mClients)
     {
       for (auto con = mClient.second.begin(); con != mClient.second.end(); ++con)
       {
@@ -104,7 +104,7 @@ Client* DataFetcher_network::getClient(const char *serverAddress,uint serverType
     {
       //printf("Connections %ld:%ld\n",mClients.size(),convec->second.size());
 
-      for (auto & it : convec->second)
+      for (auto& it : convec->second)
       {
         if (!it->isActive())
         {
@@ -203,7 +203,7 @@ bool DataFetcher_network::getFileList(uint protocol,const char *server,XmlElemen
   try
   {
     bool truncated = false;
-    for (auto & a : rootElement.elementList)
+    for (auto& a : rootElement.elementList)
     {
       if (strcasecmp(a->tag.c_str(), "ListBucketResult") == 0)
       {
@@ -226,7 +226,7 @@ bool DataFetcher_network::getFileList(uint protocol,const char *server,XmlElemen
             rec.serverType = ServerType::S3;
             rec.protocol = protocol;
             rec.server = server;
-            for (auto & c : (*b)->elementList)
+            for (auto& c : (*b)->elementList)
             {
               if (strcasecmp(c->tag.c_str(), "Key") == 0)
               {

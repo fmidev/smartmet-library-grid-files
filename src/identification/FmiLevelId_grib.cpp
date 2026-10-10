@@ -54,7 +54,7 @@ void FmiLevelId_grib::print(std::ostream& stream,uint level,uint optionFlags) co
     stream << space(level) << "FmiLevelId_grib\n";
     stream << space(level) << "- mFmiLevelId       = " << mFmiLevelId << "\n";
     stream << space(level) << "- mParameterList    = \n";
-    for (const auto & it : mParameterList)
+    for (const auto& it : mParameterList)
       stream << space(level+2) << stringFactory[it.first] << " : " << it.second << "\n";
   }
   catch (...)

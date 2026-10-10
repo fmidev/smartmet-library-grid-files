@@ -1449,7 +1449,7 @@ void saveGeometryAsJpeg(const char *_filename,int width,int height,uint backgrou
       tmaxX = -1000000000;
       tmaxY = -1000000000;
 
-      for (auto & g : geomVec)
+      for (auto& g : geomVec)
       {
         auto gg = g.get();
         auto* out = new unsigned char[gg->WkbSize()+10];
@@ -1495,7 +1495,7 @@ void saveGeometryAsJpeg(const char *_filename,int width,int height,uint backgrou
     if (sy < sx)
       ss = sy;
 
-    for (auto & g : geomVec)
+    for (auto& g : geomVec)
     {
       auto gg = g.get();
       auto* out = new unsigned char[gg->WkbSize()+10];

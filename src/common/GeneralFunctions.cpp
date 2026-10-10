@@ -2672,7 +2672,7 @@ void splitNumbers(const char *str,std::vector<std::string>& numbers)
   std::vector<std::string> parts;
   splitString(str,'/',parts);
 
-  for (auto & part : parts)
+  for (auto& part : parts)
   {
     std::vector<std::string> nums;
     splitString(part.c_str(),'-',nums);
@@ -2792,7 +2792,7 @@ bool patternMatch(const char *str, std::vector<std::string> &patterns)
 {
   try
   {
-    for (auto & pattern : patterns)
+    for (auto& pattern : patterns)
     {
       if (fnmatch(pattern.c_str(), str, 0) == 0) return true;
     }
@@ -3051,7 +3051,7 @@ void parseCoordinates(const std::string& coordinateStr,
     std::vector<std::string> partList;
 
     splitString(coordinateStr, separator2, partList);
-    for (auto & it : partList)
+    for (auto& it : partList)
     {
       T::Coordinate_vec coordinateList;
 
@@ -3302,7 +3302,7 @@ void readEofLines(const char *filename,uint numberOfLines,std::vector<std::strin
     }
     fclose(file);
 
-    for (auto & tmpLine : std::ranges::reverse_view(tmpLines))
+    for (auto& tmpLine : std::ranges::reverse_view(tmpLines))
     {
       lines.push_back(tmpLine);
       if (lines.size() == numberOfLines)

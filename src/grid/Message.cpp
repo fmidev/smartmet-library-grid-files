@@ -3863,7 +3863,7 @@ void Message::getGridValueVectorWithCaching(T::ParamValue_vec& values) const
     if (fileId > 0)
     {
       AutoThreadLock lock(&tmpCacheThreadLock);
-      for (auto & t : tmpValueCache)
+      for (auto& t : tmpValueCache)
       {
         if (t.fileId ==  fileId  &&  t.messageIndex == messageIndex  &&  t.hash == 0)
         {
@@ -5129,7 +5129,7 @@ void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double o
           // Same grid points as in getGridValueListByPolygon()
 
           std::vector<T::Coordinate> newPolygonPoints;
-          for (auto & polygonPoint : polygonPoints)
+          for (auto& polygonPoint : polygonPoints)
           {
             double grid_i = 0;
             double grid_j = 0;
@@ -5192,7 +5192,7 @@ void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double o
         std::vector<T::Point> gridPoints;
 
         getPointsInsideCircle(cols,rows,origoX,origoY,radius,gridPoints);
-        for (auto & gridPoint : gridPoints)
+        for (auto& gridPoint : gridPoints)
         {
           T::GridValue rec;
 
@@ -5290,7 +5290,7 @@ void Message::getGridValueListByPointList(T::CoordinateType coordinateType,std::
   FUNCTION_TRACE
   try
   {
-    for (auto & it : pointList)
+    for (auto& it : pointList)
     {
       T::GridValue rec;
       rec.mX = it.x();
@@ -5375,7 +5375,7 @@ void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::ve
       {
         std::vector<T::Coordinate> newPolygonPoints;
 
-        for (auto & polygonPoint : polygonPoints)
+        for (auto& polygonPoint : polygonPoints)
         {
           double grid_i = 0;
           double grid_j = 0;
@@ -5450,7 +5450,7 @@ void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::ve
       {
         std::vector<T::Coordinate> newPolygonPoints;
 
-        for (auto & polygonPoint : polygonPoints)
+        for (auto& polygonPoint : polygonPoints)
         {
           double grid_i = 0;
           double grid_j = 0;
@@ -5544,7 +5544,7 @@ void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std
       {
         std::vector<std::vector<T::Coordinate>> newPolygonPath;
 
-        for (auto & polygonPoints : polygonPath)
+        for (auto& polygonPoints : polygonPath)
         {
           std::vector<T::Coordinate> newPolygonPoints;
 
@@ -5623,7 +5623,7 @@ void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std
       {
         std::vector<std::vector<T::Coordinate>> newPolygonPath;
 
-        for (auto & polygonPoints : polygonPath)
+        for (auto& polygonPoints : polygonPath)
         {
           std::vector<T::Coordinate> newPolygonPoints;
 
@@ -5876,7 +5876,7 @@ void Message::getGridValueVectorByCoordinateList(T::CoordinateType coordinateTyp
     // ### Seaching data from the temporary cache
     {
       AutoThreadLock lock(&tmpCacheThreadLock);
-      for (auto & t : tmpValueCache)
+      for (auto& t : tmpValueCache)
       {
         if (t.fileId ==  fileId  &&  t.messageIndex == messageIndex  &&  t.hash == hash)
         {
@@ -5972,7 +5972,7 @@ void Message::getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate
     switch (areaInterpolationMethod)
     {
       case T::AreaInterpolationMethod::None:
-        for (auto & point : points)
+        for (auto& point : points)
         {
           T::ParamValue value = getGridValueByGridPoint_noInterpolation(point.x(),point.y(),modificationOperation,modificationParameters);
           values.emplace_back(value);
@@ -5980,7 +5980,7 @@ void Message::getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate
         break;
 
       case T::AreaInterpolationMethod::Nearest:
-        for (auto & point : points)
+        for (auto& point : points)
         {
           T::ParamValue value = getGridValueByGridPoint_nearest(point.x(),point.y(),modificationOperation,modificationParameters);
           values.emplace_back(value);
@@ -5988,7 +5988,7 @@ void Message::getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate
         break;
 
       case T::AreaInterpolationMethod::Linear:
-        for (auto & point : points)
+        for (auto& point : points)
         {
           T::ParamValue value = getGridValueByGridPoint_linearInterpolation(point.x(),point.y(),modificationOperation,modificationParameters);
           values.emplace_back(value);
@@ -5996,7 +5996,7 @@ void Message::getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate
         break;
 
       case T::AreaInterpolationMethod::Min:
-        for (auto & point : points)
+        for (auto& point : points)
         {
           T::ParamValue value = getGridValueByGridPoint_min(point.x(),point.y(),modificationOperation,modificationParameters);
           values.emplace_back(value);
@@ -6004,7 +6004,7 @@ void Message::getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate
         break;
 
       case T::AreaInterpolationMethod::Max:
-        for (auto & point : points)
+        for (auto& point : points)
         {
           T::ParamValue value = getGridValueByGridPoint_max(point.x(),point.y(),modificationOperation,modificationParameters);
           values.emplace_back(value);
@@ -6012,7 +6012,7 @@ void Message::getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate
         break;
 
       case T::AreaInterpolationMethod::External:
-        for (auto & point : points)
+        for (auto& point : points)
         {
           T::ParamValue value = getGridValueByGridPoint_nearest(point.x(),point.y(),modificationOperation,modificationParameters);
           values.emplace_back(value);
@@ -6020,7 +6020,7 @@ void Message::getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate
         break;
 
       default:
-        for (auto & point : points)
+        for (auto& point : points)
         {
           T::ParamValue value = getGridValueByGridPoint_nearest(point.x(),point.y(),modificationOperation,modificationParameters);
           values.emplace_back(value);
@@ -6074,7 +6074,7 @@ void Message::getGridValueVectorByGridPointList(std::vector<T::Coordinate>& coor
     switch (areaInterpolationMethod)
     {
       case T::AreaInterpolationMethod::None:
-        for (auto & coordinate : coordinates)
+        for (auto& coordinate : coordinates)
         {
           T::ParamValue value = getGridValueByGridPoint_noInterpolation(coordinate.x(),coordinate.y(),modificationOperation,modificationParameters);
           values.emplace_back(value);
@@ -6082,7 +6082,7 @@ void Message::getGridValueVectorByGridPointList(std::vector<T::Coordinate>& coor
         return;
 
       case T::AreaInterpolationMethod::Nearest:
-        for (auto & coordinate : coordinates)
+        for (auto& coordinate : coordinates)
         {
           T::ParamValue value = getGridValueByGridPoint_nearest(coordinate.x(),coordinate.y(),modificationOperation,modificationParameters);
           values.emplace_back(value);
@@ -6090,7 +6090,7 @@ void Message::getGridValueVectorByGridPointList(std::vector<T::Coordinate>& coor
         return;
 
       case T::AreaInterpolationMethod::Linear:
-        for (auto & coordinate : coordinates)
+        for (auto& coordinate : coordinates)
         {
           T::ParamValue value = getGridValueByGridPoint_linearInterpolation(coordinate.x(),coordinate.y(),modificationOperation,modificationParameters);
           values.emplace_back(value);
@@ -6098,7 +6098,7 @@ void Message::getGridValueVectorByGridPointList(std::vector<T::Coordinate>& coor
         return;
 
       case T::AreaInterpolationMethod::Min:
-        for (auto & coordinate : coordinates)
+        for (auto& coordinate : coordinates)
         {
           T::ParamValue value = getGridValueByGridPoint_min(coordinate.x(),coordinate.y(),modificationOperation,modificationParameters);
           values.emplace_back(value);
@@ -6106,7 +6106,7 @@ void Message::getGridValueVectorByGridPointList(std::vector<T::Coordinate>& coor
         return;
 
       case T::AreaInterpolationMethod::Max:
-        for (auto & coordinate : coordinates)
+        for (auto& coordinate : coordinates)
         {
           T::ParamValue value = getGridValueByGridPoint_max(coordinate.x(),coordinate.y(),modificationOperation,modificationParameters);
           values.emplace_back(value);
@@ -6114,7 +6114,7 @@ void Message::getGridValueVectorByGridPointList(std::vector<T::Coordinate>& coor
         return;
 
       case T::AreaInterpolationMethod::External:
-        for (auto & coordinate : coordinates)
+        for (auto& coordinate : coordinates)
         {
           T::ParamValue value = getGridValueByGridPoint_nearest(coordinate.x(),coordinate.y(),modificationOperation,modificationParameters);
           values.emplace_back(value);
@@ -6122,7 +6122,7 @@ void Message::getGridValueVectorByGridPointList(std::vector<T::Coordinate>& coor
         return;
 
       default:
-        for (auto & coordinate : coordinates)
+        for (auto& coordinate : coordinates)
         {
           T::ParamValue value = getGridValueByGridPoint_nearest(coordinate.x(),coordinate.y(),modificationOperation,modificationParameters);
           values.emplace_back(value);

@@ -1813,7 +1813,7 @@ void NetCdfFile::getAttributeList(const char *variableName,const std::string& pr
   try
   {
     uint len = strlen(variableName);
-    for (const auto & pr : mPropertyList)
+    for (const auto& pr : mPropertyList)
     {
       const char *s = pr.first.c_str();
       if (strncasecmp(s,variableName,len) == 0 &&  s[len] == '.')
@@ -1855,7 +1855,7 @@ void NetCdfFile::print(std::ostream& stream,uint level,uint optionFlags) const
     stream << space(level) << "NetCdfFile\n";
     stream << space(level) << "- mPropertyList = \n";
 
-    for (const auto & pr : mPropertyList)
+    for (const auto& pr : mPropertyList)
     {
       stream << space(level+2) <<  pr.first << " : ";
       for (auto it = pr.second.begin(); it != pr.second.end(); ++it)

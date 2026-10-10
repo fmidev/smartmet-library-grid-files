@@ -174,7 +174,7 @@ GaussianLatitudeCache::~GaussianLatitudeCache()
 {
   try
   {
-    for (auto & mLatitude : mLatitudes)
+    for (auto& mLatitude : mLatitudes)
     {
       if (mLatitude != nullptr)
         delete[] mLatitude;

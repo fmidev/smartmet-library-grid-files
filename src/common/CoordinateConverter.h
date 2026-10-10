@@ -91,7 +91,7 @@ class CoordinateConverter
 
     ~CoordinateConverter()
     {
-      for (auto & t : transformation)
+      for (auto& t : transformation)
       {
         if (t)
           OCTDestroyCoordinateTransformation(t);

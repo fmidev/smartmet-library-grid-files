@@ -381,7 +381,7 @@ void RequestCounter::updateTopCounters()
 
     mTopRequestCounters.clear();
 
-    for (auto & mRequestCounter : mRequestCounters)
+    for (auto& mRequestCounter : mRequestCounters)
     {
       mTopRequestCounters.insert(std::pair<uint,UInt64>(mRequestCounter.second,mRequestCounter.first));
     }
@@ -413,7 +413,7 @@ void RequestCounter::saveGeometryHitCounters(const char *filename)
       throw exception;
     }
 
-    for (auto & geom : std::ranges::reverse_view(mGeometryHitCounter))
+    for (auto& geom : std::ranges::reverse_view(mGeometryHitCounter))
     {
       for (auto it = geom.second.begin();it != geom.second.end();++it)
       {

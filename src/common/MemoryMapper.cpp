@@ -323,7 +323,7 @@ void MemoryMapper::addAccessInfo(const char *server,uint authenticationMethod,co
   FUNCTION_TRACE
   try
   {
-    for (auto & mDataFetcher : mDataFetchers)
+    for (auto& mDataFetcher : mDataFetchers)
     {
       (mDataFetcher.second)->addAccessInfo(server,authenticationMethod,username,password);
     }

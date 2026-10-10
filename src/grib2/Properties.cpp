@@ -265,7 +265,7 @@ std::string Property::getPropertyName(uint id)
 {
   try
   {
-    for (auto & it : propertyMap)
+    for (auto& it : propertyMap)
     {
       if (it.second == id)
         return it.first;

@@ -58,7 +58,7 @@ void Grib1ParameterDef::print(std::ostream& stream,uint level,uint optionFlags) 
     stream << space(level) << "GribParameterDef1\n";
     stream << space(level) << "- mGribParameterId  = " << mGribParameterId << "\n";
     stream << space(level) << "- mParameterList    = \n";
-    for (const auto & it : mParameterList)
+    for (const auto& it : mParameterList)
       stream << space(level+2) << stringFactory[it.first] << " : " << it.second << "\n";
   }
   catch (...)
