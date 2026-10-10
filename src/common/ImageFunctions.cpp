@@ -455,7 +455,7 @@ uchar *image_data = nullptr;
 
 /*! \brief Placeholder that would print the libpng and zlib version information. */
 
-void readpng_version_info(void)
+void readpng_version_info()
 {
 //  fprintf(moutput,"Compiled with libpng %s; using libpng %s.\n",PNG_LIBPNG_VER_STRING, png_libpng_ver);
 //  fprintf(moutput,"Compiled with zlib %s; using zlib %s.\n",ZLIB_VERSION, zlib_version);
@@ -828,7 +828,7 @@ static void writepng_error_handler(png_structp png_ptr, png_const_charp msg);
 
 /*! \brief Placeholder that would print libpng writer version information. */
 
-void writepng_version_info(void)
+void writepng_version_info()
 {
 }
 
