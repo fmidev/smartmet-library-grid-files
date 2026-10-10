@@ -39,8 +39,7 @@ LambertConformal::LambertConformal() {
 
 /*! \brief The destructor of the class. */
 
-LambertConformal::~LambertConformal() {
-}
+LambertConformal::~LambertConformal() = default;
 
 /*! \brief The method reads and initializes all data related to the current section object.
 
@@ -106,35 +105,20 @@ void LambertConformal::write(DataWriter &dataWriter) {
 
 void LambertConformal::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sLambertConformal.Nx", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNx));
-    sprintf(name, "%sLambertConformal.Ny", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNy));
-    sprintf(name, "%sLambertConformal.LatitudeOfFirstGridPoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatitudeOfFirstGridPoint));
-    sprintf(name, "%sLambertConformal.LongitudeOfFirstGridPoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLongitudeOfFirstGridPoint));
-    sprintf(name, "%sLambertConformal.", prefix.c_str());
-    mResolutionFlags.getAttributeList(name, attributeList);
-    sprintf(name, "%sLambertConformal.LoV", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLoV));
-    sprintf(name, "%sLambertConformal.DxInMetres", prefix.c_str());
-    attributeList.addAttribute(name, toString(mDxInMetres));
-    sprintf(name, "%sLambertConformal.DyInMetres", prefix.c_str());
-    attributeList.addAttribute(name, toString(mDyInMetres));
-    sprintf(name, "%sLambertConformal.ProjectionCentreFlag", prefix.c_str());
-    attributeList.addAttribute(name, toString(mProjectionCentreFlag));
-    sprintf(name, "%sLambertConformal.", prefix.c_str());
-    mScanningMode.getAttributeList(name, attributeList);
-    sprintf(name, "%sLambertConformal.Latin1", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatin1));
-    sprintf(name, "%sLambertConformal.Latin2", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatin2));
-    sprintf(name, "%sLambertConformal.LatitudeOfSouthernPole", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatitudeOfSouthernPole));
-    sprintf(name, "%sLambertConformal.LongitudeOfSouthernPole", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLongitudeOfSouthernPole));
+        attributeList.addAttribute(prefix + "LambertConformal.Nx", toString(mNx));
+        attributeList.addAttribute(prefix + "LambertConformal.Ny", toString(mNy));
+        attributeList.addAttribute(prefix + "LambertConformal.LatitudeOfFirstGridPoint", toString(mLatitudeOfFirstGridPoint));
+        attributeList.addAttribute(prefix + "LambertConformal.LongitudeOfFirstGridPoint", toString(mLongitudeOfFirstGridPoint));
+        mResolutionFlags.getAttributeList(prefix + "LambertConformal.", attributeList);
+        attributeList.addAttribute(prefix + "LambertConformal.LoV", toString(mLoV));
+        attributeList.addAttribute(prefix + "LambertConformal.DxInMetres", toString(mDxInMetres));
+        attributeList.addAttribute(prefix + "LambertConformal.DyInMetres", toString(mDyInMetres));
+        attributeList.addAttribute(prefix + "LambertConformal.ProjectionCentreFlag", toString(mProjectionCentreFlag));
+        mScanningMode.getAttributeList(prefix + "LambertConformal.", attributeList);
+        attributeList.addAttribute(prefix + "LambertConformal.Latin1", toString(mLatin1));
+        attributeList.addAttribute(prefix + "LambertConformal.Latin2", toString(mLatin2));
+        attributeList.addAttribute(prefix + "LambertConformal.LatitudeOfSouthernPole", toString(mLatitudeOfSouthernPole));
+        attributeList.addAttribute(prefix + "LambertConformal.LongitudeOfSouthernPole", toString(mLongitudeOfSouthernPole));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -362,7 +346,7 @@ std::int24_t LambertConformal::getLongitudeOfFirstGridPoint() const {
 
 ResolutionFlagsSettings *LambertConformal::getResolutionFlags() const {
   try {
-    return static_cast<ResolutionFlagsSettings *>(&mResolutionFlags);
+    return &mResolutionFlags;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -412,7 +396,7 @@ std::uint8_t LambertConformal::getProjectionCentreFlag() const {
 
 ScanningModeSettings *LambertConformal::getScanningMode() const {
   try {
-    return static_cast<ScanningModeSettings *>(&mScanningMode);
+    return &mScanningMode;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

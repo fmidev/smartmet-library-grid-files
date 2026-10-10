@@ -27,15 +27,14 @@ SpectralGridData::SpectralGridData() {
 
 /*! \brief The destructor of the class. */
 
-SpectralGridData::~SpectralGridData() {
-}
+SpectralGridData::~SpectralGridData() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
         \param memoryReader  This object controls the access to the memory mapped file.
 */
 
-void SpectralGridData::read(MemoryReader &memoryReader) {
+void SpectralGridData::read(MemoryReader &/*memoryReader*/) {
   try {
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
@@ -47,7 +46,7 @@ void SpectralGridData::read(MemoryReader &memoryReader) {
         \param dataWriter  This object is used for writing the object data.
 */
 
-void SpectralGridData::write(DataWriter &dataWriter) {
+void SpectralGridData::write(DataWriter &/*dataWriter*/) {
   try {
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
@@ -60,7 +59,7 @@ void SpectralGridData::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void SpectralGridData::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
+void SpectralGridData::getAttributeList(const std::string &/*prefix*/, T::AttributeList &/*attributeList*/) const {
   try {
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
@@ -73,7 +72,7 @@ void SpectralGridData::getAttributeList(const std::string &prefix, T::AttributeL
     \param attributeValue The value of the attribute (string).
 */
 
-bool SpectralGridData::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+bool SpectralGridData::getAttributeValue(const char *attributeName, std::string &/*attributeValue*/) const {
   try {
     if (attributeName == nullptr)
       return false;
@@ -106,7 +105,7 @@ bool SpectralGridData::hasAttributeValue(const char *attributeName, const char *
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void SpectralGridData::print(std::ostream &stream, uint level, uint optionFlags) const {
+void SpectralGridData::print(std::ostream &stream, uint level, uint /*optionFlags*/) const {
   try {
     stream << space(level) << "SpectralGridData\n";
   } catch (...) {

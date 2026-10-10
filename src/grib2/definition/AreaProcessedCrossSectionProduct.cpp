@@ -27,8 +27,7 @@ AreaProcessedCrossSectionProduct::AreaProcessedCrossSectionProduct() {
 
 /*! \brief The destructor of the class. */
 
-AreaProcessedCrossSectionProduct::~AreaProcessedCrossSectionProduct() {
-}
+AreaProcessedCrossSectionProduct::~AreaProcessedCrossSectionProduct() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -76,21 +75,13 @@ void AreaProcessedCrossSectionProduct::write(DataWriter &dataWriter) {
 
 void AreaProcessedCrossSectionProduct::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sAreaProcessedCrossSectionProduct.", prefix.c_str());
-    mParameter.getAttributeList(name, attributeList);
-    sprintf(name, "%sAreaProcessedCrossSectionProduct.HorizontalDimensionProcessed", prefix.c_str());
-    attributeList.addAttribute(name, toString(mHorizontalDimensionProcessed));
-    sprintf(name, "%sAreaProcessedCrossSectionProduct.TreatmentOfMissingData", prefix.c_str());
-    attributeList.addAttribute(name, toString(mTreatmentOfMissingData));
-    sprintf(name, "%sAreaProcessedCrossSectionProduct.TypeOfStatisticalProcessing", prefix.c_str());
-    attributeList.addAttribute(name, toString(mTypeOfStatisticalProcessing));
-    sprintf(name, "%sAreaProcessedCrossSectionProduct.StartOfRange", prefix.c_str());
-    attributeList.addAttribute(name, toString(mStartOfRange));
-    sprintf(name, "%sAreaProcessedCrossSectionProduct.EndOfRange", prefix.c_str());
-    attributeList.addAttribute(name, toString(mEndOfRange));
-    sprintf(name, "%sAreaProcessedCrossSectionProduct.NumberOfDataValues", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNumberOfDataValues));
+        mParameter.getAttributeList(prefix + "AreaProcessedCrossSectionProduct.", attributeList);
+        attributeList.addAttribute(prefix + "AreaProcessedCrossSectionProduct.HorizontalDimensionProcessed", toString(mHorizontalDimensionProcessed));
+        attributeList.addAttribute(prefix + "AreaProcessedCrossSectionProduct.TreatmentOfMissingData", toString(mTreatmentOfMissingData));
+        attributeList.addAttribute(prefix + "AreaProcessedCrossSectionProduct.TypeOfStatisticalProcessing", toString(mTypeOfStatisticalProcessing));
+        attributeList.addAttribute(prefix + "AreaProcessedCrossSectionProduct.StartOfRange", toString(mStartOfRange));
+        attributeList.addAttribute(prefix + "AreaProcessedCrossSectionProduct.EndOfRange", toString(mEndOfRange));
+        attributeList.addAttribute(prefix + "AreaProcessedCrossSectionProduct.NumberOfDataValues", toString(mNumberOfDataValues));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -231,7 +222,7 @@ ProductDefinition *AreaProcessedCrossSectionProduct::createProductDefinition() c
 
 ParameterSettings *AreaProcessedCrossSectionProduct::getParameter() const {
   try {
-    return static_cast<ParameterSettings *>(&mParameter);
+    return &mParameter;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

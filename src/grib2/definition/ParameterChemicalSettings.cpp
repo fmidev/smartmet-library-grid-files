@@ -27,8 +27,7 @@ ParameterChemicalSettings::ParameterChemicalSettings() {
 
 /*! \brief The destructor of the class. */
 
-ParameterChemicalSettings::~ParameterChemicalSettings() {
-}
+ParameterChemicalSettings::~ParameterChemicalSettings() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -82,27 +81,16 @@ void ParameterChemicalSettings::write(DataWriter &dataWriter) {
 
 void ParameterChemicalSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sParameterChemicalSettings.ParameterCategory", prefix.c_str());
-    attributeList.addAttribute(name, toString(mParameterCategory));
-    sprintf(name, "%sParameterChemicalSettings.ParameterNumber", prefix.c_str());
-    attributeList.addAttribute(name, toString(mParameterNumber));
-    sprintf(name, "%sParameterChemicalSettings.ConstituentType", prefix.c_str());
-    attributeList.addAttribute(name, toString(mConstituentType));
-    sprintf(name, "%sParameterChemicalSettings.TypeOfGeneratingProcess", prefix.c_str());
-    attributeList.addAttribute(name, toString(mTypeOfGeneratingProcess));
-    sprintf(name, "%sParameterChemicalSettings.BackgroundProcess", prefix.c_str());
-    attributeList.addAttribute(name, toString(mBackgroundProcess));
-    sprintf(name, "%sParameterChemicalSettings.GeneratingProcessIdentifier", prefix.c_str());
-    attributeList.addAttribute(name, toString(mGeneratingProcessIdentifier));
-    sprintf(name, "%sParameterChemicalSettings.HoursAfterDataCutoff", prefix.c_str());
-    attributeList.addAttribute(name, toString(mHoursAfterDataCutoff));
-    sprintf(name, "%sParameterChemicalSettings.MinutesAfterDataCutoff", prefix.c_str());
-    attributeList.addAttribute(name, toString(mMinutesAfterDataCutoff));
-    sprintf(name, "%sParameterChemicalSettings.IndicatorOfUnitOfTimeRange", prefix.c_str());
-    attributeList.addAttribute(name, toString(mIndicatorOfUnitOfTimeRange));
-    sprintf(name, "%sParameterChemicalSettings.ForecastTime", prefix.c_str());
-    attributeList.addAttribute(name, toString(mForecastTime));
+        attributeList.addAttribute(prefix + "ParameterChemicalSettings.ParameterCategory", toString(mParameterCategory));
+        attributeList.addAttribute(prefix + "ParameterChemicalSettings.ParameterNumber", toString(mParameterNumber));
+        attributeList.addAttribute(prefix + "ParameterChemicalSettings.ConstituentType", toString(mConstituentType));
+        attributeList.addAttribute(prefix + "ParameterChemicalSettings.TypeOfGeneratingProcess", toString(mTypeOfGeneratingProcess));
+        attributeList.addAttribute(prefix + "ParameterChemicalSettings.BackgroundProcess", toString(mBackgroundProcess));
+        attributeList.addAttribute(prefix + "ParameterChemicalSettings.GeneratingProcessIdentifier", toString(mGeneratingProcessIdentifier));
+        attributeList.addAttribute(prefix + "ParameterChemicalSettings.HoursAfterDataCutoff", toString(mHoursAfterDataCutoff));
+        attributeList.addAttribute(prefix + "ParameterChemicalSettings.MinutesAfterDataCutoff", toString(mMinutesAfterDataCutoff));
+        attributeList.addAttribute(prefix + "ParameterChemicalSettings.IndicatorOfUnitOfTimeRange", toString(mIndicatorOfUnitOfTimeRange));
+        attributeList.addAttribute(prefix + "ParameterChemicalSettings.ForecastTime", toString(mForecastTime));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -207,7 +195,7 @@ bool ParameterChemicalSettings::hasAttributeValue(const char *attributeName, con
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void ParameterChemicalSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
+void ParameterChemicalSettings::print(std::ostream &stream, uint level, uint /*optionFlags*/) const {
   try {
     stream << space(level) << "ParameterChemicalSettings\n";
     stream << space(level) << "- ParameterCategory = " << toString(mParameterCategory) << "\n";

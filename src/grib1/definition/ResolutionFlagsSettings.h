@@ -19,6 +19,10 @@ namespace GRIB1 {
 class ResolutionFlagsSettings {
 public:
   ResolutionFlagsSettings();
+  ResolutionFlagsSettings(const ResolutionFlagsSettings &) = default;
+  ResolutionFlagsSettings(ResolutionFlagsSettings &&) = default;
+  ResolutionFlagsSettings &operator=(const ResolutionFlagsSettings &) = default;
+  ResolutionFlagsSettings &operator=(ResolutionFlagsSettings &&) = default;
   virtual ~ResolutionFlagsSettings();
 
   virtual void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const;

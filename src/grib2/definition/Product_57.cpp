@@ -27,8 +27,7 @@ Product_57::Product_57() {
 
 /*! \brief The destructor of the class. */
 
-Product_57::~Product_57() {
-}
+Product_57::~Product_57() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -66,11 +65,8 @@ void Product_57::write(DataWriter &dataWriter) {
 
 void Product_57::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sProduct_57.", prefix.c_str());
-    mPointInTime.getAttributeList(name, attributeList);
-    sprintf(name, "%sProduct_57.", prefix.c_str());
-    mHorizontal.getAttributeList(name, attributeList);
+        mPointInTime.getAttributeList(prefix + "Product_57.", attributeList);
+        mHorizontal.getAttributeList(prefix + "Product_57.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -162,7 +158,7 @@ ProductDefinition *Product_57::createProductDefinition() const {
 
 PointInTimeSettings *Product_57::getPointInTime() const {
   try {
-    return static_cast<PointInTimeSettings *>(&mPointInTime);
+    return &mPointInTime;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -172,7 +168,7 @@ PointInTimeSettings *Product_57::getPointInTime() const {
 
 HorizontalSettings *Product_57::getHorizontal() const {
   try {
-    return static_cast<HorizontalSettings *>(&mHorizontal);
+    return &mHorizontal;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

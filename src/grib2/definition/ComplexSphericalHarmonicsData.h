@@ -20,16 +20,20 @@ namespace GRIB2 {
 class ComplexSphericalHarmonicsData : public DataDefinition {
 public:
   ComplexSphericalHarmonicsData();
-  virtual ~ComplexSphericalHarmonicsData();
+  ComplexSphericalHarmonicsData(const ComplexSphericalHarmonicsData &) = default;
+  ComplexSphericalHarmonicsData(ComplexSphericalHarmonicsData &&) = default;
+  ComplexSphericalHarmonicsData &operator=(const ComplexSphericalHarmonicsData &) = default;
+  ComplexSphericalHarmonicsData &operator=(ComplexSphericalHarmonicsData &&) = default;
+  ~ComplexSphericalHarmonicsData() override;
 
-  virtual uint getTemplateNumber() const;
+  uint getTemplateNumber() const override;
   virtual DataDefinition *createDataDefinition() const;
   virtual void read(MemoryReader &memoryReader);
   virtual void write(DataWriter &dataWriter);
   virtual void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const;
   virtual bool getAttributeValue(const char *attributeName, std::string &attributeValue) const;
   virtual bool hasAttributeValue(const char *attributeName, const char *attributeValue) const;
-  virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
+  void print(std::ostream &stream, uint level, uint optionFlags) const override;
   virtual T::Hash countHash() const;
 
 protected:

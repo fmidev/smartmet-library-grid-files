@@ -27,8 +27,7 @@ StretchedGaussian::StretchedGaussian() {
 
 /*! \brief The destructor of the class. */
 
-StretchedGaussian::~StretchedGaussian() {
-}
+StretchedGaussian::~StretchedGaussian() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -68,13 +67,9 @@ void StretchedGaussian::write(DataWriter &dataWriter) {
 
 void StretchedGaussian::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sStretchedGaussian.", prefix.c_str());
-    mEarthShape.getAttributeList(name, attributeList);
-    sprintf(name, "%sStretchedGaussian.", prefix.c_str());
-    mGaussian.getAttributeList(name, attributeList);
-    sprintf(name, "%sStretchedGaussian.", prefix.c_str());
-    mStretching.getAttributeList(name, attributeList);
+        mEarthShape.getAttributeList(prefix + "StretchedGaussian.", attributeList);
+        mGaussian.getAttributeList(prefix + "StretchedGaussian.", attributeList);
+        mStretching.getAttributeList(prefix + "StretchedGaussian.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -171,7 +166,7 @@ GridDefinition *StretchedGaussian::createGridDefinition() const {
 
 EarthShapeSettings *StretchedGaussian::getEarthShape() const {
   try {
-    return static_cast<EarthShapeSettings *>(&mEarthShape);
+    return &mEarthShape;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -181,7 +176,7 @@ EarthShapeSettings *StretchedGaussian::getEarthShape() const {
 
 GaussianSettings *StretchedGaussian::getGaussian() const {
   try {
-    return static_cast<GaussianSettings *>(&mGaussian);
+    return &mGaussian;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -191,7 +186,7 @@ GaussianSettings *StretchedGaussian::getGaussian() const {
 
 StretchingSettings *StretchedGaussian::getStretching() const {
   try {
-    return static_cast<StretchingSettings *>(&mStretching);
+    return &mStretching;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

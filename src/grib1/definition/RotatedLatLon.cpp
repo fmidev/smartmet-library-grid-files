@@ -32,8 +32,7 @@ RotatedLatLon::RotatedLatLon() {
 
 /*! \brief The destructor of the class. */
 
-RotatedLatLon::~RotatedLatLon() {
-}
+RotatedLatLon::~RotatedLatLon() = default;
 
 /*! \brief The method reads and initializes all data related to the current section object.
 
@@ -83,23 +82,14 @@ void RotatedLatLon::write(DataWriter &dataWriter) {
 
 void RotatedLatLon::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sRotatedLatLon.Ni", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNi));
-    sprintf(name, "%sRotatedLatLon.Nj", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNj));
-    sprintf(name, "%sRotatedLatLon.", prefix.c_str());
-    mGridArea.getAttributeList(name, attributeList);
-    sprintf(name, "%sRotatedLatLon.IDirectionIncrement", prefix.c_str());
-    attributeList.addAttribute(name, toString(mIDirectionIncrement));
-    sprintf(name, "%sRotatedLatLon.JDirectionIncrement", prefix.c_str());
-    attributeList.addAttribute(name, toString(mJDirectionIncrement));
-    sprintf(name, "%sRotatedLatLon.", prefix.c_str());
-    mScanningMode.getAttributeList(name, attributeList);
-    sprintf(name, "%sRotatedLatLon.Zero", prefix.c_str());
-    attributeList.addAttribute(name, toString(mZero));
-    sprintf(name, "%sRotatedLatLon.", prefix.c_str());
-    mRotation.getAttributeList(name, attributeList);
+        attributeList.addAttribute(prefix + "RotatedLatLon.Ni", toString(mNi));
+        attributeList.addAttribute(prefix + "RotatedLatLon.Nj", toString(mNj));
+        mGridArea.getAttributeList(prefix + "RotatedLatLon.", attributeList);
+        attributeList.addAttribute(prefix + "RotatedLatLon.IDirectionIncrement", toString(mIDirectionIncrement));
+        attributeList.addAttribute(prefix + "RotatedLatLon.JDirectionIncrement", toString(mJDirectionIncrement));
+        mScanningMode.getAttributeList(prefix + "RotatedLatLon.", attributeList);
+        attributeList.addAttribute(prefix + "RotatedLatLon.Zero", toString(mZero));
+        mRotation.getAttributeList(prefix + "RotatedLatLon.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -256,7 +246,7 @@ std::uint16_t RotatedLatLon::getNj() const {
 
 GridAreaSettings *RotatedLatLon::getGridArea() const {
   try {
-    return static_cast<GridAreaSettings *>(&mGridArea);
+    return &mGridArea;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -286,7 +276,7 @@ std::uint16_t RotatedLatLon::getJDirectionIncrement() const {
 
 ScanningModeSettings *RotatedLatLon::getScanningMode() const {
   try {
-    return static_cast<ScanningModeSettings *>(&mScanningMode);
+    return &mScanningMode;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -306,7 +296,7 @@ std::uint32_t RotatedLatLon::getZero() const {
 
 RotationSettings *RotatedLatLon::getRotation() const {
   try {
-    return static_cast<RotationSettings *>(&mRotation);
+    return &mRotation;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

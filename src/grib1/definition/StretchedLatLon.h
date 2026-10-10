@@ -23,29 +23,33 @@ namespace GRIB1 {
 class StretchedLatLon : public GridDefinition {
 public:
   StretchedLatLon();
-  virtual ~StretchedLatLon();
+  StretchedLatLon(const StretchedLatLon &) = default;
+  StretchedLatLon(StretchedLatLon &&) = default;
+  StretchedLatLon &operator=(const StretchedLatLon &) = default;
+  StretchedLatLon &operator=(StretchedLatLon &&) = default;
+  ~StretchedLatLon() override;
 
-  virtual void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const;
-  virtual void read(MemoryReader &memoryReader);
-  virtual void write(DataWriter &dataWriter);
-  virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
+  void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const override;
+  void read(MemoryReader &memoryReader) override;
+  void write(DataWriter &dataWriter) override;
+  void print(std::ostream &stream, uint level, uint optionFlags) const override;
   virtual bool getAttributeValue(const char *attributeName, std::string &attributeValue) const;
   virtual bool hasAttributeValue(const char *attributeName, const char *attributeValue) const;
-  virtual T::Hash countHash() const;
+  T::Hash countHash() const override;
 
-  virtual uint getTemplateNumber() const;
-  virtual GridDefinition *createGridDefinition() const;
+  uint getTemplateNumber() const override;
+  GridDefinition *createGridDefinition() const override;
   std::uint16_t getNi() const;
   void setNi(std::uint16_t ni);
   std::uint16_t getNj() const;
   void setNj(std::uint16_t nj);
-  GridAreaSettings *getGridArea() const;
+  GridAreaSettings *getGridArea() const override;
   void setGridArea(GridAreaSettings &gridArea);
   std::uint16_t getIDirectionIncrement() const;
   void setIDirectionIncrement(std::uint16_t iDirectionIncrement);
   std::uint16_t getJDirectionIncrement() const;
   void setJDirectionIncrement(std::uint16_t jDirectionIncrement);
-  ScanningModeSettings *getScanningMode() const;
+  ScanningModeSettings *getScanningMode() const override;
   void setScanningMode(ScanningModeSettings &scanningMode);
   std::uint32_t getZero() const;
   void setZero(std::uint32_t zero);

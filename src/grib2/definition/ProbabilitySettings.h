@@ -19,6 +19,10 @@ namespace GRIB2 {
 class ProbabilitySettings {
 public:
   ProbabilitySettings();
+  ProbabilitySettings(const ProbabilitySettings &) = default;
+  ProbabilitySettings(ProbabilitySettings &&) = default;
+  ProbabilitySettings &operator=(const ProbabilitySettings &) = default;
+  ProbabilitySettings &operator=(ProbabilitySettings &&) = default;
   virtual ~ProbabilitySettings();
 
   virtual void read(MemoryReader &memoryReader);

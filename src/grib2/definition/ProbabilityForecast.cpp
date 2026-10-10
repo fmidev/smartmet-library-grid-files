@@ -27,8 +27,7 @@ ProbabilityForecast::ProbabilityForecast() {
 
 /*! \brief The destructor of the class. */
 
-ProbabilityForecast::~ProbabilityForecast() {
-}
+ProbabilityForecast::~ProbabilityForecast() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -70,15 +69,10 @@ void ProbabilityForecast::write(DataWriter &dataWriter) {
 
 void ProbabilityForecast::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sProbabilityForecast.", prefix.c_str());
-    mParameter.getAttributeList(name, attributeList);
-    sprintf(name, "%sProbabilityForecast.", prefix.c_str());
-    mPointInTime.getAttributeList(name, attributeList);
-    sprintf(name, "%sProbabilityForecast.", prefix.c_str());
-    mHorizontal.getAttributeList(name, attributeList);
-    sprintf(name, "%sProbabilityForecast.", prefix.c_str());
-    mProbability.getAttributeList(name, attributeList);
+        mParameter.getAttributeList(prefix + "ProbabilityForecast.", attributeList);
+        mPointInTime.getAttributeList(prefix + "ProbabilityForecast.", attributeList);
+        mHorizontal.getAttributeList(prefix + "ProbabilityForecast.", attributeList);
+        mProbability.getAttributeList(prefix + "ProbabilityForecast.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -180,7 +174,7 @@ ProductDefinition *ProbabilityForecast::createProductDefinition() const {
 
 ParameterSettings *ProbabilityForecast::getParameter() const {
   try {
-    return static_cast<ParameterSettings *>(&mParameter);
+    return &mParameter;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -190,7 +184,7 @@ ParameterSettings *ProbabilityForecast::getParameter() const {
 
 PointInTimeSettings *ProbabilityForecast::getPointInTime() const {
   try {
-    return static_cast<PointInTimeSettings *>(&mPointInTime);
+    return &mPointInTime;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -200,7 +194,7 @@ PointInTimeSettings *ProbabilityForecast::getPointInTime() const {
 
 HorizontalSettings *ProbabilityForecast::getHorizontal() const {
   try {
-    return static_cast<HorizontalSettings *>(&mHorizontal);
+    return &mHorizontal;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -210,7 +204,7 @@ HorizontalSettings *ProbabilityForecast::getHorizontal() const {
 
 ProbabilitySettings *ProbabilityForecast::getProbability() const {
   try {
-    return static_cast<ProbabilitySettings *>(&mProbability);
+    return &mProbability;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

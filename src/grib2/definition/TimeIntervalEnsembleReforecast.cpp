@@ -27,8 +27,7 @@ TimeIntervalEnsembleReforecast::TimeIntervalEnsembleReforecast() {
 
 /*! \brief The destructor of the class. */
 
-TimeIntervalEnsembleReforecast::~TimeIntervalEnsembleReforecast() {
-}
+TimeIntervalEnsembleReforecast::~TimeIntervalEnsembleReforecast() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -72,17 +71,11 @@ void TimeIntervalEnsembleReforecast::write(DataWriter &dataWriter) {
 
 void TimeIntervalEnsembleReforecast::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sTimeIntervalEnsembleReforecast.", prefix.c_str());
-    mParameter.getAttributeList(name, attributeList);
-    sprintf(name, "%sTimeIntervalEnsembleReforecast.", prefix.c_str());
-    mHorizontal.getAttributeList(name, attributeList);
-    sprintf(name, "%sTimeIntervalEnsembleReforecast.", prefix.c_str());
-    mEps.getAttributeList(name, attributeList);
-    sprintf(name, "%sTimeIntervalEnsembleReforecast.", prefix.c_str());
-    mReforecast.getAttributeList(name, attributeList);
-    sprintf(name, "%sTimeIntervalEnsembleReforecast.", prefix.c_str());
-    mStatistical.getAttributeList(name, attributeList);
+        mParameter.getAttributeList(prefix + "TimeIntervalEnsembleReforecast.", attributeList);
+        mHorizontal.getAttributeList(prefix + "TimeIntervalEnsembleReforecast.", attributeList);
+        mEps.getAttributeList(prefix + "TimeIntervalEnsembleReforecast.", attributeList);
+        mReforecast.getAttributeList(prefix + "TimeIntervalEnsembleReforecast.", attributeList);
+        mStatistical.getAttributeList(prefix + "TimeIntervalEnsembleReforecast.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -189,7 +182,7 @@ ProductDefinition *TimeIntervalEnsembleReforecast::createProductDefinition() con
 
 ParameterSettings *TimeIntervalEnsembleReforecast::getParameter() const {
   try {
-    return static_cast<ParameterSettings *>(&mParameter);
+    return &mParameter;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -199,7 +192,7 @@ ParameterSettings *TimeIntervalEnsembleReforecast::getParameter() const {
 
 HorizontalSettings *TimeIntervalEnsembleReforecast::getHorizontal() const {
   try {
-    return static_cast<HorizontalSettings *>(&mHorizontal);
+    return &mHorizontal;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -209,7 +202,7 @@ HorizontalSettings *TimeIntervalEnsembleReforecast::getHorizontal() const {
 
 EpsSettings *TimeIntervalEnsembleReforecast::getEps() const {
   try {
-    return static_cast<EpsSettings *>(&mEps);
+    return &mEps;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -219,7 +212,7 @@ EpsSettings *TimeIntervalEnsembleReforecast::getEps() const {
 
 ReforecastSettings *TimeIntervalEnsembleReforecast::getReforecast() const {
   try {
-    return static_cast<ReforecastSettings *>(&mReforecast);
+    return &mReforecast;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -229,7 +222,7 @@ ReforecastSettings *TimeIntervalEnsembleReforecast::getReforecast() const {
 
 StatisticalSettings *TimeIntervalEnsembleReforecast::getStatistical() const {
   try {
-    return static_cast<StatisticalSettings *>(&mStatistical);
+    return &mStatistical;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

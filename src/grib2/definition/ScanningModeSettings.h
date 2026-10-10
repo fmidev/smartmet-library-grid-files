@@ -19,6 +19,10 @@ namespace GRIB2 {
 class ScanningModeSettings {
 public:
   ScanningModeSettings();
+  ScanningModeSettings(const ScanningModeSettings &) = default;
+  ScanningModeSettings(ScanningModeSettings &&) = default;
+  ScanningModeSettings &operator=(const ScanningModeSettings &) = default;
+  ScanningModeSettings &operator=(ScanningModeSettings &&) = default;
   virtual ~ScanningModeSettings();
 
   virtual void read(MemoryReader &memoryReader);

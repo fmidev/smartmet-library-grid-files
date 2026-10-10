@@ -27,8 +27,7 @@ LatLonSettings::LatLonSettings() {
 
 /*! \brief The destructor of the class. */
 
-LatLonSettings::~LatLonSettings() {
-}
+LatLonSettings::~LatLonSettings() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -70,15 +69,10 @@ void LatLonSettings::write(DataWriter &dataWriter) {
 
 void LatLonSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sLatLonSettings.", prefix.c_str());
-    mGrid.getAttributeList(name, attributeList);
-    sprintf(name, "%sLatLonSettings.IDirectionIncrement", prefix.c_str());
-    attributeList.addAttribute(name, toString(mIDirectionIncrement));
-    sprintf(name, "%sLatLonSettings.JDirectionIncrement", prefix.c_str());
-    attributeList.addAttribute(name, toString(mJDirectionIncrement));
-    sprintf(name, "%sLatLonSettings.", prefix.c_str());
-    mScanningMode.getAttributeList(name, attributeList);
+        mGrid.getAttributeList(prefix + "LatLonSettings.", attributeList);
+        attributeList.addAttribute(prefix + "LatLonSettings.IDirectionIncrement", toString(mIDirectionIncrement));
+        attributeList.addAttribute(prefix + "LatLonSettings.JDirectionIncrement", toString(mJDirectionIncrement));
+        mScanningMode.getAttributeList(prefix + "LatLonSettings.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -174,7 +168,7 @@ T::Hash LatLonSettings::countHash() const {
 
 GridSettings *LatLonSettings::getGrid() const {
   try {
-    return static_cast<GridSettings *>(&mGrid);
+    return &mGrid;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -204,7 +198,7 @@ const T::UInt32_opt &LatLonSettings::getJDirectionIncrement() const {
 
 ScanningModeSettings *LatLonSettings::getScanningMode() const {
   try {
-    return static_cast<ScanningModeSettings *>(&mScanningMode);
+    return &mScanningMode;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

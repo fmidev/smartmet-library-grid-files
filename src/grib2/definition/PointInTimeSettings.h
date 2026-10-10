@@ -19,6 +19,10 @@ namespace GRIB2 {
 class PointInTimeSettings {
 public:
   PointInTimeSettings();
+  PointInTimeSettings(const PointInTimeSettings &) = default;
+  PointInTimeSettings(PointInTimeSettings &&) = default;
+  PointInTimeSettings &operator=(const PointInTimeSettings &) = default;
+  PointInTimeSettings &operator=(PointInTimeSettings &&) = default;
   virtual ~PointInTimeSettings();
 
   virtual void read(MemoryReader &memoryReader);

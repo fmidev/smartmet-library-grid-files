@@ -39,8 +39,7 @@ SpaceView::SpaceView() {
 
 /*! \brief The destructor of the class. */
 
-SpaceView::~SpaceView() {
-}
+SpaceView::~SpaceView() = default;
 
 /*! \brief The method reads and initializes all data related to the current section object.
 
@@ -106,35 +105,20 @@ void SpaceView::write(DataWriter &dataWriter) {
 
 void SpaceView::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sSpaceView.Nx", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNx));
-    sprintf(name, "%sSpaceView.Ny", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNy));
-    sprintf(name, "%sSpaceView.LatitudeOfSubSatellitePoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatitudeOfSubSatellitePoint));
-    sprintf(name, "%sSpaceView.LongitudeOfSubSatellitePoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLongitudeOfSubSatellitePoint));
-    sprintf(name, "%sSpaceView.", prefix.c_str());
-    mResolutionFlags.getAttributeList(name, attributeList);
-    sprintf(name, "%sSpaceView.Dx", prefix.c_str());
-    attributeList.addAttribute(name, toString(mDx));
-    sprintf(name, "%sSpaceView.Dy", prefix.c_str());
-    attributeList.addAttribute(name, toString(mDy));
-    sprintf(name, "%sSpaceView.XpInGridLengths", prefix.c_str());
-    attributeList.addAttribute(name, toString(mXpInGridLengths));
-    sprintf(name, "%sSpaceView.YpInGridLengths", prefix.c_str());
-    attributeList.addAttribute(name, toString(mYpInGridLengths));
-    sprintf(name, "%sSpaceView.", prefix.c_str());
-    mScanningMode.getAttributeList(name, attributeList);
-    sprintf(name, "%sSpaceView.OrientationOfTheGrid", prefix.c_str());
-    attributeList.addAttribute(name, toString(mOrientationOfTheGrid));
-    sprintf(name, "%sSpaceView.NrInRadiusOfEarth", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNrInRadiusOfEarth));
-    sprintf(name, "%sSpaceView.Xo", prefix.c_str());
-    attributeList.addAttribute(name, toString(mXo));
-    sprintf(name, "%sSpaceView.Yo", prefix.c_str());
-    attributeList.addAttribute(name, toString(mYo));
+        attributeList.addAttribute(prefix + "SpaceView.Nx", toString(mNx));
+        attributeList.addAttribute(prefix + "SpaceView.Ny", toString(mNy));
+        attributeList.addAttribute(prefix + "SpaceView.LatitudeOfSubSatellitePoint", toString(mLatitudeOfSubSatellitePoint));
+        attributeList.addAttribute(prefix + "SpaceView.LongitudeOfSubSatellitePoint", toString(mLongitudeOfSubSatellitePoint));
+        mResolutionFlags.getAttributeList(prefix + "SpaceView.", attributeList);
+        attributeList.addAttribute(prefix + "SpaceView.Dx", toString(mDx));
+        attributeList.addAttribute(prefix + "SpaceView.Dy", toString(mDy));
+        attributeList.addAttribute(prefix + "SpaceView.XpInGridLengths", toString(mXpInGridLengths));
+        attributeList.addAttribute(prefix + "SpaceView.YpInGridLengths", toString(mYpInGridLengths));
+        mScanningMode.getAttributeList(prefix + "SpaceView.", attributeList);
+        attributeList.addAttribute(prefix + "SpaceView.OrientationOfTheGrid", toString(mOrientationOfTheGrid));
+        attributeList.addAttribute(prefix + "SpaceView.NrInRadiusOfEarth", toString(mNrInRadiusOfEarth));
+        attributeList.addAttribute(prefix + "SpaceView.Xo", toString(mXo));
+        attributeList.addAttribute(prefix + "SpaceView.Yo", toString(mYo));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -362,7 +346,7 @@ std::int24_t SpaceView::getLongitudeOfSubSatellitePoint() const {
 
 ResolutionFlagsSettings *SpaceView::getResolutionFlags() const {
   try {
-    return static_cast<ResolutionFlagsSettings *>(&mResolutionFlags);
+    return &mResolutionFlags;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -412,7 +396,7 @@ std::uint16_t SpaceView::getYpInGridLengths() const {
 
 ScanningModeSettings *SpaceView::getScanningMode() const {
   try {
-    return static_cast<ScanningModeSettings *>(&mScanningMode);
+    return &mScanningMode;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

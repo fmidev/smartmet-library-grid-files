@@ -31,8 +31,7 @@ GridAreaSettings::GridAreaSettings() {
 
 /*! \brief The destructor of the class. */
 
-GridAreaSettings::~GridAreaSettings() {
-}
+GridAreaSettings::~GridAreaSettings() = default;
 
 /*! \brief The method reads and initializes all data related to the current section object.
 
@@ -76,17 +75,11 @@ void GridAreaSettings::write(DataWriter &dataWriter) {
 
 void GridAreaSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sGridAreaSettings.LatitudeOfFirstGridPoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatitudeOfFirstGridPoint));
-    sprintf(name, "%sGridAreaSettings.LongitudeOfFirstGridPoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLongitudeOfFirstGridPoint));
-    sprintf(name, "%sGridAreaSettings.", prefix.c_str());
-    mResolutionFlags.getAttributeList(name, attributeList);
-    sprintf(name, "%sGridAreaSettings.LatitudeOfLastGridPoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatitudeOfLastGridPoint));
-    sprintf(name, "%sGridAreaSettings.LongitudeOfLastGridPoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLongitudeOfLastGridPoint));
+        attributeList.addAttribute(prefix + "GridAreaSettings.LatitudeOfFirstGridPoint", toString(mLatitudeOfFirstGridPoint));
+        attributeList.addAttribute(prefix + "GridAreaSettings.LongitudeOfFirstGridPoint", toString(mLongitudeOfFirstGridPoint));
+        mResolutionFlags.getAttributeList(prefix + "GridAreaSettings.", attributeList);
+        attributeList.addAttribute(prefix + "GridAreaSettings.LatitudeOfLastGridPoint", toString(mLatitudeOfLastGridPoint));
+        attributeList.addAttribute(prefix + "GridAreaSettings.LongitudeOfLastGridPoint", toString(mLongitudeOfLastGridPoint));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -210,7 +203,7 @@ std::int24_t GridAreaSettings::getLongitudeOfFirstGridPoint() const {
 
 ResolutionFlagsSettings *GridAreaSettings::getResolutionFlags() const {
   try {
-    return static_cast<ResolutionFlagsSettings *>(&mResolutionFlags);
+    return &mResolutionFlags;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

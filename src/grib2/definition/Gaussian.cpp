@@ -27,8 +27,7 @@ Gaussian::Gaussian() {
 
 /*! \brief The destructor of the class. */
 
-Gaussian::~Gaussian() {
-}
+Gaussian::~Gaussian() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -66,11 +65,8 @@ void Gaussian::write(DataWriter &dataWriter) {
 
 void Gaussian::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sGaussian.", prefix.c_str());
-    mEarthShape.getAttributeList(name, attributeList);
-    sprintf(name, "%sGaussian.", prefix.c_str());
-    mGaussian.getAttributeList(name, attributeList);
+        mEarthShape.getAttributeList(prefix + "Gaussian.", attributeList);
+        mGaussian.getAttributeList(prefix + "Gaussian.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -162,7 +158,7 @@ GridDefinition *Gaussian::createGridDefinition() const {
 
 EarthShapeSettings *Gaussian::getEarthShape() const {
   try {
-    return static_cast<EarthShapeSettings *>(&mEarthShape);
+    return &mEarthShape;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -172,7 +168,7 @@ EarthShapeSettings *Gaussian::getEarthShape() const {
 
 GaussianSettings *Gaussian::getGaussian() const {
   try {
-    return static_cast<GaussianSettings *>(&mGaussian);
+    return &mGaussian;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

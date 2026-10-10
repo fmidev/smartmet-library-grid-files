@@ -27,8 +27,7 @@ StretchingSettings::StretchingSettings() {
 
 /*! \brief The destructor of the class. */
 
-StretchingSettings::~StretchingSettings() {
-}
+StretchingSettings::~StretchingSettings() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -68,13 +67,9 @@ void StretchingSettings::write(DataWriter &dataWriter) {
 
 void StretchingSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sStretchingSettings.LatitudeOfThePoleOfStretching", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatitudeOfThePoleOfStretching));
-    sprintf(name, "%sStretchingSettings.LongitudeOfThePoleOfStretching", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLongitudeOfThePoleOfStretching));
-    sprintf(name, "%sStretchingSettings.StretchingFactorScaled", prefix.c_str());
-    attributeList.addAttribute(name, toString(mStretchingFactorScaled));
+        attributeList.addAttribute(prefix + "StretchingSettings.LatitudeOfThePoleOfStretching", toString(mLatitudeOfThePoleOfStretching));
+        attributeList.addAttribute(prefix + "StretchingSettings.LongitudeOfThePoleOfStretching", toString(mLongitudeOfThePoleOfStretching));
+        attributeList.addAttribute(prefix + "StretchingSettings.StretchingFactorScaled", toString(mStretchingFactorScaled));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -137,7 +132,7 @@ bool StretchingSettings::hasAttributeValue(const char *attributeName, const char
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void StretchingSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
+void StretchingSettings::print(std::ostream &stream, uint level, uint /*optionFlags*/) const {
   try {
     stream << space(level) << "StretchingSettings\n";
     stream << space(level) << "- LatitudeOfThePoleOfStretching = " << toString(mLatitudeOfThePoleOfStretching) << "\n";

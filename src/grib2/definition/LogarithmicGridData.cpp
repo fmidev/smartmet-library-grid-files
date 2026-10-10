@@ -27,15 +27,14 @@ LogarithmicGridData::LogarithmicGridData() {
 
 /*! \brief The destructor of the class. */
 
-LogarithmicGridData::~LogarithmicGridData() {
-}
+LogarithmicGridData::~LogarithmicGridData() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
         \param memoryReader  This object controls the access to the memory mapped file.
 */
 
-void LogarithmicGridData::read(MemoryReader &memoryReader) {
+void LogarithmicGridData::read(MemoryReader &/*memoryReader*/) {
   try {
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
@@ -47,7 +46,7 @@ void LogarithmicGridData::read(MemoryReader &memoryReader) {
         \param dataWriter  This object is used for writing the object data.
 */
 
-void LogarithmicGridData::write(DataWriter &dataWriter) {
+void LogarithmicGridData::write(DataWriter &/*dataWriter*/) {
   try {
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
@@ -60,7 +59,7 @@ void LogarithmicGridData::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void LogarithmicGridData::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
+void LogarithmicGridData::getAttributeList(const std::string &/*prefix*/, T::AttributeList &/*attributeList*/) const {
   try {
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
@@ -73,7 +72,7 @@ void LogarithmicGridData::getAttributeList(const std::string &prefix, T::Attribu
     \param attributeValue The value of the attribute (string).
 */
 
-bool LogarithmicGridData::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+bool LogarithmicGridData::getAttributeValue(const char *attributeName, std::string &/*attributeValue*/) const {
   try {
     if (attributeName == nullptr)
       return false;
@@ -106,7 +105,7 @@ bool LogarithmicGridData::hasAttributeValue(const char *attributeName, const cha
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void LogarithmicGridData::print(std::ostream &stream, uint level, uint optionFlags) const {
+void LogarithmicGridData::print(std::ostream &stream, uint level, uint /*optionFlags*/) const {
   try {
     stream << space(level) << "LogarithmicGridData\n";
   } catch (...) {

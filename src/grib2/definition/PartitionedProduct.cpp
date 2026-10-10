@@ -27,8 +27,7 @@ PartitionedProduct::PartitionedProduct() {
 
 /*! \brief The destructor of the class. */
 
-PartitionedProduct::~PartitionedProduct() {
-}
+PartitionedProduct::~PartitionedProduct() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -68,13 +67,9 @@ void PartitionedProduct::write(DataWriter &dataWriter) {
 
 void PartitionedProduct::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sPartitionedProduct.", prefix.c_str());
-    mParameterPartition.getAttributeList(name, attributeList);
-    sprintf(name, "%sPartitionedProduct.", prefix.c_str());
-    mPointInTime.getAttributeList(name, attributeList);
-    sprintf(name, "%sPartitionedProduct.", prefix.c_str());
-    mHorizontal.getAttributeList(name, attributeList);
+        mParameterPartition.getAttributeList(prefix + "PartitionedProduct.", attributeList);
+        mPointInTime.getAttributeList(prefix + "PartitionedProduct.", attributeList);
+        mHorizontal.getAttributeList(prefix + "PartitionedProduct.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -171,7 +166,7 @@ ProductDefinition *PartitionedProduct::createProductDefinition() const {
 
 ParameterPartitionSettings *PartitionedProduct::getParameterPartition() const {
   try {
-    return static_cast<ParameterPartitionSettings *>(&mParameterPartition);
+    return &mParameterPartition;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -181,7 +176,7 @@ ParameterPartitionSettings *PartitionedProduct::getParameterPartition() const {
 
 PointInTimeSettings *PartitionedProduct::getPointInTime() const {
   try {
-    return static_cast<PointInTimeSettings *>(&mPointInTime);
+    return &mPointInTime;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -191,7 +186,7 @@ PointInTimeSettings *PartitionedProduct::getPointInTime() const {
 
 HorizontalSettings *PartitionedProduct::getHorizontal() const {
   try {
-    return static_cast<HorizontalSettings *>(&mHorizontal);
+    return &mHorizontal;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

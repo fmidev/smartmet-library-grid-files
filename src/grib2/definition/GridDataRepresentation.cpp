@@ -27,8 +27,7 @@ GridDataRepresentation::GridDataRepresentation() {
 
 /*! \brief The destructor of the class. */
 
-GridDataRepresentation::~GridDataRepresentation() {
-}
+GridDataRepresentation::~GridDataRepresentation() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -66,11 +65,8 @@ void GridDataRepresentation::write(DataWriter &dataWriter) {
 
 void GridDataRepresentation::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sGridDataRepresentation.", prefix.c_str());
-    mPacking.getAttributeList(name, attributeList);
-    sprintf(name, "%sGridDataRepresentation.", prefix.c_str());
-    mOriginalValues.getAttributeList(name, attributeList);
+        mPacking.getAttributeList(prefix + "GridDataRepresentation.", attributeList);
+        mOriginalValues.getAttributeList(prefix + "GridDataRepresentation.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -162,7 +158,7 @@ RepresentationDefinition *GridDataRepresentation::createRepresentationDefinition
 
 PackingSettings *GridDataRepresentation::getPacking() const {
   try {
-    return static_cast<PackingSettings *>(&mPacking);
+    return &mPacking;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -172,7 +168,7 @@ PackingSettings *GridDataRepresentation::getPacking() const {
 
 OriginalValuesSettings *GridDataRepresentation::getOriginalValues() const {
   try {
-    return static_cast<OriginalValuesSettings *>(&mOriginalValues);
+    return &mOriginalValues;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

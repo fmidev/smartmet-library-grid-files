@@ -28,8 +28,7 @@ Unstructured::Unstructured() {
 
 /*! \brief The destructor of the class. */
 
-Unstructured::~Unstructured() {
-}
+Unstructured::~Unstructured() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -71,15 +70,10 @@ void Unstructured::write(DataWriter &dataWriter) {
 
 void Unstructured::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sUnstructured.ShapeOfTheEarth", prefix.c_str());
-    attributeList.addAttribute(name, toString(mShapeOfTheEarth));
-    sprintf(name, "%sUnstructured.NumberOfGridUsed", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNumberOfGridUsed));
-    sprintf(name, "%sUnstructured.NumberOfGridInReference", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNumberOfGridInReference));
-    sprintf(name, "%sUnstructured.UuidOfHGrid", prefix.c_str());
-    attributeList.addAttribute(name, toString(mUuidOfHGrid));
+        attributeList.addAttribute(prefix + "Unstructured.ShapeOfTheEarth", toString(mShapeOfTheEarth));
+        attributeList.addAttribute(prefix + "Unstructured.NumberOfGridUsed", toString(mNumberOfGridUsed));
+        attributeList.addAttribute(prefix + "Unstructured.NumberOfGridInReference", toString(mNumberOfGridInReference));
+        attributeList.addAttribute(prefix + "Unstructured.UuidOfHGrid", toString(mUuidOfHGrid));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -148,7 +142,7 @@ bool Unstructured::hasAttributeValue(const char *attributeName, const char *attr
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void Unstructured::print(std::ostream &stream, uint level, uint optionFlags) const {
+void Unstructured::print(std::ostream &stream, uint level, uint /*optionFlags*/) const {
   try {
     stream << space(level) << "Unstructured\n";
     stream << space(level) << "- ShapeOfTheEarth = " << toString(mShapeOfTheEarth) << "\n";

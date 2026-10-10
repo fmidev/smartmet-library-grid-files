@@ -24,25 +24,29 @@ namespace GRIB2 {
 class EnsembleForecast : public ProductDefinition {
 public:
   EnsembleForecast();
-  virtual ~EnsembleForecast();
+  EnsembleForecast(const EnsembleForecast &) = default;
+  EnsembleForecast(EnsembleForecast &&) = default;
+  EnsembleForecast &operator=(const EnsembleForecast &) = default;
+  EnsembleForecast &operator=(EnsembleForecast &&) = default;
+  ~EnsembleForecast() override;
 
-  virtual uint getTemplateNumber() const;
-  virtual ProductDefinition *createProductDefinition() const;
-  virtual void read(MemoryReader &memoryReader);
-  virtual void write(DataWriter &dataWriter);
-  virtual void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const;
-  virtual bool getAttributeValue(const char *attributeName, std::string &attributeValue) const;
-  virtual bool hasAttributeValue(const char *attributeName, const char *attributeValue) const;
-  virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
+  uint getTemplateNumber() const override;
+  ProductDefinition *createProductDefinition() const override;
+  void read(MemoryReader &memoryReader) override;
+  void write(DataWriter &dataWriter) override;
+  void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const override;
+  bool getAttributeValue(const char *attributeName, std::string &attributeValue) const override;
+  bool hasAttributeValue(const char *attributeName, const char *attributeValue) const override;
+  void print(std::ostream &stream, uint level, uint optionFlags) const override;
   virtual T::Hash countHash() const;
 
-  ParameterSettings *getParameter() const;
+  ParameterSettings *getParameter() const override;
   void setParameter(ParameterSettings &parameter);
   PointInTimeSettings *getPointInTime() const;
   void setPointInTime(PointInTimeSettings &pointInTime);
-  HorizontalSettings *getHorizontal() const;
+  HorizontalSettings *getHorizontal() const override;
   void setHorizontal(HorizontalSettings &horizontal);
-  EpsSettings *getEps() const;
+  EpsSettings *getEps() const override;
   void setEps(EpsSettings &eps);
 
 protected:

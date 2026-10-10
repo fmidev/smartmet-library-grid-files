@@ -19,6 +19,10 @@ namespace GRIB2 {
 class HorizontalSettings {
 public:
   HorizontalSettings();
+  HorizontalSettings(const HorizontalSettings &) = default;
+  HorizontalSettings(HorizontalSettings &&) = default;
+  HorizontalSettings &operator=(const HorizontalSettings &) = default;
+  HorizontalSettings &operator=(HorizontalSettings &&) = default;
   virtual ~HorizontalSettings();
 
   virtual void read(MemoryReader &memoryReader);

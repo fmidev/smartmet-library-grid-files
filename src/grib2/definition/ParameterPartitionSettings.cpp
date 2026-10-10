@@ -27,8 +27,7 @@ ParameterPartitionSettings::ParameterPartitionSettings() {
 
 /*! \brief The destructor of the class. */
 
-ParameterPartitionSettings::~ParameterPartitionSettings() {
-}
+ParameterPartitionSettings::~ParameterPartitionSettings() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -88,33 +87,19 @@ void ParameterPartitionSettings::write(DataWriter &dataWriter) {
 
 void ParameterPartitionSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sParameterPartitionSettings.ParameterCategory", prefix.c_str());
-    attributeList.addAttribute(name, toString(mParameterCategory));
-    sprintf(name, "%sParameterPartitionSettings.ParameterNumber", prefix.c_str());
-    attributeList.addAttribute(name, toString(mParameterNumber));
-    sprintf(name, "%sParameterPartitionSettings.PartitionTable", prefix.c_str());
-    attributeList.addAttribute(name, toString(mPartitionTable));
-    sprintf(name, "%sParameterPartitionSettings.NumberOfPartitions", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNumberOfPartitions));
-    sprintf(name, "%sParameterPartitionSettings.PartitionItems", prefix.c_str());
-    attributeList.addAttribute(name, toString(mPartitionItems));
-    sprintf(name, "%sParameterPartitionSettings.PartitionNumber", prefix.c_str());
-    attributeList.addAttribute(name, toString(mPartitionNumber));
-    sprintf(name, "%sParameterPartitionSettings.TypeOfGeneratingProcess", prefix.c_str());
-    attributeList.addAttribute(name, toString(mTypeOfGeneratingProcess));
-    sprintf(name, "%sParameterPartitionSettings.BackgroundProcess", prefix.c_str());
-    attributeList.addAttribute(name, toString(mBackgroundProcess));
-    sprintf(name, "%sParameterPartitionSettings.GeneratingProcessIdentifier", prefix.c_str());
-    attributeList.addAttribute(name, toString(mGeneratingProcessIdentifier));
-    sprintf(name, "%sParameterPartitionSettings.HoursAfterDataCutoff", prefix.c_str());
-    attributeList.addAttribute(name, toString(mHoursAfterDataCutoff));
-    sprintf(name, "%sParameterPartitionSettings.MinutesAfterDataCutoff", prefix.c_str());
-    attributeList.addAttribute(name, toString(mMinutesAfterDataCutoff));
-    sprintf(name, "%sParameterPartitionSettings.IndicatorOfUnitOfTimeRange", prefix.c_str());
-    attributeList.addAttribute(name, toString(mIndicatorOfUnitOfTimeRange));
-    sprintf(name, "%sParameterPartitionSettings.ForecastTime", prefix.c_str());
-    attributeList.addAttribute(name, toString(mForecastTime));
+        attributeList.addAttribute(prefix + "ParameterPartitionSettings.ParameterCategory", toString(mParameterCategory));
+        attributeList.addAttribute(prefix + "ParameterPartitionSettings.ParameterNumber", toString(mParameterNumber));
+        attributeList.addAttribute(prefix + "ParameterPartitionSettings.PartitionTable", toString(mPartitionTable));
+        attributeList.addAttribute(prefix + "ParameterPartitionSettings.NumberOfPartitions", toString(mNumberOfPartitions));
+        attributeList.addAttribute(prefix + "ParameterPartitionSettings.PartitionItems", toString(mPartitionItems));
+        attributeList.addAttribute(prefix + "ParameterPartitionSettings.PartitionNumber", toString(mPartitionNumber));
+        attributeList.addAttribute(prefix + "ParameterPartitionSettings.TypeOfGeneratingProcess", toString(mTypeOfGeneratingProcess));
+        attributeList.addAttribute(prefix + "ParameterPartitionSettings.BackgroundProcess", toString(mBackgroundProcess));
+        attributeList.addAttribute(prefix + "ParameterPartitionSettings.GeneratingProcessIdentifier", toString(mGeneratingProcessIdentifier));
+        attributeList.addAttribute(prefix + "ParameterPartitionSettings.HoursAfterDataCutoff", toString(mHoursAfterDataCutoff));
+        attributeList.addAttribute(prefix + "ParameterPartitionSettings.MinutesAfterDataCutoff", toString(mMinutesAfterDataCutoff));
+        attributeList.addAttribute(prefix + "ParameterPartitionSettings.IndicatorOfUnitOfTimeRange", toString(mIndicatorOfUnitOfTimeRange));
+        attributeList.addAttribute(prefix + "ParameterPartitionSettings.ForecastTime", toString(mForecastTime));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -237,7 +222,7 @@ bool ParameterPartitionSettings::hasAttributeValue(const char *attributeName, co
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void ParameterPartitionSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
+void ParameterPartitionSettings::print(std::ostream &stream, uint level, uint /*optionFlags*/) const {
   try {
     stream << space(level) << "ParameterPartitionSettings\n";
     stream << space(level) << "- ParameterCategory = " << toString(mParameterCategory) << "\n";

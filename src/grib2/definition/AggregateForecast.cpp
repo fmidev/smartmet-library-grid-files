@@ -27,8 +27,7 @@ AggregateForecast::AggregateForecast() {
 
 /*! \brief The destructor of the class. */
 
-AggregateForecast::~AggregateForecast() {
-}
+AggregateForecast::~AggregateForecast() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -68,13 +67,9 @@ void AggregateForecast::write(DataWriter &dataWriter) {
 
 void AggregateForecast::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sAggregateForecast.", prefix.c_str());
-    mParameter.getAttributeList(name, attributeList);
-    sprintf(name, "%sAggregateForecast.", prefix.c_str());
-    mHorizontal.getAttributeList(name, attributeList);
-    sprintf(name, "%sAggregateForecast.", prefix.c_str());
-    mStatistical.getAttributeList(name, attributeList);
+        mParameter.getAttributeList(prefix + "AggregateForecast.", attributeList);
+        mHorizontal.getAttributeList(prefix + "AggregateForecast.", attributeList);
+        mStatistical.getAttributeList(prefix + "AggregateForecast.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -171,7 +166,7 @@ ProductDefinition *AggregateForecast::createProductDefinition() const {
 
 ParameterSettings *AggregateForecast::getParameter() const {
   try {
-    return static_cast<ParameterSettings *>(&mParameter);
+    return &mParameter;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -181,7 +176,7 @@ ParameterSettings *AggregateForecast::getParameter() const {
 
 HorizontalSettings *AggregateForecast::getHorizontal() const {
   try {
-    return static_cast<HorizontalSettings *>(&mHorizontal);
+    return &mHorizontal;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -191,7 +186,7 @@ HorizontalSettings *AggregateForecast::getHorizontal() const {
 
 StatisticalSettings *AggregateForecast::getStatistical() const {
   try {
-    return static_cast<StatisticalSettings *>(&mStatistical);
+    return &mStatistical;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

@@ -27,8 +27,7 @@ TimeIntervalEnsembleForecast::TimeIntervalEnsembleForecast() {
 
 /*! \brief The destructor of the class. */
 
-TimeIntervalEnsembleForecast::~TimeIntervalEnsembleForecast() {
-}
+TimeIntervalEnsembleForecast::~TimeIntervalEnsembleForecast() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -70,15 +69,10 @@ void TimeIntervalEnsembleForecast::write(DataWriter &dataWriter) {
 
 void TimeIntervalEnsembleForecast::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sTimeIntervalEnsembleForecast.", prefix.c_str());
-    mParameter.getAttributeList(name, attributeList);
-    sprintf(name, "%sTimeIntervalEnsembleForecast.", prefix.c_str());
-    mHorizontal.getAttributeList(name, attributeList);
-    sprintf(name, "%sTimeIntervalEnsembleForecast.", prefix.c_str());
-    mEps.getAttributeList(name, attributeList);
-    sprintf(name, "%sTimeIntervalEnsembleForecast.", prefix.c_str());
-    mStatistical.getAttributeList(name, attributeList);
+        mParameter.getAttributeList(prefix + "TimeIntervalEnsembleForecast.", attributeList);
+        mHorizontal.getAttributeList(prefix + "TimeIntervalEnsembleForecast.", attributeList);
+        mEps.getAttributeList(prefix + "TimeIntervalEnsembleForecast.", attributeList);
+        mStatistical.getAttributeList(prefix + "TimeIntervalEnsembleForecast.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -180,7 +174,7 @@ ProductDefinition *TimeIntervalEnsembleForecast::createProductDefinition() const
 
 ParameterSettings *TimeIntervalEnsembleForecast::getParameter() const {
   try {
-    return static_cast<ParameterSettings *>(&mParameter);
+    return &mParameter;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -190,7 +184,7 @@ ParameterSettings *TimeIntervalEnsembleForecast::getParameter() const {
 
 HorizontalSettings *TimeIntervalEnsembleForecast::getHorizontal() const {
   try {
-    return static_cast<HorizontalSettings *>(&mHorizontal);
+    return &mHorizontal;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -200,7 +194,7 @@ HorizontalSettings *TimeIntervalEnsembleForecast::getHorizontal() const {
 
 EpsSettings *TimeIntervalEnsembleForecast::getEps() const {
   try {
-    return static_cast<EpsSettings *>(&mEps);
+    return &mEps;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -210,7 +204,7 @@ EpsSettings *TimeIntervalEnsembleForecast::getEps() const {
 
 StatisticalSettings *TimeIntervalEnsembleForecast::getStatistical() const {
   try {
-    return static_cast<StatisticalSettings *>(&mStatistical);
+    return &mStatistical;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

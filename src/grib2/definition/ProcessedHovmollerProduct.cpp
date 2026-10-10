@@ -27,8 +27,7 @@ ProcessedHovmollerProduct::ProcessedHovmollerProduct() {
 
 /*! \brief The destructor of the class. */
 
-ProcessedHovmollerProduct::~ProcessedHovmollerProduct() {
-}
+ProcessedHovmollerProduct::~ProcessedHovmollerProduct() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -68,13 +67,9 @@ void ProcessedHovmollerProduct::write(DataWriter &dataWriter) {
 
 void ProcessedHovmollerProduct::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sProcessedHovmollerProduct.", prefix.c_str());
-    mParameter.getAttributeList(name, attributeList);
-    sprintf(name, "%sProcessedHovmollerProduct.", prefix.c_str());
-    mHorizontal.getAttributeList(name, attributeList);
-    sprintf(name, "%sProcessedHovmollerProduct.", prefix.c_str());
-    mStatistical.getAttributeList(name, attributeList);
+        mParameter.getAttributeList(prefix + "ProcessedHovmollerProduct.", attributeList);
+        mHorizontal.getAttributeList(prefix + "ProcessedHovmollerProduct.", attributeList);
+        mStatistical.getAttributeList(prefix + "ProcessedHovmollerProduct.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -171,7 +166,7 @@ ProductDefinition *ProcessedHovmollerProduct::createProductDefinition() const {
 
 ParameterSettings *ProcessedHovmollerProduct::getParameter() const {
   try {
-    return static_cast<ParameterSettings *>(&mParameter);
+    return &mParameter;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -181,7 +176,7 @@ ParameterSettings *ProcessedHovmollerProduct::getParameter() const {
 
 HorizontalSettings *ProcessedHovmollerProduct::getHorizontal() const {
   try {
-    return static_cast<HorizontalSettings *>(&mHorizontal);
+    return &mHorizontal;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -191,7 +186,7 @@ HorizontalSettings *ProcessedHovmollerProduct::getHorizontal() const {
 
 StatisticalSettings *ProcessedHovmollerProduct::getStatistical() const {
   try {
-    return static_cast<StatisticalSettings *>(&mStatistical);
+    return &mStatistical;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

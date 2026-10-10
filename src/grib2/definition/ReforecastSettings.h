@@ -19,6 +19,10 @@ namespace GRIB2 {
 class ReforecastSettings {
 public:
   ReforecastSettings();
+  ReforecastSettings(const ReforecastSettings &) = default;
+  ReforecastSettings(ReforecastSettings &&) = default;
+  ReforecastSettings &operator=(const ReforecastSettings &) = default;
+  ReforecastSettings &operator=(ReforecastSettings &&) = default;
   virtual ~ReforecastSettings();
 
   virtual void read(MemoryReader &memoryReader);

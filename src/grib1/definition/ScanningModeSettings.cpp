@@ -28,8 +28,7 @@ ScanningModeSettings::ScanningModeSettings() {
 
 /*! \brief The destructor of the class. */
 
-ScanningModeSettings::~ScanningModeSettings() {
-}
+ScanningModeSettings::~ScanningModeSettings() = default;
 
 /*! \brief The method reads and initializes all data related to the current section object.
 
@@ -65,9 +64,7 @@ void ScanningModeSettings::write(DataWriter &dataWriter) {
 
 void ScanningModeSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sScanningModeSettings.ScanningMode", prefix.c_str());
-    attributeList.addAttribute(name, toString(mScanningMode));
+        attributeList.addAttribute(prefix + "ScanningModeSettings.ScanningMode", toString(mScanningMode));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -118,7 +115,7 @@ bool ScanningModeSettings::hasAttributeValue(const char *attributeName, const ch
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void ScanningModeSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
+void ScanningModeSettings::print(std::ostream &stream, uint level, uint /*optionFlags*/) const {
   try {
     stream << space(level) << "ScanningModeSettings\n";
     stream << space(level) << "- ScanningMode = " << toString(mScanningMode) << "\n";

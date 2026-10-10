@@ -27,8 +27,7 @@ EpsSettings::EpsSettings() {
 
 /*! \brief The destructor of the class. */
 
-EpsSettings::~EpsSettings() {
-}
+EpsSettings::~EpsSettings() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -68,13 +67,9 @@ void EpsSettings::write(DataWriter &dataWriter) {
 
 void EpsSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sEpsSettings.TypeOfEnsembleForecast", prefix.c_str());
-    attributeList.addAttribute(name, toString(mTypeOfEnsembleForecast));
-    sprintf(name, "%sEpsSettings.PerturbationNumber", prefix.c_str());
-    attributeList.addAttribute(name, toString(mPerturbationNumber));
-    sprintf(name, "%sEpsSettings.NumberOfForecastsInEnsemble", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNumberOfForecastsInEnsemble));
+        attributeList.addAttribute(prefix + "EpsSettings.TypeOfEnsembleForecast", toString(mTypeOfEnsembleForecast));
+        attributeList.addAttribute(prefix + "EpsSettings.PerturbationNumber", toString(mPerturbationNumber));
+        attributeList.addAttribute(prefix + "EpsSettings.NumberOfForecastsInEnsemble", toString(mNumberOfForecastsInEnsemble));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -137,7 +132,7 @@ bool EpsSettings::hasAttributeValue(const char *attributeName, const char *attri
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void EpsSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
+void EpsSettings::print(std::ostream &stream, uint level, uint /*optionFlags*/) const {
   try {
     stream << space(level) << "EpsSettings\n";
     stream << space(level) << "- TypeOfEnsembleForecast = " << toString(mTypeOfEnsembleForecast) << "\n";

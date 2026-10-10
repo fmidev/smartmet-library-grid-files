@@ -27,8 +27,7 @@ NormalProduct::NormalProduct() {
 
 /*! \brief The destructor of the class. */
 
-NormalProduct::~NormalProduct() {
-}
+NormalProduct::~NormalProduct() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -68,13 +67,9 @@ void NormalProduct::write(DataWriter &dataWriter) {
 
 void NormalProduct::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sNormalProduct.", prefix.c_str());
-    mParameter.getAttributeList(name, attributeList);
-    sprintf(name, "%sNormalProduct.", prefix.c_str());
-    mPointInTime.getAttributeList(name, attributeList);
-    sprintf(name, "%sNormalProduct.", prefix.c_str());
-    mHorizontal.getAttributeList(name, attributeList);
+        mParameter.getAttributeList(prefix + "NormalProduct.", attributeList);
+        mPointInTime.getAttributeList(prefix + "NormalProduct.", attributeList);
+        mHorizontal.getAttributeList(prefix + "NormalProduct.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -171,7 +166,7 @@ ProductDefinition *NormalProduct::createProductDefinition() const {
 
 ParameterSettings *NormalProduct::getParameter() const {
   try {
-    return static_cast<ParameterSettings *>(&mParameter);
+    return &mParameter;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -181,7 +176,7 @@ ParameterSettings *NormalProduct::getParameter() const {
 
 PointInTimeSettings *NormalProduct::getPointInTime() const {
   try {
-    return static_cast<PointInTimeSettings *>(&mPointInTime);
+    return &mPointInTime;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -191,7 +186,7 @@ PointInTimeSettings *NormalProduct::getPointInTime() const {
 
 HorizontalSettings *NormalProduct::getHorizontal() const {
   try {
-    return static_cast<HorizontalSettings *>(&mHorizontal);
+    return &mHorizontal;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

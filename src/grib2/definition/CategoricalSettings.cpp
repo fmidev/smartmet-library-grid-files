@@ -27,8 +27,7 @@ CategoricalSettings::CategoricalSettings() {
 
 /*! \brief The destructor of the class. */
 
-CategoricalSettings::~CategoricalSettings() {
-}
+CategoricalSettings::~CategoricalSettings() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -76,21 +75,13 @@ void CategoricalSettings::write(DataWriter &dataWriter) {
 
 void CategoricalSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sCategoricalSettings.NumberOfCategories", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNumberOfCategories));
-    sprintf(name, "%sCategoricalSettings.CategoryType", prefix.c_str());
-    attributeList.addAttribute(name, toString(mCategoryType));
-    sprintf(name, "%sCategoricalSettings.CodeFigure", prefix.c_str());
-    attributeList.addAttribute(name, toString(mCodeFigure));
-    sprintf(name, "%sCategoricalSettings.ScaleFactorOfLowerLimit", prefix.c_str());
-    attributeList.addAttribute(name, toString(mScaleFactorOfLowerLimit));
-    sprintf(name, "%sCategoricalSettings.ScaledValueOfLowerLimit", prefix.c_str());
-    attributeList.addAttribute(name, toString(mScaledValueOfLowerLimit));
-    sprintf(name, "%sCategoricalSettings.ScaleFactorOfUpperLimit", prefix.c_str());
-    attributeList.addAttribute(name, toString(mScaleFactorOfUpperLimit));
-    sprintf(name, "%sCategoricalSettings.ScaledValueOfUpperLimit", prefix.c_str());
-    attributeList.addAttribute(name, toString(mScaledValueOfUpperLimit));
+        attributeList.addAttribute(prefix + "CategoricalSettings.NumberOfCategories", toString(mNumberOfCategories));
+        attributeList.addAttribute(prefix + "CategoricalSettings.CategoryType", toString(mCategoryType));
+        attributeList.addAttribute(prefix + "CategoricalSettings.CodeFigure", toString(mCodeFigure));
+        attributeList.addAttribute(prefix + "CategoricalSettings.ScaleFactorOfLowerLimit", toString(mScaleFactorOfLowerLimit));
+        attributeList.addAttribute(prefix + "CategoricalSettings.ScaledValueOfLowerLimit", toString(mScaledValueOfLowerLimit));
+        attributeList.addAttribute(prefix + "CategoricalSettings.ScaleFactorOfUpperLimit", toString(mScaleFactorOfUpperLimit));
+        attributeList.addAttribute(prefix + "CategoricalSettings.ScaledValueOfUpperLimit", toString(mScaledValueOfUpperLimit));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -177,7 +168,7 @@ bool CategoricalSettings::hasAttributeValue(const char *attributeName, const cha
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void CategoricalSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
+void CategoricalSettings::print(std::ostream &stream, uint level, uint /*optionFlags*/) const {
   try {
     stream << space(level) << "CategoricalSettings\n";
     stream << space(level) << "- NumberOfCategories = " << toString(mNumberOfCategories) << "\n";

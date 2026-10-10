@@ -32,8 +32,7 @@ Mercator::Mercator() {
 
 /*! \brief The destructor of the class. */
 
-Mercator::~Mercator() {
-}
+Mercator::~Mercator() = default;
 
 /*! \brief The method reads and initializes all data related to the current section object.
 
@@ -89,21 +88,13 @@ void Mercator::write(DataWriter &dataWriter) {
 
 void Mercator::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sMercator.Ni", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNi));
-    sprintf(name, "%sMercator.Nj", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNj));
-    sprintf(name, "%sMercator.", prefix.c_str());
-    mGridArea.getAttributeList(name, attributeList);
-    sprintf(name, "%sMercator.Latin", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatin));
-    sprintf(name, "%sMercator.", prefix.c_str());
-    mScanningMode.getAttributeList(name, attributeList);
-    sprintf(name, "%sMercator.DiInMetres", prefix.c_str());
-    attributeList.addAttribute(name, toString(mDiInMetres));
-    sprintf(name, "%sMercator.DjInMetres", prefix.c_str());
-    attributeList.addAttribute(name, toString(mDjInMetres));
+        attributeList.addAttribute(prefix + "Mercator.Ni", toString(mNi));
+        attributeList.addAttribute(prefix + "Mercator.Nj", toString(mNj));
+        mGridArea.getAttributeList(prefix + "Mercator.", attributeList);
+        attributeList.addAttribute(prefix + "Mercator.Latin", toString(mLatin));
+        mScanningMode.getAttributeList(prefix + "Mercator.", attributeList);
+        attributeList.addAttribute(prefix + "Mercator.DiInMetres", toString(mDiInMetres));
+        attributeList.addAttribute(prefix + "Mercator.DjInMetres", toString(mDjInMetres));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -255,7 +246,7 @@ std::int16_t Mercator::getNj() const {
 
 GridAreaSettings *Mercator::getGridArea() const {
   try {
-    return static_cast<GridAreaSettings *>(&mGridArea);
+    return &mGridArea;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -275,7 +266,7 @@ std::int24_t Mercator::getLatin() const {
 
 ScanningModeSettings *Mercator::getScanningMode() const {
   try {
-    return static_cast<ScanningModeSettings *>(&mScanningMode);
+    return &mScanningMode;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

@@ -27,8 +27,7 @@ PngGridDataRepresentation::PngGridDataRepresentation() {
 
 /*! \brief The destructor of the class. */
 
-PngGridDataRepresentation::~PngGridDataRepresentation() {
-}
+PngGridDataRepresentation::~PngGridDataRepresentation() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -66,11 +65,8 @@ void PngGridDataRepresentation::write(DataWriter &dataWriter) {
 
 void PngGridDataRepresentation::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sPngGridDataRepresentation.", prefix.c_str());
-    mPacking.getAttributeList(name, attributeList);
-    sprintf(name, "%sPngGridDataRepresentation.", prefix.c_str());
-    mOriginalValues.getAttributeList(name, attributeList);
+        mPacking.getAttributeList(prefix + "PngGridDataRepresentation.", attributeList);
+        mOriginalValues.getAttributeList(prefix + "PngGridDataRepresentation.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -162,7 +158,7 @@ RepresentationDefinition *PngGridDataRepresentation::createRepresentationDefinit
 
 PackingSettings *PngGridDataRepresentation::getPacking() const {
   try {
-    return static_cast<PackingSettings *>(&mPacking);
+    return &mPacking;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -172,7 +168,7 @@ PackingSettings *PngGridDataRepresentation::getPacking() const {
 
 OriginalValuesSettings *PngGridDataRepresentation::getOriginalValues() const {
   try {
-    return static_cast<OriginalValuesSettings *>(&mOriginalValues);
+    return &mOriginalValues;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

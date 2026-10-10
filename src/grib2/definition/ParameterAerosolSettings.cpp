@@ -27,8 +27,7 @@ ParameterAerosolSettings::ParameterAerosolSettings() {
 
 /*! \brief The destructor of the class. */
 
-ParameterAerosolSettings::~ParameterAerosolSettings() {
-}
+ParameterAerosolSettings::~ParameterAerosolSettings() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -92,37 +91,21 @@ void ParameterAerosolSettings::write(DataWriter &dataWriter) {
 
 void ParameterAerosolSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sParameterAerosolSettings.ParameterCategory", prefix.c_str());
-    attributeList.addAttribute(name, toString(mParameterCategory));
-    sprintf(name, "%sParameterAerosolSettings.ParameterNumber", prefix.c_str());
-    attributeList.addAttribute(name, toString(mParameterNumber));
-    sprintf(name, "%sParameterAerosolSettings.AerosolType", prefix.c_str());
-    attributeList.addAttribute(name, toString(mAerosolType));
-    sprintf(name, "%sParameterAerosolSettings.TypeOfSizeInterval", prefix.c_str());
-    attributeList.addAttribute(name, toString(mTypeOfSizeInterval));
-    sprintf(name, "%sParameterAerosolSettings.ScaleFactorOfFirstSize", prefix.c_str());
-    attributeList.addAttribute(name, toString(mScaleFactorOfFirstSize));
-    sprintf(name, "%sParameterAerosolSettings.ScaledValueOfFirstSize", prefix.c_str());
-    attributeList.addAttribute(name, toString(mScaledValueOfFirstSize));
-    sprintf(name, "%sParameterAerosolSettings.ScaleFactorOfSecondSize", prefix.c_str());
-    attributeList.addAttribute(name, toString(mScaleFactorOfSecondSize));
-    sprintf(name, "%sParameterAerosolSettings.ScaledValueOfSecondSize", prefix.c_str());
-    attributeList.addAttribute(name, toString(mScaledValueOfSecondSize));
-    sprintf(name, "%sParameterAerosolSettings.TypeOfGeneratingProcess", prefix.c_str());
-    attributeList.addAttribute(name, toString(mTypeOfGeneratingProcess));
-    sprintf(name, "%sParameterAerosolSettings.BackgroundProcess", prefix.c_str());
-    attributeList.addAttribute(name, toString(mBackgroundProcess));
-    sprintf(name, "%sParameterAerosolSettings.GeneratingProcessIdentifier", prefix.c_str());
-    attributeList.addAttribute(name, toString(mGeneratingProcessIdentifier));
-    sprintf(name, "%sParameterAerosolSettings.HoursAfterDataCutoff", prefix.c_str());
-    attributeList.addAttribute(name, toString(mHoursAfterDataCutoff));
-    sprintf(name, "%sParameterAerosolSettings.MinutesAfterDataCutoff", prefix.c_str());
-    attributeList.addAttribute(name, toString(mMinutesAfterDataCutoff));
-    sprintf(name, "%sParameterAerosolSettings.IndicatorOfUnitOfTimeRange", prefix.c_str());
-    attributeList.addAttribute(name, toString(mIndicatorOfUnitOfTimeRange));
-    sprintf(name, "%sParameterAerosolSettings.ForecastTime", prefix.c_str());
-    attributeList.addAttribute(name, toString(mForecastTime));
+        attributeList.addAttribute(prefix + "ParameterAerosolSettings.ParameterCategory", toString(mParameterCategory));
+        attributeList.addAttribute(prefix + "ParameterAerosolSettings.ParameterNumber", toString(mParameterNumber));
+        attributeList.addAttribute(prefix + "ParameterAerosolSettings.AerosolType", toString(mAerosolType));
+        attributeList.addAttribute(prefix + "ParameterAerosolSettings.TypeOfSizeInterval", toString(mTypeOfSizeInterval));
+        attributeList.addAttribute(prefix + "ParameterAerosolSettings.ScaleFactorOfFirstSize", toString(mScaleFactorOfFirstSize));
+        attributeList.addAttribute(prefix + "ParameterAerosolSettings.ScaledValueOfFirstSize", toString(mScaledValueOfFirstSize));
+        attributeList.addAttribute(prefix + "ParameterAerosolSettings.ScaleFactorOfSecondSize", toString(mScaleFactorOfSecondSize));
+        attributeList.addAttribute(prefix + "ParameterAerosolSettings.ScaledValueOfSecondSize", toString(mScaledValueOfSecondSize));
+        attributeList.addAttribute(prefix + "ParameterAerosolSettings.TypeOfGeneratingProcess", toString(mTypeOfGeneratingProcess));
+        attributeList.addAttribute(prefix + "ParameterAerosolSettings.BackgroundProcess", toString(mBackgroundProcess));
+        attributeList.addAttribute(prefix + "ParameterAerosolSettings.GeneratingProcessIdentifier", toString(mGeneratingProcessIdentifier));
+        attributeList.addAttribute(prefix + "ParameterAerosolSettings.HoursAfterDataCutoff", toString(mHoursAfterDataCutoff));
+        attributeList.addAttribute(prefix + "ParameterAerosolSettings.MinutesAfterDataCutoff", toString(mMinutesAfterDataCutoff));
+        attributeList.addAttribute(prefix + "ParameterAerosolSettings.IndicatorOfUnitOfTimeRange", toString(mIndicatorOfUnitOfTimeRange));
+        attributeList.addAttribute(prefix + "ParameterAerosolSettings.ForecastTime", toString(mForecastTime));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -257,7 +240,7 @@ bool ParameterAerosolSettings::hasAttributeValue(const char *attributeName, cons
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void ParameterAerosolSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
+void ParameterAerosolSettings::print(std::ostream &stream, uint level, uint /*optionFlags*/) const {
   try {
     stream << space(level) << "ParameterAerosolSettings\n";
     stream << space(level) << "- ParameterCategory = " << toString(mParameterCategory) << "\n";

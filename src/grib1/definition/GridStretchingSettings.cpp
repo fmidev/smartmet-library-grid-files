@@ -29,8 +29,7 @@ GridStretchingSettings::GridStretchingSettings() {
 
 /*! \brief The destructor of the class. */
 
-GridStretchingSettings::~GridStretchingSettings() {
-}
+GridStretchingSettings::~GridStretchingSettings() = default;
 
 /*! \brief The method reads and initializes all data related to the current section object.
 
@@ -70,13 +69,9 @@ void GridStretchingSettings::write(DataWriter &dataWriter) {
 
 void GridStretchingSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sGridStretchingSettings.LatitudeOfStretchingPole", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatitudeOfStretchingPole));
-    sprintf(name, "%sGridStretchingSettings.LongitudeOfStretchingPole", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLongitudeOfStretchingPole));
-    sprintf(name, "%sGridStretchingSettings.StretchingFactor", prefix.c_str());
-    attributeList.addAttribute(name, toString(mStretchingFactor));
+        attributeList.addAttribute(prefix + "GridStretchingSettings.LatitudeOfStretchingPole", toString(mLatitudeOfStretchingPole));
+        attributeList.addAttribute(prefix + "GridStretchingSettings.LongitudeOfStretchingPole", toString(mLongitudeOfStretchingPole));
+        attributeList.addAttribute(prefix + "GridStretchingSettings.StretchingFactor", toString(mStretchingFactor));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -139,7 +134,7 @@ bool GridStretchingSettings::hasAttributeValue(const char *attributeName, const 
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void GridStretchingSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
+void GridStretchingSettings::print(std::ostream &stream, uint level, uint /*optionFlags*/) const {
   try {
     stream << space(level) << "GridStretchingSettings\n";
     stream << space(level) << "- LatitudeOfStretchingPole = " << toString(mLatitudeOfStretchingPole) << "\n";

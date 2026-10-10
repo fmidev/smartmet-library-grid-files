@@ -28,8 +28,7 @@ LambertConformal::LambertConformal() {
 
 /*! \brief The destructor of the class. */
 
-LambertConformal::~LambertConformal() {
-}
+LambertConformal::~LambertConformal() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -95,39 +94,22 @@ void LambertConformal::write(DataWriter &dataWriter) {
 
 void LambertConformal::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sLambertConformal.", prefix.c_str());
-    mEarthShape.getAttributeList(name, attributeList);
-    sprintf(name, "%sLambertConformal.Nx", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNx));
-    sprintf(name, "%sLambertConformal.Ny", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNy));
-    sprintf(name, "%sLambertConformal.LatitudeOfFirstGridPoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatitudeOfFirstGridPoint));
-    sprintf(name, "%sLambertConformal.LongitudeOfFirstGridPoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLongitudeOfFirstGridPoint));
-    sprintf(name, "%sLambertConformal.", prefix.c_str());
-    mResolution.getAttributeList(name, attributeList);
-    sprintf(name, "%sLambertConformal.LaD", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLaD));
-    sprintf(name, "%sLambertConformal.LoV", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLoV));
-    sprintf(name, "%sLambertConformal.Dx", prefix.c_str());
-    attributeList.addAttribute(name, toString(mDx));
-    sprintf(name, "%sLambertConformal.Dy", prefix.c_str());
-    attributeList.addAttribute(name, toString(mDy));
-    sprintf(name, "%sLambertConformal.ProjectionCentreFlag", prefix.c_str());
-    attributeList.addAttribute(name, toString(mProjectionCentreFlag));
-    sprintf(name, "%sLambertConformal.", prefix.c_str());
-    mScanningMode.getAttributeList(name, attributeList);
-    sprintf(name, "%sLambertConformal.Latin1", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatin1));
-    sprintf(name, "%sLambertConformal.Latin2", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatin2));
-    sprintf(name, "%sLambertConformal.LatitudeOfSouthernPole", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatitudeOfSouthernPole));
-    sprintf(name, "%sLambertConformal.LongitudeOfSouthernPole", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLongitudeOfSouthernPole));
+        mEarthShape.getAttributeList(prefix + "LambertConformal.", attributeList);
+        attributeList.addAttribute(prefix + "LambertConformal.Nx", toString(mNx));
+        attributeList.addAttribute(prefix + "LambertConformal.Ny", toString(mNy));
+        attributeList.addAttribute(prefix + "LambertConformal.LatitudeOfFirstGridPoint", toString(mLatitudeOfFirstGridPoint));
+        attributeList.addAttribute(prefix + "LambertConformal.LongitudeOfFirstGridPoint", toString(mLongitudeOfFirstGridPoint));
+        mResolution.getAttributeList(prefix + "LambertConformal.", attributeList);
+        attributeList.addAttribute(prefix + "LambertConformal.LaD", toString(mLaD));
+        attributeList.addAttribute(prefix + "LambertConformal.LoV", toString(mLoV));
+        attributeList.addAttribute(prefix + "LambertConformal.Dx", toString(mDx));
+        attributeList.addAttribute(prefix + "LambertConformal.Dy", toString(mDy));
+        attributeList.addAttribute(prefix + "LambertConformal.ProjectionCentreFlag", toString(mProjectionCentreFlag));
+        mScanningMode.getAttributeList(prefix + "LambertConformal.", attributeList);
+        attributeList.addAttribute(prefix + "LambertConformal.Latin1", toString(mLatin1));
+        attributeList.addAttribute(prefix + "LambertConformal.Latin2", toString(mLatin2));
+        attributeList.addAttribute(prefix + "LambertConformal.LatitudeOfSouthernPole", toString(mLatitudeOfSouthernPole));
+        attributeList.addAttribute(prefix + "LambertConformal.LongitudeOfSouthernPole", toString(mLongitudeOfSouthernPole));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -340,7 +322,7 @@ GridDefinition *LambertConformal::createGridDefinition() const {
 
 EarthShapeSettings *LambertConformal::getEarthShape() const {
   try {
-    return static_cast<EarthShapeSettings *>(&mEarthShape);
+    return &mEarthShape;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -390,7 +372,7 @@ const T::UInt32_opt &LambertConformal::getLongitudeOfFirstGridPoint() const {
 
 ResolutionSettings *LambertConformal::getResolution() const {
   try {
-    return static_cast<ResolutionSettings *>(&mResolution);
+    return &mResolution;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -450,7 +432,7 @@ std::uint8_t LambertConformal::getProjectionCentreFlag() const {
 
 ScanningModeSettings *LambertConformal::getScanningMode() const {
   try {
-    return static_cast<ScanningModeSettings *>(&mScanningMode);
+    return &mScanningMode;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

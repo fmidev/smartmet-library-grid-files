@@ -3,8 +3,8 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 26.10.8
-Release: 2%{?dist}.fmi
+Version: 26.10.10
+Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
 URL: https://github.com/fmidev/smartmet-library-grid-files
@@ -127,6 +127,10 @@ libraries, the grid engine and the plugins using it
 %attr(0755,root,root) %{_bindir}/smartmet-grid-test-config-creator
 
 %changelog
+* Sat Oct 10 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.10-1.fmi
+- Generated GRIB definition classes: override, defaulted copy/move, no sprintf into a fixed buffer for attribute names
+- The definition class generators run on PHP 8 and read the definitions from the given directory
+
 * Thu Oct  8 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.8-2.fmi
 - GRIB2 Lambert azimuthal equal area grids report their metric cell size in kilometres
   like the other projections, not in metres (BRAINSTORM-3518)

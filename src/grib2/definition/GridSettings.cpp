@@ -27,8 +27,7 @@ GridSettings::GridSettings() {
 
 /*! \brief The destructor of the class. */
 
-GridSettings::~GridSettings() {
-}
+GridSettings::~GridSettings() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -80,25 +79,15 @@ void GridSettings::write(DataWriter &dataWriter) {
 
 void GridSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sGridSettings.Ni", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNi));
-    sprintf(name, "%sGridSettings.Nj", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNj));
-    sprintf(name, "%sGridSettings.BasicAngleOfTheInitialProductionDomain", prefix.c_str());
-    attributeList.addAttribute(name, toString(mBasicAngleOfTheInitialProductionDomain));
-    sprintf(name, "%sGridSettings.SubdivisionsOfBasicAngle", prefix.c_str());
-    attributeList.addAttribute(name, toString(mSubdivisionsOfBasicAngle));
-    sprintf(name, "%sGridSettings.LatitudeOfFirstGridPoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatitudeOfFirstGridPoint));
-    sprintf(name, "%sGridSettings.LongitudeOfFirstGridPoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLongitudeOfFirstGridPoint));
-    sprintf(name, "%sGridSettings.", prefix.c_str());
-    mResolution.getAttributeList(name, attributeList);
-    sprintf(name, "%sGridSettings.LatitudeOfLastGridPoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatitudeOfLastGridPoint));
-    sprintf(name, "%sGridSettings.LongitudeOfLastGridPoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLongitudeOfLastGridPoint));
+        attributeList.addAttribute(prefix + "GridSettings.Ni", toString(mNi));
+        attributeList.addAttribute(prefix + "GridSettings.Nj", toString(mNj));
+        attributeList.addAttribute(prefix + "GridSettings.BasicAngleOfTheInitialProductionDomain", toString(mBasicAngleOfTheInitialProductionDomain));
+        attributeList.addAttribute(prefix + "GridSettings.SubdivisionsOfBasicAngle", toString(mSubdivisionsOfBasicAngle));
+        attributeList.addAttribute(prefix + "GridSettings.LatitudeOfFirstGridPoint", toString(mLatitudeOfFirstGridPoint));
+        attributeList.addAttribute(prefix + "GridSettings.LongitudeOfFirstGridPoint", toString(mLongitudeOfFirstGridPoint));
+        mResolution.getAttributeList(prefix + "GridSettings.", attributeList);
+        attributeList.addAttribute(prefix + "GridSettings.LatitudeOfLastGridPoint", toString(mLatitudeOfLastGridPoint));
+        attributeList.addAttribute(prefix + "GridSettings.LongitudeOfLastGridPoint", toString(mLongitudeOfLastGridPoint));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -299,7 +288,7 @@ const T::Int32_opt &GridSettings::getLongitudeOfFirstGridPoint() const {
 
 ResolutionSettings *GridSettings::getResolution() const {
   try {
-    return static_cast<ResolutionSettings *>(&mResolution);
+    return &mResolution;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

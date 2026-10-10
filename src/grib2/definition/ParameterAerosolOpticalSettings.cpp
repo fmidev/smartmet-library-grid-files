@@ -27,8 +27,7 @@ ParameterAerosolOpticalSettings::ParameterAerosolOpticalSettings() {
 
 /*! \brief The destructor of the class. */
 
-ParameterAerosolOpticalSettings::~ParameterAerosolOpticalSettings() {
-}
+ParameterAerosolOpticalSettings::~ParameterAerosolOpticalSettings() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -102,47 +101,26 @@ void ParameterAerosolOpticalSettings::write(DataWriter &dataWriter) {
 
 void ParameterAerosolOpticalSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sParameterAerosolOpticalSettings.ParameterCategory", prefix.c_str());
-    attributeList.addAttribute(name, toString(mParameterCategory));
-    sprintf(name, "%sParameterAerosolOpticalSettings.ParameterNumber", prefix.c_str());
-    attributeList.addAttribute(name, toString(mParameterNumber));
-    sprintf(name, "%sParameterAerosolOpticalSettings.AerosolType", prefix.c_str());
-    attributeList.addAttribute(name, toString(mAerosolType));
-    sprintf(name, "%sParameterAerosolOpticalSettings.TypeOfSizeInterval", prefix.c_str());
-    attributeList.addAttribute(name, toString(mTypeOfSizeInterval));
-    sprintf(name, "%sParameterAerosolOpticalSettings.ScaleFactorOfFirstSize", prefix.c_str());
-    attributeList.addAttribute(name, toString(mScaleFactorOfFirstSize));
-    sprintf(name, "%sParameterAerosolOpticalSettings.ScaledValueOfFirstSize", prefix.c_str());
-    attributeList.addAttribute(name, toString(mScaledValueOfFirstSize));
-    sprintf(name, "%sParameterAerosolOpticalSettings.ScaleFactorOfSecondSize", prefix.c_str());
-    attributeList.addAttribute(name, toString(mScaleFactorOfSecondSize));
-    sprintf(name, "%sParameterAerosolOpticalSettings.ScaledValueOfSecondSize", prefix.c_str());
-    attributeList.addAttribute(name, toString(mScaledValueOfSecondSize));
-    sprintf(name, "%sParameterAerosolOpticalSettings.TypeOfWavelengthInterval", prefix.c_str());
-    attributeList.addAttribute(name, toString(mTypeOfWavelengthInterval));
-    sprintf(name, "%sParameterAerosolOpticalSettings.ScaleFactorOfFirstWavelength", prefix.c_str());
-    attributeList.addAttribute(name, toString(mScaleFactorOfFirstWavelength));
-    sprintf(name, "%sParameterAerosolOpticalSettings.ScaledValueOfFirstWavelength", prefix.c_str());
-    attributeList.addAttribute(name, toString(mScaledValueOfFirstWavelength));
-    sprintf(name, "%sParameterAerosolOpticalSettings.ScaleFactorOfSecondWavelength", prefix.c_str());
-    attributeList.addAttribute(name, toString(mScaleFactorOfSecondWavelength));
-    sprintf(name, "%sParameterAerosolOpticalSettings.ScaledValueOfSecondWavelength", prefix.c_str());
-    attributeList.addAttribute(name, toString(mScaledValueOfSecondWavelength));
-    sprintf(name, "%sParameterAerosolOpticalSettings.TypeOfGeneratingProcess", prefix.c_str());
-    attributeList.addAttribute(name, toString(mTypeOfGeneratingProcess));
-    sprintf(name, "%sParameterAerosolOpticalSettings.BackgroundProcess", prefix.c_str());
-    attributeList.addAttribute(name, toString(mBackgroundProcess));
-    sprintf(name, "%sParameterAerosolOpticalSettings.GeneratingProcessIdentifier", prefix.c_str());
-    attributeList.addAttribute(name, toString(mGeneratingProcessIdentifier));
-    sprintf(name, "%sParameterAerosolOpticalSettings.HoursAfterDataCutoff", prefix.c_str());
-    attributeList.addAttribute(name, toString(mHoursAfterDataCutoff));
-    sprintf(name, "%sParameterAerosolOpticalSettings.MinutesAfterDataCutoff", prefix.c_str());
-    attributeList.addAttribute(name, toString(mMinutesAfterDataCutoff));
-    sprintf(name, "%sParameterAerosolOpticalSettings.IndicatorOfUnitOfTimeRange", prefix.c_str());
-    attributeList.addAttribute(name, toString(mIndicatorOfUnitOfTimeRange));
-    sprintf(name, "%sParameterAerosolOpticalSettings.ForecastTime", prefix.c_str());
-    attributeList.addAttribute(name, toString(mForecastTime));
+        attributeList.addAttribute(prefix + "ParameterAerosolOpticalSettings.ParameterCategory", toString(mParameterCategory));
+        attributeList.addAttribute(prefix + "ParameterAerosolOpticalSettings.ParameterNumber", toString(mParameterNumber));
+        attributeList.addAttribute(prefix + "ParameterAerosolOpticalSettings.AerosolType", toString(mAerosolType));
+        attributeList.addAttribute(prefix + "ParameterAerosolOpticalSettings.TypeOfSizeInterval", toString(mTypeOfSizeInterval));
+        attributeList.addAttribute(prefix + "ParameterAerosolOpticalSettings.ScaleFactorOfFirstSize", toString(mScaleFactorOfFirstSize));
+        attributeList.addAttribute(prefix + "ParameterAerosolOpticalSettings.ScaledValueOfFirstSize", toString(mScaledValueOfFirstSize));
+        attributeList.addAttribute(prefix + "ParameterAerosolOpticalSettings.ScaleFactorOfSecondSize", toString(mScaleFactorOfSecondSize));
+        attributeList.addAttribute(prefix + "ParameterAerosolOpticalSettings.ScaledValueOfSecondSize", toString(mScaledValueOfSecondSize));
+        attributeList.addAttribute(prefix + "ParameterAerosolOpticalSettings.TypeOfWavelengthInterval", toString(mTypeOfWavelengthInterval));
+        attributeList.addAttribute(prefix + "ParameterAerosolOpticalSettings.ScaleFactorOfFirstWavelength", toString(mScaleFactorOfFirstWavelength));
+        attributeList.addAttribute(prefix + "ParameterAerosolOpticalSettings.ScaledValueOfFirstWavelength", toString(mScaledValueOfFirstWavelength));
+        attributeList.addAttribute(prefix + "ParameterAerosolOpticalSettings.ScaleFactorOfSecondWavelength", toString(mScaleFactorOfSecondWavelength));
+        attributeList.addAttribute(prefix + "ParameterAerosolOpticalSettings.ScaledValueOfSecondWavelength", toString(mScaledValueOfSecondWavelength));
+        attributeList.addAttribute(prefix + "ParameterAerosolOpticalSettings.TypeOfGeneratingProcess", toString(mTypeOfGeneratingProcess));
+        attributeList.addAttribute(prefix + "ParameterAerosolOpticalSettings.BackgroundProcess", toString(mBackgroundProcess));
+        attributeList.addAttribute(prefix + "ParameterAerosolOpticalSettings.GeneratingProcessIdentifier", toString(mGeneratingProcessIdentifier));
+        attributeList.addAttribute(prefix + "ParameterAerosolOpticalSettings.HoursAfterDataCutoff", toString(mHoursAfterDataCutoff));
+        attributeList.addAttribute(prefix + "ParameterAerosolOpticalSettings.MinutesAfterDataCutoff", toString(mMinutesAfterDataCutoff));
+        attributeList.addAttribute(prefix + "ParameterAerosolOpticalSettings.IndicatorOfUnitOfTimeRange", toString(mIndicatorOfUnitOfTimeRange));
+        attributeList.addAttribute(prefix + "ParameterAerosolOpticalSettings.ForecastTime", toString(mForecastTime));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -307,7 +285,7 @@ bool ParameterAerosolOpticalSettings::hasAttributeValue(const char *attributeNam
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void ParameterAerosolOpticalSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
+void ParameterAerosolOpticalSettings::print(std::ostream &stream, uint level, uint /*optionFlags*/) const {
   try {
     stream << space(level) << "ParameterAerosolOpticalSettings\n";
     stream << space(level) << "- ParameterCategory = " << toString(mParameterCategory) << "\n";

@@ -20,17 +20,21 @@ namespace GRIB2 {
 class TimeSection : public GridDefinition {
 public:
   TimeSection();
-  virtual ~TimeSection();
+  TimeSection(const TimeSection &) = default;
+  TimeSection(TimeSection &&) = default;
+  TimeSection &operator=(const TimeSection &) = default;
+  TimeSection &operator=(TimeSection &&) = default;
+  ~TimeSection() override;
 
-  virtual uint getTemplateNumber() const;
-  virtual GridDefinition *createGridDefinition() const;
-  virtual void read(MemoryReader &memoryReader);
-  virtual void write(DataWriter &dataWriter);
-  virtual void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const;
+  uint getTemplateNumber() const override;
+  GridDefinition *createGridDefinition() const override;
+  void read(MemoryReader &memoryReader) override;
+  void write(DataWriter &dataWriter) override;
+  void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const override;
   virtual bool getAttributeValue(const char *attributeName, std::string &attributeValue) const;
   virtual bool hasAttributeValue(const char *attributeName, const char *attributeValue) const;
-  virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
-  virtual T::Hash countHash() const;
+  void print(std::ostream &stream, uint level, uint optionFlags) const override;
+  T::Hash countHash() const override;
 
   const T::UInt32_opt &getNumberOfTimeSteps() const;
   void setNumberOfTimeSteps(T::UInt32_opt numberOfTimeSteps);

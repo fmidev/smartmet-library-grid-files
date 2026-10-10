@@ -19,6 +19,10 @@ namespace GRIB2 {
 class PackingSettings {
 public:
   PackingSettings();
+  PackingSettings(const PackingSettings &) = default;
+  PackingSettings(PackingSettings &&) = default;
+  PackingSettings &operator=(const PackingSettings &) = default;
+  PackingSettings &operator=(PackingSettings &&) = default;
   virtual ~PackingSettings();
 
   virtual void read(MemoryReader &memoryReader);

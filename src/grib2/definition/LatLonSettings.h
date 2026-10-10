@@ -21,6 +21,10 @@ namespace GRIB2 {
 class LatLonSettings {
 public:
   LatLonSettings();
+  LatLonSettings(const LatLonSettings &) = default;
+  LatLonSettings(LatLonSettings &&) = default;
+  LatLonSettings &operator=(const LatLonSettings &) = default;
+  LatLonSettings &operator=(LatLonSettings &&) = default;
   virtual ~LatLonSettings();
 
   virtual void read(MemoryReader &memoryReader);

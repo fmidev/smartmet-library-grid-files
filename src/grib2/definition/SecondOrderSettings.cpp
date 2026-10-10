@@ -27,8 +27,7 @@ SecondOrderSettings::SecondOrderSettings() {
 
 /*! \brief The destructor of the class. */
 
-SecondOrderSettings::~SecondOrderSettings() {
-}
+SecondOrderSettings::~SecondOrderSettings() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -84,29 +83,17 @@ void SecondOrderSettings::write(DataWriter &dataWriter) {
 
 void SecondOrderSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sSecondOrderSettings.GroupSplitting", prefix.c_str());
-    attributeList.addAttribute(name, toString(mGroupSplitting));
-    sprintf(name, "%sSecondOrderSettings.MissingValueManagement", prefix.c_str());
-    attributeList.addAttribute(name, toString(mMissingValueManagement));
-    sprintf(name, "%sSecondOrderSettings.PrimaryMissingValue", prefix.c_str());
-    attributeList.addAttribute(name, toString(mPrimaryMissingValue));
-    sprintf(name, "%sSecondOrderSettings.SecondaryMissingValue", prefix.c_str());
-    attributeList.addAttribute(name, toString(mSecondaryMissingValue));
-    sprintf(name, "%sSecondOrderSettings.NumberOfGroups", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNumberOfGroups));
-    sprintf(name, "%sSecondOrderSettings.ReferenceOfWidths", prefix.c_str());
-    attributeList.addAttribute(name, toString(mReferenceOfWidths));
-    sprintf(name, "%sSecondOrderSettings.WidthOfWidths", prefix.c_str());
-    attributeList.addAttribute(name, toString(mWidthOfWidths));
-    sprintf(name, "%sSecondOrderSettings.ReferenceOfLengths", prefix.c_str());
-    attributeList.addAttribute(name, toString(mReferenceOfLengths));
-    sprintf(name, "%sSecondOrderSettings.IncrementOfLengths", prefix.c_str());
-    attributeList.addAttribute(name, toString(mIncrementOfLengths));
-    sprintf(name, "%sSecondOrderSettings.TrueLengthOfLastGroup", prefix.c_str());
-    attributeList.addAttribute(name, toString(mTrueLengthOfLastGroup));
-    sprintf(name, "%sSecondOrderSettings.WidthOfLengths", prefix.c_str());
-    attributeList.addAttribute(name, toString(mWidthOfLengths));
+        attributeList.addAttribute(prefix + "SecondOrderSettings.GroupSplitting", toString(mGroupSplitting));
+        attributeList.addAttribute(prefix + "SecondOrderSettings.MissingValueManagement", toString(mMissingValueManagement));
+        attributeList.addAttribute(prefix + "SecondOrderSettings.PrimaryMissingValue", toString(mPrimaryMissingValue));
+        attributeList.addAttribute(prefix + "SecondOrderSettings.SecondaryMissingValue", toString(mSecondaryMissingValue));
+        attributeList.addAttribute(prefix + "SecondOrderSettings.NumberOfGroups", toString(mNumberOfGroups));
+        attributeList.addAttribute(prefix + "SecondOrderSettings.ReferenceOfWidths", toString(mReferenceOfWidths));
+        attributeList.addAttribute(prefix + "SecondOrderSettings.WidthOfWidths", toString(mWidthOfWidths));
+        attributeList.addAttribute(prefix + "SecondOrderSettings.ReferenceOfLengths", toString(mReferenceOfLengths));
+        attributeList.addAttribute(prefix + "SecondOrderSettings.IncrementOfLengths", toString(mIncrementOfLengths));
+        attributeList.addAttribute(prefix + "SecondOrderSettings.TrueLengthOfLastGroup", toString(mTrueLengthOfLastGroup));
+        attributeList.addAttribute(prefix + "SecondOrderSettings.WidthOfLengths", toString(mWidthOfLengths));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -217,7 +204,7 @@ bool SecondOrderSettings::hasAttributeValue(const char *attributeName, const cha
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void SecondOrderSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
+void SecondOrderSettings::print(std::ostream &stream, uint level, uint /*optionFlags*/) const {
   try {
     stream << space(level) << "SecondOrderSettings\n";
     stream << space(level) << "- GroupSplitting = " << toString(mGroupSplitting) << "\n";

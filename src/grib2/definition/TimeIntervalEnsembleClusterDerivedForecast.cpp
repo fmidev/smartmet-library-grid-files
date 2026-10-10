@@ -27,8 +27,7 @@ TimeIntervalEnsembleClusterDerivedForecast::TimeIntervalEnsembleClusterDerivedFo
 
 /*! \brief The destructor of the class. */
 
-TimeIntervalEnsembleClusterDerivedForecast::~TimeIntervalEnsembleClusterDerivedForecast() {
-}
+TimeIntervalEnsembleClusterDerivedForecast::~TimeIntervalEnsembleClusterDerivedForecast() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -74,19 +73,12 @@ void TimeIntervalEnsembleClusterDerivedForecast::write(DataWriter &dataWriter) {
 
 void TimeIntervalEnsembleClusterDerivedForecast::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sTimeIntervalEnsembleClusterDerivedForecast.", prefix.c_str());
-    mParameter.getAttributeList(name, attributeList);
-    sprintf(name, "%sTimeIntervalEnsembleClusterDerivedForecast.", prefix.c_str());
-    mHorizontal.getAttributeList(name, attributeList);
-    sprintf(name, "%sTimeIntervalEnsembleClusterDerivedForecast.", prefix.c_str());
-    mDerived.getAttributeList(name, attributeList);
-    sprintf(name, "%sTimeIntervalEnsembleClusterDerivedForecast.", prefix.c_str());
-    mRectangularCluster.getAttributeList(name, attributeList);
-    sprintf(name, "%sTimeIntervalEnsembleClusterDerivedForecast.", prefix.c_str());
-    mStatistical.getAttributeList(name, attributeList);
-    sprintf(name, "%sTimeIntervalEnsembleClusterDerivedForecast.EnsembleForecastNumbers", prefix.c_str());
-    attributeList.addAttribute(name, toString(mEnsembleForecastNumbers));
+        mParameter.getAttributeList(prefix + "TimeIntervalEnsembleClusterDerivedForecast.", attributeList);
+        mHorizontal.getAttributeList(prefix + "TimeIntervalEnsembleClusterDerivedForecast.", attributeList);
+        mDerived.getAttributeList(prefix + "TimeIntervalEnsembleClusterDerivedForecast.", attributeList);
+        mRectangularCluster.getAttributeList(prefix + "TimeIntervalEnsembleClusterDerivedForecast.", attributeList);
+        mStatistical.getAttributeList(prefix + "TimeIntervalEnsembleClusterDerivedForecast.", attributeList);
+        attributeList.addAttribute(prefix + "TimeIntervalEnsembleClusterDerivedForecast.EnsembleForecastNumbers", toString(mEnsembleForecastNumbers));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -202,7 +194,7 @@ ProductDefinition *TimeIntervalEnsembleClusterDerivedForecast::createProductDefi
 
 ParameterSettings *TimeIntervalEnsembleClusterDerivedForecast::getParameter() const {
   try {
-    return static_cast<ParameterSettings *>(&mParameter);
+    return &mParameter;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -212,7 +204,7 @@ ParameterSettings *TimeIntervalEnsembleClusterDerivedForecast::getParameter() co
 
 HorizontalSettings *TimeIntervalEnsembleClusterDerivedForecast::getHorizontal() const {
   try {
-    return static_cast<HorizontalSettings *>(&mHorizontal);
+    return &mHorizontal;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -222,7 +214,7 @@ HorizontalSettings *TimeIntervalEnsembleClusterDerivedForecast::getHorizontal() 
 
 DerivedSettings *TimeIntervalEnsembleClusterDerivedForecast::getDerived() const {
   try {
-    return static_cast<DerivedSettings *>(&mDerived);
+    return &mDerived;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -232,7 +224,7 @@ DerivedSettings *TimeIntervalEnsembleClusterDerivedForecast::getDerived() const 
 
 RectangularClusterSettings *TimeIntervalEnsembleClusterDerivedForecast::getRectangularCluster() const {
   try {
-    return static_cast<RectangularClusterSettings *>(&mRectangularCluster);
+    return &mRectangularCluster;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -242,7 +234,7 @@ RectangularClusterSettings *TimeIntervalEnsembleClusterDerivedForecast::getRecta
 
 StatisticalSettings *TimeIntervalEnsembleClusterDerivedForecast::getStatistical() const {
   try {
-    return static_cast<StatisticalSettings *>(&mStatistical);
+    return &mStatistical;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

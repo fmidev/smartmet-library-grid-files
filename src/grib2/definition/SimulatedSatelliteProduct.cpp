@@ -27,8 +27,7 @@ SimulatedSatelliteProduct::SimulatedSatelliteProduct() {
 
 /*! \brief The destructor of the class. */
 
-SimulatedSatelliteProduct::~SimulatedSatelliteProduct() {
-}
+SimulatedSatelliteProduct::~SimulatedSatelliteProduct() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -78,23 +77,14 @@ void SimulatedSatelliteProduct::write(DataWriter &dataWriter) {
 
 void SimulatedSatelliteProduct::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sSimulatedSatelliteProduct.", prefix.c_str());
-    mParameter.getAttributeList(name, attributeList);
-    sprintf(name, "%sSimulatedSatelliteProduct.", prefix.c_str());
-    mPointInTime.getAttributeList(name, attributeList);
-    sprintf(name, "%sSimulatedSatelliteProduct.NB", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNB));
-    sprintf(name, "%sSimulatedSatelliteProduct.SatelliteSeries", prefix.c_str());
-    attributeList.addAttribute(name, toString(mSatelliteSeries));
-    sprintf(name, "%sSimulatedSatelliteProduct.SatelliteNumber", prefix.c_str());
-    attributeList.addAttribute(name, toString(mSatelliteNumber));
-    sprintf(name, "%sSimulatedSatelliteProduct.InstrumentType", prefix.c_str());
-    attributeList.addAttribute(name, toString(mInstrumentType));
-    sprintf(name, "%sSimulatedSatelliteProduct.ScaleFactorOfCentralWaveNumber", prefix.c_str());
-    attributeList.addAttribute(name, toString(mScaleFactorOfCentralWaveNumber));
-    sprintf(name, "%sSimulatedSatelliteProduct.ScaledValueOfCentralWaveNumber", prefix.c_str());
-    attributeList.addAttribute(name, toString(mScaledValueOfCentralWaveNumber));
+        mParameter.getAttributeList(prefix + "SimulatedSatelliteProduct.", attributeList);
+        mPointInTime.getAttributeList(prefix + "SimulatedSatelliteProduct.", attributeList);
+        attributeList.addAttribute(prefix + "SimulatedSatelliteProduct.NB", toString(mNB));
+        attributeList.addAttribute(prefix + "SimulatedSatelliteProduct.SatelliteSeries", toString(mSatelliteSeries));
+        attributeList.addAttribute(prefix + "SimulatedSatelliteProduct.SatelliteNumber", toString(mSatelliteNumber));
+        attributeList.addAttribute(prefix + "SimulatedSatelliteProduct.InstrumentType", toString(mInstrumentType));
+        attributeList.addAttribute(prefix + "SimulatedSatelliteProduct.ScaleFactorOfCentralWaveNumber", toString(mScaleFactorOfCentralWaveNumber));
+        attributeList.addAttribute(prefix + "SimulatedSatelliteProduct.ScaledValueOfCentralWaveNumber", toString(mScaledValueOfCentralWaveNumber));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -240,7 +230,7 @@ ProductDefinition *SimulatedSatelliteProduct::createProductDefinition() const {
 
 ParameterSettings *SimulatedSatelliteProduct::getParameter() const {
   try {
-    return static_cast<ParameterSettings *>(&mParameter);
+    return &mParameter;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -250,7 +240,7 @@ ParameterSettings *SimulatedSatelliteProduct::getParameter() const {
 
 PointInTimeSettings *SimulatedSatelliteProduct::getPointInTime() const {
   try {
-    return static_cast<PointInTimeSettings *>(&mPointInTime);
+    return &mPointInTime;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

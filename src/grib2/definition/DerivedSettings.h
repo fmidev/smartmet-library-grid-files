@@ -19,6 +19,10 @@ namespace GRIB2 {
 class DerivedSettings {
 public:
   DerivedSettings();
+  DerivedSettings(const DerivedSettings &) = default;
+  DerivedSettings(DerivedSettings &&) = default;
+  DerivedSettings &operator=(const DerivedSettings &) = default;
+  DerivedSettings &operator=(DerivedSettings &&) = default;
   virtual ~DerivedSettings();
 
   virtual void read(MemoryReader &memoryReader);

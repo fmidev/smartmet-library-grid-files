@@ -20,6 +20,10 @@ namespace GRIB2 {
 class GridSettings {
 public:
   GridSettings();
+  GridSettings(const GridSettings &) = default;
+  GridSettings(GridSettings &&) = default;
+  GridSettings &operator=(const GridSettings &) = default;
+  GridSettings &operator=(GridSettings &&) = default;
   virtual ~GridSettings();
 
   virtual void read(MemoryReader &memoryReader);

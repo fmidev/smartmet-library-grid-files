@@ -31,8 +31,7 @@ StretchedGaussian::StretchedGaussian() {
 
 /*! \brief The destructor of the class. */
 
-StretchedGaussian::~StretchedGaussian() {
-}
+StretchedGaussian::~StretchedGaussian() = default;
 
 /*! \brief The method reads and initializes all data related to the current section object.
 
@@ -84,21 +83,13 @@ void StretchedGaussian::write(DataWriter &dataWriter) {
 
 void StretchedGaussian::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sStretchedGaussian.Ni", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNi));
-    sprintf(name, "%sStretchedGaussian.Nj", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNj));
-    sprintf(name, "%sStretchedGaussian.", prefix.c_str());
-    mGridArea.getAttributeList(name, attributeList);
-    sprintf(name, "%sStretchedGaussian.IDirectionIncrement", prefix.c_str());
-    attributeList.addAttribute(name, toString(mIDirectionIncrement));
-    sprintf(name, "%sStretchedGaussian.N", prefix.c_str());
-    attributeList.addAttribute(name, toString(mN));
-    sprintf(name, "%sStretchedGaussian.", prefix.c_str());
-    mScanningMode.getAttributeList(name, attributeList);
-    sprintf(name, "%sStretchedGaussian.", prefix.c_str());
-    mGridStretching.getAttributeList(name, attributeList);
+        attributeList.addAttribute(prefix + "StretchedGaussian.Ni", toString(mNi));
+        attributeList.addAttribute(prefix + "StretchedGaussian.Nj", toString(mNj));
+        mGridArea.getAttributeList(prefix + "StretchedGaussian.", attributeList);
+        attributeList.addAttribute(prefix + "StretchedGaussian.IDirectionIncrement", toString(mIDirectionIncrement));
+        attributeList.addAttribute(prefix + "StretchedGaussian.N", toString(mN));
+        mScanningMode.getAttributeList(prefix + "StretchedGaussian.", attributeList);
+        mGridStretching.getAttributeList(prefix + "StretchedGaussian.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -247,7 +238,7 @@ std::int16_t StretchedGaussian::getNj() const {
 
 GridAreaSettings *StretchedGaussian::getGridArea() const {
   try {
-    return static_cast<GridAreaSettings *>(&mGridArea);
+    return &mGridArea;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -277,7 +268,7 @@ std::uint16_t StretchedGaussian::getN() const {
 
 ScanningModeSettings *StretchedGaussian::getScanningMode() const {
   try {
-    return static_cast<ScanningModeSettings *>(&mScanningMode);
+    return &mScanningMode;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -287,7 +278,7 @@ ScanningModeSettings *StretchedGaussian::getScanningMode() const {
 
 GridStretchingSettings *StretchedGaussian::getGridStretching() const {
   try {
-    return static_cast<GridStretchingSettings *>(&mGridStretching);
+    return &mGridStretching;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

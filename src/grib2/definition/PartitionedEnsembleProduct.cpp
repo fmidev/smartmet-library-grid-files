@@ -27,8 +27,7 @@ PartitionedEnsembleProduct::PartitionedEnsembleProduct() {
 
 /*! \brief The destructor of the class. */
 
-PartitionedEnsembleProduct::~PartitionedEnsembleProduct() {
-}
+PartitionedEnsembleProduct::~PartitionedEnsembleProduct() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -66,11 +65,8 @@ void PartitionedEnsembleProduct::write(DataWriter &dataWriter) {
 
 void PartitionedEnsembleProduct::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sPartitionedEnsembleProduct.", prefix.c_str());
-    mPartitionedProduct.getAttributeList(name, attributeList);
-    sprintf(name, "%sPartitionedEnsembleProduct.", prefix.c_str());
-    mEps.getAttributeList(name, attributeList);
+        mPartitionedProduct.getAttributeList(prefix + "PartitionedEnsembleProduct.", attributeList);
+        mEps.getAttributeList(prefix + "PartitionedEnsembleProduct.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -162,7 +158,7 @@ ProductDefinition *PartitionedEnsembleProduct::createProductDefinition() const {
 
 PartitionedProduct *PartitionedEnsembleProduct::getPartitionedProduct() const {
   try {
-    return static_cast<PartitionedProduct *>(&mPartitionedProduct);
+    return &mPartitionedProduct;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -172,7 +168,7 @@ PartitionedProduct *PartitionedEnsembleProduct::getPartitionedProduct() const {
 
 EpsSettings *PartitionedEnsembleProduct::getEps() const {
   try {
-    return static_cast<EpsSettings *>(&mEps);
+    return &mEps;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

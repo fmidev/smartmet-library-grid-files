@@ -21,6 +21,10 @@ namespace GRIB2 {
 class VariableLatLonSettings {
 public:
   VariableLatLonSettings();
+  VariableLatLonSettings(const VariableLatLonSettings &) = default;
+  VariableLatLonSettings(VariableLatLonSettings &&) = default;
+  VariableLatLonSettings &operator=(const VariableLatLonSettings &) = default;
+  VariableLatLonSettings &operator=(VariableLatLonSettings &&) = default;
   virtual ~VariableLatLonSettings();
 
   virtual void read(MemoryReader &memoryReader);

@@ -22,17 +22,21 @@ namespace GRIB2 {
 class StretchedSphericalHarmonic : public GridDefinition {
 public:
   StretchedSphericalHarmonic();
-  virtual ~StretchedSphericalHarmonic();
+  StretchedSphericalHarmonic(const StretchedSphericalHarmonic &) = default;
+  StretchedSphericalHarmonic(StretchedSphericalHarmonic &&) = default;
+  StretchedSphericalHarmonic &operator=(const StretchedSphericalHarmonic &) = default;
+  StretchedSphericalHarmonic &operator=(StretchedSphericalHarmonic &&) = default;
+  ~StretchedSphericalHarmonic() override;
 
-  virtual uint getTemplateNumber() const;
-  virtual GridDefinition *createGridDefinition() const;
-  virtual void read(MemoryReader &memoryReader);
-  virtual void write(DataWriter &dataWriter);
-  virtual void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const;
+  uint getTemplateNumber() const override;
+  GridDefinition *createGridDefinition() const override;
+  void read(MemoryReader &memoryReader) override;
+  void write(DataWriter &dataWriter) override;
+  void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const override;
   virtual bool getAttributeValue(const char *attributeName, std::string &attributeValue) const;
   virtual bool hasAttributeValue(const char *attributeName, const char *attributeValue) const;
-  virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
-  virtual T::Hash countHash() const;
+  void print(std::ostream &stream, uint level, uint optionFlags) const override;
+  T::Hash countHash() const override;
 
   SphericalHarmonicSettings *getSphericalHarmonic() const;
   void setSphericalHarmonic(SphericalHarmonicSettings &sphericalHarmonic);

@@ -22,18 +22,22 @@ namespace GRIB1 {
 class SpaceView : public GridDefinition {
 public:
   SpaceView();
-  virtual ~SpaceView();
+  SpaceView(const SpaceView &) = default;
+  SpaceView(SpaceView &&) = default;
+  SpaceView &operator=(const SpaceView &) = default;
+  SpaceView &operator=(SpaceView &&) = default;
+  ~SpaceView() override;
 
-  virtual void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const;
-  virtual void read(MemoryReader &memoryReader);
-  virtual void write(DataWriter &dataWriter);
-  virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
+  void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const override;
+  void read(MemoryReader &memoryReader) override;
+  void write(DataWriter &dataWriter) override;
+  void print(std::ostream &stream, uint level, uint optionFlags) const override;
   virtual bool getAttributeValue(const char *attributeName, std::string &attributeValue) const;
   virtual bool hasAttributeValue(const char *attributeName, const char *attributeValue) const;
-  virtual T::Hash countHash() const;
+  T::Hash countHash() const override;
 
-  virtual uint getTemplateNumber() const;
-  virtual GridDefinition *createGridDefinition() const;
+  uint getTemplateNumber() const override;
+  GridDefinition *createGridDefinition() const override;
   std::uint16_t getNx() const;
   void setNx(std::uint16_t nx);
   std::uint16_t getNy() const;
@@ -42,7 +46,7 @@ public:
   void setLatitudeOfSubSatellitePoint(std::int24_t latitudeOfSubSatellitePoint);
   std::int24_t getLongitudeOfSubSatellitePoint() const;
   void setLongitudeOfSubSatellitePoint(std::int24_t longitudeOfSubSatellitePoint);
-  ResolutionFlagsSettings *getResolutionFlags() const;
+  ResolutionFlagsSettings *getResolutionFlags() const override;
   void setResolutionFlags(ResolutionFlagsSettings &resolutionFlags);
   std::uint24_t getDx() const;
   void setDx(std::uint24_t dx);
@@ -52,7 +56,7 @@ public:
   void setXpInGridLengths(std::uint16_t xpInGridLengths);
   std::uint16_t getYpInGridLengths() const;
   void setYpInGridLengths(std::uint16_t ypInGridLengths);
-  ScanningModeSettings *getScanningMode() const;
+  ScanningModeSettings *getScanningMode() const override;
   void setScanningMode(ScanningModeSettings &scanningMode);
   std::uint24_t getOrientationOfTheGrid() const;
   void setOrientationOfTheGrid(std::uint24_t orientationOfTheGrid);

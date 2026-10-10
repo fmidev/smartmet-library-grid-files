@@ -19,6 +19,10 @@ namespace GRIB2 {
 class StretchingSettings {
 public:
   StretchingSettings();
+  StretchingSettings(const StretchingSettings &) = default;
+  StretchingSettings(StretchingSettings &&) = default;
+  StretchingSettings &operator=(const StretchingSettings &) = default;
+  StretchingSettings &operator=(StretchingSettings &&) = default;
   virtual ~StretchingSettings();
 
   virtual void read(MemoryReader &memoryReader);

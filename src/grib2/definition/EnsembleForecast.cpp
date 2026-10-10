@@ -27,8 +27,7 @@ EnsembleForecast::EnsembleForecast() {
 
 /*! \brief The destructor of the class. */
 
-EnsembleForecast::~EnsembleForecast() {
-}
+EnsembleForecast::~EnsembleForecast() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -70,15 +69,10 @@ void EnsembleForecast::write(DataWriter &dataWriter) {
 
 void EnsembleForecast::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sEnsembleForecast.", prefix.c_str());
-    mParameter.getAttributeList(name, attributeList);
-    sprintf(name, "%sEnsembleForecast.", prefix.c_str());
-    mPointInTime.getAttributeList(name, attributeList);
-    sprintf(name, "%sEnsembleForecast.", prefix.c_str());
-    mHorizontal.getAttributeList(name, attributeList);
-    sprintf(name, "%sEnsembleForecast.", prefix.c_str());
-    mEps.getAttributeList(name, attributeList);
+        mParameter.getAttributeList(prefix + "EnsembleForecast.", attributeList);
+        mPointInTime.getAttributeList(prefix + "EnsembleForecast.", attributeList);
+        mHorizontal.getAttributeList(prefix + "EnsembleForecast.", attributeList);
+        mEps.getAttributeList(prefix + "EnsembleForecast.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -180,7 +174,7 @@ ProductDefinition *EnsembleForecast::createProductDefinition() const {
 
 ParameterSettings *EnsembleForecast::getParameter() const {
   try {
-    return static_cast<ParameterSettings *>(&mParameter);
+    return &mParameter;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -190,7 +184,7 @@ ParameterSettings *EnsembleForecast::getParameter() const {
 
 PointInTimeSettings *EnsembleForecast::getPointInTime() const {
   try {
-    return static_cast<PointInTimeSettings *>(&mPointInTime);
+    return &mPointInTime;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -200,7 +194,7 @@ PointInTimeSettings *EnsembleForecast::getPointInTime() const {
 
 HorizontalSettings *EnsembleForecast::getHorizontal() const {
   try {
-    return static_cast<HorizontalSettings *>(&mHorizontal);
+    return &mHorizontal;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -210,7 +204,7 @@ HorizontalSettings *EnsembleForecast::getHorizontal() const {
 
 EpsSettings *EnsembleForecast::getEps() const {
   try {
-    return static_cast<EpsSettings *>(&mEps);
+    return &mEps;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

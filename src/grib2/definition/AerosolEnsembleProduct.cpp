@@ -27,8 +27,7 @@ AerosolEnsembleProduct::AerosolEnsembleProduct() {
 
 /*! \brief The destructor of the class. */
 
-AerosolEnsembleProduct::~AerosolEnsembleProduct() {
-}
+AerosolEnsembleProduct::~AerosolEnsembleProduct() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -70,15 +69,10 @@ void AerosolEnsembleProduct::write(DataWriter &dataWriter) {
 
 void AerosolEnsembleProduct::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sAerosolEnsembleProduct.", prefix.c_str());
-    mParameterAerosol.getAttributeList(name, attributeList);
-    sprintf(name, "%sAerosolEnsembleProduct.", prefix.c_str());
-    mPointInTime.getAttributeList(name, attributeList);
-    sprintf(name, "%sAerosolEnsembleProduct.", prefix.c_str());
-    mHorizontal.getAttributeList(name, attributeList);
-    sprintf(name, "%sAerosolEnsembleProduct.", prefix.c_str());
-    mEps.getAttributeList(name, attributeList);
+        mParameterAerosol.getAttributeList(prefix + "AerosolEnsembleProduct.", attributeList);
+        mPointInTime.getAttributeList(prefix + "AerosolEnsembleProduct.", attributeList);
+        mHorizontal.getAttributeList(prefix + "AerosolEnsembleProduct.", attributeList);
+        mEps.getAttributeList(prefix + "AerosolEnsembleProduct.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -180,7 +174,7 @@ ProductDefinition *AerosolEnsembleProduct::createProductDefinition() const {
 
 ParameterAerosolSettings *AerosolEnsembleProduct::getParameterAerosol() const {
   try {
-    return static_cast<ParameterAerosolSettings *>(&mParameterAerosol);
+    return &mParameterAerosol;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -190,7 +184,7 @@ ParameterAerosolSettings *AerosolEnsembleProduct::getParameterAerosol() const {
 
 PointInTimeSettings *AerosolEnsembleProduct::getPointInTime() const {
   try {
-    return static_cast<PointInTimeSettings *>(&mPointInTime);
+    return &mPointInTime;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -200,7 +194,7 @@ PointInTimeSettings *AerosolEnsembleProduct::getPointInTime() const {
 
 HorizontalSettings *AerosolEnsembleProduct::getHorizontal() const {
   try {
-    return static_cast<HorizontalSettings *>(&mHorizontal);
+    return &mHorizontal;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -210,7 +204,7 @@ HorizontalSettings *AerosolEnsembleProduct::getHorizontal() const {
 
 EpsSettings *AerosolEnsembleProduct::getEps() const {
   try {
-    return static_cast<EpsSettings *>(&mEps);
+    return &mEps;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

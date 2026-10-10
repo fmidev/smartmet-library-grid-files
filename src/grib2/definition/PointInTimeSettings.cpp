@@ -27,15 +27,14 @@ PointInTimeSettings::PointInTimeSettings() {
 
 /*! \brief The destructor of the class. */
 
-PointInTimeSettings::~PointInTimeSettings() {
-}
+PointInTimeSettings::~PointInTimeSettings() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
         \param memoryReader  This object controls the access to the memory mapped file.
 */
 
-void PointInTimeSettings::read(MemoryReader &memoryReader) {
+void PointInTimeSettings::read(MemoryReader &/*memoryReader*/) {
   try {
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
@@ -47,7 +46,7 @@ void PointInTimeSettings::read(MemoryReader &memoryReader) {
         \param dataWriter  This object is used for writing the object data.
 */
 
-void PointInTimeSettings::write(DataWriter &dataWriter) {
+void PointInTimeSettings::write(DataWriter &/*dataWriter*/) {
   try {
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
@@ -60,7 +59,7 @@ void PointInTimeSettings::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void PointInTimeSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
+void PointInTimeSettings::getAttributeList(const std::string &/*prefix*/, T::AttributeList &/*attributeList*/) const {
   try {
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
@@ -73,7 +72,7 @@ void PointInTimeSettings::getAttributeList(const std::string &prefix, T::Attribu
     \param attributeValue The value of the attribute (string).
 */
 
-bool PointInTimeSettings::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+bool PointInTimeSettings::getAttributeValue(const char *attributeName, std::string &/*attributeValue*/) const {
   try {
     if (attributeName == nullptr)
       return false;
@@ -106,7 +105,7 @@ bool PointInTimeSettings::hasAttributeValue(const char *attributeName, const cha
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void PointInTimeSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
+void PointInTimeSettings::print(std::ostream &stream, uint level, uint /*optionFlags*/) const {
   try {
     stream << space(level) << "PointInTimeSettings\n";
   } catch (...) {

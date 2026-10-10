@@ -27,8 +27,7 @@ CrossSection::CrossSection() {
 
 /*! \brief The destructor of the class. */
 
-CrossSection::~CrossSection() {
-}
+CrossSection::~CrossSection() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -90,35 +89,20 @@ void CrossSection::write(DataWriter &dataWriter) {
 
 void CrossSection::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sCrossSection.", prefix.c_str());
-    mEarthShape.getAttributeList(name, attributeList);
-    sprintf(name, "%sCrossSection.NumberOfHorizontalPoints", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNumberOfHorizontalPoints));
-    sprintf(name, "%sCrossSection.BasicAngleOfTheInitialProductionDomain", prefix.c_str());
-    attributeList.addAttribute(name, toString(mBasicAngleOfTheInitialProductionDomain));
-    sprintf(name, "%sCrossSection.SubdivisionsOfBasicAngle", prefix.c_str());
-    attributeList.addAttribute(name, toString(mSubdivisionsOfBasicAngle));
-    sprintf(name, "%sCrossSection.LatitudeOfFirstGridPoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatitudeOfFirstGridPoint));
-    sprintf(name, "%sCrossSection.LongitudeOfFirstGridPoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLongitudeOfFirstGridPoint));
-    sprintf(name, "%sCrossSection.", prefix.c_str());
-    mScanningMode.getAttributeList(name, attributeList);
-    sprintf(name, "%sCrossSection.LatitudeOfLastGridPoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatitudeOfLastGridPoint));
-    sprintf(name, "%sCrossSection.LongitudeOfLastGridPoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLongitudeOfLastGridPoint));
-    sprintf(name, "%sCrossSection.TypeOfHorizontalLine", prefix.c_str());
-    attributeList.addAttribute(name, toString(mTypeOfHorizontalLine));
-    sprintf(name, "%sCrossSection.NumberOfVerticalPoints", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNumberOfVerticalPoints));
-    sprintf(name, "%sCrossSection.MeaningOfVerticalCoordinate", prefix.c_str());
-    attributeList.addAttribute(name, toString(mMeaningOfVerticalCoordinate));
-    sprintf(name, "%sCrossSection.VerticalCoordinate", prefix.c_str());
-    attributeList.addAttribute(name, toString(mVerticalCoordinate));
-    sprintf(name, "%sCrossSection.NC", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNC));
+        mEarthShape.getAttributeList(prefix + "CrossSection.", attributeList);
+        attributeList.addAttribute(prefix + "CrossSection.NumberOfHorizontalPoints", toString(mNumberOfHorizontalPoints));
+        attributeList.addAttribute(prefix + "CrossSection.BasicAngleOfTheInitialProductionDomain", toString(mBasicAngleOfTheInitialProductionDomain));
+        attributeList.addAttribute(prefix + "CrossSection.SubdivisionsOfBasicAngle", toString(mSubdivisionsOfBasicAngle));
+        attributeList.addAttribute(prefix + "CrossSection.LatitudeOfFirstGridPoint", toString(mLatitudeOfFirstGridPoint));
+        attributeList.addAttribute(prefix + "CrossSection.LongitudeOfFirstGridPoint", toString(mLongitudeOfFirstGridPoint));
+        mScanningMode.getAttributeList(prefix + "CrossSection.", attributeList);
+        attributeList.addAttribute(prefix + "CrossSection.LatitudeOfLastGridPoint", toString(mLatitudeOfLastGridPoint));
+        attributeList.addAttribute(prefix + "CrossSection.LongitudeOfLastGridPoint", toString(mLongitudeOfLastGridPoint));
+        attributeList.addAttribute(prefix + "CrossSection.TypeOfHorizontalLine", toString(mTypeOfHorizontalLine));
+        attributeList.addAttribute(prefix + "CrossSection.NumberOfVerticalPoints", toString(mNumberOfVerticalPoints));
+        attributeList.addAttribute(prefix + "CrossSection.MeaningOfVerticalCoordinate", toString(mMeaningOfVerticalCoordinate));
+        attributeList.addAttribute(prefix + "CrossSection.VerticalCoordinate", toString(mVerticalCoordinate));
+        attributeList.addAttribute(prefix + "CrossSection.NC", toString(mNC));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -314,7 +298,7 @@ GridDefinition *CrossSection::createGridDefinition() const {
 
 EarthShapeSettings *CrossSection::getEarthShape() const {
   try {
-    return static_cast<EarthShapeSettings *>(&mEarthShape);
+    return &mEarthShape;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -374,7 +358,7 @@ const T::UInt32_opt &CrossSection::getLongitudeOfFirstGridPoint() const {
 
 ScanningModeSettings *CrossSection::getScanningMode() const {
   try {
-    return static_cast<ScanningModeSettings *>(&mScanningMode);
+    return &mScanningMode;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

@@ -19,6 +19,10 @@ namespace GRIB2 {
 class ParameterAerosolOpticalSettings {
 public:
   ParameterAerosolOpticalSettings();
+  ParameterAerosolOpticalSettings(const ParameterAerosolOpticalSettings &) = default;
+  ParameterAerosolOpticalSettings(ParameterAerosolOpticalSettings &&) = default;
+  ParameterAerosolOpticalSettings &operator=(const ParameterAerosolOpticalSettings &) = default;
+  ParameterAerosolOpticalSettings &operator=(ParameterAerosolOpticalSettings &&) = default;
   virtual ~ParameterAerosolOpticalSettings();
 
   virtual void read(MemoryReader &memoryReader);

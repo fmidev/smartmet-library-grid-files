@@ -27,8 +27,7 @@ TimeIntervalCategoricalForecast::TimeIntervalCategoricalForecast() {
 
 /*! \brief The destructor of the class. */
 
-TimeIntervalCategoricalForecast::~TimeIntervalCategoricalForecast() {
-}
+TimeIntervalCategoricalForecast::~TimeIntervalCategoricalForecast() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -70,15 +69,10 @@ void TimeIntervalCategoricalForecast::write(DataWriter &dataWriter) {
 
 void TimeIntervalCategoricalForecast::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sTimeIntervalCategoricalForecast.", prefix.c_str());
-    mParameter.getAttributeList(name, attributeList);
-    sprintf(name, "%sTimeIntervalCategoricalForecast.", prefix.c_str());
-    mHorizontal.getAttributeList(name, attributeList);
-    sprintf(name, "%sTimeIntervalCategoricalForecast.", prefix.c_str());
-    mCategorical.getAttributeList(name, attributeList);
-    sprintf(name, "%sTimeIntervalCategoricalForecast.", prefix.c_str());
-    mStatistical.getAttributeList(name, attributeList);
+        mParameter.getAttributeList(prefix + "TimeIntervalCategoricalForecast.", attributeList);
+        mHorizontal.getAttributeList(prefix + "TimeIntervalCategoricalForecast.", attributeList);
+        mCategorical.getAttributeList(prefix + "TimeIntervalCategoricalForecast.", attributeList);
+        mStatistical.getAttributeList(prefix + "TimeIntervalCategoricalForecast.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -180,7 +174,7 @@ ProductDefinition *TimeIntervalCategoricalForecast::createProductDefinition() co
 
 ParameterSettings *TimeIntervalCategoricalForecast::getParameter() const {
   try {
-    return static_cast<ParameterSettings *>(&mParameter);
+    return &mParameter;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -190,7 +184,7 @@ ParameterSettings *TimeIntervalCategoricalForecast::getParameter() const {
 
 HorizontalSettings *TimeIntervalCategoricalForecast::getHorizontal() const {
   try {
-    return static_cast<HorizontalSettings *>(&mHorizontal);
+    return &mHorizontal;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -200,7 +194,7 @@ HorizontalSettings *TimeIntervalCategoricalForecast::getHorizontal() const {
 
 CategoricalSettings *TimeIntervalCategoricalForecast::getCategorical() const {
   try {
-    return static_cast<CategoricalSettings *>(&mCategorical);
+    return &mCategorical;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -210,7 +204,7 @@ CategoricalSettings *TimeIntervalCategoricalForecast::getCategorical() const {
 
 StatisticalSettings *TimeIntervalCategoricalForecast::getStatistical() const {
   try {
-    return static_cast<StatisticalSettings *>(&mStatistical);
+    return &mStatistical;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

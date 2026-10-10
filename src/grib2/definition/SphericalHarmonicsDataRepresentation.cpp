@@ -27,8 +27,7 @@ SphericalHarmonicsDataRepresentation::SphericalHarmonicsDataRepresentation() {
 
 /*! \brief The destructor of the class. */
 
-SphericalHarmonicsDataRepresentation::~SphericalHarmonicsDataRepresentation() {
-}
+SphericalHarmonicsDataRepresentation::~SphericalHarmonicsDataRepresentation() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -76,21 +75,13 @@ void SphericalHarmonicsDataRepresentation::write(DataWriter &dataWriter) {
 
 void SphericalHarmonicsDataRepresentation::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sSphericalHarmonicsDataRepresentation.", prefix.c_str());
-    mPacking.getAttributeList(name, attributeList);
-    sprintf(name, "%sSphericalHarmonicsDataRepresentation.LaplacianScalingFactor", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLaplacianScalingFactor));
-    sprintf(name, "%sSphericalHarmonicsDataRepresentation.JS", prefix.c_str());
-    attributeList.addAttribute(name, toString(mJS));
-    sprintf(name, "%sSphericalHarmonicsDataRepresentation.KS", prefix.c_str());
-    attributeList.addAttribute(name, toString(mKS));
-    sprintf(name, "%sSphericalHarmonicsDataRepresentation.MS", prefix.c_str());
-    attributeList.addAttribute(name, toString(mMS));
-    sprintf(name, "%sSphericalHarmonicsDataRepresentation.TS", prefix.c_str());
-    attributeList.addAttribute(name, toString(mTS));
-    sprintf(name, "%sSphericalHarmonicsDataRepresentation.UnpackedSubsetPrecision", prefix.c_str());
-    attributeList.addAttribute(name, toString(mUnpackedSubsetPrecision));
+        mPacking.getAttributeList(prefix + "SphericalHarmonicsDataRepresentation.", attributeList);
+        attributeList.addAttribute(prefix + "SphericalHarmonicsDataRepresentation.LaplacianScalingFactor", toString(mLaplacianScalingFactor));
+        attributeList.addAttribute(prefix + "SphericalHarmonicsDataRepresentation.JS", toString(mJS));
+        attributeList.addAttribute(prefix + "SphericalHarmonicsDataRepresentation.KS", toString(mKS));
+        attributeList.addAttribute(prefix + "SphericalHarmonicsDataRepresentation.MS", toString(mMS));
+        attributeList.addAttribute(prefix + "SphericalHarmonicsDataRepresentation.TS", toString(mTS));
+        attributeList.addAttribute(prefix + "SphericalHarmonicsDataRepresentation.UnpackedSubsetPrecision", toString(mUnpackedSubsetPrecision));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -231,7 +222,7 @@ RepresentationDefinition *SphericalHarmonicsDataRepresentation::createRepresenta
 
 PackingSettings *SphericalHarmonicsDataRepresentation::getPacking() const {
   try {
-    return static_cast<PackingSettings *>(&mPacking);
+    return &mPacking;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

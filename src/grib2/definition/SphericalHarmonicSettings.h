@@ -19,6 +19,10 @@ namespace GRIB2 {
 class SphericalHarmonicSettings {
 public:
   SphericalHarmonicSettings();
+  SphericalHarmonicSettings(const SphericalHarmonicSettings &) = default;
+  SphericalHarmonicSettings(SphericalHarmonicSettings &&) = default;
+  SphericalHarmonicSettings &operator=(const SphericalHarmonicSettings &) = default;
+  SphericalHarmonicSettings &operator=(SphericalHarmonicSettings &&) = default;
   virtual ~SphericalHarmonicSettings();
 
   virtual void read(MemoryReader &memoryReader);

@@ -19,6 +19,10 @@ namespace GRIB2 {
 class ParameterAerosolSettings {
 public:
   ParameterAerosolSettings();
+  ParameterAerosolSettings(const ParameterAerosolSettings &) = default;
+  ParameterAerosolSettings(ParameterAerosolSettings &&) = default;
+  ParameterAerosolSettings &operator=(const ParameterAerosolSettings &) = default;
+  ParameterAerosolSettings &operator=(ParameterAerosolSettings &&) = default;
   virtual ~ParameterAerosolSettings();
 
   virtual void read(MemoryReader &memoryReader);

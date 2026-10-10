@@ -27,8 +27,7 @@ VariableResolutionLatLon::VariableResolutionLatLon() {
 
 /*! \brief The destructor of the class. */
 
-VariableResolutionLatLon::~VariableResolutionLatLon() {
-}
+VariableResolutionLatLon::~VariableResolutionLatLon() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -66,11 +65,8 @@ void VariableResolutionLatLon::write(DataWriter &dataWriter) {
 
 void VariableResolutionLatLon::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sVariableResolutionLatLon.", prefix.c_str());
-    mEarthShape.getAttributeList(name, attributeList);
-    sprintf(name, "%sVariableResolutionLatLon.", prefix.c_str());
-    mVariableLatLon.getAttributeList(name, attributeList);
+        mEarthShape.getAttributeList(prefix + "VariableResolutionLatLon.", attributeList);
+        mVariableLatLon.getAttributeList(prefix + "VariableResolutionLatLon.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -162,7 +158,7 @@ GridDefinition *VariableResolutionLatLon::createGridDefinition() const {
 
 EarthShapeSettings *VariableResolutionLatLon::getEarthShape() const {
   try {
-    return static_cast<EarthShapeSettings *>(&mEarthShape);
+    return &mEarthShape;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -172,7 +168,7 @@ EarthShapeSettings *VariableResolutionLatLon::getEarthShape() const {
 
 VariableLatLonSettings *VariableResolutionLatLon::getVariableLatLon() const {
   try {
-    return static_cast<VariableLatLonSettings *>(&mVariableLatLon);
+    return &mVariableLatLon;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

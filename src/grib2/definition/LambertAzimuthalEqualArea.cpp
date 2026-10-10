@@ -28,8 +28,7 @@ LambertAzimuthalEqualArea::LambertAzimuthalEqualArea() {
 
 /*! \brief The destructor of the class. */
 
-LambertAzimuthalEqualArea::~LambertAzimuthalEqualArea() {
-}
+LambertAzimuthalEqualArea::~LambertAzimuthalEqualArea() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -85,29 +84,17 @@ void LambertAzimuthalEqualArea::write(DataWriter &dataWriter) {
 
 void LambertAzimuthalEqualArea::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sLambertAzimuthalEqualArea.", prefix.c_str());
-    mEarthShape.getAttributeList(name, attributeList);
-    sprintf(name, "%sLambertAzimuthalEqualArea.NumberOfPointsAlongXAxis", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNumberOfPointsAlongXAxis));
-    sprintf(name, "%sLambertAzimuthalEqualArea.NumberOfPointsAlongYAxis", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNumberOfPointsAlongYAxis));
-    sprintf(name, "%sLambertAzimuthalEqualArea.LatitudeOfFirstGridPoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatitudeOfFirstGridPoint));
-    sprintf(name, "%sLambertAzimuthalEqualArea.LongitudeOfFirstGridPoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLongitudeOfFirstGridPoint));
-    sprintf(name, "%sLambertAzimuthalEqualArea.StandardParallelInMicrodegrees", prefix.c_str());
-    attributeList.addAttribute(name, toString(mStandardParallelInMicrodegrees));
-    sprintf(name, "%sLambertAzimuthalEqualArea.CentralLongitudeInMicrodegrees", prefix.c_str());
-    attributeList.addAttribute(name, toString(mCentralLongitudeInMicrodegrees));
-    sprintf(name, "%sLambertAzimuthalEqualArea.ResolutionAndComponentFlags", prefix.c_str());
-    attributeList.addAttribute(name, toString(mResolutionAndComponentFlags));
-    sprintf(name, "%sLambertAzimuthalEqualArea.XDirectionGridLengthInMillimetres", prefix.c_str());
-    attributeList.addAttribute(name, toString(mXDirectionGridLengthInMillimetres));
-    sprintf(name, "%sLambertAzimuthalEqualArea.YDirectionGridLengthInMillimetres", prefix.c_str());
-    attributeList.addAttribute(name, toString(mYDirectionGridLengthInMillimetres));
-    sprintf(name, "%sLambertAzimuthalEqualArea.", prefix.c_str());
-    mScanningMode.getAttributeList(name, attributeList);
+        mEarthShape.getAttributeList(prefix + "LambertAzimuthalEqualArea.", attributeList);
+        attributeList.addAttribute(prefix + "LambertAzimuthalEqualArea.NumberOfPointsAlongXAxis", toString(mNumberOfPointsAlongXAxis));
+        attributeList.addAttribute(prefix + "LambertAzimuthalEqualArea.NumberOfPointsAlongYAxis", toString(mNumberOfPointsAlongYAxis));
+        attributeList.addAttribute(prefix + "LambertAzimuthalEqualArea.LatitudeOfFirstGridPoint", toString(mLatitudeOfFirstGridPoint));
+        attributeList.addAttribute(prefix + "LambertAzimuthalEqualArea.LongitudeOfFirstGridPoint", toString(mLongitudeOfFirstGridPoint));
+        attributeList.addAttribute(prefix + "LambertAzimuthalEqualArea.StandardParallelInMicrodegrees", toString(mStandardParallelInMicrodegrees));
+        attributeList.addAttribute(prefix + "LambertAzimuthalEqualArea.CentralLongitudeInMicrodegrees", toString(mCentralLongitudeInMicrodegrees));
+        attributeList.addAttribute(prefix + "LambertAzimuthalEqualArea.ResolutionAndComponentFlags", toString(mResolutionAndComponentFlags));
+        attributeList.addAttribute(prefix + "LambertAzimuthalEqualArea.XDirectionGridLengthInMillimetres", toString(mXDirectionGridLengthInMillimetres));
+        attributeList.addAttribute(prefix + "LambertAzimuthalEqualArea.YDirectionGridLengthInMillimetres", toString(mYDirectionGridLengthInMillimetres));
+        mScanningMode.getAttributeList(prefix + "LambertAzimuthalEqualArea.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -279,7 +266,7 @@ GridDefinition *LambertAzimuthalEqualArea::createGridDefinition() const {
 
 EarthShapeSettings *LambertAzimuthalEqualArea::getEarthShape() const {
   try {
-    return static_cast<EarthShapeSettings *>(&mEarthShape);
+    return &mEarthShape;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -379,7 +366,7 @@ const T::UInt32_opt &LambertAzimuthalEqualArea::getYDirectionGridLengthInMillime
 
 ScanningModeSettings *LambertAzimuthalEqualArea::getScanningMode() const {
   try {
-    return static_cast<ScanningModeSettings *>(&mScanningMode);
+    return &mScanningMode;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

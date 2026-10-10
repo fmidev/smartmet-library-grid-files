@@ -27,8 +27,7 @@ AzimuthRange::AzimuthRange() {
 
 /*! \brief The destructor of the class. */
 
-AzimuthRange::~AzimuthRange() {
-}
+AzimuthRange::~AzimuthRange() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -80,25 +79,15 @@ void AzimuthRange::write(DataWriter &dataWriter) {
 
 void AzimuthRange::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sAzimuthRange.NumberOfDataBinsAlongRadials", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNumberOfDataBinsAlongRadials));
-    sprintf(name, "%sAzimuthRange.NumberOfRadials", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNumberOfRadials));
-    sprintf(name, "%sAzimuthRange.LatitudeOfCenterPoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatitudeOfCenterPoint));
-    sprintf(name, "%sAzimuthRange.LongitudeOfCenterPoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLongitudeOfCenterPoint));
-    sprintf(name, "%sAzimuthRange.SpacingOfBinsAlongRadials", prefix.c_str());
-    attributeList.addAttribute(name, toString(mSpacingOfBinsAlongRadials));
-    sprintf(name, "%sAzimuthRange.OffsetFromOriginToInnerBound", prefix.c_str());
-    attributeList.addAttribute(name, toString(mOffsetFromOriginToInnerBound));
-    sprintf(name, "%sAzimuthRange.", prefix.c_str());
-    mScanningMode.getAttributeList(name, attributeList);
-    sprintf(name, "%sAzimuthRange.StartingAzimuth", prefix.c_str());
-    attributeList.addAttribute(name, toString(mStartingAzimuth));
-    sprintf(name, "%sAzimuthRange.AzimuthalWidth", prefix.c_str());
-    attributeList.addAttribute(name, toString(mAzimuthalWidth));
+        attributeList.addAttribute(prefix + "AzimuthRange.NumberOfDataBinsAlongRadials", toString(mNumberOfDataBinsAlongRadials));
+        attributeList.addAttribute(prefix + "AzimuthRange.NumberOfRadials", toString(mNumberOfRadials));
+        attributeList.addAttribute(prefix + "AzimuthRange.LatitudeOfCenterPoint", toString(mLatitudeOfCenterPoint));
+        attributeList.addAttribute(prefix + "AzimuthRange.LongitudeOfCenterPoint", toString(mLongitudeOfCenterPoint));
+        attributeList.addAttribute(prefix + "AzimuthRange.SpacingOfBinsAlongRadials", toString(mSpacingOfBinsAlongRadials));
+        attributeList.addAttribute(prefix + "AzimuthRange.OffsetFromOriginToInnerBound", toString(mOffsetFromOriginToInnerBound));
+        mScanningMode.getAttributeList(prefix + "AzimuthRange.", attributeList);
+        attributeList.addAttribute(prefix + "AzimuthRange.StartingAzimuth", toString(mStartingAzimuth));
+        attributeList.addAttribute(prefix + "AzimuthRange.AzimuthalWidth", toString(mAzimuthalWidth));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -317,7 +306,7 @@ const T::UInt32_opt &AzimuthRange::getOffsetFromOriginToInnerBound() const {
 
 ScanningModeSettings *AzimuthRange::getScanningMode() const {
   try {
-    return static_cast<ScanningModeSettings *>(&mScanningMode);
+    return &mScanningMode;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

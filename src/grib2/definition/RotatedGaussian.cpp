@@ -27,8 +27,7 @@ RotatedGaussian::RotatedGaussian() {
 
 /*! \brief The destructor of the class. */
 
-RotatedGaussian::~RotatedGaussian() {
-}
+RotatedGaussian::~RotatedGaussian() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -68,13 +67,9 @@ void RotatedGaussian::write(DataWriter &dataWriter) {
 
 void RotatedGaussian::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sRotatedGaussian.", prefix.c_str());
-    mEarthShape.getAttributeList(name, attributeList);
-    sprintf(name, "%sRotatedGaussian.", prefix.c_str());
-    mGaussian.getAttributeList(name, attributeList);
-    sprintf(name, "%sRotatedGaussian.", prefix.c_str());
-    mRotation.getAttributeList(name, attributeList);
+        mEarthShape.getAttributeList(prefix + "RotatedGaussian.", attributeList);
+        mGaussian.getAttributeList(prefix + "RotatedGaussian.", attributeList);
+        mRotation.getAttributeList(prefix + "RotatedGaussian.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -171,7 +166,7 @@ GridDefinition *RotatedGaussian::createGridDefinition() const {
 
 EarthShapeSettings *RotatedGaussian::getEarthShape() const {
   try {
-    return static_cast<EarthShapeSettings *>(&mEarthShape);
+    return &mEarthShape;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -181,7 +176,7 @@ EarthShapeSettings *RotatedGaussian::getEarthShape() const {
 
 GaussianSettings *RotatedGaussian::getGaussian() const {
   try {
-    return static_cast<GaussianSettings *>(&mGaussian);
+    return &mGaussian;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -191,7 +186,7 @@ GaussianSettings *RotatedGaussian::getGaussian() const {
 
 RotationSettings *RotatedGaussian::getRotation() const {
   try {
-    return static_cast<RotationSettings *>(&mRotation);
+    return &mRotation;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

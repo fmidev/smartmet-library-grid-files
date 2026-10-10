@@ -27,15 +27,14 @@ SphericalHarmonicsData::SphericalHarmonicsData() {
 
 /*! \brief The destructor of the class. */
 
-SphericalHarmonicsData::~SphericalHarmonicsData() {
-}
+SphericalHarmonicsData::~SphericalHarmonicsData() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
         \param memoryReader  This object controls the access to the memory mapped file.
 */
 
-void SphericalHarmonicsData::read(MemoryReader &memoryReader) {
+void SphericalHarmonicsData::read(MemoryReader &/*memoryReader*/) {
   try {
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
@@ -47,7 +46,7 @@ void SphericalHarmonicsData::read(MemoryReader &memoryReader) {
         \param dataWriter  This object is used for writing the object data.
 */
 
-void SphericalHarmonicsData::write(DataWriter &dataWriter) {
+void SphericalHarmonicsData::write(DataWriter &/*dataWriter*/) {
   try {
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
@@ -60,7 +59,7 @@ void SphericalHarmonicsData::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void SphericalHarmonicsData::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
+void SphericalHarmonicsData::getAttributeList(const std::string &/*prefix*/, T::AttributeList &/*attributeList*/) const {
   try {
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
@@ -73,7 +72,7 @@ void SphericalHarmonicsData::getAttributeList(const std::string &prefix, T::Attr
     \param attributeValue The value of the attribute (string).
 */
 
-bool SphericalHarmonicsData::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+bool SphericalHarmonicsData::getAttributeValue(const char *attributeName, std::string &/*attributeValue*/) const {
   try {
     if (attributeName == nullptr)
       return false;
@@ -106,7 +105,7 @@ bool SphericalHarmonicsData::hasAttributeValue(const char *attributeName, const 
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void SphericalHarmonicsData::print(std::ostream &stream, uint level, uint optionFlags) const {
+void SphericalHarmonicsData::print(std::ostream &stream, uint level, uint /*optionFlags*/) const {
   try {
     stream << space(level) << "SphericalHarmonicsData\n";
   } catch (...) {

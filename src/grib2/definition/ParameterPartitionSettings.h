@@ -19,6 +19,10 @@ namespace GRIB2 {
 class ParameterPartitionSettings {
 public:
   ParameterPartitionSettings();
+  ParameterPartitionSettings(const ParameterPartitionSettings &) = default;
+  ParameterPartitionSettings(ParameterPartitionSettings &&) = default;
+  ParameterPartitionSettings &operator=(const ParameterPartitionSettings &) = default;
+  ParameterPartitionSettings &operator=(ParameterPartitionSettings &&) = default;
   virtual ~ParameterPartitionSettings();
 
   virtual void read(MemoryReader &memoryReader);

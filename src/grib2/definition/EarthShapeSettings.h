@@ -19,6 +19,10 @@ namespace GRIB2 {
 class EarthShapeSettings {
 public:
   EarthShapeSettings();
+  EarthShapeSettings(const EarthShapeSettings &) = default;
+  EarthShapeSettings(EarthShapeSettings &&) = default;
+  EarthShapeSettings &operator=(const EarthShapeSettings &) = default;
+  EarthShapeSettings &operator=(EarthShapeSettings &&) = default;
   virtual ~EarthShapeSettings();
 
   virtual void read(MemoryReader &memoryReader);

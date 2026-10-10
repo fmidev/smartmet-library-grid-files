@@ -27,8 +27,7 @@ AuxiliarySatelliteProduct::AuxiliarySatelliteProduct() {
 
 /*! \brief The destructor of the class. */
 
-AuxiliarySatelliteProduct::~AuxiliarySatelliteProduct() {
-}
+AuxiliarySatelliteProduct::~AuxiliarySatelliteProduct() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -84,29 +83,17 @@ void AuxiliarySatelliteProduct::write(DataWriter &dataWriter) {
 
 void AuxiliarySatelliteProduct::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sAuxiliarySatelliteProduct.ParameterCategory", prefix.c_str());
-    attributeList.addAttribute(name, toString(mParameterCategory));
-    sprintf(name, "%sAuxiliarySatelliteProduct.ParameterNumber", prefix.c_str());
-    attributeList.addAttribute(name, toString(mParameterNumber));
-    sprintf(name, "%sAuxiliarySatelliteProduct.TypeOfGeneratingProcess", prefix.c_str());
-    attributeList.addAttribute(name, toString(mTypeOfGeneratingProcess));
-    sprintf(name, "%sAuxiliarySatelliteProduct.ObservationGeneratingProcessIdentifier", prefix.c_str());
-    attributeList.addAttribute(name, toString(mObservationGeneratingProcessIdentifier));
-    sprintf(name, "%sAuxiliarySatelliteProduct.NB", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNB));
-    sprintf(name, "%sAuxiliarySatelliteProduct.TypeOfAuxiliaryInformation", prefix.c_str());
-    attributeList.addAttribute(name, toString(mTypeOfAuxiliaryInformation));
-    sprintf(name, "%sAuxiliarySatelliteProduct.SatelliteSeries", prefix.c_str());
-    attributeList.addAttribute(name, toString(mSatelliteSeries));
-    sprintf(name, "%sAuxiliarySatelliteProduct.SatelliteNumber", prefix.c_str());
-    attributeList.addAttribute(name, toString(mSatelliteNumber));
-    sprintf(name, "%sAuxiliarySatelliteProduct.InstrumentType", prefix.c_str());
-    attributeList.addAttribute(name, toString(mInstrumentType));
-    sprintf(name, "%sAuxiliarySatelliteProduct.ScaleFactorOfCentralWaveNumber", prefix.c_str());
-    attributeList.addAttribute(name, toString(mScaleFactorOfCentralWaveNumber));
-    sprintf(name, "%sAuxiliarySatelliteProduct.ScaledValueOfCentralWaveNumber", prefix.c_str());
-    attributeList.addAttribute(name, toString(mScaledValueOfCentralWaveNumber));
+        attributeList.addAttribute(prefix + "AuxiliarySatelliteProduct.ParameterCategory", toString(mParameterCategory));
+        attributeList.addAttribute(prefix + "AuxiliarySatelliteProduct.ParameterNumber", toString(mParameterNumber));
+        attributeList.addAttribute(prefix + "AuxiliarySatelliteProduct.TypeOfGeneratingProcess", toString(mTypeOfGeneratingProcess));
+        attributeList.addAttribute(prefix + "AuxiliarySatelliteProduct.ObservationGeneratingProcessIdentifier", toString(mObservationGeneratingProcessIdentifier));
+        attributeList.addAttribute(prefix + "AuxiliarySatelliteProduct.NB", toString(mNB));
+        attributeList.addAttribute(prefix + "AuxiliarySatelliteProduct.TypeOfAuxiliaryInformation", toString(mTypeOfAuxiliaryInformation));
+        attributeList.addAttribute(prefix + "AuxiliarySatelliteProduct.SatelliteSeries", toString(mSatelliteSeries));
+        attributeList.addAttribute(prefix + "AuxiliarySatelliteProduct.SatelliteNumber", toString(mSatelliteNumber));
+        attributeList.addAttribute(prefix + "AuxiliarySatelliteProduct.InstrumentType", toString(mInstrumentType));
+        attributeList.addAttribute(prefix + "AuxiliarySatelliteProduct.ScaleFactorOfCentralWaveNumber", toString(mScaleFactorOfCentralWaveNumber));
+        attributeList.addAttribute(prefix + "AuxiliarySatelliteProduct.ScaledValueOfCentralWaveNumber", toString(mScaledValueOfCentralWaveNumber));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -217,7 +204,7 @@ bool AuxiliarySatelliteProduct::hasAttributeValue(const char *attributeName, con
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void AuxiliarySatelliteProduct::print(std::ostream &stream, uint level, uint optionFlags) const {
+void AuxiliarySatelliteProduct::print(std::ostream &stream, uint level, uint /*optionFlags*/) const {
   try {
     stream << space(level) << "AuxiliarySatelliteProduct\n";
     stream << space(level) << "- ParameterCategory = " << toString(mParameterCategory) << "\n";

@@ -21,19 +21,23 @@ namespace GRIB2 {
 class MatrixDataRepresentation : public RepresentationDefinition {
 public:
   MatrixDataRepresentation();
-  virtual ~MatrixDataRepresentation();
+  MatrixDataRepresentation(const MatrixDataRepresentation &) = default;
+  MatrixDataRepresentation(MatrixDataRepresentation &&) = default;
+  MatrixDataRepresentation &operator=(const MatrixDataRepresentation &) = default;
+  MatrixDataRepresentation &operator=(MatrixDataRepresentation &&) = default;
+  ~MatrixDataRepresentation() override;
 
-  virtual uint getTemplateNumber() const;
-  virtual RepresentationDefinition *createRepresentationDefinition() const;
-  virtual void read(MemoryReader &memoryReader);
-  virtual void write(DataWriter &dataWriter);
-  virtual void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const;
+  uint getTemplateNumber() const override;
+  RepresentationDefinition *createRepresentationDefinition() const override;
+  void read(MemoryReader &memoryReader) override;
+  void write(DataWriter &dataWriter) override;
+  void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const override;
   virtual bool getAttributeValue(const char *attributeName, std::string &attributeValue) const;
   virtual bool hasAttributeValue(const char *attributeName, const char *attributeValue) const;
-  virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
+  void print(std::ostream &stream, uint level, uint optionFlags) const override;
   virtual T::Hash countHash() const;
 
-  PackingSettings *getPacking() const;
+  PackingSettings *getPacking() const override;
   void setPacking(PackingSettings &packing);
   const T::UInt8_opt &getMatrixBitmapsPresent() const;
   void setMatrixBitmapsPresent(T::UInt8_opt matrixBitmapsPresent);

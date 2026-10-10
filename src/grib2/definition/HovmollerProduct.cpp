@@ -27,8 +27,7 @@ HovmollerProduct::HovmollerProduct() {
 
 /*! \brief The destructor of the class. */
 
-HovmollerProduct::~HovmollerProduct() {
-}
+HovmollerProduct::~HovmollerProduct() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -66,11 +65,8 @@ void HovmollerProduct::write(DataWriter &dataWriter) {
 
 void HovmollerProduct::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sHovmollerProduct.", prefix.c_str());
-    mParameter.getAttributeList(name, attributeList);
-    sprintf(name, "%sHovmollerProduct.", prefix.c_str());
-    mHorizontal.getAttributeList(name, attributeList);
+        mParameter.getAttributeList(prefix + "HovmollerProduct.", attributeList);
+        mHorizontal.getAttributeList(prefix + "HovmollerProduct.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -162,7 +158,7 @@ ProductDefinition *HovmollerProduct::createProductDefinition() const {
 
 ParameterSettings *HovmollerProduct::getParameter() const {
   try {
-    return static_cast<ParameterSettings *>(&mParameter);
+    return &mParameter;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -172,7 +168,7 @@ ParameterSettings *HovmollerProduct::getParameter() const {
 
 HorizontalSettings *HovmollerProduct::getHorizontal() const {
   try {
-    return static_cast<HorizontalSettings *>(&mHorizontal);
+    return &mHorizontal;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

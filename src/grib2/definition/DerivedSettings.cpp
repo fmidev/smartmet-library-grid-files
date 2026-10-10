@@ -27,8 +27,7 @@ DerivedSettings::DerivedSettings() {
 
 /*! \brief The destructor of the class. */
 
-DerivedSettings::~DerivedSettings() {
-}
+DerivedSettings::~DerivedSettings() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -66,11 +65,8 @@ void DerivedSettings::write(DataWriter &dataWriter) {
 
 void DerivedSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sDerivedSettings.DerivedForecast", prefix.c_str());
-    attributeList.addAttribute(name, toString(mDerivedForecast));
-    sprintf(name, "%sDerivedSettings.NumberOfForecastsInEnsemble", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNumberOfForecastsInEnsemble));
+        attributeList.addAttribute(prefix + "DerivedSettings.DerivedForecast", toString(mDerivedForecast));
+        attributeList.addAttribute(prefix + "DerivedSettings.NumberOfForecastsInEnsemble", toString(mNumberOfForecastsInEnsemble));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -127,7 +123,7 @@ bool DerivedSettings::hasAttributeValue(const char *attributeName, const char *a
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void DerivedSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
+void DerivedSettings::print(std::ostream &stream, uint level, uint /*optionFlags*/) const {
   try {
     stream << space(level) << "DerivedSettings\n";
     stream << space(level) << "- DerivedForecast = " << toString(mDerivedForecast) << "\n";

@@ -27,8 +27,7 @@ SpectralGridDataRepresentation::SpectralGridDataRepresentation() {
 
 /*! \brief The destructor of the class. */
 
-SpectralGridDataRepresentation::~SpectralGridDataRepresentation() {
-}
+SpectralGridDataRepresentation::~SpectralGridDataRepresentation() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -72,17 +71,11 @@ void SpectralGridDataRepresentation::write(DataWriter &dataWriter) {
 
 void SpectralGridDataRepresentation::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sSpectralGridDataRepresentation.", prefix.c_str());
-    mPacking.getAttributeList(name, attributeList);
-    sprintf(name, "%sSpectralGridDataRepresentation.", prefix.c_str());
-    mOriginalValues.getAttributeList(name, attributeList);
-    sprintf(name, "%sSpectralGridDataRepresentation.CcsdsFlags", prefix.c_str());
-    attributeList.addAttribute(name, toString(mCcsdsFlags));
-    sprintf(name, "%sSpectralGridDataRepresentation.CcsdsBlockSize", prefix.c_str());
-    attributeList.addAttribute(name, toString(mCcsdsBlockSize));
-    sprintf(name, "%sSpectralGridDataRepresentation.CcsdsRsi", prefix.c_str());
-    attributeList.addAttribute(name, toString(mCcsdsRsi));
+        mPacking.getAttributeList(prefix + "SpectralGridDataRepresentation.", attributeList);
+        mOriginalValues.getAttributeList(prefix + "SpectralGridDataRepresentation.", attributeList);
+        attributeList.addAttribute(prefix + "SpectralGridDataRepresentation.CcsdsFlags", toString(mCcsdsFlags));
+        attributeList.addAttribute(prefix + "SpectralGridDataRepresentation.CcsdsBlockSize", toString(mCcsdsBlockSize));
+        attributeList.addAttribute(prefix + "SpectralGridDataRepresentation.CcsdsRsi", toString(mCcsdsRsi));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -201,7 +194,7 @@ RepresentationDefinition *SpectralGridDataRepresentation::createRepresentationDe
 
 PackingSettings *SpectralGridDataRepresentation::getPacking() const {
   try {
-    return static_cast<PackingSettings *>(&mPacking);
+    return &mPacking;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -211,7 +204,7 @@ PackingSettings *SpectralGridDataRepresentation::getPacking() const {
 
 OriginalValuesSettings *SpectralGridDataRepresentation::getOriginalValues() const {
   try {
-    return static_cast<OriginalValuesSettings *>(&mOriginalValues);
+    return &mOriginalValues;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

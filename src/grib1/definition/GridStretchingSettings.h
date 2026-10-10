@@ -19,6 +19,10 @@ namespace GRIB1 {
 class GridStretchingSettings {
 public:
   GridStretchingSettings();
+  GridStretchingSettings(const GridStretchingSettings &) = default;
+  GridStretchingSettings(GridStretchingSettings &&) = default;
+  GridStretchingSettings &operator=(const GridStretchingSettings &) = default;
+  GridStretchingSettings &operator=(GridStretchingSettings &&) = default;
   virtual ~GridStretchingSettings();
 
   virtual void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const;

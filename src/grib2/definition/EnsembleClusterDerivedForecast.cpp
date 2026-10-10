@@ -27,8 +27,7 @@ EnsembleClusterDerivedForecast::EnsembleClusterDerivedForecast() {
 
 /*! \brief The destructor of the class. */
 
-EnsembleClusterDerivedForecast::~EnsembleClusterDerivedForecast() {
-}
+EnsembleClusterDerivedForecast::~EnsembleClusterDerivedForecast() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -74,19 +73,12 @@ void EnsembleClusterDerivedForecast::write(DataWriter &dataWriter) {
 
 void EnsembleClusterDerivedForecast::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sEnsembleClusterDerivedForecast.", prefix.c_str());
-    mParameter.getAttributeList(name, attributeList);
-    sprintf(name, "%sEnsembleClusterDerivedForecast.", prefix.c_str());
-    mPointInTime.getAttributeList(name, attributeList);
-    sprintf(name, "%sEnsembleClusterDerivedForecast.", prefix.c_str());
-    mHorizontal.getAttributeList(name, attributeList);
-    sprintf(name, "%sEnsembleClusterDerivedForecast.", prefix.c_str());
-    mDerived.getAttributeList(name, attributeList);
-    sprintf(name, "%sEnsembleClusterDerivedForecast.", prefix.c_str());
-    mRectangularCluster.getAttributeList(name, attributeList);
-    sprintf(name, "%sEnsembleClusterDerivedForecast.EnsembleForecastNumbers", prefix.c_str());
-    attributeList.addAttribute(name, toString(mEnsembleForecastNumbers));
+        mParameter.getAttributeList(prefix + "EnsembleClusterDerivedForecast.", attributeList);
+        mPointInTime.getAttributeList(prefix + "EnsembleClusterDerivedForecast.", attributeList);
+        mHorizontal.getAttributeList(prefix + "EnsembleClusterDerivedForecast.", attributeList);
+        mDerived.getAttributeList(prefix + "EnsembleClusterDerivedForecast.", attributeList);
+        mRectangularCluster.getAttributeList(prefix + "EnsembleClusterDerivedForecast.", attributeList);
+        attributeList.addAttribute(prefix + "EnsembleClusterDerivedForecast.EnsembleForecastNumbers", toString(mEnsembleForecastNumbers));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -202,7 +194,7 @@ ProductDefinition *EnsembleClusterDerivedForecast::createProductDefinition() con
 
 ParameterSettings *EnsembleClusterDerivedForecast::getParameter() const {
   try {
-    return static_cast<ParameterSettings *>(&mParameter);
+    return &mParameter;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -212,7 +204,7 @@ ParameterSettings *EnsembleClusterDerivedForecast::getParameter() const {
 
 PointInTimeSettings *EnsembleClusterDerivedForecast::getPointInTime() const {
   try {
-    return static_cast<PointInTimeSettings *>(&mPointInTime);
+    return &mPointInTime;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -222,7 +214,7 @@ PointInTimeSettings *EnsembleClusterDerivedForecast::getPointInTime() const {
 
 HorizontalSettings *EnsembleClusterDerivedForecast::getHorizontal() const {
   try {
-    return static_cast<HorizontalSettings *>(&mHorizontal);
+    return &mHorizontal;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -232,7 +224,7 @@ HorizontalSettings *EnsembleClusterDerivedForecast::getHorizontal() const {
 
 DerivedSettings *EnsembleClusterDerivedForecast::getDerived() const {
   try {
-    return static_cast<DerivedSettings *>(&mDerived);
+    return &mDerived;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -242,7 +234,7 @@ DerivedSettings *EnsembleClusterDerivedForecast::getDerived() const {
 
 RectangularClusterSettings *EnsembleClusterDerivedForecast::getRectangularCluster() const {
   try {
-    return static_cast<RectangularClusterSettings *>(&mRectangularCluster);
+    return &mRectangularCluster;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

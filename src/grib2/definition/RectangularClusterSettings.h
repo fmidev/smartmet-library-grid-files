@@ -19,6 +19,10 @@ namespace GRIB2 {
 class RectangularClusterSettings {
 public:
   RectangularClusterSettings();
+  RectangularClusterSettings(const RectangularClusterSettings &) = default;
+  RectangularClusterSettings(RectangularClusterSettings &&) = default;
+  RectangularClusterSettings &operator=(const RectangularClusterSettings &) = default;
+  RectangularClusterSettings &operator=(RectangularClusterSettings &&) = default;
   virtual ~RectangularClusterSettings();
 
   virtual void read(MemoryReader &memoryReader);

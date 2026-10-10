@@ -27,8 +27,7 @@ EnsembleDerivedForecast::EnsembleDerivedForecast() {
 
 /*! \brief The destructor of the class. */
 
-EnsembleDerivedForecast::~EnsembleDerivedForecast() {
-}
+EnsembleDerivedForecast::~EnsembleDerivedForecast() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -70,15 +69,10 @@ void EnsembleDerivedForecast::write(DataWriter &dataWriter) {
 
 void EnsembleDerivedForecast::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sEnsembleDerivedForecast.", prefix.c_str());
-    mParameter.getAttributeList(name, attributeList);
-    sprintf(name, "%sEnsembleDerivedForecast.", prefix.c_str());
-    mPointInTime.getAttributeList(name, attributeList);
-    sprintf(name, "%sEnsembleDerivedForecast.", prefix.c_str());
-    mHorizontal.getAttributeList(name, attributeList);
-    sprintf(name, "%sEnsembleDerivedForecast.", prefix.c_str());
-    mDerived.getAttributeList(name, attributeList);
+        mParameter.getAttributeList(prefix + "EnsembleDerivedForecast.", attributeList);
+        mPointInTime.getAttributeList(prefix + "EnsembleDerivedForecast.", attributeList);
+        mHorizontal.getAttributeList(prefix + "EnsembleDerivedForecast.", attributeList);
+        mDerived.getAttributeList(prefix + "EnsembleDerivedForecast.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -180,7 +174,7 @@ ProductDefinition *EnsembleDerivedForecast::createProductDefinition() const {
 
 ParameterSettings *EnsembleDerivedForecast::getParameter() const {
   try {
-    return static_cast<ParameterSettings *>(&mParameter);
+    return &mParameter;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -190,7 +184,7 @@ ParameterSettings *EnsembleDerivedForecast::getParameter() const {
 
 PointInTimeSettings *EnsembleDerivedForecast::getPointInTime() const {
   try {
-    return static_cast<PointInTimeSettings *>(&mPointInTime);
+    return &mPointInTime;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -200,7 +194,7 @@ PointInTimeSettings *EnsembleDerivedForecast::getPointInTime() const {
 
 HorizontalSettings *EnsembleDerivedForecast::getHorizontal() const {
   try {
-    return static_cast<HorizontalSettings *>(&mHorizontal);
+    return &mHorizontal;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -210,7 +204,7 @@ HorizontalSettings *EnsembleDerivedForecast::getHorizontal() const {
 
 DerivedSettings *EnsembleDerivedForecast::getDerived() const {
   try {
-    return static_cast<DerivedSettings *>(&mDerived);
+    return &mDerived;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

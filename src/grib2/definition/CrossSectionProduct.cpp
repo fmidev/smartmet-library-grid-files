@@ -27,8 +27,7 @@ CrossSectionProduct::CrossSectionProduct() {
 
 /*! \brief The destructor of the class. */
 
-CrossSectionProduct::~CrossSectionProduct() {
-}
+CrossSectionProduct::~CrossSectionProduct() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -66,11 +65,8 @@ void CrossSectionProduct::write(DataWriter &dataWriter) {
 
 void CrossSectionProduct::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sCrossSectionProduct.", prefix.c_str());
-    mParameter.getAttributeList(name, attributeList);
-    sprintf(name, "%sCrossSectionProduct.", prefix.c_str());
-    mPointInTime.getAttributeList(name, attributeList);
+        mParameter.getAttributeList(prefix + "CrossSectionProduct.", attributeList);
+        mPointInTime.getAttributeList(prefix + "CrossSectionProduct.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -162,7 +158,7 @@ ProductDefinition *CrossSectionProduct::createProductDefinition() const {
 
 ParameterSettings *CrossSectionProduct::getParameter() const {
   try {
-    return static_cast<ParameterSettings *>(&mParameter);
+    return &mParameter;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -172,7 +168,7 @@ ParameterSettings *CrossSectionProduct::getParameter() const {
 
 PointInTimeSettings *CrossSectionProduct::getPointInTime() const {
   try {
-    return static_cast<PointInTimeSettings *>(&mPointInTime);
+    return &mPointInTime;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

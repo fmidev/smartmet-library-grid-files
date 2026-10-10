@@ -29,8 +29,7 @@ PolarStereographic::PolarStereographic() {
 
 /*! \brief The destructor of the class. */
 
-PolarStereographic::~PolarStereographic() {
-}
+PolarStereographic::~PolarStereographic() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -88,31 +87,18 @@ void PolarStereographic::write(DataWriter &dataWriter) {
 
 void PolarStereographic::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sPolarStereographic.", prefix.c_str());
-    mEarthShape.getAttributeList(name, attributeList);
-    sprintf(name, "%sPolarStereographic.Nx", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNx));
-    sprintf(name, "%sPolarStereographic.Ny", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNy));
-    sprintf(name, "%sPolarStereographic.LatitudeOfFirstGridPoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatitudeOfFirstGridPoint));
-    sprintf(name, "%sPolarStereographic.LongitudeOfFirstGridPoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLongitudeOfFirstGridPoint));
-    sprintf(name, "%sPolarStereographic.ResolutionAndComponentFlags", prefix.c_str());
-    attributeList.addAttribute(name, toString(mResolutionAndComponentFlags));
-    sprintf(name, "%sPolarStereographic.LaD", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLaD));
-    sprintf(name, "%sPolarStereographic.OrientationOfTheGrid", prefix.c_str());
-    attributeList.addAttribute(name, toString(mOrientationOfTheGrid));
-    sprintf(name, "%sPolarStereographic.Dx", prefix.c_str());
-    attributeList.addAttribute(name, toString(mDx));
-    sprintf(name, "%sPolarStereographic.Dy", prefix.c_str());
-    attributeList.addAttribute(name, toString(mDy));
-    sprintf(name, "%sPolarStereographic.ProjectionCentreFlag", prefix.c_str());
-    attributeList.addAttribute(name, toString(mProjectionCentreFlag));
-    sprintf(name, "%sPolarStereographic.", prefix.c_str());
-    mScanningMode.getAttributeList(name, attributeList);
+        mEarthShape.getAttributeList(prefix + "PolarStereographic.", attributeList);
+        attributeList.addAttribute(prefix + "PolarStereographic.Nx", toString(mNx));
+        attributeList.addAttribute(prefix + "PolarStereographic.Ny", toString(mNy));
+        attributeList.addAttribute(prefix + "PolarStereographic.LatitudeOfFirstGridPoint", toString(mLatitudeOfFirstGridPoint));
+        attributeList.addAttribute(prefix + "PolarStereographic.LongitudeOfFirstGridPoint", toString(mLongitudeOfFirstGridPoint));
+        attributeList.addAttribute(prefix + "PolarStereographic.ResolutionAndComponentFlags", toString(mResolutionAndComponentFlags));
+        attributeList.addAttribute(prefix + "PolarStereographic.LaD", toString(mLaD));
+        attributeList.addAttribute(prefix + "PolarStereographic.OrientationOfTheGrid", toString(mOrientationOfTheGrid));
+        attributeList.addAttribute(prefix + "PolarStereographic.Dx", toString(mDx));
+        attributeList.addAttribute(prefix + "PolarStereographic.Dy", toString(mDy));
+        attributeList.addAttribute(prefix + "PolarStereographic.ProjectionCentreFlag", toString(mProjectionCentreFlag));
+        mScanningMode.getAttributeList(prefix + "PolarStereographic.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -292,7 +278,7 @@ GridDefinition *PolarStereographic::createGridDefinition() const {
 
 EarthShapeSettings *PolarStereographic::getEarthShape() const {
   try {
-    return static_cast<EarthShapeSettings *>(&mEarthShape);
+    return &mEarthShape;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -402,7 +388,7 @@ std::uint8_t PolarStereographic::getProjectionCentreFlag() const {
 
 ScanningModeSettings *PolarStereographic::getScanningMode() const {
   try {
-    return static_cast<ScanningModeSettings *>(&mScanningMode);
+    return &mScanningMode;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

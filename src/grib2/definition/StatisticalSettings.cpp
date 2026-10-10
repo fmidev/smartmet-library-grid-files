@@ -27,8 +27,7 @@ StatisticalSettings::StatisticalSettings() {
 
 /*! \brief The destructor of the class. */
 
-StatisticalSettings::~StatisticalSettings() {
-}
+StatisticalSettings::~StatisticalSettings() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -90,35 +89,20 @@ void StatisticalSettings::write(DataWriter &dataWriter) {
 
 void StatisticalSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sStatisticalSettings.YearOfEndOfOverallTimeInterval", prefix.c_str());
-    attributeList.addAttribute(name, toString(mYearOfEndOfOverallTimeInterval));
-    sprintf(name, "%sStatisticalSettings.MonthOfEndOfOverallTimeInterval", prefix.c_str());
-    attributeList.addAttribute(name, toString(mMonthOfEndOfOverallTimeInterval));
-    sprintf(name, "%sStatisticalSettings.DayOfEndOfOverallTimeInterval", prefix.c_str());
-    attributeList.addAttribute(name, toString(mDayOfEndOfOverallTimeInterval));
-    sprintf(name, "%sStatisticalSettings.HourOfEndOfOverallTimeInterval", prefix.c_str());
-    attributeList.addAttribute(name, toString(mHourOfEndOfOverallTimeInterval));
-    sprintf(name, "%sStatisticalSettings.MinuteOfEndOfOverallTimeInterval", prefix.c_str());
-    attributeList.addAttribute(name, toString(mMinuteOfEndOfOverallTimeInterval));
-    sprintf(name, "%sStatisticalSettings.SecondOfEndOfOverallTimeInterval", prefix.c_str());
-    attributeList.addAttribute(name, toString(mSecondOfEndOfOverallTimeInterval));
-    sprintf(name, "%sStatisticalSettings.NumberOfTimeRange", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNumberOfTimeRange));
-    sprintf(name, "%sStatisticalSettings.NumberOfMissingInStatisticalProcess", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNumberOfMissingInStatisticalProcess));
-    sprintf(name, "%sStatisticalSettings.TypeOfStatisticalProcessing", prefix.c_str());
-    attributeList.addAttribute(name, toString(mTypeOfStatisticalProcessing));
-    sprintf(name, "%sStatisticalSettings.TypeOfTimeIncrement", prefix.c_str());
-    attributeList.addAttribute(name, toString(mTypeOfTimeIncrement));
-    sprintf(name, "%sStatisticalSettings.IndicatorOfUnitForTimeRange", prefix.c_str());
-    attributeList.addAttribute(name, toString(mIndicatorOfUnitForTimeRange));
-    sprintf(name, "%sStatisticalSettings.LengthOfTimeRange", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLengthOfTimeRange));
-    sprintf(name, "%sStatisticalSettings.IndicatorOfUnitForTimeIncrement", prefix.c_str());
-    attributeList.addAttribute(name, toString(mIndicatorOfUnitForTimeIncrement));
-    sprintf(name, "%sStatisticalSettings.TimeIncrement", prefix.c_str());
-    attributeList.addAttribute(name, toString(mTimeIncrement));
+        attributeList.addAttribute(prefix + "StatisticalSettings.YearOfEndOfOverallTimeInterval", toString(mYearOfEndOfOverallTimeInterval));
+        attributeList.addAttribute(prefix + "StatisticalSettings.MonthOfEndOfOverallTimeInterval", toString(mMonthOfEndOfOverallTimeInterval));
+        attributeList.addAttribute(prefix + "StatisticalSettings.DayOfEndOfOverallTimeInterval", toString(mDayOfEndOfOverallTimeInterval));
+        attributeList.addAttribute(prefix + "StatisticalSettings.HourOfEndOfOverallTimeInterval", toString(mHourOfEndOfOverallTimeInterval));
+        attributeList.addAttribute(prefix + "StatisticalSettings.MinuteOfEndOfOverallTimeInterval", toString(mMinuteOfEndOfOverallTimeInterval));
+        attributeList.addAttribute(prefix + "StatisticalSettings.SecondOfEndOfOverallTimeInterval", toString(mSecondOfEndOfOverallTimeInterval));
+        attributeList.addAttribute(prefix + "StatisticalSettings.NumberOfTimeRange", toString(mNumberOfTimeRange));
+        attributeList.addAttribute(prefix + "StatisticalSettings.NumberOfMissingInStatisticalProcess", toString(mNumberOfMissingInStatisticalProcess));
+        attributeList.addAttribute(prefix + "StatisticalSettings.TypeOfStatisticalProcessing", toString(mTypeOfStatisticalProcessing));
+        attributeList.addAttribute(prefix + "StatisticalSettings.TypeOfTimeIncrement", toString(mTypeOfTimeIncrement));
+        attributeList.addAttribute(prefix + "StatisticalSettings.IndicatorOfUnitForTimeRange", toString(mIndicatorOfUnitForTimeRange));
+        attributeList.addAttribute(prefix + "StatisticalSettings.LengthOfTimeRange", toString(mLengthOfTimeRange));
+        attributeList.addAttribute(prefix + "StatisticalSettings.IndicatorOfUnitForTimeIncrement", toString(mIndicatorOfUnitForTimeIncrement));
+        attributeList.addAttribute(prefix + "StatisticalSettings.TimeIncrement", toString(mTimeIncrement));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -247,7 +231,7 @@ bool StatisticalSettings::hasAttributeValue(const char *attributeName, const cha
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void StatisticalSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
+void StatisticalSettings::print(std::ostream &stream, uint level, uint /*optionFlags*/) const {
   try {
     stream << space(level) << "StatisticalSettings\n";
     stream << space(level) << "- YearOfEndOfOverallTimeInterval = " << toString(mYearOfEndOfOverallTimeInterval) << "\n";

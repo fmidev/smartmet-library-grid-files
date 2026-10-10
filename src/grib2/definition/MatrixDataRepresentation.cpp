@@ -29,8 +29,7 @@ MatrixDataRepresentation::MatrixDataRepresentation() {
 
 /*! \brief The destructor of the class. */
 
-MatrixDataRepresentation::~MatrixDataRepresentation() {
-}
+MatrixDataRepresentation::~MatrixDataRepresentation() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -90,33 +89,19 @@ void MatrixDataRepresentation::write(DataWriter &dataWriter) {
 
 void MatrixDataRepresentation::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sMatrixDataRepresentation.", prefix.c_str());
-    mPacking.getAttributeList(name, attributeList);
-    sprintf(name, "%sMatrixDataRepresentation.MatrixBitmapsPresent", prefix.c_str());
-    attributeList.addAttribute(name, toString(mMatrixBitmapsPresent));
-    sprintf(name, "%sMatrixDataRepresentation.NumberOfCodedValues", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNumberOfCodedValues));
-    sprintf(name, "%sMatrixDataRepresentation.FirstDimension", prefix.c_str());
-    attributeList.addAttribute(name, toString(mFirstDimension));
-    sprintf(name, "%sMatrixDataRepresentation.SecondDimension", prefix.c_str());
-    attributeList.addAttribute(name, toString(mSecondDimension));
-    sprintf(name, "%sMatrixDataRepresentation.FirstDimensionCoordinateValueDefinition", prefix.c_str());
-    attributeList.addAttribute(name, toString(mFirstDimensionCoordinateValueDefinition));
-    sprintf(name, "%sMatrixDataRepresentation.NC1", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNC1));
-    sprintf(name, "%sMatrixDataRepresentation.SecondDimensionCoordinateValueDefinition", prefix.c_str());
-    attributeList.addAttribute(name, toString(mSecondDimensionCoordinateValueDefinition));
-    sprintf(name, "%sMatrixDataRepresentation.NC2", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNC2));
-    sprintf(name, "%sMatrixDataRepresentation.FirstDimensionPhysicalSignificance", prefix.c_str());
-    attributeList.addAttribute(name, toString(mFirstDimensionPhysicalSignificance));
-    sprintf(name, "%sMatrixDataRepresentation.SecondDimensionPhysicalSignificance", prefix.c_str());
-    attributeList.addAttribute(name, toString(mSecondDimensionPhysicalSignificance));
-    sprintf(name, "%sMatrixDataRepresentation.CoefsFirst", prefix.c_str());
-    attributeList.addAttribute(name, toString(mCoefsFirst));
-    sprintf(name, "%sMatrixDataRepresentation.CoefsSecond", prefix.c_str());
-    attributeList.addAttribute(name, toString(mCoefsSecond));
+        mPacking.getAttributeList(prefix + "MatrixDataRepresentation.", attributeList);
+        attributeList.addAttribute(prefix + "MatrixDataRepresentation.MatrixBitmapsPresent", toString(mMatrixBitmapsPresent));
+        attributeList.addAttribute(prefix + "MatrixDataRepresentation.NumberOfCodedValues", toString(mNumberOfCodedValues));
+        attributeList.addAttribute(prefix + "MatrixDataRepresentation.FirstDimension", toString(mFirstDimension));
+        attributeList.addAttribute(prefix + "MatrixDataRepresentation.SecondDimension", toString(mSecondDimension));
+        attributeList.addAttribute(prefix + "MatrixDataRepresentation.FirstDimensionCoordinateValueDefinition", toString(mFirstDimensionCoordinateValueDefinition));
+        attributeList.addAttribute(prefix + "MatrixDataRepresentation.NC1", toString(mNC1));
+        attributeList.addAttribute(prefix + "MatrixDataRepresentation.SecondDimensionCoordinateValueDefinition", toString(mSecondDimensionCoordinateValueDefinition));
+        attributeList.addAttribute(prefix + "MatrixDataRepresentation.NC2", toString(mNC2));
+        attributeList.addAttribute(prefix + "MatrixDataRepresentation.FirstDimensionPhysicalSignificance", toString(mFirstDimensionPhysicalSignificance));
+        attributeList.addAttribute(prefix + "MatrixDataRepresentation.SecondDimensionPhysicalSignificance", toString(mSecondDimensionPhysicalSignificance));
+        attributeList.addAttribute(prefix + "MatrixDataRepresentation.CoefsFirst", toString(mCoefsFirst));
+        attributeList.addAttribute(prefix + "MatrixDataRepresentation.CoefsSecond", toString(mCoefsSecond));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -309,7 +294,7 @@ RepresentationDefinition *MatrixDataRepresentation::createRepresentationDefiniti
 
 PackingSettings *MatrixDataRepresentation::getPacking() const {
   try {
-    return static_cast<PackingSettings *>(&mPacking);
+    return &mPacking;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

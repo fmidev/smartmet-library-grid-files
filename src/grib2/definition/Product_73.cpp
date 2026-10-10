@@ -27,8 +27,7 @@ Product_73::Product_73() {
 
 /*! \brief The destructor of the class. */
 
-Product_73::~Product_73() {
-}
+Product_73::~Product_73() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -70,15 +69,10 @@ void Product_73::write(DataWriter &dataWriter) {
 
 void Product_73::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sProduct_73.", prefix.c_str());
-    mPostproc.getAttributeList(name, attributeList);
-    sprintf(name, "%sProduct_73.", prefix.c_str());
-    mHorizontal.getAttributeList(name, attributeList);
-    sprintf(name, "%sProduct_73.", prefix.c_str());
-    mEps.getAttributeList(name, attributeList);
-    sprintf(name, "%sProduct_73.", prefix.c_str());
-    mStatistical.getAttributeList(name, attributeList);
+        mPostproc.getAttributeList(prefix + "Product_73.", attributeList);
+        mHorizontal.getAttributeList(prefix + "Product_73.", attributeList);
+        mEps.getAttributeList(prefix + "Product_73.", attributeList);
+        mStatistical.getAttributeList(prefix + "Product_73.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -180,7 +174,7 @@ ProductDefinition *Product_73::createProductDefinition() const {
 
 PostprocSettings *Product_73::getPostproc() const {
   try {
-    return static_cast<PostprocSettings *>(&mPostproc);
+    return &mPostproc;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -190,7 +184,7 @@ PostprocSettings *Product_73::getPostproc() const {
 
 HorizontalSettings *Product_73::getHorizontal() const {
   try {
-    return static_cast<HorizontalSettings *>(&mHorizontal);
+    return &mHorizontal;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -200,7 +194,7 @@ HorizontalSettings *Product_73::getHorizontal() const {
 
 EpsSettings *Product_73::getEps() const {
   try {
-    return static_cast<EpsSettings *>(&mEps);
+    return &mEps;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -210,7 +204,7 @@ EpsSettings *Product_73::getEps() const {
 
 StatisticalSettings *Product_73::getStatistical() const {
   try {
-    return static_cast<StatisticalSettings *>(&mStatistical);
+    return &mStatistical;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

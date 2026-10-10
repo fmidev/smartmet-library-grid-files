@@ -27,8 +27,7 @@ Product_70::Product_70() {
 
 /*! \brief The destructor of the class. */
 
-Product_70::~Product_70() {
-}
+Product_70::~Product_70() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -68,13 +67,9 @@ void Product_70::write(DataWriter &dataWriter) {
 
 void Product_70::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sProduct_70.", prefix.c_str());
-    mPostproc.getAttributeList(name, attributeList);
-    sprintf(name, "%sProduct_70.", prefix.c_str());
-    mPointInTime.getAttributeList(name, attributeList);
-    sprintf(name, "%sProduct_70.", prefix.c_str());
-    mHorizontal.getAttributeList(name, attributeList);
+        mPostproc.getAttributeList(prefix + "Product_70.", attributeList);
+        mPointInTime.getAttributeList(prefix + "Product_70.", attributeList);
+        mHorizontal.getAttributeList(prefix + "Product_70.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -171,7 +166,7 @@ ProductDefinition *Product_70::createProductDefinition() const {
 
 PostprocSettings *Product_70::getPostproc() const {
   try {
-    return static_cast<PostprocSettings *>(&mPostproc);
+    return &mPostproc;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -181,7 +176,7 @@ PostprocSettings *Product_70::getPostproc() const {
 
 PointInTimeSettings *Product_70::getPointInTime() const {
   try {
-    return static_cast<PointInTimeSettings *>(&mPointInTime);
+    return &mPointInTime;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -191,7 +186,7 @@ PointInTimeSettings *Product_70::getPointInTime() const {
 
 HorizontalSettings *Product_70::getHorizontal() const {
   try {
-    return static_cast<HorizontalSettings *>(&mHorizontal);
+    return &mHorizontal;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

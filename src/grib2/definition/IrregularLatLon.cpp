@@ -27,8 +27,7 @@ IrregularLatLon::IrregularLatLon() {
 
 /*! \brief The destructor of the class. */
 
-IrregularLatLon::~IrregularLatLon() {
-}
+IrregularLatLon::~IrregularLatLon() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -68,13 +67,9 @@ void IrregularLatLon::write(DataWriter &dataWriter) {
 
 void IrregularLatLon::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sIrregularLatLon.", prefix.c_str());
-    mEarthShape.getAttributeList(name, attributeList);
-    sprintf(name, "%sIrregularLatLon.Latitude", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatitude));
-    sprintf(name, "%sIrregularLatLon.Longitude", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLongitude));
+        mEarthShape.getAttributeList(prefix + "IrregularLatLon.", attributeList);
+        attributeList.addAttribute(prefix + "IrregularLatLon.Latitude", toString(mLatitude));
+        attributeList.addAttribute(prefix + "IrregularLatLon.Longitude", toString(mLongitude));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -179,7 +174,7 @@ GridDefinition *IrregularLatLon::createGridDefinition() const {
 
 EarthShapeSettings *IrregularLatLon::getEarthShape() const {
   try {
-    return static_cast<EarthShapeSettings *>(&mEarthShape);
+    return &mEarthShape;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

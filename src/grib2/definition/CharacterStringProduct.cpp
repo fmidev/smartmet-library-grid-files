@@ -27,8 +27,7 @@ CharacterStringProduct::CharacterStringProduct() {
 
 /*! \brief The destructor of the class. */
 
-CharacterStringProduct::~CharacterStringProduct() {
-}
+CharacterStringProduct::~CharacterStringProduct() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -68,13 +67,9 @@ void CharacterStringProduct::write(DataWriter &dataWriter) {
 
 void CharacterStringProduct::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sCharacterStringProduct.ParameterCategory", prefix.c_str());
-    attributeList.addAttribute(name, toString(mParameterCategory));
-    sprintf(name, "%sCharacterStringProduct.ParameterNumber", prefix.c_str());
-    attributeList.addAttribute(name, toString(mParameterNumber));
-    sprintf(name, "%sCharacterStringProduct.NumberOfCharacters", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNumberOfCharacters));
+        attributeList.addAttribute(prefix + "CharacterStringProduct.ParameterCategory", toString(mParameterCategory));
+        attributeList.addAttribute(prefix + "CharacterStringProduct.ParameterNumber", toString(mParameterNumber));
+        attributeList.addAttribute(prefix + "CharacterStringProduct.NumberOfCharacters", toString(mNumberOfCharacters));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -137,7 +132,7 @@ bool CharacterStringProduct::hasAttributeValue(const char *attributeName, const 
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void CharacterStringProduct::print(std::ostream &stream, uint level, uint optionFlags) const {
+void CharacterStringProduct::print(std::ostream &stream, uint level, uint /*optionFlags*/) const {
   try {
     stream << space(level) << "CharacterStringProduct\n";
     stream << space(level) << "- ParameterCategory = " << toString(mParameterCategory) << "\n";

@@ -27,8 +27,7 @@ StretchedRotatedLatLon::StretchedRotatedLatLon() {
 
 /*! \brief The destructor of the class. */
 
-StretchedRotatedLatLon::~StretchedRotatedLatLon() {
-}
+StretchedRotatedLatLon::~StretchedRotatedLatLon() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -70,15 +69,10 @@ void StretchedRotatedLatLon::write(DataWriter &dataWriter) {
 
 void StretchedRotatedLatLon::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sStretchedRotatedLatLon.", prefix.c_str());
-    mEarthShape.getAttributeList(name, attributeList);
-    sprintf(name, "%sStretchedRotatedLatLon.", prefix.c_str());
-    mLatLon.getAttributeList(name, attributeList);
-    sprintf(name, "%sStretchedRotatedLatLon.", prefix.c_str());
-    mRotation.getAttributeList(name, attributeList);
-    sprintf(name, "%sStretchedRotatedLatLon.", prefix.c_str());
-    mStretching.getAttributeList(name, attributeList);
+        mEarthShape.getAttributeList(prefix + "StretchedRotatedLatLon.", attributeList);
+        mLatLon.getAttributeList(prefix + "StretchedRotatedLatLon.", attributeList);
+        mRotation.getAttributeList(prefix + "StretchedRotatedLatLon.", attributeList);
+        mStretching.getAttributeList(prefix + "StretchedRotatedLatLon.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -180,7 +174,7 @@ GridDefinition *StretchedRotatedLatLon::createGridDefinition() const {
 
 EarthShapeSettings *StretchedRotatedLatLon::getEarthShape() const {
   try {
-    return static_cast<EarthShapeSettings *>(&mEarthShape);
+    return &mEarthShape;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -190,7 +184,7 @@ EarthShapeSettings *StretchedRotatedLatLon::getEarthShape() const {
 
 LatLonSettings *StretchedRotatedLatLon::getLatLon() const {
   try {
-    return static_cast<LatLonSettings *>(&mLatLon);
+    return &mLatLon;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -200,7 +194,7 @@ LatLonSettings *StretchedRotatedLatLon::getLatLon() const {
 
 RotationSettings *StretchedRotatedLatLon::getRotation() const {
   try {
-    return static_cast<RotationSettings *>(&mRotation);
+    return &mRotation;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -210,7 +204,7 @@ RotationSettings *StretchedRotatedLatLon::getRotation() const {
 
 StretchingSettings *StretchedRotatedLatLon::getStretching() const {
   try {
-    return static_cast<StretchingSettings *>(&mStretching);
+    return &mStretching;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

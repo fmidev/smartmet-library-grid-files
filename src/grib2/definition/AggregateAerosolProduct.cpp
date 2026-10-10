@@ -27,8 +27,7 @@ AggregateAerosolProduct::AggregateAerosolProduct() {
 
 /*! \brief The destructor of the class. */
 
-AggregateAerosolProduct::~AggregateAerosolProduct() {
-}
+AggregateAerosolProduct::~AggregateAerosolProduct() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -68,13 +67,9 @@ void AggregateAerosolProduct::write(DataWriter &dataWriter) {
 
 void AggregateAerosolProduct::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sAggregateAerosolProduct.", prefix.c_str());
-    mParameterAerosol.getAttributeList(name, attributeList);
-    sprintf(name, "%sAggregateAerosolProduct.", prefix.c_str());
-    mHorizontal.getAttributeList(name, attributeList);
-    sprintf(name, "%sAggregateAerosolProduct.", prefix.c_str());
-    mStatistical.getAttributeList(name, attributeList);
+        mParameterAerosol.getAttributeList(prefix + "AggregateAerosolProduct.", attributeList);
+        mHorizontal.getAttributeList(prefix + "AggregateAerosolProduct.", attributeList);
+        mStatistical.getAttributeList(prefix + "AggregateAerosolProduct.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -171,7 +166,7 @@ ProductDefinition *AggregateAerosolProduct::createProductDefinition() const {
 
 ParameterAerosolSettings *AggregateAerosolProduct::getParameterAerosol() const {
   try {
-    return static_cast<ParameterAerosolSettings *>(&mParameterAerosol);
+    return &mParameterAerosol;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -181,7 +176,7 @@ ParameterAerosolSettings *AggregateAerosolProduct::getParameterAerosol() const {
 
 HorizontalSettings *AggregateAerosolProduct::getHorizontal() const {
   try {
-    return static_cast<HorizontalSettings *>(&mHorizontal);
+    return &mHorizontal;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -191,7 +186,7 @@ HorizontalSettings *AggregateAerosolProduct::getHorizontal() const {
 
 StatisticalSettings *AggregateAerosolProduct::getStatistical() const {
   try {
-    return static_cast<StatisticalSettings *>(&mStatistical);
+    return &mStatistical;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

@@ -27,8 +27,7 @@ TimeSection::TimeSection() {
 
 /*! \brief The destructor of the class. */
 
-TimeSection::~TimeSection() {
-}
+TimeSection::~TimeSection() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -94,39 +93,22 @@ void TimeSection::write(DataWriter &dataWriter) {
 
 void TimeSection::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sTimeSection.NumberOfTimeSteps", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNumberOfTimeSteps));
-    sprintf(name, "%sTimeSection.UnitOfOffsetFromReferenceTime", prefix.c_str());
-    attributeList.addAttribute(name, toString(mUnitOfOffsetFromReferenceTime));
-    sprintf(name, "%sTimeSection.OffsetFromReferenceOfFirstTime", prefix.c_str());
-    attributeList.addAttribute(name, toString(mOffsetFromReferenceOfFirstTime));
-    sprintf(name, "%sTimeSection.TypeOfTimeIncrement", prefix.c_str());
-    attributeList.addAttribute(name, toString(mTypeOfTimeIncrement));
-    sprintf(name, "%sTimeSection.UnitOfTimeIncrement", prefix.c_str());
-    attributeList.addAttribute(name, toString(mUnitOfTimeIncrement));
-    sprintf(name, "%sTimeSection.TimeIncrement", prefix.c_str());
-    attributeList.addAttribute(name, toString(mTimeIncrement));
-    sprintf(name, "%sTimeSection.Year", prefix.c_str());
-    attributeList.addAttribute(name, toString(mYear));
-    sprintf(name, "%sTimeSection.Month", prefix.c_str());
-    attributeList.addAttribute(name, toString(mMonth));
-    sprintf(name, "%sTimeSection.Day", prefix.c_str());
-    attributeList.addAttribute(name, toString(mDay));
-    sprintf(name, "%sTimeSection.Hour", prefix.c_str());
-    attributeList.addAttribute(name, toString(mHour));
-    sprintf(name, "%sTimeSection.Minute", prefix.c_str());
-    attributeList.addAttribute(name, toString(mMinute));
-    sprintf(name, "%sTimeSection.Second", prefix.c_str());
-    attributeList.addAttribute(name, toString(mSecond));
-    sprintf(name, "%sTimeSection.NumberOfVerticalPoints", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNumberOfVerticalPoints));
-    sprintf(name, "%sTimeSection.PhysicalMeaningOfVerticalCoordinate", prefix.c_str());
-    attributeList.addAttribute(name, toString(mPhysicalMeaningOfVerticalCoordinate));
-    sprintf(name, "%sTimeSection.VerticalCoordinate", prefix.c_str());
-    attributeList.addAttribute(name, toString(mVerticalCoordinate));
-    sprintf(name, "%sTimeSection.NC", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNC));
+        attributeList.addAttribute(prefix + "TimeSection.NumberOfTimeSteps", toString(mNumberOfTimeSteps));
+        attributeList.addAttribute(prefix + "TimeSection.UnitOfOffsetFromReferenceTime", toString(mUnitOfOffsetFromReferenceTime));
+        attributeList.addAttribute(prefix + "TimeSection.OffsetFromReferenceOfFirstTime", toString(mOffsetFromReferenceOfFirstTime));
+        attributeList.addAttribute(prefix + "TimeSection.TypeOfTimeIncrement", toString(mTypeOfTimeIncrement));
+        attributeList.addAttribute(prefix + "TimeSection.UnitOfTimeIncrement", toString(mUnitOfTimeIncrement));
+        attributeList.addAttribute(prefix + "TimeSection.TimeIncrement", toString(mTimeIncrement));
+        attributeList.addAttribute(prefix + "TimeSection.Year", toString(mYear));
+        attributeList.addAttribute(prefix + "TimeSection.Month", toString(mMonth));
+        attributeList.addAttribute(prefix + "TimeSection.Day", toString(mDay));
+        attributeList.addAttribute(prefix + "TimeSection.Hour", toString(mHour));
+        attributeList.addAttribute(prefix + "TimeSection.Minute", toString(mMinute));
+        attributeList.addAttribute(prefix + "TimeSection.Second", toString(mSecond));
+        attributeList.addAttribute(prefix + "TimeSection.NumberOfVerticalPoints", toString(mNumberOfVerticalPoints));
+        attributeList.addAttribute(prefix + "TimeSection.PhysicalMeaningOfVerticalCoordinate", toString(mPhysicalMeaningOfVerticalCoordinate));
+        attributeList.addAttribute(prefix + "TimeSection.VerticalCoordinate", toString(mVerticalCoordinate));
+        attributeList.addAttribute(prefix + "TimeSection.NC", toString(mNC));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -267,7 +249,7 @@ bool TimeSection::hasAttributeValue(const char *attributeName, const char *attri
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void TimeSection::print(std::ostream &stream, uint level, uint optionFlags) const {
+void TimeSection::print(std::ostream &stream, uint level, uint /*optionFlags*/) const {
   try {
     stream << space(level) << "TimeSection\n";
     stream << space(level) << "- NumberOfTimeSteps = " << toString(mNumberOfTimeSteps) << "\n";

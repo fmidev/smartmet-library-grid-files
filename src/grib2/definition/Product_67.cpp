@@ -27,8 +27,7 @@ Product_67::Product_67() {
 
 /*! \brief The destructor of the class. */
 
-Product_67::~Product_67() {
-}
+Product_67::~Product_67() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -66,11 +65,8 @@ void Product_67::write(DataWriter &dataWriter) {
 
 void Product_67::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sProduct_67.", prefix.c_str());
-    mHorizontal.getAttributeList(name, attributeList);
-    sprintf(name, "%sProduct_67.", prefix.c_str());
-    mStatistical.getAttributeList(name, attributeList);
+        mHorizontal.getAttributeList(prefix + "Product_67.", attributeList);
+        mStatistical.getAttributeList(prefix + "Product_67.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -162,7 +158,7 @@ ProductDefinition *Product_67::createProductDefinition() const {
 
 HorizontalSettings *Product_67::getHorizontal() const {
   try {
-    return static_cast<HorizontalSettings *>(&mHorizontal);
+    return &mHorizontal;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -172,7 +168,7 @@ HorizontalSettings *Product_67::getHorizontal() const {
 
 StatisticalSettings *Product_67::getStatistical() const {
   try {
-    return static_cast<StatisticalSettings *>(&mStatistical);
+    return &mStatistical;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

@@ -39,8 +39,7 @@ Albers::Albers() {
 
 /*! \brief The destructor of the class. */
 
-Albers::~Albers() {
-}
+Albers::~Albers() = default;
 
 /*! \brief The method reads and initializes all data related to the current section object.
 
@@ -106,35 +105,20 @@ void Albers::write(DataWriter &dataWriter) {
 
 void Albers::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sAlbers.Nx", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNx));
-    sprintf(name, "%sAlbers.Ny", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNy));
-    sprintf(name, "%sAlbers.LatitudeOfFirstGridPoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatitudeOfFirstGridPoint));
-    sprintf(name, "%sAlbers.LongitudeOfFirstGridPoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLongitudeOfFirstGridPoint));
-    sprintf(name, "%sAlbers.", prefix.c_str());
-    mResolutionFlags.getAttributeList(name, attributeList);
-    sprintf(name, "%sAlbers.LoV", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLoV));
-    sprintf(name, "%sAlbers.DxInMetres", prefix.c_str());
-    attributeList.addAttribute(name, toString(mDxInMetres));
-    sprintf(name, "%sAlbers.DyInMetres", prefix.c_str());
-    attributeList.addAttribute(name, toString(mDyInMetres));
-    sprintf(name, "%sAlbers.ProjectionCentreFlag", prefix.c_str());
-    attributeList.addAttribute(name, toString(mProjectionCentreFlag));
-    sprintf(name, "%sAlbers.", prefix.c_str());
-    mScanningMode.getAttributeList(name, attributeList);
-    sprintf(name, "%sAlbers.Latin1", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatin1));
-    sprintf(name, "%sAlbers.Latin2", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatin2));
-    sprintf(name, "%sAlbers.LatitudeOfSouthernPole", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatitudeOfSouthernPole));
-    sprintf(name, "%sAlbers.LongitudeOfSouthernPole", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLongitudeOfSouthernPole));
+        attributeList.addAttribute(prefix + "Albers.Nx", toString(mNx));
+        attributeList.addAttribute(prefix + "Albers.Ny", toString(mNy));
+        attributeList.addAttribute(prefix + "Albers.LatitudeOfFirstGridPoint", toString(mLatitudeOfFirstGridPoint));
+        attributeList.addAttribute(prefix + "Albers.LongitudeOfFirstGridPoint", toString(mLongitudeOfFirstGridPoint));
+        mResolutionFlags.getAttributeList(prefix + "Albers.", attributeList);
+        attributeList.addAttribute(prefix + "Albers.LoV", toString(mLoV));
+        attributeList.addAttribute(prefix + "Albers.DxInMetres", toString(mDxInMetres));
+        attributeList.addAttribute(prefix + "Albers.DyInMetres", toString(mDyInMetres));
+        attributeList.addAttribute(prefix + "Albers.ProjectionCentreFlag", toString(mProjectionCentreFlag));
+        mScanningMode.getAttributeList(prefix + "Albers.", attributeList);
+        attributeList.addAttribute(prefix + "Albers.Latin1", toString(mLatin1));
+        attributeList.addAttribute(prefix + "Albers.Latin2", toString(mLatin2));
+        attributeList.addAttribute(prefix + "Albers.LatitudeOfSouthernPole", toString(mLatitudeOfSouthernPole));
+        attributeList.addAttribute(prefix + "Albers.LongitudeOfSouthernPole", toString(mLongitudeOfSouthernPole));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -362,7 +346,7 @@ std::int24_t Albers::getLongitudeOfFirstGridPoint() const {
 
 ResolutionFlagsSettings *Albers::getResolutionFlags() const {
   try {
-    return static_cast<ResolutionFlagsSettings *>(&mResolutionFlags);
+    return &mResolutionFlags;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -412,7 +396,7 @@ std::uint8_t Albers::getProjectionCentreFlag() const {
 
 ScanningModeSettings *Albers::getScanningMode() const {
   try {
-    return static_cast<ScanningModeSettings *>(&mScanningMode);
+    return &mScanningMode;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

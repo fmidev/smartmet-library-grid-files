@@ -27,8 +27,7 @@ GaussianSettings::GaussianSettings() {
 
 /*! \brief The destructor of the class. */
 
-GaussianSettings::~GaussianSettings() {
-}
+GaussianSettings::~GaussianSettings() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -70,15 +69,10 @@ void GaussianSettings::write(DataWriter &dataWriter) {
 
 void GaussianSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sGaussianSettings.", prefix.c_str());
-    mGrid.getAttributeList(name, attributeList);
-    sprintf(name, "%sGaussianSettings.IDirectionIncrement", prefix.c_str());
-    attributeList.addAttribute(name, toString(mIDirectionIncrement));
-    sprintf(name, "%sGaussianSettings.N", prefix.c_str());
-    attributeList.addAttribute(name, toString(mN));
-    sprintf(name, "%sGaussianSettings.", prefix.c_str());
-    mScanningMode.getAttributeList(name, attributeList);
+        mGrid.getAttributeList(prefix + "GaussianSettings.", attributeList);
+        attributeList.addAttribute(prefix + "GaussianSettings.IDirectionIncrement", toString(mIDirectionIncrement));
+        attributeList.addAttribute(prefix + "GaussianSettings.N", toString(mN));
+        mScanningMode.getAttributeList(prefix + "GaussianSettings.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -174,7 +168,7 @@ T::Hash GaussianSettings::countHash() const {
 
 GridSettings *GaussianSettings::getGrid() const {
   try {
-    return static_cast<GridSettings *>(&mGrid);
+    return &mGrid;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -204,7 +198,7 @@ const T::UInt32_opt &GaussianSettings::getN() const {
 
 ScanningModeSettings *GaussianSettings::getScanningMode() const {
   try {
-    return static_cast<ScanningModeSettings *>(&mScanningMode);
+    return &mScanningMode;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

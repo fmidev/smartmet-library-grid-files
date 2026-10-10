@@ -27,15 +27,14 @@ MatrixData::MatrixData() {
 
 /*! \brief The destructor of the class. */
 
-MatrixData::~MatrixData() {
-}
+MatrixData::~MatrixData() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
         \param memoryReader  This object controls the access to the memory mapped file.
 */
 
-void MatrixData::read(MemoryReader &memoryReader) {
+void MatrixData::read(MemoryReader &/*memoryReader*/) {
   try {
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
@@ -47,7 +46,7 @@ void MatrixData::read(MemoryReader &memoryReader) {
         \param dataWriter  This object is used for writing the object data.
 */
 
-void MatrixData::write(DataWriter &dataWriter) {
+void MatrixData::write(DataWriter &/*dataWriter*/) {
   try {
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
@@ -60,7 +59,7 @@ void MatrixData::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void MatrixData::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
+void MatrixData::getAttributeList(const std::string &/*prefix*/, T::AttributeList &/*attributeList*/) const {
   try {
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
@@ -73,7 +72,7 @@ void MatrixData::getAttributeList(const std::string &prefix, T::AttributeList &a
     \param attributeValue The value of the attribute (string).
 */
 
-bool MatrixData::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+bool MatrixData::getAttributeValue(const char *attributeName, std::string &/*attributeValue*/) const {
   try {
     if (attributeName == nullptr)
       return false;
@@ -106,7 +105,7 @@ bool MatrixData::hasAttributeValue(const char *attributeName, const char *attrib
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void MatrixData::print(std::ostream &stream, uint level, uint optionFlags) const {
+void MatrixData::print(std::ostream &stream, uint level, uint /*optionFlags*/) const {
   try {
     stream << space(level) << "MatrixData\n";
   } catch (...) {

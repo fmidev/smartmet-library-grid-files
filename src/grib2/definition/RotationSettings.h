@@ -19,6 +19,10 @@ namespace GRIB2 {
 class RotationSettings {
 public:
   RotationSettings();
+  RotationSettings(const RotationSettings &) = default;
+  RotationSettings(RotationSettings &&) = default;
+  RotationSettings &operator=(const RotationSettings &) = default;
+  RotationSettings &operator=(RotationSettings &&) = default;
   virtual ~RotationSettings();
 
   virtual void read(MemoryReader &memoryReader);

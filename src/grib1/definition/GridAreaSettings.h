@@ -20,6 +20,10 @@ namespace GRIB1 {
 class GridAreaSettings {
 public:
   GridAreaSettings();
+  GridAreaSettings(const GridAreaSettings &) = default;
+  GridAreaSettings(GridAreaSettings &&) = default;
+  GridAreaSettings &operator=(const GridAreaSettings &) = default;
+  GridAreaSettings &operator=(GridAreaSettings &&) = default;
   virtual ~GridAreaSettings();
 
   virtual void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const;

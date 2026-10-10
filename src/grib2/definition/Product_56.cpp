@@ -27,8 +27,7 @@ Product_56::Product_56() {
 
 /*! \brief The destructor of the class. */
 
-Product_56::~Product_56() {
-}
+Product_56::~Product_56() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -70,15 +69,10 @@ void Product_56::write(DataWriter &dataWriter) {
 
 void Product_56::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sProduct_56.", prefix.c_str());
-    mHorizontal.getAttributeList(name, attributeList);
-    sprintf(name, "%sProduct_56.", prefix.c_str());
-    mEps.getAttributeList(name, attributeList);
-    sprintf(name, "%sProduct_56.PerturbationNumber", prefix.c_str());
-    attributeList.addAttribute(name, toString(mPerturbationNumber));
-    sprintf(name, "%sProduct_56.NumberOfForecastsInEnsemble", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNumberOfForecastsInEnsemble));
+        mHorizontal.getAttributeList(prefix + "Product_56.", attributeList);
+        mEps.getAttributeList(prefix + "Product_56.", attributeList);
+        attributeList.addAttribute(prefix + "Product_56.PerturbationNumber", toString(mPerturbationNumber));
+        attributeList.addAttribute(prefix + "Product_56.NumberOfForecastsInEnsemble", toString(mNumberOfForecastsInEnsemble));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -188,7 +182,7 @@ ProductDefinition *Product_56::createProductDefinition() const {
 
 HorizontalSettings *Product_56::getHorizontal() const {
   try {
-    return static_cast<HorizontalSettings *>(&mHorizontal);
+    return &mHorizontal;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -198,7 +192,7 @@ HorizontalSettings *Product_56::getHorizontal() const {
 
 EpsSettings *Product_56::getEps() const {
   try {
-    return static_cast<EpsSettings *>(&mEps);
+    return &mEps;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

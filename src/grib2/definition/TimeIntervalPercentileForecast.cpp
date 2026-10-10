@@ -27,8 +27,7 @@ TimeIntervalPercentileForecast::TimeIntervalPercentileForecast() {
 
 /*! \brief The destructor of the class. */
 
-TimeIntervalPercentileForecast::~TimeIntervalPercentileForecast() {
-}
+TimeIntervalPercentileForecast::~TimeIntervalPercentileForecast() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -70,15 +69,10 @@ void TimeIntervalPercentileForecast::write(DataWriter &dataWriter) {
 
 void TimeIntervalPercentileForecast::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sTimeIntervalPercentileForecast.", prefix.c_str());
-    mParameter.getAttributeList(name, attributeList);
-    sprintf(name, "%sTimeIntervalPercentileForecast.", prefix.c_str());
-    mHorizontal.getAttributeList(name, attributeList);
-    sprintf(name, "%sTimeIntervalPercentileForecast.", prefix.c_str());
-    mPercentile.getAttributeList(name, attributeList);
-    sprintf(name, "%sTimeIntervalPercentileForecast.", prefix.c_str());
-    mStatistical.getAttributeList(name, attributeList);
+        mParameter.getAttributeList(prefix + "TimeIntervalPercentileForecast.", attributeList);
+        mHorizontal.getAttributeList(prefix + "TimeIntervalPercentileForecast.", attributeList);
+        mPercentile.getAttributeList(prefix + "TimeIntervalPercentileForecast.", attributeList);
+        mStatistical.getAttributeList(prefix + "TimeIntervalPercentileForecast.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -180,7 +174,7 @@ ProductDefinition *TimeIntervalPercentileForecast::createProductDefinition() con
 
 ParameterSettings *TimeIntervalPercentileForecast::getParameter() const {
   try {
-    return static_cast<ParameterSettings *>(&mParameter);
+    return &mParameter;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -190,7 +184,7 @@ ParameterSettings *TimeIntervalPercentileForecast::getParameter() const {
 
 HorizontalSettings *TimeIntervalPercentileForecast::getHorizontal() const {
   try {
-    return static_cast<HorizontalSettings *>(&mHorizontal);
+    return &mHorizontal;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -200,7 +194,7 @@ HorizontalSettings *TimeIntervalPercentileForecast::getHorizontal() const {
 
 PercentileSettings *TimeIntervalPercentileForecast::getPercentile() const {
   try {
-    return static_cast<PercentileSettings *>(&mPercentile);
+    return &mPercentile;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -210,7 +204,7 @@ PercentileSettings *TimeIntervalPercentileForecast::getPercentile() const {
 
 StatisticalSettings *TimeIntervalPercentileForecast::getStatistical() const {
   try {
-    return static_cast<StatisticalSettings *>(&mStatistical);
+    return &mStatistical;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

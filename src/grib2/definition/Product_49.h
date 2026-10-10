@@ -24,25 +24,29 @@ namespace GRIB2 {
 class Product_49 : public ProductDefinition {
 public:
   Product_49();
-  virtual ~Product_49();
+  Product_49(const Product_49 &) = default;
+  Product_49(Product_49 &&) = default;
+  Product_49 &operator=(const Product_49 &) = default;
+  Product_49 &operator=(Product_49 &&) = default;
+  ~Product_49() override;
 
-  virtual uint getTemplateNumber() const;
-  virtual ProductDefinition *createProductDefinition() const;
-  virtual void read(MemoryReader &memoryReader);
-  virtual void write(DataWriter &dataWriter);
-  virtual void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const;
-  virtual bool getAttributeValue(const char *attributeName, std::string &attributeValue) const;
-  virtual bool hasAttributeValue(const char *attributeName, const char *attributeValue) const;
-  virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
+  uint getTemplateNumber() const override;
+  ProductDefinition *createProductDefinition() const override;
+  void read(MemoryReader &memoryReader) override;
+  void write(DataWriter &dataWriter) override;
+  void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const override;
+  bool getAttributeValue(const char *attributeName, std::string &attributeValue) const override;
+  bool hasAttributeValue(const char *attributeName, const char *attributeValue) const override;
+  void print(std::ostream &stream, uint level, uint optionFlags) const override;
   virtual T::Hash countHash() const;
 
   ParameterAerosolOpticalSettings *getParameterAerosolOptical() const;
   void setParameterAerosolOptical(ParameterAerosolOpticalSettings &parameterAerosolOptical);
   PointInTimeSettings *getPointInTime() const;
   void setPointInTime(PointInTimeSettings &pointInTime);
-  HorizontalSettings *getHorizontal() const;
+  HorizontalSettings *getHorizontal() const override;
   void setHorizontal(HorizontalSettings &horizontal);
-  EpsSettings *getEps() const;
+  EpsSettings *getEps() const override;
   void setEps(EpsSettings &eps);
 
 protected:

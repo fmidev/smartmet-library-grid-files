@@ -28,8 +28,7 @@ EquatorialAzimuthalEquidistant::EquatorialAzimuthalEquidistant() {
 
 /*! \brief The destructor of the class. */
 
-EquatorialAzimuthalEquidistant::~EquatorialAzimuthalEquidistant() {
-}
+EquatorialAzimuthalEquidistant::~EquatorialAzimuthalEquidistant() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -83,27 +82,16 @@ void EquatorialAzimuthalEquidistant::write(DataWriter &dataWriter) {
 
 void EquatorialAzimuthalEquidistant::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sEquatorialAzimuthalEquidistant.", prefix.c_str());
-    mEarthShape.getAttributeList(name, attributeList);
-    sprintf(name, "%sEquatorialAzimuthalEquidistant.NumberOfPointsAlongXAxis", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNumberOfPointsAlongXAxis));
-    sprintf(name, "%sEquatorialAzimuthalEquidistant.NumberOfPointsAlongYAxis", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNumberOfPointsAlongYAxis));
-    sprintf(name, "%sEquatorialAzimuthalEquidistant.LatitudeOfTangencyPoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatitudeOfTangencyPoint));
-    sprintf(name, "%sEquatorialAzimuthalEquidistant.LongitudeOfTangencyPoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLongitudeOfTangencyPoint));
-    sprintf(name, "%sEquatorialAzimuthalEquidistant.ResolutionAndComponentFlags", prefix.c_str());
-    attributeList.addAttribute(name, toString(mResolutionAndComponentFlags));
-    sprintf(name, "%sEquatorialAzimuthalEquidistant.Dx", prefix.c_str());
-    attributeList.addAttribute(name, toString(mDx));
-    sprintf(name, "%sEquatorialAzimuthalEquidistant.Dy", prefix.c_str());
-    attributeList.addAttribute(name, toString(mDy));
-    sprintf(name, "%sEquatorialAzimuthalEquidistant.ProjectionCenterFlag", prefix.c_str());
-    attributeList.addAttribute(name, toString(mProjectionCenterFlag));
-    sprintf(name, "%sEquatorialAzimuthalEquidistant.", prefix.c_str());
-    mScanningMode.getAttributeList(name, attributeList);
+        mEarthShape.getAttributeList(prefix + "EquatorialAzimuthalEquidistant.", attributeList);
+        attributeList.addAttribute(prefix + "EquatorialAzimuthalEquidistant.NumberOfPointsAlongXAxis", toString(mNumberOfPointsAlongXAxis));
+        attributeList.addAttribute(prefix + "EquatorialAzimuthalEquidistant.NumberOfPointsAlongYAxis", toString(mNumberOfPointsAlongYAxis));
+        attributeList.addAttribute(prefix + "EquatorialAzimuthalEquidistant.LatitudeOfTangencyPoint", toString(mLatitudeOfTangencyPoint));
+        attributeList.addAttribute(prefix + "EquatorialAzimuthalEquidistant.LongitudeOfTangencyPoint", toString(mLongitudeOfTangencyPoint));
+        attributeList.addAttribute(prefix + "EquatorialAzimuthalEquidistant.ResolutionAndComponentFlags", toString(mResolutionAndComponentFlags));
+        attributeList.addAttribute(prefix + "EquatorialAzimuthalEquidistant.Dx", toString(mDx));
+        attributeList.addAttribute(prefix + "EquatorialAzimuthalEquidistant.Dy", toString(mDy));
+        attributeList.addAttribute(prefix + "EquatorialAzimuthalEquidistant.ProjectionCenterFlag", toString(mProjectionCenterFlag));
+        mScanningMode.getAttributeList(prefix + "EquatorialAzimuthalEquidistant.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -266,7 +254,7 @@ GridDefinition *EquatorialAzimuthalEquidistant::createGridDefinition() const {
 
 EarthShapeSettings *EquatorialAzimuthalEquidistant::getEarthShape() const {
   try {
-    return static_cast<EarthShapeSettings *>(&mEarthShape);
+    return &mEarthShape;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -356,7 +344,7 @@ const T::UInt8_opt &EquatorialAzimuthalEquidistant::getProjectionCenterFlag() co
 
 ScanningModeSettings *EquatorialAzimuthalEquidistant::getScanningMode() const {
   try {
-    return static_cast<ScanningModeSettings *>(&mScanningMode);
+    return &mScanningMode;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

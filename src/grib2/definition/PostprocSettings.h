@@ -19,6 +19,10 @@ namespace GRIB2 {
 class PostprocSettings {
 public:
   PostprocSettings();
+  PostprocSettings(const PostprocSettings &) = default;
+  PostprocSettings(PostprocSettings &&) = default;
+  PostprocSettings &operator=(const PostprocSettings &) = default;
+  PostprocSettings &operator=(PostprocSettings &&) = default;
   virtual ~PostprocSettings();
 
   virtual void read(MemoryReader &memoryReader);

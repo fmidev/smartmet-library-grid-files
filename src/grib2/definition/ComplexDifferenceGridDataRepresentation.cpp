@@ -27,8 +27,7 @@ ComplexDifferenceGridDataRepresentation::ComplexDifferenceGridDataRepresentation
 
 /*! \brief The destructor of the class. */
 
-ComplexDifferenceGridDataRepresentation::~ComplexDifferenceGridDataRepresentation() {
-}
+ComplexDifferenceGridDataRepresentation::~ComplexDifferenceGridDataRepresentation() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -92,37 +91,21 @@ void ComplexDifferenceGridDataRepresentation::write(DataWriter &dataWriter) {
 
 void ComplexDifferenceGridDataRepresentation::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sComplexDifferenceGridDataRepresentation.", prefix.c_str());
-    mPacking.getAttributeList(name, attributeList);
-    sprintf(name, "%sComplexDifferenceGridDataRepresentation.", prefix.c_str());
-    mOriginalValues.getAttributeList(name, attributeList);
-    sprintf(name, "%sComplexDifferenceGridDataRepresentation.GroupSplittingMethodUsed", prefix.c_str());
-    attributeList.addAttribute(name, toString(mGroupSplittingMethodUsed));
-    sprintf(name, "%sComplexDifferenceGridDataRepresentation.MissingValueManagementUsed", prefix.c_str());
-    attributeList.addAttribute(name, toString(mMissingValueManagementUsed));
-    sprintf(name, "%sComplexDifferenceGridDataRepresentation.PrimaryMissingValueSubstitute", prefix.c_str());
-    attributeList.addAttribute(name, toString(mPrimaryMissingValueSubstitute));
-    sprintf(name, "%sComplexDifferenceGridDataRepresentation.SecondaryMissingValueSubstitute", prefix.c_str());
-    attributeList.addAttribute(name, toString(mSecondaryMissingValueSubstitute));
-    sprintf(name, "%sComplexDifferenceGridDataRepresentation.NumberOfGroupsOfDataValues", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNumberOfGroupsOfDataValues));
-    sprintf(name, "%sComplexDifferenceGridDataRepresentation.ReferenceForGroupWidths", prefix.c_str());
-    attributeList.addAttribute(name, toString(mReferenceForGroupWidths));
-    sprintf(name, "%sComplexDifferenceGridDataRepresentation.NumberOfBitsUsedForTheGroupWidths", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNumberOfBitsUsedForTheGroupWidths));
-    sprintf(name, "%sComplexDifferenceGridDataRepresentation.ReferenceForGroupLengths", prefix.c_str());
-    attributeList.addAttribute(name, toString(mReferenceForGroupLengths));
-    sprintf(name, "%sComplexDifferenceGridDataRepresentation.LengthIncrementForTheGroupLengths", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLengthIncrementForTheGroupLengths));
-    sprintf(name, "%sComplexDifferenceGridDataRepresentation.TrueLengthOfLastGroup", prefix.c_str());
-    attributeList.addAttribute(name, toString(mTrueLengthOfLastGroup));
-    sprintf(name, "%sComplexDifferenceGridDataRepresentation.NumberOfBitsForScaledGroupLengths", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNumberOfBitsForScaledGroupLengths));
-    sprintf(name, "%sComplexDifferenceGridDataRepresentation.OrderOfSpatialDifferencing", prefix.c_str());
-    attributeList.addAttribute(name, toString(mOrderOfSpatialDifferencing));
-    sprintf(name, "%sComplexDifferenceGridDataRepresentation.NumberOfOctetsExtraDescriptors", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNumberOfOctetsExtraDescriptors));
+        mPacking.getAttributeList(prefix + "ComplexDifferenceGridDataRepresentation.", attributeList);
+        mOriginalValues.getAttributeList(prefix + "ComplexDifferenceGridDataRepresentation.", attributeList);
+        attributeList.addAttribute(prefix + "ComplexDifferenceGridDataRepresentation.GroupSplittingMethodUsed", toString(mGroupSplittingMethodUsed));
+        attributeList.addAttribute(prefix + "ComplexDifferenceGridDataRepresentation.MissingValueManagementUsed", toString(mMissingValueManagementUsed));
+        attributeList.addAttribute(prefix + "ComplexDifferenceGridDataRepresentation.PrimaryMissingValueSubstitute", toString(mPrimaryMissingValueSubstitute));
+        attributeList.addAttribute(prefix + "ComplexDifferenceGridDataRepresentation.SecondaryMissingValueSubstitute", toString(mSecondaryMissingValueSubstitute));
+        attributeList.addAttribute(prefix + "ComplexDifferenceGridDataRepresentation.NumberOfGroupsOfDataValues", toString(mNumberOfGroupsOfDataValues));
+        attributeList.addAttribute(prefix + "ComplexDifferenceGridDataRepresentation.ReferenceForGroupWidths", toString(mReferenceForGroupWidths));
+        attributeList.addAttribute(prefix + "ComplexDifferenceGridDataRepresentation.NumberOfBitsUsedForTheGroupWidths", toString(mNumberOfBitsUsedForTheGroupWidths));
+        attributeList.addAttribute(prefix + "ComplexDifferenceGridDataRepresentation.ReferenceForGroupLengths", toString(mReferenceForGroupLengths));
+        attributeList.addAttribute(prefix + "ComplexDifferenceGridDataRepresentation.LengthIncrementForTheGroupLengths", toString(mLengthIncrementForTheGroupLengths));
+        attributeList.addAttribute(prefix + "ComplexDifferenceGridDataRepresentation.TrueLengthOfLastGroup", toString(mTrueLengthOfLastGroup));
+        attributeList.addAttribute(prefix + "ComplexDifferenceGridDataRepresentation.NumberOfBitsForScaledGroupLengths", toString(mNumberOfBitsForScaledGroupLengths));
+        attributeList.addAttribute(prefix + "ComplexDifferenceGridDataRepresentation.OrderOfSpatialDifferencing", toString(mOrderOfSpatialDifferencing));
+        attributeList.addAttribute(prefix + "ComplexDifferenceGridDataRepresentation.NumberOfOctetsExtraDescriptors", toString(mNumberOfOctetsExtraDescriptors));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -331,7 +314,7 @@ RepresentationDefinition *ComplexDifferenceGridDataRepresentation::createReprese
 
 PackingSettings *ComplexDifferenceGridDataRepresentation::getPacking() const {
   try {
-    return static_cast<PackingSettings *>(&mPacking);
+    return &mPacking;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -341,7 +324,7 @@ PackingSettings *ComplexDifferenceGridDataRepresentation::getPacking() const {
 
 OriginalValuesSettings *ComplexDifferenceGridDataRepresentation::getOriginalValues() const {
   try {
-    return static_cast<OriginalValuesSettings *>(&mOriginalValues);
+    return &mOriginalValues;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

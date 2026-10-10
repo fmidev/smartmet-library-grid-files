@@ -20,16 +20,20 @@ namespace GRIB2 {
 class DeprecatedSatelliteProduct : public ProductDefinition {
 public:
   DeprecatedSatelliteProduct();
-  virtual ~DeprecatedSatelliteProduct();
+  DeprecatedSatelliteProduct(const DeprecatedSatelliteProduct &) = default;
+  DeprecatedSatelliteProduct(DeprecatedSatelliteProduct &&) = default;
+  DeprecatedSatelliteProduct &operator=(const DeprecatedSatelliteProduct &) = default;
+  DeprecatedSatelliteProduct &operator=(DeprecatedSatelliteProduct &&) = default;
+  ~DeprecatedSatelliteProduct() override;
 
-  virtual uint getTemplateNumber() const;
-  virtual ProductDefinition *createProductDefinition() const;
-  virtual void read(MemoryReader &memoryReader);
-  virtual void write(DataWriter &dataWriter);
-  virtual void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const;
-  virtual bool getAttributeValue(const char *attributeName, std::string &attributeValue) const;
-  virtual bool hasAttributeValue(const char *attributeName, const char *attributeValue) const;
-  virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
+  uint getTemplateNumber() const override;
+  ProductDefinition *createProductDefinition() const override;
+  void read(MemoryReader &memoryReader) override;
+  void write(DataWriter &dataWriter) override;
+  void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const override;
+  bool getAttributeValue(const char *attributeName, std::string &attributeValue) const override;
+  bool hasAttributeValue(const char *attributeName, const char *attributeValue) const override;
+  void print(std::ostream &stream, uint level, uint optionFlags) const override;
   virtual T::Hash countHash() const;
 
   const T::UInt8_opt &getParameterCategory() const;

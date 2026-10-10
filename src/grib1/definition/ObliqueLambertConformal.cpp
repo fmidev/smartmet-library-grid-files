@@ -39,8 +39,7 @@ ObliqueLambertConformal::ObliqueLambertConformal() {
 
 /*! \brief The destructor of the class. */
 
-ObliqueLambertConformal::~ObliqueLambertConformal() {
-}
+ObliqueLambertConformal::~ObliqueLambertConformal() = default;
 
 /*! \brief The method reads and initializes all data related to the current section object.
 
@@ -106,35 +105,20 @@ void ObliqueLambertConformal::write(DataWriter &dataWriter) {
 
 void ObliqueLambertConformal::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sObliqueLambertConformal.Nx", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNx));
-    sprintf(name, "%sObliqueLambertConformal.Ny", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNy));
-    sprintf(name, "%sObliqueLambertConformal.LatitudeOfFirstGridPoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatitudeOfFirstGridPoint));
-    sprintf(name, "%sObliqueLambertConformal.LongitudeOfFirstGridPoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLongitudeOfFirstGridPoint));
-    sprintf(name, "%sObliqueLambertConformal.", prefix.c_str());
-    mResolutionFlags.getAttributeList(name, attributeList);
-    sprintf(name, "%sObliqueLambertConformal.LoV", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLoV));
-    sprintf(name, "%sObliqueLambertConformal.DxInMetres", prefix.c_str());
-    attributeList.addAttribute(name, toString(mDxInMetres));
-    sprintf(name, "%sObliqueLambertConformal.DyInMetres", prefix.c_str());
-    attributeList.addAttribute(name, toString(mDyInMetres));
-    sprintf(name, "%sObliqueLambertConformal.ProjectionCentreFlag", prefix.c_str());
-    attributeList.addAttribute(name, toString(mProjectionCentreFlag));
-    sprintf(name, "%sObliqueLambertConformal.", prefix.c_str());
-    mScanningMode.getAttributeList(name, attributeList);
-    sprintf(name, "%sObliqueLambertConformal.Latin1", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatin1));
-    sprintf(name, "%sObliqueLambertConformal.Latin2", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatin2));
-    sprintf(name, "%sObliqueLambertConformal.LatitudeOfSouthernPole", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatitudeOfSouthernPole));
-    sprintf(name, "%sObliqueLambertConformal.LongitudeOfSouthernPole", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLongitudeOfSouthernPole));
+        attributeList.addAttribute(prefix + "ObliqueLambertConformal.Nx", toString(mNx));
+        attributeList.addAttribute(prefix + "ObliqueLambertConformal.Ny", toString(mNy));
+        attributeList.addAttribute(prefix + "ObliqueLambertConformal.LatitudeOfFirstGridPoint", toString(mLatitudeOfFirstGridPoint));
+        attributeList.addAttribute(prefix + "ObliqueLambertConformal.LongitudeOfFirstGridPoint", toString(mLongitudeOfFirstGridPoint));
+        mResolutionFlags.getAttributeList(prefix + "ObliqueLambertConformal.", attributeList);
+        attributeList.addAttribute(prefix + "ObliqueLambertConformal.LoV", toString(mLoV));
+        attributeList.addAttribute(prefix + "ObliqueLambertConformal.DxInMetres", toString(mDxInMetres));
+        attributeList.addAttribute(prefix + "ObliqueLambertConformal.DyInMetres", toString(mDyInMetres));
+        attributeList.addAttribute(prefix + "ObliqueLambertConformal.ProjectionCentreFlag", toString(mProjectionCentreFlag));
+        mScanningMode.getAttributeList(prefix + "ObliqueLambertConformal.", attributeList);
+        attributeList.addAttribute(prefix + "ObliqueLambertConformal.Latin1", toString(mLatin1));
+        attributeList.addAttribute(prefix + "ObliqueLambertConformal.Latin2", toString(mLatin2));
+        attributeList.addAttribute(prefix + "ObliqueLambertConformal.LatitudeOfSouthernPole", toString(mLatitudeOfSouthernPole));
+        attributeList.addAttribute(prefix + "ObliqueLambertConformal.LongitudeOfSouthernPole", toString(mLongitudeOfSouthernPole));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -362,7 +346,7 @@ std::int24_t ObliqueLambertConformal::getLongitudeOfFirstGridPoint() const {
 
 ResolutionFlagsSettings *ObliqueLambertConformal::getResolutionFlags() const {
   try {
-    return static_cast<ResolutionFlagsSettings *>(&mResolutionFlags);
+    return &mResolutionFlags;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -412,7 +396,7 @@ std::uint8_t ObliqueLambertConformal::getProjectionCentreFlag() const {
 
 ScanningModeSettings *ObliqueLambertConformal::getScanningMode() const {
   try {
-    return static_cast<ScanningModeSettings *>(&mScanningMode);
+    return &mScanningMode;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

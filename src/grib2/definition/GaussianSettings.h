@@ -21,6 +21,10 @@ namespace GRIB2 {
 class GaussianSettings {
 public:
   GaussianSettings();
+  GaussianSettings(const GaussianSettings &) = default;
+  GaussianSettings(GaussianSettings &&) = default;
+  GaussianSettings &operator=(const GaussianSettings &) = default;
+  GaussianSettings &operator=(GaussianSettings &&) = default;
   virtual ~GaussianSettings();
 
   virtual void read(MemoryReader &memoryReader);

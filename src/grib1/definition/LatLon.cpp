@@ -32,8 +32,7 @@ LatLon::LatLon() {
 
 /*! \brief The destructor of the class. */
 
-LatLon::~LatLon() {
-}
+LatLon::~LatLon() = default;
 
 /*! \brief The method reads and initializes all data related to the current section object.
 
@@ -81,21 +80,13 @@ void LatLon::write(DataWriter &dataWriter) {
 
 void LatLon::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sLatLon.Ni", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNi));
-    sprintf(name, "%sLatLon.Nj", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNj));
-    sprintf(name, "%sLatLon.", prefix.c_str());
-    mGridArea.getAttributeList(name, attributeList);
-    sprintf(name, "%sLatLon.IDirectionIncrement", prefix.c_str());
-    attributeList.addAttribute(name, toString(mIDirectionIncrement));
-    sprintf(name, "%sLatLon.JDirectionIncrement", prefix.c_str());
-    attributeList.addAttribute(name, toString(mJDirectionIncrement));
-    sprintf(name, "%sLatLon.", prefix.c_str());
-    mScanningMode.getAttributeList(name, attributeList);
-    sprintf(name, "%sLatLon.Zero", prefix.c_str());
-    attributeList.addAttribute(name, toString(mZero));
+        attributeList.addAttribute(prefix + "LatLon.Ni", toString(mNi));
+        attributeList.addAttribute(prefix + "LatLon.Nj", toString(mNj));
+        mGridArea.getAttributeList(prefix + "LatLon.", attributeList);
+        attributeList.addAttribute(prefix + "LatLon.IDirectionIncrement", toString(mIDirectionIncrement));
+        attributeList.addAttribute(prefix + "LatLon.JDirectionIncrement", toString(mJDirectionIncrement));
+        mScanningMode.getAttributeList(prefix + "LatLon.", attributeList);
+        attributeList.addAttribute(prefix + "LatLon.Zero", toString(mZero));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -247,7 +238,7 @@ std::uint16_t LatLon::getNj() const {
 
 GridAreaSettings *LatLon::getGridArea() const {
   try {
-    return static_cast<GridAreaSettings *>(&mGridArea);
+    return &mGridArea;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -277,7 +268,7 @@ std::uint16_t LatLon::getJDirectionIncrement() const {
 
 ScanningModeSettings *LatLon::getScanningMode() const {
   try {
-    return static_cast<ScanningModeSettings *>(&mScanningMode);
+    return &mScanningMode;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

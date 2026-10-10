@@ -22,21 +22,25 @@ namespace GRIB2 {
 class ProcessedCrossSectionProduct : public ProductDefinition {
 public:
   ProcessedCrossSectionProduct();
-  virtual ~ProcessedCrossSectionProduct();
+  ProcessedCrossSectionProduct(const ProcessedCrossSectionProduct &) = default;
+  ProcessedCrossSectionProduct(ProcessedCrossSectionProduct &&) = default;
+  ProcessedCrossSectionProduct &operator=(const ProcessedCrossSectionProduct &) = default;
+  ProcessedCrossSectionProduct &operator=(ProcessedCrossSectionProduct &&) = default;
+  ~ProcessedCrossSectionProduct() override;
 
-  virtual uint getTemplateNumber() const;
-  virtual ProductDefinition *createProductDefinition() const;
-  virtual void read(MemoryReader &memoryReader);
-  virtual void write(DataWriter &dataWriter);
-  virtual void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const;
-  virtual bool getAttributeValue(const char *attributeName, std::string &attributeValue) const;
-  virtual bool hasAttributeValue(const char *attributeName, const char *attributeValue) const;
-  virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
+  uint getTemplateNumber() const override;
+  ProductDefinition *createProductDefinition() const override;
+  void read(MemoryReader &memoryReader) override;
+  void write(DataWriter &dataWriter) override;
+  void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const override;
+  bool getAttributeValue(const char *attributeName, std::string &attributeValue) const override;
+  bool hasAttributeValue(const char *attributeName, const char *attributeValue) const override;
+  void print(std::ostream &stream, uint level, uint optionFlags) const override;
   virtual T::Hash countHash() const;
 
-  ParameterSettings *getParameter() const;
+  ParameterSettings *getParameter() const override;
   void setParameter(ParameterSettings &parameter);
-  StatisticalSettings *getStatistical() const;
+  StatisticalSettings *getStatistical() const override;
   void setStatistical(StatisticalSettings &statistical);
 
 protected:

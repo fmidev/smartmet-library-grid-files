@@ -27,8 +27,7 @@ RotatedSphericalHarmonic::RotatedSphericalHarmonic() {
 
 /*! \brief The destructor of the class. */
 
-RotatedSphericalHarmonic::~RotatedSphericalHarmonic() {
-}
+RotatedSphericalHarmonic::~RotatedSphericalHarmonic() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -66,11 +65,8 @@ void RotatedSphericalHarmonic::write(DataWriter &dataWriter) {
 
 void RotatedSphericalHarmonic::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sRotatedSphericalHarmonic.", prefix.c_str());
-    mSphericalHarmonic.getAttributeList(name, attributeList);
-    sprintf(name, "%sRotatedSphericalHarmonic.", prefix.c_str());
-    mRotation.getAttributeList(name, attributeList);
+        mSphericalHarmonic.getAttributeList(prefix + "RotatedSphericalHarmonic.", attributeList);
+        mRotation.getAttributeList(prefix + "RotatedSphericalHarmonic.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -162,7 +158,7 @@ GridDefinition *RotatedSphericalHarmonic::createGridDefinition() const {
 
 SphericalHarmonicSettings *RotatedSphericalHarmonic::getSphericalHarmonic() const {
   try {
-    return static_cast<SphericalHarmonicSettings *>(&mSphericalHarmonic);
+    return &mSphericalHarmonic;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -172,7 +168,7 @@ SphericalHarmonicSettings *RotatedSphericalHarmonic::getSphericalHarmonic() cons
 
 RotationSettings *RotatedSphericalHarmonic::getRotation() const {
   try {
-    return static_cast<RotationSettings *>(&mRotation);
+    return &mRotation;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

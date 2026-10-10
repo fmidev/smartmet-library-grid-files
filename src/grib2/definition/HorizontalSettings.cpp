@@ -27,8 +27,7 @@ HorizontalSettings::HorizontalSettings() {
 
 /*! \brief The destructor of the class. */
 
-HorizontalSettings::~HorizontalSettings() {
-}
+HorizontalSettings::~HorizontalSettings() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -74,19 +73,12 @@ void HorizontalSettings::write(DataWriter &dataWriter) {
 
 void HorizontalSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sHorizontalSettings.TypeOfFirstFixedSurface", prefix.c_str());
-    attributeList.addAttribute(name, toString(mTypeOfFirstFixedSurface));
-    sprintf(name, "%sHorizontalSettings.ScaleFactorOfFirstFixedSurface", prefix.c_str());
-    attributeList.addAttribute(name, toString(mScaleFactorOfFirstFixedSurface));
-    sprintf(name, "%sHorizontalSettings.ScaledValueOfFirstFixedSurface", prefix.c_str());
-    attributeList.addAttribute(name, toString(mScaledValueOfFirstFixedSurface));
-    sprintf(name, "%sHorizontalSettings.TypeOfSecondFixedSurface", prefix.c_str());
-    attributeList.addAttribute(name, toString(mTypeOfSecondFixedSurface));
-    sprintf(name, "%sHorizontalSettings.ScaleFactorOfSecondFixedSurface", prefix.c_str());
-    attributeList.addAttribute(name, toString(mScaleFactorOfSecondFixedSurface));
-    sprintf(name, "%sHorizontalSettings.ScaledValueOfSecondFixedSurface", prefix.c_str());
-    attributeList.addAttribute(name, toString(mScaledValueOfSecondFixedSurface));
+        attributeList.addAttribute(prefix + "HorizontalSettings.TypeOfFirstFixedSurface", toString(mTypeOfFirstFixedSurface));
+        attributeList.addAttribute(prefix + "HorizontalSettings.ScaleFactorOfFirstFixedSurface", toString(mScaleFactorOfFirstFixedSurface));
+        attributeList.addAttribute(prefix + "HorizontalSettings.ScaledValueOfFirstFixedSurface", toString(mScaledValueOfFirstFixedSurface));
+        attributeList.addAttribute(prefix + "HorizontalSettings.TypeOfSecondFixedSurface", toString(mTypeOfSecondFixedSurface));
+        attributeList.addAttribute(prefix + "HorizontalSettings.ScaleFactorOfSecondFixedSurface", toString(mScaleFactorOfSecondFixedSurface));
+        attributeList.addAttribute(prefix + "HorizontalSettings.ScaledValueOfSecondFixedSurface", toString(mScaledValueOfSecondFixedSurface));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -167,7 +159,7 @@ bool HorizontalSettings::hasAttributeValue(const char *attributeName, const char
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void HorizontalSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
+void HorizontalSettings::print(std::ostream &stream, uint level, uint /*optionFlags*/) const {
   try {
     stream << space(level) << "HorizontalSettings\n";
     stream << space(level) << "- TypeOfFirstFixedSurface = " << toString(mTypeOfFirstFixedSurface) << "\n";

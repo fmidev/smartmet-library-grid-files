@@ -27,15 +27,14 @@ ComplexPackingSettings::ComplexPackingSettings() {
 
 /*! \brief The destructor of the class. */
 
-ComplexPackingSettings::~ComplexPackingSettings() {
-}
+ComplexPackingSettings::~ComplexPackingSettings() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
         \param memoryReader  This object controls the access to the memory mapped file.
 */
 
-void ComplexPackingSettings::read(MemoryReader &memoryReader) {
+void ComplexPackingSettings::read(MemoryReader &/*memoryReader*/) {
   try {
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
@@ -47,7 +46,7 @@ void ComplexPackingSettings::read(MemoryReader &memoryReader) {
         \param dataWriter  This object is used for writing the object data.
 */
 
-void ComplexPackingSettings::write(DataWriter &dataWriter) {
+void ComplexPackingSettings::write(DataWriter &/*dataWriter*/) {
   try {
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
@@ -60,7 +59,7 @@ void ComplexPackingSettings::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void ComplexPackingSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
+void ComplexPackingSettings::getAttributeList(const std::string &/*prefix*/, T::AttributeList &/*attributeList*/) const {
   try {
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
@@ -73,7 +72,7 @@ void ComplexPackingSettings::getAttributeList(const std::string &prefix, T::Attr
     \param attributeValue The value of the attribute (string).
 */
 
-bool ComplexPackingSettings::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+bool ComplexPackingSettings::getAttributeValue(const char *attributeName, std::string &/*attributeValue*/) const {
   try {
     if (attributeName == nullptr)
       return false;
@@ -106,7 +105,7 @@ bool ComplexPackingSettings::hasAttributeValue(const char *attributeName, const 
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void ComplexPackingSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
+void ComplexPackingSettings::print(std::ostream &stream, uint level, uint /*optionFlags*/) const {
   try {
     stream << space(level) << "ComplexPackingSettings\n";
   } catch (...) {

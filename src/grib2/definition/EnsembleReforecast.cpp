@@ -27,8 +27,7 @@ EnsembleReforecast::EnsembleReforecast() {
 
 /*! \brief The destructor of the class. */
 
-EnsembleReforecast::~EnsembleReforecast() {
-}
+EnsembleReforecast::~EnsembleReforecast() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -72,17 +71,11 @@ void EnsembleReforecast::write(DataWriter &dataWriter) {
 
 void EnsembleReforecast::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sEnsembleReforecast.", prefix.c_str());
-    mParameter.getAttributeList(name, attributeList);
-    sprintf(name, "%sEnsembleReforecast.", prefix.c_str());
-    mPointInTime.getAttributeList(name, attributeList);
-    sprintf(name, "%sEnsembleReforecast.", prefix.c_str());
-    mHorizontal.getAttributeList(name, attributeList);
-    sprintf(name, "%sEnsembleReforecast.", prefix.c_str());
-    mEps.getAttributeList(name, attributeList);
-    sprintf(name, "%sEnsembleReforecast.", prefix.c_str());
-    mReforecast.getAttributeList(name, attributeList);
+        mParameter.getAttributeList(prefix + "EnsembleReforecast.", attributeList);
+        mPointInTime.getAttributeList(prefix + "EnsembleReforecast.", attributeList);
+        mHorizontal.getAttributeList(prefix + "EnsembleReforecast.", attributeList);
+        mEps.getAttributeList(prefix + "EnsembleReforecast.", attributeList);
+        mReforecast.getAttributeList(prefix + "EnsembleReforecast.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -189,7 +182,7 @@ ProductDefinition *EnsembleReforecast::createProductDefinition() const {
 
 ParameterSettings *EnsembleReforecast::getParameter() const {
   try {
-    return static_cast<ParameterSettings *>(&mParameter);
+    return &mParameter;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -199,7 +192,7 @@ ParameterSettings *EnsembleReforecast::getParameter() const {
 
 PointInTimeSettings *EnsembleReforecast::getPointInTime() const {
   try {
-    return static_cast<PointInTimeSettings *>(&mPointInTime);
+    return &mPointInTime;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -209,7 +202,7 @@ PointInTimeSettings *EnsembleReforecast::getPointInTime() const {
 
 HorizontalSettings *EnsembleReforecast::getHorizontal() const {
   try {
-    return static_cast<HorizontalSettings *>(&mHorizontal);
+    return &mHorizontal;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -219,7 +212,7 @@ HorizontalSettings *EnsembleReforecast::getHorizontal() const {
 
 EpsSettings *EnsembleReforecast::getEps() const {
   try {
-    return static_cast<EpsSettings *>(&mEps);
+    return &mEps;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -229,7 +222,7 @@ EpsSettings *EnsembleReforecast::getEps() const {
 
 ReforecastSettings *EnsembleReforecast::getReforecast() const {
   try {
-    return static_cast<ReforecastSettings *>(&mReforecast);
+    return &mReforecast;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }

@@ -27,8 +27,7 @@ SphericalHarmonicSettings::SphericalHarmonicSettings() {
 
 /*! \brief The destructor of the class. */
 
-SphericalHarmonicSettings::~SphericalHarmonicSettings() {
-}
+SphericalHarmonicSettings::~SphericalHarmonicSettings() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -72,17 +71,11 @@ void SphericalHarmonicSettings::write(DataWriter &dataWriter) {
 
 void SphericalHarmonicSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sSphericalHarmonicSettings.J", prefix.c_str());
-    attributeList.addAttribute(name, toString(mJ));
-    sprintf(name, "%sSphericalHarmonicSettings.K", prefix.c_str());
-    attributeList.addAttribute(name, toString(mK));
-    sprintf(name, "%sSphericalHarmonicSettings.M", prefix.c_str());
-    attributeList.addAttribute(name, toString(mM));
-    sprintf(name, "%sSphericalHarmonicSettings.SpectralType", prefix.c_str());
-    attributeList.addAttribute(name, toString(mSpectralType));
-    sprintf(name, "%sSphericalHarmonicSettings.SpectralMode", prefix.c_str());
-    attributeList.addAttribute(name, toString(mSpectralMode));
+        attributeList.addAttribute(prefix + "SphericalHarmonicSettings.J", toString(mJ));
+        attributeList.addAttribute(prefix + "SphericalHarmonicSettings.K", toString(mK));
+        attributeList.addAttribute(prefix + "SphericalHarmonicSettings.M", toString(mM));
+        attributeList.addAttribute(prefix + "SphericalHarmonicSettings.SpectralType", toString(mSpectralType));
+        attributeList.addAttribute(prefix + "SphericalHarmonicSettings.SpectralMode", toString(mSpectralMode));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -157,7 +150,7 @@ bool SphericalHarmonicSettings::hasAttributeValue(const char *attributeName, con
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void SphericalHarmonicSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
+void SphericalHarmonicSettings::print(std::ostream &stream, uint level, uint /*optionFlags*/) const {
   try {
     stream << space(level) << "SphericalHarmonicSettings\n";
     stream << space(level) << "- J = " << toString(mJ) << "\n";
