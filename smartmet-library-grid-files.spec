@@ -4,7 +4,7 @@
 Summary: grid file handling library
 Name: %{SPECNAME}
 Version: 26.10.8
-Release: 1%{?dist}.fmi
+Release: 2%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
 URL: https://github.com/fmidev/smartmet-library-grid-files
@@ -127,7 +127,7 @@ libraries, the grid engine and the plugins using it
 %attr(0755,root,root) %{_bindir}/smartmet-grid-test-config-creator
 
 %changelog
-* Thu Oct  8 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.8-1.fmi
+* Thu Oct  8 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.8-2.fmi
 - GRIB2 Lambert azimuthal equal area grids report their metric cell size in kilometres
   like the other projections, not in metres (BRAINSTORM-3518)
 
