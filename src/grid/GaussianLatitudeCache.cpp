@@ -22,7 +22,7 @@ static std::mutex gaussianLatitudeCacheMutex;
 
 // ########## Copied from grib_api-1.17 : grib_geography.c ############
 
-#define NUMBER(x) (sizeof(x)/sizeof(x[0]))
+#define NUMBER(x) (sizeof(x)/sizeof((x)[0]))
 #define MAXITER  10
 
 #ifndef M_PI

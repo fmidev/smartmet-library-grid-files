@@ -137,6 +137,7 @@ libraries, the grid engine and the plugins using it
 - Use emplace and C++ standard library headers where clang-tidy suggests it, no functional changes
 - Use raw string literals and std::make_shared where clang-tidy suggests it, no functional changes
 - Use range-based for loops where clang-tidy suggests it, no functional changes
+- Parenthesize macro arguments where clang-tidy suggests it
 
 * Thu Oct  8 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.8-2.fmi
 - GRIB2 Lambert azimuthal equal area grids report their metric cell size in kilometres

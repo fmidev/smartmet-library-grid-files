@@ -31,7 +31,7 @@
 #include "AutoThreadLock.h"
 #include "GeneralDefinitions.h"
 
-#define NUM(a) (a-'0')
+#define NUM(a) ((a)-'0')
 
 
 namespace fs = std::filesystem;
