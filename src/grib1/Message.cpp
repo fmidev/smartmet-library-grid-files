@@ -490,7 +490,7 @@ void Message::read()
     }
 
     Int64 s = mGridFilePtr->getSize();
-    uchar *d = (uchar*)mGridFilePtr->getMemoryPtr();
+    auto *d = (uchar*)mGridFilePtr->getMemoryPtr();
     uchar *e = d + s;
 
     if (mFileMemoryPtr)
@@ -544,7 +544,7 @@ void Message::read(MemoryReader& memoryReader)
     auto rPos = memoryReader.getGlobalReadPosition();
     try
     {
-      IndicatorSection *section = new IndicatorSection();
+      auto *section = new IndicatorSection();
       section->setMessagePtr(this);
       mIndicatorSection.reset(section);
       section->read(memoryReader);
@@ -559,7 +559,7 @@ void Message::read(MemoryReader& memoryReader)
     rPos = memoryReader.getGlobalReadPosition();
     try
     {
-      ProductSection *section = new ProductSection();
+      auto *section = new ProductSection();
       section->setMessagePtr(this);
       mProductSection.reset(section);
       section->read(memoryReader);
@@ -576,7 +576,7 @@ void Message::read(MemoryReader& memoryReader)
       rPos = memoryReader.getGlobalReadPosition();
       try
       {
-        GridSection *section = new GridSection();
+        auto *section = new GridSection();
         section->setMessagePtr(this);
         mGridSection.reset(section);
         section->read(memoryReader);
@@ -594,7 +594,7 @@ void Message::read(MemoryReader& memoryReader)
       rPos = memoryReader.getGlobalReadPosition();
       try
       {
-        BitmapSection *section = new BitmapSection();
+        auto *section = new BitmapSection();
         section->setMessagePtr(this);
         mBitmapSection.reset(section);
         section->read(memoryReader);
@@ -610,7 +610,7 @@ void Message::read(MemoryReader& memoryReader)
     rPos = memoryReader.getGlobalReadPosition();
     try
     {
-      DataSection *section = new DataSection();
+      auto *section = new DataSection();
       section->setMessagePtr(this);
       mDataSection.reset(section);
       section->read(memoryReader);
@@ -786,7 +786,7 @@ void Message::initIndicatorSection()
   {
     if (mIndicatorSection == nullptr)
     {
-      IndicatorSection *section = new IndicatorSection();
+      auto *section = new IndicatorSection();
       section->setMessagePtr(this);
       mIndicatorSection.reset(section);
     }
@@ -812,7 +812,7 @@ void Message::initProductSection()
   {
     if (mProductSection == nullptr)
     {
-      ProductSection *section = new ProductSection();
+      auto *section = new ProductSection();
       section->setMessagePtr(this);
       mProductSection.reset(section);
     }
@@ -838,7 +838,7 @@ void Message::initDataSection()
   {
     if (mDataSection == nullptr)
     {
-      DataSection *section = new DataSection();
+      auto *section = new DataSection();
       section->setMessagePtr(this);
       mDataSection.reset(section);
     }
@@ -864,7 +864,7 @@ void Message::initBitmapSection()
   {
     if (mBitmapSection == nullptr)
     {
-      BitmapSection *section = new BitmapSection();
+      auto *section = new BitmapSection();
       section->setMessagePtr(this);
       mBitmapSection.reset(section);
     }
@@ -890,7 +890,7 @@ void Message::initGridSection()
   {
     if (mGridSection == nullptr)
     {
-      GridSection *section = new GridSection();
+      auto *section = new GridSection();
       section->setMessagePtr(this);
       mGridSection.reset(section);
     }
@@ -1279,7 +1279,7 @@ void Message::setGridValues(T::ParamValue_vec& values)
         // Defining the bitmap for the current values.
 
         uint bmSize = size /  8 + 1;
-        uchar *bm = new uchar[bmSize];
+        auto *bm = new uchar[bmSize];
 
         BitArrayWriter bmWriter(bm,size);
         for (uint a=0; a<size; a++)

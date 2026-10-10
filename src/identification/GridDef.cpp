@@ -3265,8 +3265,8 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
           coordinates->reserve(sz);
           latLonCoordinates->reserve(sz);
 
-          double *lon = new double[sz+1];
-          double *lat = new double[sz+1];
+          auto *lon = new double[sz+1];
+          auto *lat = new double[sz+1];
 
           std::unique_ptr<double[]> rlat(lat);
           std::unique_ptr<double[]> rlon(lon);
@@ -3667,8 +3667,8 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
 
           latLonCoordinates->reserve(sz);
 
-          double *lon = new double[sz+1];
-          double *lat = new double[sz+1];
+          auto *lon = new double[sz+1];
+          auto *lat = new double[sz+1];
 
           std::unique_ptr<double[]> rlat(lat);
           std::unique_ptr<double[]> rlon(lon);
@@ -4395,7 +4395,7 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
           double earthSemiMajor = toDouble(field[10]);
           double earthSemiMinor = toDouble(field[11]);
 
-          GRIB1::LatLonImpl *def1 = new GRIB1::LatLonImpl();
+          auto *def1 = new GRIB1::LatLonImpl();
           GRIB1::GridAreaSettings gridArea;
           GRIB1::ScanningModeSettings scanningMode1;
           if (strcasecmp(scanningMode,"+x+y") == 0)
@@ -4487,7 +4487,7 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
           double earthSemiMinor = toDouble(field[14]);
           //std::uint8_t resolutionAndComponentFlags = 48;
 
-          GRIB1::RotatedLatLonImpl *def1 = new GRIB1::RotatedLatLonImpl();
+          auto *def1 = new GRIB1::RotatedLatLonImpl();
           GRIB1::GridAreaSettings gridArea;
           GRIB1::RotationSettings rotation1;
           GRIB1::ScanningModeSettings scanningMode1;
@@ -4588,7 +4588,7 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
           char *scanningMode = field[9];
           int latin = C_INT(round(toDouble(field[10])*1000));
 
-          GRIB1::MercatorImpl *def1 = new GRIB1::MercatorImpl();
+          auto *def1 = new GRIB1::MercatorImpl();
           GRIB1::ScanningModeSettings scanningMode1;
 
           if (strcasecmp(scanningMode,"+x+y") == 0)
@@ -4673,7 +4673,7 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
           double earthSemiMajor = toDouble(field[12]);
           double earthSemiMinor = toDouble(field[13]);
 
-          GRIB1::PolarStereographicImpl *def1 = new GRIB1::PolarStereographicImpl();
+          auto *def1 = new GRIB1::PolarStereographicImpl();
           GRIB1::ScanningModeSettings scanningMode1;
 
           if (strcasecmp(scanningMode,"+x+y") == 0)
@@ -4739,7 +4739,7 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
           double earthSemiMajor = toDouble(field[16]);
           double earthSemiMinor = toDouble(field[17]);
 
-          GRIB1::LambertConformalImpl *def1 = new GRIB1::LambertConformalImpl();
+          auto *def1 = new GRIB1::LambertConformalImpl();
           GRIB1::ScanningModeSettings scanningMode1;
 
           if (strcasecmp(scanningMode,"+x+y") == 0)
@@ -4927,7 +4927,7 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           int lastLongitude = 0;
           int lastLatitude = 0;
 
-          GRIB2::LatLonImpl *def2 = new GRIB2::LatLonImpl();
+          auto *def2 = new GRIB2::LatLonImpl();
           GRIB2::LatLonSettings latLon;
           GRIB2::ScanningModeSettings scanningMode2;
           GRIB2::GridSettings grid;
@@ -5021,7 +5021,7 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           double earthSemiMinor = toDouble(field[14]);
           //std::uint8_t resolutionAndComponentFlags = 48;
 
-          GRIB2::RotatedLatLonImpl *def2 = new GRIB2::RotatedLatLonImpl();
+          auto *def2 = new GRIB2::RotatedLatLonImpl();
           GRIB2::LatLonSettings latLon;
           GRIB2::ScanningModeSettings scanningMode2;
           GRIB2::GridSettings grid;
@@ -5129,7 +5129,7 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           double earthSemiMinor = toDouble(field[15]);
 
 
-          GRIB2::TransverseMercatorImpl *def2 = new GRIB2::TransverseMercatorImpl();
+          auto *def2 = new GRIB2::TransverseMercatorImpl();
           GRIB2::ScanningModeSettings scanningMode2;
 
           if (strcasecmp(scanningMode,"+x+y") == 0)
@@ -5211,7 +5211,7 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           double earthSemiMajor = toDouble(field[12]);
           double earthSemiMinor = toDouble(field[13]);
 
-          GRIB2::PolarStereographicImpl *def2 = new GRIB2::PolarStereographicImpl();
+          auto *def2 = new GRIB2::PolarStereographicImpl();
           GRIB2::ScanningModeSettings scanningMode2;
 
           if (strcasecmp(scanningMode,"+x+y") == 0)
@@ -5285,7 +5285,7 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           double earthSemiMajor = toDouble(field[16]);
           double earthSemiMinor = toDouble(field[17]);
 
-          GRIB2::LambertConformalImpl *def2 = new GRIB2::LambertConformalImpl();
+          auto *def2 = new GRIB2::LambertConformalImpl();
           GRIB2::ScanningModeSettings scanningMode2;
 
           if (strcasecmp(scanningMode,"+x+y") == 0)
@@ -5407,7 +5407,7 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           double earthSemiMajor = toDouble(field[12]);
           double earthSemiMinor = toDouble(field[13]);
 
-          GRIB2::LambertAzimuthalEqualAreaImpl *def2 = new GRIB2::LambertAzimuthalEqualAreaImpl();
+          auto *def2 = new GRIB2::LambertAzimuthalEqualAreaImpl();
           GRIB2::ScanningModeSettings scanningMode2;
 
           if (strcasecmp(scanningMode,"+x+y") == 0)

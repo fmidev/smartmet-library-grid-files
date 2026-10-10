@@ -559,7 +559,7 @@ void GridDataRepresentationImpl::encodeValues(Message *message,T::ParamValue_vec
     if ((totalBits % 8) != 0)
       dataSize++;
 
-    uchar *data = new uchar[dataSize];
+    auto *data = new uchar[dataSize];
     memset(data,0,dataSize);
     BitArrayWriter bitArrayWriter(data,totalBits);
 
@@ -570,7 +570,7 @@ void GridDataRepresentationImpl::encodeValues(Message *message,T::ParamValue_vec
         float Y = *it;
         float X = (Y - RDfac) / EDfac;
 
-        UInt64 v = C_UINT64(round(X));
+        auto v = C_UINT64(round(X));
         bitArrayWriter.writeBits(bits,v);
       }
     }
@@ -579,7 +579,7 @@ void GridDataRepresentationImpl::encodeValues(Message *message,T::ParamValue_vec
 
     if (!dataSection)
     {
-      DataSection *section = new DataSection();
+      auto *section = new DataSection();
       section->setMessagePtr(message);
       section->setData(data,dataSize);
       message->setDataSection(section);

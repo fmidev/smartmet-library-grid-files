@@ -114,7 +114,7 @@ T::Dimensions CrossSectionImpl::getGridDimensions() const
   try
   {
     if (!mNumberOfHorizontalPoints || !mNumberOfVerticalPoints)
-      return T::Dimensions();
+      return {};
 
     return T::Dimensions(*mNumberOfHorizontalPoints, *mNumberOfVerticalPoints);
   }

@@ -115,8 +115,8 @@ T::Coordinate_svec GaussianImpl::getGridOriginalCoordinatesNoCache() const
     uint nj = (*mGaussian.getGrid()->getNj());
     long n = (long)(*mGaussian.getN());
 
-    double longitudeOfFirstGridPoint = C_DOUBLE(*mGaussian.getGrid()->getLongitudeOfFirstGridPoint());
-    double longitudeOfLastGridPoint = C_DOUBLE(*mGaussian.getGrid()->getLongitudeOfLastGridPoint());
+    auto longitudeOfFirstGridPoint = C_DOUBLE(*mGaussian.getGrid()->getLongitudeOfFirstGridPoint());
+    auto longitudeOfLastGridPoint = C_DOUBLE(*mGaussian.getGrid()->getLongitudeOfLastGridPoint());
     //double iDirectionIncrement = C_DOUBLE(*mGaussian.iDirectionIncrement());
     double iDirectionIncrement = (longitudeOfLastGridPoint - longitudeOfFirstGridPoint) / C_DOUBLE(ni-1);
 
@@ -175,7 +175,7 @@ T::Dimensions GaussianImpl::getGridDimensions() const
   try
   {
     if (!mGaussian.getGrid()->getNi() || !mGaussian.getGrid()->getNj())
-      return T::Dimensions();
+      return {};
 
     return T::Dimensions(*mGaussian.getGrid()->getNi(),*mGaussian.getGrid()->getNj());
   }

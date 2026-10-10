@@ -355,7 +355,7 @@ float ibm2ieee(float ibmFloat)
 {
   try
   {
-    unsigned char *v = reinterpret_cast<unsigned char *>(&ibmFloat);
+    auto *v = reinterpret_cast<unsigned char *>(&ibmFloat);
     unsigned char a = v[0];
     unsigned char b = v[1];
     unsigned char c = v[2];
@@ -1950,7 +1950,7 @@ int compressData(void *_data, uint _dataSize, void *_compressedData, uint &_comp
 {
   try
   {
-    uLongf comprLen = (uLongf)_compressedDataSize;
+    auto comprLen = (uLongf)_compressedDataSize;
     compress((Bytef *)_compressedData, &comprLen, (Bytef *)_data, (uLong)_dataSize);
 
     if (comprLen > 0)
@@ -1979,7 +1979,7 @@ int decompressData(void *_compressedData,
 {
   try
   {
-    uLongf len = (uLongf)_decompressedDataSize;
+    auto len = (uLongf)_decompressedDataSize;
     int res = uncompress((Bytef *)_decompressedData, &len, (Bytef *)_compressedData, (uLong)_compressedDataSize);
     _decompressedDataSize = len;
 
@@ -3166,7 +3166,7 @@ std::string fileToBase64(const char *filename)
       throw exception;
     }
 
-    unsigned char *data = new unsigned char[size + 1];
+    auto *data = new unsigned char[size + 1];
     size_t n = fread(data, 1, size, file);
     if (n <= 0)
     {
@@ -3366,7 +3366,7 @@ std::uint16_t read_uint16(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos)
     unsigned char* rPtr = dataPtr + readPos;
     unsigned short a = rPtr[0];
     unsigned short b = rPtr[1];
-    unsigned short val = static_cast<unsigned short>((a << 8 | b));
+    auto val = static_cast<unsigned short>((a << 8 | b));
 
     return val;
   }
@@ -3537,7 +3537,7 @@ std::int16_t read_int16(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos)
 
     unsigned char a = rPtr[0];
     unsigned char b = rPtr[1];
-    short val = static_cast<short>((1 - ((a & 128) >> 6)) * ((a & 127) << 8 | b));
+    auto val = static_cast<short>((1 - ((a & 128) >> 6)) * ((a & 127) << 8 | b));
 
     return val;
   }
@@ -3637,7 +3637,7 @@ std::float_t read_float(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos)
 
     float val = 0.0;
 
-    unsigned char* f = reinterpret_cast<unsigned char*>(&val);
+    auto* f = reinterpret_cast<unsigned char*>(&val);
 
     unsigned char* rPtr = dataPtr + readPos;
 
@@ -3675,7 +3675,7 @@ std::double_t read_double(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos)
 
     double val = 0.0;
 
-    unsigned char* f = reinterpret_cast<unsigned char*>(&val);
+    auto* f = reinterpret_cast<unsigned char*>(&val);
 
     unsigned char* rPtr = dataPtr + readPos;
 

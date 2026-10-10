@@ -113,7 +113,7 @@ T::Dimensions EquatorialAzimuthalEquidistantImpl::getGridDimensions() const
   try
   {
     if (!mNumberOfPointsAlongXAxis || ! mNumberOfPointsAlongYAxis)
-      return T::Dimensions();
+      return {};
 
     return T::Dimensions(*mNumberOfPointsAlongXAxis,*mNumberOfPointsAlongYAxis);
   }

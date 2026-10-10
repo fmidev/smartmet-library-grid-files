@@ -396,11 +396,11 @@ void ImagePaint::paintPolygon(std::vector<T::Coordinate>& polygonPoints,uint _dr
         double xj = polygonPoints[j].x();
         double yj = polygonPoints[j].y();
 
-        double dy = C_DOUBLE(y);
+        auto dy = C_DOUBLE(y);
 
         if ((yi < dy  &&  yj >= dy)  ||  (yj < dy &&  yi >= dy))
         {
-          double xx = C_DOUBLE(xi + (y - yi)/(yj - yi)*(xj - xi));
+          auto xx = C_DOUBLE(xi + (y - yi)/(yj - yi)*(xj - xi));
           if (nodes >= C_INT(nodeX.size()))
             nodeX.resize(2 * nodeX.size());
           nodeX[nodes++] = C_DOUBLE(xx);
@@ -548,11 +548,11 @@ void ImagePaint::paintPolygonPath(std::vector<std::vector<T::Coordinate>>& polyg
           double xj = pointsX[j];
           double yj = pointsY[j];
 
-          double dy = C_DOUBLE(y);
+          auto dy = C_DOUBLE(y);
 
           if ((yi < dy  &&  yj >= dy)  ||  (yj < dy &&  yi >= dy))
           {
-            double xx = C_DOUBLE(xi + (y - yi)/(yj - yi)*(xj - xi));
+            auto xx = C_DOUBLE(xi + (y - yi)/(yj - yi)*(xj - xi));
             if (nodes >= C_INT(nodeX.size()))
               nodeX.resize(2 * nodeX.size());
             nodeX[nodes++] = C_DOUBLE(xx);
@@ -1005,7 +1005,7 @@ void ImagePaint::paintWkb(double _mpx,double _mpy,double _dx,double _dy,T::ByteD
     if (sz == 0)
       return;
 
-    uchar *buf = new uchar[sz];
+    auto *buf = new uchar[sz];
     MemoryReader memoryReader(buf,sz,true);
 
     for (size_t t=0; t<sz; t++)

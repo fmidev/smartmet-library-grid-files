@@ -157,7 +157,7 @@ FileHandle* DataFetcher_filesys::getFileHandle(const char *filename)
       }
     }
 
-    FileHandle *f = new FileHandle;
+    auto *f = new FileHandle;
     f->fileHandle = fopen(filename,"r");
     if (f->fileHandle != NULL)
     {

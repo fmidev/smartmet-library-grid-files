@@ -182,7 +182,7 @@ void XmlElement::parseXml(const char *data,int size,XmlElement& xmlRoot)
 
         if (type == 1)
         {
-          XmlElement *e = new XmlElement;
+          auto *e = new XmlElement;
           e->parent = xe;
           e->filePosition = tagStart;
           xe->elementList.push_back(e);
@@ -193,7 +193,7 @@ void XmlElement::parseXml(const char *data,int size,XmlElement& xmlRoot)
 
         if (type == 3)
         {
-          XmlElement *e = new XmlElement;
+          auto *e = new XmlElement;
           e->parent = xe;
           e->filePosition = tagStart;
           xe->elementList.push_back(e);

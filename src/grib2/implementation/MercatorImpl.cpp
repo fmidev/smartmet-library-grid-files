@@ -244,7 +244,7 @@ T::Dimensions MercatorImpl::getGridDimensions() const
   try
   {
     if (!mNi || !mNj)
-      return T::Dimensions();
+      return {};
 
     return T::Dimensions(*mNi, *mNj);
   }

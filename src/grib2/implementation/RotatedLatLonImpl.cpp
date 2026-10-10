@@ -323,8 +323,8 @@ void RotatedLatLonImpl:: getGridPointListByLatLonCoordinates(T::Coordinate_vec& 
     int sz = latlon.size();
     points.reserve(sz);
 
-    double *x = new double[sz+1];
-    double *y = new double[sz+1];
+    auto *x = new double[sz+1];
+    auto *y = new double[sz+1];
 
     std::unique_ptr<double[]> rx(x);
     std::unique_ptr<double[]> ry(y);
@@ -584,7 +584,7 @@ std::string RotatedLatLonImpl::getGridGeometryString() const
     double sy = C_DOUBLE(*mRotation.getLatitudeOfSouthernPole())/1000000;
     double sx = getLongitude(C_DOUBLE(*mRotation.getLongitudeOfSouthernPole())/1000000);
 
-    double angle = C_DOUBLE(mRotation.getAngleOfRotation());
+    auto angle = C_DOUBLE(mRotation.getAngleOfRotation());
 
     unsigned char scanningMode = mLatLon.getScanningMode()->getScanningMode();
 
@@ -638,7 +638,7 @@ T::Dimensions RotatedLatLonImpl::getGridDimensions() const
   try
   {
     if (!mLatLon.getGrid()->getNi() || !mLatLon.getGrid()->getNj())
-      return T::Dimensions();
+      return {};
 
     return T::Dimensions(*mLatLon.getGrid()->getNi(), *mLatLon.getGrid()->getNj());
   }
@@ -951,7 +951,7 @@ void RotatedLatLonImpl::initSpatialReference()
       if (dfFlattening != 0)
         dfInvFlattening = 1/dfFlattening;
 
-      double angle = C_DOUBLE(mRotation.getAngleOfRotation());
+      auto angle = C_DOUBLE(mRotation.getAngleOfRotation());
 
       mSpatialReference->SetGeogCS(pszGeogName,pszDatumName,pszSpheroidName,dfSemiMajor,dfInvFlattening);
       mSpatialReference->SetDerivedGeogCRSWithPoleRotationGRIBConvention("RotatedLatlon",mSouthPoleLat,mSouthPoleLon,angle);

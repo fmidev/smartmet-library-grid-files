@@ -59,7 +59,7 @@ void NetCdfFile::readAttribute(MemoryReader& memoryReader,std::string& attrName,
     memoryReader >> nameLen;
 
     // The length comes from the file, it must fit in the remaining data
-    const UInt64 remaining = C_UINT64(memoryReader.getEndPtr() - memoryReader.getReadPtr());
+    const auto remaining = C_UINT64(memoryReader.getEndPtr() - memoryReader.getReadPtr());
     if (C_UINT64(nameLen) > remaining)
       throw Fmi::Exception(BCP,"Invalid NetCDF attribute name length!");
 

@@ -1347,12 +1347,12 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
         }
         if (mBitsPerValue == 16)
         {
-          ushort *data = (ushort*)mDataPtr;
+          auto *data = (ushort*)mDataPtr;
           return (T::ParamValue)data[idx];
         }
         if (mBitsPerValue == 8)
         {
-          uchar *data = (uchar*)mDataPtr;
+          auto *data = (uchar*)mDataPtr;
           return (T::ParamValue)data[idx];
         }
         break;
@@ -1365,7 +1365,7 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
         }
         if (mBitsPerValue == 16)
         {
-          short *data = (short*)mDataPtr;
+          auto *data = (short*)mDataPtr;
           return (T::ParamValue)data[idx];
         }
         if (mBitsPerValue == 8)
@@ -1378,7 +1378,7 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
       case 3: // float
         if (mBitsPerValue == 32)
         {
-          float *data = (float*)mDataPtr;
+          auto *data = (float*)mDataPtr;
           return (T::ParamValue)data[idx];
         }
         break;

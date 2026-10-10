@@ -39,7 +39,7 @@ MemoryMapper memoryMapper;
 void* fault_handler_thread(void *arg)
 {
   Fmi::set_thread_name("mmap-fault");
-  MemoryMapper *mapper = (MemoryMapper*)arg;
+  auto *mapper = (MemoryMapper*)arg;
   mapper->faultHandlerThread();
   pthread_exit(nullptr);
   return nullptr;
@@ -53,7 +53,7 @@ void* fault_processing_thread(void *arg)
 {
   static std::atomic<unsigned> counter{0};
   Fmi::set_thread_name(fmt::format("mmap-flt-{}", ++counter));
-  MemoryMapper *mapper = (MemoryMapper*)arg;
+  auto *mapper = (MemoryMapper*)arg;
   mapper->faultProcessingThread();
   pthread_exit(nullptr);
   return nullptr;
@@ -393,7 +393,7 @@ void MemoryMapper::setEnabled(bool enabled)
 
       mFaultProcessingThread = new pthread_t[mMaxProcessingThreads];
 
-      DataFetcher_filesys *fs = new DataFetcher_filesys();
+      auto *fs = new DataFetcher_filesys();
       fs->setFileHandleLimit(mFileHandleLimit);
       DataFetcher_sptr df_filesys(fs);
       DataFetcher_sptr df_network(new DataFetcher_network());

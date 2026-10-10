@@ -114,7 +114,7 @@ T::Dimensions VariableResolutionRotatedLatLonImpl::getGridDimensions() const
   try
   {
     if (!mVariableLatLon.getNi() || !mVariableLatLon.getNj())
-      return T::Dimensions();
+      return {};
 
     return T::Dimensions(*mVariableLatLon.getNi(),*mVariableLatLon.getNj());
   }

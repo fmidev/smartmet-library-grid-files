@@ -987,14 +987,14 @@ Message* GridFile::newMessage(T::FileType fileType)
     {
       case T::FileTypeValue::Grib1:
       {
-        GRIB1::Message *msg = new GRIB1::Message();
+        auto *msg = new GRIB1::Message();
         addMessage(msg);
         return msg;
       }
 
       case T::FileTypeValue::Grib2:
       {
-        GRIB2::Message *msg = new GRIB2::Message();
+        auto *msg = new GRIB2::Message();
 
         msg->setBitmapSection(new GRIB2::BitmapSection());
         msg->setIdentificationSection(new GRIB2::IdentificationSection());
@@ -1262,7 +1262,7 @@ GRID::Message* GridFile::createMessage(T::MessageIndex messageIndex,GRID::Messag
         uint idx = 0;
         for (auto it = messageInfoList.begin();it != messageInfoList.end(); ++it)
         {
-          NetCDF::Message *message = new NetCDF::Message(this,mNetCdfFile,idx,*it);
+          auto *message = new NetCDF::Message(this,mNetCdfFile,idx,*it);
           mMessages.insert(std::pair<uint,Message*>(idx,message));
           idx++;
         }
@@ -1291,7 +1291,7 @@ GRID::Message* GridFile::createMessage(T::MessageIndex messageIndex,GRID::Messag
         uint idx = 0;
         for (auto it = messageInfoList.begin();it != messageInfoList.end(); ++it)
         {
-          QueryData::Message *message = new QueryData::Message(this,mQueryDataFile,idx,*it);
+          auto *message = new QueryData::Message(this,mQueryDataFile,idx,*it);
           mMessages.insert(std::pair<uint,Message*>(idx,message));
           idx++;
         }
@@ -1320,7 +1320,7 @@ GRID::Message* GridFile::createMessage(T::MessageIndex messageIndex,GRID::Messag
         uint idx = 0;
         for (auto it = messageInfoList.begin();it != messageInfoList.end(); ++it)
         {
-          GeoTiff::Message *message = new GeoTiff::Message(this,mGeoTiffFile,idx,*it);
+          auto *message = new GeoTiff::Message(this,mGeoTiffFile,idx,*it);
           mMessages.insert(std::pair<uint,Message*>(idx,message));
           idx++;
         }
@@ -1354,14 +1354,14 @@ GRID::Message* GridFile::createMessage(T::MessageIndex messageIndex,GRID::Messag
     {
       case T::FileTypeValue::Grib1:
       {
-        GRIB1::Message *msg = new GRIB1::Message(this,messageIndex,messageInfo);
+        auto *msg = new GRIB1::Message(this,messageIndex,messageInfo);
         mMessages.insert(std::pair<uint,Message*>(messageIndex,msg));
         return msg;
       }
 
       case T::FileTypeValue::Grib2:
       {
-        GRIB2::Message *msg = new GRIB2::Message(this,messageIndex,messageInfo);
+        auto *msg = new GRIB2::Message(this,messageIndex,messageInfo);
         mMessages.insert(std::pair<uint,Message*>(messageIndex,msg));
         return msg;
       }
@@ -1603,7 +1603,7 @@ void GridFile::read(MemoryReader& memoryReader,uint maxMessages)
             uint idx = 0;
             for (auto it = messageInfoList.begin();it != messageInfoList.end(); ++it)
             {
-              NetCDF::Message *message = new NetCDF::Message(this,mNetCdfFile,idx,*it);
+              auto *message = new NetCDF::Message(this,mNetCdfFile,idx,*it);
               mMessages.insert(std::pair<uint,Message*>(idx,message));
               idx++;
               if (mMessages.size() >= maxMessages)
@@ -1624,7 +1624,7 @@ void GridFile::read(MemoryReader& memoryReader,uint maxMessages)
             uint idx = 0;
             for (auto it = messageInfoList.begin();it != messageInfoList.end(); ++it)
             {
-              QueryData::Message *message = new QueryData::Message(this,mQueryDataFile,idx,*it);
+              auto *message = new QueryData::Message(this,mQueryDataFile,idx,*it);
               mMessages.insert(std::pair<uint,Message*>(idx,message));
               idx++;
               if (mMessages.size() >= maxMessages)
@@ -1645,7 +1645,7 @@ void GridFile::read(MemoryReader& memoryReader,uint maxMessages)
             uint idx = 0;
             for (auto it = messageInfoList.begin();it != messageInfoList.end(); ++it)
             {
-              GeoTiff::Message *message = new GeoTiff::Message(this,mGeoTiffFile,idx,*it);
+              auto *message = new GeoTiff::Message(this,mGeoTiffFile,idx,*it);
               mMessages.insert(std::pair<uint,Message*>(idx,message));
               idx++;
               if (mMessages.size() >= maxMessages)
@@ -1682,7 +1682,7 @@ void GridFile::readGrib1Message(MemoryReader& memoryReader, T::MessageIndex mess
   FUNCTION_TRACE
   try
   {
-    GRIB1::Message *message = new GRIB1::Message();
+    auto *message = new GRIB1::Message();
     message->setGridFilePtr(this);
     message->setMessageIndex(messageIndex);
     mMessages.insert(std::pair<uint,Message*>(messageIndex,message));
@@ -1746,7 +1746,7 @@ void GridFile::readGrib2Message(MemoryReader& memoryReader, T::MessageIndex mess
         break;
       }
 
-      GRIB2::Message *message = new GRIB2::Message();
+      auto *message = new GRIB2::Message();
       message->setGridFilePtr(this);
       message->setMessageIndex(messageIndex);
       // A field after the first one repeats sections 2-7, 3-7 or 4-7 of the

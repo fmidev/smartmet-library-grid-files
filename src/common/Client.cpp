@@ -192,7 +192,7 @@ size_t curl_responseProcessing(char *ptr, size_t size, size_t nmemb, void *userd
   try
   {
     //printf("### RECEIVE %ld\n",nmemb);
-    Client::Response *response = (Client::Response*)userdata;
+    auto *response = (Client::Response*)userdata;
 
     for (size_t t=0; t<nmemb; t++)
     {

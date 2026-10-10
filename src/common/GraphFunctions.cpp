@@ -155,8 +155,8 @@ extern void convertWkbCoordinates(MemoryReader &_memoryReader, MemoryWriter &_me
 
 static int compare_points(const void *p1, const void *p2)
 {
-  const double *v1 = (const double*) p1;
-  const double *v2 = (const double*) p2;
+  const auto *v1 = (const double*) p1;
+  const auto *v2 = (const double*) p2;
 
   if (*v1 < *v2)
     return -1;
@@ -343,11 +343,11 @@ void getPointsInsidePolygon(int gridWidth, int gridHeight, T::Coordinate_vec &po
         double xj = polygonPoints[j].x();
         double yj = polygonPoints[j].y();
 
-        double dy = C_DOUBLE(y);
+        auto dy = C_DOUBLE(y);
 
         if ((yi < dy && yj >= dy) || (yj < dy && yi >= dy))
         {
-          double xx = C_DOUBLE(xi + (y - yi) / (yj - yi) * (xj - xi));
+          auto xx = C_DOUBLE(xi + (y - yi) / (yj - yi) * (xj - xi));
           if (nodes >= C_INT(nodeX.size()))
             nodeX.resize(2 * nodeX.size());
           nodeX[nodes++] = C_DOUBLE(xx);
@@ -522,11 +522,11 @@ void getPointsInsidePolygonPath(int gridWidth, int gridHeight, T::Polygon_vec &p
           double xj = pointsX[j];
           double yj = pointsY[j];
 
-          double dy = C_DOUBLE(y);
+          auto dy = C_DOUBLE(y);
 
           if ((yi < dy && yj >= dy) || (yj < dy && yi >= dy))
           {
-            double xx = C_DOUBLE(xi + (y - yi) / (yj - yi) * (xj - xi));
+            auto xx = C_DOUBLE(xi + (y - yi) / (yj - yi) * (xj - xi));
             if (nodes >= C_INT(nodeX.size()))
               nodeX.resize(2 * nodeX.size());
             nodeX[nodes++] = C_DOUBLE(xx);
@@ -1242,7 +1242,7 @@ void getIsolines(std::vector<float> &gridData, T::Coordinate_vec *coordinates, i
         if (size > 0)
         {
           const auto &wkb = out.str();
-          unsigned char *data = reinterpret_cast<unsigned char*>(const_cast<char*>(wkb.c_str()));
+          auto *data = reinterpret_cast<unsigned char*>(const_cast<char*>(wkb.c_str()));
 
           //paint.paintWkb(1,1,0,0,data,size);
 
@@ -1413,7 +1413,7 @@ void getIsobands(std::vector<float> &gridData, std::vector<T::Coordinate> *coord
         if (size > 0)
         {
           const auto &wkb = out.str();
-          unsigned char *data = reinterpret_cast<unsigned char*>(const_cast<char*>(wkb.c_str()));
+          auto *data = reinterpret_cast<unsigned char*>(const_cast<char*>(wkb.c_str()));
 
           wkbData.reserve(size);
           for (size_t t = 0; t < size; t++)
@@ -1993,11 +1993,11 @@ void getStreamlineImage(float *direction, float *value, uint *image, int width, 
               if (hh > 0xFF)
                 hh = 0xFF;
 
-              unsigned char hue = (unsigned char) hh;
+              auto hue = (unsigned char) hh;
               unsigned char saturation = hue;
 
               // uint pos = c % maxLength;
-              uchar v = (uchar) (startColor + (c * colorStep));
+              auto v = (uchar) (startColor + (c * colorStep));
               uint col = hsv_to_rgb(hue, saturation, v);
 
               image[idx] = col;
@@ -2125,7 +2125,7 @@ void getStreamlines(T::ParamValue_vec &gridValues, std::vector<T::Coordinate> *c
   try
   {
     int sz = width * height;
-    float *direction = new float[sz];
+    auto *direction = new float[sz];
     uint *image = new uint[sz];
 
     for (int t = 0; t < sz; t++)

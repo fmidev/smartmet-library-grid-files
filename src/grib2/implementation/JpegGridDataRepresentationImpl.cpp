@@ -273,7 +273,7 @@ typedef struct
 
 static OPJ_SIZE_T readMemoryStream(void *data, OPJ_SIZE_T dataSize, void *handle)
 {
-  StreamHandle *streamHandle = (StreamHandle*)handle;
+  auto *streamHandle = (StreamHandle*)handle;
   if (streamHandle->offset >= streamHandle->dataSize)
     return (OPJ_SIZE_T)-1;
 
@@ -295,8 +295,8 @@ static OPJ_OFF_T moveMemoryStreamOffset(OPJ_OFF_T bytes, void *handle)
   if (bytes < 0)
     return -1;
 
-  StreamHandle *streamHandle = (StreamHandle*)handle;
-  OPJ_SIZE_T n = (OPJ_SIZE_T)bytes;
+  auto *streamHandle = (StreamHandle*)handle;
+  auto n = (OPJ_SIZE_T)bytes;
 
   if ((streamHandle->offset + bytes) > streamHandle->dataSize)
     n = streamHandle->dataSize - streamHandle->offset;
@@ -309,7 +309,7 @@ static OPJ_OFF_T moveMemoryStreamOffset(OPJ_OFF_T bytes, void *handle)
 
 static OPJ_BOOL seekMemoryStream(OPJ_OFF_T position, void *handle)
 {
-  StreamHandle *streamHandle = (StreamHandle*)handle;
+  auto *streamHandle = (StreamHandle*)handle;
 
   if (position < 0)
     return OPJ_FALSE;

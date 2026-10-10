@@ -113,7 +113,7 @@ T::Dimensions TriangularImpl::getGridDimensions() const
 {
   try
   {
-    return T::Dimensions();
+    return {};
   }
   catch (...)
   {

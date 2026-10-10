@@ -114,7 +114,7 @@ T::Dimensions IrregularLatLonImpl::getGridDimensions() const
 {
   try
   {
-    return T::Dimensions();
+    return {};
   }
   catch (...)
   {

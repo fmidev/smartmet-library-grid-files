@@ -114,7 +114,7 @@ T::Dimensions TimeSectionImpl::getGridDimensions() const
 {
   try
   {
-    return T::Dimensions();
+    return {};
   }
   catch (...)
   {

@@ -1563,7 +1563,7 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
     {
       case 1:  // byte
       {
-        uchar *v = (uchar*)(mDataStartPtr + idx);
+        auto *v = (uchar*)(mDataStartPtr + idx);
         if ((T::ParamValue)(*v) == mMissingValue)
           return ParamValueMissing;
 
@@ -1583,9 +1583,9 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
 
       case 3:  // short
       {
-        uchar *v = (uchar*)(mDataStartPtr + idx);
+        auto *v = (uchar*)(mDataStartPtr + idx);
         short val = 0;
-        uchar *vv = (uchar*)&val;
+        auto *vv = (uchar*)&val;
         vv[0] = v[1];
         vv[1] = v[0];
         if ((T::ParamValue)val == mMissingValue)
@@ -1597,9 +1597,9 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
 
       case 4:  // int
       {
-        uchar *v = (uchar*)(mDataStartPtr + idx);
+        auto *v = (uchar*)(mDataStartPtr + idx);
         int val = 0;
-        uchar *vv = (uchar*)&val;
+        auto *vv = (uchar*)&val;
         vv[0] = v[3];
         vv[1] = v[2];
         vv[2] = v[1];
@@ -1613,9 +1613,9 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
 
       case 5:  // float
       {
-        uchar *v = (uchar*)(mDataStartPtr + idx);
+        auto *v = (uchar*)(mDataStartPtr + idx);
         float val = 0;
-        uchar *vv = (uchar*)&val;
+        auto *vv = (uchar*)&val;
         vv[0] = v[3];
         vv[1] = v[2];
         vv[2] = v[1];
@@ -1629,9 +1629,9 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
 
       case 6:  // double
       {
-        uchar *v = (uchar*)(mDataStartPtr + idx);
+        auto *v = (uchar*)(mDataStartPtr + idx);
         double val = 0;
-        uchar *vv = (uchar*)&val;
+        auto *vv = (uchar*)&val;
         vv[0] = v[7];
         vv[1] = v[6];
         vv[2] = v[5];

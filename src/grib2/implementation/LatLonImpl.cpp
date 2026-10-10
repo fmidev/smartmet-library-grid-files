@@ -328,7 +328,7 @@ T::Dimensions LatLonImpl::getGridDimensions() const
   try
   {
     if (!mLatLon.getGrid()->getNi() || !mLatLon.getGrid()->getNj())
-      return T::Dimensions();
+      return {};
 
     return T::Dimensions(*mLatLon.getGrid()->getNi(), *mLatLon.getGrid()->getNj());
   }

@@ -114,7 +114,7 @@ T::Dimensions SpaceViewImpl::getGridDimensions() const
   try
   {
     if (!mNx || !mNy)
-      return T::Dimensions();
+      return {};
 
     return T::Dimensions(*mNx,*mNy);
   }

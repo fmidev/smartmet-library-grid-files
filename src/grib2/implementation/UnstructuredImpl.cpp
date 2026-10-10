@@ -113,7 +113,7 @@ T::Dimensions UnstructuredImpl::getGridDimensions() const
 {
   try
   {
-    return T::Dimensions();
+    return {};
   }
   catch (...)
   {

@@ -335,7 +335,7 @@ void Topography::loadLandShading()
       for (uint t=0; t<mLandShading_size; t++)
       {
         uint col = image.pixel[t];
-        double pp = (double)argb_to_gray(col);
+        auto pp = (double)argb_to_gray(col);
         if (pp <= 207)
           mLandShading[t] = (float)(-((207.0 - pp)/207.0));
         else
@@ -390,7 +390,7 @@ void Topography::loadSeaShading()
       for (uint t=0; t<mSeaShading_size; t++)
       {
         uint col = image.pixel[t];
-        double pp = (double)argb_to_gray(col);
+        auto pp = (double)argb_to_gray(col);
         if (pp <= 163)
           mSeaShading[t] = (float)(-((163.0 - pp)/163.0));
         else

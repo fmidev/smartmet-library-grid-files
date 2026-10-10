@@ -598,7 +598,7 @@ void SimplePacking::encodeValues(Message *message,T::ParamValue_vec& values)
     //if ((totalBits % 8) != 0)
       dataSize++;
 
-    uchar *data = new uchar[dataSize];
+    auto *data = new uchar[dataSize];
     memset(data,0,dataSize);
     BitArrayWriter bitArrayWriter(data,totalBits);
 
@@ -609,7 +609,7 @@ void SimplePacking::encodeValues(Message *message,T::ParamValue_vec& values)
         double Y = *it;
         double X = (Y - RDfac) / EDfac;
 
-        UInt64 v = C_UINT64(round(X));
+        auto v = C_UINT64(round(X));
         bitArrayWriter.writeBits(bits,v);
       }
     }

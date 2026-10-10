@@ -113,7 +113,7 @@ T::Dimensions RotatedSphericalHarmonicImpl::getGridDimensions() const
 {
   try
   {
-    return T::Dimensions();
+    return {};
   }
   catch (...)
   {

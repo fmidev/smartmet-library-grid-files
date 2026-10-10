@@ -358,8 +358,8 @@ void RotatedLatLonImpl:: getGridPointListByLatLonCoordinates(T::Coordinate_vec& 
     int sz = latlon.size();
     points.reserve(sz);
 
-    double *x = new double[sz+1];
-    double *y = new double[sz+1];
+    auto *x = new double[sz+1];
+    auto *y = new double[sz+1];
 
     std::unique_ptr<double[]> rx(x);
     std::unique_ptr<double[]> ry(y);
@@ -517,13 +517,13 @@ bool RotatedLatLonImpl::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint g
     if (grid_j > nj)
       return false;
 
-    double latitudeOfFirstGridPoint = C_DOUBLE(mGridArea.getLatitudeOfFirstGridPoint());
-    double longitudeOfFirstGridPoint = C_DOUBLE(mGridArea.getLongitudeOfFirstGridPoint());
-    double latitudeOfLastGridPoint = C_DOUBLE(mGridArea.getLatitudeOfLastGridPoint());
-    double longitudeOfLastGridPoint = C_DOUBLE(mGridArea.getLongitudeOfLastGridPoint());
+    auto latitudeOfFirstGridPoint = C_DOUBLE(mGridArea.getLatitudeOfFirstGridPoint());
+    auto longitudeOfFirstGridPoint = C_DOUBLE(mGridArea.getLongitudeOfFirstGridPoint());
+    auto latitudeOfLastGridPoint = C_DOUBLE(mGridArea.getLatitudeOfLastGridPoint());
+    auto longitudeOfLastGridPoint = C_DOUBLE(mGridArea.getLongitudeOfLastGridPoint());
 
-    double iDirectionIncrement = C_DOUBLE(mIDirectionIncrement);
-    double jDirectionIncrement = C_DOUBLE(mJDirectionIncrement);
+    auto iDirectionIncrement = C_DOUBLE(mIDirectionIncrement);
+    auto jDirectionIncrement = C_DOUBLE(mJDirectionIncrement);
 
     unsigned char scanMode = mScanningMode.getScanningMode();
 
@@ -621,7 +621,7 @@ std::string RotatedLatLonImpl::getGridGeometryString() const
     double dy = C_DOUBLE(mJDirectionIncrement)/1000;
     double sx = getLongitude(C_DOUBLE(mRotation.getLongitudeOfSouthernPole())/1000);
     double sy = C_DOUBLE(mRotation.getLatitudeOfSouthernPole())/1000;
-    double angle = C_DOUBLE(mRotation.getGeography_angleOfRotationInDegrees());
+    auto angle = C_DOUBLE(mRotation.getGeography_angleOfRotationInDegrees());
 
     unsigned char scanningMode = mScanningMode.getScanningMode();
 
@@ -1052,7 +1052,7 @@ void RotatedLatLonImpl::initSpatialReference()
       const char *pszGeogName = "UNKNOWN";
       const char *pszDatumName = "UNKNOWN";
       const char *pszSpheroidName = "UNKNOWN";
-      double angle = C_DOUBLE(mRotation.getGeography_angleOfRotationInDegrees());
+      auto angle = C_DOUBLE(mRotation.getGeography_angleOfRotationInDegrees());
       double dfSemiMajor =  6367470;
       double dfInvFlattening = 0.0;
 

@@ -321,16 +321,16 @@ double linearInterpolation2(double x,double y,double x1,double y1,double x2,doub
       val_q12 == ParamValueMissing &&  val_q22 == ParamValueMissing)
     return ParamValueMissing;
 
-  Int64 ax = (Int64)(x*1000000);
-  Int64 ay = (Int64)(y*1000000);
-  Int64 ax1 = (Int64)(x1*1000000);
-  Int64 ay1 = (Int64)(y1*1000000);
-  Int64 ax2 = (Int64)(x2*1000000);
-  Int64 ay2 = (Int64)(y2*1000000);
-  Int64 aval_q11 = (Int64)(val_q11*1000000);
-  Int64 aval_q21 = (Int64)(val_q21*1000000);
-  Int64 aval_q22 = (Int64)(val_q22*1000000);
-  Int64 aval_q12 = (Int64)(val_q12*1000000);
+  auto ax = (Int64)(x*1000000);
+  auto ay = (Int64)(y*1000000);
+  auto ax1 = (Int64)(x1*1000000);
+  auto ay1 = (Int64)(y1*1000000);
+  auto ax2 = (Int64)(x2*1000000);
+  auto ay2 = (Int64)(y2*1000000);
+  auto aval_q11 = (Int64)(val_q11*1000000);
+  auto aval_q21 = (Int64)(val_q21*1000000);
+  auto aval_q22 = (Int64)(val_q22*1000000);
+  auto aval_q12 = (Int64)(val_q12*1000000);
 
   Int64 res = linearInterpolation(ax,ay,ax1,ay1,ax2,ay2,aval_q11,aval_q21,aval_q22,aval_q12);
 
@@ -777,9 +777,9 @@ T::ParamValue timeInterpolation(T::ParamValue value1,T::ParamValue& value2,time_
     if (t2 == newTime)
       return value2;
 
-    double timeDiff = C_DOUBLE(t2 - t1);
-    double diff1 = C_DOUBLE(newTime - t1);
-    double diff2 = C_DOUBLE(t2 - newTime);
+    auto timeDiff = C_DOUBLE(t2 - t1);
+    auto diff1 = C_DOUBLE(newTime - t1);
+    auto diff2 = C_DOUBLE(t2 - newTime);
 
     switch (timeInterpolationMethod)
     {
@@ -883,9 +883,9 @@ void timeInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,int
     if (values1.size() != values2.size())
       throw Fmi::Exception(BCP,"Value vectors are not the same size!");
 
-    double timeDiff = C_DOUBLE(t2 - t1);
-    double diff1 = C_DOUBLE(newTime - t1);
-    double diff2 = C_DOUBLE(t2 - newTime);
+    auto timeDiff = C_DOUBLE(t2 - t1);
+    auto diff1 = C_DOUBLE(newTime - t1);
+    auto diff2 = C_DOUBLE(t2 - newTime);
     double tp = diff1/timeDiff;
 
     uint sz = values1.size();
@@ -1036,8 +1036,8 @@ void timeInterpolation(T::GridValueList& values1,T::GridValueList& values2,time_
       return;
     }
 
-    double diff1 = (double)(newTime - t1);
-    double diff2 = (double)(t2 - t1);
+    auto diff1 = (double)(newTime - t1);
+    auto diff2 = (double)(t2 - t1);
 
     uint len1 = values1.getLength();
     uint len2 = values2.getLength();

@@ -113,7 +113,7 @@ T::Dimensions HovmollerImpl::getGridDimensions() const
 {
   try
   {
-    return T::Dimensions();
+    return {};
   }
   catch (...)
   {

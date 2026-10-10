@@ -186,10 +186,10 @@ inline uint32_t merge_ARGB(uint32_t top, uint32_t bottom)
     Bout /= Aout;
   }
 
-  uint8_t A = (uint8_t)(Aout * 255.0f + 0.49);
-  uint8_t R = (uint8_t)(Rout * 255.0f + 0.49);
-  uint8_t G = (uint8_t)(Gout * 255.0f + 0.49);
-  uint8_t B = (uint8_t)(Bout * 255.0f + 0.49);
+  auto A = (uint8_t)(Aout * 255.0f + 0.49);
+  auto R = (uint8_t)(Rout * 255.0f + 0.49);
+  auto G = (uint8_t)(Gout * 255.0f + 0.49);
+  auto B = (uint8_t)(Bout * 255.0f + 0.49);
 
   return (A << 24) | (R << 16) | (G << 8) | B;
 }
