@@ -2,11 +2,11 @@
 #include "GeneralFunctions.h"
 #include <macgyver/Exception.h>
 #include <fcntl.h>
-#include <stdio.h>
+#include <cstdio>
 #include <unistd.h>
 #include <netinet/in.h>
 #include <stdlib.h>
-#include <string.h>
+#include <cstring>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h>

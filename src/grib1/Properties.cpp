@@ -139,7 +139,7 @@ void Property::addProperty(const char *name,uint id)
   try
   {
     propertyMap.insert(std::pair<std::string,uint>(name,id));
-    propertyVector.push_back(std::pair<std::string,uint>(name,id));
+    propertyVector.emplace_back(name,id);
   }
   catch (...)
   {

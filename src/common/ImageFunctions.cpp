@@ -6,7 +6,7 @@
 #include <macgyver/Exception.h>
 #include <memory>
 #include <gis/OGR.h>
-#include <stdint.h>
+#include <cstdint>
 #include <math.h>
 
 

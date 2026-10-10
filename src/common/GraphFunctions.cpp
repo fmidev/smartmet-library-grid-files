@@ -1515,7 +1515,7 @@ int findPath(std::vector<float> &direction, bool *visited, int width, int height
     if (dat == ParamValueMissing)
       return cellCount;
 
-    coordinates.push_back(T::Coordinate(x1, y1));
+    coordinates.emplace_back(x1, y1);
 
     if (!visited[idx])
       cellCount++;
@@ -1689,7 +1689,7 @@ int findPath(float *direction, uint *image, int width, int height, int maxLength
     if (dat == ParamValueMissing)
       return cellCount;
 
-    coordinates.push_back(T::Coordinate(x1, y1));
+    coordinates.emplace_back(x1, y1);
 
     if (image[idx] != visited)
       cellCount++;
@@ -1829,7 +1829,7 @@ int findPath(std::vector<float>& direction, uint *image, int width, int height, 
     if (dat == ParamValueMissing)
       return cellCount;
 
-    coordinates.push_back(T::Coordinate(x1, y1));
+    coordinates.emplace_back(x1, y1);
 
     if (image[idx] != visited)
       cellCount++;

@@ -17,7 +17,7 @@
 #include <sys/syscall.h>
 #include <sys/ioctl.h>
 #include <fcntl.h>
-#include <signal.h>
+#include <csignal>
 #include <poll.h>
 #include <curl/curl.h>
 #include <sys/utsname.h>

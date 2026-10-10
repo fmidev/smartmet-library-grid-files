@@ -2,14 +2,14 @@
 #include <arpa/inet.h>
 #include <dirent.h>
 #include <fnmatch.h>
-#include <limits.h>
+#include <climits>
 #include <macgyver/StringConversion.h>
 #include <macgyver/TimeParser.h>
 #include <macgyver/LocalDateTime.h>
 #include <macgyver/TimeZones.h>
-#include <stdio.h>
+#include <cstdio>
 #include <stdlib.h>
-#include <string.h>
+#include <cstring>
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <sys/types.h>
@@ -3297,7 +3297,7 @@ void readEofLines(const char *filename,uint numberOfLines,std::vector<std::strin
       if (p)
         *p ='\0';
 
-      tmpLines.push_back(std::string(st));
+      tmpLines.emplace_back(st);
     }
     fclose(file);
 

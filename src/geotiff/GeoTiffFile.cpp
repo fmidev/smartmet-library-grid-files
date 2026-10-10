@@ -307,7 +307,7 @@ void GeoTiffFile::readIFD(MemoryReader& memoryReader,MessageInfoVec& messageInfo
       {
         buf[c] = '\0';
         if (c > 0)
-          lines.push_back(std::string(buf.data()));
+          lines.emplace_back(buf.data());
 
         c = 0;
       }
@@ -319,7 +319,7 @@ void GeoTiffFile::readIFD(MemoryReader& memoryReader,MessageInfoVec& messageInfo
     }
     buf[c] = '\0';
     if (c > 0)
-      lines.push_back(std::string(buf.data()));
+      lines.emplace_back(buf.data());
 
     memoryReader.setReadPosition(rp);
 

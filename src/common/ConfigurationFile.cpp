@@ -4,7 +4,7 @@
 
 #include <macgyver/Exception.h>
 
-#include <stdio.h>
+#include <cstdio>
 #include <stdlib.h>
 #include <string>
 #include <vector>
