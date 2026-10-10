@@ -11,6 +11,7 @@
 
 #include <iostream>
 #include <map>
+#include <memory>
 #include <unordered_map>
 #include <iostream>
 #include <math.h>
@@ -61,7 +62,7 @@ GridDefinition::GridDefinition()
 
     if (!latlonSpatialReference)
     {
-      latlonSpatialReference.reset(new T::SpatialRef());
+      latlonSpatialReference = std::make_shared<T::SpatialRef>();
       latlonSpatialReference->importFromEPSG(4326);
       latlonSpatialReference->SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
     }
@@ -111,7 +112,7 @@ GridDefinition::GridDefinition(const GridDefinition& other)
 
     if (!latlonSpatialReference)
     {
-      latlonSpatialReference.reset(new T::SpatialRef());
+      latlonSpatialReference = std::make_shared<T::SpatialRef>();
       latlonSpatialReference->importFromEPSG(4326);
       latlonSpatialReference->SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
     }

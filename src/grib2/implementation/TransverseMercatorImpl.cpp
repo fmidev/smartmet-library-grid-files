@@ -1,5 +1,7 @@
 #include "TransverseMercatorImpl.h"
 #include <macgyver/Exception.h>
+
+#include <memory>
 #include "../../grid/PrintOptions.h"
 #include "../../common/GeneralFunctions.h"
 
@@ -372,7 +374,7 @@ void TransverseMercatorImpl::initSpatialReference()
     mSpatialReference = getSpatialReference();
     if (!mSpatialReference)
     {
-      mSpatialReference.reset(new T::SpatialRef());
+      mSpatialReference = std::make_shared<T::SpatialRef>();
 
       // ### Check that we have all necessary values needed by this method.
 

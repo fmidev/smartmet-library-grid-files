@@ -1,5 +1,7 @@
 #include "GaussianImpl.h"
 #include <macgyver/Exception.h>
+
+#include <memory>
 #include "../../common/GeneralFunctions.h"
 #include "../../grid/GaussianLatitudeCache.h"
 #include "../../grid/PrintOptions.h"
@@ -300,7 +302,7 @@ void GaussianImpl::initSpatialReference()
     mSpatialReference = getSpatialReference();
     if (!mSpatialReference)
     {
-      mSpatialReference.reset(new T::SpatialRef());
+      mSpatialReference = std::make_shared<T::SpatialRef>();
       addSpatialReference(mSpatialReference);
 
       // ### Set geographic coordinate system.

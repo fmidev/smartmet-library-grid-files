@@ -23,6 +23,7 @@
 #include "../identification/GridDef.h"
 #include "../common/ShowFunction.h"
 #include <iostream>
+#include <memory>
 #include <set>
 #include <utility>
 #include <sys/mman.h>
@@ -136,55 +137,55 @@ Message::Message(const Message& other)
 
     if (other.mIndicatorSection)
     {
-      mIndicatorSection.reset(new IndicatorSection(*(other.mIndicatorSection.get())));
+      mIndicatorSection = std::make_shared<IndicatorSection>(*(other.mIndicatorSection.get()));
       mIndicatorSection->setMessagePtr(this);
     }
 
     if (other.mIdentificationSection)
     {
-      mIdentificationSection.reset(new IdentificationSection(*(other.mIdentificationSection.get())));
+      mIdentificationSection = std::make_shared<IdentificationSection>(*(other.mIdentificationSection.get()));
       mIdentificationSection->setMessagePtr(this);
     }
 
     if (other.mLocalSection)
     {
-      mLocalSection.reset(new LocalSection(*(other.mLocalSection.get())));
+      mLocalSection = std::make_shared<LocalSection>(*(other.mLocalSection.get()));
       mLocalSection->setMessagePtr(this);
     }
 
     if (other.mGridSection)
     {
-      mGridSection.reset(new GridSection(*(other.mGridSection.get())));
+      mGridSection = std::make_shared<GridSection>(*(other.mGridSection.get()));
       mGridSection->setMessagePtr(this);
     }
 
     if (other.mProductSection)
     {
-      mProductSection.reset(new ProductSection(*(other.mProductSection.get())));
+      mProductSection = std::make_shared<ProductSection>(*(other.mProductSection.get()));
       mProductSection->setMessagePtr(this);
     }
 
     if (other.mRepresentationSection)
     {
-      mRepresentationSection.reset(new RepresentationSection(*(other.mRepresentationSection.get())));
+      mRepresentationSection = std::make_shared<RepresentationSection>(*(other.mRepresentationSection.get()));
       mRepresentationSection->setMessagePtr(this);
     }
 
     if (other.mBitmapSection)
     {
-      mBitmapSection.reset(new BitmapSection(*(other.mBitmapSection.get())));
+      mBitmapSection = std::make_shared<BitmapSection>(*(other.mBitmapSection.get()));
       mBitmapSection->setMessagePtr(this);
     }
 
     if (other.mDataSection)
     {
-      mDataSection.reset(new DataSection(*(other.mDataSection.get())));
+      mDataSection = std::make_shared<DataSection>(*(other.mDataSection.get()));
       mDataSection->setMessagePtr(this);
     }
 
     if (other.mPreviousBitmapSection)
     {
-      mPreviousBitmapSection.reset(new BitmapSection(*(other.mPreviousBitmapSection.get())));
+      mPreviousBitmapSection = std::make_shared<BitmapSection>(*(other.mPreviousBitmapSection.get()));
       mPreviousBitmapSection->setMessagePtr(this);
     }
 

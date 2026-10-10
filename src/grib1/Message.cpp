@@ -19,6 +19,7 @@
 #include "../grid/GridFile.h"
 #include "../common/ShowFunction.h"
 #include <iostream>
+#include <memory>
 #include <sys/mman.h>
 #include <macgyver/StringConversion.h>
 
@@ -130,30 +131,30 @@ Message::Message(const Message& other)
 
     if (other.mIndicatorSection)
     {
-      mIndicatorSection.reset(new IndicatorSection(*(other.mIndicatorSection.get())));
+      mIndicatorSection = std::make_shared<IndicatorSection>(*(other.mIndicatorSection.get()));
       mIndicatorSection->setMessagePtr(this);
     }
 
     if (other.mGridSection)
     {
-      mGridSection.reset(new GridSection(*(other.mGridSection.get())));
+      mGridSection = std::make_shared<GridSection>(*(other.mGridSection.get()));
       mGridSection->setMessagePtr(this);
     }
 
     if (other.mProductSection)
     {
-      mProductSection.reset(new ProductSection(*(other.mProductSection.get())));
+      mProductSection = std::make_shared<ProductSection>(*(other.mProductSection.get()));
       mProductSection->setMessagePtr(this);
     }
     if (other.mBitmapSection)
     {
-      mBitmapSection.reset(new BitmapSection(*(other.mBitmapSection.get())));
+      mBitmapSection = std::make_shared<BitmapSection>(*(other.mBitmapSection.get()));
       mBitmapSection->setMessagePtr(this);
     }
 
     if (other.mDataSection)
     {
-      mDataSection.reset(new DataSection(*(other.mDataSection.get())));
+      mDataSection = std::make_shared<DataSection>(*(other.mDataSection.get()));
       mDataSection->setMessagePtr(this);
     }
 

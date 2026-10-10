@@ -7,6 +7,7 @@
 #include "../Properties.h"
 
 #include <iostream>
+#include <memory>
 #include <macgyver/Hash.h>
 
 
@@ -704,7 +705,7 @@ void LambertConformalImpl::initSpatialReference()
     mSpatialReference = getSpatialReference();
     if (!mSpatialReference)
     {
-      mSpatialReference.reset(new T::SpatialRef());
+      mSpatialReference = std::make_shared<T::SpatialRef>();
       addSpatialReference(mSpatialReference);
 
       // ### Check that we have all necessary values needed by this method.

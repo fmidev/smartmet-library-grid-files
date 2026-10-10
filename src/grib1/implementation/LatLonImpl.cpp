@@ -1,5 +1,6 @@
 #include "LatLonImpl.h"
 #include <cmath>
+#include <memory>
 #include "../Properties.h"
 #include <macgyver/Exception.h>
 #include "../../common/GeneralFunctions.h"
@@ -823,7 +824,7 @@ void LatLonImpl::initSpatialReference()
     mSpatialReference = getSpatialReference();
     if (!mSpatialReference)
     {
-      mSpatialReference.reset(new T::SpatialRef());
+      mSpatialReference = std::make_shared<T::SpatialRef>();
       addSpatialReference(mSpatialReference);
 
       // ### Set geographic coordinate system.

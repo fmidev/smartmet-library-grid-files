@@ -1,6 +1,8 @@
 #include "PolarStereographicImpl.h"
 #include "../Properties.h"
 #include <macgyver/Exception.h>
+
+#include <memory>
 #include "../../common/GeneralFunctions.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../grid/PrintOptions.h"
@@ -633,7 +635,7 @@ void PolarStereographicImpl::initSpatialReference()
     mSpatialReference = getSpatialReference();
     if (!mSpatialReference)
     {
-      mSpatialReference.reset(new T::SpatialRef());
+      mSpatialReference = std::make_shared<T::SpatialRef>();
       addSpatialReference(mSpatialReference);
 
       // ### Check that we have all necessary values needed by this method.

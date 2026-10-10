@@ -7,6 +7,7 @@
 #include "../Properties.h"
 
 #include <iostream>
+#include <memory>
 
 namespace SmartMet
 {
@@ -631,7 +632,7 @@ void PolarStereographicImpl::initSpatialReference()
     mSpatialReference = getSpatialReference();
     if (!mSpatialReference)
     {
-      mSpatialReference.reset(new T::SpatialRef());
+      mSpatialReference = std::make_shared<T::SpatialRef>();
       addSpatialReference(mSpatialReference);
 
 

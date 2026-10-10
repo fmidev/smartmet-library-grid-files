@@ -1,5 +1,7 @@
 #include "AlbersImpl.h"
 #include <macgyver/Exception.h>
+
+#include <memory>
 #include "../../common/Dimensions.h"
 
 namespace SmartMet
@@ -164,7 +166,7 @@ void AlbersImpl::initSpatialReference()
     mSpatialReference = getSpatialReference();
     if (!mSpatialReference)
     {
-      mSpatialReference.reset(new T::SpatialRef());
+      mSpatialReference = std::make_shared<T::SpatialRef>();
       addSpatialReference(mSpatialReference);
 
       // ### Check that we have all necessary values needed by this method.

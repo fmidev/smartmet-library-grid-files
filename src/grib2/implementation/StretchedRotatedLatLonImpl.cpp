@@ -1,5 +1,7 @@
 #include "StretchedRotatedLatLonImpl.h"
 #include <macgyver/Exception.h>
+
+#include <memory>
 #include "../../common/CoordinateConversions.h"
 
 namespace SmartMet
@@ -285,7 +287,7 @@ void StretchedRotatedLatLonImpl::initSpatialReference()
     mSpatialReference = getSpatialReference();
     if (!mSpatialReference)
     {
-      mSpatialReference.reset(new T::SpatialRef());
+      mSpatialReference = std::make_shared<T::SpatialRef>();
       addSpatialReference(mSpatialReference);
 
       // ### Set geographic coordinate system.

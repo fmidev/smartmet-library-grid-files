@@ -1,5 +1,7 @@
 #include "StretchedLatLonImpl.h"
 #include <macgyver/Exception.h>
+
+#include <memory>
 #include "../../common/CoordinateConversions.h"
 
 namespace SmartMet
@@ -256,7 +258,7 @@ void StretchedLatLonImpl::initSpatialReference()
     mSpatialReference = getSpatialReference();
     if (!mSpatialReference)
     {
-      mSpatialReference.reset(new T::SpatialRef());
+      mSpatialReference = std::make_shared<T::SpatialRef>();
       addSpatialReference(mSpatialReference);
 
       // TODO: This is probably not correct. It is directly copied from LatLonImpl

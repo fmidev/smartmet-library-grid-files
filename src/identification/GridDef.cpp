@@ -56,6 +56,8 @@
 
 #include <macgyver/StringConversion.h>
 
+#include <memory>
+
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
 
 
@@ -3257,10 +3259,10 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
           uint sz = width*height;
 
           if (!latLonCoordinates)
-            latLonCoordinates.reset(new T::Coordinate_vec());
+            latLonCoordinates = std::make_shared<T::Coordinate_vec>();
 
           if (!coordinates)
-            coordinates.reset(new T::Coordinate_vec());
+            coordinates = std::make_shared<T::Coordinate_vec>();
 
           coordinates->reserve(sz);
           latLonCoordinates->reserve(sz);
@@ -3663,7 +3665,7 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
           uint sz = width*height;
 
           if (!latLonCoordinates)
-            latLonCoordinates.reset(new T::Coordinate_vec());
+            latLonCoordinates = std::make_shared<T::Coordinate_vec>();
 
           latLonCoordinates->reserve(sz);
 

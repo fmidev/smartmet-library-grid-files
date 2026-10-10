@@ -6,6 +6,7 @@
 #include "../../grid/GaussianLatitudeCache.h"
 
 #include <iostream>
+#include <memory>
 #include <math.h>
 
 
@@ -314,7 +315,7 @@ void GaussianImpl::initSpatialReference()
     mSpatialReference = getSpatialReference();
     if (!mSpatialReference)
     {
-      mSpatialReference.reset(new T::SpatialRef());
+      mSpatialReference = std::make_shared<T::SpatialRef>();
       addSpatialReference(mSpatialReference);
 
       // ### Set geographic coordinate system.

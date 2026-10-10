@@ -1,6 +1,8 @@
 #include "ObliqueLambertConformalImpl.h"
 #include <macgyver/Exception.h>
 
+#include <memory>
+
 namespace SmartMet
 {
 namespace GRIB1
@@ -227,7 +229,7 @@ void ObliqueLambertConformalImpl::initSpatialReference()
     mSpatialReference = getSpatialReference();
     if (!mSpatialReference)
     {
-      mSpatialReference.reset(new T::SpatialRef());
+      mSpatialReference = std::make_shared<T::SpatialRef>();
       addSpatialReference(mSpatialReference);
 
       auto dfStdP1 = mLatin1;

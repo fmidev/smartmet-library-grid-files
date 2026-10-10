@@ -1,5 +1,7 @@
 #include "LambertConformalImpl.h"
 #include <macgyver/Exception.h>
+
+#include <memory>
 #include "../Properties.h"
 
 namespace SmartMet
@@ -675,7 +677,7 @@ void LambertConformalImpl::initSpatialReference()
     mSpatialReference = getSpatialReference();
     if (!mSpatialReference)
     {
-      mSpatialReference.reset(new T::SpatialRef());
+      mSpatialReference = std::make_shared<T::SpatialRef>();
       addSpatialReference(mSpatialReference);
 
       auto dfStdP1 = mLatin1;

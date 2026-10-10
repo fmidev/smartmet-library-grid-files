@@ -18,6 +18,7 @@
 #include <sys/ioctl.h>
 #include <fcntl.h>
 #include <csignal>
+#include <memory>
 #include <poll.h>
 
 
@@ -39,7 +40,7 @@ GridFile::GridFile()
   {
     mCheckTime = 0;
     mFileId = 0;
-    mMemoryMapInfo.reset(new MapInfo());
+    mMemoryMapInfo = std::make_shared<MapInfo>();
     mMemoryMapInfo->serverType = 1;
     mMemoryMapInfo->protocol = 0;
     mFlags = 0;
@@ -109,7 +110,7 @@ GridFile::GridFile(GridFile *gridFile)
   try
   {
     mCheckTime = 0;
-    mMemoryMapInfo.reset(new MapInfo());
+    mMemoryMapInfo = std::make_shared<MapInfo>();
     mMemoryMapInfo->serverType = 1;
     mMemoryMapInfo->protocol = 0;
     mFileId = 0;

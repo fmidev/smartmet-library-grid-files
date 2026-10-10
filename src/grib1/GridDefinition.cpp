@@ -10,6 +10,7 @@
 #include "../common/ShowFunction.h"
 #include <macgyver/Hash.h>
 #include <iostream>
+#include <memory>
 #include <unordered_map>
 
 
@@ -81,14 +82,14 @@ GridDefinition::GridDefinition()
 
     if (!latlonSpatialReference)
     {
-      latlonSpatialReference.reset(new T::SpatialRef());
+      latlonSpatialReference = std::make_shared<T::SpatialRef>();
       latlonSpatialReference->importFromEPSG(4326);
       latlonSpatialReference->SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
     }
 
     if (sr_wgs84_world_mercator)
     {
-      sr_wgs84_world_mercator.reset(new T::SpatialRef());
+      sr_wgs84_world_mercator = std::make_shared<T::SpatialRef>();
       sr_wgs84_world_mercator->importFromEPSG(3395);
       sr_wgs84_world_mercator->SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
     }
@@ -120,13 +121,13 @@ GridDefinition::GridDefinition(const GridDefinition& other)
 
     if (!latlonSpatialReference)
     {
-      latlonSpatialReference.reset(new T::SpatialRef());
+      latlonSpatialReference = std::make_shared<T::SpatialRef>();
       latlonSpatialReference->importFromEPSG(4326);
       latlonSpatialReference->SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
     }
     if (sr_wgs84_world_mercator)
     {
-      sr_wgs84_world_mercator.reset(new T::SpatialRef());
+      sr_wgs84_world_mercator = std::make_shared<T::SpatialRef>();
       sr_wgs84_world_mercator->importFromEPSG(3395);
       sr_wgs84_world_mercator->SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
     }

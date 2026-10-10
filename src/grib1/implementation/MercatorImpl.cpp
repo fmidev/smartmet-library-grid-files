@@ -1,6 +1,8 @@
 #include "MercatorImpl.h"
 #include "../Properties.h"
 #include <macgyver/Exception.h>
+
+#include <memory>
 #include "../../common/GeneralFunctions.h"
 #include "../../grid/PrintOptions.h"
 #include "../../grid/Typedefs.h"
@@ -520,7 +522,7 @@ void MercatorImpl::initSpatialReference()
     mSpatialReference = getSpatialReference();
     if (!mSpatialReference)
     {
-      mSpatialReference.reset(new T::SpatialRef());
+      mSpatialReference = std::make_shared<T::SpatialRef>();
       addSpatialReference(mSpatialReference);
 
       auto dfCenterLong = mGridArea.getLongitudeOfFirstGridPoint();
