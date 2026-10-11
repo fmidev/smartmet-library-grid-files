@@ -268,7 +268,8 @@ void Topography::loadLandSeaMask()
       {
         if ((mLandSeaMask_width * mLandSeaMask_height) == length)
         {
-          fseek(file,8,SEEK_SET);
+          if (fseek(file,8,SEEK_SET) != 0)
+            throw Fmi::Exception(BCP, "Failed to seek in the file");
           mLandSeaMask.readFromFile(file);
         }
         else
@@ -282,7 +283,7 @@ void Topography::loadLandSeaMask()
         }
       }
 
-      fclose(file);
+      (void)fclose(file);
     }
 
     mLandSeaMask_size = mLandSeaMask_width * mLandSeaMask_height;

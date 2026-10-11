@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 26.10.10
+Version: 26.10.11
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -127,6 +127,9 @@ libraries, the grid engine and the plugins using it
 %attr(0755,root,root) %{_bindir}/smartmet-grid-test-config-creator
 
 %changelog
+* Sun Oct 11 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.11-1.fmi
+- Failed file writes, closes and seeks are now reported instead of being ignored
+
 * Sat Oct 10 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.10-1.fmi
 - Generated GRIB definition classes: override, defaulted copy/move, no sprintf into a fixed buffer for attribute names
 - The definition class generators run on PHP 8 and read the definitions from the given directory

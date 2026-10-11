@@ -117,7 +117,7 @@ class Log
       fprintf(file,"[%04u-%02u-%02u/%02u:%02u:%02u][%lu][",x_tm.tm_year+1900,x_tm.tm_mon+1,x_tm.tm_mday,x_tm.tm_hour,x_tm.tm_min,x_tm.tm_sec,_xLog->getEventCounter());\
       fprintf(file,_xargs);\
       fprintf(file,"][%s:%u:%s()]\n",_xfileName,_xLine,_xFunction);\
-      fflush(file); \
+      (void)fflush(file); \
       _xLog->unlock();\
       _xLog->truncate();\
     }\
@@ -140,7 +140,7 @@ class Log
       fprintf(file,"[%04u-%02u-%02u/%02u:%02u:%02u][%lu][",x_tm.tm_year+1900,x_tm.tm_mon+1,x_tm.tm_mday,x_tm.tm_hour,x_tm.tm_min,x_tm.tm_sec,_xLog->getEventCounter());\
       fprintf(file,_xargs);\
       fprintf(file,"]\n");\
-      fflush(file); \
+      (void)fflush(file); \
       _xLog->unlock();\
       _xLog->truncate();\
     }\
@@ -158,7 +158,7 @@ class Log
     if (file != nullptr)\
     {\
       fprintf(file,_xargs);\
-      fflush(file); \
+      (void)fflush(file); \
       _xLog->unlock();\
       _xLog->truncate();\
     }\

@@ -26,7 +26,7 @@ ShowFunction::ShowFunction(const char *_file,uint _line,const char *_function)
   else
   {
     printf("[%04u][        ] %sSTART %s [%s]\n",_line,space(globalTraceLevel).c_str(),_function,_file);
-    fflush(stdout);
+    (void)fflush(stdout);
   }
   globalTraceLevel++;
 }
@@ -48,7 +48,7 @@ ShowFunction::~ShowFunction()
   else
   {
     printf("[%04u][%.06f] %sEND\n",line,C_DOUBLE(endTime-startTime)/1000000,space(globalTraceLevel).c_str());
-    fflush(stdout);
+    (void)fflush(stdout);
   }
 }
 

@@ -170,9 +170,11 @@ void ConfigurationFile::readFile(const std::string& filename)
     }
 
     // Read the whole file, the size is not limited
-    fseek(file,0,SEEK_END);
+    if (fseek(file,0,SEEK_END) != 0)
+      throw Fmi::Exception(BCP, "Failed to seek in the file");
     long fileSize = ftell(file);
-    fseek(file,0,SEEK_SET);
+    if (fseek(file,0,SEEK_SET) != 0)
+      throw Fmi::Exception(BCP, "Failed to seek in the file");
     if (fileSize < 0)
       fileSize = 0;
 
@@ -188,7 +190,7 @@ void ConfigurationFile::readFile(const std::string& filename)
     UInt64 *newpositions = newpositionsVec.data();
 
     int n = fread(st,1,fileSize,file);
-    fclose(file);
+    (void)fclose(file);
 
     if (n > 0)
     {
@@ -244,7 +246,7 @@ void ConfigurationFile::replaceAttributeNamesWithValues(const std::string& input
     FILE *outFile = fopen(outputFilename.c_str(),"we");
     if (outFile == nullptr)
     {
-      fclose(inFile);
+      (void)fclose(inFile);
       Fmi::Exception exception(BCP,"Cannot open the output file!");
       exception.addParameter("Output file",outputFilename);
       throw exception;
@@ -257,8 +259,9 @@ void ConfigurationFile::replaceAttributeNamesWithValues(const std::string& input
       fprintf(outFile,"%s",newStr.c_str());
     }
 
-    fclose(inFile);
-    fclose(outFile);
+    (void)fclose(inFile);
+    if (fclose(outFile) != 0)
+      throw Fmi::Exception(BCP, "Failed to close the output file");
   }
   catch (...)
   {

@@ -144,7 +144,7 @@ void ValueCache::setCacheDir(const char *cacheDir)
           {
             char fullName[2000];
             sprintf(fullName, "%s/%s", cacheDir, ep->d_name);
-            remove(fullName);
+            (void)remove(fullName);
           }
         }
       }

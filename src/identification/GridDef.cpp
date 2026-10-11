@@ -979,7 +979,7 @@ void GridDef::loadGribParameterDefinitions(const char *filename)
       }
 
     }
-    fclose(file);
+    (void)fclose(file);
   }
   catch (...)
   {
@@ -1534,7 +1534,7 @@ void GridDef::loadGrib1ParameterDefs(const char *filename)
         }
       }
     }
-    fclose(file);
+    (void)fclose(file);
   }
   catch (...)
   {
@@ -1617,7 +1617,7 @@ void GridDef::loadGrib2ParameterDefs(const char *filename)
         }
       }
     }
-    fclose(file);
+    (void)fclose(file);
   }
   catch (...)
   {
@@ -1696,7 +1696,7 @@ void GridDef::loadFmiLevelDefinitions(const char *filename)
         }
       }
     }
-    fclose(file);
+    (void)fclose(file);
   }
   catch (...)
   {
@@ -1772,7 +1772,7 @@ void GridDef::loadFmiGeometryGroupDefinitions(const char *filename)
         }
       }
     }
-    fclose(file);
+    (void)fclose(file);
   }
   catch (...)
   {
@@ -1845,7 +1845,7 @@ void GridDef::loadFmiForecastTypeDefinitions(const char *filename)
         }
       }
     }
-    fclose(file);
+    (void)fclose(file);
   }
   catch (...)
   {
@@ -1918,7 +1918,7 @@ void GridDef::loadFmiProcessingTypeDefinitions(const char *filename)
         }
       }
     }
-    fclose(file);
+    (void)fclose(file);
   }
   catch (...)
   {
@@ -1991,7 +1991,7 @@ void GridDef::loadFmiAggregationDefinitions(const char *filename)
         }
       }
     }
-    fclose(file);
+    (void)fclose(file);
   }
   catch (...)
   {
@@ -2080,7 +2080,7 @@ void GridDef::loadFmiParameterId_grib(const char *filename)
         }
       }
     }
-    fclose(file);
+    (void)fclose(file);
   }
   catch (...)
   {
@@ -2183,7 +2183,7 @@ void GridDef::loadFmiParameterId_newbase(const char *filename)
         }
       }
     }
-    fclose(file);
+    (void)fclose(file);
   }
   catch (...)
   {
@@ -2274,7 +2274,7 @@ void GridDef::loadFmiParameterId_netCdf(const char *filename)
         }
       }
     }
-    fclose(file);
+    (void)fclose(file);
   }
   catch (...)
   {
@@ -2364,7 +2364,7 @@ void GridDef::loadFmiParameterDefinitions(const char *filename)
         }
       }
     }
-    fclose(file);
+    (void)fclose(file);
   }
   catch (...)
   {
@@ -2447,7 +2447,7 @@ void GridDef::loadFmiLevelId_grib1(const char *filename)
         }
       }
     }
-    fclose(file);
+    (void)fclose(file);
   }
   catch (...)
   {
@@ -2530,7 +2530,7 @@ void GridDef::loadFmiLevelId_grib2(const char *filename)
         }
       }
     }
-    fclose(file);
+    (void)fclose(file);
   }
   catch (...)
   {
@@ -2602,7 +2602,7 @@ void GridDef::loadFmiLevelId_newbase(const char *filename)
         }
       }
     }
-    fclose(file);
+    (void)fclose(file);
   }
   catch (...)
   {
@@ -2700,7 +2700,7 @@ void GridDef::loadNewbaseParameterDefinitions(const char *filename)
         }
       }
     }
-    fclose(file);
+    (void)fclose(file);
   }
   catch (...)
   {
@@ -2773,7 +2773,7 @@ void GridDef::loadNetCdfParameterDefinitions(const char *filename)
         }
       }
     }
-    fclose(file);
+    (void)fclose(file);
   }
   catch (...)
   {
@@ -4317,7 +4317,7 @@ void GridDef::loadGeometryDefinitions(const char *filename)
         }
       }
     }
-    fclose(file);
+    (void)fclose(file);
   }
   catch (...)
   {

@@ -419,7 +419,8 @@ void RequestCounter::saveGeometryHitCounters(const char *filename)
         fprintf(file,"%u;%u;%u\n",geom->first,it->first,it->second);
       }
     }
-    fclose(file);
+    if (fclose(file) != 0)
+      throw Fmi::Exception(BCP, "Failed to close the output file");
   }
   catch (...)
   {
@@ -487,7 +488,7 @@ void RequestCounter::loadGeometryHitCounters(const char *filename)
         }
       }
     }
-    fclose(file);
+    (void)fclose(file);
   }
   catch (...)
   {

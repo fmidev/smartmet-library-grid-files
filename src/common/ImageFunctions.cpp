@@ -168,7 +168,8 @@ void jpeg_save(const char *filename, uint *image, int image_height,int image_wid
     }
 
     jpeg_finish_compress(&cinfo);
-    fclose(outfile);
+    if (fclose(outfile) != 0)
+      throw Fmi::Exception(BCP, "Failed to close the output file");
 
     jpeg_destroy_compress(&cinfo);
   }
@@ -271,7 +272,7 @@ int jpg_load(const char *_filename,CImage& _image)
       // ### We need to clean up the JPEG object, close the input file, and return.
 
       jpeg_destroy_decompress(&cinfo);
-      fclose(infile);
+      (void)fclose(infile);
       return - 2;
     }
 
@@ -421,7 +422,7 @@ int jpg_load(const char *_filename,CImage& _image)
     // ### After finish_decompress, we can close the input file.
 
 
-    fclose(infile);
+    (void)fclose(infile);
 
     // ### At this point you may want to check to see whether any corrupt-data
     // ### warnings occurred (test whether jerr.pub.num_warnings is nonzero).
@@ -726,7 +727,7 @@ int png_load(const char *_filename,CImage& _image)
     free(pixel);
 
     readpng_cleanup(0);
-    fclose(infile);
+    (void)fclose(infile);
 
     if (!_image.pixel)
       return -4;
@@ -799,7 +800,7 @@ int png_load(const char *_filename,std::vector<uint>& _image,uint& _width,uint& 
     free(pixel);
 
     readpng_cleanup(0);
-    fclose(infile);
+    (void)fclose(infile);
 
     return 0;
   }
@@ -894,10 +895,10 @@ int png_writeClose(void *_handle)
   auto *handle = (CImageHandle_png*)_handle;
   png_write_end(handle->png_ptr, nullptr);
 
-  fclose(handle->file);
+  const int result = fclose(handle->file);
   delete handle;
 
-  return 0;
+  return (result == 0 ? 0 : -1);
 }
 
 
@@ -959,7 +960,8 @@ int png_writeCloseMem(void *_handle)
   png_write_end(handle->png_ptr, nullptr);
   png_destroy_write_struct(&handle->png_ptr, &handle->info_ptr);
   int sz = ftell(handle->file);
-  fclose(handle->file);
+  if (fclose(handle->file) != 0)
+    sz = -1;
   delete handle;
   return sz;
 }
@@ -997,8 +999,7 @@ int png_save(const char *filename,uint *image,int image_width,int image_height,i
   }
 
   delete[] pixel;
-  png_writeClose(handle);
-  return 0;
+  return png_writeClose(handle);
 }
 
 
@@ -1129,9 +1130,11 @@ int webp_anim_save(const char *filename,
     if (!file)
       throw Fmi::Exception(BCP, "Cannot create a file!", nullptr);
 
-    fwrite(out.bytes, 1, out.size, file);
-    fclose(file);
-    file = nullptr;
+    const bool written = (fwrite(out.bytes, 1, out.size, file) == out.size);
+    const int closed = fclose(file);
+    file = nullptr;  // the catch block below must not close it again
+    if (closed != 0 || !written)
+      throw Fmi::Exception(BCP, "Failed to write the output file");
 
     WebPDataClear(&out);
     WebPAnimEncoderDelete(enc);
@@ -1142,7 +1145,7 @@ int webp_anim_save(const char *filename,
   catch (...)
   {
     if (file)
-      fclose(file);
+      (void)fclose(file);
 
     if (out.bytes)
       WebPDataClear(&out);
@@ -1240,9 +1243,11 @@ int webp_anim_save_ARGB(const char *filename,
     if (!file)
       throw Fmi::Exception(BCP, "Cannot create a file!", nullptr);
 
-    fwrite(out.bytes, 1, out.size, file);
-    fclose(file);
-    file = nullptr;
+    const bool written = (fwrite(out.bytes, 1, out.size, file) == out.size);
+    const int closed = fclose(file);
+    file = nullptr;  // the catch block below must not close it again
+    if (closed != 0 || !written)
+      throw Fmi::Exception(BCP, "Failed to write the output file");
 
     WebPDataClear(&out);
     WebPAnimEncoderDelete(enc);
@@ -1256,7 +1261,7 @@ int webp_anim_save_ARGB(const char *filename,
   catch (...)
   {
     if (file)
-      fclose(file);
+      (void)fclose(file);
 
     if (out.bytes)
       WebPDataClear(&out);

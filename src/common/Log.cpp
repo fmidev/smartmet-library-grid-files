@@ -44,7 +44,7 @@ Log::~Log()
     if (file != nullptr)
     {
       AutoThreadLock tLock(&threadLock);
-      fclose(file);
+      (void)fclose(file);
       file = nullptr;
     }
   }
@@ -166,7 +166,7 @@ void Log::close()
     if (file != nullptr)
     {
       AutoThreadLock tLock(&threadLock);
-      fclose(file);
+      (void)fclose(file);
       file = nullptr;
     }
   }
@@ -189,13 +189,13 @@ void Log::clear()
     AutoThreadLock tLock(&threadLock);
     if (file != nullptr)
     {
-      fclose(file);
+      (void)fclose(file);
       file = nullptr;
     }
     open();
     if (!enabled && file != nullptr)
     {
-      fclose(file);
+      (void)fclose(file);
       file = nullptr;
     }
   }
@@ -424,7 +424,7 @@ void Log::print(const char *_event)
 
     AutoThreadLock tLock(&threadLock);
     fprintf(file,"%s",_event);
-    fflush(file);
+    (void)fflush(file);
   }
   catch (...)
   {
@@ -449,7 +449,7 @@ void Log::print(time_t _time,const char *_event)
     localtime_r(&_time,&x_tm);
     AutoThreadLock tLock(&threadLock);
     fprintf(file,"[%04u-%02u-%02u/%02u:%02u:%02u] %s",x_tm.tm_year+1900,x_tm.tm_mon+1,x_tm.tm_mday,x_tm.tm_hour,x_tm.tm_min,x_tm.tm_sec,_event);
-    fflush(file);
+    (void)fflush(file);
   }
   catch (...)
   {
@@ -474,7 +474,7 @@ void Log::print(time_t _time,const char *_filename,uint _line,const char *_funct
     localtime_r(&_time,&x_tm);
     AutoThreadLock tLock(&threadLock);
     fprintf(file,"[%04u-%02u-%02u/%02u:%02u:%02u][%s:%u:%s()] %s",x_tm.tm_year+1900,x_tm.tm_mon+1,x_tm.tm_mday,x_tm.tm_hour,x_tm.tm_min,x_tm.tm_sec,_filename,_line,_function,_event);
-    fflush(file);
+    (void)fflush(file);
   }
   catch (...)
   {
@@ -496,8 +496,8 @@ void Log::print(void *_data,uint _size)
       return;
 
     AutoThreadLock tLock(&threadLock);
-    fwrite(_data,1,_size,file);
-    fflush(file);
+    (void)fwrite(_data,1,_size,file);
+    (void)fflush(file);
   }
   catch (...)
   {
@@ -539,9 +539,9 @@ void Log::truncate()
 
     // ### Closing and renaming the log file
 
-    fclose(file);
+    (void)fclose(file);
     file = nullptr;
-    rename(filename.c_str(),tmpFilename);
+    (void)rename(filename.c_str(),tmpFilename);
 
     // ### Opening a new log file
 
@@ -558,18 +558,18 @@ void Log::truncate()
 
     // ### Moving to the correct position and making sure that we start from the beginning of the line.
 
-    fseek(oldfile,pos,SEEK_SET);
+    (void)fseek(oldfile,pos,SEEK_SET);
     if (fgets(st,10000,oldfile) != nullptr)
     {
       int n;
       while ((n = fread(st,1,10000,oldfile)) > 0)
       {
-        fwrite(st,1,n,file);
+        (void)fwrite(st,1,n,file);
       }
     }
-    fclose(oldfile);
-    remove(tmpFilename);
-    fflush(file);
+    (void)fclose(oldfile);
+    (void)remove(tmpFilename);
+    (void)fflush(file);
   }
   catch (...)
   {

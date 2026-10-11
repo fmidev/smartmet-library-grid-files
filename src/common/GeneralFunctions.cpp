@@ -474,7 +474,7 @@ void copyFile(const char *sourceFileName,const char *targetFileName,bool& shutdo
     FILE *tFile = fopen(targetFileName,"w");
     if (tFile == nullptr)
     {
-      fclose(sFile);
+      (void)fclose(sFile);
       Fmi::Exception exception(BCP, "Cannot open file for writing!", nullptr);
       exception.addParameter("targetFileName",targetFileName);
       throw exception;
@@ -491,8 +491,9 @@ void copyFile(const char *sourceFileName,const char *targetFileName,bool& shutdo
       }
     }
 
-    fclose(sFile);
-    fclose(tFile);
+    (void)fclose(sFile);
+    if (fclose(tFile) != 0)
+      throw Fmi::Exception(BCP, "Failed to close the output file");
 
     // Checking that the source file and the target file have the same size.
 
@@ -3169,14 +3170,14 @@ std::string fileToBase64(const char *filename)
     size_t n = fread(data, 1, size, file);
     if (n <= 0)
     {
-      fclose(file);
+      (void)fclose(file);
       delete[] data;
       Fmi::Exception exception(BCP, "File read failed!");
       exception.addParameter("Filename", filename);
       throw exception;
     }
 
-    fclose(file);
+    (void)fclose(file);
 
     std::string st = base64_encode(data, size);
     delete[] data;
@@ -3249,7 +3250,7 @@ void readCsvFile(const char *filename,std::vector<std::vector<std::string>>& rec
         }
       }
     }
-    fclose(file);
+    (void)fclose(file);
   }
   catch (...)
   {
@@ -3289,7 +3290,8 @@ void readEofLines(const char *filename,uint numberOfLines,std::vector<std::strin
       startPos = fSize - s;
 
     char st[10000];
-    fseek(file,startPos,SEEK_SET);
+    if (fseek(file,startPos,SEEK_SET) != 0)
+      throw Fmi::Exception(BCP, "Failed to seek in the file");
 
     while (fgets(st,10000,file) != nullptr)
     {
@@ -3299,7 +3301,7 @@ void readEofLines(const char *filename,uint numberOfLines,std::vector<std::strin
 
       tmpLines.emplace_back(st);
     }
-    fclose(file);
+    (void)fclose(file);
 
     for (auto it = tmpLines.rbegin(); it != tmpLines.rend(); it++)
     {

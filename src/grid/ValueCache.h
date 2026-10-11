@@ -92,8 +92,10 @@ class ValueCacheEntry
           }
 
           T::ParamValue *f = &values[0];
-          fwrite(f,sizeof(T::ParamValue),mSize,file);
-          fclose(file);
+          if (fwrite(f,sizeof(T::ParamValue),mSize,file) != mSize)
+            throw Fmi::Exception(BCP, "Failed to write the file");
+          if (fclose(file) != 0)
+            throw Fmi::Exception(BCP, "Failed to close the output file");
 
           Int64 fileSize = getFileSize(fname);
           if (fileSize < 0)
@@ -129,7 +131,7 @@ class ValueCacheEntry
       if (mMappedFile)
       {
         mMappedFile->close();
-        remove(mFilename.c_str());
+        (void)remove(mFilename.c_str());
         delete mMappedFile;
         mMappedFile = nullptr;
       }

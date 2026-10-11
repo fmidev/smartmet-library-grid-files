@@ -39,7 +39,7 @@ DataFetcher_filesys::~DataFetcher_filesys()
   for (auto& mFileHandle : mFileHandles)
   {
     if (mFileHandle.second->fileHandle)
-      fclose(mFileHandle.second->fileHandle);
+      (void)fclose(mFileHandle.second->fileHandle);
 
     delete mFileHandle.second;
   }
@@ -88,7 +88,7 @@ void DataFetcher_filesys::checkFileHandles()
         {
           if (mFileHandle.second->threadLock.tryLock())
           {
-            fclose(mFileHandle.second->fileHandle);
+            (void)fclose(mFileHandle.second->fileHandle);  // read-only cache handle
             mFileHandle.second->fileHandle = nullptr;
             deleteList.push_back(mFileHandle.first);
             mFileHandle.second->threadLock.unlock();

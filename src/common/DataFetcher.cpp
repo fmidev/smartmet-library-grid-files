@@ -168,7 +168,7 @@ void DataFetcher::loadAccessFile(const char *filename,AccessMap& mAccessMap)
         }
       }
     }
-    fclose(file);
+    (void)fclose(file);
   }
   catch (...)
   {
