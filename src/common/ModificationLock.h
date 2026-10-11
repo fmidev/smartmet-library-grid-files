@@ -51,8 +51,7 @@ class ModificationLock
 
 
     ~ModificationLock()
-    {
-    }
+    = default;
 
 
     /*! \brief Assignment — resets counters and copies locking-enabled flag. */
