@@ -1109,11 +1109,11 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
             uint iii = 0;
             for (auto itm = dd->second.begin(); itm != dd->second.end(); ++itm)
             {
-              int i = atoi(itm->c_str());
+              int i = toInt32(itm->c_str());
               // The dimension index comes from the file
               if (i < 0 || C_UINT64(i) >= dl->second.size() || C_UINT64(i) >= dn->second.size())
                 throw Fmi::Exception(BCP,"Invalid NetCDF dimension index!");
-              int ii = atoi(dl->second[i].c_str());
+              int ii = toInt32(dl->second[i].c_str());
               std::string n = dn->second[i].c_str();
               //printf("DIM [%s][%s][%s]\n",itm->c_str(),dl->second[i].c_str(),dn->second[i].c_str());
 
@@ -1336,7 +1336,7 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
             if (Identification::gridDef.getNetCdfParameterDefByName(parameterStandardName,ncParamDef))
             {
               if (!ncParamDef.mFmiLevelId.empty())
-                paramLevelId = atoi(ncParamDef.mFmiLevelId.c_str());
+                paramLevelId = toInt32(ncParamDef.mFmiLevelId.c_str());
             }
 
             std::vector<double> levelList;

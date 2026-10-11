@@ -732,7 +732,7 @@ uint ConfigurationFile::getArraySize(const char *attributeName)
           else
             itm = attr.mName.substr(len+1);
 
-          int i = atoi(itm.c_str());
+          int i = toInt32(itm.c_str());
           if (i > idx)
             idx = i;
         }

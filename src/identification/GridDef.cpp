@@ -3171,7 +3171,7 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
 
             int origProjectionType = 0;
             if (gridOriginalProjectionStr)
-              origProjectionType = atoi(gridOriginalProjectionStr);
+              origProjectionType = toInt32(gridOriginalProjectionStr);
 
             if (targetIsLatlon)
             {
@@ -3576,7 +3576,7 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
 
             int origProjectionType = 0;
             if (gridOriginalProjectionStr != nullptr)
-              origProjectionType = atoi(gridOriginalProjectionStr);
+              origProjectionType = toInt32(gridOriginalProjectionStr);
 
             if (targetIsLatlon)
             {

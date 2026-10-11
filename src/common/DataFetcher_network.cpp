@@ -244,7 +244,7 @@ bool DataFetcher_network::getFileList(uint protocol,const char *server,XmlElemen
               else
               if (strcasecmp(c->tag.c_str(), "Size") == 0)
               {
-                rec.size = atoll(c->value.c_str());
+                rec.size = toInt64(c->value.c_str());
               }
             }
 
@@ -393,7 +393,7 @@ Int64 DataFetcher_network::getFileSize(uint serverType,uint protocol,const char 
       char *p = (char*)it->second.c_str();
       char *n = strstr(p,"/");
       if (n)
-        return atoll(n+1);
+        return toInt64(n+1);
     }
 
     return -1;

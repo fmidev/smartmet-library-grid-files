@@ -1049,7 +1049,7 @@ char toInt8(const char *str)
   {
     if (str == nullptr || str[0] == '\0') return 0;
 
-    return static_cast<char>(atoll(str));
+    return static_cast<char>(strtoll(str, nullptr, 10));
   }
   catch (...)
   {
@@ -1067,7 +1067,7 @@ short toInt16(const char *str)
   {
     if (str == nullptr || str[0] == '\0') return 0;
 
-    return static_cast<short>(atoll(str));
+    return static_cast<short>(strtoll(str, nullptr, 10));
   }
   catch (...)
   {
@@ -1085,7 +1085,7 @@ int toInt32(const char *str)
   {
     if (str == nullptr || str[0] == '\0') return 0;
 
-    return static_cast<int>(atoll(str));
+    return static_cast<int>(strtoll(str, nullptr, 10));
   }
   catch (...)
   {
@@ -1103,7 +1103,7 @@ Int64 toInt64(const char *str)
   {
     if (str == nullptr || str[0] == '\0') return 0;
 
-    return atoll(str);
+    return strtoll(str, nullptr, 10);
   }
   catch (...)
   {
@@ -1121,7 +1121,7 @@ size_t toSize_t(const char *str)
   {
     if (str == nullptr || str[0] == '\0') return 0;
 
-    return static_cast<size_t>(atoll(str));
+    return static_cast<size_t>(strtoll(str, nullptr, 10));
   }
   catch (...)
   {
@@ -1139,7 +1139,7 @@ uchar toUInt8(const char *str)
   {
     if (str == nullptr || str[0] == '\0') return 0;
 
-    return static_cast<uchar>(atoll(str));
+    return static_cast<uchar>(strtoll(str, nullptr, 10));
   }
   catch (...)
   {
@@ -1157,7 +1157,7 @@ ushort toUInt16(const char *str)
   {
     if (str == nullptr || str[0] == '\0') return 0;
 
-    return static_cast<ushort>(atoll(str));
+    return static_cast<ushort>(strtoll(str, nullptr, 10));
   }
   catch (...)
   {
@@ -1175,7 +1175,7 @@ uint toUInt32(const char *str)
   {
     if (str == nullptr || str[0] == '\0') return 0;
 
-    return static_cast<uint>(atoll(str));
+    return static_cast<uint>(strtoll(str, nullptr, 10));
   }
   catch (...)
   {
@@ -1258,7 +1258,7 @@ float toFloat(const char *str)
     if (str == nullptr)
       return 0.0;
 
-    return C_FLOAT(atof(str));
+    return C_FLOAT(strtod(str, nullptr));
   }
   catch (...)
   {
@@ -1281,7 +1281,7 @@ double toDouble(const char *str)
     if (str == nullptr)
       return 0.0;
 
-    return atof(str);
+    return strtod(str, nullptr);
   }
   catch (...)
   {
@@ -2073,7 +2073,7 @@ void parseUnits(const char *unitString,double& value,std::string& units)
     *u = '\0';
     *v = '\0';
 
-    value = atof(val);
+    value = strtod(val, nullptr);
     units = unit;
   }
   catch (...)
@@ -2899,7 +2899,7 @@ int timePeriodToSeconds(const char *timePeriod)
     if (p != nullptr)
     {
       *p = '\0';
-      return atoi(tmp);
+      return static_cast<int>(strtol(tmp, nullptr, 10));
     }
     else
     {
@@ -2907,7 +2907,7 @@ int timePeriodToSeconds(const char *timePeriod)
       if (p != nullptr)
       {
         *p = '\0';
-        return (atoi(tmp) * 60);
+        return (static_cast<int>(strtol(tmp, nullptr, 10)) * 60);
       }
       else
       {
@@ -2915,7 +2915,7 @@ int timePeriodToSeconds(const char *timePeriod)
         if (p != nullptr)
         {
           *p = '\0';
-          return (atoi(tmp) * 3600);
+          return (static_cast<int>(strtol(tmp, nullptr, 10)) * 3600);
         }
         else
         {
@@ -2923,11 +2923,11 @@ int timePeriodToSeconds(const char *timePeriod)
           if (p != nullptr)
           {
             *p = '\0';
-            return (atoi(tmp) * 3600 * 24);
+            return (static_cast<int>(strtol(tmp, nullptr, 10)) * 3600 * 24);
           }
           else
           {
-            return (atoi(tmp) * 60);
+            return (static_cast<int>(strtol(tmp, nullptr, 10)) * 60);
           }
         }
       }
