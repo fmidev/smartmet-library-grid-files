@@ -148,7 +148,7 @@ void FileWriter::setWritePosition(UInt64 _pos)
       throw Fmi::Exception(BCP,"No file defined!");
 
     if (fseek(mFileHandle,_pos,SEEK_SET) != 0)
-      throw Fmi::Exception(BCP, "Failed to seek in the file");
+      throw Fmi::Exception(BCP,"Failed to seek in the file");
   }
   catch (...)
   {
@@ -170,7 +170,7 @@ void FileWriter::write_data(void *_data,UInt64 _size)
       throw Fmi::Exception(BCP,"No file defined!");
 
     if (fwrite(_data,_size,1,mFileHandle) != 1)
-      throw Fmi::Exception(BCP, "Failed to write the file");
+      throw Fmi::Exception(BCP,"Failed to write the file");
   }
   catch (...)
   {

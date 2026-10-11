@@ -543,15 +543,15 @@ void BitLine::writeToFile(const char *filename)
     }
 
     if (fwrite(&length,4,1,file) != 1)
-      throw Fmi::Exception(BCP, "Failed to write the file");
+      throw Fmi::Exception(BCP,"Failed to write the file");
     if (fwrite(&changeCount,4,1,file) != 1)
-      throw Fmi::Exception(BCP, "Failed to write the file");
+      throw Fmi::Exception(BCP,"Failed to write the file");
     if (changeCount > 0)
       if (fwrite(changes,4,changeCount,file) != changeCount)
-        throw Fmi::Exception(BCP, "Failed to write the file");
+        throw Fmi::Exception(BCP,"Failed to write the file");
 
     if (fclose(file) != 0)
-      throw Fmi::Exception(BCP, "Failed to close the output file");
+      throw Fmi::Exception(BCP,"Failed to close the output file");
   }
   catch (...)
   {
@@ -569,12 +569,12 @@ void BitLine::writeToFile(FILE *file)
   try
   {
     if (fwrite(&length,4,1,file) != 1)
-      throw Fmi::Exception(BCP, "Failed to write the file");
+      throw Fmi::Exception(BCP,"Failed to write the file");
     if (fwrite(&changeCount,4,1,file) != 1)
-      throw Fmi::Exception(BCP, "Failed to write the file");
+      throw Fmi::Exception(BCP,"Failed to write the file");
     if (changeCount > 0)
       if (fwrite(changes,4,changeCount,file) != changeCount)
-        throw Fmi::Exception(BCP, "Failed to write the file");
+        throw Fmi::Exception(BCP,"Failed to write the file");
   }
   catch (...)
   {

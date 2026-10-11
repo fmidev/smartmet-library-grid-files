@@ -171,10 +171,10 @@ void ConfigurationFile::readFile(const std::string& filename)
 
     // Read the whole file, the size is not limited
     if (fseek(file,0,SEEK_END) != 0)
-      throw Fmi::Exception(BCP, "Failed to seek in the file");
+      throw Fmi::Exception(BCP,"Failed to seek in the file");
     long fileSize = ftell(file);
     if (fseek(file,0,SEEK_SET) != 0)
-      throw Fmi::Exception(BCP, "Failed to seek in the file");
+      throw Fmi::Exception(BCP,"Failed to seek in the file");
     if (fileSize < 0)
       fileSize = 0;
 
@@ -261,7 +261,7 @@ void ConfigurationFile::replaceAttributeNamesWithValues(const std::string& input
 
     (void)fclose(inFile);
     if (fclose(outFile) != 0)
-      throw Fmi::Exception(BCP, "Failed to close the output file");
+      throw Fmi::Exception(BCP,"Failed to close the output file");
   }
   catch (...)
   {

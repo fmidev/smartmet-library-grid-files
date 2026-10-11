@@ -93,9 +93,9 @@ class ValueCacheEntry
 
           T::ParamValue *f = &values[0];
           if (fwrite(f,sizeof(T::ParamValue),mSize,file) != mSize)
-            throw Fmi::Exception(BCP, "Failed to write the file");
+            throw Fmi::Exception(BCP,"Failed to write the file");
           if (fclose(file) != 0)
-            throw Fmi::Exception(BCP, "Failed to close the output file");
+            throw Fmi::Exception(BCP,"Failed to close the output file");
 
           Int64 fileSize = getFileSize(fname);
           if (fileSize < 0)

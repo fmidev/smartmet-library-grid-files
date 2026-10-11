@@ -420,7 +420,7 @@ void RequestCounter::saveGeometryHitCounters(const char *filename)
       }
     }
     if (fclose(file) != 0)
-      throw Fmi::Exception(BCP, "Failed to close the output file");
+      throw Fmi::Exception(BCP,"Failed to close the output file");
   }
   catch (...)
   {
