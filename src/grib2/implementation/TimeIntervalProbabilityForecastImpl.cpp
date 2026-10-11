@@ -10,8 +10,7 @@ namespace GRIB2
 
 /*! \brief The constructor of the class. */
 
-TimeIntervalProbabilityForecastImpl::TimeIntervalProbabilityForecastImpl()
-= default;
+TimeIntervalProbabilityForecastImpl::TimeIntervalProbabilityForecastImpl() = default;
 
 
 
@@ -19,9 +18,7 @@ TimeIntervalProbabilityForecastImpl::TimeIntervalProbabilityForecastImpl()
 
 /*! \brief The copy constructor of the class. */
 
-TimeIntervalProbabilityForecastImpl::TimeIntervalProbabilityForecastImpl(const TimeIntervalProbabilityForecastImpl& other)
-
-= default;
+TimeIntervalProbabilityForecastImpl::TimeIntervalProbabilityForecastImpl(const TimeIntervalProbabilityForecastImpl& other) = default;
 
 
 
@@ -29,8 +26,7 @@ TimeIntervalProbabilityForecastImpl::TimeIntervalProbabilityForecastImpl(const T
 
 /*! \brief The destructor of the class. */
 
-TimeIntervalProbabilityForecastImpl::~TimeIntervalProbabilityForecastImpl()
-= default;
+TimeIntervalProbabilityForecastImpl::~TimeIntervalProbabilityForecastImpl() = default;
 
 
 

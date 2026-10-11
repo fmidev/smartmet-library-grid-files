@@ -9,8 +9,7 @@ namespace GRIB2
 
 /*! \brief The constructor of the class. */
 
-AggregateForecastImpl::AggregateForecastImpl()
-= default;
+AggregateForecastImpl::AggregateForecastImpl() = default;
 
 
 
@@ -18,9 +17,7 @@ AggregateForecastImpl::AggregateForecastImpl()
 
 /*! \brief The copy constructor of the class. */
 
-AggregateForecastImpl::AggregateForecastImpl(const AggregateForecastImpl& other)
-
-= default;
+AggregateForecastImpl::AggregateForecastImpl(const AggregateForecastImpl& other) = default;
 
 
 
@@ -28,8 +25,7 @@ AggregateForecastImpl::AggregateForecastImpl(const AggregateForecastImpl& other)
 
 /*! \brief The destructor of the class. */
 
-AggregateForecastImpl::~AggregateForecastImpl()
-= default;
+AggregateForecastImpl::~AggregateForecastImpl() = default;
 
 
 

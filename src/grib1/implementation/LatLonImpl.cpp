@@ -55,8 +55,7 @@ LatLonImpl::LatLonImpl(const LatLonImpl& other)
 
 /*! \brief The destructor of the class. */
 
-LatLonImpl::~LatLonImpl()
-= default;
+LatLonImpl::~LatLonImpl() = default;
 
 
 

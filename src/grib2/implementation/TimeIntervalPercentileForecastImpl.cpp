@@ -10,8 +10,7 @@ namespace GRIB2
 
 /*! \brief The constructor of the class. */
 
-TimeIntervalPercentileForecastImpl::TimeIntervalPercentileForecastImpl()
-= default;
+TimeIntervalPercentileForecastImpl::TimeIntervalPercentileForecastImpl() = default;
 
 
 
@@ -19,9 +18,7 @@ TimeIntervalPercentileForecastImpl::TimeIntervalPercentileForecastImpl()
 
 /*! \brief The copy constructor of the class. */
 
-TimeIntervalPercentileForecastImpl::TimeIntervalPercentileForecastImpl(const TimeIntervalPercentileForecastImpl& other)
-
-= default;
+TimeIntervalPercentileForecastImpl::TimeIntervalPercentileForecastImpl(const TimeIntervalPercentileForecastImpl& other) = default;
 
 
 
@@ -29,8 +26,7 @@ TimeIntervalPercentileForecastImpl::TimeIntervalPercentileForecastImpl(const Tim
 
 /*! \brief The destructor of the class. */
 
-TimeIntervalPercentileForecastImpl::~TimeIntervalPercentileForecastImpl()
-= default;
+TimeIntervalPercentileForecastImpl::~TimeIntervalPercentileForecastImpl() = default;
 
 
 

@@ -21,9 +21,7 @@ UnstructuredImpl::UnstructuredImpl()
 
 /*! \brief The copy constructor of the class. */
 
-UnstructuredImpl::UnstructuredImpl(const UnstructuredImpl& other)
-
-= default;
+UnstructuredImpl::UnstructuredImpl(const UnstructuredImpl& other) = default;
 
 
 
@@ -31,8 +29,7 @@ UnstructuredImpl::UnstructuredImpl(const UnstructuredImpl& other)
 
 /*! \brief The destructor of the class. */
 
-UnstructuredImpl::~UnstructuredImpl()
-= default;
+UnstructuredImpl::~UnstructuredImpl() = default;
 
 
 

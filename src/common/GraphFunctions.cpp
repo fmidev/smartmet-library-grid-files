@@ -19,7 +19,6 @@
 #include <vector>
 
 #include <algorithm>
-#include <cmath>
 #include <sstream>
 #include <stack>
 #include <thread>

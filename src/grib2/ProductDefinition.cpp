@@ -14,8 +14,7 @@ namespace GRIB2
 
 /*! \brief The constructor of the class. */
 
-ProductDefinition::ProductDefinition()
-= default;
+ProductDefinition::ProductDefinition() = default;
 
 
 
@@ -33,8 +32,7 @@ ProductDefinition::ProductDefinition(const ProductDefinition& other)
 
 /*! \brief The destructor of the class. */
 
-ProductDefinition::~ProductDefinition()
-= default;
+ProductDefinition::~ProductDefinition() = default;
 
 
 

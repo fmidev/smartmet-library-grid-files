@@ -10,8 +10,7 @@ namespace GRIB2
 
 /*! \brief The constructor of the class. */
 
-ComplexSphericalHarmonicsDataRepresentationImpl::ComplexSphericalHarmonicsDataRepresentationImpl()
-= default;
+ComplexSphericalHarmonicsDataRepresentationImpl::ComplexSphericalHarmonicsDataRepresentationImpl() = default;
 
 
 
@@ -19,9 +18,7 @@ ComplexSphericalHarmonicsDataRepresentationImpl::ComplexSphericalHarmonicsDataRe
 
 /*! \brief The copy constructor of the class. */
 
-ComplexSphericalHarmonicsDataRepresentationImpl::ComplexSphericalHarmonicsDataRepresentationImpl(const ComplexSphericalHarmonicsDataRepresentationImpl& other)
-
-= default;
+ComplexSphericalHarmonicsDataRepresentationImpl::ComplexSphericalHarmonicsDataRepresentationImpl(const ComplexSphericalHarmonicsDataRepresentationImpl& other) = default;
 
 
 
@@ -29,8 +26,7 @@ ComplexSphericalHarmonicsDataRepresentationImpl::ComplexSphericalHarmonicsDataRe
 
 /*! \brief The destructor of the class. */
 
-ComplexSphericalHarmonicsDataRepresentationImpl::~ComplexSphericalHarmonicsDataRepresentationImpl()
-= default;
+ComplexSphericalHarmonicsDataRepresentationImpl::~ComplexSphericalHarmonicsDataRepresentationImpl() = default;
 
 
 

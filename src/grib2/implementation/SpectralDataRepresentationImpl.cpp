@@ -8,8 +8,7 @@ namespace GRIB2
 
 /*! \brief The constructor of the class. */
 
-SpectralDataRepresentationImpl::SpectralDataRepresentationImpl()
-= default;
+SpectralDataRepresentationImpl::SpectralDataRepresentationImpl() = default;
 
 
 
@@ -17,9 +16,7 @@ SpectralDataRepresentationImpl::SpectralDataRepresentationImpl()
 
 /*! \brief The copy constructor of the class. */
 
-SpectralDataRepresentationImpl::SpectralDataRepresentationImpl(const SpectralDataRepresentationImpl& other)
-
-= default;
+SpectralDataRepresentationImpl::SpectralDataRepresentationImpl(const SpectralDataRepresentationImpl& other) = default;
 
 
 
@@ -27,8 +24,7 @@ SpectralDataRepresentationImpl::SpectralDataRepresentationImpl(const SpectralDat
 
 /*! \brief The destructor of the class. */
 
-SpectralDataRepresentationImpl::~SpectralDataRepresentationImpl()
-= default;
+SpectralDataRepresentationImpl::~SpectralDataRepresentationImpl() = default;
 
 
 

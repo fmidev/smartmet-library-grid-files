@@ -87,8 +87,7 @@ GridPointValue::GridPointValue(T::FileId fileId,T::MessageIndex messageIndex,dou
 
 /*! \brief The destructor of the class. */
 
-GridPointValue::~GridPointValue()
-= default;
+GridPointValue::~GridPointValue() = default;
 
 
 

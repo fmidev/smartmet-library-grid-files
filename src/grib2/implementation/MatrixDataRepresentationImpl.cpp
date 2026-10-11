@@ -11,8 +11,7 @@ namespace GRIB2
 
 /*! \brief The constructor of the class. */
 
-MatrixDataRepresentationImpl::MatrixDataRepresentationImpl()
-= default;
+MatrixDataRepresentationImpl::MatrixDataRepresentationImpl() = default;
 
 
 
@@ -20,9 +19,7 @@ MatrixDataRepresentationImpl::MatrixDataRepresentationImpl()
 
 /*! \brief The copy constructor of the class. */
 
-MatrixDataRepresentationImpl::MatrixDataRepresentationImpl(const MatrixDataRepresentationImpl& other)
-
-= default;
+MatrixDataRepresentationImpl::MatrixDataRepresentationImpl(const MatrixDataRepresentationImpl& other) = default;
 
 
 
@@ -30,8 +27,7 @@ MatrixDataRepresentationImpl::MatrixDataRepresentationImpl(const MatrixDataRepre
 
 /*! \brief The destructor of the class. */
 
-MatrixDataRepresentationImpl::~MatrixDataRepresentationImpl()
-= default;
+MatrixDataRepresentationImpl::~MatrixDataRepresentationImpl() = default;
 
 
 

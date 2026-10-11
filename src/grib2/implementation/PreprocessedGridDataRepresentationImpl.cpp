@@ -9,8 +9,7 @@ namespace GRIB2
 
 /*! \brief The constructor of the class. */
 
-PreprocessedGridDataRepresentationImpl::PreprocessedGridDataRepresentationImpl()
-= default;
+PreprocessedGridDataRepresentationImpl::PreprocessedGridDataRepresentationImpl() = default;
 
 
 
@@ -18,9 +17,7 @@ PreprocessedGridDataRepresentationImpl::PreprocessedGridDataRepresentationImpl()
 
 /*! \brief The copy constructor of the class. */
 
-PreprocessedGridDataRepresentationImpl::PreprocessedGridDataRepresentationImpl(const PreprocessedGridDataRepresentationImpl& other)
-
-= default;
+PreprocessedGridDataRepresentationImpl::PreprocessedGridDataRepresentationImpl(const PreprocessedGridDataRepresentationImpl& other) = default;
 
 
 
@@ -28,8 +25,7 @@ PreprocessedGridDataRepresentationImpl::PreprocessedGridDataRepresentationImpl(c
 
 /*! \brief The destructor of the class. */
 
-PreprocessedGridDataRepresentationImpl::~PreprocessedGridDataRepresentationImpl()
-= default;
+PreprocessedGridDataRepresentationImpl::~PreprocessedGridDataRepresentationImpl() = default;
 
 
 

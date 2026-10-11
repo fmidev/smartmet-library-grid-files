@@ -21,9 +21,7 @@ VariableResolutionLatLonImpl::VariableResolutionLatLonImpl()
 
 /*! \brief The copy constructor of the class. */
 
-VariableResolutionLatLonImpl::VariableResolutionLatLonImpl(const VariableResolutionLatLonImpl& other)
-
-= default;
+VariableResolutionLatLonImpl::VariableResolutionLatLonImpl(const VariableResolutionLatLonImpl& other) = default;
 
 
 
@@ -31,8 +29,7 @@ VariableResolutionLatLonImpl::VariableResolutionLatLonImpl(const VariableResolut
 
 /*! \brief The destructor of the class. */
 
-VariableResolutionLatLonImpl::~VariableResolutionLatLonImpl()
-= default;
+VariableResolutionLatLonImpl::~VariableResolutionLatLonImpl() = default;
 
 
 

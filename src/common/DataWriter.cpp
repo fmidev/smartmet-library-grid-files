@@ -27,8 +27,7 @@ DataWriter::DataWriter()
 
 /*! \brief Destructor for the DataWriter base class. */
 
-DataWriter::~DataWriter()
-= default;
+DataWriter::~DataWriter() = default;
 
 
 

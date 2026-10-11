@@ -162,8 +162,7 @@ Message::Message(const Message& message)
 
 /*! \brief The destructor of the class. */
 
-Message::~Message()
-= default;
+Message::~Message() = default;
 
 
 

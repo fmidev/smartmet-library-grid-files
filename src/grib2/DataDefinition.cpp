@@ -10,8 +10,7 @@ namespace GRIB2
 
 /*! \brief The constructor of the class. */
 
-DataDefinition::DataDefinition()
-= default;
+DataDefinition::DataDefinition() = default;
 
 
 
@@ -19,8 +18,7 @@ DataDefinition::DataDefinition()
 
 /*! \brief The copy constructor of the class. */
 
-DataDefinition::DataDefinition(const DataDefinition& other)
-= default;
+DataDefinition::DataDefinition(const DataDefinition& other) = default;
 
 
 
@@ -28,8 +26,7 @@ DataDefinition::DataDefinition(const DataDefinition& other)
 
 /*! \brief The destructor of the class. */
 
-DataDefinition::~DataDefinition()
-= default;
+DataDefinition::~DataDefinition() = default;
 
 
 

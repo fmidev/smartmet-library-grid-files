@@ -21,9 +21,7 @@ TriangularImpl::TriangularImpl()
 
 /*! \brief The copy constructor of the class. */
 
-TriangularImpl::TriangularImpl(const TriangularImpl& other)
-
-= default;
+TriangularImpl::TriangularImpl(const TriangularImpl& other) = default;
 
 
 
@@ -31,8 +29,7 @@ TriangularImpl::TriangularImpl(const TriangularImpl& other)
 
 /*! \brief The destructor of the class. */
 
-TriangularImpl::~TriangularImpl()
-= default;
+TriangularImpl::~TriangularImpl() = default;
 
 
 

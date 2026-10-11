@@ -10,8 +10,7 @@ namespace GRIB2
 
 /*! \brief The constructor of the class. */
 
-PartitionedProductImpl::PartitionedProductImpl()
-= default;
+PartitionedProductImpl::PartitionedProductImpl() = default;
 
 
 
@@ -19,9 +18,7 @@ PartitionedProductImpl::PartitionedProductImpl()
 
 /*! \brief The copy constructor of the class. */
 
-PartitionedProductImpl::PartitionedProductImpl(const PartitionedProductImpl& other)
-
-= default;
+PartitionedProductImpl::PartitionedProductImpl(const PartitionedProductImpl& other) = default;
 
 
 
@@ -29,8 +26,7 @@ PartitionedProductImpl::PartitionedProductImpl(const PartitionedProductImpl& oth
 
 /*! \brief The destructor of the class. */
 
-PartitionedProductImpl::~PartitionedProductImpl()
-= default;
+PartitionedProductImpl::~PartitionedProductImpl() = default;
 
 
 

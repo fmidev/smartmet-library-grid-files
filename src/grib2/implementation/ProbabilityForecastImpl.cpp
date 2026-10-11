@@ -10,8 +10,7 @@ namespace GRIB2
 
 /*! \brief The constructor of the class. */
 
-ProbabilityForecastImpl::ProbabilityForecastImpl()
-= default;
+ProbabilityForecastImpl::ProbabilityForecastImpl() = default;
 
 
 
@@ -19,9 +18,7 @@ ProbabilityForecastImpl::ProbabilityForecastImpl()
 
 /*! \brief The copy constructor of the class. */
 
-ProbabilityForecastImpl::ProbabilityForecastImpl(const ProbabilityForecastImpl& other)
-
-= default;
+ProbabilityForecastImpl::ProbabilityForecastImpl(const ProbabilityForecastImpl& other) = default;
 
 
 
@@ -29,8 +26,7 @@ ProbabilityForecastImpl::ProbabilityForecastImpl(const ProbabilityForecastImpl& 
 
 /*! \brief The destructor of the class. */
 
-ProbabilityForecastImpl::~ProbabilityForecastImpl()
-= default;
+ProbabilityForecastImpl::~ProbabilityForecastImpl() = default;
 
 
 

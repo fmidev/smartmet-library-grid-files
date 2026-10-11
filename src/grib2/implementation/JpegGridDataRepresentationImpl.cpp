@@ -24,19 +24,15 @@ namespace GRIB2
 {
 /*! \brief The constructor of the class. */
 
-JpegGridDataRepresentationImpl::JpegGridDataRepresentationImpl()
-= default;
+JpegGridDataRepresentationImpl::JpegGridDataRepresentationImpl() = default;
 
 /*! \brief The copy constructor of the class. */
 
-JpegGridDataRepresentationImpl::JpegGridDataRepresentationImpl(const JpegGridDataRepresentationImpl &other) 
-    
-= default;
+JpegGridDataRepresentationImpl::JpegGridDataRepresentationImpl(const JpegGridDataRepresentationImpl &other) = default;
 
 /*! \brief The destructor of the class. */
 
-JpegGridDataRepresentationImpl::~JpegGridDataRepresentationImpl()
-= default;
+JpegGridDataRepresentationImpl::~JpegGridDataRepresentationImpl() = default;
 
 /*! \brief The method creates a duplicate of the current object. */
 

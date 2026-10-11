@@ -40,8 +40,7 @@ GeoTiffFile::GeoTiffFile(const char *filename)
 
 /*! \brief The destructor of the class. */
 
-GeoTiffFile::~GeoTiffFile()
-= default;
+GeoTiffFile::~GeoTiffFile() = default;
 
 
 

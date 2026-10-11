@@ -10,8 +10,7 @@ namespace GRIB2
 
 /*! \brief The constructor of the class. */
 
-EnsembleForecastImpl::EnsembleForecastImpl()
-= default;
+EnsembleForecastImpl::EnsembleForecastImpl() = default;
 
 
 
@@ -19,9 +18,7 @@ EnsembleForecastImpl::EnsembleForecastImpl()
 
 /*! \brief The copy constructor of the class. */
 
-EnsembleForecastImpl::EnsembleForecastImpl(const EnsembleForecastImpl& other)
-
-= default;
+EnsembleForecastImpl::EnsembleForecastImpl(const EnsembleForecastImpl& other) = default;
 
 
 
@@ -29,8 +26,7 @@ EnsembleForecastImpl::EnsembleForecastImpl(const EnsembleForecastImpl& other)
 
 /*! \brief The destructor of the class. */
 
-EnsembleForecastImpl::~EnsembleForecastImpl()
-= default;
+EnsembleForecastImpl::~EnsembleForecastImpl() = default;
 
 
 

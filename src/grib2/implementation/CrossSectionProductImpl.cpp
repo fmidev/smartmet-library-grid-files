@@ -10,8 +10,7 @@ namespace GRIB2
 
 /*! \brief The constructor of the class. */
 
-CrossSectionProductImpl::CrossSectionProductImpl()
-= default;
+CrossSectionProductImpl::CrossSectionProductImpl() = default;
 
 
 
@@ -19,9 +18,7 @@ CrossSectionProductImpl::CrossSectionProductImpl()
 
 /*! \brief The copy constructor of the class. */
 
-CrossSectionProductImpl::CrossSectionProductImpl(const CrossSectionProductImpl& other)
-
-= default;
+CrossSectionProductImpl::CrossSectionProductImpl(const CrossSectionProductImpl& other) = default;
 
 
 
@@ -29,8 +26,7 @@ CrossSectionProductImpl::CrossSectionProductImpl(const CrossSectionProductImpl& 
 
 /*! \brief The destructor of the class. */
 
-CrossSectionProductImpl::~CrossSectionProductImpl()
-= default;
+CrossSectionProductImpl::~CrossSectionProductImpl() = default;
 
 
 

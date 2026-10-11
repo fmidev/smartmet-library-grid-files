@@ -57,8 +57,7 @@ SphericalHarmonicsComplexPacking::SphericalHarmonicsComplexPacking(const Spheric
 
 /*! \brief The destructor of the class. */
 
-SphericalHarmonicsComplexPacking::~SphericalHarmonicsComplexPacking()
-= default;
+SphericalHarmonicsComplexPacking::~SphericalHarmonicsComplexPacking() = default;
 
 
 

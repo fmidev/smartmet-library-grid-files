@@ -10,8 +10,7 @@ namespace GRIB2
 
 /*! \brief The constructor of the class. */
 
-SimulatedSatelliteEnsembleProductImpl::SimulatedSatelliteEnsembleProductImpl()
-= default;
+SimulatedSatelliteEnsembleProductImpl::SimulatedSatelliteEnsembleProductImpl() = default;
 
 
 
@@ -19,9 +18,7 @@ SimulatedSatelliteEnsembleProductImpl::SimulatedSatelliteEnsembleProductImpl()
 
 /*! \brief The copy constructor of the class. */
 
-SimulatedSatelliteEnsembleProductImpl::SimulatedSatelliteEnsembleProductImpl(const SimulatedSatelliteEnsembleProductImpl& other)
-
-= default;
+SimulatedSatelliteEnsembleProductImpl::SimulatedSatelliteEnsembleProductImpl(const SimulatedSatelliteEnsembleProductImpl& other) = default;
 
 
 
@@ -29,8 +26,7 @@ SimulatedSatelliteEnsembleProductImpl::SimulatedSatelliteEnsembleProductImpl(con
 
 /*! \brief The destructor of the class. */
 
-SimulatedSatelliteEnsembleProductImpl::~SimulatedSatelliteEnsembleProductImpl()
-= default;
+SimulatedSatelliteEnsembleProductImpl::~SimulatedSatelliteEnsembleProductImpl() = default;
 
 
 

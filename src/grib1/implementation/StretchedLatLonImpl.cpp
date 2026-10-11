@@ -23,9 +23,7 @@ StretchedLatLonImpl::StretchedLatLonImpl()
 
 /*! \brief The copy constructor of the class. */
 
-StretchedLatLonImpl::StretchedLatLonImpl(const StretchedLatLonImpl& other)
-
-= default;
+StretchedLatLonImpl::StretchedLatLonImpl(const StretchedLatLonImpl& other) = default;
 
 
 
@@ -33,8 +31,7 @@ StretchedLatLonImpl::StretchedLatLonImpl(const StretchedLatLonImpl& other)
 
 /*! \brief The destructor of the class. */
 
-StretchedLatLonImpl::~StretchedLatLonImpl()
-= default;
+StretchedLatLonImpl::~StretchedLatLonImpl() = default;
 
 
 

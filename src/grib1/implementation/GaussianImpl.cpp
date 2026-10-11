@@ -25,9 +25,7 @@ GaussianImpl::GaussianImpl()
 
 /*! \brief The copy constructor of the class. */
 
-GaussianImpl::GaussianImpl(const GaussianImpl& other)
-
-= default;
+GaussianImpl::GaussianImpl(const GaussianImpl& other) = default;
 
 
 
@@ -35,8 +33,7 @@ GaussianImpl::GaussianImpl(const GaussianImpl& other)
 
 /*! \brief The destructor of the class. */
 
-GaussianImpl::~GaussianImpl()
-= default;
+GaussianImpl::~GaussianImpl() = default;
 
 
 

@@ -107,8 +107,7 @@ GridSection::GridSection(const GridSection& other)
 
 /*! \brief The destructor of the class. */
 
-GridSection::~GridSection()
-= default;
+GridSection::~GridSection() = default;
 
 
 

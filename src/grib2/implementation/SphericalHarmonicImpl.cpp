@@ -21,9 +21,7 @@ SphericalHarmonicImpl::SphericalHarmonicImpl()
 
 /*! \brief The copy constructor of the class. */
 
-SphericalHarmonicImpl::SphericalHarmonicImpl(const SphericalHarmonicImpl& other)
-
-= default;
+SphericalHarmonicImpl::SphericalHarmonicImpl(const SphericalHarmonicImpl& other) = default;
 
 
 
@@ -31,8 +29,7 @@ SphericalHarmonicImpl::SphericalHarmonicImpl(const SphericalHarmonicImpl& other)
 
 /*! \brief The destructor of the class. */
 
-SphericalHarmonicImpl::~SphericalHarmonicImpl()
-= default;
+SphericalHarmonicImpl::~SphericalHarmonicImpl() = default;
 
 
 

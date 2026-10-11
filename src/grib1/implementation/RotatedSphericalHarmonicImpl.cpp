@@ -21,9 +21,7 @@ RotatedSphericalHarmonicImpl::RotatedSphericalHarmonicImpl()
 
 /*! \brief The copy constructor of the class. */
 
-RotatedSphericalHarmonicImpl::RotatedSphericalHarmonicImpl(const RotatedSphericalHarmonicImpl& other)
-
-= default;
+RotatedSphericalHarmonicImpl::RotatedSphericalHarmonicImpl(const RotatedSphericalHarmonicImpl& other) = default;
 
 
 
@@ -31,8 +29,7 @@ RotatedSphericalHarmonicImpl::RotatedSphericalHarmonicImpl(const RotatedSpherica
 
 /*! \brief The destructor of the class. */
 
-RotatedSphericalHarmonicImpl::~RotatedSphericalHarmonicImpl()
-= default;
+RotatedSphericalHarmonicImpl::~RotatedSphericalHarmonicImpl() = default;
 
 
 

@@ -32,8 +32,7 @@ Client::Client()
 
 /*! \brief Destructor for Client. */
 
-Client::~Client()
-= default;
+Client::~Client() = default;
 
 
 

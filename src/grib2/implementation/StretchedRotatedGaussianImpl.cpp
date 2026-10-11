@@ -21,9 +21,7 @@ StretchedRotatedGaussianImpl::StretchedRotatedGaussianImpl()
 
 /*! \brief The copy constructor of the class. */
 
-StretchedRotatedGaussianImpl::StretchedRotatedGaussianImpl(const StretchedRotatedGaussianImpl& other)
-
-= default;
+StretchedRotatedGaussianImpl::StretchedRotatedGaussianImpl(const StretchedRotatedGaussianImpl& other) = default;
 
 
 
@@ -31,8 +29,7 @@ StretchedRotatedGaussianImpl::StretchedRotatedGaussianImpl(const StretchedRotate
 
 /*! \brief The destructor of the class. */
 
-StretchedRotatedGaussianImpl::~StretchedRotatedGaussianImpl()
-= default;
+StretchedRotatedGaussianImpl::~StretchedRotatedGaussianImpl() = default;
 
 
 

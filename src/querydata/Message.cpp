@@ -189,8 +189,7 @@ Message::Message(GRID::GridFile *gridFile,QueryDataFile *queryDataFile,T::Messag
 
 /*! \brief The destructor of the class. */
 
-Message::~Message()
-= default;
+Message::~Message() = default;
 
 
 

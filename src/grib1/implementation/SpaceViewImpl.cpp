@@ -21,9 +21,7 @@ SpaceViewImpl::SpaceViewImpl()
 
 /*! \brief The copy constructor of the class. */
 
-SpaceViewImpl::SpaceViewImpl(const SpaceViewImpl& other)
-
-= default;
+SpaceViewImpl::SpaceViewImpl(const SpaceViewImpl& other) = default;
 
 
 
@@ -31,8 +29,7 @@ SpaceViewImpl::SpaceViewImpl(const SpaceViewImpl& other)
 
 /*! \brief The destructor of the class. */
 
-SpaceViewImpl::~SpaceViewImpl()
-= default;
+SpaceViewImpl::~SpaceViewImpl() = default;
 
 
 

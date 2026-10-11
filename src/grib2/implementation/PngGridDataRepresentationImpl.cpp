@@ -46,8 +46,7 @@ static void png_read_callback(png_structp png,png_bytep data, png_size_t length)
 
 /*! \brief The constructor of the class. */
 
-PngGridDataRepresentationImpl::PngGridDataRepresentationImpl()
-= default;
+PngGridDataRepresentationImpl::PngGridDataRepresentationImpl() = default;
 
 
 
@@ -55,9 +54,7 @@ PngGridDataRepresentationImpl::PngGridDataRepresentationImpl()
 
 /*! \brief The copy constructor of the class. */
 
-PngGridDataRepresentationImpl::PngGridDataRepresentationImpl(const PngGridDataRepresentationImpl& other)
-
-= default;
+PngGridDataRepresentationImpl::PngGridDataRepresentationImpl(const PngGridDataRepresentationImpl& other) = default;
 
 
 
@@ -65,8 +62,7 @@ PngGridDataRepresentationImpl::PngGridDataRepresentationImpl(const PngGridDataRe
 
 /*! \brief The destructor of the class. */
 
-PngGridDataRepresentationImpl::~PngGridDataRepresentationImpl()
-= default;
+PngGridDataRepresentationImpl::~PngGridDataRepresentationImpl() = default;
 
 
 

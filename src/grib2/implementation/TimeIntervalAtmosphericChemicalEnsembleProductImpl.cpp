@@ -13,8 +13,7 @@ namespace GRIB2
 
 /*! \brief The constructor of the class. */
 
-TimeIntervalAtmosphericChemicalEnsembleProductImpl::TimeIntervalAtmosphericChemicalEnsembleProductImpl()
-= default;
+TimeIntervalAtmosphericChemicalEnsembleProductImpl::TimeIntervalAtmosphericChemicalEnsembleProductImpl() = default;
 
 
 
@@ -22,9 +21,7 @@ TimeIntervalAtmosphericChemicalEnsembleProductImpl::TimeIntervalAtmosphericChemi
 
 /*! \brief The copy constructor of the class. */
 
-TimeIntervalAtmosphericChemicalEnsembleProductImpl::TimeIntervalAtmosphericChemicalEnsembleProductImpl(const TimeIntervalAtmosphericChemicalEnsembleProductImpl& other)
-
-= default;
+TimeIntervalAtmosphericChemicalEnsembleProductImpl::TimeIntervalAtmosphericChemicalEnsembleProductImpl(const TimeIntervalAtmosphericChemicalEnsembleProductImpl& other) = default;
 
 
 
@@ -32,8 +29,7 @@ TimeIntervalAtmosphericChemicalEnsembleProductImpl::TimeIntervalAtmosphericChemi
 
 /*! \brief The destructor of the class. */
 
-TimeIntervalAtmosphericChemicalEnsembleProductImpl::~TimeIntervalAtmosphericChemicalEnsembleProductImpl()
-= default;
+TimeIntervalAtmosphericChemicalEnsembleProductImpl::~TimeIntervalAtmosphericChemicalEnsembleProductImpl() = default;
 
 
 

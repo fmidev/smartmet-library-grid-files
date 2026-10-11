@@ -10,8 +10,7 @@ namespace GRIB2
 
 /*! \brief The constructor of the class. */
 
-AerosolEnsembleProductImpl::AerosolEnsembleProductImpl()
-= default;
+AerosolEnsembleProductImpl::AerosolEnsembleProductImpl() = default;
 
 
 
@@ -19,9 +18,7 @@ AerosolEnsembleProductImpl::AerosolEnsembleProductImpl()
 
 /*! \brief The copy constructor of the class. */
 
-AerosolEnsembleProductImpl::AerosolEnsembleProductImpl(const AerosolEnsembleProductImpl& other)
-
-= default;
+AerosolEnsembleProductImpl::AerosolEnsembleProductImpl(const AerosolEnsembleProductImpl& other) = default;
 
 
 
@@ -29,8 +26,7 @@ AerosolEnsembleProductImpl::AerosolEnsembleProductImpl(const AerosolEnsembleProd
 
 /*! \brief The destructor of the class. */
 
-AerosolEnsembleProductImpl::~AerosolEnsembleProductImpl()
-= default;
+AerosolEnsembleProductImpl::~AerosolEnsembleProductImpl() = default;
 
 
 

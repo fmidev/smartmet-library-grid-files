@@ -207,7 +207,7 @@ METHODDEF(void) my_error_exit (j_common_ptr cinfo)
 {
   // ### cinfo->err really points to a my_error_mgr struct, so coerce pointer
 
-  auto myerr = (my_error_ptr) cinfo->err;
+  auto *myerr = (my_error_ptr) cinfo->err;
 
   // ### Always display the message.
   // ### We could postpone this until after returning, if we chose.
@@ -610,7 +610,7 @@ uchar *readpng_get_image(double display_exponent, int *pChannels, uint *pRowbyte
     return nullptr;
   }
 
-  auto row_pointers = (png_bytepp)malloc(height*sizeof(png_bytep));
+  auto *row_pointers = (png_bytepp)malloc(height*sizeof(png_bytep));
   if (row_pointers == nullptr)
   {
     png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
@@ -1461,7 +1461,7 @@ void saveGeometryAsJpeg(const char *_filename,int width,int height,uint backgrou
 
       for (auto& g : geomVec)
       {
-        auto gg = g.get();
+        auto *gg = g.get();
         auto* out = new unsigned char[gg->WkbSize()+10];
         gg->exportToWkb(wkbNDR,out,wkbVariantOldOgc);
 
@@ -1507,7 +1507,7 @@ void saveGeometryAsJpeg(const char *_filename,int width,int height,uint backgrou
 
     for (auto& g : geomVec)
     {
-      auto gg = g.get();
+      auto *gg = g.get();
       auto* out = new unsigned char[gg->WkbSize()+10];
       gg->exportToWkb(wkbNDR,out,wkbVariantOldOgc);
       imagePaint.paintWkb(ss, ss, dx+10/ss, dy+10/ss,out,gg->WkbSize());

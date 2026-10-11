@@ -64,8 +64,7 @@ SecondOrderPacking::SecondOrderPacking(const SecondOrderPacking& other)
 
 /*! \brief The destructor of the class. */
 
-SecondOrderPacking::~SecondOrderPacking()
-= default;
+SecondOrderPacking::~SecondOrderPacking() = default;
 
 
 

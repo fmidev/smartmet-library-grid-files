@@ -10,8 +10,7 @@ namespace GRID
 
 /*! \brief The constructor of the class. */
 
-MessageSection::MessageSection()
-= default;
+MessageSection::MessageSection() = default;
 
 
 
@@ -30,8 +29,7 @@ MessageSection::MessageSection(const MessageSection& other)
 
 /*! \brief The destructor of the class. */
 
-MessageSection::~MessageSection()
-= default;
+MessageSection::~MessageSection() = default;
 
 
 
