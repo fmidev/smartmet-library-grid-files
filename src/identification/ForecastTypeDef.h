@@ -31,7 +31,7 @@ class ForecastTypeDef
 
 
 using ForecastTypeDef_vec = std::vector<ForecastTypeDef>;  //!< Ordered list of forecast type definitions
-typedef const ForecastTypeDef* ForecastTypeDef_cptr;       //!< Non-owning const pointer
+using ForecastTypeDef_cptr = const ForecastTypeDef*;       //!< Non-owning const pointer
 
 
 }

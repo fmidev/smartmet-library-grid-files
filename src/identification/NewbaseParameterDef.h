@@ -32,7 +32,7 @@ class NewbaseParameterDef
     std::string       mFmiName;             //!< Corresponding FMI canonical parameter name
 };
 
-typedef const NewbaseParameterDef* NewbaseParamDef_cptr;                   //!< Non-owning const pointer
+using NewbaseParamDef_cptr = const NewbaseParameterDef*;                   //!< Non-owning const pointer
 using NewbaseParamDef_vec = std::vector<NewbaseParameterDef>;              //!< Ordered list of Newbase parameter definitions
 using NewbaseParamDef_umap = std::map<uint,NewbaseParameterDef>;           //!< Ordered map keyed by Newbase parameter ID
 

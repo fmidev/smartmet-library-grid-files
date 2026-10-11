@@ -33,7 +33,7 @@ class Grib1ParameterDef
     ParameterList   mParameterList;    //!< GRIB 1 key/value pairs that identify this parameter
 };
 
-typedef const Grib1ParameterDef* Grib1ParamDef_cptr;          //!< Non-owning const pointer
+using Grib1ParamDef_cptr = const Grib1ParameterDef*;          //!< Non-owning const pointer
 using Grib1ParamDef_vec = std::vector<Grib1ParameterDef>;      //!< Ordered list of GRIB 1 parameter definitions
 using Grib1ParamDef_list = std::list<Grib1ParameterDef>;       //!< List used as a lookup cache
 

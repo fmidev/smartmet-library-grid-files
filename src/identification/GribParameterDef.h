@@ -32,7 +32,7 @@ class GribParameterDef
 };
 
 using GribParamDef_vec = std::vector<GribParameterDef>;  //!< Ordered list of GRIB parameter definitions
-typedef const GribParameterDef* GribParamDef_cptr;       //!< Non-owning const pointer
+using GribParamDef_cptr = const GribParameterDef*;       //!< Non-owning const pointer
 
 }
 }

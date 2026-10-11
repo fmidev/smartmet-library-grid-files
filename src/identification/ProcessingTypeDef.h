@@ -31,7 +31,7 @@ class ProcessingTypeDef
 
 
 using ProcessingTypeDef_vec = std::vector<ProcessingTypeDef>;  //!< Ordered list of processing type definitions
-typedef const ProcessingTypeDef* ProcessingTypeDef_cptr;       //!< Non-owning const pointer
+using ProcessingTypeDef_cptr = const ProcessingTypeDef*;       //!< Non-owning const pointer
 
 
 }

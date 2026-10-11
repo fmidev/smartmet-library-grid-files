@@ -39,7 +39,7 @@ class FmiParameterDef
 
 using FmiParamDef_vec = std::vector<FmiParameterDef>;           //!< Ordered list of FMI parameter definitions
 using FmiParamDef_umap = std::unordered_map<uint,FmiParameterDef>; //!< Hash map keyed by FMI parameter ID
-typedef const FmiParameterDef* FmiParamDef_cptr;                //!< Non-owning const pointer
+using FmiParamDef_cptr = const FmiParameterDef*;                //!< Non-owning const pointer
 
 }
 }

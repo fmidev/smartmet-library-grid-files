@@ -31,7 +31,7 @@ class NetCdfParameterDef
     std::string   mParameterUnits; //!< Physical units (e.g. "K", "m/s")
 };
 
-typedef const NetCdfParameterDef* NetCdfParamDef_cptr;                               //!< Non-owning const pointer
+using NetCdfParamDef_cptr = const NetCdfParameterDef*;                               //!< Non-owning const pointer
 using NetCdfParamDef_vec = std::vector<NetCdfParameterDef>;                          //!< Ordered list of NetCDF parameter definitions
 using NetCdfParamDef_umap = std::unordered_map<std::string,NetCdfParameterDef>;      //!< Hash map keyed by NetCDF variable name
 

@@ -36,7 +36,7 @@ class FmiLevelId_grib
 
 
 using FmiLevelId_grib_vec = std::vector<FmiLevelId_grib>;  //!< Ordered list of FMI↔GRIB level mappings
-typedef const FmiLevelId_grib* FmiLevelId_grib_cptr;       //!< Non-owning const pointer
+using FmiLevelId_grib_cptr = const FmiLevelId_grib*;       //!< Non-owning const pointer
 
 
 }

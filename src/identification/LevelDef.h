@@ -34,7 +34,7 @@ class LevelDef
 
 
 using LevelDef_vec = std::vector<LevelDef>;  //!< Ordered list of level definitions
-typedef const LevelDef* LevelDef_cptr;       //!< Non-owning const pointer
+using LevelDef_cptr = const LevelDef*;       //!< Non-owning const pointer
 
 
 }

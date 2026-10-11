@@ -35,7 +35,7 @@ class Grib2ParameterDef
     ParameterList   mParameterList;    //!< GRIB 2 key/value pairs that identify this parameter
 };
 
-typedef const Grib2ParameterDef* Grib2ParamDef_cptr;          //!< Non-owning const pointer
+using Grib2ParamDef_cptr = const Grib2ParameterDef*;          //!< Non-owning const pointer
 using Grib2ParamDef_vec = std::vector<Grib2ParameterDef>;      //!< Ordered list of GRIB 2 parameter definitions
 using Grib2ParamDef_list = std::list<Grib2ParameterDef>;       //!< List used as a lookup cache
 
