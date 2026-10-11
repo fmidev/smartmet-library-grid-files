@@ -5,7 +5,7 @@
 #include <cstdio>
 #include <unistd.h>
 #include <netinet/in.h>
-#include <stdlib.h>
+#include <cstdlib>
 #include <cstring>
 #include <sys/types.h>
 #include <sys/socket.h>

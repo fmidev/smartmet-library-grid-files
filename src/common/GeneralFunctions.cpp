@@ -8,7 +8,7 @@
 #include <macgyver/LocalDateTime.h>
 #include <macgyver/TimeZones.h>
 #include <cstdio>
-#include <stdlib.h>
+#include <cstdlib>
 #include <cstring>
 #include <sys/stat.h>
 #include <sys/time.h>

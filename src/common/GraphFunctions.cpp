@@ -19,7 +19,7 @@
 #include <vector>
 
 #include <algorithm>
-#include <math.h>
+#include <cmath>
 #include <sstream>
 #include <stack>
 #include <thread>

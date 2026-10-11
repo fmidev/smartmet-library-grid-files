@@ -7,7 +7,7 @@
 #include <memory>
 #include <gis/OGR.h>
 #include <cstdint>
-#include <math.h>
+#include <cmath>
 
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF

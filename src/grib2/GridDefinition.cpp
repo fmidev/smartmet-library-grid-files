@@ -14,7 +14,7 @@
 #include <memory>
 #include <unordered_map>
 #include <iostream>
-#include <math.h>
+#include <cmath>
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
 
