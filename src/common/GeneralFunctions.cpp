@@ -20,7 +20,6 @@
 #include <boost/archive/iterators/binary_from_base64.hpp>
 #include <boost/archive/iterators/transform_width.hpp>
 #include <filesystem>
-#include <ranges>
 #include <set>
 #include <sstream>
 #include <string>
@@ -3302,9 +3301,9 @@ void readEofLines(const char *filename,uint numberOfLines,std::vector<std::strin
     }
     fclose(file);
 
-    for (auto& tmpLine : std::ranges::reverse_view(tmpLines))
+    for (auto it = tmpLines.rbegin(); it != tmpLines.rend(); it++)
     {
-      lines.push_back(tmpLine);
+      lines.push_back(*it);
       if (lines.size() == numberOfLines)
         return;
     }

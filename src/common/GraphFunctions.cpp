@@ -16,7 +16,6 @@
 #include <fmt/format.h>
 #include <cmath>
 #include <memory>
-#include <ranges>
 #include <vector>
 
 #include <algorithm>
@@ -1949,10 +1948,10 @@ void getStreamlineImage(float *direction, float *value, uint *image, int width, 
         uint c = 0;
         if (cellCount >= minLength && value)
         {
-          for (auto& coordinate : std::ranges::reverse_view(coordinates))
+          for (auto it = coordinates.rbegin(); it != coordinates.rend(); ++it)
           {
-            int xx = (int) coordinate.x();
-            int yy = (int) coordinate.y();
+            int xx = (int) it->x();
+            int yy = (int) it->y();
             int idx = yy * width + xx;
 
             float val = value[idx];
@@ -1968,10 +1967,10 @@ void getStreamlineImage(float *direction, float *value, uint *image, int width, 
         }
 
         c = 0;
-        for (auto& coordinate : std::ranges::reverse_view(coordinates))
+        for (auto it = coordinates.rbegin(); it != coordinates.rend(); ++it)
         {
-          int xx = (int) coordinate.x();
-          int yy = (int) coordinate.y();
+          int xx = (int) it->x();
+          int yy = (int) it->y();
 
           int idx = yy * width + xx;
           if (idx < size)
@@ -2038,10 +2037,10 @@ void getStreamlineImage(float *direction, float *value, uint *image, int width, 
         int cellCount = findPath(direction, image, width, height, maxLength, 0, (double) x + 0.5, (double) y + 0.5, 0, 0, coordinates);
 
         uint c = 1;
-        for (auto& coordinate : std::ranges::reverse_view(coordinates))
+        for (auto it = coordinates.rbegin(); it != coordinates.rend(); ++it)
         {
-          int xx = (int) coordinate.x();
-          int yy = (int) coordinate.y();
+          int xx = (int) it->x();
+          int yy = (int) it->y();
 
           int idx = yy * width + xx;
           if (idx < size)
@@ -2088,10 +2087,10 @@ void getStreamlineImage(std::vector<float>& direction, float *value, uint *image
         int cellCount = findPath(direction, image, width, height, maxLength, 0, (double) x + 0.5, (double) y + 0.5, 0, 0, coordinates);
 
         uint c = 1;
-        for (auto& coordinate : std::ranges::reverse_view(coordinates))
+        for (auto it = coordinates.rbegin(); it != coordinates.rend(); ++it)
         {
-          int xx = (int) coordinate.x();
-          int yy = (int) coordinate.y();
+          int xx = (int) it->x();
+          int yy = (int) it->y();
 
           int idx = yy * width + xx;
           if (idx < size)
