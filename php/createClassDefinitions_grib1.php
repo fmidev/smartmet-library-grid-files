@@ -211,11 +211,11 @@ function process_template($file, $name, $class, $outdir)
       'ibmfloat' => 'ibmfloat',
       'unsigned\s*\[1\]' => 'std::uint8_t',
       'unsigned\s*\[2\]' => 'std::uint16_t',
-      'unsigned\s*\[3\]' => 'std::uint24_t',
+      'unsigned\s*\[3\]' => 'SmartMet::uint24_t',
       'unsigned\s*\[4\]' => 'std::uint32_t',
       'signed\s*\[1\]' => 'std::int8_t',
       'signed\s*\[2\]' => 'std::int16_t',
-      'signed\s*\[3\]' => 'std::int24_t',
+      'signed\s*\[3\]' => 'SmartMet::int24_t',
       'signed\s*\[4\]' => 'std::int32_t',
       'ascii\s*\[4\]' => 'std::uint32_t',
       'pad' => 'pad'
@@ -228,11 +228,11 @@ function process_template($file, $name, $class, $outdir)
       'ibmfloat' => 'ibmfloat',
       'std::uint8_t' => 'std::uint8_t',
       'std::uint16_t' => 'std::uint16_t',
-      'std::uint24_t' => 'std::uint24_t',
+      'SmartMet::uint24_t' => 'SmartMet::uint24_t',
       'std::uint32_t' => 'std::uint32_t',
       'std::int8_t' => 'std::int8_t',
       'std::int16_t' => 'std::int16_t',
-      'std::int24_t' => 'std::int24_t',
+      'SmartMet::int24_t' => 'SmartMet::int24_t',
       'std::int32_t' => 'std::int32_t',
       'pad' => 'pad',
       'ResolutionFlags' => 'pad',
@@ -653,9 +653,9 @@ function process_template($file, $name, $class, $outdir)
     {     
       $cpp .= "for (uint t=0; t<" . substr($type,4) . ";t++) dataWriter.write_uint8(0);\n";
     }
-    else if ($cpptype == "std::int24_t")
+    else if ($cpptype == "SmartMet::int24_t")
       $cpp .= "dataWriter.write_int24(m$Var);\n";
-    else if ($cpptype == "std::uint24_t")
+    else if ($cpptype == "SmartMet::uint24_t")
       $cpp .= "dataWriter.write_uint24(m$Var);\n";
     else
       $cpp .= "dataWriter << m$Var;\n";

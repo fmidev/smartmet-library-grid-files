@@ -324,7 +324,7 @@ std::uint16_t SpaceView::getNy() const {
 
 /*! \brief The method returns the value of the {@link mLatitudeOfSubSatellitePoint} attribute. */
 
-std::int24_t SpaceView::getLatitudeOfSubSatellitePoint() const {
+SmartMet::int24_t SpaceView::getLatitudeOfSubSatellitePoint() const {
   try {
     return mLatitudeOfSubSatellitePoint;
   } catch (...) {
@@ -334,7 +334,7 @@ std::int24_t SpaceView::getLatitudeOfSubSatellitePoint() const {
 
 /*! \brief The method returns the value of the {@link mLongitudeOfSubSatellitePoint} attribute. */
 
-std::int24_t SpaceView::getLongitudeOfSubSatellitePoint() const {
+SmartMet::int24_t SpaceView::getLongitudeOfSubSatellitePoint() const {
   try {
     return mLongitudeOfSubSatellitePoint;
   } catch (...) {
@@ -354,7 +354,7 @@ ResolutionFlagsSettings *SpaceView::getResolutionFlags() const {
 
 /*! \brief The method returns the value of the {@link mDx} attribute. */
 
-std::uint24_t SpaceView::getDx() const {
+SmartMet::uint24_t SpaceView::getDx() const {
   try {
     return mDx;
   } catch (...) {
@@ -364,7 +364,7 @@ std::uint24_t SpaceView::getDx() const {
 
 /*! \brief The method returns the value of the {@link mDy} attribute. */
 
-std::uint24_t SpaceView::getDy() const {
+SmartMet::uint24_t SpaceView::getDy() const {
   try {
     return mDy;
   } catch (...) {
@@ -404,7 +404,7 @@ ScanningModeSettings *SpaceView::getScanningMode() const {
 
 /*! \brief The method returns the value of the {@link mOrientationOfTheGrid} attribute. */
 
-std::uint24_t SpaceView::getOrientationOfTheGrid() const {
+SmartMet::uint24_t SpaceView::getOrientationOfTheGrid() const {
   try {
     return mOrientationOfTheGrid;
   } catch (...) {
@@ -414,7 +414,7 @@ std::uint24_t SpaceView::getOrientationOfTheGrid() const {
 
 /*! \brief The method returns the value of the {@link mNrInRadiusOfEarth} attribute. */
 
-std::uint24_t SpaceView::getNrInRadiusOfEarth() const {
+SmartMet::uint24_t SpaceView::getNrInRadiusOfEarth() const {
   try {
     return mNrInRadiusOfEarth;
   } catch (...) {
@@ -458,7 +458,7 @@ void SpaceView::setNy(std::uint16_t ny) {
   }
 }
 
-void SpaceView::setLatitudeOfSubSatellitePoint(std::int24_t latitudeOfSubSatellitePoint) {
+void SpaceView::setLatitudeOfSubSatellitePoint(SmartMet::int24_t latitudeOfSubSatellitePoint) {
   try {
     mLatitudeOfSubSatellitePoint = latitudeOfSubSatellitePoint;
   } catch (...) {
@@ -466,7 +466,7 @@ void SpaceView::setLatitudeOfSubSatellitePoint(std::int24_t latitudeOfSubSatelli
   }
 }
 
-void SpaceView::setLongitudeOfSubSatellitePoint(std::int24_t longitudeOfSubSatellitePoint) {
+void SpaceView::setLongitudeOfSubSatellitePoint(SmartMet::int24_t longitudeOfSubSatellitePoint) {
   try {
     mLongitudeOfSubSatellitePoint = longitudeOfSubSatellitePoint;
   } catch (...) {
@@ -482,7 +482,7 @@ void SpaceView::setResolutionFlags(ResolutionFlagsSettings &resolutionFlags) {
   }
 }
 
-void SpaceView::setDx(std::uint24_t dx) {
+void SpaceView::setDx(SmartMet::uint24_t dx) {
   try {
     mDx = dx;
   } catch (...) {
@@ -490,7 +490,7 @@ void SpaceView::setDx(std::uint24_t dx) {
   }
 }
 
-void SpaceView::setDy(std::uint24_t dy) {
+void SpaceView::setDy(SmartMet::uint24_t dy) {
   try {
     mDy = dy;
   } catch (...) {
@@ -522,7 +522,7 @@ void SpaceView::setScanningMode(ScanningModeSettings &scanningMode) {
   }
 }
 
-void SpaceView::setOrientationOfTheGrid(std::uint24_t orientationOfTheGrid) {
+void SpaceView::setOrientationOfTheGrid(SmartMet::uint24_t orientationOfTheGrid) {
   try {
     mOrientationOfTheGrid = orientationOfTheGrid;
   } catch (...) {
@@ -530,7 +530,7 @@ void SpaceView::setOrientationOfTheGrid(std::uint24_t orientationOfTheGrid) {
   }
 }
 
-void SpaceView::setNrInRadiusOfEarth(std::uint24_t nrInRadiusOfEarth) {
+void SpaceView::setNrInRadiusOfEarth(SmartMet::uint24_t nrInRadiusOfEarth) {
   try {
     mNrInRadiusOfEarth = nrInRadiusOfEarth;
   } catch (...) {

@@ -91,6 +91,8 @@ BitLine::~BitLine()
 
 void BitLine::operator=(BitLine& bitLine)
 {
+  if (&bitLine == this)
+    return;
   try
   {
     if (changes)

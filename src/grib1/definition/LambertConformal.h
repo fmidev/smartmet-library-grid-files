@@ -42,30 +42,30 @@ public:
   void setNx(std::uint16_t nx);
   std::uint16_t getNy() const;
   void setNy(std::uint16_t ny);
-  std::int24_t getLatitudeOfFirstGridPoint() const;
-  void setLatitudeOfFirstGridPoint(std::int24_t latitudeOfFirstGridPoint);
-  std::int24_t getLongitudeOfFirstGridPoint() const;
-  void setLongitudeOfFirstGridPoint(std::int24_t longitudeOfFirstGridPoint);
+  SmartMet::int24_t getLatitudeOfFirstGridPoint() const;
+  void setLatitudeOfFirstGridPoint(SmartMet::int24_t latitudeOfFirstGridPoint);
+  SmartMet::int24_t getLongitudeOfFirstGridPoint() const;
+  void setLongitudeOfFirstGridPoint(SmartMet::int24_t longitudeOfFirstGridPoint);
   ResolutionFlagsSettings *getResolutionFlags() const override;
   void setResolutionFlags(ResolutionFlagsSettings &resolutionFlags);
-  std::int24_t getLoV() const;
-  void setLoV(std::int24_t loV);
-  std::uint24_t getDxInMetres() const;
-  void setDxInMetres(std::uint24_t dxInMetres);
-  std::uint24_t getDyInMetres() const;
-  void setDyInMetres(std::uint24_t dyInMetres);
+  SmartMet::int24_t getLoV() const;
+  void setLoV(SmartMet::int24_t loV);
+  SmartMet::uint24_t getDxInMetres() const;
+  void setDxInMetres(SmartMet::uint24_t dxInMetres);
+  SmartMet::uint24_t getDyInMetres() const;
+  void setDyInMetres(SmartMet::uint24_t dyInMetres);
   std::uint8_t getProjectionCentreFlag() const;
   void setProjectionCentreFlag(std::uint8_t projectionCentreFlag);
   ScanningModeSettings *getScanningMode() const override;
   void setScanningMode(ScanningModeSettings &scanningMode);
-  std::int24_t getLatin1() const;
-  void setLatin1(std::int24_t latin1);
-  std::int24_t getLatin2() const;
-  void setLatin2(std::int24_t latin2);
-  std::int24_t getLatitudeOfSouthernPole() const;
-  void setLatitudeOfSouthernPole(std::int24_t latitudeOfSouthernPole);
-  std::int24_t getLongitudeOfSouthernPole() const;
-  void setLongitudeOfSouthernPole(std::int24_t longitudeOfSouthernPole);
+  SmartMet::int24_t getLatin1() const;
+  void setLatin1(SmartMet::int24_t latin1);
+  SmartMet::int24_t getLatin2() const;
+  void setLatin2(SmartMet::int24_t latin2);
+  SmartMet::int24_t getLatitudeOfSouthernPole() const;
+  void setLatitudeOfSouthernPole(SmartMet::int24_t latitudeOfSouthernPole);
+  SmartMet::int24_t getLongitudeOfSouthernPole() const;
+  void setLongitudeOfSouthernPole(SmartMet::int24_t longitudeOfSouthernPole);
 
 protected:
   // # Copyright 2005-2019 ECMWF.
@@ -94,7 +94,7 @@ protected:
   // #  La1 - latitude of first grid point
   // signed[3] latitudeOfFirstGridPoint :  edition_specific;
 
-  std::int24_t mLatitudeOfFirstGridPoint;
+  SmartMet::int24_t mLatitudeOfFirstGridPoint;
 
   // meta geography.latitudeOfFirstGridPointInDegrees
   //       scale(latitudeOfFirstGridPoint,oneConstant,grib1divider,truncateDegrees) : dump;
@@ -106,7 +106,7 @@ protected:
   // #  Lo1 - longitude of first grid point
   // signed[3] longitudeOfFirstGridPoint  : edition_specific;
 
-  std::int24_t mLongitudeOfFirstGridPoint;
+  SmartMet::int24_t mLongitudeOfFirstGridPoint;
 
   // meta geography.longitudeOfFirstGridPointInDegrees
   //       scale(longitudeOfFirstGridPoint,oneConstant,grib1divider,truncateDegrees) : dump;
@@ -123,7 +123,7 @@ protected:
   // #  LoV - orientation of the grid; i.e.  the east longitude value of the meridian which is parallel to the Y-axis
   // signed[3] LoV : edition_specific  ;
 
-  std::int24_t mLoV;
+  SmartMet::int24_t mLoV;
 
   // meta geography.LoVInDegrees
   //     scale(LoV,oneConstant,grib1divider,truncateDegrees) : dump;
@@ -133,7 +133,7 @@ protected:
   // #  Dx - X-direction grid length (in units of metres)
   // unsigned[3] DxInMetres  : dump;
 
-  std::uint24_t mDxInMetres;
+  SmartMet::uint24_t mDxInMetres;
 
   // alias xDirectionGridLength=DxInMetres;
   // alias geography.DxInMetres=DxInMetres ;
@@ -143,7 +143,7 @@ protected:
   // #  Dy - Y-direction grid length (in units of metres)
   // unsigned[3] DyInMetres  : dump;
 
-  std::uint24_t mDyInMetres;
+  SmartMet::uint24_t mDyInMetres;
 
   // alias yDirectionGridLength=DyInMetres;
   // alias geography.DyInMetres=DyInMetres;
@@ -170,7 +170,7 @@ protected:
   // #  Latin 1 - first latitude from the pole at which the secant cone cuts the sphere
   // signed[3] Latin1 : edition_specific;
 
-  std::int24_t mLatin1;
+  SmartMet::int24_t mLatin1;
 
   // meta geography.Latin1InDegrees scale(Latin1,oneConstant,grib1divider,truncateDegrees) : dump;
   // alias firstLatitude=Latin1;
@@ -183,7 +183,7 @@ protected:
   // #  Latin 2 - second latitude from the pole at which the secant cone cuts the sphere
   // signed[3] Latin2 :edition_specific;
 
-  std::int24_t mLatin2;
+  SmartMet::int24_t mLatin2;
 
   // alias secondLatitude=Latin2;
   // meta geography.Latin2InDegrees scale(Latin2,oneConstant,grib1divider,truncateDegrees) : dump;
@@ -191,14 +191,14 @@ protected:
   //
   // signed[3] latitudeOfSouthernPole : no_copy;
 
-  std::int24_t mLatitudeOfSouthernPole;
+  SmartMet::int24_t mLatitudeOfSouthernPole;
 
   // meta  geography.latitudeOfSouthernPoleInDegrees
   //         scale(latitudeOfSouthernPole,oneConstant,grib1divider,truncateDegrees) : dump;
   //
   // signed[3] longitudeOfSouthernPole : no_copy;
 
-  std::int24_t mLongitudeOfSouthernPole;
+  SmartMet::int24_t mLongitudeOfSouthernPole;
 
   // meta  geography.longitudeOfSouthernPoleInDegrees
   //         scale(longitudeOfSouthernPole,oneConstant,grib1divider,truncateDegrees) : dump;

@@ -33,10 +33,10 @@ public:
   virtual bool hasAttributeValue(const char *attributeName, const char *attributeValue) const;
   virtual T::Hash countHash() const;
 
-  std::int24_t getLatitudeOfStretchingPole() const;
-  void setLatitudeOfStretchingPole(std::int24_t latitudeOfStretchingPole);
-  std::int24_t getLongitudeOfStretchingPole() const;
-  void setLongitudeOfStretchingPole(std::int24_t longitudeOfStretchingPole);
+  SmartMet::int24_t getLatitudeOfStretchingPole() const;
+  void setLatitudeOfStretchingPole(SmartMet::int24_t latitudeOfStretchingPole);
+  SmartMet::int24_t getLongitudeOfStretchingPole() const;
+  void setLongitudeOfStretchingPole(SmartMet::int24_t longitudeOfStretchingPole);
   ibmfloat getStretchingFactor() const;
   void setStretchingFactor(ibmfloat stretchingFactor);
 
@@ -45,11 +45,11 @@ protected:
   //
   // signed[3] latitudeOfStretchingPole : edition_specific,no_copy;
 
-  std::int24_t mLatitudeOfStretchingPole;
+  SmartMet::int24_t mLatitudeOfStretchingPole;
 
   // signed[3] longitudeOfStretchingPole : edition_specific,no_copy;
 
-  std::int24_t mLongitudeOfStretchingPole;
+  SmartMet::int24_t mLongitudeOfStretchingPole;
 
   //
   // meta  geography.latitudeOfStretchingPoleInDegrees

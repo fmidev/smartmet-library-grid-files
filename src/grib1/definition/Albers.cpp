@@ -324,7 +324,7 @@ std::uint16_t Albers::getNy() const {
 
 /*! \brief The method returns the value of the {@link mLatitudeOfFirstGridPoint} attribute. */
 
-std::int24_t Albers::getLatitudeOfFirstGridPoint() const {
+SmartMet::int24_t Albers::getLatitudeOfFirstGridPoint() const {
   try {
     return mLatitudeOfFirstGridPoint;
   } catch (...) {
@@ -334,7 +334,7 @@ std::int24_t Albers::getLatitudeOfFirstGridPoint() const {
 
 /*! \brief The method returns the value of the {@link mLongitudeOfFirstGridPoint} attribute. */
 
-std::int24_t Albers::getLongitudeOfFirstGridPoint() const {
+SmartMet::int24_t Albers::getLongitudeOfFirstGridPoint() const {
   try {
     return mLongitudeOfFirstGridPoint;
   } catch (...) {
@@ -354,7 +354,7 @@ ResolutionFlagsSettings *Albers::getResolutionFlags() const {
 
 /*! \brief The method returns the value of the {@link mLoV} attribute. */
 
-std::int24_t Albers::getLoV() const {
+SmartMet::int24_t Albers::getLoV() const {
   try {
     return mLoV;
   } catch (...) {
@@ -364,7 +364,7 @@ std::int24_t Albers::getLoV() const {
 
 /*! \brief The method returns the value of the {@link mDxInMetres} attribute. */
 
-std::uint24_t Albers::getDxInMetres() const {
+SmartMet::uint24_t Albers::getDxInMetres() const {
   try {
     return mDxInMetres;
   } catch (...) {
@@ -374,7 +374,7 @@ std::uint24_t Albers::getDxInMetres() const {
 
 /*! \brief The method returns the value of the {@link mDyInMetres} attribute. */
 
-std::uint24_t Albers::getDyInMetres() const {
+SmartMet::uint24_t Albers::getDyInMetres() const {
   try {
     return mDyInMetres;
   } catch (...) {
@@ -404,7 +404,7 @@ ScanningModeSettings *Albers::getScanningMode() const {
 
 /*! \brief The method returns the value of the {@link mLatin1} attribute. */
 
-std::int24_t Albers::getLatin1() const {
+SmartMet::int24_t Albers::getLatin1() const {
   try {
     return mLatin1;
   } catch (...) {
@@ -414,7 +414,7 @@ std::int24_t Albers::getLatin1() const {
 
 /*! \brief The method returns the value of the {@link mLatin2} attribute. */
 
-std::int24_t Albers::getLatin2() const {
+SmartMet::int24_t Albers::getLatin2() const {
   try {
     return mLatin2;
   } catch (...) {
@@ -424,7 +424,7 @@ std::int24_t Albers::getLatin2() const {
 
 /*! \brief The method returns the value of the {@link mLatitudeOfSouthernPole} attribute. */
 
-std::int24_t Albers::getLatitudeOfSouthernPole() const {
+SmartMet::int24_t Albers::getLatitudeOfSouthernPole() const {
   try {
     return mLatitudeOfSouthernPole;
   } catch (...) {
@@ -434,7 +434,7 @@ std::int24_t Albers::getLatitudeOfSouthernPole() const {
 
 /*! \brief The method returns the value of the {@link mLongitudeOfSouthernPole} attribute. */
 
-std::int24_t Albers::getLongitudeOfSouthernPole() const {
+SmartMet::int24_t Albers::getLongitudeOfSouthernPole() const {
   try {
     return mLongitudeOfSouthernPole;
   } catch (...) {
@@ -458,7 +458,7 @@ void Albers::setNy(std::uint16_t ny) {
   }
 }
 
-void Albers::setLatitudeOfFirstGridPoint(std::int24_t latitudeOfFirstGridPoint) {
+void Albers::setLatitudeOfFirstGridPoint(SmartMet::int24_t latitudeOfFirstGridPoint) {
   try {
     mLatitudeOfFirstGridPoint = latitudeOfFirstGridPoint;
   } catch (...) {
@@ -466,7 +466,7 @@ void Albers::setLatitudeOfFirstGridPoint(std::int24_t latitudeOfFirstGridPoint) 
   }
 }
 
-void Albers::setLongitudeOfFirstGridPoint(std::int24_t longitudeOfFirstGridPoint) {
+void Albers::setLongitudeOfFirstGridPoint(SmartMet::int24_t longitudeOfFirstGridPoint) {
   try {
     mLongitudeOfFirstGridPoint = longitudeOfFirstGridPoint;
   } catch (...) {
@@ -482,7 +482,7 @@ void Albers::setResolutionFlags(ResolutionFlagsSettings &resolutionFlags) {
   }
 }
 
-void Albers::setLoV(std::int24_t loV) {
+void Albers::setLoV(SmartMet::int24_t loV) {
   try {
     mLoV = loV;
   } catch (...) {
@@ -490,7 +490,7 @@ void Albers::setLoV(std::int24_t loV) {
   }
 }
 
-void Albers::setDxInMetres(std::uint24_t dxInMetres) {
+void Albers::setDxInMetres(SmartMet::uint24_t dxInMetres) {
   try {
     mDxInMetres = dxInMetres;
   } catch (...) {
@@ -498,7 +498,7 @@ void Albers::setDxInMetres(std::uint24_t dxInMetres) {
   }
 }
 
-void Albers::setDyInMetres(std::uint24_t dyInMetres) {
+void Albers::setDyInMetres(SmartMet::uint24_t dyInMetres) {
   try {
     mDyInMetres = dyInMetres;
   } catch (...) {
@@ -522,7 +522,7 @@ void Albers::setScanningMode(ScanningModeSettings &scanningMode) {
   }
 }
 
-void Albers::setLatin1(std::int24_t latin1) {
+void Albers::setLatin1(SmartMet::int24_t latin1) {
   try {
     mLatin1 = latin1;
   } catch (...) {
@@ -530,7 +530,7 @@ void Albers::setLatin1(std::int24_t latin1) {
   }
 }
 
-void Albers::setLatin2(std::int24_t latin2) {
+void Albers::setLatin2(SmartMet::int24_t latin2) {
   try {
     mLatin2 = latin2;
   } catch (...) {
@@ -538,7 +538,7 @@ void Albers::setLatin2(std::int24_t latin2) {
   }
 }
 
-void Albers::setLatitudeOfSouthernPole(std::int24_t latitudeOfSouthernPole) {
+void Albers::setLatitudeOfSouthernPole(SmartMet::int24_t latitudeOfSouthernPole) {
   try {
     mLatitudeOfSouthernPole = latitudeOfSouthernPole;
   } catch (...) {
@@ -546,7 +546,7 @@ void Albers::setLatitudeOfSouthernPole(std::int24_t latitudeOfSouthernPole) {
   }
 }
 
-void Albers::setLongitudeOfSouthernPole(std::int24_t longitudeOfSouthernPole) {
+void Albers::setLongitudeOfSouthernPole(SmartMet::int24_t longitudeOfSouthernPole) {
   try {
     mLongitudeOfSouthernPole = longitudeOfSouthernPole;
   } catch (...) {

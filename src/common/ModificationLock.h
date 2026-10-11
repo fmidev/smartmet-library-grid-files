@@ -57,6 +57,8 @@ class ModificationLock
     /*! \brief Assignment — resets counters and copies locking-enabled flag. */
     void operator=(const ModificationLock& modificationLock)
     {
+      if (&modificationLock == this)
+        return;
       mReadCounter.store(0);
       mWriteCounter.store(0);
       mLockingEnabled = modificationLock.mLockingEnabled;

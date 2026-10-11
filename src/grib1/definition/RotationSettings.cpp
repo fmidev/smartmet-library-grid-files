@@ -161,7 +161,7 @@ T::Hash RotationSettings::countHash() const {
 
 /*! \brief The method returns the value of the {@link mLatitudeOfSouthernPole} attribute. */
 
-std::int24_t RotationSettings::getLatitudeOfSouthernPole() const {
+SmartMet::int24_t RotationSettings::getLatitudeOfSouthernPole() const {
   try {
     return mLatitudeOfSouthernPole;
   } catch (...) {
@@ -171,7 +171,7 @@ std::int24_t RotationSettings::getLatitudeOfSouthernPole() const {
 
 /*! \brief The method returns the value of the {@link mLongitudeOfSouthernPole} attribute. */
 
-std::int24_t RotationSettings::getLongitudeOfSouthernPole() const {
+SmartMet::int24_t RotationSettings::getLongitudeOfSouthernPole() const {
   try {
     return mLongitudeOfSouthernPole;
   } catch (...) {
@@ -189,7 +189,7 @@ ibmfloat RotationSettings::getGeography_angleOfRotationInDegrees() const {
   }
 }
 
-void RotationSettings::setLatitudeOfSouthernPole(std::int24_t latitudeOfSouthernPole) {
+void RotationSettings::setLatitudeOfSouthernPole(SmartMet::int24_t latitudeOfSouthernPole) {
   try {
     mLatitudeOfSouthernPole = latitudeOfSouthernPole;
   } catch (...) {
@@ -197,7 +197,7 @@ void RotationSettings::setLatitudeOfSouthernPole(std::int24_t latitudeOfSouthern
   }
 }
 
-void RotationSettings::setLongitudeOfSouthernPole(std::int24_t longitudeOfSouthernPole) {
+void RotationSettings::setLongitudeOfSouthernPole(SmartMet::int24_t longitudeOfSouthernPole) {
   try {
     mLongitudeOfSouthernPole = longitudeOfSouthernPole;
   } catch (...) {

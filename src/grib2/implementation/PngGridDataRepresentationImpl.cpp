@@ -191,6 +191,7 @@ void PngGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_
       throw Fmi::Exception(BCP,"PNG decoding error!");
     }
 
+    // NOLINTNEXTLINE(cert-err52-cpp): libpng/libjpeg report errors with longjmp
     if (setjmp(png_jmpbuf(png)))
     {
       png_destroy_read_struct(&png,&info,&theEnd);

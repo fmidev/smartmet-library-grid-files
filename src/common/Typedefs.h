@@ -8,16 +8,13 @@
 #include <cmath>
 #include <optional>
 
-/*! \brief Portable 24-bit integer aliases injected into std for uniform numeric handling. */
-namespace std
-{
-  using int24_t = int32_t;  //!< Signed 24-bit integer stored in 32 bits
-  using uint24_t = uint32_t; //!< Unsigned 24-bit integer stored in 32 bits
-}
-
 /*! \brief Root namespace for the SmartMet Server framework and all sub-libraries. */
 namespace SmartMet
 {
+  // 24-bit integer aliases for GRIB fields. They used to be declared in
+  // namespace std, which programs may not extend (cert-dcl58-cpp).
+  using int24_t = int32_t;  //!< Signed 24-bit integer stored in 32 bits
+  using uint24_t = uint32_t; //!< Unsigned 24-bit integer stored in 32 bits
 
 using uchar = unsigned char;   //!< Byte alias used throughout the codebase
 using ushort = unsigned short; //!< 16-bit unsigned alias
@@ -63,7 +60,7 @@ namespace T
   using Int64_opt = std::optional<std::int64_t>;    //!< Optional signed 64-bit integer
   using UInt8_opt = std::optional<std::uint8_t>;    //!< Optional unsigned 8-bit integer
   using UInt16_opt = std::optional<std::uint16_t>;  //!< Optional unsigned 16-bit integer
-  using UInt24_opt = std::optional<std::uint24_t>;  //!< Optional unsigned 24-bit integer
+  using UInt24_opt = std::optional<SmartMet::uint24_t>;  //!< Optional unsigned 24-bit integer
   using UInt32_opt = std::optional<std::uint32_t>;  //!< Optional unsigned 32-bit integer
   using UInt64_opt = std::optional<std::uint64_t>;  //!< Optional unsigned 64-bit integer
   using Float_opt = std::optional<std::float_t>;    //!< Optional single-precision float

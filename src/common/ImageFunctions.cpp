@@ -216,6 +216,7 @@ METHODDEF(void) my_error_exit (j_common_ptr cinfo)
 
   // ### Return control to the setjmp point
 
+  // NOLINTNEXTLINE(cert-err52-cpp): libpng/libjpeg report errors with longjmp
   longjmp(myerr->setjmp_buffer, 1);
 }
 
@@ -266,6 +267,7 @@ int jpg_load(const char *_filename,CImage& _image)
 
     // ### Establish the setjmp return context for my_error_exit to use.
 
+    // NOLINTNEXTLINE(cert-err52-cpp): libpng/libjpeg report errors with longjmp
     if (setjmp(jerr.setjmp_buffer))
     {
       // ### If we get here, the JPEG code has signaled an error.
@@ -488,6 +490,7 @@ int readpng_init(FILE *infile, uint *pWidth, uint *pHeight)
     return -3;   /* out of memory */
   }
 
+  // NOLINTNEXTLINE(cert-err52-cpp): libpng/libjpeg report errors with longjmp
   if (setjmp(png_jmpbuf(png_ptr)))
   {
     png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
@@ -518,6 +521,7 @@ int readpng_get_bgcolor(uchar *red, uchar *green, uchar *blue)
 {
   png_color_16p pBackground;
 
+  // NOLINTNEXTLINE(cert-err52-cpp): libpng/libjpeg report errors with longjmp
   if (setjmp(png_jmpbuf(png_ptr)))
   {
     png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
@@ -569,6 +573,7 @@ uchar *readpng_get_image(double display_exponent, int *pChannels, uint *pRowbyte
   png_uint_32 i, rowbytes;
 
 
+  // NOLINTNEXTLINE(cert-err52-cpp): libpng/libjpeg report errors with longjmp
   if (setjmp(png_jmpbuf(png_ptr)))
   {
     png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);

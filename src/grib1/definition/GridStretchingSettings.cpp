@@ -161,7 +161,7 @@ T::Hash GridStretchingSettings::countHash() const {
 
 /*! \brief The method returns the value of the {@link mLatitudeOfStretchingPole} attribute. */
 
-std::int24_t GridStretchingSettings::getLatitudeOfStretchingPole() const {
+SmartMet::int24_t GridStretchingSettings::getLatitudeOfStretchingPole() const {
   try {
     return mLatitudeOfStretchingPole;
   } catch (...) {
@@ -171,7 +171,7 @@ std::int24_t GridStretchingSettings::getLatitudeOfStretchingPole() const {
 
 /*! \brief The method returns the value of the {@link mLongitudeOfStretchingPole} attribute. */
 
-std::int24_t GridStretchingSettings::getLongitudeOfStretchingPole() const {
+SmartMet::int24_t GridStretchingSettings::getLongitudeOfStretchingPole() const {
   try {
     return mLongitudeOfStretchingPole;
   } catch (...) {
@@ -189,7 +189,7 @@ ibmfloat GridStretchingSettings::getStretchingFactor() const {
   }
 }
 
-void GridStretchingSettings::setLatitudeOfStretchingPole(std::int24_t latitudeOfStretchingPole) {
+void GridStretchingSettings::setLatitudeOfStretchingPole(SmartMet::int24_t latitudeOfStretchingPole) {
   try {
     mLatitudeOfStretchingPole = latitudeOfStretchingPole;
   } catch (...) {
@@ -197,7 +197,7 @@ void GridStretchingSettings::setLatitudeOfStretchingPole(std::int24_t latitudeOf
   }
 }
 
-void GridStretchingSettings::setLongitudeOfStretchingPole(std::int24_t longitudeOfStretchingPole) {
+void GridStretchingSettings::setLongitudeOfStretchingPole(SmartMet::int24_t longitudeOfStretchingPole) {
   try {
     mLongitudeOfStretchingPole = longitudeOfStretchingPole;
   } catch (...) {

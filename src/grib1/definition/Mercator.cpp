@@ -254,7 +254,7 @@ GridAreaSettings *Mercator::getGridArea() const {
 
 /*! \brief The method returns the value of the {@link mLatin} attribute. */
 
-std::int24_t Mercator::getLatin() const {
+SmartMet::int24_t Mercator::getLatin() const {
   try {
     return mLatin;
   } catch (...) {
@@ -274,7 +274,7 @@ ScanningModeSettings *Mercator::getScanningMode() const {
 
 /*! \brief The method returns the value of the {@link mDiInMetres} attribute. */
 
-std::int24_t Mercator::getDiInMetres() const {
+SmartMet::int24_t Mercator::getDiInMetres() const {
   try {
     return mDiInMetres;
   } catch (...) {
@@ -284,7 +284,7 @@ std::int24_t Mercator::getDiInMetres() const {
 
 /*! \brief The method returns the value of the {@link mDjInMetres} attribute. */
 
-std::int24_t Mercator::getDjInMetres() const {
+SmartMet::int24_t Mercator::getDjInMetres() const {
   try {
     return mDjInMetres;
   } catch (...) {
@@ -316,7 +316,7 @@ void Mercator::setGridArea(GridAreaSettings &gridArea) {
   }
 }
 
-void Mercator::setLatin(std::int24_t latin) {
+void Mercator::setLatin(SmartMet::int24_t latin) {
   try {
     mLatin = latin;
   } catch (...) {
@@ -332,7 +332,7 @@ void Mercator::setScanningMode(ScanningModeSettings &scanningMode) {
   }
 }
 
-void Mercator::setDiInMetres(std::int24_t diInMetres) {
+void Mercator::setDiInMetres(SmartMet::int24_t diInMetres) {
   try {
     mDiInMetres = diInMetres;
   } catch (...) {
@@ -340,7 +340,7 @@ void Mercator::setDiInMetres(std::int24_t diInMetres) {
   }
 }
 
-void Mercator::setDjInMetres(std::int24_t djInMetres) {
+void Mercator::setDjInMetres(SmartMet::int24_t djInMetres) {
   try {
     mDjInMetres = djInMetres;
   } catch (...) {

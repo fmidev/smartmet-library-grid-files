@@ -42,26 +42,26 @@ public:
   void setNx(std::uint16_t nx);
   std::uint16_t getNy() const;
   void setNy(std::uint16_t ny);
-  std::int24_t getLatitudeOfSubSatellitePoint() const;
-  void setLatitudeOfSubSatellitePoint(std::int24_t latitudeOfSubSatellitePoint);
-  std::int24_t getLongitudeOfSubSatellitePoint() const;
-  void setLongitudeOfSubSatellitePoint(std::int24_t longitudeOfSubSatellitePoint);
+  SmartMet::int24_t getLatitudeOfSubSatellitePoint() const;
+  void setLatitudeOfSubSatellitePoint(SmartMet::int24_t latitudeOfSubSatellitePoint);
+  SmartMet::int24_t getLongitudeOfSubSatellitePoint() const;
+  void setLongitudeOfSubSatellitePoint(SmartMet::int24_t longitudeOfSubSatellitePoint);
   ResolutionFlagsSettings *getResolutionFlags() const override;
   void setResolutionFlags(ResolutionFlagsSettings &resolutionFlags);
-  std::uint24_t getDx() const;
-  void setDx(std::uint24_t dx);
-  std::uint24_t getDy() const;
-  void setDy(std::uint24_t dy);
+  SmartMet::uint24_t getDx() const;
+  void setDx(SmartMet::uint24_t dx);
+  SmartMet::uint24_t getDy() const;
+  void setDy(SmartMet::uint24_t dy);
   std::uint16_t getXpInGridLengths() const;
   void setXpInGridLengths(std::uint16_t xpInGridLengths);
   std::uint16_t getYpInGridLengths() const;
   void setYpInGridLengths(std::uint16_t ypInGridLengths);
   ScanningModeSettings *getScanningMode() const override;
   void setScanningMode(ScanningModeSettings &scanningMode);
-  std::uint24_t getOrientationOfTheGrid() const;
-  void setOrientationOfTheGrid(std::uint24_t orientationOfTheGrid);
-  std::uint24_t getNrInRadiusOfEarth() const;
-  void setNrInRadiusOfEarth(std::uint24_t nrInRadiusOfEarth);
+  SmartMet::uint24_t getOrientationOfTheGrid() const;
+  void setOrientationOfTheGrid(SmartMet::uint24_t orientationOfTheGrid);
+  SmartMet::uint24_t getNrInRadiusOfEarth() const;
+  void setNrInRadiusOfEarth(SmartMet::uint24_t nrInRadiusOfEarth);
   std::uint16_t getXo() const;
   void setXo(std::uint16_t xo);
   std::uint16_t getYo() const;
@@ -90,14 +90,14 @@ protected:
   //
   // signed[3] latitudeOfSubSatellitePoint ;
 
-  std::int24_t mLatitudeOfSubSatellitePoint;
+  SmartMet::int24_t mLatitudeOfSubSatellitePoint;
 
   // meta geography.latitudeOfSubSatellitePointInDegrees  scale(latitudeOfSubSatellitePoint,oneConstant,grib1divider,truncateDegrees) : dump;
   // alias Lap=latitudeOfSubSatellitePoint;
   //
   // signed[3] longitudeOfSubSatellitePoint ;
 
-  std::int24_t mLongitudeOfSubSatellitePoint;
+  SmartMet::int24_t mLongitudeOfSubSatellitePoint;
 
   // meta geography.longitudeOfSubSatellitePointInDegrees  scale(longitudeOfSubSatellitePoint,oneConstant,grib1divider,truncateDegrees) : dump;
   // alias Lap=longitudeOfSubSatellitePoint;
@@ -109,13 +109,13 @@ protected:
   //
   // unsigned[3] dx  : dump;
 
-  std::uint24_t mDx;
+  SmartMet::uint24_t mDx;
 
   // alias geography.dx=dx;
   //
   // unsigned[3] dy  : dump;
 
-  std::uint24_t mDy;
+  SmartMet::uint24_t mDy;
 
   // alias geography.dy=dy;
   //
@@ -139,13 +139,13 @@ protected:
   //
   // unsigned[3] orientationOfTheGrid : edition_specific ;
 
-  std::uint24_t mOrientationOfTheGrid;
+  SmartMet::uint24_t mOrientationOfTheGrid;
 
   // meta geography.orientationOfTheGridInDegrees  scale(orientationOfTheGrid,oneConstant,grib1divider,truncateDegrees) : dump;
   //
   // unsigned[3] NrInRadiusOfEarth : edition_specific,can_be_missing,no_copy;
 
-  std::uint24_t mNrInRadiusOfEarth;
+  SmartMet::uint24_t mNrInRadiusOfEarth;
 
   // alias altitudeOfTheCameraFromTheEarthSCenterMeasuredInUnitsOfTheEarth = NrInRadiusOfEarth;
   //

@@ -4640,7 +4640,7 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
           def1->setGridArea(gridArea);
           def1->setDiInMetres(iInc);
           def1->setDjInMetres(jInc);
-          def1->setLatin((std::int24_t)latin);
+          def1->setLatin((SmartMet::int24_t)latin);
 
           def1->setGridGeometryId(geometryId);
           mGeometryNames.insert(std::pair<uint,std::string>(geometryId,geometryName));
@@ -4702,10 +4702,10 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
           def1->setDxInMetres(iInc);
           def1->setDyInMetres(jInc);
           //def1->setProjectionCentreFlag(std::uint8_t projectionCentreFlag);
-          //def1->setLatin1((std::int24_t)latin1/1000);
-          //def1->setLatin2((std::int24_t)latin2/1000);
-          //def1->setLatitudeOfSouthernPole((std::int24_t)latitudeOfSouthernPole/1000);
-          //def1->setLongitudeOfSouthernPole((std::int24_t)longitudeOfSouthernPole/1000);
+          //def1->setLatin1((SmartMet::int24_t)latin1/1000);
+          //def1->setLatin2((SmartMet::int24_t)latin2/1000);
+          //def1->setLatitudeOfSouthernPole((SmartMet::int24_t)latitudeOfSouthernPole/1000);
+          //def1->setLongitudeOfSouthernPole((SmartMet::int24_t)longitudeOfSouthernPole/1000);
 
           def1->setGridGeometryId(geometryId);
           mGeometryNames.insert(std::pair<uint,std::string>(geometryId,geometryName));

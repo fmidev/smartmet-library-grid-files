@@ -83,6 +83,8 @@ class CImage
 
     CImage& operator=(const CImage& image)
     {
+      if (&image == this)
+        return *this;
       if (pixel != nullptr)
         delete[] pixel;
 

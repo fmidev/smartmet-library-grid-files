@@ -44,14 +44,14 @@ public:
   void setNj(std::int16_t nj);
   GridAreaSettings *getGridArea() const override;
   void setGridArea(GridAreaSettings &gridArea);
-  std::int24_t getLatin() const;
-  void setLatin(std::int24_t latin);
+  SmartMet::int24_t getLatin() const;
+  void setLatin(SmartMet::int24_t latin);
   ScanningModeSettings *getScanningMode() const override;
   void setScanningMode(ScanningModeSettings &scanningMode);
-  std::int24_t getDiInMetres() const;
-  void setDiInMetres(std::int24_t diInMetres);
-  std::int24_t getDjInMetres() const;
-  void setDjInMetres(std::int24_t djInMetres);
+  SmartMet::int24_t getDiInMetres() const;
+  void setDiInMetres(SmartMet::int24_t diInMetres);
+  SmartMet::int24_t getDjInMetres() const;
+  void setDjInMetres(SmartMet::int24_t djInMetres);
 
 protected:
   // # Copyright 2005-2019 ECMWF.
@@ -83,7 +83,7 @@ protected:
   //
   // signed[3] Latin : edition_specific,no_copy;
 
-  std::int24_t mLatin;
+  SmartMet::int24_t mLatin;
 
   // meta geography.LaDInDegrees scale(Latin,oneConstant,grib1divider,truncateDegrees) : dump;
   //
@@ -103,7 +103,7 @@ protected:
   //
   // signed[3] DiInMetres   : dump;
 
-  std::int24_t mDiInMetres;
+  SmartMet::int24_t mDiInMetres;
 
   // alias longitudinalDirectionGridLength=DiInMetres;
   // alias Di=DiInMetres;
@@ -111,7 +111,7 @@ protected:
   //
   // signed[3] DjInMetres   : dump;
 
-  std::int24_t mDjInMetres;
+  SmartMet::int24_t mDjInMetres;
 
   // alias latitudinalDirectionGridLength=DjInMetres;
   // alias Dj=DjInMetres;

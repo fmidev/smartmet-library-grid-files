@@ -276,7 +276,7 @@ std::uint16_t PolarStereographic::getNy() const {
 
 /*! \brief The method returns the value of the {@link mLatitudeOfFirstGridPoint} attribute. */
 
-std::int24_t PolarStereographic::getLatitudeOfFirstGridPoint() const {
+SmartMet::int24_t PolarStereographic::getLatitudeOfFirstGridPoint() const {
   try {
     return mLatitudeOfFirstGridPoint;
   } catch (...) {
@@ -286,7 +286,7 @@ std::int24_t PolarStereographic::getLatitudeOfFirstGridPoint() const {
 
 /*! \brief The method returns the value of the {@link mLongitudeOfFirstGridPoint} attribute. */
 
-std::int24_t PolarStereographic::getLongitudeOfFirstGridPoint() const {
+SmartMet::int24_t PolarStereographic::getLongitudeOfFirstGridPoint() const {
   try {
     return mLongitudeOfFirstGridPoint;
   } catch (...) {
@@ -306,7 +306,7 @@ ResolutionFlagsSettings *PolarStereographic::getResolutionFlags() const {
 
 /*! \brief The method returns the value of the {@link mOrientationOfTheGrid} attribute. */
 
-std::int24_t PolarStereographic::getOrientationOfTheGrid() const {
+SmartMet::int24_t PolarStereographic::getOrientationOfTheGrid() const {
   try {
     return mOrientationOfTheGrid;
   } catch (...) {
@@ -316,7 +316,7 @@ std::int24_t PolarStereographic::getOrientationOfTheGrid() const {
 
 /*! \brief The method returns the value of the {@link mDxInMetres} attribute. */
 
-std::uint24_t PolarStereographic::getDxInMetres() const {
+SmartMet::uint24_t PolarStereographic::getDxInMetres() const {
   try {
     return mDxInMetres;
   } catch (...) {
@@ -326,7 +326,7 @@ std::uint24_t PolarStereographic::getDxInMetres() const {
 
 /*! \brief The method returns the value of the {@link mDyInMetres} attribute. */
 
-std::uint24_t PolarStereographic::getDyInMetres() const {
+SmartMet::uint24_t PolarStereographic::getDyInMetres() const {
   try {
     return mDyInMetres;
   } catch (...) {
@@ -370,7 +370,7 @@ void PolarStereographic::setNy(std::uint16_t ny) {
   }
 }
 
-void PolarStereographic::setLatitudeOfFirstGridPoint(std::int24_t latitudeOfFirstGridPoint) {
+void PolarStereographic::setLatitudeOfFirstGridPoint(SmartMet::int24_t latitudeOfFirstGridPoint) {
   try {
     mLatitudeOfFirstGridPoint = latitudeOfFirstGridPoint;
   } catch (...) {
@@ -378,7 +378,7 @@ void PolarStereographic::setLatitudeOfFirstGridPoint(std::int24_t latitudeOfFirs
   }
 }
 
-void PolarStereographic::setLongitudeOfFirstGridPoint(std::int24_t longitudeOfFirstGridPoint) {
+void PolarStereographic::setLongitudeOfFirstGridPoint(SmartMet::int24_t longitudeOfFirstGridPoint) {
   try {
     mLongitudeOfFirstGridPoint = longitudeOfFirstGridPoint;
   } catch (...) {
@@ -394,7 +394,7 @@ void PolarStereographic::setResolutionFlags(ResolutionFlagsSettings &resolutionF
   }
 }
 
-void PolarStereographic::setOrientationOfTheGrid(std::int24_t orientationOfTheGrid) {
+void PolarStereographic::setOrientationOfTheGrid(SmartMet::int24_t orientationOfTheGrid) {
   try {
     mOrientationOfTheGrid = orientationOfTheGrid;
   } catch (...) {
@@ -402,7 +402,7 @@ void PolarStereographic::setOrientationOfTheGrid(std::int24_t orientationOfTheGr
   }
 }
 
-void PolarStereographic::setDxInMetres(std::uint24_t dxInMetres) {
+void PolarStereographic::setDxInMetres(SmartMet::uint24_t dxInMetres) {
   try {
     mDxInMetres = dxInMetres;
   } catch (...) {
@@ -410,7 +410,7 @@ void PolarStereographic::setDxInMetres(std::uint24_t dxInMetres) {
   }
 }
 
-void PolarStereographic::setDyInMetres(std::uint24_t dyInMetres) {
+void PolarStereographic::setDyInMetres(SmartMet::uint24_t dyInMetres) {
   try {
     mDyInMetres = dyInMetres;
   } catch (...) {
