@@ -613,7 +613,7 @@ void LambertAzimuthalEqualAreaImpl::print(std::ostream& stream,uint level,uint o
       int nx = C_INT(*mNumberOfPointsAlongXAxis);
       int ny = C_INT(*mNumberOfPointsAlongYAxis);
 
-      if (coordinateList && coordinateList->size() == (std::size_t)(nx*ny))
+      if (coordinateList && coordinateList->size() == (std::size_t)nx*ny)
       {
         char str[200];
         uint c = 0;

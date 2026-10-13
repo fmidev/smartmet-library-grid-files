@@ -546,6 +546,8 @@ void Log::truncate()
     // ### Opening a new log file
 
     open();
+    if (file == nullptr)
+      return;
 
     // ### Copying log information into the new log file
 

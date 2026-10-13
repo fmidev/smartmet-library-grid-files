@@ -4,6 +4,7 @@
 #include "MemoryReader.h"
 #include "MemoryWriter.h"
 #include "GeneralFunctions.h"
+#include <cmath>
 #include "AutoThreadLock.h"
 #include "ShowFunction.h"
 #include "InterpolationFunctions.h"
@@ -186,7 +187,7 @@ void addLine(double x1, double y1, double x2, double y2, std::set<UInt64> &cList
 
     if (x1 == x2 && (x1 - round(x1)) == 0)
     {
-      int yStart = C_INT(y1 + 0.5);
+      int yStart = C_INT(std::lround(y1));
       if ((y1 - yStart) > 0)
         yStart++;
 
@@ -211,7 +212,7 @@ void addLine(double x1, double y1, double x2, double y2, std::set<UInt64> &cList
         x2 = tx;
       }
 
-      int xStart = C_INT(x1 + 0.5);
+      int xStart = C_INT(std::lround(x1));
       if ((x1 - xStart) > 0)
         xStart++;
 
@@ -232,7 +233,7 @@ void addLine(double x1, double y1, double x2, double y2, std::set<UInt64> &cList
 
     double dd = dx / dy;
 
-    int yStart = C_INT(y1 + 0.5);
+    int yStart = C_INT(std::lround(y1));
     if ((y1 - yStart) > 0)
       yStart++;
 

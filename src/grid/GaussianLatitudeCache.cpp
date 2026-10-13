@@ -326,6 +326,16 @@ int GaussianLatitudeCache::getClosestLatitudes(uint nj,long n,uint firstRow,doub
     while (lats[low] < lat  &&  low > 0)
       low--;
 
+    if (low == endp)
+    {
+      // Only an exact match with the last latitude can end here, lats[low+1] is out of range
+      if (lats[low] != lat)
+        return -1;
+      latLow = lats[low];
+      latHigh = lats[low];
+      return low;
+    }
+
     if (lats[low] >= lat  &&  lats[low+1] <= lat)
     {
       latLow = lats[low];

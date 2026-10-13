@@ -131,6 +131,7 @@ libraries, the grid engine and the plugins using it
 - Declare member functions and parameters const where nothing is modified (const correctness), no functional changes
 - The generated GRIB definition setters take their settings by const reference (PHP generators updated too)
 - Requires 26.10.13 versions of newbase, spine due to their ABI changes
+- Fixed an out-of-range read in GaussianLatitudeCache::getClosestLatitudes for the last latitude, zero-initialized the complex and second order packing value buffers, check JPEG-2000 components for null and stop log rotation if the new log file cannot be opened
 
 * Sun Oct 11 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.11-1.fmi
 - Failed file writes, closes and seeks are now reported instead of being ignored

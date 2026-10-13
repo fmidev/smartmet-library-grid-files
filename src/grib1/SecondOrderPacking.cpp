@@ -437,7 +437,7 @@ void SecondOrderPacking::decodeValues_SPD(
     std::vector<uint> groupValue(numberOfGroups, 0);
     std::vector<uint> valueSize(numberOfGroups, 0);
 
-    auto *dataValues = new double[numOfValues];
+    auto *dataValues = new double[numOfValues]();
     std::unique_ptr<double[]> dataValues_delete(dataValues);
 
     BitArrayReader bitArrayReader(data,dataSize*8);

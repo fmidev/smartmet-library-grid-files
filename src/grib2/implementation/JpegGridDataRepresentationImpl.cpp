@@ -436,18 +436,7 @@ void JpegGridDataRepresentationImpl::decodeValues(Message *message, T::ParamValu
 
       // ### PROCESSING DECODED DATA FOR THE GRIB
 
-      // Get data dimensions
-
-      //int width = 0;
-      //int height = 0;
-
-      if (image->comps)
-      {
-        //width = image->comps->w;
-        //height = image->comps->h;
-      }
-
-      if (image->numcomps < 1 || image->comps->data == nullptr)
+      if (image->numcomps < 1 || image->comps == nullptr || image->comps->data == nullptr)
         throw Fmi::Exception(BCP, "JPEG-2000 image contains no data!");
 
       // The decoded image size is independent of the GRIB value count
