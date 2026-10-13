@@ -23,6 +23,7 @@
 #include "../grid/Typedefs.h"
 #include "../grib2/GridDefinition.h"
 
+#include <atomic>
 #include <set>
 
 
@@ -387,7 +388,7 @@ class GridDef
     ConfigurationFile       mConfigurationFile;
 
     bool                    mInitialized;
-    time_t                  mLastCheckTime;
+    std::atomic<time_t>     mLastCheckTime;
     ModificationLock        mModificationLock;
 
     string_vec              mGrib_parameterDef_files;

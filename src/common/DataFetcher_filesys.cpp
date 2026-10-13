@@ -138,15 +138,12 @@ FileHandle* DataFetcher_filesys::getFileHandle(const char *filename)
       }
     }
 
-    time_t interv = (time(nullptr) - mLastChecked);
-
-    if (interv > CHECK_INTERVAL || (mFileHandles.size() > mFileHandleLimit  && interv > 30))
-    {
-      AutoWriteLock lock(&mModificationLock);
-      checkFileHandles();
-    }
-
     AutoWriteLock lock(&mModificationLock);
+
+    time_t interv = (time(nullptr) - mLastChecked);
+    if (interv > CHECK_INTERVAL || (mFileHandles.size() > mFileHandleLimit  && interv > 30))
+      checkFileHandles();
+
     auto fh = mFileHandles.find(filename);
     if (fh != mFileHandles.end())
     {
