@@ -699,7 +699,7 @@ int png_load(const char *_filename,CImage& _image)
     int size = width * height;
     _image.pixel = (uint*)pixel;
 
-    _image.pixel = new uint[size];
+    _image.pixel = new uint[size]();  // RGB images leave the alpha byte unset
 
     int p1 = 0;
     int p2 = 0;
@@ -781,24 +781,22 @@ int png_load(const char *_filename,std::vector<uint>& _image,uint& _width,uint& 
     int size = _width * _height;
     _image.reserve(size);
     int p1 = 0;
-    int p2 = 0;
 
     uint pix = 0;
     auto *ptr = (uchar*)&pix;
 
     for (int t=0; t<size; t++)
     {
-      ptr[p2+0] = pixel[p1+2];
-      ptr[p2+1] = pixel[p1+1];
-      ptr[p2+2] = pixel[p1+0];
+      ptr[0] = pixel[p1+2];
+      ptr[1] = pixel[p1+1];
+      ptr[2] = pixel[p1+0];
 
       if (image_channels == 4)
       {
-        ptr[p2+3] = pixel[p1+3];
+        ptr[3] = pixel[p1+3];
       }
 
       p1 = p1 + image_channels;
-      p2 = p2 + 4;
       _image.push_back(pix);
     }
 
