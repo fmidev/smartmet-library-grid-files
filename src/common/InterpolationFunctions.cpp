@@ -588,7 +588,7 @@ void levelInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,do
 
 /*! \brief Interpolates two grid value lists between vertical levels using the given method. */
 
-void levelInterpolation(T::GridValueList& values1,T::GridValueList& values2,double level1,double level2,double newLevel,short levelInterpolationMethod,T::GridValueList& valueList)
+void levelInterpolation(const T::GridValueList& values1,const T::GridValueList& values2,double level1,double level2,double newLevel,short levelInterpolationMethod,T::GridValueList& valueList)
 {
   try
   {
@@ -745,7 +745,7 @@ void levelInterpolation(T::GridValueList& values1,T::GridValueList& values2,doub
 
 /*! \brief Interpolates a parameter value between two timestamps given as strings. */
 
-T::ParamValue timeInterpolation(T::ParamValue value1,T::ParamValue& value2,std::string time1,std::string time2,std::string newTime,short timeInterpolationMethod)
+T::ParamValue timeInterpolation(T::ParamValue value1,const T::ParamValue& value2,std::string time1,std::string time2,std::string newTime,short timeInterpolationMethod)
 {
   try
   {
@@ -767,7 +767,7 @@ T::ParamValue timeInterpolation(T::ParamValue value1,T::ParamValue& value2,std::
 
 /*! \brief Interpolates a parameter value between two epoch timestamps using the given method. */
 
-T::ParamValue timeInterpolation(T::ParamValue value1,T::ParamValue& value2,time_t t1,time_t t2,time_t newTime,short timeInterpolationMethod)
+T::ParamValue timeInterpolation(T::ParamValue value1,const T::ParamValue& value2,time_t t1,time_t t2,time_t newTime,short timeInterpolationMethod)
 {
   try
   {
@@ -996,7 +996,7 @@ void timeInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,int
 
 /*! \brief Interpolates two grid value lists between two timestamps given as strings. */
 
-void timeInterpolation(T::GridValueList& values1,T::GridValueList& values2,std::string time1,std::string time2,std::string newTime,short timeInterpolationMethod,T::GridValueList& valueList)
+void timeInterpolation(const T::GridValueList& values1,const T::GridValueList& values2,std::string time1,std::string time2,std::string newTime,short timeInterpolationMethod,T::GridValueList& valueList)
 {
   try
   {
@@ -1017,7 +1017,7 @@ void timeInterpolation(T::GridValueList& values1,T::GridValueList& values2,std::
 
 /*! \brief Interpolates two grid value lists between two epoch timestamps using the given method. */
 
-void timeInterpolation(T::GridValueList& values1,T::GridValueList& values2,time_t t1,time_t t2,time_t newTime,short timeInterpolationMethod,T::GridValueList& valueList)
+void timeInterpolation(const T::GridValueList& values1,const T::GridValueList& values2,time_t t1,time_t t2,time_t newTime,short timeInterpolationMethod,T::GridValueList& valueList)
 {
   try
   {

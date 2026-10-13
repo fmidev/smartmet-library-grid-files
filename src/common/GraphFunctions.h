@@ -61,7 +61,7 @@ void getPointsInsidePolygonPath(
 /*! \brief Return the total number of vertices across all rings of a polygon path.
  *  \param[in] polygonPath  Multi-ring polygon.
  *  \return Total vertex count. */
-std::size_t getPolygonPathLength(T::Polygon_vec& polygonPath);
+std::size_t getPolygonPathLength(const T::Polygon_vec& polygonPath);
 
 /*! \brief Flatten a multi-ring polygon path into a single coordinate vector.
  *  \param[in]  polygonPath    Multi-ring polygon.
@@ -74,7 +74,7 @@ void convertToPointVector(
  *  \param[in]  svgPath     Source SVG path.
  *  \param[out] polygonPath Receives the converted polygon rings. */
 void convertSvgPathToPolygonPath(
-    NFmiSvgPath& svgPath,
+    const NFmiSvgPath& svgPath,
     T::Polygon_vec& polygonPath);
 
 /*! \brief Convert a WKT MULTIPOLYGON string to an SVG path string.
@@ -176,7 +176,7 @@ int findPath(
 
 void getStreamlineImage(
     float *direction,                           // Grid of directions in degrees (size = width x height). For example "wind direction".
-    float *value,                               // Grid of values (size = width x height). For example "wind speed"
+    const float *value,                               // Grid of values (size = width x height). For example "wind speed"
     uint *image,                                // RGB image (size = width x height). Values >= 0xFF000000 mean tranparent pixels).
     int width,int height,                       // Size of the grids / the image
     int xStep,int yStep,                        // Counting steps

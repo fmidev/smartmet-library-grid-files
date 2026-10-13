@@ -328,7 +328,7 @@ void StretchedRotatedSphericalHarmonic::setRepresentationMode(std::uint8_t repre
   }
 }
 
-void StretchedRotatedSphericalHarmonic::setRotation(RotationSettings &rotation) {
+void StretchedRotatedSphericalHarmonic::setRotation(const RotationSettings &rotation) {
   try {
     mRotation = rotation;
   } catch (...) {
@@ -336,7 +336,7 @@ void StretchedRotatedSphericalHarmonic::setRotation(RotationSettings &rotation) 
   }
 }
 
-void StretchedRotatedSphericalHarmonic::setGridStretching(GridStretchingSettings &gridStretching) {
+void StretchedRotatedSphericalHarmonic::setGridStretching(const GridStretchingSettings &gridStretching) {
   try {
     mGridStretching = gridStretching;
   } catch (...) {

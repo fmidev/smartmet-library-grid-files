@@ -39,9 +39,9 @@ public:
   virtual T::Hash countHash() const;
 
   SimulatedSatelliteProduct *getSimulatedSatelliteProduct() const;
-  void setSimulatedSatelliteProduct(SimulatedSatelliteProduct &simulatedSatelliteProduct);
+  void setSimulatedSatelliteProduct(const SimulatedSatelliteProduct &simulatedSatelliteProduct);
   EpsSettings *getEps() const override;
-  void setEps(EpsSettings &eps);
+  void setEps(const EpsSettings &eps);
 
 protected:
   // # Copyright 2005-2019 ECMWF.

@@ -210,7 +210,7 @@ StatisticalSettings *TimeIntervalAerosolEnsembleProduct::getStatistical() const 
   }
 }
 
-void TimeIntervalAerosolEnsembleProduct::setParameterAerosol(ParameterAerosolSettings &parameterAerosol) {
+void TimeIntervalAerosolEnsembleProduct::setParameterAerosol(const ParameterAerosolSettings &parameterAerosol) {
   try {
     mParameterAerosol = parameterAerosol;
   } catch (...) {
@@ -218,7 +218,7 @@ void TimeIntervalAerosolEnsembleProduct::setParameterAerosol(ParameterAerosolSet
   }
 }
 
-void TimeIntervalAerosolEnsembleProduct::setHorizontal(HorizontalSettings &horizontal) {
+void TimeIntervalAerosolEnsembleProduct::setHorizontal(const HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
@@ -226,7 +226,7 @@ void TimeIntervalAerosolEnsembleProduct::setHorizontal(HorizontalSettings &horiz
   }
 }
 
-void TimeIntervalAerosolEnsembleProduct::setEps(EpsSettings &eps) {
+void TimeIntervalAerosolEnsembleProduct::setEps(const EpsSettings &eps) {
   try {
     mEps = eps;
   } catch (...) {
@@ -234,7 +234,7 @@ void TimeIntervalAerosolEnsembleProduct::setEps(EpsSettings &eps) {
   }
 }
 
-void TimeIntervalAerosolEnsembleProduct::setStatistical(StatisticalSettings &statistical) {
+void TimeIntervalAerosolEnsembleProduct::setStatistical(const StatisticalSettings &statistical) {
   try {
     mStatistical = statistical;
   } catch (...) {

@@ -380,7 +380,7 @@ void AzimuthRange::setOffsetFromOriginToInnerBound(T::UInt32_opt offsetFromOrigi
   }
 }
 
-void AzimuthRange::setScanningMode(ScanningModeSettings &scanningMode) {
+void AzimuthRange::setScanningMode(const ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {

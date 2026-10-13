@@ -174,7 +174,7 @@ StretchingSettings *StretchedSphericalHarmonic::getStretching() const {
   }
 }
 
-void StretchedSphericalHarmonic::setSphericalHarmonic(SphericalHarmonicSettings &sphericalHarmonic) {
+void StretchedSphericalHarmonic::setSphericalHarmonic(const SphericalHarmonicSettings &sphericalHarmonic) {
   try {
     mSphericalHarmonic = sphericalHarmonic;
   } catch (...) {
@@ -182,7 +182,7 @@ void StretchedSphericalHarmonic::setSphericalHarmonic(SphericalHarmonicSettings 
   }
 }
 
-void StretchedSphericalHarmonic::setStretching(StretchingSettings &stretching) {
+void StretchedSphericalHarmonic::setStretching(const StretchingSettings &stretching) {
   try {
     mStretching = stretching;
   } catch (...) {

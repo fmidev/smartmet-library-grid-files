@@ -210,7 +210,7 @@ EpsSettings *AtmosphericChemicalEnsembleProduct::getEps() const {
   }
 }
 
-void AtmosphericChemicalEnsembleProduct::setParameterChemical(ParameterChemicalSettings &parameterChemical) {
+void AtmosphericChemicalEnsembleProduct::setParameterChemical(const ParameterChemicalSettings &parameterChemical) {
   try {
     mParameterChemical = parameterChemical;
   } catch (...) {
@@ -218,7 +218,7 @@ void AtmosphericChemicalEnsembleProduct::setParameterChemical(ParameterChemicalS
   }
 }
 
-void AtmosphericChemicalEnsembleProduct::setPointInTime(PointInTimeSettings &pointInTime) {
+void AtmosphericChemicalEnsembleProduct::setPointInTime(const PointInTimeSettings &pointInTime) {
   try {
     mPointInTime = pointInTime;
   } catch (...) {
@@ -226,7 +226,7 @@ void AtmosphericChemicalEnsembleProduct::setPointInTime(PointInTimeSettings &poi
   }
 }
 
-void AtmosphericChemicalEnsembleProduct::setHorizontal(HorizontalSettings &horizontal) {
+void AtmosphericChemicalEnsembleProduct::setHorizontal(const HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
@@ -234,7 +234,7 @@ void AtmosphericChemicalEnsembleProduct::setHorizontal(HorizontalSettings &horiz
   }
 }
 
-void AtmosphericChemicalEnsembleProduct::setEps(EpsSettings &eps) {
+void AtmosphericChemicalEnsembleProduct::setEps(const EpsSettings &eps) {
   try {
     mEps = eps;
   } catch (...) {

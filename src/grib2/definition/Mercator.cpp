@@ -410,7 +410,7 @@ const T::UInt32_opt &Mercator::getDj() const {
   }
 }
 
-void Mercator::setEarthShape(EarthShapeSettings &earthShape) {
+void Mercator::setEarthShape(const EarthShapeSettings &earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
@@ -450,7 +450,7 @@ void Mercator::setLongitudeOfFirstGridPoint(T::Int32_opt longitudeOfFirstGridPoi
   }
 }
 
-void Mercator::setResolution(ResolutionSettings &resolution) {
+void Mercator::setResolution(const ResolutionSettings &resolution) {
   try {
     mResolution = resolution;
   } catch (...) {
@@ -482,7 +482,7 @@ void Mercator::setLongitudeOfLastGridPoint(T::Int32_opt longitudeOfLastGridPoint
   }
 }
 
-void Mercator::setScanningMode(ScanningModeSettings &scanningMode) {
+void Mercator::setScanningMode(const ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {

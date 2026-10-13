@@ -572,8 +572,8 @@ bool AdditionalParameters::getParameterValueByLocationAndTime(
 /*! \brief Formats a local date/time using the given C-style format string. */
 
 std::string AdditionalParameters::formatDate(
-    Fmi::LocalDateTime& ldt,
-    std::locale& llocale,
+    const Fmi::LocalDateTime& ldt,
+    const std::locale& llocale,
     const char *fmt)
 {
   FUNCTION_TRACE
@@ -595,8 +595,8 @@ std::string AdditionalParameters::formatDate(
 /*! \brief Formats a local date/time using the given std::string format. */
 
 std::string AdditionalParameters::formatDate(
-    Fmi::LocalDateTime& ldt,
-    std::locale& llocale,
+    const Fmi::LocalDateTime& ldt,
+    const std::locale& llocale,
     std::string fmt)
 {
   FUNCTION_TRACE

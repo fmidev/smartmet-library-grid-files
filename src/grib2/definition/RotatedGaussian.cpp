@@ -192,7 +192,7 @@ RotationSettings *RotatedGaussian::getRotation() const {
   }
 }
 
-void RotatedGaussian::setEarthShape(EarthShapeSettings &earthShape) {
+void RotatedGaussian::setEarthShape(const EarthShapeSettings &earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
@@ -200,7 +200,7 @@ void RotatedGaussian::setEarthShape(EarthShapeSettings &earthShape) {
   }
 }
 
-void RotatedGaussian::setGaussian(GaussianSettings &gaussian) {
+void RotatedGaussian::setGaussian(const GaussianSettings &gaussian) {
   try {
     mGaussian = gaussian;
   } catch (...) {
@@ -208,7 +208,7 @@ void RotatedGaussian::setGaussian(GaussianSettings &gaussian) {
   }
 }
 
-void RotatedGaussian::setRotation(RotationSettings &rotation) {
+void RotatedGaussian::setRotation(const RotationSettings &rotation) {
   try {
     mRotation = rotation;
   } catch (...) {

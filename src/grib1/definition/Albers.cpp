@@ -474,7 +474,7 @@ void Albers::setLongitudeOfFirstGridPoint(SmartMet::int24_t longitudeOfFirstGrid
   }
 }
 
-void Albers::setResolutionFlags(ResolutionFlagsSettings &resolutionFlags) {
+void Albers::setResolutionFlags(const ResolutionFlagsSettings &resolutionFlags) {
   try {
     mResolutionFlags = resolutionFlags;
   } catch (...) {
@@ -514,7 +514,7 @@ void Albers::setProjectionCentreFlag(std::uint8_t projectionCentreFlag) {
   }
 }
 
-void Albers::setScanningMode(ScanningModeSettings &scanningMode) {
+void Albers::setScanningMode(const ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {

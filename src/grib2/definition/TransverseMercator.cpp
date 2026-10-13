@@ -478,7 +478,7 @@ const T::Int32_opt &TransverseMercator::getY2() const {
   }
 }
 
-void TransverseMercator::setEarthShape(EarthShapeSettings &earthShape) {
+void TransverseMercator::setEarthShape(const EarthShapeSettings &earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
@@ -518,7 +518,7 @@ void TransverseMercator::setLongitudeOfReferencePoint(T::Int32_opt longitudeOfRe
   }
 }
 
-void TransverseMercator::setResolution(ResolutionSettings &resolution) {
+void TransverseMercator::setResolution(const ResolutionSettings &resolution) {
   try {
     mResolution = resolution;
   } catch (...) {
@@ -550,7 +550,7 @@ void TransverseMercator::setYR(T::Int32_opt yR) {
   }
 }
 
-void TransverseMercator::setScanningMode(ScanningModeSettings &scanningMode) {
+void TransverseMercator::setScanningMode(const ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {

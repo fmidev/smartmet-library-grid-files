@@ -288,7 +288,7 @@ const T::UInt16_opt &AreaProcessedCrossSectionProduct::getNumberOfDataValues() c
   }
 }
 
-void AreaProcessedCrossSectionProduct::setParameter(ParameterSettings &parameter) {
+void AreaProcessedCrossSectionProduct::setParameter(const ParameterSettings &parameter) {
   try {
     mParameter = parameter;
   } catch (...) {

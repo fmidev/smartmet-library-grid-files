@@ -192,7 +192,7 @@ StatisticalSettings *AggregateAerosolProduct::getStatistical() const {
   }
 }
 
-void AggregateAerosolProduct::setParameterAerosol(ParameterAerosolSettings &parameterAerosol) {
+void AggregateAerosolProduct::setParameterAerosol(const ParameterAerosolSettings &parameterAerosol) {
   try {
     mParameterAerosol = parameterAerosol;
   } catch (...) {
@@ -200,7 +200,7 @@ void AggregateAerosolProduct::setParameterAerosol(ParameterAerosolSettings &para
   }
 }
 
-void AggregateAerosolProduct::setHorizontal(HorizontalSettings &horizontal) {
+void AggregateAerosolProduct::setHorizontal(const HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
@@ -208,7 +208,7 @@ void AggregateAerosolProduct::setHorizontal(HorizontalSettings &horizontal) {
   }
 }
 
-void AggregateAerosolProduct::setStatistical(StatisticalSettings &statistical) {
+void AggregateAerosolProduct::setStatistical(const StatisticalSettings &statistical) {
   try {
     mStatistical = statistical;
   } catch (...) {

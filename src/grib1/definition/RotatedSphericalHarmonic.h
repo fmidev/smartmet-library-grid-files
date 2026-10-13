@@ -48,7 +48,7 @@ public:
   std::uint8_t getRepresentationMode() const;
   void setRepresentationMode(std::uint8_t representationMode);
   RotationSettings *getRotation() const override;
-  void setRotation(RotationSettings &rotation);
+  void setRotation(const RotationSettings &rotation);
 
 protected:
   // # Copyright 2005-2019 ECMWF.

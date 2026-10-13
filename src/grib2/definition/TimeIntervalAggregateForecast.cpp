@@ -258,7 +258,7 @@ const T::UInt8_opt &TimeIntervalAggregateForecast::getNumberOfPointsUsed() const
   }
 }
 
-void TimeIntervalAggregateForecast::setParameter(ParameterSettings &parameter) {
+void TimeIntervalAggregateForecast::setParameter(const ParameterSettings &parameter) {
   try {
     mParameter = parameter;
   } catch (...) {
@@ -266,7 +266,7 @@ void TimeIntervalAggregateForecast::setParameter(ParameterSettings &parameter) {
   }
 }
 
-void TimeIntervalAggregateForecast::setPointInTime(PointInTimeSettings &pointInTime) {
+void TimeIntervalAggregateForecast::setPointInTime(const PointInTimeSettings &pointInTime) {
   try {
     mPointInTime = pointInTime;
   } catch (...) {
@@ -274,7 +274,7 @@ void TimeIntervalAggregateForecast::setPointInTime(PointInTimeSettings &pointInT
   }
 }
 
-void TimeIntervalAggregateForecast::setHorizontal(HorizontalSettings &horizontal) {
+void TimeIntervalAggregateForecast::setHorizontal(const HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {

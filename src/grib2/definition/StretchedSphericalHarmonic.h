@@ -39,9 +39,9 @@ public:
   T::Hash countHash() const override;
 
   SphericalHarmonicSettings *getSphericalHarmonic() const;
-  void setSphericalHarmonic(SphericalHarmonicSettings &sphericalHarmonic);
+  void setSphericalHarmonic(const SphericalHarmonicSettings &sphericalHarmonic);
   StretchingSettings *getStretching() const;
-  void setStretching(StretchingSettings &stretching);
+  void setStretching(const StretchingSettings &stretching);
 
 protected:
   // # Copyright 2005-2019 ECMWF.

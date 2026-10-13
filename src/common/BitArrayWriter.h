@@ -24,9 +24,9 @@ class BitArrayWriter
     virtual     ~BitArrayWriter();
 
     /*! \brief Return the total writable bit capacity. */
-    UInt64      getNumberOfBits();
+    UInt64      getNumberOfBits() const;
     /*! \brief Return the current bit write position. */
-    UInt64      getWritePosition();
+    UInt64      getWritePosition() const;
     /*! \brief Set the current bit write position.
      *  \param[in] writePosition  New position (zero-based bit index). */
     void        setWritePosition(UInt64 writePosition);

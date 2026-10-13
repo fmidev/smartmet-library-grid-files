@@ -40,11 +40,11 @@ public:
   virtual T::Hash countHash() const;
 
   HorizontalSettings *getHorizontal() const override;
-  void setHorizontal(HorizontalSettings &horizontal);
+  void setHorizontal(const HorizontalSettings &horizontal);
   EpsSettings *getEps() const override;
-  void setEps(EpsSettings &eps);
+  void setEps(const EpsSettings &eps);
   StatisticalSettings *getStatistical() const override;
-  void setStatistical(StatisticalSettings &statistical);
+  void setStatistical(const StatisticalSettings &statistical);
 
 protected:
   // # Copyright 2005-2019 ECMWF.

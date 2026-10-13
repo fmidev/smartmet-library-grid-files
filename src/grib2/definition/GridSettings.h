@@ -47,7 +47,7 @@ public:
   const T::Int32_opt &getLongitudeOfFirstGridPoint() const;
   void setLongitudeOfFirstGridPoint(T::Int32_opt longitudeOfFirstGridPoint);
   ResolutionSettings *getResolution() const;
-  void setResolution(ResolutionSettings &resolution);
+  void setResolution(const ResolutionSettings &resolution);
   const T::Int32_opt &getLatitudeOfLastGridPoint() const;
   void setLatitudeOfLastGridPoint(T::Int32_opt latitudeOfLastGridPoint);
   const T::Int32_opt &getLongitudeOfLastGridPoint() const;

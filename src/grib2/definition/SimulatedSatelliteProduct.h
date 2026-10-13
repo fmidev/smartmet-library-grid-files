@@ -39,9 +39,9 @@ public:
   virtual T::Hash countHash() const;
 
   ParameterSettings *getParameter() const override;
-  void setParameter(ParameterSettings &parameter);
+  void setParameter(const ParameterSettings &parameter);
   PointInTimeSettings *getPointInTime() const;
-  void setPointInTime(PointInTimeSettings &pointInTime);
+  void setPointInTime(const PointInTimeSettings &pointInTime);
   const T::UInt8_opt &getNB() const;
   void setNB(T::UInt8_opt nB);
   const T::UInt16_opt &getSatelliteSeries() const;

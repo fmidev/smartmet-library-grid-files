@@ -434,7 +434,7 @@ const T::UInt16_opt &CrossSection::getNC() const {
   }
 }
 
-void CrossSection::setEarthShape(EarthShapeSettings &earthShape) {
+void CrossSection::setEarthShape(const EarthShapeSettings &earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
@@ -482,7 +482,7 @@ void CrossSection::setLongitudeOfFirstGridPoint(T::UInt32_opt longitudeOfFirstGr
   }
 }
 
-void CrossSection::setScanningMode(ScanningModeSettings &scanningMode) {
+void CrossSection::setScanningMode(const ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {

@@ -245,7 +245,7 @@ void GridAreaSettings::setLongitudeOfFirstGridPoint(SmartMet::int24_t longitudeO
   }
 }
 
-void GridAreaSettings::setResolutionFlags(ResolutionFlagsSettings &resolutionFlags) {
+void GridAreaSettings::setResolutionFlags(const ResolutionFlagsSettings &resolutionFlags) {
   try {
     mResolutionFlags = resolutionFlags;
   } catch (...) {

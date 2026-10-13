@@ -210,7 +210,7 @@ StatisticalSettings *TimeIntervalEnsembleForecast::getStatistical() const {
   }
 }
 
-void TimeIntervalEnsembleForecast::setParameter(ParameterSettings &parameter) {
+void TimeIntervalEnsembleForecast::setParameter(const ParameterSettings &parameter) {
   try {
     mParameter = parameter;
   } catch (...) {
@@ -218,7 +218,7 @@ void TimeIntervalEnsembleForecast::setParameter(ParameterSettings &parameter) {
   }
 }
 
-void TimeIntervalEnsembleForecast::setHorizontal(HorizontalSettings &horizontal) {
+void TimeIntervalEnsembleForecast::setHorizontal(const HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
@@ -226,7 +226,7 @@ void TimeIntervalEnsembleForecast::setHorizontal(HorizontalSettings &horizontal)
   }
 }
 
-void TimeIntervalEnsembleForecast::setEps(EpsSettings &eps) {
+void TimeIntervalEnsembleForecast::setEps(const EpsSettings &eps) {
   try {
     mEps = eps;
   } catch (...) {
@@ -234,7 +234,7 @@ void TimeIntervalEnsembleForecast::setEps(EpsSettings &eps) {
   }
 }
 
-void TimeIntervalEnsembleForecast::setStatistical(StatisticalSettings &statistical) {
+void TimeIntervalEnsembleForecast::setStatistical(const StatisticalSettings &statistical) {
   try {
     mStatistical = statistical;
   } catch (...) {

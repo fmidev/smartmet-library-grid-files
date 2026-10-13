@@ -183,7 +183,7 @@ class BitLine
 
   protected:
     
-    inline bool getBit(uchar *_bits,uint _pos)
+    inline bool getBit(const uchar *_bits,uint _pos)
     {
       uint bt = _pos / 8;
       uint bit = _pos % 8;

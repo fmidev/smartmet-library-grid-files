@@ -42,15 +42,15 @@ public:
   virtual T::Hash countHash() const;
 
   ParameterSettings *getParameter() const override;
-  void setParameter(ParameterSettings &parameter);
+  void setParameter(const ParameterSettings &parameter);
   HorizontalSettings *getHorizontal() const override;
-  void setHorizontal(HorizontalSettings &horizontal);
+  void setHorizontal(const HorizontalSettings &horizontal);
   EpsSettings *getEps() const override;
-  void setEps(EpsSettings &eps);
+  void setEps(const EpsSettings &eps);
   ReforecastSettings *getReforecast() const;
-  void setReforecast(ReforecastSettings &reforecast);
+  void setReforecast(const ReforecastSettings &reforecast);
   StatisticalSettings *getStatistical() const override;
-  void setStatistical(StatisticalSettings &statistical);
+  void setStatistical(const StatisticalSettings &statistical);
 
 protected:
   // # Copyright 2005-2019 ECMWF.

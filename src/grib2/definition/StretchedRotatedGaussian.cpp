@@ -210,7 +210,7 @@ StretchingSettings *StretchedRotatedGaussian::getStretching() const {
   }
 }
 
-void StretchedRotatedGaussian::setEarthShape(EarthShapeSettings &earthShape) {
+void StretchedRotatedGaussian::setEarthShape(const EarthShapeSettings &earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
@@ -218,7 +218,7 @@ void StretchedRotatedGaussian::setEarthShape(EarthShapeSettings &earthShape) {
   }
 }
 
-void StretchedRotatedGaussian::setGaussian(GaussianSettings &gaussian) {
+void StretchedRotatedGaussian::setGaussian(const GaussianSettings &gaussian) {
   try {
     mGaussian = gaussian;
   } catch (...) {
@@ -226,7 +226,7 @@ void StretchedRotatedGaussian::setGaussian(GaussianSettings &gaussian) {
   }
 }
 
-void StretchedRotatedGaussian::setRotation(RotationSettings &rotation) {
+void StretchedRotatedGaussian::setRotation(const RotationSettings &rotation) {
   try {
     mRotation = rotation;
   } catch (...) {
@@ -234,7 +234,7 @@ void StretchedRotatedGaussian::setRotation(RotationSettings &rotation) {
   }
 }
 
-void StretchedRotatedGaussian::setStretching(StretchingSettings &stretching) {
+void StretchedRotatedGaussian::setStretching(const StretchingSettings &stretching) {
   try {
     mStretching = stretching;
   } catch (...) {

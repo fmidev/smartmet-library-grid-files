@@ -39,9 +39,9 @@ public:
   T::Hash countHash() const override;
 
   EarthShapeSettings *getEarthShape() const override;
-  void setEarthShape(EarthShapeSettings &earthShape);
+  void setEarthShape(const EarthShapeSettings &earthShape);
   LatLonSettings *getLatLon() const override;
-  void setLatLon(LatLonSettings &latLon);
+  void setLatLon(const LatLonSettings &latLon);
 
 protected:
   // # Copyright 2005-2019 ECMWF.

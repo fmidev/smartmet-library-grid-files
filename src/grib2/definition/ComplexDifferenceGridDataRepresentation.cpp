@@ -460,7 +460,7 @@ const T::UInt8_opt &ComplexDifferenceGridDataRepresentation::getNumberOfOctetsEx
   }
 }
 
-void ComplexDifferenceGridDataRepresentation::setPacking(PackingSettings &packing) {
+void ComplexDifferenceGridDataRepresentation::setPacking(const PackingSettings &packing) {
   try {
     mPacking = packing;
   } catch (...) {
@@ -468,7 +468,7 @@ void ComplexDifferenceGridDataRepresentation::setPacking(PackingSettings &packin
   }
 }
 
-void ComplexDifferenceGridDataRepresentation::setOriginalValues(OriginalValuesSettings &originalValues) {
+void ComplexDifferenceGridDataRepresentation::setOriginalValues(const OriginalValuesSettings &originalValues) {
   try {
     mOriginalValues = originalValues;
   } catch (...) {

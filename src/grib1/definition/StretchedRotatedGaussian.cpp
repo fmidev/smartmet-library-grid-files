@@ -318,7 +318,7 @@ void StretchedRotatedGaussian::setNj(std::int16_t nj) {
   }
 }
 
-void StretchedRotatedGaussian::setGridArea(GridAreaSettings &gridArea) {
+void StretchedRotatedGaussian::setGridArea(const GridAreaSettings &gridArea) {
   try {
     mGridArea = gridArea;
   } catch (...) {
@@ -342,7 +342,7 @@ void StretchedRotatedGaussian::setN(std::uint16_t n) {
   }
 }
 
-void StretchedRotatedGaussian::setScanningMode(ScanningModeSettings &scanningMode) {
+void StretchedRotatedGaussian::setScanningMode(const ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {
@@ -350,7 +350,7 @@ void StretchedRotatedGaussian::setScanningMode(ScanningModeSettings &scanningMod
   }
 }
 
-void StretchedRotatedGaussian::setRotation(RotationSettings &rotation) {
+void StretchedRotatedGaussian::setRotation(const RotationSettings &rotation) {
   try {
     mRotation = rotation;
   } catch (...) {
@@ -358,7 +358,7 @@ void StretchedRotatedGaussian::setRotation(RotationSettings &rotation) {
   }
 }
 
-void StretchedRotatedGaussian::setGridStretching(GridStretchingSettings &gridStretching) {
+void StretchedRotatedGaussian::setGridStretching(const GridStretchingSettings &gridStretching) {
   try {
     mGridStretching = gridStretching;
   } catch (...) {

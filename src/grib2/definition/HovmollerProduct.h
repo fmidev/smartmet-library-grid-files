@@ -39,9 +39,9 @@ public:
   virtual T::Hash countHash() const;
 
   ParameterSettings *getParameter() const override;
-  void setParameter(ParameterSettings &parameter);
+  void setParameter(const ParameterSettings &parameter);
   HorizontalSettings *getHorizontal() const override;
-  void setHorizontal(HorizontalSettings &horizontal);
+  void setHorizontal(const HorizontalSettings &horizontal);
 
 protected:
   // # Copyright 2005-2019 ECMWF.

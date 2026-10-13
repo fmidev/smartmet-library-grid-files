@@ -362,7 +362,7 @@ void GridSettings::setLongitudeOfFirstGridPoint(T::Int32_opt longitudeOfFirstGri
   }
 }
 
-void GridSettings::setResolution(ResolutionSettings &resolution) {
+void GridSettings::setResolution(const ResolutionSettings &resolution) {
   try {
     mResolution = resolution;
   } catch (...) {

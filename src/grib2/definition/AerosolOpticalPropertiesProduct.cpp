@@ -192,7 +192,7 @@ HorizontalSettings *AerosolOpticalPropertiesProduct::getHorizontal() const {
   }
 }
 
-void AerosolOpticalPropertiesProduct::setParameterAerosolOptical(ParameterAerosolOpticalSettings &parameterAerosolOptical) {
+void AerosolOpticalPropertiesProduct::setParameterAerosolOptical(const ParameterAerosolOpticalSettings &parameterAerosolOptical) {
   try {
     mParameterAerosolOptical = parameterAerosolOptical;
   } catch (...) {
@@ -200,7 +200,7 @@ void AerosolOpticalPropertiesProduct::setParameterAerosolOptical(ParameterAeroso
   }
 }
 
-void AerosolOpticalPropertiesProduct::setPointInTime(PointInTimeSettings &pointInTime) {
+void AerosolOpticalPropertiesProduct::setPointInTime(const PointInTimeSettings &pointInTime) {
   try {
     mPointInTime = pointInTime;
   } catch (...) {
@@ -208,7 +208,7 @@ void AerosolOpticalPropertiesProduct::setPointInTime(PointInTimeSettings &pointI
   }
 }
 
-void AerosolOpticalPropertiesProduct::setHorizontal(HorizontalSettings &horizontal) {
+void AerosolOpticalPropertiesProduct::setHorizontal(const HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {

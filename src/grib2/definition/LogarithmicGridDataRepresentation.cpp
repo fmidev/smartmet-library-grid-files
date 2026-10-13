@@ -178,7 +178,7 @@ float LogarithmicGridDataRepresentation::getPreProcessingParameter() const {
   }
 }
 
-void LogarithmicGridDataRepresentation::setPacking(PackingSettings &packing) {
+void LogarithmicGridDataRepresentation::setPacking(const PackingSettings &packing) {
   try {
     mPacking = packing;
   } catch (...) {

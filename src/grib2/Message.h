@@ -46,7 +46,7 @@ class Message : public GRID::Message
   public:
 
                         Message();
-                        Message(GRID::GridFile *gridFile,T::MessageIndex messageIndex,GRID::MessageInfo& messageInfo);
+                        Message(GRID::GridFile *gridFile,T::MessageIndex messageIndex,const GRID::MessageInfo& messageInfo);
                         Message(const Message& other);
     ~Message() override;
 

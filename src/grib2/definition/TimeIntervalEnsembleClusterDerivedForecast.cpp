@@ -250,7 +250,7 @@ const T::UInt8_opt &TimeIntervalEnsembleClusterDerivedForecast::getEnsembleForec
   }
 }
 
-void TimeIntervalEnsembleClusterDerivedForecast::setParameter(ParameterSettings &parameter) {
+void TimeIntervalEnsembleClusterDerivedForecast::setParameter(const ParameterSettings &parameter) {
   try {
     mParameter = parameter;
   } catch (...) {
@@ -258,7 +258,7 @@ void TimeIntervalEnsembleClusterDerivedForecast::setParameter(ParameterSettings 
   }
 }
 
-void TimeIntervalEnsembleClusterDerivedForecast::setHorizontal(HorizontalSettings &horizontal) {
+void TimeIntervalEnsembleClusterDerivedForecast::setHorizontal(const HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
@@ -266,7 +266,7 @@ void TimeIntervalEnsembleClusterDerivedForecast::setHorizontal(HorizontalSetting
   }
 }
 
-void TimeIntervalEnsembleClusterDerivedForecast::setDerived(DerivedSettings &derived) {
+void TimeIntervalEnsembleClusterDerivedForecast::setDerived(const DerivedSettings &derived) {
   try {
     mDerived = derived;
   } catch (...) {
@@ -274,7 +274,7 @@ void TimeIntervalEnsembleClusterDerivedForecast::setDerived(DerivedSettings &der
   }
 }
 
-void TimeIntervalEnsembleClusterDerivedForecast::setRectangularCluster(RectangularClusterSettings &rectangularCluster) {
+void TimeIntervalEnsembleClusterDerivedForecast::setRectangularCluster(const RectangularClusterSettings &rectangularCluster) {
   try {
     mRectangularCluster = rectangularCluster;
   } catch (...) {
@@ -282,7 +282,7 @@ void TimeIntervalEnsembleClusterDerivedForecast::setRectangularCluster(Rectangul
   }
 }
 
-void TimeIntervalEnsembleClusterDerivedForecast::setStatistical(StatisticalSettings &statistical) {
+void TimeIntervalEnsembleClusterDerivedForecast::setStatistical(const StatisticalSettings &statistical) {
   try {
     mStatistical = statistical;
   } catch (...) {

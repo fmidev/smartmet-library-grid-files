@@ -374,8 +374,8 @@ function process_template($file, $name, $class, $outdir)
         $getters .= "\n/*! \brief The method returns the pointer to the {@link m${Var}} attribute. */\n\n";        
         $getters .= "$incclass * ${class}::get$Var() const { try { return &m${Var}; } catch (...) {throw Fmi::Exception(BCP,\"Operation failed\",nullptr);}\n}\n\n";
 
-        $body .= "void set$Var($incclass& $var);\n";
-        $setters .= "void ${class}::set$Var($incclass& $var) { try { m${Var} = $var; } catch (...) {throw Fmi::Exception(BCP,\"Operation failed\",nullptr);}\n}\n\n";
+        $body .= "void set$Var(const $incclass& $var);\n";
+        $setters .= "void ${class}::set$Var(const $incclass& $var) { try { m${Var} = $var; } catch (...) {throw Fmi::Exception(BCP,\"Operation failed\",nullptr);}\n}\n\n";
         
         $protected .= "mutable $incclass m$Var;\n";
         $headers ["\"${incclass}.h\""] = 1;

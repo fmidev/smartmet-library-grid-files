@@ -39,9 +39,9 @@ public:
   virtual T::Hash countHash() const;
 
   PackingSettings *getPacking() const override;
-  void setPacking(PackingSettings &packing);
+  void setPacking(const PackingSettings &packing);
   OriginalValuesSettings *getOriginalValues() const override;
-  void setOriginalValues(OriginalValuesSettings &originalValues);
+  void setOriginalValues(const OriginalValuesSettings &originalValues);
   const T::UInt8_opt &getGroupSplittingMethodUsed() const;
   void setGroupSplittingMethodUsed(T::UInt8_opt groupSplittingMethodUsed);
   const T::UInt8_opt &getMissingValueManagementUsed() const;

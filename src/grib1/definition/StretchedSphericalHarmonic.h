@@ -48,7 +48,7 @@ public:
   std::uint8_t getRepresentationMode() const;
   void setRepresentationMode(std::uint8_t representationMode);
   GridStretchingSettings *getGridStretching() const;
-  void setGridStretching(GridStretchingSettings &gridStretching);
+  void setGridStretching(const GridStretchingSettings &gridStretching);
 
 protected:
   // # Copyright 2005-2019 ECMWF.

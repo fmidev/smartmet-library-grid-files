@@ -174,7 +174,7 @@ OriginalValuesSettings *PngGridDataRepresentation::getOriginalValues() const {
   }
 }
 
-void PngGridDataRepresentation::setPacking(PackingSettings &packing) {
+void PngGridDataRepresentation::setPacking(const PackingSettings &packing) {
   try {
     mPacking = packing;
   } catch (...) {
@@ -182,7 +182,7 @@ void PngGridDataRepresentation::setPacking(PackingSettings &packing) {
   }
 }
 
-void PngGridDataRepresentation::setOriginalValues(OriginalValuesSettings &originalValues) {
+void PngGridDataRepresentation::setOriginalValues(const OriginalValuesSettings &originalValues) {
   try {
     mOriginalValues = originalValues;
   } catch (...) {

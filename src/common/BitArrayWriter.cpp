@@ -47,7 +47,7 @@ BitArrayWriter::~BitArrayWriter()
 
 /*! \brief Returns the total number of bits in the array. */
 
-UInt64 BitArrayWriter::getNumberOfBits()
+UInt64 BitArrayWriter::getNumberOfBits() const
 {
   try
   {
@@ -65,7 +65,7 @@ UInt64 BitArrayWriter::getNumberOfBits()
 
 /*! \brief Returns the current bit write position. */
 
-UInt64 BitArrayWriter::getWritePosition()
+UInt64 BitArrayWriter::getWritePosition() const
 {
   try
   {

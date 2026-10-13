@@ -47,7 +47,7 @@ public:
   SmartMet::int24_t getLongitudeOfFirstGridPoint() const;
   void setLongitudeOfFirstGridPoint(SmartMet::int24_t longitudeOfFirstGridPoint);
   ResolutionFlagsSettings *getResolutionFlags() const override;
-  void setResolutionFlags(ResolutionFlagsSettings &resolutionFlags);
+  void setResolutionFlags(const ResolutionFlagsSettings &resolutionFlags);
   SmartMet::int24_t getLoV() const;
   void setLoV(SmartMet::int24_t loV);
   SmartMet::uint24_t getDxInMetres() const;
@@ -57,7 +57,7 @@ public:
   std::uint8_t getProjectionCentreFlag() const;
   void setProjectionCentreFlag(std::uint8_t projectionCentreFlag);
   ScanningModeSettings *getScanningMode() const override;
-  void setScanningMode(ScanningModeSettings &scanningMode);
+  void setScanningMode(const ScanningModeSettings &scanningMode);
   SmartMet::int24_t getLatin1() const;
   void setLatin1(SmartMet::int24_t latin1);
   SmartMet::int24_t getLatin2() const;

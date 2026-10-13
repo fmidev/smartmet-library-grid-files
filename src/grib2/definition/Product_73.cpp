@@ -210,7 +210,7 @@ StatisticalSettings *Product_73::getStatistical() const {
   }
 }
 
-void Product_73::setPostproc(PostprocSettings &postproc) {
+void Product_73::setPostproc(const PostprocSettings &postproc) {
   try {
     mPostproc = postproc;
   } catch (...) {
@@ -218,7 +218,7 @@ void Product_73::setPostproc(PostprocSettings &postproc) {
   }
 }
 
-void Product_73::setHorizontal(HorizontalSettings &horizontal) {
+void Product_73::setHorizontal(const HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
@@ -226,7 +226,7 @@ void Product_73::setHorizontal(HorizontalSettings &horizontal) {
   }
 }
 
-void Product_73::setEps(EpsSettings &eps) {
+void Product_73::setEps(const EpsSettings &eps) {
   try {
     mEps = eps;
   } catch (...) {
@@ -234,7 +234,7 @@ void Product_73::setEps(EpsSettings &eps) {
   }
 }
 
-void Product_73::setStatistical(StatisticalSettings &statistical) {
+void Product_73::setStatistical(const StatisticalSettings &statistical) {
   try {
     mStatistical = statistical;
   } catch (...) {

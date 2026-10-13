@@ -1208,7 +1208,7 @@ std::string GridFile::getFileTypeString() const
 
 /*! \brief Creates a format-specific message object based on the supplied message information. */
 
-GRID::Message* GridFile::createMessage(T::MessageIndex messageIndex,GRID::MessageInfo& messageInfo)
+GRID::Message* GridFile::createMessage(T::MessageIndex messageIndex,const GRID::MessageInfo& messageInfo)
 {
   FUNCTION_TRACE
   try
@@ -1798,7 +1798,7 @@ void GridFile::readGrib2Message(MemoryReader& memoryReader, T::MessageIndex mess
         \return              A vector of data pointers pointing to the found messages.
 */
 
-MessagePos_vec GridFile::searchMessageLocations(MemoryReader& memoryReader,uint maxMessages)
+MessagePos_vec GridFile::searchMessageLocations(MemoryReader& memoryReader,uint maxMessages) const
 {
   FUNCTION_TRACE
   try
@@ -2082,7 +2082,7 @@ std::size_t GridFile::getNumberOfMessages()
         \param memoryReader  This object controls the access to the memory mapped file.
 */
 
-uchar GridFile::readMessageType(MemoryReader& memoryReader)
+uchar GridFile::readMessageType(MemoryReader& memoryReader) const
 {
   FUNCTION_TRACE
   try

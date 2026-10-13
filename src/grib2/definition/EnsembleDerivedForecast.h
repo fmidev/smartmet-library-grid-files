@@ -41,13 +41,13 @@ public:
   virtual T::Hash countHash() const;
 
   ParameterSettings *getParameter() const override;
-  void setParameter(ParameterSettings &parameter);
+  void setParameter(const ParameterSettings &parameter);
   PointInTimeSettings *getPointInTime() const;
-  void setPointInTime(PointInTimeSettings &pointInTime);
+  void setPointInTime(const PointInTimeSettings &pointInTime);
   HorizontalSettings *getHorizontal() const override;
-  void setHorizontal(HorizontalSettings &horizontal);
+  void setHorizontal(const HorizontalSettings &horizontal);
   DerivedSettings *getDerived() const override;
-  void setDerived(DerivedSettings &derived);
+  void setDerived(const DerivedSettings &derived);
 
 protected:
   // # Copyright 2005-2019 ECMWF.

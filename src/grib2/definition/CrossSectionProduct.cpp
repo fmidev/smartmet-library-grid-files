@@ -174,7 +174,7 @@ PointInTimeSettings *CrossSectionProduct::getPointInTime() const {
   }
 }
 
-void CrossSectionProduct::setParameter(ParameterSettings &parameter) {
+void CrossSectionProduct::setParameter(const ParameterSettings &parameter) {
   try {
     mParameter = parameter;
   } catch (...) {
@@ -182,7 +182,7 @@ void CrossSectionProduct::setParameter(ParameterSettings &parameter) {
   }
 }
 
-void CrossSectionProduct::setPointInTime(PointInTimeSettings &pointInTime) {
+void CrossSectionProduct::setPointInTime(const PointInTimeSettings &pointInTime) {
   try {
     mPointInTime = pointInTime;
   } catch (...) {

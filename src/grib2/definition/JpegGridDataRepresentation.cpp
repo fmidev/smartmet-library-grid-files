@@ -218,7 +218,7 @@ const T::UInt8_opt &JpegGridDataRepresentation::getTargetCompressionRatio() cons
   }
 }
 
-void JpegGridDataRepresentation::setPacking(PackingSettings &packing) {
+void JpegGridDataRepresentation::setPacking(const PackingSettings &packing) {
   try {
     mPacking = packing;
   } catch (...) {
@@ -226,7 +226,7 @@ void JpegGridDataRepresentation::setPacking(PackingSettings &packing) {
   }
 }
 
-void JpegGridDataRepresentation::setOriginalValues(OriginalValuesSettings &originalValues) {
+void JpegGridDataRepresentation::setOriginalValues(const OriginalValuesSettings &originalValues) {
   try {
     mOriginalValues = originalValues;
   } catch (...) {

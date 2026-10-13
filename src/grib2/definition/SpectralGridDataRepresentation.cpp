@@ -240,7 +240,7 @@ const T::UInt16_opt &SpectralGridDataRepresentation::getCcsdsRsi() const {
   }
 }
 
-void SpectralGridDataRepresentation::setPacking(PackingSettings &packing) {
+void SpectralGridDataRepresentation::setPacking(const PackingSettings &packing) {
   try {
     mPacking = packing;
   } catch (...) {
@@ -248,7 +248,7 @@ void SpectralGridDataRepresentation::setPacking(PackingSettings &packing) {
   }
 }
 
-void SpectralGridDataRepresentation::setOriginalValues(OriginalValuesSettings &originalValues) {
+void SpectralGridDataRepresentation::setOriginalValues(const OriginalValuesSettings &originalValues) {
   try {
     mOriginalValues = originalValues;
   } catch (...) {

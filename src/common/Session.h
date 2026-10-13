@@ -40,7 +40,7 @@ class Session
 
     /*! \brief Parse a URL-encoded attribute string and store all key=value pairs.
      *  \param[in] attributes  URL-encoded parameter string. */
-    void        setAttributes(std::string& attributes);
+    void        setAttributes(const std::string& attributes);
 
     /** @name Typed attribute setters
      *  Store a value under the given name (converts to string internally). @{ */
@@ -50,7 +50,7 @@ class Session
     void        setAttribute(const char *name,Int64 value);
     void        setAttribute(const char *name,UInt64 value);
     void        setAttribute(const char *name,const char *value);
-    void        setAttribute(const char *name,std::string& value);
+    void        setAttribute(const char *name,const std::string& value);
     /** @} */
 
     /*! \brief Return the raw string value for \p name, or nullptr if not found.

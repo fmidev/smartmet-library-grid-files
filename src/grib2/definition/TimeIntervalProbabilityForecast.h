@@ -41,13 +41,13 @@ public:
   virtual T::Hash countHash() const;
 
   ParameterSettings *getParameter() const override;
-  void setParameter(ParameterSettings &parameter);
+  void setParameter(const ParameterSettings &parameter);
   HorizontalSettings *getHorizontal() const override;
-  void setHorizontal(HorizontalSettings &horizontal);
+  void setHorizontal(const HorizontalSettings &horizontal);
   ProbabilitySettings *getProbability() const override;
-  void setProbability(ProbabilitySettings &probability);
+  void setProbability(const ProbabilitySettings &probability);
   StatisticalSettings *getStatistical() const override;
-  void setStatistical(StatisticalSettings &statistical);
+  void setStatistical(const StatisticalSettings &statistical);
 
 protected:
   // # Copyright 2005-2019 ECMWF.

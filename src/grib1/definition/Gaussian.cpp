@@ -282,7 +282,7 @@ void Gaussian::setNj(std::int16_t nj) {
   }
 }
 
-void Gaussian::setGridArea(GridAreaSettings &gridArea) {
+void Gaussian::setGridArea(const GridAreaSettings &gridArea) {
   try {
     mGridArea = gridArea;
   } catch (...) {
@@ -306,7 +306,7 @@ void Gaussian::setN(std::uint16_t n) {
   }
 }
 
-void Gaussian::setScanningMode(ScanningModeSettings &scanningMode) {
+void Gaussian::setScanningMode(const ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {

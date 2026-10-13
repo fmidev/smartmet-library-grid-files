@@ -308,7 +308,7 @@ void Mercator::setNj(std::int16_t nj) {
   }
 }
 
-void Mercator::setGridArea(GridAreaSettings &gridArea) {
+void Mercator::setGridArea(const GridAreaSettings &gridArea) {
   try {
     mGridArea = gridArea;
   } catch (...) {
@@ -324,7 +324,7 @@ void Mercator::setLatin(SmartMet::int24_t latin) {
   }
 }
 
-void Mercator::setScanningMode(ScanningModeSettings &scanningMode) {
+void Mercator::setScanningMode(const ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {

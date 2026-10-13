@@ -210,7 +210,7 @@ ProbabilitySettings *ProbabilityForecast::getProbability() const {
   }
 }
 
-void ProbabilityForecast::setParameter(ParameterSettings &parameter) {
+void ProbabilityForecast::setParameter(const ParameterSettings &parameter) {
   try {
     mParameter = parameter;
   } catch (...) {
@@ -218,7 +218,7 @@ void ProbabilityForecast::setParameter(ParameterSettings &parameter) {
   }
 }
 
-void ProbabilityForecast::setPointInTime(PointInTimeSettings &pointInTime) {
+void ProbabilityForecast::setPointInTime(const PointInTimeSettings &pointInTime) {
   try {
     mPointInTime = pointInTime;
   } catch (...) {
@@ -226,7 +226,7 @@ void ProbabilityForecast::setPointInTime(PointInTimeSettings &pointInTime) {
   }
 }
 
-void ProbabilityForecast::setHorizontal(HorizontalSettings &horizontal) {
+void ProbabilityForecast::setHorizontal(const HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
@@ -234,7 +234,7 @@ void ProbabilityForecast::setHorizontal(HorizontalSettings &horizontal) {
   }
 }
 
-void ProbabilityForecast::setProbability(ProbabilitySettings &probability) {
+void ProbabilityForecast::setProbability(const ProbabilitySettings &probability) {
   try {
     mProbability = probability;
   } catch (...) {

@@ -111,7 +111,7 @@ uint argb(const char *colStr)
 
 /*! \brief Writes a 32-bit pixel buffer to disk as a JPEG file at the given quality. */
 
-void jpeg_save(const char *filename, uint *image, int image_height,int image_width, int quality)
+void jpeg_save(const char *filename, const uint *image, int image_height,int image_width, int quality)
 {
   try
   {

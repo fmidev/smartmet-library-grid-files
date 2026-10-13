@@ -38,7 +38,7 @@ public:
   virtual T::Hash countHash() const;
 
   PackingSettings *getPacking() const override;
-  void setPacking(PackingSettings &packing);
+  void setPacking(const PackingSettings &packing);
   const T::Int32_opt &getLaplacianScalingFactor() const;
   void setLaplacianScalingFactor(T::Int32_opt laplacianScalingFactor);
   const T::UInt32_opt &getTS() const;

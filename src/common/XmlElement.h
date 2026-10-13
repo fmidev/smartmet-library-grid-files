@@ -55,7 +55,7 @@ class XmlElement
 
   protected:
 
-    static int    getTagNameAndType(const char *data,char *name,ParameterList& parameterList);
+    static int    getTagNameAndType(const char *data,char *name,const ParameterList& parameterList);
 };
 
 

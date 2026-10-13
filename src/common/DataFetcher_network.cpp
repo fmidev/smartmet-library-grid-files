@@ -197,7 +197,7 @@ int DataFetcher_network::getData(uint serverType,uint protocol,const char *serve
 
 /*! \brief Parses an S3 ListBucketResult XML element into a list of file records. */
 
-bool DataFetcher_network::getFileList(uint protocol,const char *server,XmlElement& rootElement,std::vector<std::string> &filePatterns,std::vector<FileRec>& fileList,std::string& lastKey)
+bool DataFetcher_network::getFileList(uint protocol,const char *server,const XmlElement& rootElement,const std::vector<std::string> &filePatterns,std::vector<FileRec>& fileList,std::string& lastKey)
 {
   FUNCTION_TRACE
   try
@@ -300,7 +300,7 @@ void DataFetcher_network::getFileList(uint serverType,uint protocol,const char *
 
 /*! \brief Lists files in an S3 bucket directory, handling pagination. */
 
-void DataFetcher_network::getFileList_S3(uint protocol,const char *server,const char *dir,std::vector<std::string> &filePatterns,std::vector<FileRec>& fileList)
+void DataFetcher_network::getFileList_S3(uint protocol,const char *server,const char *dir,const std::vector<std::string> &filePatterns,std::vector<FileRec>& fileList)
 {
   FUNCTION_TRACE
   try

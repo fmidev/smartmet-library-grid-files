@@ -47,7 +47,7 @@ public:
   SmartMet::int24_t getLongitudeOfSubSatellitePoint() const;
   void setLongitudeOfSubSatellitePoint(SmartMet::int24_t longitudeOfSubSatellitePoint);
   ResolutionFlagsSettings *getResolutionFlags() const override;
-  void setResolutionFlags(ResolutionFlagsSettings &resolutionFlags);
+  void setResolutionFlags(const ResolutionFlagsSettings &resolutionFlags);
   SmartMet::uint24_t getDx() const;
   void setDx(SmartMet::uint24_t dx);
   SmartMet::uint24_t getDy() const;
@@ -57,7 +57,7 @@ public:
   std::uint16_t getYpInGridLengths() const;
   void setYpInGridLengths(std::uint16_t ypInGridLengths);
   ScanningModeSettings *getScanningMode() const override;
-  void setScanningMode(ScanningModeSettings &scanningMode);
+  void setScanningMode(const ScanningModeSettings &scanningMode);
   SmartMet::uint24_t getOrientationOfTheGrid() const;
   void setOrientationOfTheGrid(SmartMet::uint24_t orientationOfTheGrid);
   SmartMet::uint24_t getNrInRadiusOfEarth() const;

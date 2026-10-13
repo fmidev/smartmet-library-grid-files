@@ -37,7 +37,7 @@ class NetCdfFile
     void        print(std::ostream& stream,uint level,uint optionFlags) const;
 
     void        createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec& messageInfoList);
-    void        insertProperty(std::string propertyName,std::vector<std::string>& propertyValue);
+    void        insertProperty(std::string propertyName,const std::vector<std::string>& propertyValue);
     void        insertProperty(std::string propertyName,std::string propertyValue);
     void        insertProperty(std::string propertyName,int propertyValue);
     void        insertProperty(std::string propertyName,uint propertyValue);

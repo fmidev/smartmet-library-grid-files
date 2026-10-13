@@ -174,7 +174,7 @@ OriginalValuesSettings *GridDataRepresentation::getOriginalValues() const {
   }
 }
 
-void GridDataRepresentation::setPacking(PackingSettings &packing) {
+void GridDataRepresentation::setPacking(const PackingSettings &packing) {
   try {
     mPacking = packing;
   } catch (...) {
@@ -182,7 +182,7 @@ void GridDataRepresentation::setPacking(PackingSettings &packing) {
   }
 }
 
-void GridDataRepresentation::setOriginalValues(OriginalValuesSettings &originalValues) {
+void GridDataRepresentation::setOriginalValues(const OriginalValuesSettings &originalValues) {
   try {
     mOriginalValues = originalValues;
   } catch (...) {

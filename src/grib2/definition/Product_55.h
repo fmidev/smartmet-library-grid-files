@@ -39,9 +39,9 @@ public:
   virtual T::Hash countHash() const;
 
   PointInTimeSettings *getPointInTime() const;
-  void setPointInTime(PointInTimeSettings &pointInTime);
+  void setPointInTime(const PointInTimeSettings &pointInTime);
   HorizontalSettings *getHorizontal() const override;
-  void setHorizontal(HorizontalSettings &horizontal);
+  void setHorizontal(const HorizontalSettings &horizontal);
 
 protected:
   // # Copyright 2005-2019 ECMWF.

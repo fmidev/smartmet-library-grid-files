@@ -40,7 +40,7 @@ public:
   T::Hash countHash() const override;
 
   EarthShapeSettings *getEarthShape() const override;
-  void setEarthShape(EarthShapeSettings &earthShape);
+  void setEarthShape(const EarthShapeSettings &earthShape);
   const T::UInt32_opt &getNi() const;
   void setNi(T::UInt32_opt ni);
   const T::UInt32_opt &getNj() const;
@@ -50,7 +50,7 @@ public:
   const T::Int32_opt &getLongitudeOfFirstGridPoint() const;
   void setLongitudeOfFirstGridPoint(T::Int32_opt longitudeOfFirstGridPoint);
   ResolutionSettings *getResolution() const override;
-  void setResolution(ResolutionSettings &resolution);
+  void setResolution(const ResolutionSettings &resolution);
   const T::Int32_opt &getLaD() const;
   void setLaD(T::Int32_opt laD);
   const T::Int32_opt &getLatitudeOfLastGridPoint() const;
@@ -58,7 +58,7 @@ public:
   const T::Int32_opt &getLongitudeOfLastGridPoint() const;
   void setLongitudeOfLastGridPoint(T::Int32_opt longitudeOfLastGridPoint);
   ScanningModeSettings *getScanningMode() const;
-  void setScanningMode(ScanningModeSettings &scanningMode);
+  void setScanningMode(const ScanningModeSettings &scanningMode);
   const T::UInt32_opt &getOrientationOfTheGrid() const;
   void setOrientationOfTheGrid(T::UInt32_opt orientationOfTheGrid);
   const T::UInt32_opt &getDi() const;

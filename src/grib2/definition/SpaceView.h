@@ -40,7 +40,7 @@ public:
   T::Hash countHash() const override;
 
   EarthShapeSettings *getEarthShape() const override;
-  void setEarthShape(EarthShapeSettings &earthShape);
+  void setEarthShape(const EarthShapeSettings &earthShape);
   const T::UInt32_opt &getNx() const;
   void setNx(T::UInt32_opt nx);
   const T::UInt32_opt &getNy() const;
@@ -50,7 +50,7 @@ public:
   const T::Int32_opt &getLongitudeOfSubSatellitePoint() const;
   void setLongitudeOfSubSatellitePoint(T::Int32_opt longitudeOfSubSatellitePoint);
   ResolutionSettings *getResolution() const override;
-  void setResolution(ResolutionSettings &resolution);
+  void setResolution(const ResolutionSettings &resolution);
   const T::UInt32_opt &getDx() const;
   void setDx(T::UInt32_opt dx);
   const T::UInt32_opt &getDy() const;
@@ -60,7 +60,7 @@ public:
   const T::UInt32_opt &getYp() const;
   void setYp(T::UInt32_opt yp);
   ScanningModeSettings *getScanningMode() const;
-  void setScanningMode(ScanningModeSettings &scanningMode);
+  void setScanningMode(const ScanningModeSettings &scanningMode);
   const T::Int32_opt &getOrientationOfTheGrid() const;
   void setOrientationOfTheGrid(T::Int32_opt orientationOfTheGrid);
   const T::UInt32_opt &getNr() const;

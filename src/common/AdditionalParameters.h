@@ -76,13 +76,13 @@ class AdditionalParameters
   private:
 
     std::string formatDate(
-                    Fmi::LocalDateTime& ldt,
-                    std::locale& llocale,
+                    const Fmi::LocalDateTime& ldt,
+                    const std::locale& llocale,
                     const char *fmt);
 
     std::string formatDate(
-                    Fmi::LocalDateTime& ldt,
-                    std::locale& llocale,
+                    const Fmi::LocalDateTime& ldt,
+                    const std::locale& llocale,
                     std::string fmt);
 
     const Fmi::TimeZones&         mTimezones;      //!< Available time zone data

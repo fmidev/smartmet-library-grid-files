@@ -244,7 +244,7 @@ int MemoryMapper::getClosestIndex(char *address)
 
 /*! \brief Returns true when the userfaultfd-based memory mapper is enabled. */
 
-bool MemoryMapper::isEnabled()
+bool MemoryMapper::isEnabled() const
 {
   return mEnabled;
 }
@@ -254,7 +254,7 @@ bool MemoryMapper::isEnabled()
 
 /*! \brief Returns true when page prefetching/premapping is enabled. */
 
-bool MemoryMapper::isPremapEnabled()
+bool MemoryMapper::isPremapEnabled() const
 {
   if (mEnabled)
     return mPremapEnabled;

@@ -300,7 +300,7 @@ void RotatedGaussian::setNj(std::int16_t nj) {
   }
 }
 
-void RotatedGaussian::setGridArea(GridAreaSettings &gridArea) {
+void RotatedGaussian::setGridArea(const GridAreaSettings &gridArea) {
   try {
     mGridArea = gridArea;
   } catch (...) {
@@ -324,7 +324,7 @@ void RotatedGaussian::setN(std::uint16_t n) {
   }
 }
 
-void RotatedGaussian::setScanningMode(ScanningModeSettings &scanningMode) {
+void RotatedGaussian::setScanningMode(const ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {
@@ -332,7 +332,7 @@ void RotatedGaussian::setScanningMode(ScanningModeSettings &scanningMode) {
   }
 }
 
-void RotatedGaussian::setRotation(RotationSettings &rotation) {
+void RotatedGaussian::setRotation(const RotationSettings &rotation) {
   try {
     mRotation = rotation;
   } catch (...) {

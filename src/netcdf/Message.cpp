@@ -108,7 +108,7 @@ Message::Message(const Message& message)
 
 /*! \brief Constructs the message from grid file, NetCDF file and message info metadata. */
 
-Message::Message(GRID::GridFile *gridFile,NetCdfFile *netCdfFile,T::MessageIndex messageIndex,NetCDF::MessageInfo& messageInfo)
+Message::Message(GRID::GridFile *gridFile,NetCdfFile *netCdfFile,T::MessageIndex messageIndex,const NetCDF::MessageInfo& messageInfo)
 {
   FUNCTION_TRACE
   try

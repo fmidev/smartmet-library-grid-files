@@ -174,7 +174,7 @@ HorizontalSettings *Product_57::getHorizontal() const {
   }
 }
 
-void Product_57::setPointInTime(PointInTimeSettings &pointInTime) {
+void Product_57::setPointInTime(const PointInTimeSettings &pointInTime) {
   try {
     mPointInTime = pointInTime;
   } catch (...) {
@@ -182,7 +182,7 @@ void Product_57::setPointInTime(PointInTimeSettings &pointInTime) {
   }
 }
 
-void Product_57::setHorizontal(HorizontalSettings &horizontal) {
+void Product_57::setHorizontal(const HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {

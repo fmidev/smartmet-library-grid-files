@@ -174,7 +174,7 @@ StatisticalSettings *ProcessedCrossSectionProduct::getStatistical() const {
   }
 }
 
-void ProcessedCrossSectionProduct::setParameter(ParameterSettings &parameter) {
+void ProcessedCrossSectionProduct::setParameter(const ParameterSettings &parameter) {
   try {
     mParameter = parameter;
   } catch (...) {
@@ -182,7 +182,7 @@ void ProcessedCrossSectionProduct::setParameter(ParameterSettings &parameter) {
   }
 }
 
-void ProcessedCrossSectionProduct::setStatistical(StatisticalSettings &statistical) {
+void ProcessedCrossSectionProduct::setStatistical(const StatisticalSettings &statistical) {
   try {
     mStatistical = statistical;
   } catch (...) {

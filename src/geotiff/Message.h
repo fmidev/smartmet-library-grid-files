@@ -39,7 +39,7 @@ class Message : public GRID::Message
 
                         Message();
                         Message(const Message& message);
-                        Message(GRID::GridFile *gridFile,GeoTiffFile *geoTiffFile,T::MessageIndex messageIndex,GeoTiff::MessageInfo& messageInfo);
+                        Message(GRID::GridFile *gridFile,GeoTiffFile *geoTiffFile,T::MessageIndex messageIndex,const GeoTiff::MessageInfo& messageInfo);
     ~Message() override;
 
     void                getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const override;

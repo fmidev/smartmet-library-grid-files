@@ -39,9 +39,9 @@ public:
   virtual T::Hash countHash() const;
 
   PackingSettings *getPacking() const override;
-  void setPacking(PackingSettings &packing);
+  void setPacking(const PackingSettings &packing);
   OriginalValuesSettings *getOriginalValues() const override;
-  void setOriginalValues(OriginalValuesSettings &originalValues);
+  void setOriginalValues(const OriginalValuesSettings &originalValues);
 
 protected:
   // # Copyright 2005-2019 ECMWF.

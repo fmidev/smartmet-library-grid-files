@@ -85,7 +85,7 @@ GridValueList& GridValueList::operator=(const GridValueList& gridValueList)
 
 /*! \brief Appends a grid value to the end of the list. */
 
-void GridValueList::addGridValue(GridValue& gridValue)
+void GridValueList::addGridValue(const GridValue& gridValue)
 {
   try
   {
@@ -164,7 +164,7 @@ bool GridValueList::getGridValueByIndex(uint index,GridValue& gridValue) const
 
 /*! \brief Replaces the grid value at the given index with the supplied value. */
 
-bool GridValueList::setGridValueByIndex(uint index,GridValue& gridValue)
+bool GridValueList::setGridValueByIndex(uint index,const GridValue& gridValue)
 {
   try
   {

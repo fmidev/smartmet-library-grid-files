@@ -174,7 +174,7 @@ EpsSettings *PartitionedEnsembleProduct::getEps() const {
   }
 }
 
-void PartitionedEnsembleProduct::setPartitionedProduct(PartitionedProduct &partitionedProduct) {
+void PartitionedEnsembleProduct::setPartitionedProduct(const PartitionedProduct &partitionedProduct) {
   try {
     mPartitionedProduct = partitionedProduct;
   } catch (...) {
@@ -182,7 +182,7 @@ void PartitionedEnsembleProduct::setPartitionedProduct(PartitionedProduct &parti
   }
 }
 
-void PartitionedEnsembleProduct::setEps(EpsSettings &eps) {
+void PartitionedEnsembleProduct::setEps(const EpsSettings &eps) {
   try {
     mEps = eps;
   } catch (...) {

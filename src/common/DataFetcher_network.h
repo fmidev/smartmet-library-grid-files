@@ -48,8 +48,8 @@ class DataFetcher_network : public DataFetcher
 
     Client*       newClient(uint protocol);
     Client*       getClient(const char *serverAddress,uint serverType,uint protocol);
-    bool          getFileList(uint protocol,const char *server,XmlElement& rootElement,std::vector<std::string> &filePatterns,std::vector<FileRec>& fileList,std::string& lastKey);
-    void          getFileList_S3(uint protocol,const char *server,const char *dir,std::vector<std::string> &filePatterns,std::vector<FileRec>& fileList);
+    bool          getFileList(uint protocol,const char *server,const XmlElement& rootElement,const std::vector<std::string> &filePatterns,std::vector<FileRec>& fileList,std::string& lastKey);
+    void          getFileList_S3(uint protocol,const char *server,const char *dir,const std::vector<std::string> &filePatterns,std::vector<FileRec>& fileList);
 
     ThreadLock    mThreadLock; //!< Guards the client pool
     Client_vecmap mClients;    //!< Reusable HTTP client pool keyed by server type

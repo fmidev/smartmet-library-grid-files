@@ -184,7 +184,7 @@ struct curl_slist* Client::addAuthenticationHeaders(const char *server,const cha
 
 /*! \brief Curl write callback that appends response bytes into the response buffer. */
 
-size_t curl_responseProcessing(char *ptr, size_t size, size_t nmemb, void *userdata)
+size_t curl_responseProcessing(const char *ptr, size_t size, size_t nmemb, void *userdata)
 {
   FUNCTION_TRACE
   try

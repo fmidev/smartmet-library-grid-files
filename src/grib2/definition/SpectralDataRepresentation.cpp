@@ -178,7 +178,7 @@ float SpectralDataRepresentation::getRealPartOf00() const {
   }
 }
 
-void SpectralDataRepresentation::setPacking(PackingSettings &packing) {
+void SpectralDataRepresentation::setPacking(const PackingSettings &packing) {
   try {
     mPacking = packing;
   } catch (...) {

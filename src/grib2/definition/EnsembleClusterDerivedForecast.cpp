@@ -250,7 +250,7 @@ const T::UInt8_opt &EnsembleClusterDerivedForecast::getEnsembleForecastNumbers()
   }
 }
 
-void EnsembleClusterDerivedForecast::setParameter(ParameterSettings &parameter) {
+void EnsembleClusterDerivedForecast::setParameter(const ParameterSettings &parameter) {
   try {
     mParameter = parameter;
   } catch (...) {
@@ -258,7 +258,7 @@ void EnsembleClusterDerivedForecast::setParameter(ParameterSettings &parameter) 
   }
 }
 
-void EnsembleClusterDerivedForecast::setPointInTime(PointInTimeSettings &pointInTime) {
+void EnsembleClusterDerivedForecast::setPointInTime(const PointInTimeSettings &pointInTime) {
   try {
     mPointInTime = pointInTime;
   } catch (...) {
@@ -266,7 +266,7 @@ void EnsembleClusterDerivedForecast::setPointInTime(PointInTimeSettings &pointIn
   }
 }
 
-void EnsembleClusterDerivedForecast::setHorizontal(HorizontalSettings &horizontal) {
+void EnsembleClusterDerivedForecast::setHorizontal(const HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
@@ -274,7 +274,7 @@ void EnsembleClusterDerivedForecast::setHorizontal(HorizontalSettings &horizonta
   }
 }
 
-void EnsembleClusterDerivedForecast::setDerived(DerivedSettings &derived) {
+void EnsembleClusterDerivedForecast::setDerived(const DerivedSettings &derived) {
   try {
     mDerived = derived;
   } catch (...) {
@@ -282,7 +282,7 @@ void EnsembleClusterDerivedForecast::setDerived(DerivedSettings &derived) {
   }
 }
 
-void EnsembleClusterDerivedForecast::setRectangularCluster(RectangularClusterSettings &rectangularCluster) {
+void EnsembleClusterDerivedForecast::setRectangularCluster(const RectangularClusterSettings &rectangularCluster) {
   try {
     mRectangularCluster = rectangularCluster;
   } catch (...) {

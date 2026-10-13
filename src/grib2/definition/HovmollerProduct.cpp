@@ -174,7 +174,7 @@ HorizontalSettings *HovmollerProduct::getHorizontal() const {
   }
 }
 
-void HovmollerProduct::setParameter(ParameterSettings &parameter) {
+void HovmollerProduct::setParameter(const ParameterSettings &parameter) {
   try {
     mParameter = parameter;
   } catch (...) {
@@ -182,7 +182,7 @@ void HovmollerProduct::setParameter(ParameterSettings &parameter) {
   }
 }
 
-void HovmollerProduct::setHorizontal(HorizontalSettings &horizontal) {
+void HovmollerProduct::setHorizontal(const HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {

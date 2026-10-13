@@ -310,7 +310,7 @@ void StretchedSphericalHarmonic::setRepresentationMode(std::uint8_t representati
   }
 }
 
-void StretchedSphericalHarmonic::setGridStretching(GridStretchingSettings &gridStretching) {
+void StretchedSphericalHarmonic::setGridStretching(const GridStretchingSettings &gridStretching) {
   try {
     mGridStretching = gridStretching;
   } catch (...) {

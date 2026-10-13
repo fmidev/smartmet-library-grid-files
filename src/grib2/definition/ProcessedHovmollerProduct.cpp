@@ -192,7 +192,7 @@ StatisticalSettings *ProcessedHovmollerProduct::getStatistical() const {
   }
 }
 
-void ProcessedHovmollerProduct::setParameter(ParameterSettings &parameter) {
+void ProcessedHovmollerProduct::setParameter(const ParameterSettings &parameter) {
   try {
     mParameter = parameter;
   } catch (...) {
@@ -200,7 +200,7 @@ void ProcessedHovmollerProduct::setParameter(ParameterSettings &parameter) {
   }
 }
 
-void ProcessedHovmollerProduct::setHorizontal(HorizontalSettings &horizontal) {
+void ProcessedHovmollerProduct::setHorizontal(const HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
@@ -208,7 +208,7 @@ void ProcessedHovmollerProduct::setHorizontal(HorizontalSettings &horizontal) {
   }
 }
 
-void ProcessedHovmollerProduct::setStatistical(StatisticalSettings &statistical) {
+void ProcessedHovmollerProduct::setStatistical(const StatisticalSettings &statistical) {
   try {
     mStatistical = statistical;
   } catch (...) {

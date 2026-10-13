@@ -15,7 +15,7 @@ namespace GRID
 
 // Per-request number of row-bands for parallel contouring, taken from the request attributes
 // (default 1 = single-threaded). The value is clamped to the number of cores downstream.
-static int getContourThreads(T::AttributeList &attributeList)
+static int getContourThreads(const T::AttributeList &attributeList)
 {
   const char *str = attributeList.getAttributeValue("contour.threads");
   return (str != nullptr) ? toInt32(str) : 1;

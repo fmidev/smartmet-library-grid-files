@@ -379,7 +379,7 @@ bool GridDefinition::getGridLatLonArea(T::Coordinate& topLeft,T::Coordinate& top
         \return   The type of the grid projection (expressed as an enum value).
 */
 
-T::GridProjection GridDefinition::getGridProjection()
+T::GridProjection GridDefinition::getGridProjection() const
 {
   FUNCTION_TRACE
   try

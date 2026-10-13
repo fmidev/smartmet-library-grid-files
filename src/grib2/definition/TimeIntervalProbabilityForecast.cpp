@@ -210,7 +210,7 @@ StatisticalSettings *TimeIntervalProbabilityForecast::getStatistical() const {
   }
 }
 
-void TimeIntervalProbabilityForecast::setParameter(ParameterSettings &parameter) {
+void TimeIntervalProbabilityForecast::setParameter(const ParameterSettings &parameter) {
   try {
     mParameter = parameter;
   } catch (...) {
@@ -218,7 +218,7 @@ void TimeIntervalProbabilityForecast::setParameter(ParameterSettings &parameter)
   }
 }
 
-void TimeIntervalProbabilityForecast::setHorizontal(HorizontalSettings &horizontal) {
+void TimeIntervalProbabilityForecast::setHorizontal(const HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
@@ -226,7 +226,7 @@ void TimeIntervalProbabilityForecast::setHorizontal(HorizontalSettings &horizont
   }
 }
 
-void TimeIntervalProbabilityForecast::setProbability(ProbabilitySettings &probability) {
+void TimeIntervalProbabilityForecast::setProbability(const ProbabilitySettings &probability) {
   try {
     mProbability = probability;
   } catch (...) {
@@ -234,7 +234,7 @@ void TimeIntervalProbabilityForecast::setProbability(ProbabilitySettings &probab
   }
 }
 
-void TimeIntervalProbabilityForecast::setStatistical(StatisticalSettings &statistical) {
+void TimeIntervalProbabilityForecast::setStatistical(const StatisticalSettings &statistical) {
   try {
     mStatistical = statistical;
   } catch (...) {

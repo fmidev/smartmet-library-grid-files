@@ -82,7 +82,7 @@ void XmlElement::print(std::ostream& stream,uint level,uint optionFlags)
 
 /*! \brief Extracts the tag name and type from a raw XML tag string. */
 
-int XmlElement::getTagNameAndType(const char *data,char *name,ParameterList& parameterList)
+int XmlElement::getTagNameAndType(const char *data,char *name,const ParameterList& parameterList)
 {
   try
   {

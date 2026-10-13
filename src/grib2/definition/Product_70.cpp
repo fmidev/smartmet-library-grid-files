@@ -192,7 +192,7 @@ HorizontalSettings *Product_70::getHorizontal() const {
   }
 }
 
-void Product_70::setPostproc(PostprocSettings &postproc) {
+void Product_70::setPostproc(const PostprocSettings &postproc) {
   try {
     mPostproc = postproc;
   } catch (...) {
@@ -200,7 +200,7 @@ void Product_70::setPostproc(PostprocSettings &postproc) {
   }
 }
 
-void Product_70::setPointInTime(PointInTimeSettings &pointInTime) {
+void Product_70::setPointInTime(const PointInTimeSettings &pointInTime) {
   try {
     mPointInTime = pointInTime;
   } catch (...) {
@@ -208,7 +208,7 @@ void Product_70::setPointInTime(PointInTimeSettings &pointInTime) {
   }
 }
 
-void Product_70::setHorizontal(HorizontalSettings &horizontal) {
+void Product_70::setHorizontal(const HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {

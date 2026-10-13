@@ -51,7 +51,7 @@ GridValue::GridValue(double x,double y, T::ParamValue value)
 
 /*! \brief Constructs a GridValue at the given coordinates with a string value. */
 
-GridValue::GridValue(double x,double y, std::string& valueString)
+GridValue::GridValue(double x,double y, const std::string& valueString)
 {
   try
   {
@@ -93,7 +93,7 @@ GridValue::GridValue(double x,double y, const char *valueString)
 
 /*! \brief Constructs a GridValue with both numeric and string value representations. */
 
-GridValue::GridValue(double x,double y, T::ParamValue value, std::string& valueString)
+GridValue::GridValue(double x,double y, T::ParamValue value, const std::string& valueString)
 {
   try
   {
@@ -153,7 +153,7 @@ GridValue::~GridValue()
 
 /*! \brief Prints the contents of the grid value into the given stream. */
 
-void GridValue::print(std::ostream& stream,uint level,uint optionFlags)
+void GridValue::print(std::ostream& stream,uint level,uint optionFlags) const
 {
   try
   {

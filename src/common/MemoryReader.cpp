@@ -378,7 +378,7 @@ unsigned char MemoryReader::getByte(UInt64 _pos)
 
 /*! \brief Returns the byte at the given pointer position, validating that it is in range. */
 
-unsigned char MemoryReader::getByte(unsigned char *_posPtr)
+unsigned char MemoryReader::getByte(const unsigned char *_posPtr)
 {
   try
   {

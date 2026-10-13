@@ -40,11 +40,11 @@ public:
   virtual T::Hash countHash() const;
 
   ParameterAerosolOpticalSettings *getParameterAerosolOptical() const;
-  void setParameterAerosolOptical(ParameterAerosolOpticalSettings &parameterAerosolOptical);
+  void setParameterAerosolOptical(const ParameterAerosolOpticalSettings &parameterAerosolOptical);
   PointInTimeSettings *getPointInTime() const;
-  void setPointInTime(PointInTimeSettings &pointInTime);
+  void setPointInTime(const PointInTimeSettings &pointInTime);
   HorizontalSettings *getHorizontal() const override;
-  void setHorizontal(HorizontalSettings &horizontal);
+  void setHorizontal(const HorizontalSettings &horizontal);
 
 protected:
   // # Copyright 2005-2019 ECMWF.

@@ -372,7 +372,7 @@ ScanningModeSettings *LambertAzimuthalEqualArea::getScanningMode() const {
   }
 }
 
-void LambertAzimuthalEqualArea::setEarthShape(EarthShapeSettings &earthShape) {
+void LambertAzimuthalEqualArea::setEarthShape(const EarthShapeSettings &earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
@@ -452,7 +452,7 @@ void LambertAzimuthalEqualArea::setYDirectionGridLengthInMillimetres(T::UInt32_o
   }
 }
 
-void LambertAzimuthalEqualArea::setScanningMode(ScanningModeSettings &scanningMode) {
+void LambertAzimuthalEqualArea::setScanningMode(const ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {

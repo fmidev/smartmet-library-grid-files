@@ -39,9 +39,9 @@ public:
   virtual T::Hash countHash() const;
 
   HorizontalSettings *getHorizontal() const override;
-  void setHorizontal(HorizontalSettings &horizontal);
+  void setHorizontal(const HorizontalSettings &horizontal);
   EpsSettings *getEps() const override;
-  void setEps(EpsSettings &eps);
+  void setEps(const EpsSettings &eps);
   const T::UInt8_opt &getPerturbationNumber() const;
   void setPerturbationNumber(T::UInt8_opt perturbationNumber);
   const T::UInt8_opt &getNumberOfForecastsInEnsemble() const;

@@ -174,7 +174,7 @@ RotationSettings *RotatedSphericalHarmonic::getRotation() const {
   }
 }
 
-void RotatedSphericalHarmonic::setSphericalHarmonic(SphericalHarmonicSettings &sphericalHarmonic) {
+void RotatedSphericalHarmonic::setSphericalHarmonic(const SphericalHarmonicSettings &sphericalHarmonic) {
   try {
     mSphericalHarmonic = sphericalHarmonic;
   } catch (...) {
@@ -182,7 +182,7 @@ void RotatedSphericalHarmonic::setSphericalHarmonic(SphericalHarmonicSettings &s
   }
 }
 
-void RotatedSphericalHarmonic::setRotation(RotationSettings &rotation) {
+void RotatedSphericalHarmonic::setRotation(const RotationSettings &rotation) {
   try {
     mRotation = rotation;
   } catch (...) {

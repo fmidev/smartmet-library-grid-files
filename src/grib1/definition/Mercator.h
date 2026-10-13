@@ -43,11 +43,11 @@ public:
   std::int16_t getNj() const;
   void setNj(std::int16_t nj);
   GridAreaSettings *getGridArea() const override;
-  void setGridArea(GridAreaSettings &gridArea);
+  void setGridArea(const GridAreaSettings &gridArea);
   SmartMet::int24_t getLatin() const;
   void setLatin(SmartMet::int24_t latin);
   ScanningModeSettings *getScanningMode() const override;
-  void setScanningMode(ScanningModeSettings &scanningMode);
+  void setScanningMode(const ScanningModeSettings &scanningMode);
   SmartMet::int24_t getDiInMetres() const;
   void setDiInMetres(SmartMet::int24_t diInMetres);
   SmartMet::int24_t getDjInMetres() const;

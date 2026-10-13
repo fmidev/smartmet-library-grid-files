@@ -386,7 +386,7 @@ void PolarStereographic::setLongitudeOfFirstGridPoint(SmartMet::int24_t longitud
   }
 }
 
-void PolarStereographic::setResolutionFlags(ResolutionFlagsSettings &resolutionFlags) {
+void PolarStereographic::setResolutionFlags(const ResolutionFlagsSettings &resolutionFlags) {
   try {
     mResolutionFlags = resolutionFlags;
   } catch (...) {
@@ -426,7 +426,7 @@ void PolarStereographic::setProjectionCentreFlag(std::uint8_t projectionCentreFl
   }
 }
 
-void PolarStereographic::setScanningMode(ScanningModeSettings &scanningMode) {
+void PolarStereographic::setScanningMode(const ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {

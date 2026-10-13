@@ -39,7 +39,7 @@ public:
   T::Hash countHash() const override;
 
   EarthShapeSettings *getEarthShape() const override;
-  void setEarthShape(EarthShapeSettings &earthShape);
+  void setEarthShape(const EarthShapeSettings &earthShape);
   const T::UInt32_opt &getBasicAngleOfTheInitialProductionDomain() const;
   void setBasicAngleOfTheInitialProductionDomain(T::UInt32_opt basicAngleOfTheInitialProductionDomain);
   const T::UInt32_opt &getSubdivisionsOfBasicAngle() const;
@@ -49,7 +49,7 @@ public:
   const T::UInt32_opt &getLongitudeOfFirstGridPoint() const;
   void setLongitudeOfFirstGridPoint(T::UInt32_opt longitudeOfFirstGridPoint);
   ScanningModeSettings *getScanningMode() const;
-  void setScanningMode(ScanningModeSettings &scanningMode);
+  void setScanningMode(const ScanningModeSettings &scanningMode);
   const T::Int32_opt &getLatitudeOfLastGridPoint() const;
   void setLatitudeOfLastGridPoint(T::Int32_opt latitudeOfLastGridPoint);
   const T::UInt32_opt &getLongitudeOfLastGridPoint() const;

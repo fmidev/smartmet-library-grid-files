@@ -192,7 +192,7 @@ StatisticalSettings *TimeIntervalSimulatedSatelliteEnsembleProduct::getStatistic
   }
 }
 
-void TimeIntervalSimulatedSatelliteEnsembleProduct::setSimulatedSatelliteProduct(SimulatedSatelliteProduct &simulatedSatelliteProduct) {
+void TimeIntervalSimulatedSatelliteEnsembleProduct::setSimulatedSatelliteProduct(const SimulatedSatelliteProduct &simulatedSatelliteProduct) {
   try {
     mSimulatedSatelliteProduct = simulatedSatelliteProduct;
   } catch (...) {
@@ -200,7 +200,7 @@ void TimeIntervalSimulatedSatelliteEnsembleProduct::setSimulatedSatelliteProduct
   }
 }
 
-void TimeIntervalSimulatedSatelliteEnsembleProduct::setEps(EpsSettings &eps) {
+void TimeIntervalSimulatedSatelliteEnsembleProduct::setEps(const EpsSettings &eps) {
   try {
     mEps = eps;
   } catch (...) {
@@ -208,7 +208,7 @@ void TimeIntervalSimulatedSatelliteEnsembleProduct::setEps(EpsSettings &eps) {
   }
 }
 
-void TimeIntervalSimulatedSatelliteEnsembleProduct::setStatistical(StatisticalSettings &statistical) {
+void TimeIntervalSimulatedSatelliteEnsembleProduct::setStatistical(const StatisticalSettings &statistical) {
   try {
     mStatistical = statistical;
   } catch (...) {

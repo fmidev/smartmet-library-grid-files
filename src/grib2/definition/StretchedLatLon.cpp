@@ -192,7 +192,7 @@ StretchingSettings *StretchedLatLon::getStretching() const {
   }
 }
 
-void StretchedLatLon::setEarthShape(EarthShapeSettings &earthShape) {
+void StretchedLatLon::setEarthShape(const EarthShapeSettings &earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
@@ -200,7 +200,7 @@ void StretchedLatLon::setEarthShape(EarthShapeSettings &earthShape) {
   }
 }
 
-void StretchedLatLon::setLatLon(LatLonSettings &latLon) {
+void StretchedLatLon::setLatLon(const LatLonSettings &latLon) {
   try {
     mLatLon = latLon;
   } catch (...) {
@@ -208,7 +208,7 @@ void StretchedLatLon::setLatLon(LatLonSettings &latLon) {
   }
 }
 
-void StretchedLatLon::setStretching(StretchingSettings &stretching) {
+void StretchedLatLon::setStretching(const StretchingSettings &stretching) {
   try {
     mStretching = stretching;
   } catch (...) {

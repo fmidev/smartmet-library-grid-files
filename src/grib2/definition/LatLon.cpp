@@ -174,7 +174,7 @@ LatLonSettings *LatLon::getLatLon() const {
   }
 }
 
-void LatLon::setEarthShape(EarthShapeSettings &earthShape) {
+void LatLon::setEarthShape(const EarthShapeSettings &earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
@@ -182,7 +182,7 @@ void LatLon::setEarthShape(EarthShapeSettings &earthShape) {
   }
 }
 
-void LatLon::setLatLon(LatLonSettings &latLon) {
+void LatLon::setLatLon(const LatLonSettings &latLon) {
   try {
     mLatLon = latLon;
   } catch (...) {

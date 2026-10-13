@@ -228,7 +228,7 @@ StatisticalSettings *TimeIntervalEnsembleReforecast::getStatistical() const {
   }
 }
 
-void TimeIntervalEnsembleReforecast::setParameter(ParameterSettings &parameter) {
+void TimeIntervalEnsembleReforecast::setParameter(const ParameterSettings &parameter) {
   try {
     mParameter = parameter;
   } catch (...) {
@@ -236,7 +236,7 @@ void TimeIntervalEnsembleReforecast::setParameter(ParameterSettings &parameter) 
   }
 }
 
-void TimeIntervalEnsembleReforecast::setHorizontal(HorizontalSettings &horizontal) {
+void TimeIntervalEnsembleReforecast::setHorizontal(const HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
@@ -244,7 +244,7 @@ void TimeIntervalEnsembleReforecast::setHorizontal(HorizontalSettings &horizonta
   }
 }
 
-void TimeIntervalEnsembleReforecast::setEps(EpsSettings &eps) {
+void TimeIntervalEnsembleReforecast::setEps(const EpsSettings &eps) {
   try {
     mEps = eps;
   } catch (...) {
@@ -252,7 +252,7 @@ void TimeIntervalEnsembleReforecast::setEps(EpsSettings &eps) {
   }
 }
 
-void TimeIntervalEnsembleReforecast::setReforecast(ReforecastSettings &reforecast) {
+void TimeIntervalEnsembleReforecast::setReforecast(const ReforecastSettings &reforecast) {
   try {
     mReforecast = reforecast;
   } catch (...) {
@@ -260,7 +260,7 @@ void TimeIntervalEnsembleReforecast::setReforecast(ReforecastSettings &reforecas
   }
 }
 
-void TimeIntervalEnsembleReforecast::setStatistical(StatisticalSettings &statistical) {
+void TimeIntervalEnsembleReforecast::setStatistical(const StatisticalSettings &statistical) {
   try {
     mStatistical = statistical;
   } catch (...) {

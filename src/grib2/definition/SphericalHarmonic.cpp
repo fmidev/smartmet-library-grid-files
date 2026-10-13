@@ -156,7 +156,7 @@ SphericalHarmonicSettings *SphericalHarmonic::getSphericalHarmonic() const {
   }
 }
 
-void SphericalHarmonic::setSphericalHarmonic(SphericalHarmonicSettings &sphericalHarmonic) {
+void SphericalHarmonic::setSphericalHarmonic(const SphericalHarmonicSettings &sphericalHarmonic) {
   try {
     mSphericalHarmonic = sphericalHarmonic;
   } catch (...) {

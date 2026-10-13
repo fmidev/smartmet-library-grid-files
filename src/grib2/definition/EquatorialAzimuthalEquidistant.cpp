@@ -350,7 +350,7 @@ ScanningModeSettings *EquatorialAzimuthalEquidistant::getScanningMode() const {
   }
 }
 
-void EquatorialAzimuthalEquidistant::setEarthShape(EarthShapeSettings &earthShape) {
+void EquatorialAzimuthalEquidistant::setEarthShape(const EarthShapeSettings &earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
@@ -422,7 +422,7 @@ void EquatorialAzimuthalEquidistant::setProjectionCenterFlag(T::UInt8_opt projec
   }
 }
 
-void EquatorialAzimuthalEquidistant::setScanningMode(ScanningModeSettings &scanningMode) {
+void EquatorialAzimuthalEquidistant::setScanningMode(const ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {

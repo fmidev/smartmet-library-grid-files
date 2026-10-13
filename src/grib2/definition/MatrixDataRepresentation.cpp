@@ -420,7 +420,7 @@ float MatrixDataRepresentation::getCoefsSecond() const {
   }
 }
 
-void MatrixDataRepresentation::setPacking(PackingSettings &packing) {
+void MatrixDataRepresentation::setPacking(const PackingSettings &packing) {
   try {
     mPacking = packing;
   } catch (...) {

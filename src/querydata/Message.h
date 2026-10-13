@@ -48,7 +48,7 @@ class Message : public GRID::Message
 
                         Message();
                         Message(const Message& message);
-                        Message(GRID::GridFile *gridFile,QueryDataFile *queryDataFile,T::MessageIndex messageIndex,QueryData::MessageInfo& messageInfo);
+                        Message(GRID::GridFile *gridFile,QueryDataFile *queryDataFile,T::MessageIndex messageIndex,const QueryData::MessageInfo& messageInfo);
     ~Message() override;
 
     void                getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const override;

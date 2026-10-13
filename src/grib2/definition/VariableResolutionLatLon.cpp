@@ -174,7 +174,7 @@ VariableLatLonSettings *VariableResolutionLatLon::getVariableLatLon() const {
   }
 }
 
-void VariableResolutionLatLon::setEarthShape(EarthShapeSettings &earthShape) {
+void VariableResolutionLatLon::setEarthShape(const EarthShapeSettings &earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
@@ -182,7 +182,7 @@ void VariableResolutionLatLon::setEarthShape(EarthShapeSettings &earthShape) {
   }
 }
 
-void VariableResolutionLatLon::setVariableLatLon(VariableLatLonSettings &variableLatLon) {
+void VariableResolutionLatLon::setVariableLatLon(const VariableLatLonSettings &variableLatLon) {
   try {
     mVariableLatLon = variableLatLon;
   } catch (...) {

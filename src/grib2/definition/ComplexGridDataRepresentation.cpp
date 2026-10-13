@@ -416,7 +416,7 @@ const T::UInt8_opt &ComplexGridDataRepresentation::getNumberOfBitsForScaledGroup
   }
 }
 
-void ComplexGridDataRepresentation::setPacking(PackingSettings &packing) {
+void ComplexGridDataRepresentation::setPacking(const PackingSettings &packing) {
   try {
     mPacking = packing;
   } catch (...) {
@@ -424,7 +424,7 @@ void ComplexGridDataRepresentation::setPacking(PackingSettings &packing) {
   }
 }
 
-void ComplexGridDataRepresentation::setOriginalValues(OriginalValuesSettings &originalValues) {
+void ComplexGridDataRepresentation::setOriginalValues(const OriginalValuesSettings &originalValues) {
   try {
     mOriginalValues = originalValues;
   } catch (...) {

@@ -423,7 +423,7 @@ void ProductSection::setMessagePtr(Message *message)
         \return            The method returns true if the value of the requested property was found.
 */
 
-bool ProductSection::getProperty(uint propertyId,Int64& value)
+bool ProductSection::getProperty(uint propertyId,Int64& value) const
 {
   try
   {

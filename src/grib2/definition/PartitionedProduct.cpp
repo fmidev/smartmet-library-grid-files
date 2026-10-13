@@ -192,7 +192,7 @@ HorizontalSettings *PartitionedProduct::getHorizontal() const {
   }
 }
 
-void PartitionedProduct::setParameterPartition(ParameterPartitionSettings &parameterPartition) {
+void PartitionedProduct::setParameterPartition(const ParameterPartitionSettings &parameterPartition) {
   try {
     mParameterPartition = parameterPartition;
   } catch (...) {
@@ -200,7 +200,7 @@ void PartitionedProduct::setParameterPartition(ParameterPartitionSettings &param
   }
 }
 
-void PartitionedProduct::setPointInTime(PointInTimeSettings &pointInTime) {
+void PartitionedProduct::setPointInTime(const PointInTimeSettings &pointInTime) {
   try {
     mPointInTime = pointInTime;
   } catch (...) {
@@ -208,7 +208,7 @@ void PartitionedProduct::setPointInTime(PointInTimeSettings &pointInTime) {
   }
 }
 
-void PartitionedProduct::setHorizontal(HorizontalSettings &horizontal) {
+void PartitionedProduct::setHorizontal(const HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {

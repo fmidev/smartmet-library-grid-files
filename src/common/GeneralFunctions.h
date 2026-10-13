@@ -77,7 +77,7 @@ void valueToTime(time_t value,uint& year,uint& month,uint& day,uint& hour,uint& 
 
 time_t toTimeT(Fmi::DateTime tim);
 time_t getFileModificationTime(const char *filename);
-void copyFile(const char *sourceFileName,const char *targetFileName,bool& shutdownRequested);
+void copyFile(const char *sourceFileName,const char *targetFileName,const bool& shutdownRequested);
 Int64 getFileSize(const char *filename);
 Int64 getFileSize(FILE *file);
 std::string getAbsoluteFilePath(const std::string& filename);
@@ -174,14 +174,14 @@ void splitNumbers(const char *str,std::vector<std::string>& numbers);
 void lineSplit(const char *str,std::vector<std::string> &lines);
 
 std::string toString(std::list<std::string>& parts,char separator);
-std::string toString(std::set<int>& parts,char separator);
-std::string toString(std::set<float>& parts,char separator);
+std::string toString(const std::set<int>& parts,char separator);
+std::string toString(const std::set<float>& parts,char separator);
 std::string toString(T::AreaCoordinates& coordinates,char separator1,char separator2);
 
 void parseCoordinates(const std::string& coordinateStr,char separator1,char separator2,T::AreaCoordinates& coordinates);
 
 
-bool patternMatch(const char *str,std::vector<std::string>& patterns);
+bool patternMatch(const char *str,const std::vector<std::string>& patterns);
 void getFileList(const char *dirName,std::vector<std::string>& filePatterns,bool includeSubDirs,std::set<std::string>& dirList,std::vector<std::pair<std::string,std::string>>& fileList);
 void tuneLevels(int& level1,int& level2,int newLevel);
 
@@ -211,7 +211,7 @@ double  gregorianToJdn(int year, int month, int day);
 double  julianToJdn(int year, int month, int day);
 void    jdnToJulian(double J,int& year, int& month, int& day);
 time_t  getGregorianTimeT(int refYear, int refMonth, int refDay,int refHour, int refMinute, int refSecond,time_t plusSeconds);
-void    parseNetCdfTime(std::string& timeStr,int& year,int& month,int& day,int& hour,int& minute,int& second,time_t& unitSize);
+void    parseNetCdfTime(const std::string& timeStr,int& year,int& month,int& day,int& hour,int& minute,int& second,time_t& unitSize);
 
 
 int getClosestIndexPos(FloatVec& values,float value);
@@ -233,7 +233,7 @@ void hash_sha256(uchar *input,int inputLen,char *hexHash);
 std::string replaceVariables(const std::string& str,std::map<std::string,std::string>& variables);
 
 
-inline int ptr_compare(char *v1, char *v2)
+inline int ptr_compare(const char *v1, const char *v2)
 {
   if (v1 == v2)
     return 0;

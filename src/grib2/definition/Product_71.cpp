@@ -210,7 +210,7 @@ EpsSettings *Product_71::getEps() const {
   }
 }
 
-void Product_71::setPostproc(PostprocSettings &postproc) {
+void Product_71::setPostproc(const PostprocSettings &postproc) {
   try {
     mPostproc = postproc;
   } catch (...) {
@@ -218,7 +218,7 @@ void Product_71::setPostproc(PostprocSettings &postproc) {
   }
 }
 
-void Product_71::setPointInTime(PointInTimeSettings &pointInTime) {
+void Product_71::setPointInTime(const PointInTimeSettings &pointInTime) {
   try {
     mPointInTime = pointInTime;
   } catch (...) {
@@ -226,7 +226,7 @@ void Product_71::setPointInTime(PointInTimeSettings &pointInTime) {
   }
 }
 
-void Product_71::setHorizontal(HorizontalSettings &horizontal) {
+void Product_71::setHorizontal(const HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
@@ -234,7 +234,7 @@ void Product_71::setHorizontal(HorizontalSettings &horizontal) {
   }
 }
 
-void Product_71::setEps(EpsSettings &eps) {
+void Product_71::setEps(const EpsSettings &eps) {
   try {
     mEps = eps;
   } catch (...) {

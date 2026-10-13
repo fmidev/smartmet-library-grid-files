@@ -300,7 +300,7 @@ void LatLon::setNj(std::uint16_t nj) {
   }
 }
 
-void LatLon::setGridArea(GridAreaSettings &gridArea) {
+void LatLon::setGridArea(const GridAreaSettings &gridArea) {
   try {
     mGridArea = gridArea;
   } catch (...) {
@@ -324,7 +324,7 @@ void LatLon::setJDirectionIncrement(std::uint16_t jDirectionIncrement) {
   }
 }
 
-void LatLon::setScanningMode(ScanningModeSettings &scanningMode) {
+void LatLon::setScanningMode(const ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {

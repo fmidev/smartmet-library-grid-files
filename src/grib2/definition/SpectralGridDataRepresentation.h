@@ -39,9 +39,9 @@ public:
   virtual T::Hash countHash() const;
 
   PackingSettings *getPacking() const override;
-  void setPacking(PackingSettings &packing);
+  void setPacking(const PackingSettings &packing);
   OriginalValuesSettings *getOriginalValues() const override;
-  void setOriginalValues(OriginalValuesSettings &originalValues);
+  void setOriginalValues(const OriginalValuesSettings &originalValues);
   const T::UInt8_opt &getCcsdsFlags() const;
   void setCcsdsFlags(T::UInt8_opt ccsdsFlags);
   const T::UInt8_opt &getCcsdsBlockSize() const;

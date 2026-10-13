@@ -192,7 +192,7 @@ RotationSettings *RotatedLatLon::getRotation() const {
   }
 }
 
-void RotatedLatLon::setEarthShape(EarthShapeSettings &earthShape) {
+void RotatedLatLon::setEarthShape(const EarthShapeSettings &earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
@@ -200,7 +200,7 @@ void RotatedLatLon::setEarthShape(EarthShapeSettings &earthShape) {
   }
 }
 
-void RotatedLatLon::setLatLon(LatLonSettings &latLon) {
+void RotatedLatLon::setLatLon(const LatLonSettings &latLon) {
   try {
     mLatLon = latLon;
   } catch (...) {
@@ -208,7 +208,7 @@ void RotatedLatLon::setLatLon(LatLonSettings &latLon) {
   }
 }
 
-void RotatedLatLon::setRotation(RotationSettings &rotation) {
+void RotatedLatLon::setRotation(const RotationSettings &rotation) {
   try {
     mRotation = rotation;
   } catch (...) {

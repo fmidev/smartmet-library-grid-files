@@ -228,7 +228,7 @@ ReforecastSettings *EnsembleReforecast::getReforecast() const {
   }
 }
 
-void EnsembleReforecast::setParameter(ParameterSettings &parameter) {
+void EnsembleReforecast::setParameter(const ParameterSettings &parameter) {
   try {
     mParameter = parameter;
   } catch (...) {
@@ -236,7 +236,7 @@ void EnsembleReforecast::setParameter(ParameterSettings &parameter) {
   }
 }
 
-void EnsembleReforecast::setPointInTime(PointInTimeSettings &pointInTime) {
+void EnsembleReforecast::setPointInTime(const PointInTimeSettings &pointInTime) {
   try {
     mPointInTime = pointInTime;
   } catch (...) {
@@ -244,7 +244,7 @@ void EnsembleReforecast::setPointInTime(PointInTimeSettings &pointInTime) {
   }
 }
 
-void EnsembleReforecast::setHorizontal(HorizontalSettings &horizontal) {
+void EnsembleReforecast::setHorizontal(const HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
@@ -252,7 +252,7 @@ void EnsembleReforecast::setHorizontal(HorizontalSettings &horizontal) {
   }
 }
 
-void EnsembleReforecast::setEps(EpsSettings &eps) {
+void EnsembleReforecast::setEps(const EpsSettings &eps) {
   try {
     mEps = eps;
   } catch (...) {
@@ -260,7 +260,7 @@ void EnsembleReforecast::setEps(EpsSettings &eps) {
   }
 }
 
-void EnsembleReforecast::setReforecast(ReforecastSettings &reforecast) {
+void EnsembleReforecast::setReforecast(const ReforecastSettings &reforecast) {
   try {
     mReforecast = reforecast;
   } catch (...) {

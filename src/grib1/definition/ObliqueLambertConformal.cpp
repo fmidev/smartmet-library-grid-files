@@ -474,7 +474,7 @@ void ObliqueLambertConformal::setLongitudeOfFirstGridPoint(SmartMet::int24_t lon
   }
 }
 
-void ObliqueLambertConformal::setResolutionFlags(ResolutionFlagsSettings &resolutionFlags) {
+void ObliqueLambertConformal::setResolutionFlags(const ResolutionFlagsSettings &resolutionFlags) {
   try {
     mResolutionFlags = resolutionFlags;
   } catch (...) {
@@ -514,7 +514,7 @@ void ObliqueLambertConformal::setProjectionCentreFlag(std::uint8_t projectionCen
   }
 }
 
-void ObliqueLambertConformal::setScanningMode(ScanningModeSettings &scanningMode) {
+void ObliqueLambertConformal::setScanningMode(const ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {

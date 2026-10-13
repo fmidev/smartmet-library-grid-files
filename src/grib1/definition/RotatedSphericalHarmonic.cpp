@@ -310,7 +310,7 @@ void RotatedSphericalHarmonic::setRepresentationMode(std::uint8_t representation
   }
 }
 
-void RotatedSphericalHarmonic::setRotation(RotationSettings &rotation) {
+void RotatedSphericalHarmonic::setRotation(const RotationSettings &rotation) {
   try {
     mRotation = rotation;
   } catch (...) {

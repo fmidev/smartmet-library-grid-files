@@ -42,7 +42,7 @@ class RequestCounter
     /*! \brief Clear the top-N sorted list without resetting per-key counters. */
     void                clearTopIndexes();
     /*! \brief Return the running total of all increment calls. */
-    UInt64              getTotalRequests();
+    UInt64              getTotalRequests() const;
     /*! \brief Reset the total request counter to zero. */
     void                resetTotalRequests();
 
@@ -64,7 +64,7 @@ class RequestCounter
     void                incGeometryHitCounter(uint geometryId,uint index);
 
     /*! \brief Return true if counting is currently enabled. */
-    bool                isCountingEnabled();
+    bool                isCountingEnabled() const;
 
     /*! \brief Return the current hit count for \p key.
      *  \param[in] key  Request key to query.

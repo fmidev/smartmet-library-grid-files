@@ -139,7 +139,7 @@ class ProductSection : public GRID::MessageSection
     void              setForecastNumber(short forecastNuber);
     void              setMessagePtr(Message *message);
 
-    bool              getProperty(uint propertyId,Int64& value);
+    bool              getProperty(uint propertyId,Int64& value) const;
     void              getProperties(T::PropertySettingVec& properties);
 
     bool              setProperty(uint propertyId,Int64 value);

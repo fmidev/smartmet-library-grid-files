@@ -192,7 +192,7 @@ StatisticalSettings *AggregateAtmosphericChemicalProduct::getStatistical() const
   }
 }
 
-void AggregateAtmosphericChemicalProduct::setParameterChemical(ParameterChemicalSettings &parameterChemical) {
+void AggregateAtmosphericChemicalProduct::setParameterChemical(const ParameterChemicalSettings &parameterChemical) {
   try {
     mParameterChemical = parameterChemical;
   } catch (...) {
@@ -200,7 +200,7 @@ void AggregateAtmosphericChemicalProduct::setParameterChemical(ParameterChemical
   }
 }
 
-void AggregateAtmosphericChemicalProduct::setHorizontal(HorizontalSettings &horizontal) {
+void AggregateAtmosphericChemicalProduct::setHorizontal(const HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
@@ -208,7 +208,7 @@ void AggregateAtmosphericChemicalProduct::setHorizontal(HorizontalSettings &hori
   }
 }
 
-void AggregateAtmosphericChemicalProduct::setStatistical(StatisticalSettings &statistical) {
+void AggregateAtmosphericChemicalProduct::setStatistical(const StatisticalSettings &statistical) {
   try {
     mStatistical = statistical;
   } catch (...) {

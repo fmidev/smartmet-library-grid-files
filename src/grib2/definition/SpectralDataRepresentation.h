@@ -38,7 +38,7 @@ public:
   virtual T::Hash countHash() const;
 
   PackingSettings *getPacking() const override;
-  void setPacking(PackingSettings &packing);
+  void setPacking(const PackingSettings &packing);
   float getRealPartOf00() const;
   void setRealPartOf00(float realPartOf00);
 

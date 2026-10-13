@@ -81,7 +81,7 @@ class MemoryReader
 
     /*! \brief Return the byte at pointer \p _posPtr without advancing the read pointer.
      *  \param[in] _posPtr  Pointer into the buffer. */
-    unsigned char       getByte(unsigned char *_posPtr);
+    unsigned char       getByte(const unsigned char *_posPtr);
 
     /*! \brief Check whether the next bytes in the buffer match \p _str without advancing.
      *  \param[in] _str  Null-terminated string to compare.

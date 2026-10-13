@@ -41,13 +41,13 @@ public:
   T::Hash countHash() const override;
 
   EarthShapeSettings *getEarthShape() const override;
-  void setEarthShape(EarthShapeSettings &earthShape);
+  void setEarthShape(const EarthShapeSettings &earthShape);
   GaussianSettings *getGaussian() const;
-  void setGaussian(GaussianSettings &gaussian);
+  void setGaussian(const GaussianSettings &gaussian);
   RotationSettings *getRotation() const override;
-  void setRotation(RotationSettings &rotation);
+  void setRotation(const RotationSettings &rotation);
   StretchingSettings *getStretching() const;
-  void setStretching(StretchingSettings &stretching);
+  void setStretching(const StretchingSettings &stretching);
 
 protected:
   // # Copyright 2005-2019 ECMWF.

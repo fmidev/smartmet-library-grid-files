@@ -681,7 +681,7 @@ bool NetCdfFile::getProperty(std::string propertyName,uint index,double& propert
 
 /*! \brief Inserts a property containing a vector of string values into the property list. */
 
-void NetCdfFile::insertProperty(std::string propertyName,std::vector<std::string>& propertyValue)
+void NetCdfFile::insertProperty(std::string propertyName,const std::vector<std::string>& propertyValue)
 {
   FUNCTION_TRACE
   try

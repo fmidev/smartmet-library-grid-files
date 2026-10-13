@@ -318,7 +318,7 @@ void StretchedLatLon::setNj(std::uint16_t nj) {
   }
 }
 
-void StretchedLatLon::setGridArea(GridAreaSettings &gridArea) {
+void StretchedLatLon::setGridArea(const GridAreaSettings &gridArea) {
   try {
     mGridArea = gridArea;
   } catch (...) {
@@ -342,7 +342,7 @@ void StretchedLatLon::setJDirectionIncrement(std::uint16_t jDirectionIncrement) 
   }
 }
 
-void StretchedLatLon::setScanningMode(ScanningModeSettings &scanningMode) {
+void StretchedLatLon::setScanningMode(const ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {
@@ -358,7 +358,7 @@ void StretchedLatLon::setZero(std::uint32_t zero) {
   }
 }
 
-void StretchedLatLon::setGridStretching(GridStretchingSettings &gridStretching) {
+void StretchedLatLon::setGridStretching(const GridStretchingSettings &gridStretching) {
   try {
     mGridStretching = gridStretching;
   } catch (...) {

@@ -192,7 +192,7 @@ HorizontalSettings *NormalProduct::getHorizontal() const {
   }
 }
 
-void NormalProduct::setParameter(ParameterSettings &parameter) {
+void NormalProduct::setParameter(const ParameterSettings &parameter) {
   try {
     mParameter = parameter;
   } catch (...) {
@@ -200,7 +200,7 @@ void NormalProduct::setParameter(ParameterSettings &parameter) {
   }
 }
 
-void NormalProduct::setPointInTime(PointInTimeSettings &pointInTime) {
+void NormalProduct::setPointInTime(const PointInTimeSettings &pointInTime) {
   try {
     mPointInTime = pointInTime;
   } catch (...) {
@@ -208,7 +208,7 @@ void NormalProduct::setPointInTime(PointInTimeSettings &pointInTime) {
   }
 }
 
-void NormalProduct::setHorizontal(HorizontalSettings &horizontal) {
+void NormalProduct::setHorizontal(const HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {

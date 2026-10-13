@@ -306,7 +306,7 @@ const T::UInt32_opt &SimulatedSatelliteProduct::getScaledValueOfCentralWaveNumbe
   }
 }
 
-void SimulatedSatelliteProduct::setParameter(ParameterSettings &parameter) {
+void SimulatedSatelliteProduct::setParameter(const ParameterSettings &parameter) {
   try {
     mParameter = parameter;
   } catch (...) {
@@ -314,7 +314,7 @@ void SimulatedSatelliteProduct::setParameter(ParameterSettings &parameter) {
   }
 }
 
-void SimulatedSatelliteProduct::setPointInTime(PointInTimeSettings &pointInTime) {
+void SimulatedSatelliteProduct::setPointInTime(const PointInTimeSettings &pointInTime) {
   try {
     mPointInTime = pointInTime;
   } catch (...) {

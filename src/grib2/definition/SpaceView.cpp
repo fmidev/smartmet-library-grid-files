@@ -456,7 +456,7 @@ const T::UInt32_opt &SpaceView::getYo() const {
   }
 }
 
-void SpaceView::setEarthShape(EarthShapeSettings &earthShape) {
+void SpaceView::setEarthShape(const EarthShapeSettings &earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
@@ -496,7 +496,7 @@ void SpaceView::setLongitudeOfSubSatellitePoint(T::Int32_opt longitudeOfSubSatel
   }
 }
 
-void SpaceView::setResolution(ResolutionSettings &resolution) {
+void SpaceView::setResolution(const ResolutionSettings &resolution) {
   try {
     mResolution = resolution;
   } catch (...) {
@@ -536,7 +536,7 @@ void SpaceView::setYp(T::UInt32_opt yp) {
   }
 }
 
-void SpaceView::setScanningMode(ScanningModeSettings &scanningMode) {
+void SpaceView::setScanningMode(const ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {

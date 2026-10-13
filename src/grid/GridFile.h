@@ -260,13 +260,13 @@ class GridFile
 
   private:
 
-    GRID::Message*        createMessage(T::MessageIndex messageIndex,GRID::MessageInfo& messageInfo);
+    GRID::Message*        createMessage(T::MessageIndex messageIndex,const GRID::MessageInfo& messageInfo);
     Int64                 countSize();
     void                  readFmig1Message(MemoryReader& memoryReader, T::MessageIndex messageIndex);
     void                  readGrib1Message(MemoryReader& memoryReader, T::MessageIndex messageIndex);
     void                  readGrib2Message(MemoryReader& memoryReader, T::MessageIndex messageIndex);
-    uchar                 readMessageType(MemoryReader& memoryReader);
-    MessagePos_vec        searchMessageLocations(MemoryReader& memoryReader,uint maxMessages);
+    uchar                 readMessageType(MemoryReader& memoryReader) const;
+    MessagePos_vec        searchMessageLocations(MemoryReader& memoryReader,uint maxMessages) const;
 
   protected:
 

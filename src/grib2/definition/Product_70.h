@@ -40,11 +40,11 @@ public:
   virtual T::Hash countHash() const;
 
   PostprocSettings *getPostproc() const override;
-  void setPostproc(PostprocSettings &postproc);
+  void setPostproc(const PostprocSettings &postproc);
   PointInTimeSettings *getPointInTime() const;
-  void setPointInTime(PointInTimeSettings &pointInTime);
+  void setPointInTime(const PointInTimeSettings &pointInTime);
   HorizontalSettings *getHorizontal() const override;
-  void setHorizontal(HorizontalSettings &horizontal);
+  void setHorizontal(const HorizontalSettings &horizontal);
 
 protected:
   // # Copyright 2005-2019 ECMWF.

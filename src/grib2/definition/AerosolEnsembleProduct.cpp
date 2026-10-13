@@ -210,7 +210,7 @@ EpsSettings *AerosolEnsembleProduct::getEps() const {
   }
 }
 
-void AerosolEnsembleProduct::setParameterAerosol(ParameterAerosolSettings &parameterAerosol) {
+void AerosolEnsembleProduct::setParameterAerosol(const ParameterAerosolSettings &parameterAerosol) {
   try {
     mParameterAerosol = parameterAerosol;
   } catch (...) {
@@ -218,7 +218,7 @@ void AerosolEnsembleProduct::setParameterAerosol(ParameterAerosolSettings &param
   }
 }
 
-void AerosolEnsembleProduct::setPointInTime(PointInTimeSettings &pointInTime) {
+void AerosolEnsembleProduct::setPointInTime(const PointInTimeSettings &pointInTime) {
   try {
     mPointInTime = pointInTime;
   } catch (...) {
@@ -226,7 +226,7 @@ void AerosolEnsembleProduct::setPointInTime(PointInTimeSettings &pointInTime) {
   }
 }
 
-void AerosolEnsembleProduct::setHorizontal(HorizontalSettings &horizontal) {
+void AerosolEnsembleProduct::setHorizontal(const HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
@@ -234,7 +234,7 @@ void AerosolEnsembleProduct::setHorizontal(HorizontalSettings &horizontal) {
   }
 }
 
-void AerosolEnsembleProduct::setEps(EpsSettings &eps) {
+void AerosolEnsembleProduct::setEps(const EpsSettings &eps) {
   try {
     mEps = eps;
   } catch (...) {

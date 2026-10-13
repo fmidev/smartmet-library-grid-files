@@ -210,7 +210,7 @@ StatisticalSettings *TimeIntervalAtmosphericChemicalEnsembleProduct::getStatisti
   }
 }
 
-void TimeIntervalAtmosphericChemicalEnsembleProduct::setParameterChemical(ParameterChemicalSettings &parameterChemical) {
+void TimeIntervalAtmosphericChemicalEnsembleProduct::setParameterChemical(const ParameterChemicalSettings &parameterChemical) {
   try {
     mParameterChemical = parameterChemical;
   } catch (...) {
@@ -218,7 +218,7 @@ void TimeIntervalAtmosphericChemicalEnsembleProduct::setParameterChemical(Parame
   }
 }
 
-void TimeIntervalAtmosphericChemicalEnsembleProduct::setHorizontal(HorizontalSettings &horizontal) {
+void TimeIntervalAtmosphericChemicalEnsembleProduct::setHorizontal(const HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
@@ -226,7 +226,7 @@ void TimeIntervalAtmosphericChemicalEnsembleProduct::setHorizontal(HorizontalSet
   }
 }
 
-void TimeIntervalAtmosphericChemicalEnsembleProduct::setEps(EpsSettings &eps) {
+void TimeIntervalAtmosphericChemicalEnsembleProduct::setEps(const EpsSettings &eps) {
   try {
     mEps = eps;
   } catch (...) {
@@ -234,7 +234,7 @@ void TimeIntervalAtmosphericChemicalEnsembleProduct::setEps(EpsSettings &eps) {
   }
 }
 
-void TimeIntervalAtmosphericChemicalEnsembleProduct::setStatistical(StatisticalSettings &statistical) {
+void TimeIntervalAtmosphericChemicalEnsembleProduct::setStatistical(const StatisticalSettings &statistical) {
   try {
     mStatistical = statistical;
   } catch (...) {

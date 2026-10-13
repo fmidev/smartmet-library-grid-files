@@ -90,7 +90,7 @@ Message::Message(const Message& message)
 
 /*! \brief Constructs the message from grid file, GeoTIFF file and message info metadata. */
 
-Message::Message(GRID::GridFile *gridFile,GeoTiffFile *geoTiffFile,T::MessageIndex messageIndex,GeoTiff::MessageInfo& messageInfo)
+Message::Message(GRID::GridFile *gridFile,GeoTiffFile *geoTiffFile,T::MessageIndex messageIndex,const GeoTiff::MessageInfo& messageInfo)
 {
   FUNCTION_TRACE
   try

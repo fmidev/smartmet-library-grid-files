@@ -728,7 +728,7 @@ void GridPointValueList::getGridPointValueListByValueRange(T::ParamValue minValu
 
 /*! \brief Returns the number of grid point values currently stored in the list. */
 
-uint GridPointValueList::getLength()
+uint GridPointValueList::getLength() const
 {
   try
   {
@@ -779,7 +779,7 @@ bool GridPointValueList::deleteGridPointValueByIndex(uint index)
 
 /*! \brief Returns whether the list owns and releases its grid point value objects. */
 
-bool GridPointValueList::getReleaseObjects()
+bool GridPointValueList::getReleaseObjects() const
 {
   try
   {

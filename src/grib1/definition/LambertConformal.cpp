@@ -474,7 +474,7 @@ void LambertConformal::setLongitudeOfFirstGridPoint(SmartMet::int24_t longitudeO
   }
 }
 
-void LambertConformal::setResolutionFlags(ResolutionFlagsSettings &resolutionFlags) {
+void LambertConformal::setResolutionFlags(const ResolutionFlagsSettings &resolutionFlags) {
   try {
     mResolutionFlags = resolutionFlags;
   } catch (...) {
@@ -514,7 +514,7 @@ void LambertConformal::setProjectionCentreFlag(std::uint8_t projectionCentreFlag
   }
 }
 
-void LambertConformal::setScanningMode(ScanningModeSettings &scanningMode) {
+void LambertConformal::setScanningMode(const ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {

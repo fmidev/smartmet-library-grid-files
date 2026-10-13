@@ -192,7 +192,7 @@ StretchingSettings *StretchedRotatedSphericalHarmonic::getStretching() const {
   }
 }
 
-void StretchedRotatedSphericalHarmonic::setSphericalHarmonic(SphericalHarmonicSettings &sphericalHarmonic) {
+void StretchedRotatedSphericalHarmonic::setSphericalHarmonic(const SphericalHarmonicSettings &sphericalHarmonic) {
   try {
     mSphericalHarmonic = sphericalHarmonic;
   } catch (...) {
@@ -200,7 +200,7 @@ void StretchedRotatedSphericalHarmonic::setSphericalHarmonic(SphericalHarmonicSe
   }
 }
 
-void StretchedRotatedSphericalHarmonic::setRotation(RotationSettings &rotation) {
+void StretchedRotatedSphericalHarmonic::setRotation(const RotationSettings &rotation) {
   try {
     mRotation = rotation;
   } catch (...) {
@@ -208,7 +208,7 @@ void StretchedRotatedSphericalHarmonic::setRotation(RotationSettings &rotation) 
   }
 }
 
-void StretchedRotatedSphericalHarmonic::setStretching(StretchingSettings &stretching) {
+void StretchedRotatedSphericalHarmonic::setStretching(const StretchingSettings &stretching) {
   try {
     mStretching = stretching;
   } catch (...) {

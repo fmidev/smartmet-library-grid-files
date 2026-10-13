@@ -51,7 +51,7 @@ void Session::clearAttributes()
 
 /*! \brief Sets attributes by parsing a semicolon-separated key=value string. */
 
-void Session::setAttributes(std::string& attributes)
+void Session::setAttributes(const std::string& attributes)
 {
   try
   {
@@ -197,7 +197,7 @@ void Session::setAttribute(const char *name,UInt64 value)
 
 /*! \brief Sets a session attribute to a std::string value. */
 
-void Session::setAttribute(const char *name,std::string& value)
+void Session::setAttribute(const char *name,const std::string& value)
 {
   try
   {

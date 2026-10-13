@@ -192,7 +192,7 @@ StatisticalSettings *Product_72::getStatistical() const {
   }
 }
 
-void Product_72::setPostproc(PostprocSettings &postproc) {
+void Product_72::setPostproc(const PostprocSettings &postproc) {
   try {
     mPostproc = postproc;
   } catch (...) {
@@ -200,7 +200,7 @@ void Product_72::setPostproc(PostprocSettings &postproc) {
   }
 }
 
-void Product_72::setHorizontal(HorizontalSettings &horizontal) {
+void Product_72::setHorizontal(const HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
@@ -208,7 +208,7 @@ void Product_72::setHorizontal(HorizontalSettings &horizontal) {
   }
 }
 
-void Product_72::setStatistical(StatisticalSettings &statistical) {
+void Product_72::setStatistical(const StatisticalSettings &statistical) {
   try {
     mStatistical = statistical;
   } catch (...) {

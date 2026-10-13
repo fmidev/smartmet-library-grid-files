@@ -36,13 +36,13 @@ public:
   virtual T::Hash countHash() const;
 
   GridSettings *getGrid() const;
-  void setGrid(GridSettings &grid);
+  void setGrid(const GridSettings &grid);
   const T::UInt32_opt &getIDirectionIncrement() const;
   void setIDirectionIncrement(T::UInt32_opt iDirectionIncrement);
   const T::UInt32_opt &getJDirectionIncrement() const;
   void setJDirectionIncrement(T::UInt32_opt jDirectionIncrement);
   ScanningModeSettings *getScanningMode() const;
-  void setScanningMode(ScanningModeSettings &scanningMode);
+  void setScanningMode(const ScanningModeSettings &scanningMode);
 
 protected:
   // # Copyright 2005-2019 ECMWF.

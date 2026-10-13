@@ -478,7 +478,7 @@ const T::UInt32_opt &Albers::getLongitudeOfTheSouthernPoleOfProjection() const {
   }
 }
 
-void Albers::setEarthShape(EarthShapeSettings &earthShape) {
+void Albers::setEarthShape(const EarthShapeSettings &earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
@@ -518,7 +518,7 @@ void Albers::setLongitudeOfFirstGridPoint(T::UInt32_opt longitudeOfFirstGridPoin
   }
 }
 
-void Albers::setResolution(ResolutionSettings &resolution) {
+void Albers::setResolution(const ResolutionSettings &resolution) {
   try {
     mResolution = resolution;
   } catch (...) {
@@ -566,7 +566,7 @@ void Albers::setProjectionCentreFlag(std::uint8_t projectionCentreFlag) {
   }
 }
 
-void Albers::setScanningMode(ScanningModeSettings &scanningMode) {
+void Albers::setScanningMode(const ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {

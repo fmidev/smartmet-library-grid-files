@@ -119,7 +119,7 @@ TopList RequestCounter::getTopRequestCounters()
 
 /*! \brief Returns the total number of counted requests. */
 
-UInt64 RequestCounter::getTotalRequests()
+UInt64 RequestCounter::getTotalRequests() const
 {
   FUNCTION_TRACE
   try
@@ -346,7 +346,7 @@ void RequestCounter::setCountingEnabled(bool _enabled)
 
 /*! \brief Returns whether request counting is currently enabled. */
 
-bool RequestCounter::isCountingEnabled()
+bool RequestCounter::isCountingEnabled() const
 {
   FUNCTION_TRACE
   try

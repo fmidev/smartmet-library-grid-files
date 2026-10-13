@@ -156,7 +156,7 @@ NormalProduct *ForecastError::getNormalProduct() const {
   }
 }
 
-void ForecastError::setNormalProduct(NormalProduct &normalProduct) {
+void ForecastError::setNormalProduct(const NormalProduct &normalProduct) {
   try {
     mNormalProduct = normalProduct;
   } catch (...) {

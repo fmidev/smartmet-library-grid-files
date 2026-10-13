@@ -50,7 +50,7 @@ public:
   const T::UInt32_opt &getOffsetFromOriginToInnerBound() const;
   void setOffsetFromOriginToInnerBound(T::UInt32_opt offsetFromOriginToInnerBound);
   ScanningModeSettings *getScanningMode() const;
-  void setScanningMode(ScanningModeSettings &scanningMode);
+  void setScanningMode(const ScanningModeSettings &scanningMode);
   const T::Int16_opt &getStartingAzimuth() const;
   void setStartingAzimuth(T::Int16_opt startingAzimuth);
   const T::Int16_opt &getAzimuthalWidth() const;

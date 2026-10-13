@@ -38,7 +38,7 @@ public:
   virtual T::Hash countHash() const;
 
   PackingSettings *getPacking() const override;
-  void setPacking(PackingSettings &packing);
+  void setPacking(const PackingSettings &packing);
   const T::UInt8_opt &getMatrixBitmapsPresent() const;
   void setMatrixBitmapsPresent(T::UInt8_opt matrixBitmapsPresent);
   const T::UInt32_opt &getNumberOfCodedValues() const;

@@ -853,7 +853,7 @@ bool ConfigurationFile::getSubAttributes(const char *attributeName,std::vector<s
 
 /*! \brief Returns the name of the main configuration file. */
 
-std::string ConfigurationFile::getFilename()
+std::string ConfigurationFile::getFilename() const
 {
   try
   {
@@ -903,7 +903,7 @@ bool ConfigurationFile::findAttribute(const char *attributeName)
 
 /*! \brief Sets or updates the value of the named attribute. */
 
-void ConfigurationFile::setAttributeValue(const char *attributeName,std::string& attributeValue)
+void ConfigurationFile::setAttributeValue(const char *attributeName,const std::string& attributeValue)
 {
   FUNCTION_TRACE
   try
@@ -1085,7 +1085,7 @@ std::string ConfigurationFile::parseConstValue(const std::string& value)
 
 /*! \brief Strips comments from the input buffer and pads delimiters with spaces in the output buffer. */
 
-void ConfigurationFile::removeComments(char *st,UInt64 *positions,char *newst,UInt64 *newpositions,int len)
+void ConfigurationFile::removeComments(const char *st,const UInt64 *positions,char *newst,UInt64 *newpositions,int len)
 {
   FUNCTION_TRACE
   try
@@ -1187,7 +1187,7 @@ void ConfigurationFile::removeComments(char *st,UInt64 *positions,char *newst,UI
 
 /*! \brief Builds row/column position information for each character in the input buffer. */
 
-void ConfigurationFile::setPositions(char *st,UInt64 *positions,int len)
+void ConfigurationFile::setPositions(const char *st,UInt64 *positions,int len)
 {
   FUNCTION_TRACE
   try

@@ -200,7 +200,7 @@ float PreprocessedGridDataRepresentation::getPreProcessingParameter() const {
   }
 }
 
-void PreprocessedGridDataRepresentation::setPacking(PackingSettings &packing) {
+void PreprocessedGridDataRepresentation::setPacking(const PackingSettings &packing) {
   try {
     mPacking = packing;
   } catch (...) {

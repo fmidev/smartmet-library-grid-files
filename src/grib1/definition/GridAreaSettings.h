@@ -39,7 +39,7 @@ public:
   SmartMet::int24_t getLongitudeOfFirstGridPoint() const;
   void setLongitudeOfFirstGridPoint(SmartMet::int24_t longitudeOfFirstGridPoint);
   ResolutionFlagsSettings *getResolutionFlags() const;
-  void setResolutionFlags(ResolutionFlagsSettings &resolutionFlags);
+  void setResolutionFlags(const ResolutionFlagsSettings &resolutionFlags);
   SmartMet::int24_t getLatitudeOfLastGridPoint() const;
   void setLatitudeOfLastGridPoint(SmartMet::int24_t latitudeOfLastGridPoint);
   SmartMet::int24_t getLongitudeOfLastGridPoint() const;

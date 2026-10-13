@@ -25,9 +25,9 @@ class BitArrayReader
     virtual    ~BitArrayReader();
 
     /*! \brief Return the total number of bits in the buffer. */
-    UInt64     getNumberOfBits();
+    UInt64     getNumberOfBits() const;
     /*! \brief Return the current bit read position. */
-    UInt64     getReadPosition();
+    UInt64     getReadPosition() const;
     /*! \brief Set the current bit read position.
      *  \param[in] readPosition  New position (zero-based bit index). */
     void       setReadPosition(UInt64 readPosition);

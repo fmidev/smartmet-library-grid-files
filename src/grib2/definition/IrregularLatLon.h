@@ -38,7 +38,7 @@ public:
   T::Hash countHash() const override;
 
   EarthShapeSettings *getEarthShape() const override;
-  void setEarthShape(EarthShapeSettings &earthShape);
+  void setEarthShape(const EarthShapeSettings &earthShape);
   const T::Int32_opt &getLatitude() const;
   void setLatitude(T::Int32_opt latitude);
   const T::Int32_opt &getLongitude() const;

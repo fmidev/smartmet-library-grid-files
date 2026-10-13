@@ -192,7 +192,7 @@ StatisticalSettings *Product_68::getStatistical() const {
   }
 }
 
-void Product_68::setHorizontal(HorizontalSettings &horizontal) {
+void Product_68::setHorizontal(const HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
@@ -200,7 +200,7 @@ void Product_68::setHorizontal(HorizontalSettings &horizontal) {
   }
 }
 
-void Product_68::setEps(EpsSettings &eps) {
+void Product_68::setEps(const EpsSettings &eps) {
   try {
     mEps = eps;
   } catch (...) {
@@ -208,7 +208,7 @@ void Product_68::setEps(EpsSettings &eps) {
   }
 }
 
-void Product_68::setStatistical(StatisticalSettings &statistical) {
+void Product_68::setStatistical(const StatisticalSettings &statistical) {
   try {
     mStatistical = statistical;
   } catch (...) {

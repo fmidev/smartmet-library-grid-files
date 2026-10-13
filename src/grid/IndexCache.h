@@ -30,7 +30,7 @@ class IndexCache
     /*! \brief Store an index vector in the cache under the given hash key.
      *  \param[in] hash        64-bit hash key identifying the index set.
      *  \param[in] indexVector The index vector to cache. */
-    void      addIndexVector(Int64 hash,T::IndexVector& indexVector);
+    void      addIndexVector(Int64 hash,const T::IndexVector& indexVector);
 
     /*! \brief Retrieve a cached index vector by hash key.
      *  \param[in]  hash        64-bit hash key.

@@ -192,7 +192,7 @@ StatisticalSettings *AggregateForecast::getStatistical() const {
   }
 }
 
-void AggregateForecast::setParameter(ParameterSettings &parameter) {
+void AggregateForecast::setParameter(const ParameterSettings &parameter) {
   try {
     mParameter = parameter;
   } catch (...) {
@@ -200,7 +200,7 @@ void AggregateForecast::setParameter(ParameterSettings &parameter) {
   }
 }
 
-void AggregateForecast::setHorizontal(HorizontalSettings &horizontal) {
+void AggregateForecast::setHorizontal(const HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
@@ -208,7 +208,7 @@ void AggregateForecast::setHorizontal(HorizontalSettings &horizontal) {
   }
 }
 
-void AggregateForecast::setStatistical(StatisticalSettings &statistical) {
+void AggregateForecast::setStatistical(const StatisticalSettings &statistical) {
   try {
     mStatistical = statistical;
   } catch (...) {

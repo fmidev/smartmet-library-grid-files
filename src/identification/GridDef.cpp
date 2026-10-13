@@ -253,7 +253,7 @@ void GridDef::updateCheck()
 
 /*! \brief Returns the latest modification time across the given files. */
 
-time_t GridDef::getModificationTime(string_vec& files)
+time_t GridDef::getModificationTime(const string_vec& files)
 {
   FUNCTION_TRACE
   try
@@ -3751,7 +3751,7 @@ GRIB1::GridDef_sptr GridDef::getGrib1DefinitionByGeometryId(int geometryId)
 
 /*! \brief Returns the GRIB1 grid definition matching the given GRIB1 message. */
 
-GRIB1::GridDef_sptr GridDef::getGrib1Definition(GRIB1::Message& message)
+GRIB1::GridDef_sptr GridDef::getGrib1Definition(const GRIB1::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -3799,7 +3799,7 @@ GRIB1::GridDef_sptr GridDef::getGrib1DefinitionByGeometryString(const char *geom
 
 /*! \brief Returns the GRIB1 grid definition matching the given geometry string. */
 
-GRIB1::GridDef_sptr GridDef::getGrib1DefinitionByGeometryString(std::string& geometryStr)
+GRIB1::GridDef_sptr GridDef::getGrib1DefinitionByGeometryString(const std::string& geometryStr)
 {
   FUNCTION_TRACE
   try
@@ -3845,7 +3845,7 @@ GRIB2::GridDef_sptr GridDef::getGrib2DefinitionByGeometryString(const char *geom
 
 /*! \brief Returns the GRIB2 grid definition matching the given geometry string. */
 
-GRIB2::GridDef_sptr GridDef::getGrib2DefinitionByGeometryString(std::string& geometryStr)
+GRIB2::GridDef_sptr GridDef::getGrib2DefinitionByGeometryString(const std::string& geometryStr)
 {
   FUNCTION_TRACE
   try
@@ -3868,7 +3868,7 @@ GRIB2::GridDef_sptr GridDef::getGrib2DefinitionByGeometryString(std::string& geo
 
 /*! \brief Returns the GRIB2 grid definition matching the given GRIB2 message. */
 
-GRIB2::GridDef_sptr GridDef::getGrib2Definition(GRIB2::Message& message)
+GRIB2::GridDef_sptr GridDef::getGrib2Definition(const GRIB2::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -3916,7 +3916,7 @@ GRIB2::GridDef_sptr GridDef::getGrib2DefinitionByGeometryId(int geometryId)
 
 /*! \brief Returns the geometry id for the grid in the given GRIB1 message. */
 
-int GridDef::getGrib1GeometryId(GRIB1::Message& message)
+int GridDef::getGrib1GeometryId(const GRIB1::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -3942,7 +3942,7 @@ int GridDef::getGrib1GeometryId(GRIB1::Message& message)
 
 /*! \brief Returns the geometry id for the grid in the given GRIB2 message. */
 
-int GridDef::getGrib2GeometryId(GRIB2::Message& message)
+int GridDef::getGrib2GeometryId(const GRIB2::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -5507,7 +5507,7 @@ FmiParamId_grib_cptr GridDef::getGribParameterMappingByFmiId(T::FmiParamId fmiPa
 
 /*! \brief Returns the GRIB parameter id for the given GRIB1 message. */
 
-T::GribParamId GridDef::getGribParameterId(GRIB1::Message& message)
+T::GribParamId GridDef::getGribParameterId(const GRIB1::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -5578,7 +5578,7 @@ T::GribParamId GridDef::getGribParameterId(GRIB1::Message& message)
 
 /*! \brief Returns the GRIB parameter id for the given GRIB2 message. */
 
-T::GribParamId GridDef::getGribParameterId(GRIB2::Message& message)
+T::GribParamId GridDef::getGribParameterId(const GRIB2::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -5703,7 +5703,7 @@ bool GridDef::getGrib2LevelDef(uint fmiLevelId,FmiLevelId_grib& def)
 
 /*! \brief Returns the GRIB parameter name for the given GRIB1 message. */
 
-std::string GridDef::getGribParameterName(GRIB1::Message& message)
+std::string GridDef::getGribParameterName(const GRIB1::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -5730,7 +5730,7 @@ std::string GridDef::getGribParameterName(GRIB1::Message& message)
 
 /*! \brief Returns the GRIB parameter name for the given GRIB2 message. */
 
-std::string GridDef::getGribParameterName(GRIB2::Message& message)
+std::string GridDef::getGribParameterName(const GRIB2::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -5757,7 +5757,7 @@ std::string GridDef::getGribParameterName(GRIB2::Message& message)
 
 /*! \brief Returns the FMI parameter id for the given GRIB1 message. */
 
-T::FmiParamId GridDef::getFmiParameterId(GRIB1::Message& message)
+T::FmiParamId GridDef::getFmiParameterId(const GRIB1::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -5791,7 +5791,7 @@ T::FmiParamId GridDef::getFmiParameterId(GRIB1::Message& message)
 
 /*! \brief Returns the FMI parameter id for the given GRIB2 message. */
 
-T::FmiParamId GridDef::getFmiParameterId(GRIB2::Message& message)
+T::FmiParamId GridDef::getFmiParameterId(const GRIB2::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -5824,7 +5824,7 @@ T::FmiParamId GridDef::getFmiParameterId(GRIB2::Message& message)
 
 /*! \brief Returns the FMI level id for the given GRIB1 message. */
 
-T::ParamLevelId GridDef::getFmiLevelId(GRIB1::Message& message)
+T::ParamLevelId GridDef::getFmiLevelId(const GRIB1::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -5866,7 +5866,7 @@ T::ParamLevelId GridDef::getFmiLevelId(GRIB1::Message& message)
 
 /*! \brief Returns the FMI level id for the given GRIB2 message. */
 
-T::ParamLevelId GridDef::getFmiLevelId(GRIB2::Message& message)
+T::ParamLevelId GridDef::getFmiLevelId(const GRIB2::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -6113,7 +6113,7 @@ FmiParamId_newbase_cptr GridDef::getFmiParameterMappingByNewbaseId(T::NewbasePar
 
 /*! \brief Returns a pointer to the FMI parameter mapping for the given NetCDF parameter name. */
 
-FmiParamId_netCdf_cptr GridDef::getFmiParameterMappingByNetCdfName(std::string& netCdfParamName)
+FmiParamId_netCdf_cptr GridDef::getFmiParameterMappingByNetCdfName(const std::string& netCdfParamName)
 {
   FUNCTION_TRACE
   try
@@ -6405,7 +6405,7 @@ FmiParamDef_cptr GridDef::getFmiParameterDefByNewbaseId(T::NewbaseParamId newbas
 
 /*! \brief Returns a pointer to the FMI parameter definition for the given NetCDF parameter name. */
 
-FmiParamDef_cptr GridDef::getFmiParameterDefByNetCdfName(std::string& netCdfParamName)
+FmiParamDef_cptr GridDef::getFmiParameterDefByNetCdfName(const std::string& netCdfParamName)
 {
   FUNCTION_TRACE
   try
@@ -6529,7 +6529,7 @@ bool GridDef::getFmiParameterDefByNewbaseId(T::NewbaseParamId newbaseParamId,Fmi
 
 /*! \brief Fetches an FMI parameter definition by NetCDF parameter name (copy out). */
 
-bool GridDef::getFmiParameterDefByNetCdfName(std::string& netCdfParamName,FmiParameterDef& paramDef)
+bool GridDef::getFmiParameterDefByNetCdfName(const std::string& netCdfParamName,FmiParameterDef& paramDef)
 {
   FUNCTION_TRACE
   try
@@ -6610,7 +6610,7 @@ bool GridDef::getFmiParameterDefByName(const std::string& fmiParamName,FmiParame
 
 /*! \brief Returns the FMI parameter name for the given GRIB1 message. */
 
-std::string GridDef::getFmiParameterName(GRIB1::Message& message)
+std::string GridDef::getFmiParameterName(const GRIB1::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -6640,7 +6640,7 @@ std::string GridDef::getFmiParameterName(GRIB1::Message& message)
 
 /*! \brief Returns the FMI parameter name for the given GRIB2 message. */
 
-std::string GridDef::getFmiParameterName(GRIB2::Message& message)
+std::string GridDef::getFmiParameterName(const GRIB2::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -6670,7 +6670,7 @@ std::string GridDef::getFmiParameterName(GRIB2::Message& message)
 
 /*! \brief Returns the FMI parameter description for the given GRIB1 message. */
 
-std::string GridDef::getFmiParameterDescription(GRIB1::Message& message)
+std::string GridDef::getFmiParameterDescription(const GRIB1::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -6700,7 +6700,7 @@ std::string GridDef::getFmiParameterDescription(GRIB1::Message& message)
 
 /*! \brief Returns the FMI parameter description for the given GRIB2 message. */
 
-std::string GridDef::getFmiParameterDescription(GRIB2::Message& message)
+std::string GridDef::getFmiParameterDescription(const GRIB2::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -6730,7 +6730,7 @@ std::string GridDef::getFmiParameterDescription(GRIB2::Message& message)
 
 /*! \brief Returns the FMI parameter units for the given GRIB1 message. */
 
-std::string GridDef::getFmiParameterUnits(GRIB1::Message& message)
+std::string GridDef::getFmiParameterUnits(const GRIB1::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -6760,7 +6760,7 @@ std::string GridDef::getFmiParameterUnits(GRIB1::Message& message)
 
 /*! \brief Returns the FMI parameter units for the given GRIB2 message. */
 
-std::string GridDef::getFmiParameterUnits(GRIB2::Message& message)
+std::string GridDef::getFmiParameterUnits(const GRIB2::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -6790,7 +6790,7 @@ std::string GridDef::getFmiParameterUnits(GRIB2::Message& message)
 
 /*! \brief Returns the FMI area interpolation method for the given GRIB1 message. */
 
-short GridDef::getFmiParameterInterpolationMethod(GRIB1::Message& message)
+short GridDef::getFmiParameterInterpolationMethod(const GRIB1::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -6820,7 +6820,7 @@ short GridDef::getFmiParameterInterpolationMethod(GRIB1::Message& message)
 
 /*! \brief Returns the FMI area interpolation method for the given GRIB2 message. */
 
-short GridDef::getFmiParameterInterpolationMethod(GRIB2::Message& message)
+short GridDef::getFmiParameterInterpolationMethod(const GRIB2::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -6924,7 +6924,7 @@ NetCdfParamDef_cptr GridDef::getNetCdfParameterDefByName(const std::string& netC
 
 /*! \brief Returns the newbase parameter id for the given GRIB1 message. */
 
-T::NewbaseParamId GridDef::getNewbaseParameterId(GRIB1::Message& message)
+T::NewbaseParamId GridDef::getNewbaseParameterId(const GRIB1::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -6954,7 +6954,7 @@ T::NewbaseParamId GridDef::getNewbaseParameterId(GRIB1::Message& message)
 
 /*! \brief Returns the newbase parameter id for the given GRIB2 message. */
 
-T::NewbaseParamId GridDef::getNewbaseParameterId(GRIB2::Message& message)
+T::NewbaseParamId GridDef::getNewbaseParameterId(const GRIB2::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -6984,7 +6984,7 @@ T::NewbaseParamId GridDef::getNewbaseParameterId(GRIB2::Message& message)
 
 /*! \brief Returns the newbase parameter name for the given GRIB1 message. */
 
-std::string GridDef::getNewbaseParameterName(GRIB1::Message& message)
+std::string GridDef::getNewbaseParameterName(const GRIB1::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -7014,7 +7014,7 @@ std::string GridDef::getNewbaseParameterName(GRIB1::Message& message)
 
 /*! \brief Returns the newbase parameter name for the given GRIB2 message. */
 
-std::string GridDef::getNewbaseParameterName(GRIB2::Message& message)
+std::string GridDef::getNewbaseParameterName(const GRIB2::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -7044,7 +7044,7 @@ std::string GridDef::getNewbaseParameterName(GRIB2::Message& message)
 
 /*! \brief Returns the NetCDF parameter name for the given GRIB1 message. */
 
-std::string GridDef::getNetCdfParameterName(GRIB1::Message& message)
+std::string GridDef::getNetCdfParameterName(const GRIB1::Message& message)
 {
   FUNCTION_TRACE
   try  {
@@ -7073,7 +7073,7 @@ std::string GridDef::getNetCdfParameterName(GRIB1::Message& message)
 
 /*! \brief Returns the NetCDF parameter name for the given GRIB2 message. */
 
-std::string GridDef::getNetCdfParameterName(GRIB2::Message& message)
+std::string GridDef::getNetCdfParameterName(const GRIB2::Message& message)
 {
   FUNCTION_TRACE
   try

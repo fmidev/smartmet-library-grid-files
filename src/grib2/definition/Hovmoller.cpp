@@ -588,7 +588,7 @@ const T::UInt8_opt &Hovmoller::getSecond() const {
   }
 }
 
-void Hovmoller::setEarthShape(EarthShapeSettings &earthShape) {
+void Hovmoller::setEarthShape(const EarthShapeSettings &earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
@@ -628,7 +628,7 @@ void Hovmoller::setLongitudeOfFirstGridPoint(T::UInt32_opt longitudeOfFirstGridP
   }
 }
 
-void Hovmoller::setScanningMode(ScanningModeSettings &scanningMode) {
+void Hovmoller::setScanningMode(const ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {

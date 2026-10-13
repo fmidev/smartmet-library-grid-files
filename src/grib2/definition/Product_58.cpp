@@ -192,7 +192,7 @@ EpsSettings *Product_58::getEps() const {
   }
 }
 
-void Product_58::setPointInTime(PointInTimeSettings &pointInTime) {
+void Product_58::setPointInTime(const PointInTimeSettings &pointInTime) {
   try {
     mPointInTime = pointInTime;
   } catch (...) {
@@ -200,7 +200,7 @@ void Product_58::setPointInTime(PointInTimeSettings &pointInTime) {
   }
 }
 
-void Product_58::setHorizontal(HorizontalSettings &horizontal) {
+void Product_58::setHorizontal(const HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
@@ -208,7 +208,7 @@ void Product_58::setHorizontal(HorizontalSettings &horizontal) {
   }
 }
 
-void Product_58::setEps(EpsSettings &eps) {
+void Product_58::setEps(const EpsSettings &eps) {
   try {
     mEps = eps;
   } catch (...) {

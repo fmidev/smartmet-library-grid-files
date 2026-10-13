@@ -474,7 +474,7 @@ void SpaceView::setLongitudeOfSubSatellitePoint(SmartMet::int24_t longitudeOfSub
   }
 }
 
-void SpaceView::setResolutionFlags(ResolutionFlagsSettings &resolutionFlags) {
+void SpaceView::setResolutionFlags(const ResolutionFlagsSettings &resolutionFlags) {
   try {
     mResolutionFlags = resolutionFlags;
   } catch (...) {
@@ -514,7 +514,7 @@ void SpaceView::setYpInGridLengths(std::uint16_t ypInGridLengths) {
   }
 }
 
-void SpaceView::setScanningMode(ScanningModeSettings &scanningMode) {
+void SpaceView::setScanningMode(const ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {

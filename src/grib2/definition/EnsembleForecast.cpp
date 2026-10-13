@@ -210,7 +210,7 @@ EpsSettings *EnsembleForecast::getEps() const {
   }
 }
 
-void EnsembleForecast::setParameter(ParameterSettings &parameter) {
+void EnsembleForecast::setParameter(const ParameterSettings &parameter) {
   try {
     mParameter = parameter;
   } catch (...) {
@@ -218,7 +218,7 @@ void EnsembleForecast::setParameter(ParameterSettings &parameter) {
   }
 }
 
-void EnsembleForecast::setPointInTime(PointInTimeSettings &pointInTime) {
+void EnsembleForecast::setPointInTime(const PointInTimeSettings &pointInTime) {
   try {
     mPointInTime = pointInTime;
   } catch (...) {
@@ -226,7 +226,7 @@ void EnsembleForecast::setPointInTime(PointInTimeSettings &pointInTime) {
   }
 }
 
-void EnsembleForecast::setHorizontal(HorizontalSettings &horizontal) {
+void EnsembleForecast::setHorizontal(const HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
@@ -234,7 +234,7 @@ void EnsembleForecast::setHorizontal(HorizontalSettings &horizontal) {
   }
 }
 
-void EnsembleForecast::setEps(EpsSettings &eps) {
+void EnsembleForecast::setEps(const EpsSettings &eps) {
   try {
     mEps = eps;
   } catch (...) {

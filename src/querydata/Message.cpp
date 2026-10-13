@@ -92,7 +92,7 @@ Message::Message(const Message& message)
 
 /*! \brief Constructs the message from grid file, QueryData file and message info metadata. */
 
-Message::Message(GRID::GridFile *gridFile,QueryDataFile *queryDataFile,T::MessageIndex messageIndex,QueryData::MessageInfo& messageInfo)
+Message::Message(GRID::GridFile *gridFile,QueryDataFile *queryDataFile,T::MessageIndex messageIndex,const QueryData::MessageInfo& messageInfo)
 {
   FUNCTION_TRACE
   try

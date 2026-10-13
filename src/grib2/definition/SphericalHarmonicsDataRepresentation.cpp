@@ -288,7 +288,7 @@ const T::UInt8_opt &SphericalHarmonicsDataRepresentation::getUnpackedSubsetPreci
   }
 }
 
-void SphericalHarmonicsDataRepresentation::setPacking(PackingSettings &packing) {
+void SphericalHarmonicsDataRepresentation::setPacking(const PackingSettings &packing) {
   try {
     mPacking = packing;
   } catch (...) {

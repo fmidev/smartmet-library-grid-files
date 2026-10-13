@@ -123,7 +123,7 @@ GridPointValue& GridPointValue::operator=(const GridPointValue& gridPointValue)
 
 /*! \brief Compares this grid point value against another using the specified ordering scheme. */
 
-int GridPointValue::compare(ComparisonMethod comparisonMethod,GridPointValue *gridPointValue)
+int GridPointValue::compare(ComparisonMethod comparisonMethod,GridPointValue *gridPointValue) const
 {
   try
   {

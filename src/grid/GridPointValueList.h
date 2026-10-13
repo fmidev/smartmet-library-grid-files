@@ -137,10 +137,10 @@ class GridPointValueList
      void                 getGridPointValueListByTimeSteps(double x,double y,T::ParamLevel level,time_t startTime,uint numberOfSteps,uint stepSizeInSeconds,GridPointValueList& gridPointValueList);
 
      /*! \brief Return the number of entries currently in the list. */
-     uint                 getLength();
+     uint                 getLength() const;
 
      /*! \brief Return true if the list will delete objects on removal. */
-     bool                 getReleaseObjects();
+     bool                 getReleaseObjects() const;
 
      /*! \brief Pre-allocate capacity to at least \p newSize entries.
       *  \param[in] newSize  Desired minimum capacity. */

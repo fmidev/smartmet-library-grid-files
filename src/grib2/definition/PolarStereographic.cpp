@@ -394,7 +394,7 @@ ScanningModeSettings *PolarStereographic::getScanningMode() const {
   }
 }
 
-void PolarStereographic::setEarthShape(EarthShapeSettings &earthShape) {
+void PolarStereographic::setEarthShape(const EarthShapeSettings &earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
@@ -482,7 +482,7 @@ void PolarStereographic::setProjectionCentreFlag(std::uint8_t projectionCentreFl
   }
 }
 
-void PolarStereographic::setScanningMode(ScanningModeSettings &scanningMode) {
+void PolarStereographic::setScanningMode(const ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {

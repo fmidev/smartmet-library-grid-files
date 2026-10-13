@@ -192,7 +192,7 @@ HorizontalSettings *AtmosphericChemicalProduct::getHorizontal() const {
   }
 }
 
-void AtmosphericChemicalProduct::setParameterChemical(ParameterChemicalSettings &parameterChemical) {
+void AtmosphericChemicalProduct::setParameterChemical(const ParameterChemicalSettings &parameterChemical) {
   try {
     mParameterChemical = parameterChemical;
   } catch (...) {
@@ -200,7 +200,7 @@ void AtmosphericChemicalProduct::setParameterChemical(ParameterChemicalSettings 
   }
 }
 
-void AtmosphericChemicalProduct::setPointInTime(PointInTimeSettings &pointInTime) {
+void AtmosphericChemicalProduct::setPointInTime(const PointInTimeSettings &pointInTime) {
   try {
     mPointInTime = pointInTime;
   } catch (...) {
@@ -208,7 +208,7 @@ void AtmosphericChemicalProduct::setPointInTime(PointInTimeSettings &pointInTime
   }
 }
 
-void AtmosphericChemicalProduct::setHorizontal(HorizontalSettings &horizontal) {
+void AtmosphericChemicalProduct::setHorizontal(const HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {

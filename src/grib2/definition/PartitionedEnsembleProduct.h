@@ -39,9 +39,9 @@ public:
   virtual T::Hash countHash() const;
 
   PartitionedProduct *getPartitionedProduct() const;
-  void setPartitionedProduct(PartitionedProduct &partitionedProduct);
+  void setPartitionedProduct(const PartitionedProduct &partitionedProduct);
   EpsSettings *getEps() const override;
-  void setEps(EpsSettings &eps);
+  void setEps(const EpsSettings &eps);
 
 protected:
   // # Copyright 2005-2019 ECMWF.

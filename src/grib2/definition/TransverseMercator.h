@@ -40,7 +40,7 @@ public:
   T::Hash countHash() const override;
 
   EarthShapeSettings *getEarthShape() const override;
-  void setEarthShape(EarthShapeSettings &earthShape);
+  void setEarthShape(const EarthShapeSettings &earthShape);
   const T::UInt32_opt &getNi() const;
   void setNi(T::UInt32_opt ni);
   const T::UInt32_opt &getNj() const;
@@ -50,7 +50,7 @@ public:
   const T::Int32_opt &getLongitudeOfReferencePoint() const;
   void setLongitudeOfReferencePoint(T::Int32_opt longitudeOfReferencePoint);
   ResolutionSettings *getResolution() const override;
-  void setResolution(ResolutionSettings &resolution);
+  void setResolution(const ResolutionSettings &resolution);
   float getScaleFactorAtReferencePoint() const;
   void setScaleFactorAtReferencePoint(float scaleFactorAtReferencePoint);
   const T::Int32_opt &getXR() const;
@@ -58,7 +58,7 @@ public:
   const T::Int32_opt &getYR() const;
   void setYR(T::Int32_opt yR);
   ScanningModeSettings *getScanningMode() const;
-  void setScanningMode(ScanningModeSettings &scanningMode);
+  void setScanningMode(const ScanningModeSettings &scanningMode);
   const T::UInt32_opt &getDi() const;
   void setDi(T::UInt32_opt di);
   const T::UInt32_opt &getDj() const;

@@ -192,7 +192,7 @@ StretchingSettings *StretchedGaussian::getStretching() const {
   }
 }
 
-void StretchedGaussian::setEarthShape(EarthShapeSettings &earthShape) {
+void StretchedGaussian::setEarthShape(const EarthShapeSettings &earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
@@ -200,7 +200,7 @@ void StretchedGaussian::setEarthShape(EarthShapeSettings &earthShape) {
   }
 }
 
-void StretchedGaussian::setGaussian(GaussianSettings &gaussian) {
+void StretchedGaussian::setGaussian(const GaussianSettings &gaussian) {
   try {
     mGaussian = gaussian;
   } catch (...) {
@@ -208,7 +208,7 @@ void StretchedGaussian::setGaussian(GaussianSettings &gaussian) {
   }
 }
 
-void StretchedGaussian::setStretching(StretchingSettings &stretching) {
+void StretchedGaussian::setStretching(const StretchingSettings &stretching) {
   try {
     mStretching = stretching;
   } catch (...) {

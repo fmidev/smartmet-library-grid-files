@@ -38,7 +38,7 @@ public:
   virtual T::Hash countHash() const;
 
   NormalProduct *getNormalProduct() const;
-  void setNormalProduct(NormalProduct &normalProduct);
+  void setNormalProduct(const NormalProduct &normalProduct);
 
 protected:
   // # Note: This template is deprecated. Template 4.0 should be used instead.

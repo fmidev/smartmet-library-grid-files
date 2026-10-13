@@ -210,7 +210,7 @@ CategoricalSettings *CategoricalForecast::getCategorical() const {
   }
 }
 
-void CategoricalForecast::setParameter(ParameterSettings &parameter) {
+void CategoricalForecast::setParameter(const ParameterSettings &parameter) {
   try {
     mParameter = parameter;
   } catch (...) {
@@ -218,7 +218,7 @@ void CategoricalForecast::setParameter(ParameterSettings &parameter) {
   }
 }
 
-void CategoricalForecast::setPointInTime(PointInTimeSettings &pointInTime) {
+void CategoricalForecast::setPointInTime(const PointInTimeSettings &pointInTime) {
   try {
     mPointInTime = pointInTime;
   } catch (...) {
@@ -226,7 +226,7 @@ void CategoricalForecast::setPointInTime(PointInTimeSettings &pointInTime) {
   }
 }
 
-void CategoricalForecast::setHorizontal(HorizontalSettings &horizontal) {
+void CategoricalForecast::setHorizontal(const HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
@@ -234,7 +234,7 @@ void CategoricalForecast::setHorizontal(HorizontalSettings &horizontal) {
   }
 }
 
-void CategoricalForecast::setCategorical(CategoricalSettings &categorical) {
+void CategoricalForecast::setCategorical(const CategoricalSettings &categorical) {
   try {
     mCategorical = categorical;
   } catch (...) {

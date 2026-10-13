@@ -222,7 +222,7 @@ const T::UInt8_opt &ComplexSphericalHarmonicsDataRepresentation::getUnpackedSubs
   }
 }
 
-void ComplexSphericalHarmonicsDataRepresentation::setPacking(PackingSettings &packing) {
+void ComplexSphericalHarmonicsDataRepresentation::setPacking(const PackingSettings &packing) {
   try {
     mPacking = packing;
   } catch (...) {

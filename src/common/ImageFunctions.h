@@ -112,7 +112,7 @@ class CImage
 int  jpg_load(const char *_filename,CImage& _image);
 
 /*! \brief Write a pixel buffer to a JPEG file at the given quality (1–100). */
-void jpeg_save(const char *filename,uint *image,int image_height,int image_width,int quality);
+void jpeg_save(const char *filename,const uint *image,int image_height,int image_width,int quality);
 
 /*! \brief Load a PNG file into a CImage.  \return 0 on success. */
 int  png_load(const char *_filename,CImage& _image);
@@ -200,7 +200,7 @@ inline uint32_t merge_ARGB(uint32_t top, uint32_t bottom)
 /*! \brief Parse a colour string (e.g. "0xFF8800", "#FF8800", "255,128,0") into ARGB. */
 uint argb(const char *colStr);
 
-inline uint argb(std::string& colStr)
+inline uint argb(const std::string& colStr)
 {
   return argb(colStr.c_str());
 }

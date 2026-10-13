@@ -136,7 +136,7 @@ void DataSection::setMessagePtr(Message *message)
         \return            The method returns true if the value of the requested property was found.
 */
 
-bool DataSection::getProperty(uint propertyId,Int64& value)
+bool DataSection::getProperty(uint propertyId,Int64& value) const
 {
   try
   {

@@ -645,7 +645,7 @@ void getPointsInsideCircle(int gridWidth, int gridHeight, double origoX, double 
 
 /*! \brief Returns the total number of points across all polygons in the path. */
 
-std::size_t getPolygonPathLength(T::Polygon_vec &polygonPath)
+std::size_t getPolygonPathLength(const T::Polygon_vec &polygonPath)
 {
   try
   {
@@ -686,7 +686,7 @@ void convertToPointVector(T::Polygon_vec &polygonPath, T::Coordinate_vec &polygo
 
 /*! \brief Converts an SVG path into a polygon path of coordinate rings. */
 
-void convertSvgPathToPolygonPath(NFmiSvgPath &svgPath, T::Polygon_vec &polygonPath)
+void convertSvgPathToPolygonPath(const NFmiSvgPath &svgPath, T::Polygon_vec &polygonPath)
 {
   try
   {
@@ -1921,7 +1921,7 @@ int findPath(std::vector<float>& direction, uint *image, int width, int height, 
 
 /*! \brief Renders a colored streamline image from direction and value grids using the given color range. */
 
-void getStreamlineImage(float *direction, float *value, uint *image, int width, int height, int xStep, int yStep, int minLength, int maxLength, float valueRangeStart,
+void getStreamlineImage(float *direction, const float *value, uint *image, int width, int height, int xStep, int yStep, int minLength, int maxLength, float valueRangeStart,
     float valueRangeEnd, int startColor, int endColor, uint backColor)
 {
   try

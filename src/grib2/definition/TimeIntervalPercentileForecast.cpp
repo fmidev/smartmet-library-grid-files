@@ -210,7 +210,7 @@ StatisticalSettings *TimeIntervalPercentileForecast::getStatistical() const {
   }
 }
 
-void TimeIntervalPercentileForecast::setParameter(ParameterSettings &parameter) {
+void TimeIntervalPercentileForecast::setParameter(const ParameterSettings &parameter) {
   try {
     mParameter = parameter;
   } catch (...) {
@@ -218,7 +218,7 @@ void TimeIntervalPercentileForecast::setParameter(ParameterSettings &parameter) 
   }
 }
 
-void TimeIntervalPercentileForecast::setHorizontal(HorizontalSettings &horizontal) {
+void TimeIntervalPercentileForecast::setHorizontal(const HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
@@ -226,7 +226,7 @@ void TimeIntervalPercentileForecast::setHorizontal(HorizontalSettings &horizonta
   }
 }
 
-void TimeIntervalPercentileForecast::setPercentile(PercentileSettings &percentile) {
+void TimeIntervalPercentileForecast::setPercentile(const PercentileSettings &percentile) {
   try {
     mPercentile = percentile;
   } catch (...) {
@@ -234,7 +234,7 @@ void TimeIntervalPercentileForecast::setPercentile(PercentileSettings &percentil
   }
 }
 
-void TimeIntervalPercentileForecast::setStatistical(StatisticalSettings &statistical) {
+void TimeIntervalPercentileForecast::setStatistical(const StatisticalSettings &statistical) {
   try {
     mStatistical = statistical;
   } catch (...) {

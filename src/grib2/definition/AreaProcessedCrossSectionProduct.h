@@ -38,7 +38,7 @@ public:
   virtual T::Hash countHash() const;
 
   ParameterSettings *getParameter() const override;
-  void setParameter(ParameterSettings &parameter);
+  void setParameter(const ParameterSettings &parameter);
   const T::UInt8_opt &getHorizontalDimensionProcessed() const;
   void setHorizontalDimensionProcessed(T::UInt8_opt horizontalDimensionProcessed);
   const T::UInt8_opt &getTreatmentOfMissingData() const;

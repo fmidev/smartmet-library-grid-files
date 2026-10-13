@@ -200,7 +200,7 @@ const T::Int32_opt &IrregularLatLon::getLongitude() const {
   }
 }
 
-void IrregularLatLon::setEarthShape(EarthShapeSettings &earthShape) {
+void IrregularLatLon::setEarthShape(const EarthShapeSettings &earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {

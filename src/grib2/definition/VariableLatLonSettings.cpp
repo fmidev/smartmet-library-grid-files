@@ -322,7 +322,7 @@ void VariableLatLonSettings::setSubdivisionsOfBasicAngle(T::UInt32_opt subdivisi
   }
 }
 
-void VariableLatLonSettings::setResolution(ResolutionSettings &resolution) {
+void VariableLatLonSettings::setResolution(const ResolutionSettings &resolution) {
   try {
     mResolution = resolution;
   } catch (...) {
@@ -330,7 +330,7 @@ void VariableLatLonSettings::setResolution(ResolutionSettings &resolution) {
   }
 }
 
-void VariableLatLonSettings::setScanningMode(ScanningModeSettings &scanningMode) {
+void VariableLatLonSettings::setScanningMode(const ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {

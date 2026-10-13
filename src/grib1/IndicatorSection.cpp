@@ -100,7 +100,7 @@ void IndicatorSection::getAttributeList(const std::string& prefix,T::AttributeLi
         \return            The method returns true if the value of the requested property was found.
 */
 
-bool IndicatorSection::getProperty(uint propertyId,Int64& value)
+bool IndicatorSection::getProperty(uint propertyId,Int64& value) const
 {
   try
   {

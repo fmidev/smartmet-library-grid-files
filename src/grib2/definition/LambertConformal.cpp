@@ -478,7 +478,7 @@ const T::UInt32_opt &LambertConformal::getLongitudeOfSouthernPole() const {
   }
 }
 
-void LambertConformal::setEarthShape(EarthShapeSettings &earthShape) {
+void LambertConformal::setEarthShape(const EarthShapeSettings &earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
@@ -518,7 +518,7 @@ void LambertConformal::setLongitudeOfFirstGridPoint(T::UInt32_opt longitudeOfFir
   }
 }
 
-void LambertConformal::setResolution(ResolutionSettings &resolution) {
+void LambertConformal::setResolution(const ResolutionSettings &resolution) {
   try {
     mResolution = resolution;
   } catch (...) {
@@ -566,7 +566,7 @@ void LambertConformal::setProjectionCentreFlag(std::uint8_t projectionCentreFlag
   }
 }
 
-void LambertConformal::setScanningMode(ScanningModeSettings &scanningMode) {
+void LambertConformal::setScanningMode(const ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {

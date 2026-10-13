@@ -204,7 +204,7 @@ ScanningModeSettings *LatLonSettings::getScanningMode() const {
   }
 }
 
-void LatLonSettings::setGrid(GridSettings &grid) {
+void LatLonSettings::setGrid(const GridSettings &grid) {
   try {
     mGrid = grid;
   } catch (...) {
@@ -228,7 +228,7 @@ void LatLonSettings::setJDirectionIncrement(T::UInt32_opt jDirectionIncrement) {
   }
 }
 
-void LatLonSettings::setScanningMode(ScanningModeSettings &scanningMode) {
+void LatLonSettings::setScanningMode(const ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {

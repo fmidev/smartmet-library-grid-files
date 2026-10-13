@@ -174,7 +174,7 @@ GaussianSettings *Gaussian::getGaussian() const {
   }
 }
 
-void Gaussian::setEarthShape(EarthShapeSettings &earthShape) {
+void Gaussian::setEarthShape(const EarthShapeSettings &earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
@@ -182,7 +182,7 @@ void Gaussian::setEarthShape(EarthShapeSettings &earthShape) {
   }
 }
 
-void Gaussian::setGaussian(GaussianSettings &gaussian) {
+void Gaussian::setGaussian(const GaussianSettings &gaussian) {
   try {
     mGaussian = gaussian;
   } catch (...) {

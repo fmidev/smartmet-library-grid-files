@@ -50,7 +50,7 @@ IndexCache::~IndexCache()
 
 /*! \brief Inserts an index vector into the cache under the given hash, sorted by hash. */
 
-void IndexCache::addIndexVector(Int64 hash,T::IndexVector& indexVector)
+void IndexCache::addIndexVector(Int64 hash,const T::IndexVector& indexVector)
 {
   try
   {

@@ -210,7 +210,7 @@ PercentileSettings *PercentileForecast::getPercentile() const {
   }
 }
 
-void PercentileForecast::setParameter(ParameterSettings &parameter) {
+void PercentileForecast::setParameter(const ParameterSettings &parameter) {
   try {
     mParameter = parameter;
   } catch (...) {
@@ -218,7 +218,7 @@ void PercentileForecast::setParameter(ParameterSettings &parameter) {
   }
 }
 
-void PercentileForecast::setPointInTime(PointInTimeSettings &pointInTime) {
+void PercentileForecast::setPointInTime(const PointInTimeSettings &pointInTime) {
   try {
     mPointInTime = pointInTime;
   } catch (...) {
@@ -226,7 +226,7 @@ void PercentileForecast::setPointInTime(PointInTimeSettings &pointInTime) {
   }
 }
 
-void PercentileForecast::setHorizontal(HorizontalSettings &horizontal) {
+void PercentileForecast::setHorizontal(const HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
@@ -234,7 +234,7 @@ void PercentileForecast::setHorizontal(HorizontalSettings &horizontal) {
   }
 }
 
-void PercentileForecast::setPercentile(PercentileSettings &percentile) {
+void PercentileForecast::setPercentile(const PercentileSettings &percentile) {
   try {
     mPercentile = percentile;
   } catch (...) {

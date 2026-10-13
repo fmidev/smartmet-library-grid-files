@@ -459,7 +459,7 @@ time_t getFileModificationTime(const char *filename)
 
 /*! \brief Copies a source file to a target file, aborting if shutdown is requested. */
 
-void copyFile(const char *sourceFileName,const char *targetFileName,bool& shutdownRequested)
+void copyFile(const char *sourceFileName,const char *targetFileName,const bool& shutdownRequested)
 {
   try
   {
@@ -2088,7 +2088,7 @@ void parseUnits(const char *unitString,double& value,std::string& units)
 
 /*! \brief Parses a NetCDF time-unit string into reference date components and unit size. */
 
-void parseNetCdfTime(std::string& timeStr,int& year,int& month,int& day,int& hour,int& minute,int& second,time_t& unitSize)
+void parseNetCdfTime(const std::string& timeStr,int& year,int& month,int& day,int& hour,int& minute,int& second,time_t& unitSize)
 {
   try
   {
@@ -2788,7 +2788,7 @@ std::string getFileDir(const std::string& filename)
 
 /*! \brief Returns true if the string matches any of the supplied glob patterns. */
 
-bool patternMatch(const char *str, std::vector<std::string> &patterns)
+bool patternMatch(const char *str, const std::vector<std::string> &patterns)
 {
   try
   {
@@ -2967,7 +2967,7 @@ std::string toString(std::list<std::string> &parts, char separator)
 
 /*! \brief Joins a set of integers with the given separator. */
 
-std::string toString(std::set<int> &parts, char separator)
+std::string toString(const std::set<int> &parts, char separator)
 {
   try
   {
@@ -2990,7 +2990,7 @@ std::string toString(std::set<int> &parts, char separator)
 
 /*! \brief Joins a set of floats with the given separator. */
 
-std::string toString(std::set<float> &parts, char separator)
+std::string toString(const std::set<float> &parts, char separator)
 {
   try
   {

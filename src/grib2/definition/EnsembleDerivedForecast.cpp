@@ -210,7 +210,7 @@ DerivedSettings *EnsembleDerivedForecast::getDerived() const {
   }
 }
 
-void EnsembleDerivedForecast::setParameter(ParameterSettings &parameter) {
+void EnsembleDerivedForecast::setParameter(const ParameterSettings &parameter) {
   try {
     mParameter = parameter;
   } catch (...) {
@@ -218,7 +218,7 @@ void EnsembleDerivedForecast::setParameter(ParameterSettings &parameter) {
   }
 }
 
-void EnsembleDerivedForecast::setPointInTime(PointInTimeSettings &pointInTime) {
+void EnsembleDerivedForecast::setPointInTime(const PointInTimeSettings &pointInTime) {
   try {
     mPointInTime = pointInTime;
   } catch (...) {
@@ -226,7 +226,7 @@ void EnsembleDerivedForecast::setPointInTime(PointInTimeSettings &pointInTime) {
   }
 }
 
-void EnsembleDerivedForecast::setHorizontal(HorizontalSettings &horizontal) {
+void EnsembleDerivedForecast::setHorizontal(const HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
@@ -234,7 +234,7 @@ void EnsembleDerivedForecast::setHorizontal(HorizontalSettings &horizontal) {
   }
 }
 
-void EnsembleDerivedForecast::setDerived(DerivedSettings &derived) {
+void EnsembleDerivedForecast::setDerived(const DerivedSettings &derived) {
   try {
     mDerived = derived;
   } catch (...) {

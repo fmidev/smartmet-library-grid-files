@@ -174,7 +174,7 @@ EpsSettings *SimulatedSatelliteEnsembleProduct::getEps() const {
   }
 }
 
-void SimulatedSatelliteEnsembleProduct::setSimulatedSatelliteProduct(SimulatedSatelliteProduct &simulatedSatelliteProduct) {
+void SimulatedSatelliteEnsembleProduct::setSimulatedSatelliteProduct(const SimulatedSatelliteProduct &simulatedSatelliteProduct) {
   try {
     mSimulatedSatelliteProduct = simulatedSatelliteProduct;
   } catch (...) {
@@ -182,7 +182,7 @@ void SimulatedSatelliteEnsembleProduct::setSimulatedSatelliteProduct(SimulatedSa
   }
 }
 
-void SimulatedSatelliteEnsembleProduct::setEps(EpsSettings &eps) {
+void SimulatedSatelliteEnsembleProduct::setEps(const EpsSettings &eps) {
   try {
     mEps = eps;
   } catch (...) {

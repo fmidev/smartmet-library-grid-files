@@ -204,7 +204,7 @@ ScanningModeSettings *GaussianSettings::getScanningMode() const {
   }
 }
 
-void GaussianSettings::setGrid(GridSettings &grid) {
+void GaussianSettings::setGrid(const GridSettings &grid) {
   try {
     mGrid = grid;
   } catch (...) {
@@ -228,7 +228,7 @@ void GaussianSettings::setN(T::UInt32_opt n) {
   }
 }
 
-void GaussianSettings::setScanningMode(ScanningModeSettings &scanningMode) {
+void GaussianSettings::setScanningMode(const ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {

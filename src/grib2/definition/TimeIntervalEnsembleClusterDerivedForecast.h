@@ -42,15 +42,15 @@ public:
   virtual T::Hash countHash() const;
 
   ParameterSettings *getParameter() const override;
-  void setParameter(ParameterSettings &parameter);
+  void setParameter(const ParameterSettings &parameter);
   HorizontalSettings *getHorizontal() const override;
-  void setHorizontal(HorizontalSettings &horizontal);
+  void setHorizontal(const HorizontalSettings &horizontal);
   DerivedSettings *getDerived() const override;
-  void setDerived(DerivedSettings &derived);
+  void setDerived(const DerivedSettings &derived);
   RectangularClusterSettings *getRectangularCluster() const override;
-  void setRectangularCluster(RectangularClusterSettings &rectangularCluster);
+  void setRectangularCluster(const RectangularClusterSettings &rectangularCluster);
   StatisticalSettings *getStatistical() const override;
-  void setStatistical(StatisticalSettings &statistical);
+  void setStatistical(const StatisticalSettings &statistical);
   const T::UInt8_opt &getEnsembleForecastNumbers() const;
   void setEnsembleForecastNumbers(T::UInt8_opt ensembleForecastNumbers);
 

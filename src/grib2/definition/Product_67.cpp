@@ -174,7 +174,7 @@ StatisticalSettings *Product_67::getStatistical() const {
   }
 }
 
-void Product_67::setHorizontal(HorizontalSettings &horizontal) {
+void Product_67::setHorizontal(const HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
@@ -182,7 +182,7 @@ void Product_67::setHorizontal(HorizontalSettings &horizontal) {
   }
 }
 
-void Product_67::setStatistical(StatisticalSettings &statistical) {
+void Product_67::setStatistical(const StatisticalSettings &statistical) {
   try {
     mStatistical = statistical;
   } catch (...) {

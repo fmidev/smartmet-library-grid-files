@@ -37,14 +37,14 @@ class MemoryMapper
               ~MemoryMapper();
 
     /*! \brief Return true if the mapper is enabled (userfaultfd active). */
-    bool      isEnabled();
+    bool      isEnabled() const;
 
     /*! \brief Enable or disable the mapper.
      *  \param[in] enabled  True to activate userfaultfd-based lazy mapping. */
     void      setEnabled(bool enabled);
 
     /*! \brief Return true if eager pre-mapping is enabled. */
-    bool      isPremapEnabled();
+    bool      isPremapEnabled() const;
 
     /*! \brief Enable or disable eager pre-mapping (fetch all pages at map time).
      *  \param[in] enabled  True to pre-fetch pages immediately on map(). */

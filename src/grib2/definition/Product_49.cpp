@@ -210,7 +210,7 @@ EpsSettings *Product_49::getEps() const {
   }
 }
 
-void Product_49::setParameterAerosolOptical(ParameterAerosolOpticalSettings &parameterAerosolOptical) {
+void Product_49::setParameterAerosolOptical(const ParameterAerosolOpticalSettings &parameterAerosolOptical) {
   try {
     mParameterAerosolOptical = parameterAerosolOptical;
   } catch (...) {
@@ -218,7 +218,7 @@ void Product_49::setParameterAerosolOptical(ParameterAerosolOpticalSettings &par
   }
 }
 
-void Product_49::setPointInTime(PointInTimeSettings &pointInTime) {
+void Product_49::setPointInTime(const PointInTimeSettings &pointInTime) {
   try {
     mPointInTime = pointInTime;
   } catch (...) {
@@ -226,7 +226,7 @@ void Product_49::setPointInTime(PointInTimeSettings &pointInTime) {
   }
 }
 
-void Product_49::setHorizontal(HorizontalSettings &horizontal) {
+void Product_49::setHorizontal(const HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
@@ -234,7 +234,7 @@ void Product_49::setHorizontal(HorizontalSettings &horizontal) {
   }
 }
 
-void Product_49::setEps(EpsSettings &eps) {
+void Product_49::setEps(const EpsSettings &eps) {
   try {
     mEps = eps;
   } catch (...) {

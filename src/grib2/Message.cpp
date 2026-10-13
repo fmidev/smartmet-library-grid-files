@@ -86,7 +86,7 @@ Message::Message()
 
 /*! \brief The constructor that initializes the message from grid file metadata. */
 
-Message::Message(GRID::GridFile *gridFile,T::MessageIndex messageIndex,GRID::MessageInfo& messageInfo)
+Message::Message(GRID::GridFile *gridFile,T::MessageIndex messageIndex,const GRID::MessageInfo& messageInfo)
 {
   FUNCTION_TRACE
   try

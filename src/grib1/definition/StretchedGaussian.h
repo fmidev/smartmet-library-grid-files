@@ -44,15 +44,15 @@ public:
   std::int16_t getNj() const;
   void setNj(std::int16_t nj);
   GridAreaSettings *getGridArea() const override;
-  void setGridArea(GridAreaSettings &gridArea);
+  void setGridArea(const GridAreaSettings &gridArea);
   std::uint16_t getIDirectionIncrement() const;
   void setIDirectionIncrement(std::uint16_t iDirectionIncrement);
   std::uint16_t getN() const;
   void setN(std::uint16_t n);
   ScanningModeSettings *getScanningMode() const override;
-  void setScanningMode(ScanningModeSettings &scanningMode);
+  void setScanningMode(const ScanningModeSettings &scanningMode);
   GridStretchingSettings *getGridStretching() const;
-  void setGridStretching(GridStretchingSettings &gridStretching);
+  void setGridStretching(const GridStretchingSettings &gridStretching);
 
 protected:
   // # Copyright 2005-2019 ECMWF.

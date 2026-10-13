@@ -218,7 +218,7 @@ const T::UInt8_opt &Product_56::getNumberOfForecastsInEnsemble() const {
   }
 }
 
-void Product_56::setHorizontal(HorizontalSettings &horizontal) {
+void Product_56::setHorizontal(const HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
@@ -226,7 +226,7 @@ void Product_56::setHorizontal(HorizontalSettings &horizontal) {
   }
 }
 
-void Product_56::setEps(EpsSettings &eps) {
+void Product_56::setEps(const EpsSettings &eps) {
   try {
     mEps = eps;
   } catch (...) {

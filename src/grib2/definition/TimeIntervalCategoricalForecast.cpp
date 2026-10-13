@@ -210,7 +210,7 @@ StatisticalSettings *TimeIntervalCategoricalForecast::getStatistical() const {
   }
 }
 
-void TimeIntervalCategoricalForecast::setParameter(ParameterSettings &parameter) {
+void TimeIntervalCategoricalForecast::setParameter(const ParameterSettings &parameter) {
   try {
     mParameter = parameter;
   } catch (...) {
@@ -218,7 +218,7 @@ void TimeIntervalCategoricalForecast::setParameter(ParameterSettings &parameter)
   }
 }
 
-void TimeIntervalCategoricalForecast::setHorizontal(HorizontalSettings &horizontal) {
+void TimeIntervalCategoricalForecast::setHorizontal(const HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
@@ -226,7 +226,7 @@ void TimeIntervalCategoricalForecast::setHorizontal(HorizontalSettings &horizont
   }
 }
 
-void TimeIntervalCategoricalForecast::setCategorical(CategoricalSettings &categorical) {
+void TimeIntervalCategoricalForecast::setCategorical(const CategoricalSettings &categorical) {
   try {
     mCategorical = categorical;
   } catch (...) {
@@ -234,7 +234,7 @@ void TimeIntervalCategoricalForecast::setCategorical(CategoricalSettings &catego
   }
 }
 
-void TimeIntervalCategoricalForecast::setStatistical(StatisticalSettings &statistical) {
+void TimeIntervalCategoricalForecast::setStatistical(const StatisticalSettings &statistical) {
   try {
     mStatistical = statistical;
   } catch (...) {
