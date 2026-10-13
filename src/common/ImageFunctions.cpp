@@ -990,6 +990,7 @@ int png_save(const char *filename,uint *image,int image_width,int image_height,i
 
     for (int x=0; x<image_width; x++)
     {
+      // codechecker_false_positive [security.ArrayBound] p1 + 3 < 4 * image_width, the size of the row buffer
       pixel[p1+3] = ptr[p2+3];
       pixel[p1+2] = ptr[p2+0];
       pixel[p1+1] = ptr[p2+1];
@@ -1363,9 +1364,11 @@ void mergePngFiles(const char *newFile,std::vector<std::string>& fileList)
         unsigned long col = img.pixel[a];
         uint cc = col & 0xFF000000;
         if (cc == 0xFF000000)
+          // codechecker_false_positive [security.ArrayBound] both images have been checked to have sz = width * height pixels
           image.pixel[a] = col;
         else
         if (cc > 0)
+          // codechecker_false_positive [security.ArrayBound] both images have been checked to have sz = width * height pixels
           image.pixel[a] = merge_ARGB(col, image.pixel[a]);
       }
     }

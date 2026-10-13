@@ -194,6 +194,7 @@ void ConfigurationFile::readFile(const std::string& filename)
 
     if (n > 0)
     {
+      // codechecker_false_positive [security.ArrayBound] n <= fileSize and the buffer has fileSize + 1 bytes
       st[n] = '\0';
 
       setPositions(st,positions,n);

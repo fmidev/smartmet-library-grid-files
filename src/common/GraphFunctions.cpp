@@ -2137,6 +2137,7 @@ void getStreamlines(T::ParamValue_vec &gridValues, std::vector<T::Coordinate> *c
       uint idx2 = (height - y - 1) * width;
       for (int x = 0; x < width; x++)
       {
+        // codechecker_false_positive [security.ArrayBound] idx < width * height, the size of the array
         direction[idx] = gridValues[idx2];
         idx++;
         idx2++;

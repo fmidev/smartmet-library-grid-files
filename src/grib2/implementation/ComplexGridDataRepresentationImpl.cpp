@@ -307,6 +307,7 @@ void ComplexGridDataRepresentationImpl::decodeValues(Message *message,T::ParamVa
 
           for (int k=0; k<groupSize[g]; k++)
           {
+            // codechecker_false_positive [security.ArrayBound] the group sizes have been validated to sum to numberOfValues
             dataReader.readBits(groupValueSize[g],dataValue[n]);
 
             if (dataValue[n] == missingValueIndicator1)
@@ -338,6 +339,7 @@ void ComplexGridDataRepresentationImpl::decodeValues(Message *message,T::ParamVa
           {
             int lEnd = n + groupSize[g];
             for (int l=n; l<lEnd; l++)
+              // codechecker_false_positive [security.ArrayBound] the group sizes have been validated to sum to numberOfValues
               missingDataValue[l] = 1;
           }
           else
@@ -345,12 +347,14 @@ void ComplexGridDataRepresentationImpl::decodeValues(Message *message,T::ParamVa
           {
             int lEnd = n + groupSize[g];
             for (int l=n; l<lEnd; l++)
+              // codechecker_false_positive [security.ArrayBound] the group sizes have been validated to sum to numberOfValues
               missingDataValue[l] = 2;
           }
           else
           {
             int lEnd = n + groupSize[g];
             for (int l=n; l<lEnd; l++)
+              // codechecker_false_positive [security.ArrayBound] the group sizes have been validated to sum to numberOfValues
               missingDataValue[l] = 0;
 
             lEnd = c + groupSize[g];
