@@ -108,7 +108,7 @@ class BitLine
     /*! \brief Return the bit value at position \p index.
      *  \param[in] index  Zero-based bit position.
      *  \return True if the bit is 1; false if 0 or out of range. */
-    inline bool getBit(uint index)
+    bool getBit(uint index)
     {
       if (index >= length || changeCount == 0)
         return false;
@@ -129,7 +129,7 @@ class BitLine
     }
     
     
-    inline int compare(uint v1,uint v2)
+    int compare(uint v1,uint v2)
     {
       if (v1 == v2)
         return 0;
@@ -144,7 +144,7 @@ class BitLine
     /*! \brief Binary-search the change list for the index closest to \p _value.
      *  \param[in] _value  Bit position to search for.
      *  \return Index into changes[] of the closest preceding or equal entry. */
-    inline uint getClosestIndex(uint _value)
+    uint getClosestIndex(uint _value)
     {
       if (changes == nullptr  ||  changeCount == 0)
         return 0;
@@ -183,17 +183,14 @@ class BitLine
 
   protected:
     
-    inline bool getBit(const uchar *_bits,uint _pos)
+    bool getBit(const uchar *_bits,uint _pos)
     {
       uint bt = _pos / 8;
       uint bit = _pos % 8;
   
       uchar v = 1 << bit;
   
-      if (_bits[bt] & v)
-        return true;
-  
-      return false;  
+      return (_bits[bt] & v) != 0;  
     }
 
 };

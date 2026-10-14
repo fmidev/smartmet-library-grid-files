@@ -177,7 +177,7 @@ FileHandle* DataFetcher_filesys::getFileHandle(const char *filename)
 
 /*! \brief Reads a range of bytes from a local file into the given buffer. */
 
-int DataFetcher_filesys::getData(uint serverType,uint protocol,const char *server,const char *filename,std::size_t filePosition,int dataSize,char *dataPtr)
+int DataFetcher_filesys::getData(uint /*serverType*/,uint /*protocol*/,const char * /*server*/,const char *filename,std::size_t filePosition,int dataSize,char *dataPtr)
 {
   FUNCTION_TRACE
   try
@@ -278,7 +278,7 @@ void DataFetcher_filesys::getFileList(const char *dirName,std::vector<std::strin
           {
             if (ep->d_type == DT_REG || ep->d_type == DT_LNK)
             {
-              if (filePatterns.size() == 0 || patternMatch(fullName,filePatterns))
+              if (filePatterns.empty() || patternMatch(fullName,filePatterns))
               {
                 FileRec rec;
                 rec.filename = fullName;
@@ -297,7 +297,7 @@ void DataFetcher_filesys::getFileList(const char *dirName,std::vector<std::strin
               }
               else if ((s.st_mode & S_IFREG)  || (s.st_mode & S_IFLNK))
               {
-                if (filePatterns.size() == 0 || patternMatch(fullName,filePatterns))
+                if (filePatterns.empty() || patternMatch(fullName,filePatterns))
                 {
                   FileRec rec;
                   rec.filename = fullName;
@@ -330,7 +330,7 @@ void DataFetcher_filesys::getFileList(const char *dirName,std::vector<std::strin
 
 /*! \brief Lists files matching the given patterns under the given directory. */
 
-void DataFetcher_filesys::getFileList(uint serverType,uint protocol,const char *server,const char *dir,std::vector<std::string> &filePatterns,std::vector<FileRec>& fileList)
+void DataFetcher_filesys::getFileList(uint /*serverType*/,uint /*protocol*/,const char * /*server*/,const char *dir,std::vector<std::string> &filePatterns,std::vector<FileRec>& fileList)
 {
   FUNCTION_TRACE
   try
@@ -348,7 +348,7 @@ void DataFetcher_filesys::getFileList(uint serverType,uint protocol,const char *
 
 /*! \brief Returns the size of the given local file, or -1 on error. */
 
-Int64 DataFetcher_filesys::getFileSize(uint serverType,uint protocol,const char *server,const char *filename)
+Int64 DataFetcher_filesys::getFileSize(uint /*serverType*/,uint /*protocol*/,const char * /*server*/,const char *filename)
 {
   FUNCTION_TRACE
   try
@@ -369,7 +369,7 @@ Int64 DataFetcher_filesys::getFileSize(uint serverType,uint protocol,const char 
 
 /*! \brief No-op file headers retrieval for local files. */
 
-void DataFetcher_filesys::getFileHeaders(uint serverType,uint protocol,const char *server,const char *filename,std::map<std::string,std::string>& headers)
+void DataFetcher_filesys::getFileHeaders(uint /*serverType*/,uint /*protocol*/,const char * /*server*/,const char * /*filename*/,std::map<std::string,std::string>& /*headers*/)
 {
   FUNCTION_TRACE
   try

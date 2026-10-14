@@ -36,7 +36,7 @@ class ThreadLock
 
 
     /*! \brief Acquire the mutex, blocking until it is available. */
-    inline void lock()
+    void lock()
     {
       if (pthread_mutex_lock(&threadLock))
         printf("ERROR ThreadLock.h: Possible re-locking trial from the same thread!\n");
@@ -45,17 +45,14 @@ class ThreadLock
 
     /*! \brief Try to acquire the mutex without blocking.
      *  \return True if the mutex was acquired; false if it was already held. */
-    inline bool tryLock()
+    bool tryLock()
     {
-      if (pthread_mutex_trylock(&threadLock) == 0)
-        return true;
-      else
-        return false;
+      return pthread_mutex_trylock(&threadLock) == 0;
     }
 
 
     /*! \brief Release the mutex. */
-    inline void unlock()
+    void unlock()
     {
       pthread_mutex_unlock(&threadLock);
     }

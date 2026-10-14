@@ -2,6 +2,7 @@
 #include "ImageFunctions.h"
 #include "MemoryReader.h"
 #include "ShowFunction.h"
+#include <algorithm>
 #include <vector>
 #include <macgyver/Exception.h>
 
@@ -261,10 +262,10 @@ void ImagePaint::paintLine(int _x1,int _y1,int _x2,int _y2,uint _color)
       return;
     }
 
-    int x1 = (int)_x1;
-    int y1 = (int)_y1;
-    int x2 = (int)_x2;
-    int y2 = (int)_y2;
+    int x1 = _x1;
+    int y1 = _y1;
+    int x2 = _x2;
+    int y2 = _y2;
 
     int dy = (y2 - y1);
     int dx = (x2 - x1);
@@ -375,8 +376,7 @@ void ImagePaint::paintPolygon(std::vector<T::Coordinate>& polygonPoints,uint _dr
         maxY = C_INT(yp);
     }
 
-    if (minY < 0)
-      minY = 0;
+    minY = std::max(minY, 0);
 
     if (maxY >= mImageHeight)
       maxY = mImageHeight - 1;
@@ -417,11 +417,9 @@ void ImagePaint::paintPolygon(std::vector<T::Coordinate>& polygonPoints,uint _dr
 
         if (nodeX[i+1] > minX)
         {
-          if (nodeX[i] < minX)
-            nodeX[i] = minX;
+          nodeX[i] = std::max<__gnu_cxx::__alloc_traits<class std::allocator<double> >::value_type>(nodeX[i], minX);
 
-          if (nodeX[i+1] > maxX)
-            nodeX[i+1] = maxX;
+          nodeX[i+1] = std::min<__gnu_cxx::__alloc_traits<class std::allocator<double> >::value_type>(nodeX[i+1], maxX);
 
           int xStart = C_INT(nodeX[i]);
           int xEnd = C_INT(nodeX[i+1]);
@@ -460,7 +458,7 @@ void ImagePaint::paintPolygonPath(std::vector<std::vector<T::Coordinate>>& polyg
     if (mCountingActive)
       return;
 
-    if (polygonPath.size() == 0)
+    if (polygonPath.empty())
       return;
 
     std::set<UInt64> cList;
@@ -509,8 +507,7 @@ void ImagePaint::paintPolygonPath(std::vector<std::vector<T::Coordinate>>& polyg
       }
     }
 
-    if (minY < 0)
-      minY = 0;
+    minY = std::max(minY, 0);
 
     if (maxY >= mImageHeight)
       maxY = mImageHeight - 1;
@@ -571,11 +568,9 @@ void ImagePaint::paintPolygonPath(std::vector<std::vector<T::Coordinate>>& polyg
 
         if (nodeX[i+1] > minX)
         {
-          if (nodeX[i] < minX)
-            nodeX[i] = minX;
+          nodeX[i] = std::max<__gnu_cxx::__alloc_traits<class std::allocator<double> >::value_type>(nodeX[i], minX);
 
-          if (nodeX[i+1] > maxX)
-            nodeX[i+1] = maxX;
+          nodeX[i+1] = std::min<__gnu_cxx::__alloc_traits<class std::allocator<double> >::value_type>(nodeX[i+1], maxX);
 
           int xStart = C_INT(nodeX[i]);
           int xEnd = C_INT(nodeX[i+1]);
@@ -623,17 +618,13 @@ void ImagePaint::paintWkbPoint(double _mpx,double _mpy,double _dx,double _dy,Mem
 
     if (mCountingActive)
     {
-      if (x < mMinX)
-        mMinX = x;
+      mMinX = std::min(x, mMinX);
 
-      if (x > mMaxX)
-        mMaxX = x;
+      mMaxX = std::max(x, mMaxX);
 
-      if (y < mMinY)
-        mMinY = y;
+      mMinY = std::min(y, mMinY);
 
-      if (y > mMaxY)
-        mMaxY = y;
+      mMaxY = std::max(y, mMaxY);
     }
     else
     {
@@ -671,17 +662,13 @@ void ImagePaint::paintWkbLine(double _mpx,double _mpy,double _dx,double _dy,Memo
 
       if (mCountingActive)
       {
-        if (x < mMinX)
-          mMinX = x;
+        mMinX = std::min(x, mMinX);
 
-        if (x > mMaxX)
-          mMaxX = x;
+        mMaxX = std::max(x, mMaxX);
 
-        if (y < mMinY)
-          mMinY = y;
+        mMinY = std::min(y, mMinY);
 
-        if (y > mMaxY)
-          mMaxY = y;
+        mMaxY = std::max(y, mMaxY);
       }
       else
       {
@@ -720,17 +707,13 @@ void ImagePaint::paintWkbRing(double _mpx,double _mpy,double _dx,double _dy,Memo
 
       if (mCountingActive)
       {
-        if (x < mMinX)
-          mMinX = x;
+        mMinX = std::min(x, mMinX);
 
-        if (x > mMaxX)
-          mMaxX = x;
+        mMaxX = std::max(x, mMaxX);
 
-        if (y < mMinY)
-          mMinY = y;
+        mMinY = std::min(y, mMinY);
 
-        if (y > mMaxY)
-          mMaxY = y;
+        mMaxY = std::max(y, mMaxY);
       }
       else
       {
@@ -856,17 +839,13 @@ void ImagePaint::paintWkbMultiPolygon(double _mpx,double _mpy,double _dx,double 
 
           if (mCountingActive)
           {
-            if (x < mMinX)
-              mMinX = x;
+            mMinX = std::min(x, mMinX);
 
-            if (x > mMaxX)
-              mMaxX = x;
+            mMaxX = std::max(x, mMaxX);
 
-            if (y < mMinY)
-              mMinY = y;
+            mMinY = std::min(y, mMinY);
 
-            if (y > mMaxY)
-              mMaxY = y;
+            mMaxY = std::max(y, mMaxY);
           }
           else
           {

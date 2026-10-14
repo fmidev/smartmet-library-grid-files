@@ -126,7 +126,7 @@ class MemoryMapper
     int       getClosestIndex(char *address);
 
 
-  protected:
+  
     long                      mUffd;                    //!< userfaultfd file descriptor
     int                       mPageSize;                //!< OS page size in bytes
     std::vector<MapInfo_sptr> mMemoryMappings;          //!< Active mapping descriptors

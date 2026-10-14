@@ -444,10 +444,7 @@ bool LambertAzimuthalEqualAreaImpl::getGridPointByOriginalCoordinates(double x,d
     grid_i = i;
     grid_j = j;
 
-    if (i < 0 ||  j < 0  ||  i >= C_DOUBLE(*mNumberOfPointsAlongXAxis) ||  j > C_DOUBLE(*mNumberOfPointsAlongYAxis))
-      return false;
-
-    return true;
+    return !(i < 0 ||  j < 0  ||  i >= C_DOUBLE(*mNumberOfPointsAlongXAxis) ||  j > C_DOUBLE(*mNumberOfPointsAlongYAxis));
   }
   catch (...)
   {
@@ -472,10 +469,7 @@ bool LambertAzimuthalEqualAreaImpl::reverseXDirection() const
   {
     unsigned char scanMode = mScanningMode.getScanningMode();
 
-    if ((scanMode & 0x80) != 0)
-      return true;
-
-    return false;
+    return (scanMode & 0x80) != 0;
   }
   catch (...)
   {
@@ -499,10 +493,7 @@ bool LambertAzimuthalEqualAreaImpl::reverseYDirection() const
   {
     unsigned char scanMode = mScanningMode.getScanningMode();
 
-    if ((scanMode & 0x40) == 0)
-      return true;
-
-    return false;
+    return (scanMode & 0x40) == 0;
   }
   catch (...)
   {

@@ -83,7 +83,7 @@ void ForecastErrorImpl::read(MemoryReader& memoryReader)
         \return               The forecast time.
 */
 
-T::TimeString ForecastErrorImpl::getForecastTime(T::TimeString referenceTime) const
+T::TimeString ForecastErrorImpl::getForecastTime(T::TimeString /*referenceTime*/) const
 {
   throw Fmi::Exception(BCP, "Not implemented!");
 }

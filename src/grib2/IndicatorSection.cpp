@@ -128,10 +128,7 @@ bool IndicatorSection::hasAttributeValue(const char *attributeName, const char *
 {
   try
   {
-    if (strcasecmp(attributeName,"discipline") == 0  &&  strcasecmp(attributeValue,toString(getDiscipline()).c_str()) == 0)
-      return true;
-
-    return false;
+    return strcasecmp(attributeName,"discipline") == 0  &&  strcasecmp(attributeValue,toString(getDiscipline()).c_str()) == 0;
   }
   catch (...)
   {
@@ -544,7 +541,7 @@ void IndicatorSection::setTotalLength(std::uint64_t totalLength)
         \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void IndicatorSection::print(std::ostream& stream,uint level,uint optionFlags) const
+void IndicatorSection::print(std::ostream& stream,uint level,uint /*optionFlags*/) const
 {
   try
   {

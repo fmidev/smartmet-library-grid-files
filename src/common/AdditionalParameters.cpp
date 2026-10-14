@@ -297,7 +297,7 @@ bool AdditionalParameters::getParameterValueByLocation(
 
 bool AdditionalParameters::getParameterValueByLocationAndTime(
     std::string parameterName,
-    std::string tag,
+    std::string /*tag*/,
     Spine::LocationPtr loc,
     Fmi::LocalDateTime queryTime,
     Fmi::TimeZonePtr tz,

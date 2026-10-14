@@ -46,7 +46,7 @@ AggregationDef::~AggregationDef()
 
 /*! \brief Prints the content of the object into the given stream. */
 
-void AggregationDef::print(std::ostream& stream,uint level,uint optionFlags) const
+void AggregationDef::print(std::ostream& stream,uint level,uint /*optionFlags*/) const
 {
   try
   {

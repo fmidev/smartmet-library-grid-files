@@ -83,7 +83,7 @@ void CharacterStringProductImpl::read(MemoryReader& memoryReader)
         \return               The forecast time.
 */
 
-T::TimeString CharacterStringProductImpl::getForecastTime(T::TimeString referenceTime) const
+T::TimeString CharacterStringProductImpl::getForecastTime(T::TimeString /*referenceTime*/) const
 {
   throw Fmi::Exception(BCP, "Not implemented!");
 }

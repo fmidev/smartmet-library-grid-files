@@ -77,7 +77,7 @@ void PreprocessedGridDataRepresentationImpl::read(MemoryReader& memoryReader)
 
 /*! \brief Decodes the preprocessed-packed grid values (not implemented). */
 
-void PreprocessedGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec& decodedValues) const
+void PreprocessedGridDataRepresentationImpl::decodeValues(Message * /*message*/,T::ParamValue_vec& /*decodedValues*/) const
 {
   throw Fmi::Exception(BCP,"The method not implemented!");
 }

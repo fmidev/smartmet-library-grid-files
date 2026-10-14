@@ -62,7 +62,7 @@ class MapInfo
         mappedFile->close();
     }
 
-  public:
+  
 
     uint            protocol;      //!< Transport protocol (see MapInfo::Protocol)
     uint            serverType;    //!< Server category (see MapInfo::ServerType)
@@ -75,7 +75,7 @@ class MapInfo
     bool            mappingError;  //!< True if the last mapping attempt failed
     MappedFile_uptr mappedFile;    //!< Boost-mapped file handle (non-null for local file mappings)
 
-  public:
+  
 
     /*! \brief Transport protocol constants for `MapInfo::protocol`. */
     class Protocol

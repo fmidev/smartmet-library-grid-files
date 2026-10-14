@@ -380,13 +380,13 @@ void DataSection::read(MemoryReader& memoryReader)
     {
       if ((mFlags & ComplexPacking) == 0)
       {
-        auto dataDefinition = new SimplePacking();
+        auto *dataDefinition = new SimplePacking();
         mDataDefinition.reset(dataDefinition);
         dataDefinition->read(memoryReader);
       }
       else
       {
-        auto dataDefinition = new SecondOrderPacking();
+        auto *dataDefinition = new SecondOrderPacking();
         mDataDefinition.reset(dataDefinition);
         dataDefinition->read(memoryReader);
       }
@@ -395,13 +395,13 @@ void DataSection::read(MemoryReader& memoryReader)
     {
       if ((mFlags & ComplexPacking) == 0)
       {
-        auto dataDefinition = new SphericalHarmonicsSimplePacking();
+        auto *dataDefinition = new SphericalHarmonicsSimplePacking();
         mDataDefinition.reset(dataDefinition);
         dataDefinition->read(memoryReader);
       }
       else
       {
-        auto dataDefinition = new SphericalHarmonicsComplexPacking();
+        auto *dataDefinition = new SphericalHarmonicsComplexPacking();
         mDataDefinition.reset(dataDefinition);
         dataDefinition->read(memoryReader);
       }
@@ -854,12 +854,12 @@ void DataSection::setFlags(std::uint8_t flags)
     {
       if ((mFlags & ComplexPacking) == 0)
       {
-        auto dataDefinition = new SimplePacking();
+        auto *dataDefinition = new SimplePacking();
         mDataDefinition.reset(dataDefinition);
       }
       else
       {
-        auto dataDefinition = new SecondOrderPacking();
+        auto *dataDefinition = new SecondOrderPacking();
         mDataDefinition.reset(dataDefinition);
       }
     }
@@ -867,12 +867,12 @@ void DataSection::setFlags(std::uint8_t flags)
     {
       if ((mFlags & ComplexPacking) == 0)
       {
-        auto dataDefinition = new SphericalHarmonicsSimplePacking();
+        auto *dataDefinition = new SphericalHarmonicsSimplePacking();
         mDataDefinition.reset(dataDefinition);
       }
       else
       {
-        auto dataDefinition = new SphericalHarmonicsComplexPacking();
+        auto *dataDefinition = new SphericalHarmonicsComplexPacking();
         mDataDefinition.reset(dataDefinition);
       }
     }

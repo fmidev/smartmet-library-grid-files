@@ -47,7 +47,7 @@ class Topography
     void        loadLandShading();
     void        loadSeaShading();
 
-  protected:
+  
 
     bool        mInitialized;             //!< True after init() has been called.
 
@@ -85,7 +85,7 @@ class Topography
   public:
 
     /*! \brief Return true if the given lon/lat coordinate falls on land. */
-    inline bool isLand(double lon,double lat)
+    bool isLand(double lon,double lat)
     {
       if (!mLandSeaMask_initialized)
         loadLandSeaMask();
@@ -104,15 +104,12 @@ class Topography
 
       uint pos = y*mLandSeaMask_width + x;
 
-      if (mLandSeaMask.getBit(pos))
-        return true;
-
-      return false;
+      return mLandSeaMask.getBit(pos);
     }
 
 
     /*! \brief Return the shading value for lon/lat, selecting land or sea shading automatically. */
-    inline float getShading(double lon,double lat)
+    float getShading(double lon,double lat)
     {
       if (isLand(lon,lat))
         return getLandShading(lon,lat);
@@ -122,7 +119,7 @@ class Topography
 
 
     /*! \brief Return the land elevation shading value at lon/lat (0 if outside the raster). */
-    inline float getLandShading(double lon,double lat)
+    float getLandShading(double lon,double lat)
     {
       if (!mLandShading_initialized)
         loadLandShading();
@@ -139,7 +136,7 @@ class Topography
 
 
     /*! \brief Return the sea depth shading value at lon/lat (0 if outside the raster). */
-    inline float getSeaShading(double lon,double lat)
+    float getSeaShading(double lon,double lat)
     {
       if (!mSeaShading_initialized)
         loadSeaShading();

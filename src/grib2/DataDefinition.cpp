@@ -50,7 +50,7 @@ uint DataDefinition::getTemplateNumber() const
         \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void DataDefinition::print(std::ostream& stream,uint level,uint optionFlags) const
+void DataDefinition::print(std::ostream& /*stream*/,uint /*level*/,uint /*optionFlags*/) const
 {
   throw Fmi::Exception(BCP,"Not implemented!");
 }

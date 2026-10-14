@@ -83,7 +83,7 @@ void PartitionedEnsembleProductImpl::read(MemoryReader& memoryReader)
         \return               The forecast time.
 */
 
-T::TimeString PartitionedEnsembleProductImpl::getForecastTime(T::TimeString referenceTime) const
+T::TimeString PartitionedEnsembleProductImpl::getForecastTime(T::TimeString /*referenceTime*/) const
 {
   throw Fmi::Exception(BCP, "Not implemented!");
 }

@@ -4,6 +4,7 @@
 #include "MemoryReader.h"
 #include "MemoryWriter.h"
 #include "GeneralFunctions.h"
+#include <algorithm>
 #include <cmath>
 #include "AutoThreadLock.h"
 #include "ShowFunction.h"
@@ -40,17 +41,20 @@ namespace SmartMet
 
 using GeometryPtr = std::shared_ptr<geos::geom::Geometry>;
 
+namespace
+{
 Fmi::Cache::Cache<std::size_t, std::vector<T::Point>> gridPointsCache(300);
 
 // Number of row-bands for parallel contouring, clamped to [1, number of cores] so contouring
 // never uses more threads than there are cores. 0/1 means single-threaded.
-static int clampContourThreads(int threads)
+int clampContourThreads(int threads)
 {
   if (threads <= 1)
     return 1;
   unsigned int cores = std::max(1U, std::thread::hardware_concurrency());
   return std::min(threads, static_cast<int>(cores));
 }
+}  // namespace
 
 class TraxGrid: public Trax::Grid
 {
@@ -153,7 +157,9 @@ extern void convertWkbCoordinates(MemoryReader &_memoryReader, MemoryWriter &_me
 
 /*! \brief Comparator for sorting doubles in ascending order via qsort. */
 
-static int compare_points(const void *p1, const void *p2)
+namespace
+{
+int compare_points(const void *p1, const void *p2)
 {
   const auto *v1 = (const double*) p1;
   const auto *v2 = (const double*) p2;
@@ -257,6 +263,7 @@ void addLine(double x1, double y1, double x2, double y2, std::set<UInt64> &cList
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
+}  // namespace
 
 
 
@@ -322,8 +329,7 @@ void getPointsInsidePolygon(int gridWidth, int gridHeight, T::Coordinate_vec &po
         maxY = C_INT(yp);
     }
 
-    if (minY < 0)
-      minY = 0;
+    minY = std::max(minY, 0);
 
     if (maxY >= gridHeight)
       maxY = gridHeight - 1;
@@ -364,11 +370,9 @@ void getPointsInsidePolygon(int gridWidth, int gridHeight, T::Coordinate_vec &po
 
         if (nodeX[i + 1] > minX)
         {
-          if (nodeX[i] < minX)
-            nodeX[i] = minX;
+          nodeX[i] = std::max<__gnu_cxx::__alloc_traits<class std::allocator<double> >::value_type>(nodeX[i], minX);
 
-          if (nodeX[i + 1] > maxX)
-            nodeX[i + 1] = maxX;
+          nodeX[i + 1] = std::min<__gnu_cxx::__alloc_traits<class std::allocator<double> >::value_type>(nodeX[i + 1], maxX);
 
           int xStart = C_INT(nodeX[i]);
           int xEnd = C_INT(nodeX[i + 1]);
@@ -415,7 +419,7 @@ void getPointsInsidePolygonPath(int gridWidth, int gridHeight, T::Polygon_vec &p
 {
   try
   {
-    if (polygonPath.size() == 0)
+    if (polygonPath.empty())
       return;
 
     std::size_t hash = 0;
@@ -484,8 +488,7 @@ void getPointsInsidePolygonPath(int gridWidth, int gridHeight, T::Polygon_vec &p
       }
     }
 
-    if (minY < 0)
-      minY = 0;
+    minY = std::max(minY, 0);
 
     if (maxY >= gridHeight)
       maxY = gridHeight - 1;
@@ -545,11 +548,9 @@ void getPointsInsidePolygonPath(int gridWidth, int gridHeight, T::Polygon_vec &p
 
         if (nodeX[i + 1] > minX)
         {
-          if (nodeX[i] < minX)
-            nodeX[i] = minX;
+          nodeX[i] = std::max<__gnu_cxx::__alloc_traits<class std::allocator<double> >::value_type>(nodeX[i], minX);
 
-          if (nodeX[i + 1] > maxX)
-            nodeX[i + 1] = maxX;
+          nodeX[i + 1] = std::min<__gnu_cxx::__alloc_traits<class std::allocator<double> >::value_type>(nodeX[i + 1], maxX);
 
           int xStart = C_INT(nodeX[i]);
           int xEnd = C_INT(nodeX[i + 1]);
@@ -603,11 +604,9 @@ void getPointsInsideCircle(int gridWidth, int gridHeight, double origoX, double 
 
     double rr = radius * radius;
 
-    if (x1 < 0)
-      x1 = 0;
+    x1 = std::max<double>(x1, 0);
 
-    if (y1 < 0)
-      y1 = 0;
+    y1 = std::max<double>(y1, 0);
 
     if (x2 >= gridWidth)
       x2 = gridWidth - 1;
@@ -651,7 +650,7 @@ std::size_t getPolygonPathLength(const T::Polygon_vec &polygonPath)
   try
   {
     std::size_t s = 0;
-    for (auto& coordinates : polygonPath)
+    for (const auto& coordinates : polygonPath)
     {
       s = s + coordinates.size();
     }
@@ -693,12 +692,12 @@ void convertSvgPathToPolygonPath(const NFmiSvgPath &svgPath, T::Polygon_vec &pol
   {
     T::Coordinate_vec polygonPoints;
 
-    for (auto& it : svgPath)
+    for (const auto& it : svgPath)
     {
       switch (it.itsType)
       {
         case NFmiSvgPath::kElementMoveto:
-          if (polygonPoints.size() > 0)
+          if (!polygonPoints.empty())
           {
             polygonPath.emplace_back(polygonPoints);
             polygonPoints.clear();
@@ -707,7 +706,7 @@ void convertSvgPathToPolygonPath(const NFmiSvgPath &svgPath, T::Polygon_vec &pol
           break;
 
         case NFmiSvgPath::kElementClosePath:
-          if (polygonPoints.size() > 0)
+          if (!polygonPoints.empty())
           {
             int t = C_INT(polygonPoints.size())-1;
             if (t > 0 && (polygonPoints[0].x() != polygonPoints[t].x() || polygonPoints[0].y() != polygonPoints[t].y()))
@@ -728,7 +727,7 @@ void convertSvgPathToPolygonPath(const NFmiSvgPath &svgPath, T::Polygon_vec &pol
           return;
         }
       }
-    if (polygonPoints.size() > 0)
+    if (!polygonPoints.empty())
       polygonPath.emplace_back(polygonPoints);
   }
   catch (...)
@@ -807,6 +806,8 @@ void convertWktMultipolygonToPolygonPath(const std::string &wktString, T::Polygo
 
 /*! \brief Computes the intersection point of two infinite lines defined by their endpoints. */
 
+namespace
+{
 bool getLineIntersection(double ax1, double ay1, double ax2, double ay2, double bx1, double by1, double bx2, double by2, double &x, double &y)
 {
   try
@@ -1053,6 +1054,7 @@ void getPointMovementRev(double x1, double y1, double x2, double y2, double area
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+}  // namespace
 
 
 
@@ -1116,6 +1118,8 @@ T::Coordinate_vec getEnlargedPolygon(T::Coordinate_vec &oldCoordinates, double a
 
 /*! \brief Returns the total perimeter length of the polygon defined by the given coordinates. */
 
+namespace
+{
 double getPolygonLen(T::Coordinate_vec &coordinates)
 {
   try
@@ -1139,6 +1143,7 @@ double getPolygonLen(T::Coordinate_vec &coordinates)
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+}  // namespace
 
 
 
@@ -1196,7 +1201,7 @@ T::Polygon_vec getEnlargedPolygonPath(T::Polygon_vec &oldPath, double areaExtens
 /*! \brief Computes isolines for the given grid values and returns them as WKB-encoded contours. */
 
 void getIsolines(std::vector<float> &gridData, T::Coordinate_vec *coordinates, int width, int height, std::vector<float> &contourValues, short interpolationMethod,
-    size_t smooth_size, size_t smooth_degree, T::ByteData_vec &contours, int subdivide, int threads, const Trax::SmoothOptions &smoothOptions)
+    size_t /*smooth_size*/, size_t /*smooth_degree*/, T::ByteData_vec &contours, int subdivide, int threads, const Trax::SmoothOptions &smoothOptions)
 {
   try
   {
@@ -1229,7 +1234,7 @@ void getIsolines(std::vector<float> &gridData, T::Coordinate_vec *coordinates, i
     auto result = contourer.isolines(*input, isolineValues);
 
     //ImagePaint paint(3600,1800,0xFFFFFF,0xFF0000,0x0000FF,false,false);
-    if (result.size() > 0)
+    if (!result.empty())
     {
       for (auto& g : result)
       {
@@ -1267,7 +1272,7 @@ void getIsolines(std::vector<float> &gridData, T::Coordinate_vec *coordinates, i
 /*! \brief Computes isobands for the given grid values and returns them as WKB-encoded contours. */
 
 void getIsobands(std::vector<float> &gridData, std::vector<T::Coordinate> *coordinates, int width, int height, std::vector<float> &contourLowValues,
-    std::vector<float> &contourHighValues, short interpolationMethod, size_t smooth_size, size_t smooth_degree, T::ByteData_vec &contours, int subdivide, int threads, const Trax::SmoothOptions &smoothOptions)
+    std::vector<float> &contourHighValues, short interpolationMethod, size_t /*smooth_size*/, size_t /*smooth_degree*/, T::ByteData_vec &contours, int subdivide, int threads, const Trax::SmoothOptions &smoothOptions)
 {
   try
   {
@@ -1399,7 +1404,7 @@ void getIsobands(std::vector<float> &gridData, std::vector<T::Coordinate> *coord
 
 #endif
 
-    if (result.size() > 0)
+    if (!result.empty())
     {
       for (auto& g : result)
       {
@@ -1533,9 +1538,9 @@ int findPath(std::vector<float> &direction, bool *visited, int width, int height
     double x2 = x1 + sin(angle) * step;
     double y2 = y1 - cos(angle) * step;
 
-    double ix;
-    double iy;
-    bool sec;
+    double ix = NAN;
+    double iy = NAN;
+    bool sec = false;
 
     /*
 
@@ -1629,6 +1634,8 @@ int findPath(std::vector<float> &direction, bool *visited, int width, int height
 
 /*! \brief Returns the absolute difference between two doubles, or zero if their integer parts match. */
 
+namespace
+{
 double diff(double a, double b)
 {
   if ((int) a == (int) b)
@@ -1639,6 +1646,7 @@ double diff(double a, double b)
 
   return a - b;
 }
+}  // namespace
 
 
 
@@ -1707,9 +1715,9 @@ int findPath(float *direction, uint *image, int width, int height, int maxLength
     double x2 = x1 + sin(angle) * step;
     double y2 = y1 - cos(angle) * step;
 
-    double ix;
-    double iy;
-    bool sec;
+    double ix = NAN;
+    double iy = NAN;
+    bool sec = false;
     double d0 = 0.000001;
     double d1 = 1.000001;
     double aa = 0.001;
@@ -1847,9 +1855,9 @@ int findPath(std::vector<float>& direction, uint *image, int width, int height, 
     double x2 = x1 + sin(angle) * step;
     double y2 = y1 - cos(angle) * step;
 
-    double ix;
-    double iy;
-    bool sec;
+    double ix = NAN;
+    double iy = NAN;
+    bool sec = false;
 
     double d0 = 0.000001;
     double d1 = 1.000001;
@@ -1990,8 +1998,7 @@ void getStreamlineImage(float *direction, const float *value, uint *image, int w
                 val = valueRangeStart;
 
               double hh = valueStep * (val - valueRangeStart);
-              if (hh > 0xFF)
-                hh = 0xFF;
+              hh = std::min<double>(hh, 0xFF);
 
               auto hue = (unsigned char) hh;
               unsigned char saturation = hue;
@@ -2019,7 +2026,7 @@ void getStreamlineImage(float *direction, const float *value, uint *image, int w
 
 /*! \brief Renders a streamline image from a direction grid, marking pixels by their sequence index. */
 
-void getStreamlineImage(float *direction, float *value, uint *image, int width, int height, int xStep, int yStep, int minLength, int maxLength)
+void getStreamlineImage(float *direction, float * /*value*/, uint *image, int width, int height, int xStep, int yStep, int minLength, int maxLength)
 {
   try
   {
@@ -2069,7 +2076,7 @@ void getStreamlineImage(float *direction, float *value, uint *image, int width, 
 
 /*! \brief Renders a streamline image from a direction vector, marking pixels by their sequence index. */
 
-void getStreamlineImage(std::vector<float>& direction, float *value, uint *image, int width, int height, int xStep, int yStep, int minLength, int maxLength)
+void getStreamlineImage(std::vector<float>& direction, float * /*value*/, uint *image, int width, int height, int xStep, int yStep, int minLength, int maxLength)
 {
   try
   {

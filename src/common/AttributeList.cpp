@@ -482,7 +482,7 @@ std::size_t AttributeList::getHash()
 
 /*! \brief Prints all attributes in the list to the given stream. */
 
-void AttributeList::print(std::ostream& stream,uint level,uint optionFlags) const
+void AttributeList::print(std::ostream& stream,uint level,uint /*optionFlags*/) const
 {
   try
   {

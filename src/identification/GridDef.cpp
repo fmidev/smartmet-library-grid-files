@@ -56,6 +56,7 @@
 
 #include <macgyver/StringConversion.h>
 
+#include <algorithm>
 #include <memory>
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
@@ -259,11 +260,10 @@ time_t GridDef::getModificationTime(const string_vec& files)
   try
   {
     time_t t = 0;
-    for (auto& file : files)
+    for (const auto& file : files)
     {
       time_t tt = getFileModificationTime(file.c_str());
-      if (tt > t)
-        t = tt;
+      t = std::max(tt, t);
     }
 
     return t;
@@ -621,7 +621,7 @@ bool GridDef::getGrib1ParameterDefById(T::GribParamId gribParamId,Grib1Parameter
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto def = getGrib1ParameterDefById(gribParamId);
+    const auto *def = getGrib1ParameterDefById(gribParamId);
     if (def == nullptr)
       return false;
 
@@ -648,7 +648,7 @@ bool GridDef::getGrib1ParameterDefByFmiId(T::FmiParamId fmiParamId,Grib1Paramete
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto def = getGrib1ParameterDefByFmiId(fmiParamId);
+    const auto *def = getGrib1ParameterDefByFmiId(fmiParamId);
     if (def == nullptr)
       return false;
 
@@ -770,7 +770,7 @@ bool GridDef::getGrib2ParameterDefById(T::GribParamId gribParamId,Grib2Parameter
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto def = getGrib2ParameterDefById(gribParamId);
+    const auto *def = getGrib2ParameterDefById(gribParamId);
     if (def == nullptr)
       return false;
 
@@ -797,7 +797,7 @@ bool GridDef::getGrib2ParameterDefByFmiId(T::FmiParamId fmiParamId,Grib2Paramete
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto def = getGrib2ParameterDefByFmiId(fmiParamId);
+    const auto *def = getGrib2ParameterDefByFmiId(fmiParamId);
     if (def == nullptr)
       return false;
 
@@ -824,7 +824,7 @@ bool GridDef::getGribParameterMappingByFmiId(T::FmiParamId fmiParamId,FmiParamet
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto pdef =  getGribParameterMappingByFmiId(fmiParamId);
+    const auto *pdef =  getGribParameterMappingByFmiId(fmiParamId);
     if (pdef == nullptr)
       return false;
 
@@ -1001,7 +1001,7 @@ bool GridDef::getGribParameterDefById(T::GribParamId gribParamId,GribParameterDe
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto def = getGribParameterDefById(gribParamId);
+    const auto *def = getGribParameterDefById(gribParamId);
     if (def == nullptr)
       return false;
 
@@ -1028,7 +1028,7 @@ bool GridDef::getGribParameterDefByName(const std::string& gribParamName,GribPar
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto def = getGribParameterDefByName(gribParamName);
+    const auto *def = getGribParameterDefByName(gribParamName);
     if (def == nullptr)
       return false;
 
@@ -1103,7 +1103,7 @@ bool GridDef::getFmiGeometryGroupDef(const char *producerName,uint groupType,Fmi
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto def = getFmiGeometryGroupDef(producerName,groupType);
+    const auto *def = getFmiGeometryGroupDef(producerName,groupType);
     if (def == nullptr)
       return false;
 
@@ -1130,7 +1130,7 @@ bool GridDef::getFmiGeometryGroupDef(uint geometryGroupId,FmiGeometryGroupDef& g
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto def = getFmiGeometryGroupDef(geometryGroupId);
+    const auto *def = getFmiGeometryGroupDef(geometryGroupId);
     if (def == nullptr)
       return false;
 
@@ -1246,7 +1246,7 @@ bool GridDef::getFmiLevelDef(uint levelId,LevelDef& levelDef)
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto def = getFmiLevelDef(levelId);
+    const auto *def = getFmiLevelDef(levelId);
     if (def == nullptr)
       return false;
 
@@ -1273,7 +1273,7 @@ bool GridDef::getFmiAggregationDef(int aggregationId,AggregationDef& aggregation
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto def = getFmiAggregationDef(aggregationId);
+    const auto *def = getFmiAggregationDef(aggregationId);
     if (def == nullptr)
       return false;
 
@@ -1300,7 +1300,7 @@ bool GridDef::getFmiProcessingTypeDef(int processingTypeId,ProcessingTypeDef& pr
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto def = getFmiProcessingTypeDef(processingTypeId);
+    const auto *def = getFmiProcessingTypeDef(processingTypeId);
     if (def == nullptr)
       return false;
 
@@ -1327,7 +1327,7 @@ bool GridDef::getFmiForecastTypeDef(int forecastTypeId,ForecastTypeDef& forecast
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto def = getFmiForecastTypeDef(forecastTypeId);
+    const auto *def = getFmiForecastTypeDef(forecastTypeId);
     if (def == nullptr)
       return false;
 
@@ -2060,7 +2060,7 @@ void GridDef::loadFmiParameterId_grib(const char *filename)
             }
             else
             {
-              auto def = getFmiParameterDefByName(field[0]);
+              const auto *def = getFmiParameterDefByName(field[0]);
               if (def)
                 rec.mFmiParameterId = def->mFmiParameterId;
             }
@@ -2148,7 +2148,7 @@ void GridDef::loadFmiParameterId_newbase(const char *filename)
             }
             else
             {
-              auto def = getFmiParameterDefByName(field[0]);
+              const auto *def = getFmiParameterDefByName(field[0]);
               if (def)
                 rec.mFmiParameterId = def->mFmiParameterId;
             }
@@ -2162,7 +2162,7 @@ void GridDef::loadFmiParameterId_newbase(const char *filename)
             }
             else
             {
-              auto def = getNewbaseParameterDefByName(field[1]);
+              const auto *def = getNewbaseParameterDefByName(field[1]);
               if (def)
                 rec.mNewbaseParameterId = def->mNewbaseParameterId;
             }
@@ -2251,7 +2251,7 @@ void GridDef::loadFmiParameterId_netCdf(const char *filename)
             }
             else
             {
-              auto def = getFmiParameterDefByName(field[0]);
+              const auto *def = getFmiParameterDefByName(field[0]);
               if (def)
                 rec.mFmiParameterId = def->mFmiParameterId;
             }
@@ -2914,7 +2914,7 @@ T::Coordinate_svec GridDef::getGridLatLonCoordinatesByGeometryId(T::GeometryId  
 
 /*! \brief Resolves grid coordinates in the original projection from the given geometry attributes. */
 
-void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeList,T::Coordinate_svec& latLonCoordinates,T::CoordinateType coordinateType,T::Coordinate_svec& coordinates,uint& width,uint& height)
+void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeList,T::Coordinate_svec& latLonCoordinates,T::CoordinateType /*coordinateType*/,T::Coordinate_svec& coordinates,uint& width,uint& height)
 {
   FUNCTION_TRACE
   try
@@ -2995,7 +2995,7 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
 
     if (!def &&  geometryStringStr)
     {
-      auto defPtr = Identification::gridDef.createGrib2GridDefinition(geometryStringStr);
+      auto *defPtr = Identification::gridDef.createGrib2GridDefinition(geometryStringStr);
       if (!defPtr)
         return;
 
@@ -3254,7 +3254,7 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
           attributeList.setAttribute("grid.cell.height",Fmi::to_string(fabs(dy/1000)));
         }
 
-        if (!latLonCoordinates || latLonCoordinates->size() == 0)
+        if (!latLonCoordinates || latLonCoordinates->empty())
         {
           uint sz = width*height;
 
@@ -3403,7 +3403,7 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
 
     if (!def &&  geometryStringStr)
     {
-      auto defPtr =  Identification::gridDef.createGrib2GridDefinition(geometryStringStr);
+      auto *defPtr =  Identification::gridDef.createGrib2GridDefinition(geometryStringStr);
       if (!defPtr)
         return;
 
@@ -3660,7 +3660,7 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
         }
 
 
-        if (!latLonCoordinates || latLonCoordinates->size() == 0)
+        if (!latLonCoordinates || latLonCoordinates->empty())
         {
           uint sz = width*height;
 
@@ -3700,7 +3700,7 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
       }
     }
 
-    if (latLonCoordinates && latLonCoordinates->size() > 0)
+    if (latLonCoordinates && !latLonCoordinates->empty())
     {
       int last = latLonCoordinates->size() - 1;
       char tmp[1400];  // four %.15f values of any magnitude
@@ -5712,7 +5712,7 @@ std::string GridDef::getGribParameterName(const GRIB1::Message& message)
     if (gribId == 0)
       return std::string("");
 
-    auto p = getGribParameterDefById(gribId);
+    const auto *p = getGribParameterDefById(gribId);
     if (p)
       return p->mParameterName;
 
@@ -5739,7 +5739,7 @@ std::string GridDef::getGribParameterName(const GRIB2::Message& message)
     if (gribId == 0)
       return std::string("");
 
-    auto p = getGribParameterDefById(gribId);
+    const auto *p = getGribParameterDefById(gribId);
     if (p)
       return p->mParameterName;
 
@@ -5773,7 +5773,7 @@ T::FmiParamId GridDef::getFmiParameterId(const GRIB1::Message& message)
     if (gribId == 0)
       return 0;
 
-    auto r =  getFmiParameterMappingByGribId(gribId);
+    const auto *r =  getFmiParameterMappingByGribId(gribId);
     if (r)
       return r->mFmiParameterId;
 
@@ -5807,7 +5807,7 @@ T::FmiParamId GridDef::getFmiParameterId(const GRIB2::Message& message)
     if (gribId == 0)
       return 0;
 
-    auto r =  getFmiParameterMappingByGribId(gribId);
+    const auto *r =  getFmiParameterMappingByGribId(gribId);
     if (r)
       return r->mFmiParameterId;
 
@@ -5916,7 +5916,7 @@ T::FmiParamId GridDef::getFmiParameterIdByFmiName(const std::string& fmiParamNam
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto p = getFmiParameterDefByName(fmiParamName);
+    const auto *p = getFmiParameterDefByName(fmiParamName);
     if (p)
       return p->mFmiParameterId;
 
@@ -6211,11 +6211,11 @@ bool GridDef::getNewbaseParameterDefByFmiId(T::FmiParamId fmiParamId,NewbasePara
   FUNCTION_TRACE
   try
   {
-    auto p = getNewbaseParameterMappingByFmiId(fmiParamId);
+    const auto *p = getNewbaseParameterMappingByFmiId(fmiParamId);
     if (p == nullptr)
       return false;
 
-    auto n = getNewbaseParameterDefById(p->mNewbaseParameterId);
+    const auto *n = getNewbaseParameterDefById(p->mNewbaseParameterId);
     if (n == nullptr)
       return false;
 
@@ -6239,11 +6239,11 @@ bool GridDef::getNetCdfParameterDefByFmiId(T::FmiParamId fmiParamId,NetCdfParame
   FUNCTION_TRACE
   try
   {
-    auto p = getNetCdfParameterMappingByFmiId(fmiParamId);
+    const auto *p = getNetCdfParameterMappingByFmiId(fmiParamId);
     if (p == nullptr)
       return false;
 
-    auto n = getNetCdfParameterDefByName(p->mNetCdfParameterName);
+    const auto *n = getNetCdfParameterDefByName(p->mNetCdfParameterName);
     if (n == nullptr)
       return false;
 
@@ -6267,7 +6267,7 @@ bool GridDef::getNewbaseParameterDefByName(const std::string& newbaseParamName,N
   FUNCTION_TRACE
   try
   {
-    auto p = GridDef::getNewbaseParameterDefByName(newbaseParamName);
+    const auto *p = GridDef::getNewbaseParameterDefByName(newbaseParamName);
     if (p == nullptr)
       return false;
 
@@ -6291,7 +6291,7 @@ bool GridDef::getNetCdfParameterDefByName(const std::string& netCdfParamName,Net
   FUNCTION_TRACE
   try
   {
-    auto p = GridDef::getNetCdfParameterDefByName(netCdfParamName);
+    const auto *p = GridDef::getNetCdfParameterDefByName(netCdfParamName);
     if (p == nullptr)
       return false;
 
@@ -6363,7 +6363,7 @@ bool GridDef::getNewbaseParameterDefById(T::NewbaseParamId newbaseParamId,Newbas
   FUNCTION_TRACE
   try
   {
-    auto n = getNewbaseParameterDefById(newbaseParamId);
+    const auto *n = getNewbaseParameterDefById(newbaseParamId);
     if (n == nullptr)
       return false;
 
@@ -6410,7 +6410,7 @@ FmiParamDef_cptr GridDef::getFmiParameterDefByNetCdfName(const std::string& netC
   FUNCTION_TRACE
   try
   {
-    auto p = getFmiParameterMappingByNetCdfName(netCdfParamName);
+    const auto *p = getFmiParameterMappingByNetCdfName(netCdfParamName);
     if (p)
       return getFmiParameterDefById(p->mFmiParameterId);
 
@@ -6433,7 +6433,7 @@ FmiParamDef_cptr GridDef::getFmiParameterDefByGribId(T::GribParamId gribParamId)
   FUNCTION_TRACE
   try
   {
-    auto p = getFmiParameterMappingByGribId(gribParamId);
+    const auto *p = getFmiParameterMappingByGribId(gribParamId);
     if (p)
       return getFmiParameterDefById(p->mFmiParameterId);
 
@@ -6483,7 +6483,7 @@ bool GridDef::getFmiParameterDefById(T::FmiParamId fmiParamId,FmiParameterDef& p
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto def = getFmiParameterDefById(fmiParamId);
+    const auto *def = getFmiParameterDefById(fmiParamId);
     if (def == nullptr)
       return false;
 
@@ -6510,7 +6510,7 @@ bool GridDef::getFmiParameterDefByNewbaseId(T::NewbaseParamId newbaseParamId,Fmi
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto def = getFmiParameterDefByNewbaseId(newbaseParamId);
+    const auto *def = getFmiParameterDefByNewbaseId(newbaseParamId);
     if (def == nullptr)
       return false;
 
@@ -6537,7 +6537,7 @@ bool GridDef::getFmiParameterDefByNetCdfName(const std::string& netCdfParamName,
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto def = getFmiParameterDefByNetCdfName(netCdfParamName);
+    const auto *def = getFmiParameterDefByNetCdfName(netCdfParamName);
     if (def == nullptr)
       return false;
 
@@ -6564,7 +6564,7 @@ bool GridDef::getFmiParameterDefByGribId(T::GribParamId gribParamId,FmiParameter
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto def = getFmiParameterDefByGribId(gribParamId);
+    const auto *def = getFmiParameterDefByGribId(gribParamId);
     if (def == nullptr)
       return false;
 
@@ -6591,7 +6591,7 @@ bool GridDef::getFmiParameterDefByName(const std::string& fmiParamName,FmiParame
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto def = getFmiParameterDefByName(fmiParamName);
+    const auto *def = getFmiParameterDefByName(fmiParamName);
     if (def == nullptr)
       return false;
 
@@ -6622,7 +6622,7 @@ std::string GridDef::getFmiParameterName(const GRIB1::Message& message)
     if (fmiId == 0)
       return std::string("");
 
-    auto p = getFmiParameterDefById(fmiId);
+    const auto *p = getFmiParameterDefById(fmiId);
     if (p == nullptr)
       return std::string("");
 
@@ -6652,7 +6652,7 @@ std::string GridDef::getFmiParameterName(const GRIB2::Message& message)
     if (fmiId == 0)
       return std::string("");
 
-    auto p = getFmiParameterDefById(fmiId);
+    const auto *p = getFmiParameterDefById(fmiId);
     if (p == nullptr)
       return std::string("");
 
@@ -6682,7 +6682,7 @@ std::string GridDef::getFmiParameterDescription(const GRIB1::Message& message)
     if (fmiId == 0)
       return std::string("");
 
-    auto p = getFmiParameterDefById(fmiId);
+    const auto *p = getFmiParameterDefById(fmiId);
     if (p == nullptr)
       return std::string("");
 
@@ -6712,7 +6712,7 @@ std::string GridDef::getFmiParameterDescription(const GRIB2::Message& message)
     if (fmiId == 0)
       return std::string("");
 
-    auto p = getFmiParameterDefById(fmiId);
+    const auto *p = getFmiParameterDefById(fmiId);
     if (p == nullptr)
       return std::string("");
 
@@ -6742,7 +6742,7 @@ std::string GridDef::getFmiParameterUnits(const GRIB1::Message& message)
     if (fmiId == 0)
       return std::string("");
 
-    auto p = getFmiParameterDefById(fmiId);
+    const auto *p = getFmiParameterDefById(fmiId);
     if (p == nullptr)
       return std::string("");
 
@@ -6772,7 +6772,7 @@ std::string GridDef::getFmiParameterUnits(const GRIB2::Message& message)
     if (fmiId == 0)
       return std::string("");
 
-    auto p = getFmiParameterDefById(fmiId);
+    const auto *p = getFmiParameterDefById(fmiId);
     if (p == nullptr)
       return std::string("");
 
@@ -6802,7 +6802,7 @@ short GridDef::getFmiParameterInterpolationMethod(const GRIB1::Message& message)
     if (fmiId == 0)
       return T::AreaInterpolationMethod::None;
 
-    auto p = getFmiParameterDefById(fmiId);
+    const auto *p = getFmiParameterDefById(fmiId);
     if (p == nullptr)
       return T::AreaInterpolationMethod::None;
 
@@ -6832,7 +6832,7 @@ short GridDef::getFmiParameterInterpolationMethod(const GRIB2::Message& message)
     if (fmiId == 0)
       return T::AreaInterpolationMethod::None;
 
-    auto p = getFmiParameterDefById(fmiId);
+    const auto *p = getFmiParameterDefById(fmiId);
     if (p == nullptr)
       return T::AreaInterpolationMethod::None;
 
@@ -6996,7 +6996,7 @@ std::string GridDef::getNewbaseParameterName(const GRIB1::Message& message)
     if (id == 0)
       return std::string("");
 
-    auto n = getNewbaseParameterDefById(id);
+    const auto *n = getNewbaseParameterDefById(id);
     if (n == nullptr)
       return std::string("");
 
@@ -7026,7 +7026,7 @@ std::string GridDef::getNewbaseParameterName(const GRIB2::Message& message)
     if (id == 0)
       return std::string("");
 
-    auto n = getNewbaseParameterDefById(id);
+    const auto *n = getNewbaseParameterDefById(id);
     if (n == nullptr)
       return std::string("");
 
@@ -7055,7 +7055,7 @@ std::string GridDef::getNetCdfParameterName(const GRIB1::Message& message)
     if (fmiId == 0)
       return std::string("");
 
-    auto p = getNetCdfParameterMappingByFmiId(fmiId);
+    const auto *p = getNetCdfParameterMappingByFmiId(fmiId);
     if (!p)
       return std::string("");
 
@@ -7085,7 +7085,7 @@ std::string GridDef::getNetCdfParameterName(const GRIB2::Message& message)
     if (fmiId == 0)
       return std::string("");
 
-    auto p = getNetCdfParameterMappingByFmiId(fmiId);
+    const auto *p = getNetCdfParameterMappingByFmiId(fmiId);
     if (!p)
       return std::string("");
 

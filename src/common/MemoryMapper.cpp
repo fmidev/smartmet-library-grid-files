@@ -36,6 +36,8 @@ MemoryMapper memoryMapper;
 
 /*! \brief Thread entry point that runs the MemoryMapper fault handler loop. */
 
+namespace
+{
 void* fault_handler_thread(void *arg)
 {
   Fmi::set_thread_name("mmap-fault");
@@ -75,6 +77,7 @@ std::string permission_string(mode_t mode)
   permissions += ((mode & S_IXOTH) ? "x" : "-");
   return permissions;
 }
+}  // namespace
   
 
 /*! \brief Constructs the MemoryMapper with default configuration values. */
@@ -124,10 +127,10 @@ MemoryMapper::~MemoryMapper()
   while (mEnabled  &&  mThreadsRunning)
     time_usleep(0,100);
 
-  if (mMessage)
+  
     delete [] mMessage;
 
-  if (mFaultProcessingThread)
+  
     delete [] mFaultProcessingThread;
 
   curl_global_cleanup();
@@ -620,7 +623,10 @@ MapInfo_sptr MemoryMapper::getMapInfo(char *address)
 
 
 
+namespace
+{
 Int64 premapCnt = 0;
+}  // namespace
 
 
 /*! \brief Prefetches and caches the pages covering the given address range. */
@@ -660,7 +666,7 @@ void MemoryMapper::premap(char *startAddress,char *endAddress)
 
     Int64 address = pageIndex * mPageSize;
 
-    Int64 fp = (Int64)address - (Int64)info->memoryPtr;
+    Int64 fp = address - (Int64)info->memoryPtr;
 
     Int64 pages = endPageIndex - pageIndex + 1;
 
@@ -685,7 +691,7 @@ void MemoryMapper::premap(char *startAddress,char *endAddress)
         pageIndex++;
       }
 
-      if (data)
+      
         delete [] data;
     }
 
@@ -930,7 +936,7 @@ void MemoryMapper::faultProcessingThread()
         {
           AutoReadLock lock(&mModificationLock);
 
-          auto address = (char*)mMessage[idx].arg.pagefault.address;
+          auto *address = (char*)mMessage[idx].arg.pagefault.address;
 
           int index = getClosestIndex(address);
 

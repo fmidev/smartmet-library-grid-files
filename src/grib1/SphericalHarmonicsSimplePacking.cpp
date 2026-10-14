@@ -71,7 +71,7 @@ PackingMethod SphericalHarmonicsSimplePacking::getPackingMethod() const
 
 /*! \brief The method decodes the spherical harmonics simple-packed values from the message data. */
 
-void SphericalHarmonicsSimplePacking::decodeValues(Message *message,T::ParamValue_vec& decodedValues) const
+void SphericalHarmonicsSimplePacking::decodeValues(Message * /*message*/,T::ParamValue_vec& /*decodedValues*/) const
 {
   try
   {
@@ -94,7 +94,7 @@ void SphericalHarmonicsSimplePacking::decodeValues(Message *message,T::ParamValu
         \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void SphericalHarmonicsSimplePacking::print(std::ostream& stream,uint level,uint optionFlags) const
+void SphericalHarmonicsSimplePacking::print(std::ostream& stream,uint level,uint /*optionFlags*/) const
 {
   try
   {

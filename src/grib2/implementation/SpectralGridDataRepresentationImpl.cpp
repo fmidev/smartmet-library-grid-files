@@ -18,7 +18,10 @@ namespace GRIB2
 {
 
 
+namespace
+{
 ThreadLock AEC_threadLock;
+}  // namespace
 
 
 /*! \brief The constructor of the class. */

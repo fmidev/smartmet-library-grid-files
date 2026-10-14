@@ -323,7 +323,7 @@ void GridSection::setDataRepresentationType(Int64 value)
     if (!mGridDefinition)
     {
       mDataRepresentationType = static_cast<std::uint8_t>(value);
-      auto gridDefinition = createGridDefinition(mDataRepresentationType);
+      auto *gridDefinition = createGridDefinition(mDataRepresentationType);
       mGridDefinition.reset(gridDefinition);
     }
   }
@@ -379,7 +379,7 @@ void GridSection::read(MemoryReader& memoryReader)
     memoryReader >> mPvlLocation;
     memoryReader >> mDataRepresentationType;
 
-    auto gridDefinition = createGridDefinition(mDataRepresentationType);
+    auto *gridDefinition = createGridDefinition(mDataRepresentationType);
     mGridDefinition.reset(gridDefinition);
     gridDefinition->read(memoryReader);
 

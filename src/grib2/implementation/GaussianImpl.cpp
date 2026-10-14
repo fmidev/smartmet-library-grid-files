@@ -288,10 +288,7 @@ bool GaussianImpl::getGridPointByOriginalCoordinates(double x,double y,double& g
     grid_i = i;
     grid_j = j;
 
-    if (j < 0  ||  j > C_DOUBLE(nj))
-      return false;
-
-    return true;
+    return !(j < 0  ||  j > C_DOUBLE(nj));
   }
   catch (...)
   {

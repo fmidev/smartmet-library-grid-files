@@ -21,7 +21,10 @@
 #include <newbase/NFmiLocation.h>
 #include <unordered_map>
 
+namespace
+{
 Fmi::Cache::Cache<std::size_t,std::shared_ptr<SmartMet::CoordinateConverter>> coordinateConverterCache(10000);
+}  // namespace
 
 
 
@@ -60,6 +63,8 @@ bool convert(const std::shared_ptr<OGRSpatialReference> sr_from,const std::share
 
 /*! \brief Normalises an angle to the (-180, 180] range. */
 
+namespace
+{
 double getValue(double theAngle)
 {
   try
@@ -80,6 +85,7 @@ double getValue(double theAngle)
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
+}  // namespace
 
 
 

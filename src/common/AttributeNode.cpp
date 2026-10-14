@@ -210,7 +210,7 @@ void AttributeNode::print(std::ostream& stream,uint level,uint optionFlags)
 {
   try
   {
-    if (mSubAttributes.size() > 0)
+    if (!mSubAttributes.empty())
     {
       stream << space(level) << "* " << mName << " :\n";
       for (auto& mSubAttribute : mSubAttributes)

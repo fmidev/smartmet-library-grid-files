@@ -394,7 +394,7 @@ void NetCdfFile::readValues(MemoryReader& memoryReader,uint type,uint items,UInt
         for (uint i = 0; i < items; i++)
         {
           memoryReader >> val;
-          values.push_back(scaleFactor*(float)val + baseValue);
+          values.push_back(scaleFactor*val + baseValue);
         }
       }
       break;
@@ -492,7 +492,7 @@ void NetCdfFile::readValues(MemoryReader& memoryReader,uint type,uint items,UInt
         for (uint i = 0; i < items; i++)
         {
           memoryReader >> val;
-          values.push_back(scaleFactor*(double)val + baseValue);
+          values.push_back(scaleFactor*val + baseValue);
         }
       }
       break;
@@ -1319,7 +1319,7 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
                 // The values come from the file, they must be convertible to time_t
                 if (!std::isfinite(timeValue) || std::fabs(timeValue) > 1e12)
                   throw Fmi::Exception(BCP,"Invalid NetCDF time value!");
-                time_t ttt = (time_t)timeValue*(time_t)unitSize+(time_t)t*(time_t)unitSize;
+                time_t ttt = (time_t)timeValue*unitSize+(time_t)t*unitSize;
                 //printf("TimeT %ld %f %ld\n",ttt,*v,unitSize);
                 time_t tt = getGregorianTimeT(year,month,day,hour,minute,second,ttt);
                 timeList.push_back(tt);
@@ -1377,7 +1377,7 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
 
             // ##### X-coordinates #################################################
 
-            if (mXCoordinates.size() == 0)
+            if (mXCoordinates.empty())
             {
               type = 0;
               size = 0;
@@ -1405,7 +1405,7 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
 
             // ##### Y-coordinates #################################################
 
-            if (mYCoordinates.size() == 0)
+            if (mYCoordinates.empty())
             {
               type = 0;
               size = 0;
@@ -1447,7 +1447,7 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
 
             }
 
-            if (mXCoordinates.size() == 0 || mYCoordinates.size() == 0)
+            if (mXCoordinates.empty() || mYCoordinates.empty())
             {
               Fmi::Exception exception(BCP,"X- or Y-coordinates missing!");
               exception.addParameter("Number of X-coordinates",std::to_string(mXCoordinates.size()));
@@ -1847,7 +1847,7 @@ void NetCdfFile::getAttributeList(const char *variableName,const std::string& pr
         \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void NetCdfFile::print(std::ostream& stream,uint level,uint optionFlags) const
+void NetCdfFile::print(std::ostream& stream,uint level,uint /*optionFlags*/) const
 {
   try
   {

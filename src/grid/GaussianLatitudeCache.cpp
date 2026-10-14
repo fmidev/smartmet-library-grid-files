@@ -15,8 +15,11 @@ namespace GRID
 
 GaussianLatitudeCache gaussianLatitudeCache;
 
+namespace
+{
 // Serializes cache lookups and insertions, the cache is shared by all threads
-static std::mutex gaussianLatitudeCacheMutex;
+std::mutex gaussianLatitudeCacheMutex;
+}  // namespace
 
 
 
@@ -32,7 +35,9 @@ static std::mutex gaussianLatitudeCacheMutex;
 
 /*! \brief Provides initial Newton iteration guesses for Gaussian latitudes. */
 
-static void gauss_first_guess(long N, double* vals)
+namespace
+{
+void gauss_first_guess(long N, double* vals)
 {
   try
   {
@@ -138,6 +143,7 @@ int gaussian_getLatitudes(long N, double *lats)
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
+}  // namespace
 
 // ########## end of copy ##########
 
@@ -176,7 +182,7 @@ GaussianLatitudeCache::~GaussianLatitudeCache()
   {
     for (auto& mLatitude : mLatitudes)
     {
-      if (mLatitude != nullptr)
+      
         delete[] mLatitude;
     }
   }

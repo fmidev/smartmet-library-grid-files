@@ -82,7 +82,7 @@ class CoordinateConverter
      *  reserved as long as the converter stays cached, so the key remains unique.
      *  The transformations themselves use the internal clones (sr1/sr2); these pinned
      *  references are kept solely to guarantee key stability. */
-    inline void keepAlive(const std::shared_ptr<OGRSpatialReference>& sr_from,
+    void keepAlive(const std::shared_ptr<OGRSpatialReference>& sr_from,
                           const std::shared_ptr<OGRSpatialReference>& sr_to)
     {
       mPinFrom = sr_from;
@@ -107,7 +107,7 @@ class CoordinateConverter
 
     /*! \brief Acquire a free transformation slot index (spins until one is available).
      *  \return Slot index in [0, CONVERTER_COUNT). */
-    inline uint getTransform()
+    uint getTransform()
     {
       while (true)
       {
@@ -127,7 +127,7 @@ class CoordinateConverter
      *  \param[in,out] x       X values (overwritten with transformed values).
      *  \param[in,out] y       Y values (overwritten with transformed values).
      *  \return True on success. */
-    inline bool convert(int nCount,double *x,double *y)
+    bool convert(int nCount,double *x,double *y)
     {
       uint idx = getTransform();
       AutoThreadLock lock(&threadLock[idx]);

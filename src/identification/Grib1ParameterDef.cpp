@@ -51,7 +51,7 @@ Grib1ParameterDef::~Grib1ParameterDef()
         \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void Grib1ParameterDef::print(std::ostream& stream,uint level,uint optionFlags) const
+void Grib1ParameterDef::print(std::ostream& stream,uint level,uint /*optionFlags*/) const
 {
   try
   {

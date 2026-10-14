@@ -13,13 +13,16 @@ namespace SmartMet
 namespace GRID
 {
 
+namespace
+{
 // Per-request number of row-bands for parallel contouring, taken from the request attributes
 // (default 1 = single-threaded). The value is clamped to the number of cores downstream.
-static int getContourThreads(const T::AttributeList &attributeList)
+int getContourThreads(const T::AttributeList &attributeList)
 {
   const char *str = attributeList.getAttributeValue("contour.threads");
   return (str != nullptr) ? toInt32(str) : 1;
 }
+}  // namespace
 
 
 /*! \brief The constructor of the class. */
@@ -423,7 +426,7 @@ void MessageProcessing::getGridIsobandsByLevelAndGeometry(const GRID::Message& m
 
     Identification::gridDef.getGridOriginalCoordinatesByGeometry(attributeList,latLonCoordinates,coordinateType,coordinates,width,height);
 
-    if (!latLonCoordinates || latLonCoordinates->size() == 0)
+    if (!latLonCoordinates || latLonCoordinates->empty())
     {
       getGridIsobandsByLevel(message1,message2,newLevel,contourLowValues,contourHighValues,attributeList,modificationOperation,modificationParameters,contours);
       return;
@@ -864,7 +867,7 @@ void MessageProcessing::getGridIsobandsByTimeAndGeometry(const GRID::Message& me
 
     Identification::gridDef.getGridOriginalCoordinatesByGeometry(attributeList,latLonCoordinates,coordinateType,coordinates,width,height);
 
-    if (!latLonCoordinates || latLonCoordinates->size() == 0)
+    if (!latLonCoordinates || latLonCoordinates->empty())
     {
       getGridIsobandsByTime(message1,message2,newTime,contourLowValues,contourHighValues,attributeList,modificationOperation,modificationParameters,contours);
       return;
@@ -1197,7 +1200,7 @@ void MessageProcessing::getGridIsobandsByTimeLevelAndGeometry(const GRID::Messag
 
     Identification::gridDef.getGridOriginalCoordinatesByGeometry(attributeList,latLonCoordinates,coordinateType,coordinates,width,height);
 
-    if (!latLonCoordinates || latLonCoordinates->size() == 0)
+    if (!latLonCoordinates || latLonCoordinates->empty())
     {
       getGridIsobandsByTimeAndLevel(message1,message2,message3,message4,newTime,newLevel,contourLowValues,contourHighValues,attributeList,modificationOperation,modificationParameters,contours);
       return;
@@ -1587,7 +1590,7 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGeometry(const GRID::Messag
 
     Identification::gridDef.getGridOriginalCoordinatesByGeometry(attributeList,latLonCoordinates,coordinateType,coordinates,width,height);
 
-    if (!latLonCoordinates || latLonCoordinates->size() == 0)
+    if (!latLonCoordinates || latLonCoordinates->empty())
     {
       getGridIsolinesByTimeAndLevel(message1,message2,message3,message4,newTime,newLevel,contourValues,attributeList,modificationOperation,modificationParameters,contours);
       return;
@@ -2040,7 +2043,7 @@ void MessageProcessing::getGridIsolinesByLevelAndGeometry(const GRID::Message& m
 
     Identification::gridDef.getGridOriginalCoordinatesByGeometry(attributeList,latLonCoordinates,coordinateType,coordinates,width,height);
 
-    if (!latLonCoordinates || latLonCoordinates->size() == 0)
+    if (!latLonCoordinates || latLonCoordinates->empty())
     {
       getGridIsolinesByLevel(message1,message2,newLevel,contourValues,attributeList,modificationOperation,modificationParameters,contours);
       return;
@@ -2291,7 +2294,7 @@ void MessageProcessing::getGridIsolinesByTimeAndGeometry(const GRID::Message& me
 
     Identification::gridDef.getGridOriginalCoordinatesByGeometry(attributeList,latLonCoordinates,coordinateType,coordinates,width,height);
 
-    if (!latLonCoordinates || latLonCoordinates->size() == 0)
+    if (!latLonCoordinates || latLonCoordinates->empty())
     {
       getGridIsolinesByTime(message1,message2,newTime,contourValues,attributeList,modificationOperation,modificationParameters,contours);
       return;
@@ -2939,7 +2942,7 @@ void MessageProcessing::getGridStreamlinesByTimeLevelAndGeometry(const GRID::Mes
 
     Identification::gridDef.getGridOriginalCoordinatesByGeometry(attributeList,latLonCoordinates,coordinateType,coordinates,width,height);
 
-    if (!latLonCoordinates || latLonCoordinates->size() == 0)
+    if (!latLonCoordinates || latLonCoordinates->empty())
     {
       getGridStreamlinesByTimeAndLevel(message1,message2,message3,message4,newTime,newLevel,attributeList,modificationOperation,modificationParameters,streamlines);
       return;
@@ -3422,7 +3425,7 @@ void MessageProcessing::getGridStreamlinesByLevelAndGeometry(const GRID::Message
 
     Identification::gridDef.getGridOriginalCoordinatesByGeometry(attributeList,latLonCoordinates,coordinateType,coordinates,width,height);
 
-    if (!latLonCoordinates || latLonCoordinates->size() == 0)
+    if (!latLonCoordinates || latLonCoordinates->empty())
     {
       getGridStreamlinesByLevel(message1,message2,newLevel,attributeList,modificationOperation,modificationParameters,streamlines);
       return;
@@ -3681,7 +3684,7 @@ void MessageProcessing::getGridStreamlinesByTimeAndGeometry(const GRID::Message&
 
     Identification::gridDef.getGridOriginalCoordinatesByGeometry(attributeList,latLonCoordinates,coordinateType,coordinates,width,height);
 
-    if (!latLonCoordinates || latLonCoordinates->size() == 0)
+    if (!latLonCoordinates || latLonCoordinates->empty())
     {
       getGridStreamlinesByTime(message1,message2,newTime,attributeList,modificationOperation,modificationParameters,streamlines);
       return;
@@ -4942,7 +4945,7 @@ void MessageProcessing::getGridValueVectorByLevelAndCoordinateList(const GRID::M
     attributeList.setAttribute("grid.levelInterpolationMethod",Fmi::to_string(levelInterpolationMethod));
     attributeList.setAttribute("grid.coordinateType",Fmi::to_string(coordinateType));
 
-    if (coordinates.size() == 0)
+    if (coordinates.empty())
       return;
 
     T::ParamValue_vec gridValues1;
@@ -5015,7 +5018,7 @@ void MessageProcessing::getGridValueVectorByTimeAndCoordinateList(const GRID::Me
     attributeList.setAttribute("grid.timeInterpolationMethod",Fmi::to_string(timeInterpolationMethod));
     attributeList.setAttribute("grid.coordinateType",Fmi::to_string(coordinateType));
 
-    if (coordinates.size() == 0)
+    if (coordinates.empty())
       return;
 
     T::ParamValue_vec gridValues1;
@@ -5175,7 +5178,7 @@ void MessageProcessing::getGridValueVectorByTimeAndLevel(const GRID::Message& me
 
 /*! \brief Returns the full grid value vector between four messages at a target time and level with value modification. */
 
-void MessageProcessing::getGridValueVectorByTimeAndLevel(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,short areaInterpolationMethod,short timeInterpolationMethod,short levelInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const
+void MessageProcessing::getGridValueVectorByTimeAndLevel(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,short /*areaInterpolationMethod*/,short timeInterpolationMethod,short levelInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const
 {
   FUNCTION_TRACE
   try

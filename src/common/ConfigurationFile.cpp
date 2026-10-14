@@ -4,6 +4,7 @@
 
 #include <macgyver/Exception.h>
 
+#include <algorithm>
 #include <cstdio>
 #include <cstdlib>
 #include <string>
@@ -157,7 +158,7 @@ void ConfigurationFile::readFile(const std::string& filename)
   FUNCTION_TRACE
   try
   {
-    if (mFilename.length() == 0)
+    if (mFilename.empty())
       mFilename = filename;
 
     mCurrentFilename = filename;
@@ -175,8 +176,7 @@ void ConfigurationFile::readFile(const std::string& filename)
     long fileSize = ftell(file);
     if (fseek(file,0,SEEK_SET) != 0)
       throw Fmi::Exception(BCP,"Failed to seek in the file");
-    if (fileSize < 0)
-      fileSize = 0;
+    fileSize = std::max<long>(fileSize, 0);
 
     // Room for the terminating null character
     std::vector<char> stVec(fileSize + 1);
@@ -288,7 +288,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,bool& attrib
       {
         std::string val = parseValue(attr.mValue);
 
-        if (val.length() == 0)
+        if (val.empty())
         {
           Fmi::Exception exception(BCP,"The attribute value is empty (not a boolean as requested)!");
           exception.addParameter("AttributeName",attributeName);
@@ -348,7 +348,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,double& attr
       {
         std::string val = parseValue(attr.mValue);
 
-        if (val.length() == 0)
+        if (val.empty())
         {
           Fmi::Exception exception(BCP,"The attribute value is empty (not a float as requested)!");
           exception.addParameter("AttributeName",attributeName);
@@ -469,7 +469,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,Int64& attri
       {
         std::string val = parseValue(attr.mValue);
 
-        if (val.length() == 0)
+        if (val.empty())
         {
           Fmi::Exception exception(BCP,"The attribute value is empty (not an integer as requested)!");
           exception.addParameter("AttributeName",attributeName);
@@ -684,10 +684,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,std::vector<
       }
     }
 
-    if (attributeValueVec.size() > 0  ||  exists)
-      return true;
-
-    return false;
+    return attributeValueVec.size() > 0  ||  exists;
   }
   catch (...)
   {
@@ -737,8 +734,7 @@ uint ConfigurationFile::getArraySize(const char *attributeName)
             itm = attr.mName.substr(len+1);
 
           int i = toInt32(itm.c_str());
-          if (i > idx)
-            idx = i;
+          idx = std::max(i, idx);
         }
       }
     }
@@ -791,10 +787,7 @@ bool ConfigurationFile::getAttributeFields(const char *attributeName,std::set<st
       }
     }
 
-    if (attributeFields.size() > 0)
-      return true;
-
-    return false;
+    return attributeFields.size() > 0;
   }
   catch (...)
   {
@@ -835,10 +828,7 @@ bool ConfigurationFile::getSubAttributes(const char *attributeName,std::vector<s
       }
     }
 
-    if (attributeNames.size() > 0)
-      return true;
-
-    return false;
+    return attributeNames.size() > 0;
   }
   catch (...)
   {
@@ -1131,7 +1121,7 @@ void ConfigurationFile::removeComments(const char *st,const UInt64 *positions,ch
         else
         if ((a+1) < len  &&  st[a] == '/'  &&  st[a+1] == '*')
         {
-          while (a < len  &&  !(a > 0 &&  st[a-1] == '*'  &&  st[a] == '/'))
+          while (a < len  &&  (a <= 0 ||  st[a-1] != '*'  ||  st[a] != '/'))
             a++;
 
           if (a < len)

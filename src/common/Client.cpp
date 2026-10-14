@@ -39,7 +39,7 @@ Client::~Client() = default;
 
 /*! \brief Stub for fetching a range of bytes from a file; must be implemented in a subclass. */
 
-int Client::getData(const char *server,const char *filename,std::size_t filePosition,int dataSize,char *dataPtr)
+int Client::getData(const char * /*server*/,const char * /*filename*/,std::size_t /*filePosition*/,int /*dataSize*/,char * /*dataPtr*/)
 {
   throw Fmi::Exception(BCP,"Should be implemented in the child class!");
 }
@@ -49,7 +49,7 @@ int Client::getData(const char *server,const char *filename,std::size_t filePosi
 
 /*! \brief Stub for fetching file header data; must be implemented in a subclass. */
 
-int Client::getHeaderData(const char *server,const char *filename,int dataSize,char *dataPtr)
+int Client::getHeaderData(const char * /*server*/,const char * /*filename*/,int /*dataSize*/,char * /*dataPtr*/)
 {
   throw Fmi::Exception(BCP,"Should be implemented in the child class!");
 }
@@ -184,7 +184,7 @@ struct curl_slist* Client::addAuthenticationHeaders(const char *server,const cha
 
 /*! \brief Curl write callback that appends response bytes into the response buffer. */
 
-size_t curl_responseProcessing(const char *ptr, size_t size, size_t nmemb, void *userdata)
+size_t curl_responseProcessing(const char *ptr, size_t /*size*/, size_t nmemb, void *userdata)
 {
   FUNCTION_TRACE
   try
@@ -215,10 +215,12 @@ size_t curl_responseProcessing(const char *ptr, size_t size, size_t nmemb, void 
 
 /*! \brief Dumps a hex/ASCII view of a memory buffer to the given stream. */
 
+namespace
+{
 void curl_dump(const char *text,FILE *stream, unsigned char *ptr, size_t size)
 {
-  size_t i;
-  size_t c;
+  size_t i = 0;
+  size_t c = 0;
   unsigned int width=0x10;
 
   fprintf(stream, "%s, %10.10ld bytes (0x%8.8lx)\n",
@@ -247,6 +249,7 @@ void curl_dump(const char *text,FILE *stream, unsigned char *ptr, size_t size)
     fputc('\n', stream); /* newline */
   }
 }
+}  // namespace
 
 
 
@@ -254,7 +257,7 @@ void curl_dump(const char *text,FILE *stream, unsigned char *ptr, size_t size)
 
 int curl_trace(CURL *handle, curl_infotype type,char *data, size_t size,void *userp)
 {
-  const char *text;
+  const char *text = nullptr;
   (void)handle; /* prevent compiler warning */
   (void)userp;
 

@@ -103,7 +103,7 @@ void Log::open()
 {
   try
   {
-    if (filename.length() == 0)
+    if (filename.empty())
       return;     // ### The log file name is empty.
 
     if (file != nullptr)
@@ -133,7 +133,7 @@ void Log::openForAppend()
 {
   try
   {
-    if (filename.length() == 0)
+    if (filename.empty())
       return;     // ### The log file name is empty.
 
     if (file != nullptr)
@@ -563,7 +563,7 @@ void Log::truncate()
     (void)fseek(oldfile,pos,SEEK_SET);
     if (fgets(st,10000,oldfile) != nullptr)
     {
-      int n;
+      int n = 0;
       while ((n = fread(st,1,10000,oldfile)) > 0)
       {
         (void)fwrite(st,1,n,file);

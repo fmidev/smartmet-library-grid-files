@@ -75,7 +75,7 @@ void DataWriter::setLittleEndian(bool _littleEndian)
 
 /*! \brief Sets the current write position; must be implemented by subclasses. */
 
-void DataWriter::setWritePosition(UInt64 _pos)
+void DataWriter::setWritePosition(UInt64 /*_pos*/)
 {
   throw Fmi::Exception(BCP,"Not implemented!",nullptr);
 }
@@ -86,7 +86,7 @@ void DataWriter::setWritePosition(UInt64 _pos)
 
 /*! \brief Writes a raw block of bytes; must be implemented by subclasses. */
 
-void DataWriter::write_data(void *_data,UInt64 _size)
+void DataWriter::write_data(void * /*_data*/,UInt64 /*_size*/)
 {
   throw Fmi::Exception(BCP,"Not implemented!",nullptr);
 }

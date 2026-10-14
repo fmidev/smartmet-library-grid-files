@@ -130,7 +130,7 @@ Pyramid build_pyramid(const std::vector<float> &base, int w, int h, int levels)
   P.W.push_back(w);
   P.H.push_back(h);
   for (int i = 1; i < levels; i++) {
-    int nw, nh;
+    int nw = 0, nh = 0;
     auto ds = downsample2(P.levels.back(), P.W.back(), P.H.back(), nw, nh);
     P.levels.push_back(std::move(ds));
     P.W.push_back(nw);

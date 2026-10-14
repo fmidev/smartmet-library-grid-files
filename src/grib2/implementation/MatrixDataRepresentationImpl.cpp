@@ -79,7 +79,7 @@ void MatrixDataRepresentationImpl::read(MemoryReader& memoryReader)
 
 /*! \brief Decodes the matrix-packed grid values (not implemented). */
 
-void MatrixDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec& decodedValues) const
+void MatrixDataRepresentationImpl::decodeValues(Message * /*message*/,T::ParamValue_vec& /*decodedValues*/) const
 {
   throw Fmi::Exception(BCP,"The method not implemented!");
 }

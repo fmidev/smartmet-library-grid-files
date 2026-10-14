@@ -57,10 +57,10 @@ QueryDataFile::QueryDataFile(const char *filename)
 
 QueryDataFile::~QueryDataFile()
 {
-  if (mFastQueryInfo != nullptr)
+  
     delete mFastQueryInfo;
 
-  if (mQueryDataFile != nullptr)
+  
     delete mQueryDataFile;
 }
 
@@ -438,7 +438,7 @@ void QueryDataFile::read(MessageInfoVec& messageInfoList)
         \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void QueryDataFile::print(std::ostream& stream,uint level,uint optionFlags) const
+void QueryDataFile::print(std::ostream& stream,uint level,uint /*optionFlags*/) const
 {
   try
   {

@@ -124,7 +124,7 @@ void SphericalHarmonicsComplexPacking::read(MemoryReader& memoryReader)
         \param dataWriter  The data stream object.
 */
 
-void SphericalHarmonicsComplexPacking::write(DataWriter& dataWriter)
+void SphericalHarmonicsComplexPacking::write(DataWriter& /*dataWriter*/)
 {
   try
   {
@@ -141,7 +141,7 @@ void SphericalHarmonicsComplexPacking::write(DataWriter& dataWriter)
 
 /*! \brief Decodes packed spherical harmonics complex values into the output vector (not yet implemented). */
 
-void SphericalHarmonicsComplexPacking::decodeValues(Message *message,T::ParamValue_vec& decodedValues) const
+void SphericalHarmonicsComplexPacking::decodeValues(Message * /*message*/,T::ParamValue_vec& /*decodedValues*/) const
 {
   try
   {
@@ -164,7 +164,7 @@ void SphericalHarmonicsComplexPacking::decodeValues(Message *message,T::ParamVal
         \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void SphericalHarmonicsComplexPacking::print(std::ostream& stream,uint level,uint optionFlags) const
+void SphericalHarmonicsComplexPacking::print(std::ostream& stream,uint level,uint /*optionFlags*/) const
 {
   try
   {

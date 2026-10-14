@@ -6,7 +6,10 @@ namespace SmartMet
 
 
 Log *globalTraceLog = nullptr;
+namespace
+{
 int globalTraceLevel = 0;
+}  // namespace
 
 
 

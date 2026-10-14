@@ -78,7 +78,7 @@ void ComplexSphericalHarmonicsDataRepresentationImpl::read(MemoryReader& memoryR
 
 /*! \brief Decodes the complex spherical-harmonics packed grid values (not implemented). */
 
-void ComplexSphericalHarmonicsDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec& decodedValues) const
+void ComplexSphericalHarmonicsDataRepresentationImpl::decodeValues(Message * /*message*/,T::ParamValue_vec& /*decodedValues*/) const
 {
   throw Fmi::Exception(BCP,"The method not implemented!");
 }

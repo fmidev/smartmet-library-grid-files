@@ -1,5 +1,7 @@
 #include "GridValueList.h"
 #include <macgyver/Exception.h>
+
+#include <algorithm>
 #include "../common/GeneralFunctions.h"
 
 
@@ -222,17 +224,13 @@ void GridValueList::getGridValueArea(double& minX,double& minY,double& maxX,doub
     uint len = mList.size();
     for (uint t=0; t<len; t++)
     {
-      if (mList[t].mX < minX)
-        minX = mList[t].mX;
+      minX = std::min(mList[t].mX, minX);
 
-      if (mList[t].mX > maxX)
-        maxX = mList[t].mX;
+      maxX = std::max(mList[t].mX, maxX);
 
-      if (mList[t].mY < minY)
-        minY = mList[t].mY;
+      minY = std::min(mList[t].mY, minY);
 
-      if (mList[t].mY > maxY)
-        maxY = mList[t].mY;
+      maxY = std::max(mList[t].mY, maxY);
     }
   }
   catch (...)

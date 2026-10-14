@@ -413,7 +413,7 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint gri
         \return        The method return true if the latlon values were succesfully returned.
 */
 
-bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j,double& lat,double& lon) const
+bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j,double& /*lat*/,double& /*lon*/) const
 {
   try
   {
@@ -743,7 +743,7 @@ bool RotatedLatLonImpl::getGridOriginalCoordinatesByLatLonCoordinates(double lat
         \return        The method return true if the latlon values were succesfully returned.
 */
 
-bool RotatedLatLonImpl::getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,double& lat,double& lon) const
+bool RotatedLatLonImpl::getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,double& /*lat*/,double& /*lon*/) const
 {
   try
   {
@@ -851,10 +851,7 @@ bool RotatedLatLonImpl::reverseXDirection() const
   {
     unsigned char scanMode = mLatLon.getScanningMode()->getScanningMode();
 
-    if ((scanMode & 0x80) != 0)
-      return true;
-
-    return false;
+    return (scanMode & 0x80) != 0;
   }
   catch (...)
   {
@@ -878,10 +875,7 @@ bool RotatedLatLonImpl::reverseYDirection() const
   {
     unsigned char scanMode = mLatLon.getScanningMode()->getScanningMode();
 
-    if ((scanMode & 0x40) == 0)
-      return true;
-
-    return false;
+    return (scanMode & 0x40) == 0;
   }
   catch (...)
   {

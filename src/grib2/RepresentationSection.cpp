@@ -269,7 +269,7 @@ void RepresentationSection::read(MemoryReader& memoryReader)
 
     if (mDataRepresentationTemplateNumber)
     {
-      auto representationDefinition = createRepresentationDefinition(*mDataRepresentationTemplateNumber);
+      auto *representationDefinition = createRepresentationDefinition(*mDataRepresentationTemplateNumber);
       mRepresentationDefinition.reset(representationDefinition);
       representationDefinition->read(memoryReader);
     }
@@ -529,7 +529,7 @@ void RepresentationSection::decodeValues(T::ParamValue_vec& decodedValues) const
 
 /*! \brief The method encodes the given values via the representation definition. */
 
-void RepresentationSection::encodeValues(Message *message,T::ParamValue_vec& values)
+void RepresentationSection::encodeValues(Message * /*message*/,T::ParamValue_vec& values)
 {
   try
   {

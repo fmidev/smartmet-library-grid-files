@@ -149,7 +149,7 @@ void BitmapSection::setMessagePtr(Message *message)
         \return            The method returns true if the value of the requested property was found.
 */
 
-bool BitmapSection::getProperty(uint propertyId,Int64& value)
+bool BitmapSection::getProperty(uint /*propertyId*/,Int64& /*value*/)
 {
   try
   {
@@ -166,7 +166,7 @@ bool BitmapSection::getProperty(uint propertyId,Int64& value)
 
 /*! \brief The method collects the bitmap section properties into the given vector. */
 
-void BitmapSection::getProperties(T::PropertySettingVec& properties)
+void BitmapSection::getProperties(T::PropertySettingVec& /*properties*/)
 {
   try
   {
@@ -187,7 +187,7 @@ void BitmapSection::getProperties(T::PropertySettingVec& properties)
         \return            The method returns true if the value of the requested property was set.
 */
 
-bool BitmapSection::setProperty(uint propertyId,Int64 value)
+bool BitmapSection::setProperty(uint /*propertyId*/,Int64 /*value*/)
 {
   try
   {
@@ -566,7 +566,7 @@ void BitmapSection::setBitmapData(T::Data_ptr data,std::size_t size)
         \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void BitmapSection::print(std::ostream& stream,uint level,uint optionFlags) const
+void BitmapSection::print(std::ostream& stream,uint level,uint /*optionFlags*/) const
 {
   try
   {

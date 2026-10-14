@@ -30,7 +30,7 @@ DataFetcher::~DataFetcher() = default;
 
 /*! \brief Stub for retrieving file size; must be implemented in subclasses. */
 
-Int64 DataFetcher::getFileSize(uint serverType,uint protocol,const char *server,const char *filename)
+Int64 DataFetcher::getFileSize(uint /*serverType*/,uint /*protocol*/,const char * /*server*/,const char * /*filename*/)
 {
   throw Fmi::Exception(BCP,"This method should be implemented in child classes!");
 }
@@ -40,7 +40,7 @@ Int64 DataFetcher::getFileSize(uint serverType,uint protocol,const char *server,
 
 /*! \brief Stub for retrieving file headers; must be implemented in subclasses. */
 
-void DataFetcher::getFileHeaders(uint serverType,uint protocol,const char *server,const char *filename,std::map<std::string,std::string>& headers)
+void DataFetcher::getFileHeaders(uint /*serverType*/,uint /*protocol*/,const char * /*server*/,const char * /*filename*/,std::map<std::string,std::string>& /*headers*/)
 {
   throw Fmi::Exception(BCP,"This method should be implemented in child classes!");
 }
@@ -50,7 +50,7 @@ void DataFetcher::getFileHeaders(uint serverType,uint protocol,const char *serve
 
 /*! \brief Stub for fetching file data; must be implemented in subclasses. */
 
-int DataFetcher::getData(uint serverType,uint protocol,const char *server,const char *filename,std::size_t filePosition,int dataSize,char *dataPtr)
+int DataFetcher::getData(uint /*serverType*/,uint /*protocol*/,const char * /*server*/,const char * /*filename*/,std::size_t /*filePosition*/,int /*dataSize*/,char * /*dataPtr*/)
 {
   throw Fmi::Exception(BCP,"This method should be implemented in child classes!");
 }
@@ -60,7 +60,7 @@ int DataFetcher::getData(uint serverType,uint protocol,const char *server,const 
 
 /*! \brief Stub for listing files in a directory; must be implemented in subclasses. */
 
-void DataFetcher::getFileList(uint serverType,uint protocol,const char *server,const char *dir,std::vector<std::string> &filePatterns,std::vector<FileRec>& fileList)
+void DataFetcher::getFileList(uint /*serverType*/,uint /*protocol*/,const char * /*server*/,const char * /*dir*/,std::vector<std::string> & /*filePatterns*/,std::vector<FileRec>& /*fileList*/)
 {
   throw Fmi::Exception(BCP,"This method should be implemented in child classes!");
 }
@@ -210,7 +210,7 @@ DataFetcher::AccessInfo* DataFetcher::getAccessInfo(const char *server)
   FUNCTION_TRACE
   try
   {
-    if (mAccessMap.size() == 0)
+    if (mAccessMap.empty())
       return nullptr;
 
     std::string key = toLowerString(server);

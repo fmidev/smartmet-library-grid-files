@@ -259,7 +259,7 @@ GridPointValue* GridPointValue::duplicate()
         \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void GridPointValue::print(std::ostream& stream,uint level,uint optionFlags) const
+void GridPointValue::print(std::ostream& stream,uint level,uint /*optionFlags*/) const
 {
   try
   {

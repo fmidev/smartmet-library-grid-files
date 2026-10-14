@@ -26,25 +26,43 @@ namespace GRIB1
 #define TRANSFORM_VEC_CACHE_SIZE 400
 
 Fmi::Cache::CacheStats latlonCoordinateCache_stats;
+namespace
+{
 Fmi::Cache::Cache<uint,T::Coordinate_svec> latlonCoordinateCache(COORDINATE_VEC_CACHE_SIZE);
+}  // namespace
 
 Fmi::Cache::CacheStats originalCoordinateCache_stats;
+namespace
+{
 Fmi::Cache::Cache<uint,T::Coordinate_svec> originalCoordinateCache(COORDINATE_VEC_CACHE_SIZE);
+}  // namespace
 
 
 Fmi::Cache::CacheStats transformCache1_stats;
+namespace
+{
 Fmi::Cache::Cache<std::size_t,T::Coordinate> transformCache1(1000000);
+}  // namespace
 
 Fmi::Cache::CacheStats transformCache2_stats;
+namespace
+{
 Fmi::Cache::Cache<std::size_t,T::Coordinate> transformCache2(1000000);
+}  // namespace
 
 Fmi::Cache::CacheStats transformCache3_stats;
+namespace
+{
 Fmi::Cache::Cache<std::size_t,T::Coordinate_svec> transformCache3(TRANSFORM_VEC_CACHE_SIZE);
 
 Fmi::Cache::Cache<std::size_t,T::SpatialRef_sptr> spatialReferenceCache(1000);
+}  // namespace
 
 T::SpatialRef_sptr latlonSpatialReference;
+namespace
+{
 T::SpatialRef_sptr sr_wgs84_world_mercator;
+}  // namespace
 
 
 
@@ -174,7 +192,7 @@ GridDefinition* GridDefinition::createGridDefinition() const
 
 /*! \brief The method collects attributeList details related to the grid definition. */
 
-void GridDefinition::getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const
+void GridDefinition::getAttributeList(const std::string& /*prefix*/,T::AttributeList& /*attributeList*/) const
 {
   FUNCTION_TRACE
 }
@@ -370,7 +388,9 @@ bool GridDefinition::getGridLatLonArea(T::Coordinate& topLeft,T::Coordinate& top
         \return        Returns 'true' if the position was clamped onto the grid.
 */
 
-static bool clampGridPointToBorder(const T::Dimensions& d,double& grid_i,double& grid_j)
+namespace
+{
+bool clampGridPointToBorder(const T::Dimensions& d,double& grid_i,double& grid_j)
 {
   const double eps = 0.000001;
 
@@ -391,6 +411,7 @@ static bool clampGridPointToBorder(const T::Dimensions& d,double& grid_i,double&
 
   return true;
 }
+}  // namespace
 
 
 
@@ -605,7 +626,7 @@ bool GridDefinition::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid
         \return        The method return true if the original coordinates were succesfully returned.
 */
 
-bool GridDefinition::getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const
+bool GridDefinition::getGridOriginalCoordinatesByGridPosition(double /*grid_i*/,double /*grid_j*/,double& /*x*/,double& /*y*/) const
 {
   FUNCTION_TRACE
   // Not implemented for all grids (for example Gaussian grids). Returning false lets the
@@ -1282,7 +1303,7 @@ void GridDefinition::getProperties_gridArea(T::PropertySettingVec& properties)
     properties.emplace_back((uint)Property::GridSection::GridArea::LatitudeOfLastGridPoint,gridArea->getLatitudeOfLastGridPoint());
     properties.emplace_back((uint)Property::GridSection::GridArea::LongitudeOfLastGridPoint,gridArea->getLongitudeOfLastGridPoint());
 
-    auto resolutionFlags = gridArea->getResolutionFlags();
+    auto *resolutionFlags = gridArea->getResolutionFlags();
     if (resolutionFlags)
       properties.emplace_back((uint)Property::GridSection::ResolutionFlags::ResolutionAndComponentFlags,resolutionFlags->getResolutionAndComponentFlags());
   }
@@ -1395,7 +1416,7 @@ bool GridDefinition::getProperty_gridArea(uint propertyId,Int64& value)
 
       case Property::GridSection::ResolutionFlags::ResolutionAndComponentFlags:
       {
-        auto resolutionFlags = gridArea->getResolutionFlags();
+        auto *resolutionFlags = gridArea->getResolutionFlags();
         if (resolutionFlags)
           value = resolutionFlags->getResolutionAndComponentFlags();
         return true;
@@ -1679,7 +1700,7 @@ bool GridDefinition::setProperty_gridArea(uint propertyId,Int64 value)
 
       case Property::GridSection::ResolutionFlags::ResolutionAndComponentFlags:
       {
-        auto resolutionFlags = gridArea->getResolutionFlags();
+        auto *resolutionFlags = gridArea->getResolutionFlags();
         if (resolutionFlags)
           resolutionFlags->setResolutionAndComponentFlags(value);
         return true;
@@ -2327,7 +2348,7 @@ bool GridDefinition::getGridPointByLatLonCoordinatesNoCache(double lat,double lo
       \return        Returns 'false' if the given coordinates are outside of the grid.
 */
 
-bool GridDefinition::getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const
+bool GridDefinition::getGridPointByOriginalCoordinates(double /*x*/,double /*y*/,double& /*grid_i*/,double& /*grid_j*/) const
 {
   FUNCTION_TRACE
   throw Fmi::Exception(BCP,"Not implemented!");
@@ -2499,7 +2520,7 @@ uint GridDefinition::getTemplateNumber() const
         \param memoryReader  This object controls the access to the memory mapped file.
 */
 
-void GridDefinition::read(MemoryReader& memoryReader)
+void GridDefinition::read(MemoryReader& /*memoryReader*/)
 {
   FUNCTION_TRACE
   throw Fmi::Exception(BCP,"Not implemented!");
@@ -2514,7 +2535,7 @@ void GridDefinition::read(MemoryReader& memoryReader)
         \param dataWriter  The data stream object.
 */
 
-void GridDefinition::write(DataWriter& dataWriter)
+void GridDefinition::write(DataWriter& /*dataWriter*/)
 {
   FUNCTION_TRACE
   throw Fmi::Exception(BCP,"Not implemented!");
@@ -2531,7 +2552,7 @@ void GridDefinition::write(DataWriter& dataWriter)
         \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void GridDefinition::print(std::ostream& stream,uint level,uint optionFlags) const
+void GridDefinition::print(std::ostream& stream,uint level,uint /*optionFlags*/) const
 {
   FUNCTION_TRACE
   try

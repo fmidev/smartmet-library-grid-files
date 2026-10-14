@@ -10,6 +10,8 @@
 #include <macgyver/FastMath.h>
 #include <arpa/inet.h>
 
+#include <algorithm>
+
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
 
@@ -1079,7 +1081,7 @@ void Message::setGridGeometryId(T::GeometryId geometryId)
         \param values  The vector of grid values.
 */
 
-void Message::setGridValues(T::ParamValue_vec& values)
+void Message::setGridValues(T::ParamValue_vec& /*values*/)
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -1682,11 +1684,9 @@ void Message::getGridMinAndMaxValues(T::ParamValue& minValue,T::ParamValue& maxV
         T::ParamValue val = getGridValueByGridPoint(x,y);
         if (val != ParamValueMissing)
         {
-          if (val < minValue)
-            minValue = val;
+          minValue = std::min(val, minValue);
 
-          if (val > maxValue)
-            maxValue = val;
+          maxValue = std::max(val, maxValue);
         }
       }
     }
@@ -2061,7 +2061,7 @@ void Message::read(MemoryReader& memoryReader)
         \param dataWriter  The data stream object.
 */
 
-void Message::write(DataWriter& dataWriter)
+void Message::write(DataWriter& /*dataWriter*/)
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }

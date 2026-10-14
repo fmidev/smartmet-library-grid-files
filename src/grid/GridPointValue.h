@@ -31,7 +31,7 @@ class GridPointValue
       file_message_x_y_level  = 5,  //!< Sort by: file, message, x, y, level, value
     };
 
-  public:
+  
                     GridPointValue();
                     /*! \brief Copy constructor. */
                     GridPointValue(const GridPointValue& gridPointValue);

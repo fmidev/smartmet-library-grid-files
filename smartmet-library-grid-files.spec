@@ -134,6 +134,7 @@ libraries, the grid engine and the plugins using it
 - Fixed an out-of-range read in GaussianLatitudeCache::getClosestLatitudes for the last latitude, zero-initialized the complex and second order packing value buffers, check JPEG-2000 components for null and stop log rotation if the new log file cannot be opened
 - Fixed data races: GridDef read its last definition check time and the file handle cache its last cleanup time without holding the lock
 - Fixed a stack overflow in png_load into a vector for images with more than one pixel, and zero-initialize the alpha channel of RGB images in png_load into a CImage
+- Fixed mechanical clang-tidy findings (internal linkage, unused parameters, initialization, redundant code), no functional changes
 
 * Sun Oct 11 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.11-1.fmi
 - Failed file writes, closes and seeks are now reported instead of being ignored

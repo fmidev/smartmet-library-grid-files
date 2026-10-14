@@ -104,7 +104,7 @@ std::string MessageSection::getSectionName() const
       \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void MessageSection::print(std::ostream& stream,uint level,uint optionFlags) const
+void MessageSection::print(std::ostream& /*stream*/,uint /*level*/,uint /*optionFlags*/) const
 {
   throw Fmi::Exception(BCP,"Not implemented!");
 }

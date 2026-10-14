@@ -61,7 +61,7 @@ class SecondOrderPacking : public DataDefinition
     std::uint16_t   mP2;            //!< Number of second-order packed values.
     std::uint8_t    mExtraValues;   //!< Reserved extra-value byte (octet 21).
 
-  private:
+  
 
     void decodeValues_rowByRow(
         std::size_t numOfValues,

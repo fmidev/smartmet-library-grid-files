@@ -140,7 +140,7 @@ void SecondOrderPacking::read(MemoryReader& memoryReader)
         \param dataWriter  The data stream object.
 */
 
-void SecondOrderPacking::write(DataWriter& dataWriter)
+void SecondOrderPacking::write(DataWriter& /*dataWriter*/)
 {
   try
   {
@@ -294,18 +294,18 @@ void SecondOrderPacking::decodeValues(Message *message,T::ParamValue_vec& decode
 /*! \brief The method decodes second-order packed values row by row. */
 
 void SecondOrderPacking::decodeValues_rowByRow(
-    std::size_t numOfValues,
-    T::Dimensions dimensions,
-    T::Data_ptr data,
-    std::size_t dataSize,
-    T::Data_ptr bitmap,
-    std::size_t bitmapSizeInBytes,
-    std::int16_t binaryScaleFactor,
-    std::uint16_t decimalScaleFactor,
-    std::float_t referenceValue,
-    std::uint8_t bitsPerValue,
-    std::uint8_t flags,
-    T::ParamValue_vec& decodedValues) const
+    std::size_t /*numOfValues*/,
+    T::Dimensions /*dimensions*/,
+    T::Data_ptr /*data*/,
+    std::size_t /*dataSize*/,
+    T::Data_ptr /*bitmap*/,
+    std::size_t /*bitmapSizeInBytes*/,
+    std::int16_t /*binaryScaleFactor*/,
+    std::uint16_t /*decimalScaleFactor*/,
+    std::float_t /*referenceValue*/,
+    std::uint8_t /*bitsPerValue*/,
+    std::uint8_t /*flags*/,
+    T::ParamValue_vec& /*decodedValues*/) const
 {
   try
   {
@@ -324,18 +324,18 @@ void SecondOrderPacking::decodeValues_rowByRow(
 /*! \brief The method decodes second-order packed values using a constant bit width. */
 
 void SecondOrderPacking::decodeValues_constantWidth(
-    std::size_t numOfValues,
-    T::Dimensions dimensions,
-    T::Data_ptr data,
-    std::size_t dataSize,
-    T::Data_ptr bitmap,
-    std::size_t bitmapSizeInBytes,
-    std::int16_t binaryScaleFactor,
-    std::uint16_t decimalScaleFactor,
-    std::float_t referenceValue,
-    std::uint8_t bitsPerValue,
-    std::uint8_t flags,
-    T::ParamValue_vec& decodedValues) const
+    std::size_t /*numOfValues*/,
+    T::Dimensions /*dimensions*/,
+    T::Data_ptr /*data*/,
+    std::size_t /*dataSize*/,
+    T::Data_ptr /*bitmap*/,
+    std::size_t /*bitmapSizeInBytes*/,
+    std::int16_t /*binaryScaleFactor*/,
+    std::uint16_t /*decimalScaleFactor*/,
+    std::float_t /*referenceValue*/,
+    std::uint8_t /*bitsPerValue*/,
+    std::uint8_t /*flags*/,
+    T::ParamValue_vec& /*decodedValues*/) const
 {
   try
   {
@@ -354,18 +354,18 @@ void SecondOrderPacking::decodeValues_constantWidth(
 /*! \brief The method decodes second-order packed values using variable bit widths. */
 
 void SecondOrderPacking::decodeValues_differentWidth(
-    std::size_t numOfValues,
-    T::Dimensions dimensions,
-    T::Data_ptr data,
-    std::size_t dataSize,
-    T::Data_ptr bitmap,
-    std::size_t bitmapSizeInBytes,
-    std::int16_t binaryScaleFactor,
-    std::uint16_t decimalScaleFactor,
-    std::float_t referenceValue,
-    std::uint8_t bitsPerValue,
-    std::uint8_t flags,
-    T::ParamValue_vec& decodedValues) const
+    std::size_t /*numOfValues*/,
+    T::Dimensions /*dimensions*/,
+    T::Data_ptr /*data*/,
+    std::size_t /*dataSize*/,
+    T::Data_ptr /*bitmap*/,
+    std::size_t /*bitmapSizeInBytes*/,
+    std::int16_t /*binaryScaleFactor*/,
+    std::uint16_t /*decimalScaleFactor*/,
+    std::float_t /*referenceValue*/,
+    std::uint8_t /*bitsPerValue*/,
+    std::uint8_t /*flags*/,
+    T::ParamValue_vec& /*decodedValues*/) const
 {
   try
   {
@@ -394,7 +394,7 @@ void SecondOrderPacking::decodeValues_SPD(
     std::uint16_t decimalScaleFactor,
     std::float_t referenceValue,
     std::uint8_t bitsPerValue,
-    std::uint8_t flags,
+    std::uint8_t /*flags*/,
     T::ParamValue_vec& decodedValues,
     uint orderOfSPD) const
 {
@@ -654,7 +654,7 @@ void SecondOrderPacking::decodeValues_SPD(
         \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void SecondOrderPacking::print(std::ostream& stream,uint level,uint optionFlags) const
+void SecondOrderPacking::print(std::ostream& stream,uint level,uint /*optionFlags*/) const
 {
   try
   {

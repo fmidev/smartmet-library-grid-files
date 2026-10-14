@@ -368,7 +368,7 @@ void GridSection::read(MemoryReader& memoryReader)
     {
       if (mGridDefinitionTemplateNumber)
       {
-        auto gridDefinition = createGridDefinition(*mGridDefinitionTemplateNumber);
+        auto *gridDefinition = createGridDefinition(*mGridDefinitionTemplateNumber);
         mGridDefinition.reset(gridDefinition);
         gridDefinition->read(memoryReader);
       }

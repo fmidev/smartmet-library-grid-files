@@ -13,6 +13,8 @@ Topography topography;
 
 /*! \brief Converts an ARGB pixel value into a grayscale intensity using the luminance formula. */
 
+namespace
+{
 inline unsigned char argb_to_gray(uint argb)
 {
   uint r = (argb & 0xFF0000) >> 16;
@@ -21,6 +23,7 @@ inline unsigned char argb_to_gray(uint argb)
 
   return (unsigned char)(0.299 * r + 0.587 * g + 0.114 * b);
 }
+}  // namespace
 
 
 
@@ -74,10 +77,10 @@ Topography::~Topography()
 {
   try
   {
-    if (mLandShading)
+    
       delete [] mLandShading;
 
-    if (mSeaShading)
+    
       delete [] mSeaShading;
   }
   catch (...)

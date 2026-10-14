@@ -3,6 +3,8 @@
 #include <macgyver/Exception.h>
 #include <arpa/inet.h>
 
+#include <algorithm>
+
 namespace SmartMet
 {
 
@@ -437,8 +439,7 @@ bool MemoryReader::read_string(uchar _endChar,char *_str,uint _maxLen)
     auto *s = (uchar*)_str;
     uchar *r = readPtr;
     uchar *e = readPtr + _maxLen;
-    if (e > endPtr)
-      e = endPtr;
+    e = std::min(e, endPtr);
 
     while (r < e)
     {
@@ -809,9 +810,9 @@ std::int32_t MemoryReader::read_int24()
     unsigned char a = readPtr[0];
     unsigned char b = readPtr[1];
     unsigned char c = readPtr[2];
-    int val =  static_cast<int>((1 - ((a & 128) >> 6)) * ((a & 127) << 24 | b << 16 | c << 8));
+    int val =  ((1 - ((a & 128) >> 6)) * ((a & 127) << 24 | b << 16 | c << 8));
     if (littleEndian)
-      val =  static_cast<int>((1 - ((c & 128) >> 6)) * ((c & 127) << 24 | b << 16 | a << 8));
+      val =  ((1 - ((c & 128) >> 6)) * ((c & 127) << 24 | b << 16 | a << 8));
 
     val = val / 256;
 
@@ -859,9 +860,9 @@ std::int32_t MemoryReader::read_int32()
     unsigned char b = readPtr[1];
     unsigned char c = readPtr[2];
     unsigned char d = readPtr[3];
-    int val =  static_cast<int>((1 - ((a & 128) >> 6)) * ((a & 127) << 24 | b << 16 | c << 8 | d));
+    int val =  ((1 - ((a & 128) >> 6)) * ((a & 127) << 24 | b << 16 | c << 8 | d));
     if (littleEndian)
-       val =  static_cast<int>((1 - ((d & 128) >> 6)) * ((d & 127) << 24 | c << 16 | b << 8 | a));
+       val =  ((1 - ((d & 128) >> 6)) * ((d & 127) << 24 | c << 16 | b << 8 | a));
 
     readPtr += 4;
     return val;
@@ -1286,7 +1287,7 @@ T::Int16_opt MemoryReader::read_Int16_opt()
 
     readPtr += 2;
 
-    if (!(a == 0xFF  &&  b == 0xFF))
+    if (a != 0xFF  ||  b != 0xFF)
       return val;
 
     return {};
@@ -1321,15 +1322,15 @@ T::Int32_opt MemoryReader::read_Int24_opt()
     unsigned char a = readPtr[0];
     unsigned char b = readPtr[1];
     unsigned char c = readPtr[2];
-    int val =  static_cast<int>((1 - ((a & 128) >> 6)) * ((a & 127) << 24 | b << 16 | c << 8));
+    int val =  ((1 - ((a & 128) >> 6)) * ((a & 127) << 24 | b << 16 | c << 8));
     if (littleEndian)
-      val =  static_cast<int>((1 - ((c & 128) >> 6)) * ((c & 127) << 24 | b << 16 | a << 8));
+      val =  ((1 - ((c & 128) >> 6)) * ((c & 127) << 24 | b << 16 | a << 8));
 
     val = val / 256;
 
     readPtr += 3;
 
-    if (!(a == 0xFF  &&  b == 0xFF  &&  c == 0xFF))
+    if (a != 0xFF  ||  b != 0xFF  ||  c != 0xFF)
       return val;
 
     return {};
@@ -1365,13 +1366,13 @@ T::Int32_opt MemoryReader::read_Int32_opt()
     unsigned char b = readPtr[1];
     unsigned char c = readPtr[2];
     unsigned char d = readPtr[3];
-    int val =  static_cast<int>((1 - ((a & 128) >> 6)) * ((a & 127) << 24 | b << 16 | c << 8 | d));
+    int val =  ((1 - ((a & 128) >> 6)) * ((a & 127) << 24 | b << 16 | c << 8 | d));
     if (littleEndian)
-      val =  static_cast<int>((1 - ((d & 128) >> 6)) * ((d & 127) << 24 | c << 16 | b << 8 | a));
+      val =  ((1 - ((d & 128) >> 6)) * ((d & 127) << 24 | c << 16 | b << 8 | a));
 
     readPtr += 4;
 
-    if (!(a == 0xFF  &&  b == 0xFF  &&  c == 0xFF  &&  d == 0xFF))
+    if (a != 0xFF  ||  b != 0xFF  ||  c != 0xFF  ||  d != 0xFF)
       return val;
 
     return {};
@@ -1422,7 +1423,7 @@ T::Float_opt MemoryReader::read_Float_opt()
 
     readPtr += 4;
 
-    if (!(f[0] == 0xFF  &&  f[1] == 0xFF  &&  f[2] == 0xFF  &&  f[3] == 0xFF))
+    if (f[0] != 0xFF  ||  f[1] != 0xFF  ||  f[2] != 0xFF  ||  f[3] != 0xFF)
       return val;
 
     return {};

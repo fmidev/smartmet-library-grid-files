@@ -135,7 +135,7 @@ bool TcpClient::isConnected()
     if (mSockfd < 0)
       return false;
 
-    char data;
+    char data = 0;
     if (recv(mSockfd,&data,1, MSG_PEEK | MSG_DONTWAIT) >= 0)
       return true;
 

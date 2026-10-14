@@ -1297,7 +1297,7 @@ void IdentificationSection::setTypeOfProcessedData(T::UInt8_opt typeOfProcessedD
         \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void IdentificationSection::print(std::ostream& stream,uint level,uint optionFlags) const
+void IdentificationSection::print(std::ostream& stream,uint level,uint /*optionFlags*/) const
 {
   try
   {

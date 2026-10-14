@@ -30,7 +30,7 @@ class QueryDataFile
     void                print(std::ostream& stream,uint level,uint optionFlags) const;
     //T::ParamValue       getGridValue(uint paramIndex,uint levelIndex,uint timeIndex,uint grid_i,uint grid_j) const;
 
-    inline T::ParamValue getGridValue(uint paramIndex,uint levelIndex,uint timeIndex,uint grid_i,uint grid_j) const
+    T::ParamValue getGridValue(uint paramIndex,uint levelIndex,uint timeIndex,uint grid_i,uint grid_j) const
     {
       try
       {

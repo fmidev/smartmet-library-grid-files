@@ -2,6 +2,7 @@
 #include <arpa/inet.h>
 #include <dirent.h>
 #include <fnmatch.h>
+#include <algorithm>
 #include <climits>
 #include <macgyver/StringConversion.h>
 #include <macgyver/TimeParser.h>
@@ -38,7 +39,10 @@ namespace fs = std::filesystem;
 namespace SmartMet
 {
 
+namespace
+{
 Fmi::TimeZones itsTimeZones;
+}  // namespace
 
 
 /*! \brief Converts an unsigned 64-bit integer to a hexadecimal string. */
@@ -482,7 +486,7 @@ void copyFile(const char *sourceFileName,const char *targetFileName,const bool& 
 
     std::vector<char> bufVec(1000000);
     char *buf = bufVec.data();
-    int nr;
+    int nr = 0;
     while (!shutdownRequested && (nr = fread(buf,1,1000000,sFile)) > 0)
     {
       if (!shutdownRequested)
@@ -941,6 +945,8 @@ std::string utcTimeFromTimeT(time_t t)
 
 /*! \brief Converts a local-time ISO timestamp in the given timezone to a UTC ISO timestamp. */
 
+namespace
+{
 std::string localTimeToUtcTime(const std::string& localTime, const char *tzone)
 {
   try
@@ -953,6 +959,7 @@ std::string localTimeToUtcTime(const std::string& localTime, const char *tzone)
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+}  // namespace
 
 /*! \brief Converts a local DateTime in the given timezone to UTC. */
 
@@ -993,6 +1000,8 @@ std::string localTimeToUtc(const std::string& localTime, Fmi::TimeZonePtr tz)
 
 /*! \brief Converts a UTC ISO timestamp to a local-time ISO timestamp in the given timezone. */
 
+namespace
+{
 std::string utcTimeToLocalTime(const std::string& utcTime, const char *tzone)
 {
   try
@@ -1005,6 +1014,7 @@ std::string utcTimeToLocalTime(const std::string& utcTime, const char *tzone)
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+}  // namespace
 
 
 
@@ -1206,6 +1216,8 @@ UInt64 toUInt64(const char *str)
 
 /*! \brief Parses a C string into a double using a locale-independent custom parser. */
 
+namespace
+{
 double toDouble2(const char* str)
 {
   double result = 0;
@@ -1244,6 +1256,7 @@ double toDouble2(const char* str)
   }
   return result;
 }
+}  // namespace
 
 
 
@@ -1471,7 +1484,7 @@ size_t toSize_t(const std::string &str)
 
 /*! \brief Returns a placeholder string for a 16-byte char array value. */
 
-std::string toString(std::array<char, 16> value)
+std::string toString(std::array<char, 16> /*value*/)
 {
   try
   {
@@ -2792,7 +2805,7 @@ bool patternMatch(const char *str, const std::vector<std::string> &patterns)
 {
   try
   {
-    for (auto& pattern : patterns)
+    for (const auto& pattern : patterns)
     {
       if (fnmatch(pattern.c_str(), str, 0) == 0) return true;
     }
@@ -2851,7 +2864,7 @@ void getFileList(const char *dirName,
         }
         else if (ep->d_type == DT_REG)
         {
-          if (filePatterns.size() == 0 || patternMatch(ep->d_name, filePatterns))
+          if (filePatterns.empty() || patternMatch(ep->d_name, filePatterns))
             fileList.emplace_back(path, ep->d_name);
         }
         else if (ep->d_type == DT_UNKNOWN)
@@ -2866,7 +2879,7 @@ void getFileList(const char *dirName,
             }
             else if (s.st_mode & S_IFREG)
             {
-              if (filePatterns.size() == 0 || patternMatch(ep->d_name, filePatterns))
+              if (filePatterns.empty() || patternMatch(ep->d_name, filePatterns))
                 fileList.emplace_back(path, ep->d_name);
             }
           }
@@ -3078,8 +3091,7 @@ void parseCoordinates(const std::string& coordinateStr,
 
 void tuneLevels(int &level1, int &level2, int newLevel)
 {
-  if (level1 > level2)
-    level2 = level1;
+  level2 = std::max(level1, level2);
 
   if (level1 <= newLevel && newLevel <= level2) return;
 
@@ -3571,7 +3583,7 @@ std::int32_t read_int24(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos)
     unsigned char a = rPtr[0];
     unsigned char b = rPtr[1];
     unsigned char c = rPtr[2];
-    int val =  static_cast<int>((1 - ((a & 128) >> 6)) * ((a & 127) << 24 | b << 16 | c << 8));
+    int val =  ((1 - ((a & 128) >> 6)) * ((a & 127) << 24 | b << 16 | c << 8));
 
     val = val / 256;
 
@@ -3607,7 +3619,7 @@ std::int32_t read_int32(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos)
     unsigned char b = rPtr[1];
     unsigned char c = rPtr[2];
     unsigned char d = rPtr[3];
-    int val =  static_cast<int>((1 - ((a & 128) >> 6)) * ((a & 127) << 24 | b << 16 | c << 8 | d));
+    int val =  ((1 - ((a & 128) >> 6)) * ((a & 127) << 24 | b << 16 | c << 8 | d));
 
     return val;
   }
@@ -3742,6 +3754,8 @@ std::float_t read_ibmFloat(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos
 
 /*! \brief Returns the mathematical floor-based modulo of x by y. */
 
+namespace
+{
 double mod(double x,double y)
 {
   return (x - y * floor(x / y));
@@ -3753,7 +3767,7 @@ double mod(double x,double y)
 
 bool isGregorianLeapYear(int year)
 {
-    return ((year % 4) == 0) && (!(((year % 100) == 0) && ((year % 400) != 0)));
+    return ((year % 4) == 0) && (((year % 100) != 0) || ((year % 400) == 0));
 }
 
 
@@ -3779,6 +3793,7 @@ double gregorian_to_jd(int year, int month, int day)
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
+}  // namespace
 
 
 
@@ -3805,7 +3820,7 @@ void jdnToGregorian(double jd,int& year, int& month, int& day)
     double yindex = floor(dquad / 365);
 
     year = (quadricent * 400) + (cent * 100) + (quad * 4) + yindex;
-    if (!((cent == 4) || (yindex == 4)))
+    if ((cent != 4) && (yindex != 4))
       year++;
 
     double yearday = wjd - gregorian_to_jd(year, 1, 1);
@@ -4070,7 +4085,7 @@ int getClosestIndex(FloatVec& values,float value)
 {
   try
   {
-    if (values.size() == 0)
+    if (values.empty())
       return 0;
 
     if (values[0] >= values[values.size()-1])
@@ -4302,7 +4317,7 @@ int hmac_sha256(const uint8_t *secretKey,int secretKeyLen,const uint8_t *input,i
 
 /*! \brief Computes an AWS S3 v4 request signature as a hexadecimal string. */
 
-int signature_aws_s3_v4(const char *username,
+int signature_aws_s3_v4(const char * /*username*/,
                  const char *password,
                  const char *date,
                  const char *dateRegion,

@@ -37,14 +37,14 @@ class Coordinate
     Coordinate(unsigned int x, unsigned int y) : mX(static_cast<double>(x)), mY(static_cast<double>(y)) {};
 
     /*! \brief Return the horizontal component. */
-    inline double x() const { return mX; }
+    double x() const { return mX; }
     /*! \brief Return the vertical component. */
-    inline double y() const { return mY; }
+    double y() const { return mY; }
 
     /*! \brief Set both components.
      *  \param[in] x  New horizontal value.
      *  \param[in] y  New vertical value. */
-    inline void set(double x, double y) {mX = x;  mY = y;}
+    void set(double x, double y) {mX = x;  mY = y;}
 
   private:
 

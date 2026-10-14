@@ -77,7 +77,7 @@ class CImage
 
     virtual ~CImage()
     {
-      if (pixel != nullptr)
+      
         delete[] pixel;
     }
 
@@ -85,7 +85,7 @@ class CImage
     {
       if (&image == this)
         return *this;
-      if (pixel != nullptr)
+      
         delete[] pixel;
 
       pixel = nullptr;

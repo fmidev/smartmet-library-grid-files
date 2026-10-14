@@ -203,7 +203,7 @@ bool DataFetcher_network::getFileList(uint protocol,const char *server,const Xml
   try
   {
     bool truncated = false;
-    for (auto& a : rootElement.elementList)
+    for (const auto& a : rootElement.elementList)
     {
       if (strcasecmp(a->tag.c_str(), "ListBucketResult") == 0)
       {
@@ -248,7 +248,7 @@ bool DataFetcher_network::getFileList(uint protocol,const char *server,const Xml
               }
             }
 
-            if (filePatterns.size() == 0 || patternMatch(rec.filename.c_str(),filePatterns))
+            if (filePatterns.empty() || patternMatch(rec.filename.c_str(),filePatterns))
               fileList.push_back(rec);
           }
         }

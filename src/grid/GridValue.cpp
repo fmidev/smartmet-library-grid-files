@@ -153,7 +153,7 @@ GridValue::~GridValue()
 
 /*! \brief Prints the contents of the grid value into the given stream. */
 
-void GridValue::print(std::ostream& stream,uint level,uint optionFlags) const
+void GridValue::print(std::ostream& stream,uint level,uint /*optionFlags*/) const
 {
   try
   {

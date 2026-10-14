@@ -353,7 +353,7 @@ void ProductSection::read(MemoryReader& memoryReader)
 
     if (mProductDefinitionTemplateNumber)
     {
-      auto productDefinition = createProductDefinition((*mProductDefinitionTemplateNumber));
+      auto *productDefinition = createProductDefinition((*mProductDefinitionTemplateNumber));
       if (productDefinition == nullptr)
       {
         Fmi::Exception exception(BCP,"Product definition template not supported!");

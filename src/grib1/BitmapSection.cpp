@@ -453,7 +453,7 @@ void BitmapSection::setBitmapData(T::Data_ptr data,std::size_t size)
         \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void BitmapSection::print(std::ostream& stream,uint level,uint optionFlags) const
+void BitmapSection::print(std::ostream& stream,uint level,uint /*optionFlags*/) const
 {
   try
   {

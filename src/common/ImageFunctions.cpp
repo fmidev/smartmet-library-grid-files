@@ -4,6 +4,7 @@
 #include "MemoryReader.h"
 #include "ShowFunction.h"
 #include <macgyver/Exception.h>
+#include <algorithm>
 #include <memory>
 #include <gis/OGR.h>
 #include <cstdint>
@@ -15,7 +16,8 @@
 
 extern "C"
 {
-  #include <stdlib.h>
+  #include <math.h>
+#include <stdlib.h>
   #include <stdio.h>
   #include <jpeglib.h>
   #include <math.h>
@@ -54,6 +56,8 @@ int compare_coordinates(const void *p1, const void *p2)
 
 /*! \brief Returns the smaller of two integer values. */
 
+namespace
+{
 int int_min(int _val1,int _val2)
 {
   if (_val1 < _val2)
@@ -61,6 +65,7 @@ int int_min(int _val1,int _val2)
 
   return _val2;
 }
+}  // namespace
 
 
 
@@ -247,8 +252,8 @@ int jpg_load(const char *_filename,CImage& _image)
 
     struct my_error_mgr jerr;
 
-    JSAMPARRAY buffer;  // ### Output row buffer
-    int row_stride;     // ###  physical row width in output buffer
+    JSAMPARRAY buffer = nullptr;  // ### Output row buffer
+    int row_stride = 0;     // ###  physical row width in output buffer
 
     FILE *infile = fopen(_filename, "rbe");
     if (infile == nullptr)
@@ -446,8 +451,10 @@ int jpg_load(const char *_filename,CImage& _image)
 
 
 
-static png_structp png_ptr = nullptr;
-static png_infop info_ptr = nullptr;
+namespace
+{
+png_structp png_ptr = nullptr;
+png_infop info_ptr = nullptr;
 
 png_uint_32 width = 0, height = 0;
 int bit_depth = 0, color_type = 0;
@@ -519,7 +526,7 @@ int readpng_init(FILE *infile, uint *pWidth, uint *pHeight)
 
 int readpng_get_bgcolor(uchar *red, uchar *green, uchar *blue)
 {
-  png_color_16p pBackground;
+  png_color_16p pBackground = nullptr;
 
   // NOLINTNEXTLINE(cert-err52-cpp): libpng/libjpeg report errors with longjmp
   if (setjmp(png_jmpbuf(png_ptr)))
@@ -569,8 +576,8 @@ int readpng_get_bgcolor(uchar *red, uchar *green, uchar *blue)
 
 uchar *readpng_get_image(double display_exponent, int *pChannels, uint *pRowbytes)
 {
-  double gamma;
-  png_uint_32 i, rowbytes;
+  double gamma = NAN;
+  png_uint_32 i = 0, rowbytes = 0;
 
 
   // NOLINTNEXTLINE(cert-err52-cpp): libpng/libjpeg report errors with longjmp
@@ -654,6 +661,7 @@ void readpng_cleanup(int free_image_data)
     info_ptr = nullptr;
   }
 }
+}  // namespace
 
 
 
@@ -826,7 +834,9 @@ struct CImageHandle_png
 
 /* local prototype */
 
-static void writepng_error_handler(png_structp png_ptr, png_const_charp msg);
+namespace
+{
+void writepng_error_handler(png_structp png_ptr, png_const_charp msg);
 
 
 
@@ -910,7 +920,7 @@ int png_writeClose(void *_handle)
 
 /*! \brief libpng error handler that terminates the process on PNG write failures. */
 
-static void writepng_error_handler(png_structp png_ptr, png_const_charp msg)
+void writepng_error_handler(png_structp /*png_ptr*/, png_const_charp /*msg*/)
 {
   exit(-1);
 }
@@ -968,6 +978,7 @@ int png_writeCloseMem(void *_handle)
   delete handle;
   return sz;
 }
+}  // namespace
 
 
 /*! \brief Writes a 32-bit pixel buffer to disk as a PNG file using the given compression level. */
@@ -1474,17 +1485,13 @@ void saveGeometryAsJpeg(const char *_filename,int width,int height,uint backgrou
 
         //printf("PAINT %f %f %f %f\n",minX,minY,maxX,maxY);
 
-        if (minX < tminX)
-          tminX = minX;
+        tminX = std::min(minX, tminX);
 
-        if (minY < tminY)
-          tminY = minY;
+        tminY = std::min(minY, tminY);
 
-        if (maxX > tmaxX)
-          tmaxX = maxX;
+        tmaxX = std::max(maxX, tmaxX);
 
-        if (maxY > tmaxY)
-          tmaxY = maxY;
+        tmaxY = std::max(maxY, tmaxY);
       }
     }
 

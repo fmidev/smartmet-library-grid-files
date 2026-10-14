@@ -4,6 +4,8 @@
 
 #include <memory.h>
 
+#include <algorithm>
+
 namespace SmartMet
 {
 
@@ -79,7 +81,7 @@ BitLine::BitLine(BitLine& bitLine)
 
 BitLine::~BitLine()
 {
-  if (changes)
+  
     delete[] changes;
 }
 
@@ -146,10 +148,7 @@ bool BitLine::isAllZeros()
 {
   try
   {
-    if (changeCount == 0 || changes == nullptr)
-      return true;
-
-    return false;
+    return changeCount == 0 || changes == nullptr;
   }
   catch (...)
   {
@@ -347,8 +346,7 @@ uint BitLine::getMaxChange()
     for (uint t=0; t<changeCount; t++)
     {
       uint diff = changes[t] - prevChange;
-      if (diff > maxChange)
-        maxChange = diff;
+      maxChange = std::max(diff, maxChange);
 
       prevChange = changes[t];
     }

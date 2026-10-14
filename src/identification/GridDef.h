@@ -382,7 +382,7 @@ class GridDef
     void                    updateCheck();
     time_t                  getModificationTime(const string_vec& files);
 
-  protected:
+  
 
     std::string             mConfigFileName;
     ConfigurationFile       mConfigurationFile;

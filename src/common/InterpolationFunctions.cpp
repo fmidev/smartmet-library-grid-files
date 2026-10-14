@@ -3,6 +3,8 @@
 #include "GeneralFunctions.h"
 #include <macgyver/Exception.h>
 
+#include <algorithm>
+
 
 namespace SmartMet
 {
@@ -315,6 +317,8 @@ Int64 linearInterpolation(Int64 x,Int64 y,Int64 x1,Int64 y1,Int64 x2,Int64 y2,In
 
 /*! \brief Performs bilinear interpolation by delegating to the fixed-point integer implementation. */
 
+namespace
+{
 double linearInterpolation2(double x,double y,double x1,double y1,double x2,double y2,double val_q11,double val_q21,double val_q22,double val_q12)
 {
   if (val_q11 == ParamValueMissing && val_q21 == ParamValueMissing  &&
@@ -339,6 +343,7 @@ double linearInterpolation2(double x,double y,double x1,double y1,double x2,doub
   else
     return ParamValueMissing;
 }
+}  // namespace
 
 
 
@@ -1152,6 +1157,8 @@ void timeInterpolation(const T::GridValueList& values1,const T::GridValueList& v
 
 /*! \brief Computes the lapse-rate correction for the height difference between true and model terrain. */
 
+namespace
+{
 double lapseratefix(double lapseRate,double trueHeight,double modelHeight,bool waterFlag)
 {
   try
@@ -1161,8 +1168,7 @@ double lapseratefix(double lapseRate,double trueHeight,double modelHeight,bool w
 
     if (waterFlag)
     {
-      if (lapseRate > sea_lapse_rate_limit)
-        lapseRate = sea_lapse_rate_limit;
+      lapseRate = std::min(lapseRate, sea_lapse_rate_limit);
     }
 
     double diff = trueHeight - modelHeight;
@@ -1192,6 +1198,7 @@ double lapseratefix(double lapseRate,double trueHeight,double modelHeight,bool w
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+}  // namespace
 
 
 

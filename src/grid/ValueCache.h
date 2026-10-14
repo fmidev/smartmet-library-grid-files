@@ -251,7 +251,7 @@ class ValueCache
      *  \param[out] value  Receives the requested grid value.
      *  \return True if the entry is still in the cache; false if it was evicted
      *          (caller should re-decode and re-store). */
-    inline bool getValue(uint key,uint index,T::ParamValue& value)
+    bool getValue(uint key,uint index,T::ParamValue& value)
     {
       try
       {

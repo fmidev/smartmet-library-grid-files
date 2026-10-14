@@ -72,7 +72,7 @@ void JpegGridDataRepresentationImpl::read(MemoryReader &memoryReader)
 
 /*! \brief Encodes the given grid values into a JPEG-2000 packed data buffer (placeholder). */
 
-void JpegGridDataRepresentationImpl::encodeValues(Message *message, T::ParamValue_vec &values)
+void JpegGridDataRepresentationImpl::encodeValues(Message * /*message*/, T::ParamValue_vec & /*values*/)
 {
   try
   {
@@ -264,7 +264,9 @@ typedef struct
 
 
 
-static OPJ_SIZE_T readMemoryStream(void *data, OPJ_SIZE_T dataSize, void *handle)
+namespace
+{
+OPJ_SIZE_T readMemoryStream(void *data, OPJ_SIZE_T dataSize, void *handle)
 {
   auto *streamHandle = (StreamHandle*)handle;
   if (streamHandle->offset >= streamHandle->dataSize)
@@ -283,7 +285,7 @@ static OPJ_SIZE_T readMemoryStream(void *data, OPJ_SIZE_T dataSize, void *handle
 
 
 
-static OPJ_OFF_T moveMemoryStreamOffset(OPJ_OFF_T bytes, void *handle)
+OPJ_OFF_T moveMemoryStreamOffset(OPJ_OFF_T bytes, void *handle)
 {
   if (bytes < 0)
     return -1;
@@ -300,7 +302,7 @@ static OPJ_OFF_T moveMemoryStreamOffset(OPJ_OFF_T bytes, void *handle)
 
 
 
-static OPJ_BOOL seekMemoryStream(OPJ_OFF_T position, void *handle)
+OPJ_BOOL seekMemoryStream(OPJ_OFF_T position, void *handle)
 {
   auto *streamHandle = (StreamHandle*)handle;
 
@@ -316,14 +318,14 @@ static OPJ_BOOL seekMemoryStream(OPJ_OFF_T position, void *handle)
 
 
 
-static void nopMemoryStream(void *handle)
+void nopMemoryStream(void *handle)
 {
   OPJ_ARG_NOT_USED(handle);
 }
 
 
 
-static opj_stream_t* createMemoryStream(StreamHandle& streamHandle)
+opj_stream_t* createMemoryStream(StreamHandle& streamHandle)
 {
   if (!(streamHandle.stream = opj_stream_default_create(true)))
     return (nullptr);
@@ -357,6 +359,7 @@ void openjpeg_info_callback(const char *msg, void*)
 {
   //std::cout << "OpenJPEG info: " << msg << std::endl;
 }
+}  // namespace
 
 
 /*! \brief Decodes a JPEG-2000 packed message into a vector of parameter values (OpenJPEG backend). */

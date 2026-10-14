@@ -417,7 +417,7 @@ void IndicatorSection::setTotalLength(std::uint32_t length)
         \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void IndicatorSection::print(std::ostream& stream,uint level,uint optionFlags) const
+void IndicatorSection::print(std::ostream& stream,uint level,uint /*optionFlags*/) const
 {
   try
   {

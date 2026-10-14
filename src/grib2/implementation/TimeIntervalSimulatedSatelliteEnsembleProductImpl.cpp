@@ -83,7 +83,7 @@ void TimeIntervalSimulatedSatelliteEnsembleProductImpl::read(MemoryReader& memor
         \return               The forecast time.
 */
 
-T::TimeString TimeIntervalSimulatedSatelliteEnsembleProductImpl::getForecastTime(T::TimeString referenceTime) const
+T::TimeString TimeIntervalSimulatedSatelliteEnsembleProductImpl::getForecastTime(T::TimeString /*referenceTime*/) const
 {
   throw Fmi::Exception(BCP, "Not implemented!");
 }

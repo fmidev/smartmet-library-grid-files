@@ -1510,7 +1510,7 @@ void ProductDefinition::getAttributeList(const std::string& prefix,T::AttributeL
 
 /*! \brief The method returns true if the named attribute matches the given value. */
 
-bool ProductDefinition::hasAttributeValue(const char *attributeName, const char *attributeValue) const
+bool ProductDefinition::hasAttributeValue(const char * /*attributeName*/, const char * /*attributeValue*/) const
 {
   return false;
 }
@@ -1521,7 +1521,7 @@ bool ProductDefinition::hasAttributeValue(const char *attributeName, const char 
 
 /*! \brief The method returns the value of the named product definition attribute. */
 
-bool ProductDefinition::getAttributeValue(const char *attributeName, std::string& attributeValue) const
+bool ProductDefinition::getAttributeValue(const char * /*attributeName*/, std::string& /*attributeValue*/) const
 {
   return false;
 }
@@ -1680,7 +1680,7 @@ T::ParamLevel ProductDefinition::getGribParameterLevel() const
 {
   try
   {
-    auto horizontal = getHorizontal();
+    auto *horizontal = getHorizontal();
     if (horizontal && horizontal->getScaledValueOfFirstFixedSurface())
       return *horizontal->getScaledValueOfFirstFixedSurface(); // * std::pow(10.0,*mHorizontal.getScaleFactorOfFirstFixedSurface());
 
@@ -1706,7 +1706,7 @@ T::ParamLevelId ProductDefinition::getGribParameterLevelId() const
 {
   try
   {
-    auto horizontal = getHorizontal();
+    auto *horizontal = getHorizontal();
     if (horizontal->getTypeOfFirstFixedSurface())
       return *horizontal->getTypeOfFirstFixedSurface();
 
@@ -2026,7 +2026,7 @@ PostprocSettings* ProductDefinition::getPostproc() const
         \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void ProductDefinition::print(std::ostream& stream,uint level,uint optionFlags) const
+void ProductDefinition::print(std::ostream& /*stream*/,uint /*level*/,uint /*optionFlags*/) const
 {
   throw Fmi::Exception(BCP,"Not implemented!");
 }

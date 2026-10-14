@@ -83,7 +83,7 @@ void AuxiliarySatelliteProductImpl::read(MemoryReader& memoryReader)
         \return               The forecast time.
 */
 
-T::TimeString AuxiliarySatelliteProductImpl::getForecastTime(T::TimeString referenceTime) const
+T::TimeString AuxiliarySatelliteProductImpl::getForecastTime(T::TimeString /*referenceTime*/) const
 {
   throw Fmi::Exception(BCP, "Not implemented!");
 }

@@ -14,6 +14,9 @@
 #include <macgyver/Cache.h>
 #include <macgyver/Cache.h>
 #include <macgyver/Hash.h>
+#include <cmath>
+
+#include <algorithm>
 
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
@@ -24,21 +27,30 @@ namespace SmartMet
 namespace GRID
 {
 
+namespace
+{
 // Per-request number of row-bands for parallel contouring, taken from the request attributes
 // (default 1 = single-threaded). The value is clamped to the number of cores downstream.
-static int getContourThreads(const T::AttributeList &attributeList)
+int getContourThreads(const T::AttributeList &attributeList)
 {
   const char *str = attributeList.getAttributeValue("contour.threads");
   return (str != nullptr) ? toInt32(str) : 1;
 }
+}  // namespace
 
 using AngleList = std::vector<float>;
 using AngleCache = std::map<int,AngleList>;
 
+namespace
+{
 AngleCache gridAngleCache;
+}  // namespace
 
 const uint tmpValueCacheSize = 200;
+namespace
+{
 uint tmpValueCachePos = 0;
+}  // namespace
 
 struct TmpValueCacheRec
 {
@@ -48,8 +60,11 @@ struct TmpValueCacheRec
     T::MessageIndex messageIndex;
 };
 
+namespace
+{
 TmpValueCacheRec tmpValueCache[tmpValueCacheSize];
 ThreadLock tmpCacheThreadLock;
+}  // namespace
 std::vector<double> EMPTY_DOUBLE_VEC;
 std::vector<Message*> EMPTY_MSG_VEC;
 
@@ -57,7 +72,10 @@ std::vector<Message*> EMPTY_MSG_VEC;
 using PolygonCoordinates = std::vector<std::vector<T::Coordinate>>;
 using PolygonCoordinates_sptr = std::shared_ptr<PolygonCoordinates>;
 
+namespace
+{
 Fmi::Cache::Cache<std::size_t,PolygonCoordinates_sptr> polygonCoordinateCache(10000);
+}  // namespace
 
 // The grid points inside a latlon circle and their latlon coordinates. The points depend only on
 // the grid geometry and the circle, so they are shared by all messages with the same geometry
@@ -75,7 +93,10 @@ using CirclePoints_sptr = std::shared_ptr<const CirclePoints>;
 #define CIRCLE_POINT_CACHE_SIZE 100
 
 Fmi::Cache::CacheStats circlePointCache_stats(Fmi::SecondClock::universal_time(),CIRCLE_POINT_CACHE_SIZE,0,0,0,0);
+namespace
+{
 Fmi::Cache::Cache<std::size_t,CirclePoints_sptr> circlePointCache(CIRCLE_POINT_CACHE_SIZE);
+}  // namespace
 
 
 
@@ -179,7 +200,7 @@ void Message::premap() const
     to the current message.
 */
 
-void Message::getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const
+void Message::getAttributeList(const std::string& /*prefix*/,T::AttributeList& /*attributeList*/) const
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -190,7 +211,7 @@ void Message::getAttributeList(const std::string& prefix,T::AttributeList& attri
 
 /*! \brief Returns the value of the named attribute as a string. */
 
-bool Message::getAttributeValue(const char *attributeName, std::string& attributeValue) const
+bool Message::getAttributeValue(const char * /*attributeName*/, std::string& /*attributeValue*/) const
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -200,7 +221,7 @@ bool Message::getAttributeValue(const char *attributeName, std::string& attribut
 
 /*! \brief Returns true if the named attribute equals the given value. */
 
-bool Message::hasAttributeValue(const char *attributeName, const char *attributeValue) const
+bool Message::hasAttributeValue(const char * /*attributeName*/, const char * /*attributeValue*/) const
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -796,7 +817,7 @@ void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::P
 
     Identification::gridDef.getGridOriginalCoordinatesByGeometry(attributeList,latLonCoordinates,coordinateType,coordinates,width,height);
 
-    if (!latLonCoordinates || latLonCoordinates->size() == 0)
+    if (!latLonCoordinates || latLonCoordinates->empty())
     {
       getGridIsobands(contourLowValues,contourHighValues,attributeList,modificationOperation,modificationParameters,contours);
       return;
@@ -863,7 +884,7 @@ void Message::getGridIsobandsByGrid(T::ParamValue_vec& contourLowValues,T::Param
   FUNCTION_TRACE
   try
   {
-    if (gridLatLonCoordinates.size() == 0 ||  gridWidth == 0 || gridHeight == 0)
+    if (gridLatLonCoordinates.empty() ||  gridWidth == 0 || gridHeight == 0)
       return;
 
     short areaInterpolationMethod = T::AreaInterpolationMethod::Linear;
@@ -1232,7 +1253,7 @@ void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::Attr
 
     Identification::gridDef.getGridOriginalCoordinatesByGeometry(attributeList,latLonCoordinates,coordinateType,coordinates,width,height);
 
-    if (!latLonCoordinates || latLonCoordinates->size() == 0)
+    if (!latLonCoordinates || latLonCoordinates->empty())
     {
       getGridIsolines(contourValues,attributeList,modificationOperation,modificationParameters,contours);
       return;
@@ -1300,7 +1321,7 @@ void Message::getGridIsolinesByGrid(T::ParamValue_vec& contourValues,uint gridWi
   FUNCTION_TRACE
   try
   {
-    if (gridLatLonCoordinates.size() == 0 ||  gridWidth == 0 || gridHeight == 0)
+    if (gridLatLonCoordinates.empty() ||  gridWidth == 0 || gridHeight == 0)
       return;
 
     short areaInterpolationMethod = T::AreaInterpolationMethod::Linear;
@@ -1660,7 +1681,7 @@ void Message::getGridStreamlinesByGeometry(T::AttributeList& attributeList,uint 
 
     Identification::gridDef.getGridOriginalCoordinatesByGeometry(attributeList,latLonCoordinates,coordinateType,coordinates,gwidth,gheight);
 
-    if (!latLonCoordinates || latLonCoordinates->size() == 0)
+    if (!latLonCoordinates || latLonCoordinates->empty())
     {
       getGridStreamlines(attributeList,modificationOperation,modificationParameters,streamlines);
       return;
@@ -1732,12 +1753,12 @@ void Message::getGridStreamlinesByGrid(uint gridWidth,uint gridHeight,std::vecto
 
 /*! \brief Computes streamlines over an explicit target grid with value modification. */
 
-void Message::getGridStreamlinesByGrid(uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,std::vector<T::Coordinate>& projectionCoordinates,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& streamlines)
+void Message::getGridStreamlinesByGrid(uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,std::vector<T::Coordinate>& /*projectionCoordinates*/,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& streamlines)
 {
   FUNCTION_TRACE
   try
   {
-    if (gridLatLonCoordinates.size() == 0 ||  gridWidth == 0 || gridHeight == 0)
+    if (gridLatLonCoordinates.empty() ||  gridWidth == 0 || gridHeight == 0)
       return;
 
     short areaInterpolationMethod = T::AreaInterpolationMethod::Nearest;
@@ -1923,7 +1944,7 @@ std::size_t Message::getGridOriginalValueCount() const
                          is outside of the grid data then the method return -1.
 */
 
-int Message::getGridOriginalValueIndex(uint grid_i,uint grid_j) const
+int Message::getGridOriginalValueIndex(uint /*grid_i*/,uint /*grid_j*/) const
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -1975,7 +1996,7 @@ T::GeometryId Message::getGridGeometryId() const
 
 /*! \brief Returns the average grid cell width and height in degrees. */
 
-void Message::getGridCellAverageSize(double& width,double& height) const
+void Message::getGridCellAverageSize(double& /*width*/,double& /*height*/) const
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -1986,7 +2007,7 @@ void Message::getGridCellAverageSize(double& width,double& height) const
 
 /*! \brief Returns the grid cell width and height in metric units. */
 
-bool Message::getGridMetricCellSize(double& width,double& height) const
+bool Message::getGridMetricCellSize(double& /*width*/,double& /*height*/) const
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -1997,7 +2018,7 @@ bool Message::getGridMetricCellSize(double& width,double& height) const
 
 /*! \brief Returns the full grid width and height in metric units. */
 
-bool Message::getGridMetricSize(double& width,double& height) const
+bool Message::getGridMetricSize(double& /*width*/,double& /*height*/) const
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -2008,7 +2029,7 @@ bool Message::getGridMetricSize(double& width,double& height) const
 
 /*! \brief Returns the corner coordinates of the grid in metric units. */
 
-bool Message::getGridMetricArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight)
+bool Message::getGridMetricArea(T::Coordinate& /*topLeft*/,T::Coordinate& /*topRight*/,T::Coordinate& /*bottomLeft*/,T::Coordinate& /*bottomRight*/)
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -2019,7 +2040,7 @@ bool Message::getGridMetricArea(T::Coordinate& topLeft,T::Coordinate& topRight,T
 
 /*! \brief Returns the corner coordinates of the grid in latitude/longitude. */
 
-bool Message::getGridLatLonArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight)
+bool Message::getGridLatLonArea(T::Coordinate& /*topLeft*/,T::Coordinate& /*topRight*/,T::Coordinate& /*bottomLeft*/,T::Coordinate& /*bottomRight*/)
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -2092,7 +2113,7 @@ T::FileType Message::getMessageType() const
         \param geometryId  The grid geometry identifier.
 */
 
-void Message::setGridGeometryId(T::GeometryId geometryId)
+void Message::setGridGeometryId(T::GeometryId /*geometryId*/)
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -2108,7 +2129,7 @@ void Message::setGridGeometryId(T::GeometryId geometryId)
         \param values  The vector of grid values.
 */
 
-void Message::setGridValues(T::ParamValue_vec& values)
+void Message::setGridValues(T::ParamValue_vec& /*values*/)
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -2126,7 +2147,7 @@ void Message::setGridValues(T::ParamValue_vec& values)
         \return   The method return true if the latlon values were succesfully returned.
 */
 
-bool Message::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const
+bool Message::getGridLatLonCoordinatesByGridPoint(uint /*grid_i*/,uint /*grid_j*/,double& /*lat*/,double& /*lon*/) const
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -2183,7 +2204,7 @@ void Message::getGridLatLonCoordinatesByGridPointList(std::vector<T::Point>& gri
         \return        The method return true if the latlon values were succesfully returned.
 */
 
-bool Message::getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j,double& lat,double& lon) const
+bool Message::getGridLatLonCoordinatesByGridPosition(double /*grid_i*/,double /*grid_j*/,double& /*lat*/,double& /*lon*/) const
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -2201,7 +2222,7 @@ bool Message::getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j
         \return        The method return true if the latlon values were succesfully returned.
 */
 
-bool Message::getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,double& lat,double& lon) const
+bool Message::getGridLatLonCoordinatesByOriginalCoordinates(double /*x*/,double /*y*/,double& /*lat*/,double& /*lon*/) const
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -2219,7 +2240,7 @@ bool Message::getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,do
         \return        The method return true if the original coordinates were succesfully returned.
 */
 
-bool Message::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,double& x,double& y) const
+bool Message::getGridOriginalCoordinatesByGridPoint(uint /*grid_i*/,uint /*grid_j*/,double& /*x*/,double& /*y*/) const
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -2237,7 +2258,7 @@ bool Message::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,doub
         \return        The method return true if the original coordinates were succesfully returned.
 */
 
-bool Message::getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const
+bool Message::getGridOriginalCoordinatesByGridPosition(double /*grid_i*/,double /*grid_j*/,double& /*x*/,double& /*y*/) const
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -2255,7 +2276,7 @@ bool Message::getGridOriginalCoordinatesByGridPosition(double grid_i,double grid
         \return     The method return true if the original coordinates were succesfully returned.
 */
 
-bool Message::getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lon,double& x,double& y) const
+bool Message::getGridOriginalCoordinatesByLatLonCoordinates(double /*lat*/,double /*lon*/,double& /*x*/,double& /*y*/) const
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -2266,7 +2287,7 @@ bool Message::getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lo
 
 /*! \brief Converts a list of latlon coordinates to the corresponding grid point list. */
 
-void Message::getGridPointListByLatLonCoordinates(T::Coordinate_vec& latlon,T::Coordinate_vec& points) const
+void Message::getGridPointListByLatLonCoordinates(T::Coordinate_vec& /*latlon*/,T::Coordinate_vec& /*points*/) const
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -2285,7 +2306,7 @@ void Message::getGridPointListByLatLonCoordinates(T::Coordinate_vec& latlon,T::C
         \return        Returns 'false' if the given coordinates are outside of the grid.
 */
 
-bool Message::getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j)  const
+bool Message::getGridPointByLatLonCoordinates(double /*lat*/,double /*lon*/,double& /*grid_i*/,double& /*grid_j*/)  const
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -2296,7 +2317,7 @@ bool Message::getGridPointByLatLonCoordinates(double lat,double lon,double& grid
 
 /*! \brief Computes the grid position for a latlon coordinate without using the cache. */
 
-bool Message::getGridPointByLatLonCoordinatesNoCache(double lat,double lon,double& grid_i,double& grid_j)  const
+bool Message::getGridPointByLatLonCoordinatesNoCache(double /*lat*/,double /*lon*/,double& /*grid_i*/,double& /*grid_j*/)  const
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -2505,7 +2526,7 @@ void Message::getGridPointAngles(std::vector<float>& angles) const
 */
 
 
-bool Message::getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const
+bool Message::getGridPointByOriginalCoordinates(double /*x*/,double /*y*/,double& /*grid_i*/,double& /*grid_j*/) const
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -2521,7 +2542,7 @@ bool Message::getGridPointByOriginalCoordinates(double x,double y,double& grid_i
         \param attributeList  The projection attributes are returned in this parameter.
 */
 
-void Message::getGridProjectionAttributes(const std::string& prefix,T::AttributeList& attributeList) const
+void Message::getGridProjectionAttributes(const std::string& /*prefix*/,T::AttributeList& /*attributeList*/) const
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -2765,7 +2786,7 @@ T::ParamLevelId Message::getGridParameterLevelId() const
         \return         The parameter value of the given grid point.
 */
 
-T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
+T::ParamValue Message::getGridValueByGridPoint(uint /*grid_i*/,uint /*grid_j*/) const
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -2970,7 +2991,7 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j,uint modi
         \param maxValue   The returned maximum parameter value in the grid.
 */
 
-void Message::getGridMinAndMaxValues(T::ParamValue& minValue,T::ParamValue& maxValue) const
+void Message::getGridMinAndMaxValues(T::ParamValue& /*minValue*/,T::ParamValue& /*maxValue*/) const
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -2998,7 +3019,7 @@ T::ParamValue Message::countAverageValue() const
     uint c = 0;
     for (uint y=0; y<h; y++)
     {
-      double lat1,lon1,lat2,lon2,lat3,lon3,lat4,lon4;
+      double lat1 = NAN,lon1 = NAN,lat2 = NAN,lon2 = NAN,lat3 = NAN,lon3 = NAN,lat4 = NAN,lon4 = NAN;
       getGridLatLonCoordinatesByGridPoint(0,y,lat1,lon1);
       getGridLatLonCoordinatesByGridPoint(1,y,lat2,lon2);
       getGridLatLonCoordinatesByGridPoint(0,y+1,lat3,lon3);
@@ -3045,7 +3066,7 @@ T::ParamValue Message::countAverageValue() const
         \param values   The returned grid values.
 */
 
-void Message::getGridValueVector(T::ParamValue_vec& values) const
+void Message::getGridValueVector(T::ParamValue_vec& /*values*/) const
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -3530,7 +3551,7 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,uint 
             if (getGridProjection() == T::GridProjectionValue::LatLon)
             {
               const char *boxAttrs[] = { "grid.llbox", "grid.bbox" };
-              for (auto boxAttr : boxAttrs)
+              for (const auto *boxAttr : boxAttrs)
               {
                 const char *boxStr = attributeList.getAttributeValue(boxAttr);
                 if (boxStr != nullptr)
@@ -3569,7 +3590,7 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,uint 
             }
 
             const char *boxAttrs[] = { "grid.llbox", "grid.bbox" };
-            for (auto boxAttr : boxAttrs)
+            for (const auto *boxAttr : boxAttrs)
             {
               const char *boxStr = attributeList.getAttributeValue(boxAttr);
               if (boxStr != nullptr)
@@ -3607,7 +3628,7 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,uint 
 
     Identification::gridDef.getGridLatLonCoordinatesByGeometry(attributeList,latLonCoordinates,width,height);
 
-    if (!latLonCoordinates || latLonCoordinates->size() == 0)
+    if (!latLonCoordinates || latLonCoordinates->empty())
     {
       getGridValueVector(modificationOperation,modificationParameters,values);
       T::Dimensions  d = getGridDimensions();
@@ -3730,17 +3751,13 @@ void Message::getGridValueVectorByCrop(T::AttributeList& attributeList,uint modi
     double w = d.nx();
     double h = d.ny();
 
-    if (x1 < 0)
-      x1 = 0;
+    x1 = std::max<double>(x1, 0);
 
-    if (y1 < 0)
-      y1 = 0;
+    y1 = std::max<double>(y1, 0);
 
-    if (x2 < 0)
-      x2 = 0;
+    x2 = std::max<double>(x2, 0);
 
-    if (y2 < 0)
-      y2 = 0;
+    y2 = std::max<double>(y2, 0);
 
     if (x2 >= w)
       x2 = w-1;
@@ -3929,7 +3946,7 @@ void Message::getGridValueVectorWithCaching(uint modificationOperation,double_ve
         \param values   The returned grid values (original).
 */
 
-void Message::getGridOriginalValueVector(T::ParamValue_vec& values) const
+void Message::getGridOriginalValueVector(T::ParamValue_vec& /*values*/) const
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -3989,7 +4006,7 @@ std::string Message::getProj4() const
 
 /*! \brief Returns the file positions of all sections belonging to this message. */
 
-void Message::getSectionPositions(std::set<T::FilePosition>& positions)
+void Message::getSectionPositions(std::set<T::FilePosition>& /*positions*/)
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -4275,7 +4292,7 @@ bool Message::setProperty(uint propertyId,UInt64 value)
         \return            The method returns true if the value of the requested property was set.
 */
 
-bool Message::setProperty(uint propertyId,Int64 value)
+bool Message::setProperty(uint /*propertyId*/,Int64 /*value*/)
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -4291,7 +4308,7 @@ bool Message::setProperty(uint propertyId,Int64 value)
         \return            The method returns true if the value of the requested property was set.
 */
 
-bool Message::setProperty(uint propertyId,double value)
+bool Message::setProperty(uint /*propertyId*/,double /*value*/)
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -4307,7 +4324,7 @@ bool Message::setProperty(uint propertyId,double value)
         \return            The method returns true if the value of the requested property was found.
 */
 
-bool Message::getProperty(uint propertyId,Int64& value)
+bool Message::getProperty(uint /*propertyId*/,Int64& /*value*/)
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -4323,7 +4340,7 @@ bool Message::getProperty(uint propertyId,Int64& value)
         \return              The method returns true if the value of the requested property was found.
 */
 
-bool Message::getProperty(const char *propertyName,Int64& value)
+bool Message::getProperty(const char * /*propertyName*/,Int64& /*value*/)
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -4334,7 +4351,7 @@ bool Message::getProperty(const char *propertyName,Int64& value)
 
 /*! \brief Returns all property settings of the message. */
 
-void Message::getProperties(T::PropertySettingVec& properties)
+void Message::getProperties(T::PropertySettingVec& /*properties*/)
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -4517,7 +4534,7 @@ bool Message::setProperty(const char *propertyName,UInt64 value)
         \return              The method returns true if the value of the requested property was set.
 */
 
-bool Message::setProperty(const char *propertyName,Int64 value)
+bool Message::setProperty(const char * /*propertyName*/,Int64 /*value*/)
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -4533,7 +4550,7 @@ bool Message::setProperty(const char *propertyName,Int64 value)
         \return              The method returns true if the value of the requested property was set.
 */
 
-bool Message::setProperty(const char *propertyName,double value)
+bool Message::setProperty(const char * /*propertyName*/,double /*value*/)
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -5116,7 +5133,7 @@ void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double o
 
         if (!circle)
         {
-          double lon1,lat1,lon2,lat2;
+          double lon1 = NAN,lat1 = NAN,lon2 = NAN,lat2 = NAN;
           latLon_bboxByCenter(origoX,origoY,dd,dd,lon1,lat1,lon2,lat2);
 
           std::vector<T::Coordinate> polygonPoints;
@@ -5211,7 +5228,7 @@ void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double o
 
         getGridLatLonCoordinatesByOriginalCoordinates(origoX,origoY,newOrigoY,newOrigoX);
 
-        double lon1,lat1,lon2,lat2;
+        double lon1 = NAN,lat1 = NAN,lon2 = NAN,lat2 = NAN;
         latLon_bboxByCenter(newOrigoX,newOrigoY,dd,dd,lon1,lat1,lon2,lat2);
 
         double xx1 = 0;
@@ -5358,7 +5375,7 @@ void Message::getGridValuesByPointList(std::vector<T::Point>& gridPoints,T::Para
 
 /*! \brief Returns grid point values inside the given polygon with value modification. */
 
-void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::vector<T::Coordinate>& polygonPoints,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const
+void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::vector<T::Coordinate>& polygonPoints,uint /*modificationOperation*/,double_vec& /*modificationParameters*/,T::GridValueList& valueList) const
 {
   FUNCTION_TRACE
   try
@@ -5527,7 +5544,7 @@ void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std
 
 /*! \brief Returns grid point values inside the given polygon path with value modification. */
 
-void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std::vector<std::vector<T::Coordinate>>& polygonPath,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const
+void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std::vector<std::vector<T::Coordinate>>& polygonPath,uint /*modificationOperation*/,double_vec& /*modificationParameters*/,T::GridValueList& valueList) const
 {
   FUNCTION_TRACE
   try
@@ -6353,7 +6370,7 @@ void Message::getParameterValuesByRectangle(uint grid_i_start,uint grid_j_start,
 
 /*! \brief Returns parameter values in the given rectangle with value modification. */
 
-void Message::getParameterValuesByRectangle(uint grid_i_start,uint grid_j_start,uint grid_i_end,uint grid_j_end,uint modificationOperation,double_vec& modificationParameters,T::GridPointValueList& gridPointValues) const
+void Message::getParameterValuesByRectangle(uint grid_i_start,uint grid_j_start,uint grid_i_end,uint grid_j_end,uint /*modificationOperation*/,double_vec& /*modificationParameters*/,T::GridPointValueList& gridPointValues) const
 {
   FUNCTION_TRACE
   try
@@ -6696,7 +6713,7 @@ void Message::read()
         \param memoryReader  This object controls the access to the memory mapped file.
 */
 
-void Message::read(MemoryReader& memoryReader)
+void Message::read(MemoryReader& /*memoryReader*/)
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -6710,7 +6727,7 @@ void Message::read(MemoryReader& memoryReader)
         \param dataWriter  The data stream object.
 */
 
-void Message::write(DataWriter& dataWriter)
+void Message::write(DataWriter& /*dataWriter*/)
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -6726,7 +6743,7 @@ void Message::write(DataWriter& dataWriter)
         \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void Message::print(std::ostream& stream,uint level,uint optionFlags) const
+void Message::print(std::ostream& /*stream*/,uint /*level*/,uint /*optionFlags*/) const
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }

@@ -83,7 +83,7 @@ void TimeIntervalAerosolEnsembleProductImpl::read(MemoryReader& memoryReader)
         \return               The forecast time.
 */
 
-T::TimeString TimeIntervalAerosolEnsembleProductImpl::getForecastTime(T::TimeString referenceTime) const
+T::TimeString TimeIntervalAerosolEnsembleProductImpl::getForecastTime(T::TimeString /*referenceTime*/) const
 {
   throw Fmi::Exception(BCP, "Not implemented!");
 }

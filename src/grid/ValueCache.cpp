@@ -6,6 +6,8 @@
 #include <sys/stat.h>
 #include <dirent.h>
 
+#include <algorithm>
+
 
 namespace SmartMet
 {
@@ -598,15 +600,9 @@ bool ValueCache::getMinAndMaxValues(uint key,T::ParamValue& minValue,T::ParamVal
       auto val = values[t];
       if (val != ParamValueMissing)
       {
-        if (val > maxValue)
-        {
-          maxValue = val;
-        }
+        maxValue = std::max(val, maxValue);
 
-        if (val < minValue)
-        {
-          minValue = val;
-        }
+        minValue = std::min(val, minValue);
       }
     }
     entry ->mAccessCounter = mAccessCounter++;

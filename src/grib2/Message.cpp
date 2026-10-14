@@ -1,4 +1,5 @@
 #include "Message.h"
+#include <algorithm>
 #include <ctime>
 #include "BitmapSection.h"
 #include "DataSection.h"
@@ -220,7 +221,7 @@ Message::~Message()
 
     if (mDataLocked)
     {
-      auto addr = getDataPtr();
+      auto *addr = getDataPtr();
       auto len = getDataSize();
 
       if (addr != nullptr &&  len > 0)
@@ -262,7 +263,7 @@ void Message::premap() const
 
     if (mDataSection)
     {
-      auto addr = mDataSection->getDataPtr();
+      auto *addr = mDataSection->getDataPtr();
       auto sz = mDataSection->getDataSize();
 
       if (addr && sz > 0)
@@ -273,7 +274,7 @@ void Message::premap() const
 
     if (mBitmapSection)
     {
-      auto bitmap = mBitmapSection->getBitmapDataPtr();
+      auto *bitmap = mBitmapSection->getBitmapDataPtr();
       auto sz = mBitmapSection->getBitmapDataSizeInBytes();
 
       if (bitmap && sz > 0)
@@ -1040,7 +1041,7 @@ void Message::lockData()
     if (mDataLocked)
       return;
 
-    auto addr = getDataPtr();
+    auto *addr = getDataPtr();
     auto len = getDataSize();
 
     if (addr != nullptr &&  len > 0)
@@ -1068,7 +1069,7 @@ void Message::unlockData()
     if (!mDataLocked)
       return;
 
-    auto addr = getDataPtr();
+    auto *addr = getDataPtr();
     auto len = getDataSize();
 
     if (addr != nullptr &&  len > 0)
@@ -3298,11 +3299,9 @@ void Message::getGridMinAndMaxValues(T::ParamValue& minValue,T::ParamValue& maxV
     {
       if (value != ParamValueMissing)
       {
-        if (value < minValue)
-          minValue = value;
+        minValue = std::min(value, minValue);
 
-        if (value > maxValue)
-          maxValue = value;
+        maxValue = std::max(value, maxValue);
       }
     }
   }

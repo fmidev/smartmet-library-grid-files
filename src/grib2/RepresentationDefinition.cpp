@@ -343,7 +343,7 @@ uint RepresentationDefinition::getTemplateNumber() const
 
 /*! \brief The method returns the decoded value at the given index. */
 
-bool RepresentationDefinition::getValueByIndex(Message *message,uint index,T::ParamValue& value) const
+bool RepresentationDefinition::getValueByIndex(Message * /*message*/,uint /*index*/,T::ParamValue& /*value*/) const
 {
   try
   {
@@ -383,7 +383,7 @@ OriginalValuesSettings*  RepresentationDefinition::getOriginalValues() const
 
 /*! \brief The method decodes the packed values into the given vector. */
 
-void RepresentationDefinition::decodeValues(Message *message,T::ParamValue_vec& decodedValues) const
+void RepresentationDefinition::decodeValues(Message * /*message*/,T::ParamValue_vec& /*decodedValues*/) const
 {
   throw Fmi::Exception(BCP,"Not implemented!");
 }
@@ -394,7 +394,7 @@ void RepresentationDefinition::decodeValues(Message *message,T::ParamValue_vec& 
 
 /*! \brief The method encodes the given values into the message data. */
 
-void RepresentationDefinition::encodeValues(Message *message,T::ParamValue_vec& values)
+void RepresentationDefinition::encodeValues(Message * /*message*/,T::ParamValue_vec& /*values*/)
 {
   throw Fmi::Exception(BCP,"Not implemented!");
 }
@@ -408,7 +408,7 @@ void RepresentationDefinition::encodeValues(Message *message,T::ParamValue_vec& 
         \param memoryReader  This object controls the access to the memory mapped file.
 */
 
-void RepresentationDefinition::read(MemoryReader& memoryReader)
+void RepresentationDefinition::read(MemoryReader& /*memoryReader*/)
 {
   throw Fmi::Exception(BCP,"Not implemented!");
 }
@@ -422,7 +422,7 @@ void RepresentationDefinition::read(MemoryReader& memoryReader)
         \param dataWriter  The data stream object.
 */
 
-void RepresentationDefinition::write(DataWriter& dataWriter)
+void RepresentationDefinition::write(DataWriter& /*dataWriter*/)
 {
   throw Fmi::Exception(BCP,"Not implemented!");
 }
@@ -438,7 +438,7 @@ void RepresentationDefinition::write(DataWriter& dataWriter)
         \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void RepresentationDefinition::print(std::ostream& stream,uint level,uint optionFlags) const
+void RepresentationDefinition::print(std::ostream& /*stream*/,uint /*level*/,uint /*optionFlags*/) const
 {
   throw Fmi::Exception(BCP,"Not implemented!");
 }

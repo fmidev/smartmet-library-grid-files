@@ -59,7 +59,7 @@ class DataFetcher
 
     using AccessMap = std::map<std::string,AccessInfo>; //!< Per-server credential map
 
-  public:
+  
                         DataFetcher();
     virtual             ~DataFetcher();
 

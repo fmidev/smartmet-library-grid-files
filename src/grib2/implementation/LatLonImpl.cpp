@@ -712,10 +712,7 @@ bool LatLonImpl::reverseXDirection() const
   {
     unsigned char scanMode = mLatLon.getScanningMode()->getScanningMode();
 
-    if ((scanMode & 0x80) != 0)
-      return true;
-
-    return false;
+    return (scanMode & 0x80) != 0;
   }
   catch (...)
   {
@@ -739,10 +736,7 @@ bool LatLonImpl::reverseYDirection() const
   {
     unsigned char scanMode = mLatLon.getScanningMode()->getScanningMode();
 
-    if ((scanMode & 0x40) == 0)
-      return true;
-
-    return false;
+    return (scanMode & 0x40) == 0;
   }
   catch (...)
   {

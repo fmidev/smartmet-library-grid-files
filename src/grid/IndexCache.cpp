@@ -56,7 +56,7 @@ void IndexCache::addIndexVector(Int64 hash,const T::IndexVector& indexVector)
   {
     AutoWriteLock lock(&mModificationLock);
 
-    if (mHashVector.size() == 0)
+    if (mHashVector.empty())
     {
       mHashVector.emplace_back(hash);
       mVector.emplace_back(indexVector);
@@ -142,11 +142,7 @@ bool IndexCache::findIndexVector(Int64 hash)
     int sz = C_INT(mHashVector.size());
     int idx = getClosestIndexByHashNoLock(hash);
 
-    if (idx >= 0  &&  idx < sz  &&  mHashVector[idx] == hash)
-    {
-      return true;
-    }
-    return false;
+    return idx >= 0  &&  idx < sz  &&  mHashVector[idx] == hash;
   }
   catch (...)
   {

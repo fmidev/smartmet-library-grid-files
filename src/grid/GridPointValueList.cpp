@@ -1,5 +1,7 @@
 #include "GridPointValueList.h"
 #include <macgyver/Exception.h>
+
+#include <algorithm>
 #include "../common/GeneralFunctions.h"
 #include "../common/AutoWriteLock.h"
 #include "../common/AutoThreadLock.h"
@@ -12,6 +14,8 @@ namespace T
 {
 
 
+namespace
+{
 ThreadLock GridPointValueList_sortLock;
 
 GridPointValue::ComparisonMethod gridPointValue_comparisonMethod = GridPointValue::ComparisonMethod::none;
@@ -31,6 +35,7 @@ int gridPointValue_compare(const void *_val1,const void *_val2)
   }
   return 0;
 }
+}  // namespace
 
 
 
@@ -581,17 +586,13 @@ void GridPointValueList::getGridPointValueArea(double& minX,double& minY,double&
 
     for (uint t=0; t<mLength; t++)
     {
-      if (mArray[t]->mX < minX)
-        minX = mArray[t]->mX;
+      minX = std::min(mArray[t]->mX, minX);
 
-      if (mArray[t]->mX > maxX)
-        maxX = mArray[t]->mX;
+      maxX = std::max(mArray[t]->mX, maxX);
 
-      if (mArray[t]->mY < minY)
-        minY = mArray[t]->mY;
+      minY = std::min(mArray[t]->mY, minY);
 
-      if (mArray[t]->mY > maxY)
-        maxY = mArray[t]->mY;
+      maxY = std::max(mArray[t]->mY, maxY);
     }
   }
   catch (...)
@@ -876,8 +877,7 @@ T::ParamValue GridPointValueList::getMaxValue()
 
     for (uint t=1; t<mLength; t++)
     {
-      if (mArray[t]->mValue > maxValue)
-        maxValue = mArray[t]->mValue;
+      maxValue = std::max(mArray[t]->mValue, maxValue);
     }
     return maxValue;
   }
@@ -936,8 +936,7 @@ T::ParamValue GridPointValueList::getMinValue()
 
     for (uint t=1; t<mLength; t++)
     {
-      if (mArray[t]->mValue < minValue)
-        minValue = mArray[t]->mValue;
+      minValue = std::min(mArray[t]->mValue, minValue);
     }
     return minValue;
   }

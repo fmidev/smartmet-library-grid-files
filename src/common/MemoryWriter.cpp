@@ -1,5 +1,7 @@
 #include "MemoryWriter.h"
 
+#include <algorithm>
+
 
 namespace SmartMet
 {
@@ -142,8 +144,7 @@ void MemoryWriter::write_data(void *_data,UInt64 _size)
 
     mWritePosition += _size;
 
-    if (mWritePosition > mMaxWritePosition)
-      mMaxWritePosition = mWritePosition;
+    mMaxWritePosition = std::max(mWritePosition, mMaxWritePosition);
   }
   catch (...)
   {

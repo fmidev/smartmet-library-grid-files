@@ -48,7 +48,7 @@ FmiGeometryGroupDef::~FmiGeometryGroupDef()
 
 /*! \brief Prints the content of the object into the given stream. */
 
-void FmiGeometryGroupDef::print(std::ostream& stream,uint level,uint optionFlags) const
+void FmiGeometryGroupDef::print(std::ostream& stream,uint level,uint /*optionFlags*/) const
 {
   try
   {
