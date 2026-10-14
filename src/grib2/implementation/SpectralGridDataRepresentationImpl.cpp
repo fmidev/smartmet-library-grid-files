@@ -129,15 +129,12 @@ void SpectralGridDataRepresentationImpl::decodeValues(Message *message,T::ParamV
         }
         return;
       }
-      else
+      // All values are set to "reference_value".
+      for (std::uint32_t i=0; i<numOfValues; i++)
       {
-        // All values are set to "reference_value".
-        for (std::uint32_t i=0; i<numOfValues; i++)
-        {
-          decodedValues.emplace_back(reference_value);
-        }
-        return;
+        decodedValues.emplace_back(reference_value);
       }
+      return;
     }
 
     auto *dest = new int32_t[numOfValues];

@@ -173,8 +173,7 @@ class BitLine
 
         if (mid > 0  &&  res > 0)
           return (uint)(mid - 1);
-        else
-          return (uint)mid;
+        return (uint)mid;
       }
 
       return 0;

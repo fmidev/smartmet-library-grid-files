@@ -130,21 +130,18 @@ Client* DataFetcher_network::getClient(const char *serverAddress,uint serverType
       //printf("Connections %ld:%ld\n",mClients.size(),convec->second.size());
       return conn;
     }
-    else
-    {
-      Client_ptr_vec vec;
-      Client *conn = newClient(protocol);
-      AccessInfo *accessInfo = getAccessInfo(serverAddress);
-      if (accessInfo)
-        conn->setAuthentication(accessInfo->authenticationMethod,accessInfo->username.c_str(),accessInfo->password.c_str());
-      //else
-      //  printf("NO AUTH %s\n",serverAddress);
-      conn->setActive(true);
-      conn->setDebugEnabled(mDebugEnabled);
-      vec.push_back(conn);
-      mClients.insert(std::pair<std::string,Client_ptr_vec>(key,vec));
-      return conn;
-    }
+    Client_ptr_vec vec;
+    Client *conn = newClient(protocol);
+    AccessInfo *accessInfo = getAccessInfo(serverAddress);
+    if (accessInfo)
+      conn->setAuthentication(accessInfo->authenticationMethod,accessInfo->username.c_str(),accessInfo->password.c_str());
+    //else
+    //  printf("NO AUTH %s\n",serverAddress);
+    conn->setActive(true);
+    conn->setDebugEnabled(mDebugEnabled);
+    vec.push_back(conn);
+    mClients.insert(std::pair<std::string,Client_ptr_vec>(key,vec));
+    return conn;
   }
   catch (...)
   {
@@ -312,7 +309,7 @@ void DataFetcher_network::getFileList_S3(uint protocol,const char *server,const 
     std::string lastKey;
     std::string fname;
 
-    do
+    for (bool more = true; more; more = truncated)
     {
       if (truncated)
         fname = std::string(dir) + "?marker=" + lastKey;
@@ -327,7 +324,7 @@ void DataFetcher_network::getFileList_S3(uint protocol,const char *server,const 
       XmlElement xml;
       XmlElement::parseXml(data,n,xml);
       truncated = getFileList(protocol,server,xml,filePatterns,fileList,lastKey);
-    } while (truncated);
+    }
 
   }
   catch (Fmi::Exception& e)

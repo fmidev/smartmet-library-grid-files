@@ -127,8 +127,7 @@ MemoryMapper::~MemoryMapper()
   while (mEnabled  &&  mThreadsRunning)
     time_usleep(0,100);
 
-  
-    delete [] mMessage;
+  delete [] mMessage;
 
   
     delete [] mFaultProcessingThread;
@@ -226,13 +225,10 @@ int MemoryMapper::getClosestIndex(char *address)
 
         return mid-1;
       }
-      else
-      {
-        while (mid > 0  &&  ptr_compare(mMemoryMappings[mid]->memoryPtr,address) > 0)
-          mid--;
+      while (mid > 0  &&  ptr_compare(mMemoryMappings[mid]->memoryPtr,address) > 0)
+        mid--;
 
-        return mid;
-      }
+      return mid;
     }
     return 0;
   }

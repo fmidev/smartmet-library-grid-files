@@ -129,7 +129,7 @@ void GeoTiffFile::readIFD(MemoryReader& memoryReader,MessageInfoVec& messageInfo
     for (ushort t = 0; t < numOfDirectoryEntries; t++)
     {
       ushort tag = memoryReader.read_uint16();
-      ushort type = memoryReader.read_uint16();
+      [[maybe_unused]] ushort type = memoryReader.read_uint16();  // only in the debug print below
       uint count = memoryReader.read_uint32();
       uint value = memoryReader.read_uint32();
 

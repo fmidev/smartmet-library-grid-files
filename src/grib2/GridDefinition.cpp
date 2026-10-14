@@ -1371,7 +1371,8 @@ bool GridDefinition::getGridLatLonCoordinatesByGridPosition(double grid_i,double
   FUNCTION_TRACE
   try
   {
-    double x = 0, y = 0;
+    double x = 0;
+    double y = 0;
 
     if (getGridOriginalCoordinatesByGridPosition(grid_i,grid_j,x,y))
     {
@@ -1645,7 +1646,8 @@ void GridDefinition:: getGridPointListByLatLonCoordinates(T::Coordinate_vec& lat
 
     for (uint t=0; t<sz; t++)
     {
-      double i = -1000,j = -1000;
+      double i = -1000;
+      double j = -1000;
       if (getGridPointByOriginalCoordinates(x[t],y[t],i,j) || clampGridPointToBorder(d,i,j))
         vec->emplace_back(i,j);
       else
@@ -1705,7 +1707,8 @@ bool GridDefinition::getGridPointByLatLonCoordinates(double lat,double lon,doubl
       transformCache2_stats.misses++;
     }
 
-    double x = 0, y = 0;
+    double x = 0;
+    double y = 0;
 
     getGridOriginalCoordinatesByLatLonCoordinates(lat,lon,x,y);
 
@@ -1742,7 +1745,8 @@ bool GridDefinition::getGridPointByLatLonCoordinatesNoCache(double lat,double lo
   FUNCTION_TRACE
   try
   {
-    double x = 0, y = 0;
+    double x = 0;
+    double y = 0;
 
     getGridOriginalCoordinatesByLatLonCoordinatesNoCache(lat,lon,x,y);
 
@@ -2261,7 +2265,10 @@ void GridDefinition::getGridCellAverageSize(double& width,double& height) const
       int x = d.nx()/2;
       int y = d.ny()/2;
 
-      double lat1 = 0,lon1 = 0,lat2 = 0,lon2 = 0;;
+      double lat1 = 0;
+      double lon1 = 0;
+      double lat2 = 0;
+      double lon2 = 0;;
       if (getGridLatLonCoordinatesByGridPoint(x,y,lat1,lon1)  &&  getGridLatLonCoordinatesByGridPoint(x+1,y+1,lat2,lon2))
       {
         width = latlon_distance(lat1,lon1,lat1,lon2);

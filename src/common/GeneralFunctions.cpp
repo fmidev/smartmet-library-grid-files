@@ -244,7 +244,8 @@ int time_compare(time_t v1, time_t v2)
 
 void time_usleep(int _sec, int _usec)
 {
-  timespec r1, r2;
+  timespec r1;
+  timespec r2;
   r1.tv_sec = _sec;
   r1.tv_nsec = _usec;  // * 1000;
   nanosleep(&r1, &r2);
@@ -489,9 +490,13 @@ void copyFile(const char *sourceFileName,const char *targetFileName,const bool& 
     int nr = 0;
     while (!shutdownRequested && (nr = fread(buf,1,1000000,sFile)) > 0)
     {
-      if (!shutdownRequested)
+      if (!shutdownRequested && fwrite(buf,1,nr,tFile) != static_cast<size_t>(nr))
       {
-        int nw = fwrite(buf,1,nr,tFile);
+        (void)fclose(sFile);
+        (void)fclose(tFile);
+        Fmi::Exception exception(BCP, "File write failed!", nullptr);
+        exception.addParameter("targetFileName",targetFileName);
+        throw exception;
       }
     }
 
@@ -945,8 +950,6 @@ std::string utcTimeFromTimeT(time_t t)
 
 /*! \brief Converts a local-time ISO timestamp in the given timezone to a UTC ISO timestamp. */
 
-namespace
-{
 std::string localTimeToUtcTime(const std::string& localTime, const char *tzone)
 {
   try
@@ -959,7 +962,6 @@ std::string localTimeToUtcTime(const std::string& localTime, const char *tzone)
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
-}  // namespace
 
 /*! \brief Converts a local DateTime in the given timezone to UTC. */
 
@@ -1000,8 +1002,6 @@ std::string localTimeToUtc(const std::string& localTime, Fmi::TimeZonePtr tz)
 
 /*! \brief Converts a UTC ISO timestamp to a local-time ISO timestamp in the given timezone. */
 
-namespace
-{
 std::string utcTimeToLocalTime(const std::string& utcTime, const char *tzone)
 {
   try
@@ -1014,9 +1014,6 @@ std::string utcTimeToLocalTime(const std::string& utcTime, const char *tzone)
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
-}  // namespace
-
-
 
 /*! \brief Converts an Fmi::DateTime to a time_t. */
 
@@ -1211,52 +1208,6 @@ UInt64 toUInt64(const char *str)
     throw Fmi::Exception(BCP, "Operation failed!", nullptr).addDetail(str);
   }
 }
-
-
-
-/*! \brief Parses a C string into a double using a locale-independent custom parser. */
-
-namespace
-{
-double toDouble2(const char* str)
-{
-  double result = 0;
-  double sign = *str == '-' ? str++, -1 : 1;
-  while (*str >= '0' && *str <= '9')
-  {
-    result *= 10;
-    result += *str - '0';
-    str++;
-  }
-
-  if (*str == ',' || *str == '.')
-  {
-    str++;
-    double multiplier = 0.1;
-    while (*str >= '0' && *str <= '9')
-    {
-      result += (*str - '0') * multiplier;
-      multiplier /= 10;
-      str++;
-    }
-  }
-  result *= sign;
-  if (*str == 'e' || *str == 'E')
-  {
-    str++;
-    double powerer = *str == '-'? str++, 0.1 : 10;
-    double power = 0;
-    while (*str >= '0' && *str <= '9')
-    {
-      power *= 10;
-      power += *str - '0';
-      str++;
-    }
-    result *= pow(powerer, power);
-  }
-  return result;
-}
-}  // namespace
 
 
 
@@ -3779,13 +3730,17 @@ double gregorian_to_jd(int year, int month, int day)
 {
   try
   {
+    int monthCorrection = 0;
+    if (month > 2)
+      monthCorrection = (isGregorianLeapYear(year) ? -1 : -2);
+
     return (1721425.5 - 1) +
            (365.0 * (year - 1.0)) +
            floor((year - 1) / 4) +
            (-floor((year - 1) / 100)) +
            floor((year - 1) / 400) +
            floor((((367 * month) - 362) / 12) +
-           ((month <= 2) ? 0 : (isGregorianLeapYear(year) ? -1 : -2)) +
+           monthCorrection +
            day);
   }
   catch (...)

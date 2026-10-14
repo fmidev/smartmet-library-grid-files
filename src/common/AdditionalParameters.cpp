@@ -267,17 +267,11 @@ bool AdditionalParameters::getParameterValueByLocation(
           value = mValueFormatter.missing();
           return true;
         }
-        else
-        {
-          value = loc->name;
-          return true;
-        }
-      }
-      else
-      {
-        value = loc->area;
+        value = loc->name;
         return true;
       }
+      value = loc->area;
+      return true;
       return false;
     }
 

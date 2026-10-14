@@ -323,8 +323,14 @@ void MessageProcessing::getGridIsobandsByLevelAndGeometry(const GRID::Message& m
 
       if (llboxStr == nullptr)
       {
-        double x1 = 0.0, y1 = 0.0, x2 = 0.0, y2 = 0.0;
-        uint px1 = 0,py1 = 0,px2 = d.nx()-1,py2 = d.ny()-1;
+        double x1 = 0.0;
+        double y1 = 0.0;
+        double x2 = 0.0;
+        double y2 = 0.0;
+        uint px1 = 0;
+        uint py1 = 0;
+        uint px2 = d.nx()-1;
+        uint py2 = d.ny()-1;
 
         if (message1.reverseYDirection())
           px1 = 0,py1 = d.ny()-1,px2 = d.nx()-1,py2 = 0;
@@ -388,7 +394,10 @@ void MessageProcessing::getGridIsobandsByLevelAndGeometry(const GRID::Message& m
           double mWidth = toDouble(metricWidthStr) * 1000;   // km => m
           double mHeight = toDouble(metricHeightStr) * 1000; // km => m
 
-          double lon1 = 0,lat1 = 0,lon2 = 0, lat2 =0;
+          double lon1 = 0;
+          double lat1 = 0;
+          double lon2 = 0;
+          double lat2 =0;
 
           latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
 
@@ -750,8 +759,14 @@ void MessageProcessing::getGridIsobandsByTimeAndGeometry(const GRID::Message& me
 
       if (llboxStr == nullptr)
       {
-        double x1 = 0.0, y1 = 0.0, x2 = 0.0, y2 = 0.0;
-        uint px1 = 0,py1 = 0,px2 = d.nx()-1,py2 = d.ny()-1;
+        double x1 = 0.0;
+        double y1 = 0.0;
+        double x2 = 0.0;
+        double y2 = 0.0;
+        uint px1 = 0;
+        uint py1 = 0;
+        uint px2 = d.nx()-1;
+        uint py2 = d.ny()-1;
 
         if (message1.reverseYDirection())
           px1 = 0,py1 = d.ny()-1,px2 = d.nx()-1,py2 = 0;
@@ -815,7 +830,10 @@ void MessageProcessing::getGridIsobandsByTimeAndGeometry(const GRID::Message& me
           double mWidth = toDouble(metricWidthStr) * 1000;   // km => m
           double mHeight = toDouble(metricHeightStr) * 1000; // km => m
 
-          double lon1 = 0,lat1 = 0,lon2 = 0, lat2 =0;
+          double lon1 = 0;
+          double lat1 = 0;
+          double lon2 = 0;
+          double lat2 =0;
 
           latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
 
@@ -1097,8 +1115,14 @@ void MessageProcessing::getGridIsobandsByTimeLevelAndGeometry(const GRID::Messag
 
       if (llboxStr == nullptr)
       {
-        double x1 = 0.0, y1 = 0.0, x2 = 0.0, y2 = 0.0;
-        uint px1 = 0,py1 = 0,px2 = d.nx()-1,py2 = d.ny()-1;
+        double x1 = 0.0;
+        double y1 = 0.0;
+        double x2 = 0.0;
+        double y2 = 0.0;
+        uint px1 = 0;
+        uint py1 = 0;
+        uint px2 = d.nx()-1;
+        uint py2 = d.ny()-1;
 
         if (message1.reverseYDirection())
           px1 = 0,py1 = d.ny()-1,px2 = d.nx()-1,py2 = 0;
@@ -1162,7 +1186,10 @@ void MessageProcessing::getGridIsobandsByTimeLevelAndGeometry(const GRID::Messag
           double mWidth = toDouble(metricWidthStr) * 1000;   // km => m
           double mHeight = toDouble(metricHeightStr) * 1000; // km => m
 
-          double lon1 = 0,lat1 = 0,lon2 = 0, lat2 =0;
+          double lon1 = 0;
+          double lat1 = 0;
+          double lon2 = 0;
+          double lat2 =0;
 
           latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
 
@@ -1487,8 +1514,14 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGeometry(const GRID::Messag
 
       if (llboxStr == nullptr)
       {
-        double x1 = 0.0, y1 = 0.0, x2 = 0.0, y2 = 0.0;
-        uint px1 = 0,py1 = 0,px2 = d.nx()-1,py2 = d.ny()-1;
+        double x1 = 0.0;
+        double y1 = 0.0;
+        double x2 = 0.0;
+        double y2 = 0.0;
+        uint px1 = 0;
+        uint py1 = 0;
+        uint px2 = d.nx()-1;
+        uint py2 = d.ny()-1;
 
         if (message1.reverseYDirection())
           px1 = 0,py1 = d.ny()-1,px2 = d.nx()-1,py2 = 0;
@@ -1552,7 +1585,10 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGeometry(const GRID::Messag
           double mWidth = toDouble(metricWidthStr) * 1000;   // km => m
           double mHeight = toDouble(metricHeightStr) * 1000; // km => m
 
-          double lon1 = 0,lat1 = 0,lon2 = 0, lat2 =0;
+          double lon1 = 0;
+          double lat1 = 0;
+          double lon2 = 0;
+          double lat2 =0;
 
           latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
 
@@ -1926,8 +1962,14 @@ void MessageProcessing::getGridIsolinesByLevelAndGeometry(const GRID::Message& m
 
       if (llboxStr == nullptr)
       {
-        double x1 = 0.0, y1 = 0.0, x2 = 0.0, y2 = 0.0;
-        uint px1 = 0,py1 = 0,px2 = d.nx()-1,py2 = d.ny()-1;
+        double x1 = 0.0;
+        double y1 = 0.0;
+        double x2 = 0.0;
+        double y2 = 0.0;
+        uint px1 = 0;
+        uint py1 = 0;
+        uint px2 = d.nx()-1;
+        uint py2 = d.ny()-1;
 
         if (message1.reverseYDirection())
           px1 = 0,py1 = d.ny()-1,px2 = d.nx()-1,py2 = 0;
@@ -1991,7 +2033,10 @@ void MessageProcessing::getGridIsolinesByLevelAndGeometry(const GRID::Message& m
           double mWidth = toDouble(metricWidthStr) * 1000;   // km => m
           double mHeight = toDouble(metricHeightStr) * 1000; // km => m
 
-          double lon1 = 0,lat1 = 0,lon2 = 0, lat2 =0;
+          double lon1 = 0;
+          double lat1 = 0;
+          double lon2 = 0;
+          double lat2 =0;
 
           latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
 
@@ -2176,8 +2221,14 @@ void MessageProcessing::getGridIsolinesByTimeAndGeometry(const GRID::Message& me
 
       if (llboxStr == nullptr)
       {
-        double x1 = 0.0, y1 = 0.0, x2 = 0.0, y2 = 0.0;
-        uint px1 = 0,py1 = 0,px2 = d.nx()-1,py2 = d.ny()-1;
+        double x1 = 0.0;
+        double y1 = 0.0;
+        double x2 = 0.0;
+        double y2 = 0.0;
+        uint px1 = 0;
+        uint py1 = 0;
+        uint px2 = d.nx()-1;
+        uint py2 = d.ny()-1;
 
         if (message1.reverseYDirection())
           px1 = 0,py1 = d.ny()-1,px2 = d.nx()-1,py2 = 0;
@@ -2241,7 +2292,10 @@ void MessageProcessing::getGridIsolinesByTimeAndGeometry(const GRID::Message& me
           double mWidth = toDouble(metricWidthStr) * 1000;   // km => m
           double mHeight = toDouble(metricHeightStr) * 1000; // km => m
 
-          double lon1 = 0,lat1 = 0,lon2 = 0, lat2 =0;
+          double lon1 = 0;
+          double lat1 = 0;
+          double lon2 = 0;
+          double lat2 =0;
 
           latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
 
@@ -2817,8 +2871,14 @@ void MessageProcessing::getGridStreamlinesByTimeLevelAndGeometry(const GRID::Mes
 
       if (llboxStr == nullptr)
       {
-        double x1 = 0.0, y1 = 0.0, x2 = 0.0, y2 = 0.0;
-        uint px1 = 0,py1 = 0,px2 = d.nx()-1,py2 = d.ny()-1;
+        double x1 = 0.0;
+        double y1 = 0.0;
+        double x2 = 0.0;
+        double y2 = 0.0;
+        uint px1 = 0;
+        uint py1 = 0;
+        uint px2 = d.nx()-1;
+        uint py2 = d.ny()-1;
 
         if (message1.reverseYDirection())
           px1 = 0,py1 = d.ny()-1,px2 = d.nx()-1,py2 = 0;
@@ -2882,7 +2942,10 @@ void MessageProcessing::getGridStreamlinesByTimeLevelAndGeometry(const GRID::Mes
           double mWidth = toDouble(metricWidthStr) * 1000;   // km => m
           double mHeight = toDouble(metricHeightStr) * 1000; // km => m
 
-          double lon1 = 0,lat1 = 0,lon2 = 0, lat2 =0;
+          double lon1 = 0;
+          double lat1 = 0;
+          double lon2 = 0;
+          double lat2 =0;
 
           latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
 
@@ -3300,8 +3363,14 @@ void MessageProcessing::getGridStreamlinesByLevelAndGeometry(const GRID::Message
 
       if (llboxStr == nullptr)
       {
-        double x1 = 0.0, y1 = 0.0, x2 = 0.0, y2 = 0.0;
-        uint px1 = 0,py1 = 0,px2 = d.nx()-1,py2 = d.ny()-1;
+        double x1 = 0.0;
+        double y1 = 0.0;
+        double x2 = 0.0;
+        double y2 = 0.0;
+        uint px1 = 0;
+        uint py1 = 0;
+        uint px2 = d.nx()-1;
+        uint py2 = d.ny()-1;
 
         if (message1.reverseYDirection())
           px1 = 0,py1 = d.ny()-1,px2 = d.nx()-1,py2 = 0;
@@ -3365,7 +3434,10 @@ void MessageProcessing::getGridStreamlinesByLevelAndGeometry(const GRID::Message
           double mWidth = toDouble(metricWidthStr) * 1000;   // km => m
           double mHeight = toDouble(metricHeightStr) * 1000; // km => m
 
-          double lon1 = 0,lat1 = 0,lon2 = 0, lat2 =0;
+          double lon1 = 0;
+          double lat1 = 0;
+          double lon2 = 0;
+          double lat2 =0;
 
           latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
 
@@ -3559,8 +3631,14 @@ void MessageProcessing::getGridStreamlinesByTimeAndGeometry(const GRID::Message&
 
       if (llboxStr == nullptr)
       {
-        double x1 = 0.0, y1 = 0.0, x2 = 0.0, y2 = 0.0;
-        uint px1 = 0,py1 = 0,px2 = d.nx()-1,py2 = d.ny()-1;
+        double x1 = 0.0;
+        double y1 = 0.0;
+        double x2 = 0.0;
+        double y2 = 0.0;
+        uint px1 = 0;
+        uint py1 = 0;
+        uint px2 = d.nx()-1;
+        uint py2 = d.ny()-1;
 
         if (message1.reverseYDirection())
           px1 = 0,py1 = d.ny()-1,px2 = d.nx()-1,py2 = 0;
@@ -3624,7 +3702,10 @@ void MessageProcessing::getGridStreamlinesByTimeAndGeometry(const GRID::Message&
           double mWidth = toDouble(metricWidthStr) * 1000;   // km => m
           double mHeight = toDouble(metricHeightStr) * 1000; // km => m
 
-          double lon1 = 0,lat1 = 0,lon2 = 0, lat2 =0;
+          double lon1 = 0;
+          double lat1 = 0;
+          double lon2 = 0;
+          double lat2 =0;
 
           latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
 

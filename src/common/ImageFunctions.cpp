@@ -465,12 +465,6 @@ uchar *image_data = nullptr;
 
 /*! \brief Placeholder that would print the libpng and zlib version information. */
 
-void readpng_version_info()
-{
-//  fprintf(moutput,"Compiled with libpng %s; using libpng %s.\n",PNG_LIBPNG_VER_STRING, png_libpng_ver);
-//  fprintf(moutput,"Compiled with zlib %s; using zlib %s.\n",ZLIB_VERSION, zlib_version);
-}
-
 
 
 
@@ -524,49 +518,6 @@ int readpng_init(FILE *infile, uint *pWidth, uint *pHeight)
 
 /*! \brief Retrieves the PNG file's background color, normalized to 8-bit RGB. */
 
-int readpng_get_bgcolor(uchar *red, uchar *green, uchar *blue)
-{
-  png_color_16p pBackground = nullptr;
-
-  // NOLINTNEXTLINE(cert-err52-cpp): libpng/libjpeg report errors with longjmp
-  if (setjmp(png_jmpbuf(png_ptr)))
-  {
-    png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
-    return 2;
-  }
-
-
-  if (!png_get_valid(png_ptr, info_ptr, PNG_INFO_bKGD))
-    return 1;
-
-  png_get_bKGD(png_ptr, info_ptr, &pBackground);
-
-  if (bit_depth == 16)
-  {
-    *red   = pBackground->red   >> 8;
-    *green = pBackground->green >> 8;
-    *blue  = pBackground->blue  >> 8;
-  }
-  else
-  if (color_type == PNG_COLOR_TYPE_GRAY && bit_depth < 8)
-  {
-    if (bit_depth == 1)
-      *red = *green = *blue = pBackground->gray? 255 : 0;
-    else
-    if (bit_depth == 2)
-      *red = *green = *blue = (255/3) * pBackground->gray;
-    else /* bit_depth == 4 */
-      *red = *green = *blue = (255/15) * pBackground->gray;
-  }
-  else
-  {
-    *red   = C_UCHAR(pBackground->red);
-    *green = C_UCHAR(pBackground->green);
-    *blue  = C_UCHAR(pBackground->blue);
-  }
-  return 0;
-}
-
 
 
 
@@ -577,7 +528,8 @@ int readpng_get_bgcolor(uchar *red, uchar *green, uchar *blue)
 uchar *readpng_get_image(double display_exponent, int *pChannels, uint *pRowbytes)
 {
   double gamma = NAN;
-  png_uint_32 i = 0, rowbytes = 0;
+  png_uint_32 i = 0;
+  png_uint_32 rowbytes = 0;
 
 
   // NOLINTNEXTLINE(cert-err52-cpp): libpng/libjpeg report errors with longjmp
@@ -842,10 +794,6 @@ void writepng_error_handler(png_structp png_ptr, png_const_charp msg);
 
 /*! \brief Placeholder that would print libpng writer version information. */
 
-void writepng_version_info()
-{
-}
-
 
 
 /*! \brief Opens a PNG file for streaming row-by-row write and returns an opaque handle. */
@@ -889,13 +837,6 @@ void* png_writeOpen(const char *_filename,int image_width,int image_height,int c
 
 
 /*! \brief Writes a single image row through the previously opened PNG write handle. */
-
-int png_writeImageRow(void *_handle,uchar *_row)
-{
-  auto *handle = (CImageHandle_png*)_handle;
-  png_write_row(handle->png_ptr,_row);
-  return 0;
-}
 
 
 
@@ -1418,7 +1359,10 @@ void saveGeometryAsJpeg(const char *_filename,int width,int height,uint backgrou
 
     if (autoscale)
     {
-      double minX = 0, minY = 0, maxX = 0, maxY = 0;
+      double minX = 0;
+      double minY = 0;
+      double maxX = 0;
+      double maxY = 0;
       imagePaint.countPaintWkbArea(out,geom->WkbSize(),minX,minY,maxX,maxY);
 
       dx = -minX;
@@ -1463,7 +1407,10 @@ void saveGeometryAsJpeg(const char *_filename,int width,int height,uint backgrou
 
     ImagePaint imagePaint(width, height,backgroundColor,drawColor,fillColor,false,true);
 
-    double tminX = 0, tminY = 0, tmaxX = 0, tmaxY = 0;
+    double tminX = 0;
+    double tminY = 0;
+    double tmaxX = 0;
+    double tmaxY = 0;
     if (autoscale)
     {
       tminX = 1000000000;
@@ -1479,7 +1426,10 @@ void saveGeometryAsJpeg(const char *_filename,int width,int height,uint backgrou
 
       //std::string st = Fmi::OGR::exportToWkt(*g);
 
-        double minX = 0, minY = 0, maxX = 0, maxY = 0;
+        double minX = 0;
+        double minY = 0;
+        double maxX = 0;
+        double maxY = 0;
         imagePaint.countPaintWkbArea(out,gg->WkbSize(),minX,minY,maxX,maxY);
         CPLFree(out);
 

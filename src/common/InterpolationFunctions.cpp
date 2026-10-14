@@ -315,40 +315,6 @@ Int64 linearInterpolation(Int64 x,Int64 y,Int64 x1,Int64 y1,Int64 x2,Int64 y2,In
 
 
 
-/*! \brief Performs bilinear interpolation by delegating to the fixed-point integer implementation. */
-
-namespace
-{
-double linearInterpolation2(double x,double y,double x1,double y1,double x2,double y2,double val_q11,double val_q21,double val_q22,double val_q12)
-{
-  if (val_q11 == ParamValueMissing && val_q21 == ParamValueMissing  &&
-      val_q12 == ParamValueMissing &&  val_q22 == ParamValueMissing)
-    return ParamValueMissing;
-
-  auto ax = (Int64)(x*1000000);
-  auto ay = (Int64)(y*1000000);
-  auto ax1 = (Int64)(x1*1000000);
-  auto ay1 = (Int64)(y1*1000000);
-  auto ax2 = (Int64)(x2*1000000);
-  auto ay2 = (Int64)(y2*1000000);
-  auto aval_q11 = (Int64)(val_q11*1000000);
-  auto aval_q21 = (Int64)(val_q21*1000000);
-  auto aval_q22 = (Int64)(val_q22*1000000);
-  auto aval_q12 = (Int64)(val_q12*1000000);
-
-  Int64 res = linearInterpolation(ax,ay,ax1,ay1,ax2,ay2,aval_q11,aval_q21,aval_q22,aval_q12);
-
-  if (res != 0x7FFFFFFFFFFFFFFF)
-    return (double)res / 1000000;
-  else
-    return ParamValueMissing;
-}
-}  // namespace
-
-
-
-
-
 /*! \brief Logarithmically interpolates a value between two positions. */
 
 double logarithmicInterpolation(double wantedPosition, double position1, double position2, double value1, double value2)
@@ -814,8 +780,7 @@ T::ParamValue timeInterpolation(T::ParamValue value1,const T::ParamValue& value2
         {
           if (value1 <= value2)
             return value1;
-          else
-            return value2;
+          return value2;
         }
         else
         {
@@ -827,8 +792,7 @@ T::ParamValue timeInterpolation(T::ParamValue value1,const T::ParamValue& value2
         {
           if (value1 >= value2)
             return value1;
-          else
-            return value2;
+          return value2;
         }
         else
         {

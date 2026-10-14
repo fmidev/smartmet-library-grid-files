@@ -71,9 +71,9 @@ double getValue(double theAngle)
   {
     if (::fabs(theAngle - 180) < 0.0000001)
       return 180;
-    else if (::fabs(theAngle + 180) < 0.0000001)
+    if (::fabs(theAngle + 180) < 0.0000001)
       return -180;
-    else if (theAngle > 180)
+    if (theAngle > 180)
       return getValue(theAngle - 360);
     else if (theAngle < -180)
       return getValue(theAngle + 360);

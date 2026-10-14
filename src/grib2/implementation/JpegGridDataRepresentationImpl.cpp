@@ -341,21 +341,21 @@ opj_stream_t* createMemoryStream(StreamHandle& streamHandle)
 
 
 
-void openjpeg_error_callback(const char *msg, void*)
+void openjpeg_error_callback(const char *msg, void* /*unused*/)
 {
   //std::cerr << "OpenJPEG error: " << msg << std::endl;
   throw Fmi::Exception(BCP, "JPEG Error: " + std::string(msg));
 }
 
 
-void openjpeg_warning_callback(const char *msg, void*)
+void openjpeg_warning_callback(const char *msg, void* /*unused*/)
 {
   //std::cerr << "OpenJPEG warning: " << msg << std::endl;
   throw Fmi::Exception(BCP, "JPEG Warning: " + std::string(msg));
 }
 
 
-void openjpeg_info_callback(const char *msg, void*)
+void openjpeg_info_callback(const char *msg, void* /*unused*/)
 {
   //std::cout << "OpenJPEG info: " << msg << std::endl;
 }

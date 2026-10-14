@@ -663,7 +663,10 @@ void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::P
 
       if (llboxStr == nullptr)
       {
-        double x1 = 0.0, y1 = 0.0, x2 = 0.0, y2 = 0.0;
+        double x1 = 0.0;
+        double y1 = 0.0;
+        double x2 = 0.0;
+        double y2 = 0.0;
 
         char tmp[1400];  // four %.15f values of any magnitude
 
@@ -733,7 +736,10 @@ void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::P
           double mWidth = toDouble(metricWidthStr) * 1000;   // km => m
           double mHeight = toDouble(metricHeightStr) * 1000; // km => m
 
-          double lon1 = 0,lat1 = 0,lon2 = 0, lat2 =0;
+          double lon1 = 0;
+          double lat1 = 0;
+          double lon2 = 0;
+          double lat2 =0;
 
           latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
 
@@ -1100,7 +1106,10 @@ void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::Attr
 
       if (llboxStr == nullptr)
       {
-        double x1 = 0.0, y1 = 0.0, x2 = 0.0, y2 = 0.0;
+        double x1 = 0.0;
+        double y1 = 0.0;
+        double x2 = 0.0;
+        double y2 = 0.0;
 
         char tmp[1400];  // four %.15f values of any magnitude
 
@@ -1170,7 +1179,10 @@ void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::Attr
           double mWidth = toDouble(metricWidthStr) * 1000;   // km => m
           double mHeight = toDouble(metricHeightStr) * 1000; // km => m
 
-          double lon1 = 0,lat1 = 0,lon2 = 0, lat2 =0;
+          double lon1 = 0;
+          double lat1 = 0;
+          double lon2 = 0;
+          double lat2 =0;
 
           latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
 
@@ -1547,7 +1559,10 @@ void Message::getGridStreamlinesByGeometry(T::AttributeList& attributeList,uint 
 
       if (llboxStr == nullptr)
       {
-        double x1 = 0.0, y1 = 0.0, x2 = 0.0, y2 = 0.0;
+        double x1 = 0.0;
+        double y1 = 0.0;
+        double x2 = 0.0;
+        double y2 = 0.0;
 
         char tmp[1400];  // four %.15f values of any magnitude
 
@@ -1617,7 +1632,10 @@ void Message::getGridStreamlinesByGeometry(T::AttributeList& attributeList,uint 
           double mWidth = toDouble(metricWidthStr) * 1000;   // km => m
           double mHeight = toDouble(metricHeightStr) * 1000; // km => m
 
-          double lon1 = 0,lat1 = 0,lon2 = 0, lat2 =0;
+          double lon1 = 0;
+          double lat1 = 0;
+          double lon2 = 0;
+          double lat2 =0;
 
           latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
 
@@ -2341,7 +2359,8 @@ float Message::getGridPointAngle(T::CoordinateType coordinateType,double x,doubl
 
       case T::CoordinateTypeValue::GRID_COORDINATES:
       {
-        double lat = 0, lon = 0;
+        double lat = 0;
+        double lon = 0;
         getGridLatLonCoordinatesByGridPosition(x,y,lat,lon);
         return getGridPointAngleByLatLonCoordinates(lat,lon);
       }
@@ -2349,7 +2368,8 @@ float Message::getGridPointAngle(T::CoordinateType coordinateType,double x,doubl
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
       {
-        double lat = 0, lon = 0;
+        double lat = 0;
+        double lon = 0;
         getGridLatLonCoordinatesByOriginalCoordinates(x,y,lat,lon);
         return getGridPointAngleByLatLonCoordinates(lat,lon);
       }
@@ -3019,7 +3039,14 @@ T::ParamValue Message::countAverageValue() const
     uint c = 0;
     for (uint y=0; y<h; y++)
     {
-      double lat1 = NAN,lon1 = NAN,lat2 = NAN,lon2 = NAN,lat3 = NAN,lon3 = NAN,lat4 = NAN,lon4 = NAN;
+      double lat1 = NAN;
+      double lon1 = NAN;
+      double lat2 = NAN;
+      double lon2 = NAN;
+      double lat3 = NAN;
+      double lon3 = NAN;
+      double lat4 = NAN;
+      double lon4 = NAN;
       getGridLatLonCoordinatesByGridPoint(0,y,lat1,lon1);
       getGridLatLonCoordinatesByGridPoint(1,y,lat2,lon2);
       getGridLatLonCoordinatesByGridPoint(0,y+1,lat3,lon3);
@@ -3391,7 +3418,10 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,uint 
 
       if (llboxStr == nullptr  &&  centerStr == nullptr)
       {
-        double x1 = 0.0, y1 = 0.0, x2 = 0.0, y2 = 0.0;
+        double x1 = 0.0;
+        double y1 = 0.0;
+        double x2 = 0.0;
+        double y2 = 0.0;
 
         char tmp[1400];  // four %.15f values of any magnitude
 
@@ -3463,7 +3493,10 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,uint 
         double mWidth = toDouble(metricWidthStr) * 1000;   // km => m
         double mHeight = toDouble(metricHeightStr) * 1000; // km => m
 
-        double lon1 = 0,lat1 = 0,lon2 = 0, lat2 =0;
+        double lon1 = 0;
+        double lat1 = 0;
+        double lon2 = 0;
+        double lat2 =0;
 
         latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
 
@@ -3721,7 +3754,10 @@ void Message::getGridValueVectorByCrop(T::AttributeList& attributeList,uint modi
         double mWidth = toDouble(metricWidthStr) * 1000;   // km => m
         double mHeight = toDouble(metricHeightStr) * 1000; // km => m
 
-        double lon1 = 0,lat1 = 0,lon2 = 0, lat2 =0;
+        double lon1 = 0;
+        double lat1 = 0;
+        double lon2 = 0;
+        double lat2 =0;
 
         latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
 
@@ -5133,7 +5169,10 @@ void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double o
 
         if (!circle)
         {
-          double lon1 = NAN,lat1 = NAN,lon2 = NAN,lat2 = NAN;
+          double lon1 = NAN;
+          double lat1 = NAN;
+          double lon2 = NAN;
+          double lat2 = NAN;
           latLon_bboxByCenter(origoX,origoY,dd,dd,lon1,lat1,lon2,lat2);
 
           std::vector<T::Coordinate> polygonPoints;
@@ -5228,7 +5267,10 @@ void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double o
 
         getGridLatLonCoordinatesByOriginalCoordinates(origoX,origoY,newOrigoY,newOrigoX);
 
-        double lon1 = NAN,lat1 = NAN,lon2 = NAN,lat2 = NAN;
+        double lon1 = NAN;
+        double lat1 = NAN;
+        double lon2 = NAN;
+        double lat2 = NAN;
         latLon_bboxByCenter(newOrigoX,newOrigoY,dd,dd,lon1,lat1,lon2,lat2);
 
         double xx1 = 0;
@@ -5769,8 +5811,10 @@ void Message::getGridValueListByRectangle(T::CoordinateType coordinateType,doubl
           polygonPoints.emplace_back(gx2,gy1);
           polygonPoints.emplace_back(gx1,gy1);
 
-          double lat1 = 0,lon1 = 0;
-          double lat2 = 0,lon2 = 0;
+          double lat1 = 0;
+          double lon1 = 0;
+          double lat2 = 0;
+          double lon2 = 0;
           getGridLatLonCoordinatesByGridPosition(gx1,gy2,lat1,lon1);
           getGridLatLonCoordinatesByGridPosition(gx2,gy1,lat2,lon2);
           getGridValueListByPolygon(T::CoordinateTypeValue::GRID_COORDINATES,polygonPoints,modificationOperation,modificationParameters,valueList);

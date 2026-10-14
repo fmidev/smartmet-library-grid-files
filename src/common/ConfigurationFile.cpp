@@ -1278,7 +1278,6 @@ int ConfigurationFile::readValue(std::vector<std::string>& words,std::vector<UIn
 
       return pos + 4;
     }
-    else
     if ((pos+3) < len &&  words[pos] == "%" &&  words[pos+1] == "("  &&  words[pos+3] == ")")
     {
       T::Attribute attr;
@@ -1289,7 +1288,6 @@ int ConfigurationFile::readValue(std::vector<std::string>& words,std::vector<UIn
 
       return pos + 4;
     }
-    else
     if (words[pos] == "{" )
     {
       int startPos = pos;
@@ -1675,13 +1673,10 @@ int ConfigurationFile::readAttribute(std::vector<std::string>& words,std::vector
         exception.addParameter("Column",std::to_string(wordPositions[pos+1] & 0xFFFFFFFF));
         throw exception;
       }
-      else
-      {
-        Fmi::Exception exception(BCP,"Invalid attribute definition!");
-        exception.addParameter("Row",std::to_string(wordPositions[pos] >> 32));
-        exception.addParameter("Column",std::to_string(wordPositions[pos] & 0xFFFFFFFF));
-        throw exception;
-      }
+      Fmi::Exception exception(BCP,"Invalid attribute definition!");
+      exception.addParameter("Row",std::to_string(wordPositions[pos] >> 32));
+      exception.addParameter("Column",std::to_string(wordPositions[pos] & 0xFFFFFFFF));
+      throw exception;
     }
     return pos+1;
   }

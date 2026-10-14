@@ -208,10 +208,7 @@ int DataFetcher_filesys::getData(uint /*serverType*/,uint /*protocol*/,const cha
             memset(dataPtr + n, 0, dataSize - n);
             return dataSize;
           }
-          else
-          {
-            printf("### WARNING: Cannot read all requested data (%s) filepos = %ld  %d/%d\n",filename,filePosition,n,dataSize);
-          }
+          printf("### WARNING: Cannot read all requested data (%s) filepos = %ld  %d/%d\n",filename,filePosition,n,dataSize);
         }
 
         return n;

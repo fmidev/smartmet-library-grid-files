@@ -150,14 +150,11 @@ GridFile::~GridFile()
       delete (mMessage.second);
     }
 
-    
-      delete mNetCdfFile;
+    delete mNetCdfFile;
 
-    
-      delete mQueryDataFile;
+    delete mQueryDataFile;
 
-    
-      delete mGeoTiffFile;
+    delete mGeoTiffFile;
 
     if (isMemoryMapped())
     {
@@ -2004,16 +2001,13 @@ GRID::Message* GridFile::getMessageByIndex(std::size_t index)
       msg->second->incRequestCounter();
       return msg->second;
     }
-    else
+    printf("*** GridFile.cpp: Message not found (%s) %lu / %lu /%lu\n",mMemoryMapInfo->filename.c_str(),index,mMessages.size(),mMessagePositions.size());
+    if (mMessages.size() != mMessagePositions.size())
     {
-      printf("*** GridFile.cpp: Message not found (%s) %lu / %lu /%lu\n",mMemoryMapInfo->filename.c_str(),index,mMessages.size(),mMessagePositions.size());
-      if (mMessages.size() != mMessagePositions.size())
-      {
-        mMessages.clear();
-        mMemoryMapInfo->memoryPtr = nullptr;
-        //for (auto it = mMessagePositions.begin(); it != mMessagePositions.end(); ++it)
-        //  printf("** %d\n",it->first);
-      }
+      mMessages.clear();
+      mMemoryMapInfo->memoryPtr = nullptr;
+      //for (auto it = mMessagePositions.begin(); it != mMessagePositions.end(); ++it)
+      //  printf("** %d\n",it->first);
     }
 
     return nullptr;

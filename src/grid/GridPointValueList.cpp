@@ -409,13 +409,10 @@ int GridPointValueList::getClosestIndex(GridPointValue::ComparisonMethod compari
 
         return mid-1;
       }
-      else
-      {
-        while (mid > 0  &&  mArray[mid] != nullptr  &&   mArray[mid]->compare(comparisonMethod,&gridPointValue) > 0)
-          mid--;
+      while (mid > 0  &&  mArray[mid] != nullptr  &&   mArray[mid]->compare(comparisonMethod,&gridPointValue) > 0)
+        mid--;
 
-        return mid;
-      }
+      return mid;
     }
     return 0;
   }

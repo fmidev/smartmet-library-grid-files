@@ -904,12 +904,9 @@ void getPointMovement(double x1, double y1, double x2, double y2, double areaExt
         my = 0;
         return;
       }
-      else
-      {
-        mx = -areaExtensionX;
-        my = 0;
-        return;
-      }
+      mx = -areaExtensionX;
+      my = 0;
+      return;
     }
 
     if (y1 == y2)
@@ -920,12 +917,9 @@ void getPointMovement(double x1, double y1, double x2, double y2, double areaExt
         my = -areaExtensionY;
         return;
       }
-      else
-      {
-        mx = 0;
-        my = areaExtensionY;
-        return;
-      }
+      mx = 0;
+      my = areaExtensionY;
+      return;
     }
 
     if (x1 < x2)
@@ -936,12 +930,9 @@ void getPointMovement(double x1, double y1, double x2, double y2, double areaExt
         my = areaExtension_y;
         return;
       }
-      else
-      {
-        mx = -areaExtension_x;
-        my = areaExtension_y;
-        return;
-      }
+      mx = -areaExtension_x;
+      my = areaExtension_y;
+      return;
     }
 
     if (x1 > x2)
@@ -952,12 +943,9 @@ void getPointMovement(double x1, double y1, double x2, double y2, double areaExt
         my = -areaExtension_y;
         return;
       }
-      else
-      {
-        mx = -areaExtension_x;
-        my = -areaExtension_y;
-        return;
-      }
+      mx = -areaExtension_x;
+      my = -areaExtension_y;
+      return;
     }
   }
   catch (...)
@@ -993,12 +981,9 @@ void getPointMovementRev(double x1, double y1, double x2, double y2, double area
         my = 0;
         return;
       }
-      else
-      {
-        mx = areaExtensionX;
-        my = 0;
-        return;
-      }
+      mx = areaExtensionX;
+      my = 0;
+      return;
     }
 
     if (y1 == y2)
@@ -1009,12 +994,9 @@ void getPointMovementRev(double x1, double y1, double x2, double y2, double area
         my = areaExtensionY;
         return;
       }
-      else
-      {
-        mx = 0;
-        my = -areaExtensionY;
-        return;
-      }
+      mx = 0;
+      my = -areaExtensionY;
+      return;
     }
 
     if (x1 < x2)
@@ -1025,12 +1007,9 @@ void getPointMovementRev(double x1, double y1, double x2, double y2, double area
         my = -areaExtension_y;
         return;
       }
-      else
-      {
-        mx = areaExtension_x;
-        my = -areaExtension_y;
-        return;
-      }
+      mx = areaExtension_x;
+      my = -areaExtension_y;
+      return;
     }
 
     if (x1 > x2)
@@ -1041,12 +1020,9 @@ void getPointMovementRev(double x1, double y1, double x2, double y2, double area
         my = areaExtension_y;
         return;
       }
-      else
-      {
-        mx = areaExtension_x;
-        my = areaExtension_y;
-        return;
-      }
+      mx = areaExtension_x;
+      my = areaExtension_y;
+      return;
     }
   }
   catch (...)

@@ -443,8 +443,7 @@ char* Message::getMemoryPtr() const
 
     if (mFileMemoryPtr)
       return mFileMemoryPtr + mFilePosition;
-    else
-      return mGridFilePtr->getMemoryPtr() + mFilePosition;
+    return mGridFilePtr->getMemoryPtr() + mFilePosition;
   }
   catch (...)
   {
@@ -2851,8 +2850,7 @@ void Message::getGridValueVector(T::ParamValue_vec& values) const
       mValueDecodingFailedTime = time(nullptr);
       if (mGridFilePtr->hasMemoryMapperError())
         throw exception;
-      else
-        exception.printError();
+      exception.printError();
     }
   }
   catch (...)
@@ -2926,8 +2924,7 @@ void Message::getGridOriginalValueVector(T::ParamValue_vec& values) const
       mValueDecodingFailedTime = time(nullptr);
       if (mGridFilePtr->hasMemoryMapperError())
         throw exception;
-      else
-        exception.printError();
+      exception.printError();
     }
   }
   catch (...)

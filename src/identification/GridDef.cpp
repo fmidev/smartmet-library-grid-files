@@ -3128,7 +3128,8 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
           double lon2 = aa[2];
           double lat2 = aa[3];
 
-          int ok1 = 0, ok2 = 0;
+          int ok1 = 0;
+          int ok2 = 0;
           int rc1 = reverseTransformation->Transform(1, &lon1, &lat1, nullptr, &ok1);
           int rc2 = reverseTransformation->Transform(1, &lon2, &lat2, nullptr, &ok2);
 
@@ -3534,7 +3535,8 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
           double lon2 = aa[2];
           double lat2 = aa[3];
 
-          int ok1 = 0, ok2 = 0;
+          int ok1 = 0;
+          int ok2 = 0;
           int rc1 = reverseTransformation->Transform(1, &lon1, &lat1, nullptr, &ok1);
           int rc2 = reverseTransformation->Transform(1, &lon2, &lat2, nullptr, &ok2);
 
@@ -5172,7 +5174,8 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           def2->initSpatialReference();
           def2->countHash();
 
-          double xx = 0,yy = 0;
+          double xx = 0;
+          double yy = 0;
           def2->getGridOriginalCoordinatesByLatLonCoordinates(latitude,longitude,xx,yy);
 
           int x1 = C_INT(round(xx))*100;

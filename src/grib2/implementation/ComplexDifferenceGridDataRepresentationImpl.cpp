@@ -475,31 +475,28 @@ void ComplexDifferenceGridDataRepresentationImpl::decodeValues(Message *message,
 
       return;
     }
-    else
+    // Bitmap defined.
+
+    const int bitmask[] = {128, 64, 32, 16, 8, 4, 2, 1};
+
+    std::size_t n = 0;
+    for (std::size_t i = 0; i < numberOfValues; i++)
     {
-      // Bitmap defined.
+      // Guard against a bitmap that is shorter than the grid implies (OOB read).
+      if ((i / 8) >= bitmapSizeInBytes)
+        throw Fmi::Exception(BCP,"GRIB2 bitmap is too short for the declared value count!");
 
-      const int bitmask[] = {128, 64, 32, 16, 8, 4, 2, 1};
-
-      std::size_t n = 0;
-      for (std::size_t i = 0; i < numberOfValues; i++)
+      if ((bitmap[i / 8] & bitmask[i % 8]) == 0)
       {
-        // Guard against a bitmap that is shorter than the grid implies (OOB read).
-        if ((i / 8) >= bitmapSizeInBytes)
-          throw Fmi::Exception(BCP,"GRIB2 bitmap is too short for the declared value count!");
-
-        if ((bitmap[i / 8] & bitmask[i % 8]) == 0)
-        {
-          decodedValues.emplace_back(ParamValueMissing);
-        }
-        else
-        {
-          decodedValues.emplace_back(value[n]);
-          n++;
-        }
+        decodedValues.emplace_back(ParamValueMissing);
       }
-      return;
+      else
+      {
+        decodedValues.emplace_back(value[n]);
+        n++;
+      }
     }
+    return;
   }
   catch (...)
   {

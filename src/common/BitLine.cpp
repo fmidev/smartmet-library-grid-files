@@ -81,8 +81,7 @@ BitLine::BitLine(BitLine& bitLine)
 
 BitLine::~BitLine()
 {
-  
-    delete[] changes;
+  delete[] changes;
 }
 
 

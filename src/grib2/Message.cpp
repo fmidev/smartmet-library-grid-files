@@ -1197,8 +1197,7 @@ char* Message::getMemoryPtr() const
 
     if (mFileMemoryPtr)
       return mFileMemoryPtr + mFilePosition;
-    else
-      return mGridFilePtr->getMemoryPtr() + mFilePosition;
+    return mGridFilePtr->getMemoryPtr() + mFilePosition;
   }
   catch (...)
   {
@@ -1450,7 +1449,7 @@ void Message::read(MemoryReader& memoryReader)
     mFilePosition = memoryReader.getGlobalReadPosition();
 
     // Index of the section processed last (=none)
-    std::uint8_t last_idx = 0u;
+    std::uint8_t last_idx = 0U;
     bool begin = false;
 
     // A GRIB2 message may contain several fields, each repeating sections 2-7,
@@ -3375,8 +3374,7 @@ void Message::getGridValueVector(T::ParamValue_vec& values) const
 
       if (mGridFilePtr->hasMemoryMapperError())
         throw exception;
-      else
-        exception.printError();
+      exception.printError();
     }
   }
   catch (...)
@@ -3449,8 +3447,7 @@ void Message::getGridOriginalValueVector(T::ParamValue_vec& values) const
 
       if (mGridFilePtr->hasMemoryMapperError())
         throw exception;
-      else
-        exception.printError();
+      exception.printError();
     }
   }
   catch (...)
@@ -3986,7 +3983,7 @@ void Message::getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate
     const uint w = mColumnCount;
     const uint h = mRowCount;
     const bool global = isGridGlobal();
-    const uint INVALID = 0xFFFFFFFFu;
+    const uint INVALID = 0xFFFFFFFFU;
 
     // Flat grid index for an integer grid point, mirroring getGridValueByGridPoint().
     // INVALID marks an out-of-range point, which resolves to ParamValueMissing.

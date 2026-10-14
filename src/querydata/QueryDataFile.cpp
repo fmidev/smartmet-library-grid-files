@@ -57,11 +57,9 @@ QueryDataFile::QueryDataFile(const char *filename)
 
 QueryDataFile::~QueryDataFile()
 {
-  
-    delete mFastQueryInfo;
+  delete mFastQueryInfo;
 
-  
-    delete mQueryDataFile;
+  delete mQueryDataFile;
 }
 
 

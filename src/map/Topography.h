@@ -113,8 +113,7 @@ class Topography
     {
       if (isLand(lon,lat))
         return getLandShading(lon,lat);
-      else
-        return getSeaShading(lon,lat);
+      return getSeaShading(lon,lat);
     }
 
 

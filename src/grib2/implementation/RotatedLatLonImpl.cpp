@@ -823,7 +823,8 @@ bool RotatedLatLonImpl::getGridPointByLatLonCoordinates(double lat,double lon,do
 {
   try
   {
-    double x = 0, y = 0;
+    double x = 0;
+    double y = 0;
     getGridOriginalCoordinatesByLatLonCoordinates(lat,lon,x,y);
 
     return getGridPointByOriginalCoordinates(x,y,grid_i,grid_j);

@@ -77,16 +77,14 @@ class CImage
 
     virtual ~CImage()
     {
-      
-        delete[] pixel;
+      delete[] pixel;
     }
 
     CImage& operator=(const CImage& image)
     {
       if (&image == this)
         return *this;
-      
-        delete[] pixel;
+      delete[] pixel;
 
       pixel = nullptr;
       width = image.width;
@@ -165,33 +163,33 @@ inline uint32_t merge_ARGB(uint32_t top, uint32_t bottom)
   if (!(bottom & 0xFF000000))
     return top;
 
-  float At = ((top >> 24) & 0xFF) / 255.0f;
-  float Rt = ((top >> 16) & 0xFF) / 255.0f;
-  float Gt = ((top >> 8)  & 0xFF) / 255.0f;
-  float Bt = (top         & 0xFF) / 255.0f;
+  float At = ((top >> 24) & 0xFF) / 255.0F;
+  float Rt = ((top >> 16) & 0xFF) / 255.0F;
+  float Gt = ((top >> 8)  & 0xFF) / 255.0F;
+  float Bt = (top         & 0xFF) / 255.0F;
 
-  float Ab = ((bottom >> 24) & 0xFF) / 255.0f;
-  float Rb = ((bottom >> 16) & 0xFF) / 255.0f;
-  float Gb = ((bottom >> 8)  & 0xFF) / 255.0f;
-  float Bb = (bottom         & 0xFF) / 255.0f;
+  float Ab = ((bottom >> 24) & 0xFF) / 255.0F;
+  float Rb = ((bottom >> 16) & 0xFF) / 255.0F;
+  float Gb = ((bottom >> 8)  & 0xFF) / 255.0F;
+  float Bb = (bottom         & 0xFF) / 255.0F;
 
-  float k = Ab*(1.0f - At);
+  float k = Ab*(1.0F - At);
   float Aout = At + k;
   float Rout = (Rt * At + Rb * k);
   float Gout = (Gt * At + Gb * k);
   float Bout = (Bt * At + Bb * k);
 
-  if (Aout > 0.0f)
+  if (Aout > 0.0F)
   {
     Rout /= Aout;
     Gout /= Aout;
     Bout /= Aout;
   }
 
-  auto A = (uint8_t)(Aout * 255.0f + 0.49);
-  auto R = (uint8_t)(Rout * 255.0f + 0.49);
-  auto G = (uint8_t)(Gout * 255.0f + 0.49);
-  auto B = (uint8_t)(Bout * 255.0f + 0.49);
+  auto A = (uint8_t)(Aout * 255.0F + 0.49);
+  auto R = (uint8_t)(Rout * 255.0F + 0.49);
+  auto G = (uint8_t)(Gout * 255.0F + 0.49);
+  auto B = (uint8_t)(Bout * 255.0F + 0.49);
 
   return (A << 24) | (R << 16) | (G << 8) | B;
 }

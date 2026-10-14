@@ -182,8 +182,7 @@ GaussianLatitudeCache::~GaussianLatitudeCache()
   {
     for (auto& mLatitude : mLatitudes)
     {
-      
-        delete[] mLatitude;
+      delete[] mLatitude;
     }
   }
   catch (...)
