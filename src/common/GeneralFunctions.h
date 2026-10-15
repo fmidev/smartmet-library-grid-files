@@ -51,10 +51,6 @@ float ieee2ibm(float value);
 int timePeriodToSeconds(const char *timePeriod);
 
 time_t localTimeToTimeT(const std::string& localTime,const char *tzone);
-/*
-std::string localTimeToUtcTime(const std::string& localTime,const char *tzone);
-std::string utcTimeToLocalTime(const std::string& utcTime,const char *tzone);
-*/
 
 std::string utcTimeFromTimeT(time_t t);
 time_t      utcTimeToTimeT(const std::string& utcTime);

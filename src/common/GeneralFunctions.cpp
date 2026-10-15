@@ -948,24 +948,6 @@ std::string utcTimeFromTimeT(time_t t)
 
 
 
-/*! \brief Converts a local-time ISO timestamp in the given timezone to a UTC ISO timestamp. */
-
-namespace
-{
-std::string localTimeToUtcTime(const std::string& localTime, const char *tzone)
-{
-  try
-  {
-    time_t t = localTimeToTimeT(localTime, tzone);
-    return utcTimeFromTimeT(t);
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-}  // namespace
-
 /*! \brief Converts a local DateTime in the given timezone to UTC. */
 
 Fmi::DateTime localTimeToUtc(const Fmi::DateTime& localTime,const Fmi::TimeZonePtr& tz)
@@ -1002,24 +984,6 @@ std::string localTimeToUtc(const std::string& localTime, const Fmi::TimeZonePtr&
 }
 
 
-
-/*! \brief Converts a UTC ISO timestamp to a local-time ISO timestamp in the given timezone. */
-
-namespace
-{
-std::string utcTimeToLocalTime(const std::string& utcTime, const char *tzone)
-{
-  try
-  {
-    time_t t = utcTimeToTimeT(utcTime);
-    return localTimeFromTimeT(t, tzone);
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-}  // namespace
 
 /*! \brief Converts an Fmi::DateTime to a time_t. */
 
