@@ -4,6 +4,7 @@
 #include <macgyver/Exception.h>
 #include <macgyver/StringConversion.h>
 
+#include <cstdarg>
 #include <sys/types.h>
 #include <unistd.h>
 
@@ -498,6 +499,123 @@ void Log::print(void *_data,uint _size)
     AutoThreadLock tLock(&threadLock);
     (void)fwrite(_data,1,_size,file);
     (void)fflush(file);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+/*! \brief Writes the timestamp and the event number which start an event line. */
+
+namespace
+{
+void printEventPrefix(FILE *_file,UInt64 _eventCounter)
+{
+  time_t x_time = time(nullptr);
+  struct tm x_tm{};
+  localtime_r(&x_time,&x_tm);
+  fprintf(_file,"[%04d-%02d-%02d/%02d:%02d:%02d][%llu][",x_tm.tm_year+1900,x_tm.tm_mon+1,x_tm.tm_mday,x_tm.tm_hour,x_tm.tm_min,x_tm.tm_sec,static_cast<unsigned long long>(_eventCounter));
+}
+}  // namespace
+
+
+
+
+
+/*! \brief Writes printf formatted text to the log. */
+
+void Log::printData(const char *_format,...)
+{
+  try
+  {
+    lock();
+    FILE *f = getFileHandle();
+    if (f == nullptr)
+    {
+      unlock();
+      return;
+    }
+
+    va_list args;
+    va_start(args,_format);
+    vfprintf(f,_format,args);
+    va_end(args);
+    (void)fflush(f);
+    unlock();
+    truncate();
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+/*! \brief Writes a timestamped, numbered event line of printf formatted text to the log. */
+
+void Log::printEventLine(const char *_format,...)
+{
+  try
+  {
+    lock();
+    FILE *f = getFileHandle();
+    if (f == nullptr)
+    {
+      unlock();
+      return;
+    }
+
+    printEventPrefix(f,getEventCounter());
+    va_list args;
+    va_start(args,_format);
+    vfprintf(f,_format,args);
+    va_end(args);
+    fprintf(f,"]\n");
+    (void)fflush(f);
+    unlock();
+    truncate();
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+/*! \brief Writes a timestamped, numbered event of printf formatted text with its source location to the log. */
+
+void Log::printEvent(const char *_filename,uint _line,const char *_function,const char *_format,...)
+{
+  try
+  {
+    lock();
+    FILE *f = getFileHandle();
+    if (f == nullptr)
+    {
+      unlock();
+      return;
+    }
+
+    printEventPrefix(f,getEventCounter());
+    va_list args;
+    va_start(args,_format);
+    vfprintf(f,_format,args);
+    va_end(args);
+    fprintf(f,"][%s:%u:%s()]\n",_filename,_line,_function);
+    (void)fflush(f);
+    unlock();
+    truncate();
   }
   catch (...)
   {
