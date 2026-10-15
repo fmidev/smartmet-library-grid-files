@@ -64,7 +64,7 @@ class SecondOrderPacking : public DataDefinition
 
   
 
-    void decodeValues_rowByRow(
+    [[noreturn]] void decodeValues_rowByRow(
         std::size_t numOfValues,
         T::Dimensions dimensions,
         T::Data_ptr data,
@@ -78,7 +78,7 @@ class SecondOrderPacking : public DataDefinition
         std::uint8_t flags,
         T::ParamValue_vec& decodedValues) const;
 
-    void decodeValues_constantWidth(
+    [[noreturn]] void decodeValues_constantWidth(
         std::size_t numOfValues,
         T::Dimensions dimensions,
         T::Data_ptr data,
@@ -92,7 +92,7 @@ class SecondOrderPacking : public DataDefinition
         std::uint8_t flags,
         T::ParamValue_vec& decodedValues) const;
 
-    void decodeValues_differentWidth(
+    [[noreturn]] void decodeValues_differentWidth(
         std::size_t numOfValues,
         T::Dimensions dimensions,
         T::Data_ptr data,
