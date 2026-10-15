@@ -14,6 +14,7 @@ class JpegGridDataRepresentationImpl : public JpegGridDataRepresentation
               JpegGridDataRepresentationImpl();
               JpegGridDataRepresentationImpl(const JpegGridDataRepresentationImpl& other);
     ~JpegGridDataRepresentationImpl() override;
+    JpegGridDataRepresentationImpl& operator=(const JpegGridDataRepresentationImpl&) = default;
 
     RepresentationDefinition* createRepresentationDefinition() const override;
 

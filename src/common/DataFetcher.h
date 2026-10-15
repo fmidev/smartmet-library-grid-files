@@ -26,12 +26,12 @@ class DataFetcher
     class FileRec
     {
       public:
-        uint        serverType;   //!< Server type (see DataFetcher::ServerType)
-        uint        protocol;     //!< Protocol (see MapInfo::Protocol)
+        uint        serverType = 0;   //!< Server type (see DataFetcher::ServerType)
+        uint        protocol = 0;     //!< Protocol (see MapInfo::Protocol)
         std::string server;       //!< Server hostname or URL
         std::string filename;     //!< File path relative to the server
-        time_t      lastModified; //!< Last-modified timestamp
-        std::size_t size;         //!< File size in bytes
+        time_t      lastModified = 0; //!< Last-modified timestamp
+        std::size_t size = 0;         //!< File size in bytes
     };
 
     /*! \brief Server category constants (mirrors MapInfo::ServerType). */

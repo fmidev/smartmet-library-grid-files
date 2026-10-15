@@ -15,6 +15,7 @@ class SimulatedSatelliteProductImpl : public SimulatedSatelliteProduct
                         SimulatedSatelliteProductImpl();
                         SimulatedSatelliteProductImpl(const SimulatedSatelliteProductImpl& other);
     ~SimulatedSatelliteProductImpl() override;
+    SimulatedSatelliteProductImpl& operator=(const SimulatedSatelliteProductImpl&) = default;
 
     ProductDefinition*  createProductDefinition() const override;
 

@@ -15,6 +15,7 @@ class UnstructuredImpl : public Unstructured
                         UnstructuredImpl();
                         UnstructuredImpl(const UnstructuredImpl& other);
     ~UnstructuredImpl() override;
+    UnstructuredImpl& operator=(const UnstructuredImpl&) = default;
 
     GridDefinition*     createGridDefinition() const override;
 

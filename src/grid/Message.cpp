@@ -55,9 +55,9 @@ uint tmpValueCachePos = 0;
 struct TmpValueCacheRec
 {
     T::ParamValue_vec values;
-    UInt64 hash;
-    T::FileId fileId;
-    T::MessageIndex messageIndex;
+    UInt64 hash = 0;
+    T::FileId fileId = 0;
+    T::MessageIndex messageIndex = 0;
 };
 
 namespace
@@ -583,6 +583,8 @@ void Message::getGridIsobands(T::ParamValue_vec& contourLowValues,T::ParamValue_
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
         coordinates = getGridOriginalCoordinates();
         break;
+      default:
+        break;
     }
 
     getIsobands(gridValues,coordinates.get(),d.nx(),d.ny(),contourLowValues,contourHighValues,interpolationType,smoothSize,smoothDegree,contours,0,getContourThreads(attributeList));
@@ -847,6 +849,8 @@ void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::P
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
         coordinatePtr = coordinates.get();
         break;
+      default:
+        break;
     }
 
     getIsobands(gridValues,coordinatePtr,width,height,contourLowValues,contourHighValues,interpolationType,smoothSize,smoothDegree,contours,0,getContourThreads(attributeList));
@@ -933,6 +937,8 @@ void Message::getGridIsobandsByGrid(T::ParamValue_vec& contourLowValues,T::Param
         break;
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
+        break;
+      default:
         break;
     }
 
@@ -1025,6 +1031,8 @@ void Message::getGridIsolines(T::ParamValue_vec& contourValues,T::AttributeList&
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
         coordinates = getGridOriginalCoordinates();
         coordinatePtr = coordinates.get();
+        break;
+      default:
         break;
     }
 
@@ -1290,6 +1298,8 @@ void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::Attr
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
         coordinatePtr = coordinates.get();
         break;
+      default:
+        break;
     }
 
     getIsolines(gridValues,coordinatePtr,width,height,contourValues,interpolationType,smoothSize,smoothDegree,contours,0,getContourThreads(attributeList));
@@ -1377,6 +1387,8 @@ void Message::getGridIsolinesByGrid(T::ParamValue_vec& contourValues,uint gridWi
         break;
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
+        break;
+      default:
         break;
     }
 
@@ -1476,6 +1488,8 @@ void Message::getGridStreamlines(T::AttributeList& attributeList,uint modificati
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
         coordinates = getGridOriginalCoordinates();
+        break;
+      default:
         break;
     }
 
@@ -2989,6 +3003,8 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j,uint modi
 
       case Operation::DEG2RAD:
         return (2*3.1415926535898*value/360.0);
+      default:
+        break;
     }
     return value;
   }
@@ -3316,6 +3332,8 @@ void Message::modifyGridValueVector(uint modificationOperation,double_vec& modif
         }
       }
       return;
+      default:
+        break;
     }
   }
   catch (...)
@@ -3733,8 +3751,7 @@ void Message::getGridValueVectorByCrop(T::AttributeList& attributeList,uint modi
       getGridPointByLatLonCoordinates(a[1],a[0],x1,y1);
       getGridPointByLatLonCoordinates(a[3],a[2],x2,y2);
     }
-    else
-    if (centerStr != nullptr)
+    else if (centerStr != nullptr)
     {
       // The crop area is defined by a rectangle and its latlon center coordinates.
 
@@ -5032,6 +5049,8 @@ void Message::getGridValueVectorByGridPoint(double grid_i,double grid_j,uint vec
         valueVector.emplace_back(getGridValueByGridPoint(x2,y2,modificationOperation,modificationParameters));
         valueVector.emplace_back(getGridValueByGridPoint(x1,y2,modificationOperation,modificationParameters));
         break;
+      default:
+        break;
     }
   }
   catch (...)
@@ -5305,6 +5324,8 @@ void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double o
         }
       }
       break;
+      default:
+        break;
     }
   }
   catch (...)
@@ -5545,6 +5566,8 @@ void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::ve
         }
       }
       break;
+      default:
+        break;
     }
   }
   catch (...)
@@ -5726,6 +5749,8 @@ void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std
         }
       }
       break;
+      default:
+        break;
     }
   }
   catch (...)

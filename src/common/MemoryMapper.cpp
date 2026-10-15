@@ -365,7 +365,7 @@ void MemoryMapper::setEnabled(bool enabled)
   {
     if (enabled)
     {
-      struct utsname systemInfo;
+      struct utsname systemInfo{};
       if (uname(&systemInfo) != 0)
       {
         std::cout << "### WARNING: MemoryMapper::setEnabled(): Error getting system information\n";
@@ -417,7 +417,7 @@ void MemoryMapper::setEnabled(bool enabled)
         return;
       }
 
-      struct uffdio_api uffdio_api;
+      struct uffdio_api uffdio_api{};
       uffdio_api.api = UFFD_API;
       uffdio_api.features = 0;
 
@@ -465,7 +465,7 @@ void MemoryMapper::map(MapInfo_sptr info)
     {
       // We should use the old memory mapper
 
-      struct stat buf;
+      struct stat buf{};
       if (stat(info->filename.c_str(), &buf) == 0)
       {
         info->fileSize = (std::size_t)buf.st_size;
@@ -528,7 +528,7 @@ void MemoryMapper::map(MapInfo_sptr info)
     addMapInfo(info);
     //mMemoryMappings.insert(std::pair<char*,MapInfo>(info.memoryPtr,info));
 
-    struct uffdio_register uffdio_register;
+    struct uffdio_register uffdio_register{};
     uffdio_register.range.start = (unsigned long)info->memoryPtr;
     uffdio_register.range.len = info->allocatedSize;
     uffdio_register.mode = UFFDIO_REGISTER_MODE_MISSING;
@@ -575,7 +575,7 @@ void MemoryMapper::unmap(MapInfo_sptr info)
         }
       }
 
-      struct uffdio_register uffdio_register;
+      struct uffdio_register uffdio_register{};
       uffdio_register.range.start = (unsigned long)info->memoryPtr;
       uffdio_register.range.len = info->allocatedSize;
       uffdio_register.mode = UFFDIO_REGISTER_MODE_MISSING;
@@ -796,7 +796,7 @@ Int64 MemoryMapper::getFileSize(uint serverType,uint protocol,const char *server
     {
       // We should use the old memory mapper
 
-      struct stat buf;
+      struct stat buf{};
       if (stat(filename, &buf) == 0)
         return (Int64)buf.st_size;
 
@@ -891,7 +891,7 @@ void MemoryMapper::faultProcessingThread()
 
     uint threadId = mThreadsRunning;
     mThreadsRunning++;
-    struct uffdio_copy uffdio_copy;
+    struct uffdio_copy uffdio_copy{};
 
     /* Create a page that will be copied into the faulting region. */
 
@@ -932,7 +932,7 @@ void MemoryMapper::faultProcessingThread()
         {
           AutoReadLock lock(&mModificationLock);
 
-          auto *address = (char*)mMessage[idx].arg.pagefault.address;
+          auto *address = (char*)mMessage[idx].arg.pagefault.address;  // NOLINT(cppcoreguidelines-pro-type-union-access): kernel uffd_msg API
 
           int index = getClosestIndex(address);
 
@@ -1063,7 +1063,7 @@ void MemoryMapper::faultHandlerThread()
 
           if (mMessage[idx].event == 0)
           {
-            struct pollfd pollfd;
+            struct pollfd pollfd{};
             pollfd.fd = mUffd;
             pollfd.events = POLLIN;
             int nready = poll(&pollfd, 1, 1000);
@@ -1089,11 +1089,11 @@ void MemoryMapper::faultHandlerThread()
 
               /*
               bool found = false;
-              auto address = mMessage[idx].arg.pagefault.address;
+              auto address = mMessage[idx].arg.pagefault.address;  // NOLINT(cppcoreguidelines-pro-type-union-access): kernel uffd_msg API
               for (auto t = (Int64)mMessageProcessCount; t<(Int64)mMessageReadCount.load()  &&  !found; t++)
               {
                 auto i = t % mMaxMessages;
-                if (mMessage[i].arg.pagefault.address == address)
+                if (mMessage[i].arg.pagefault.address == address)  // NOLINT(cppcoreguidelines-pro-type-union-access): kernel uffd_msg API
                   found = true;
               }
               if (!found)

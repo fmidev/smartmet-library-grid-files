@@ -26,6 +26,7 @@ class DataDefinition
                   DataDefinition();
                   DataDefinition(const DataDefinition& other);
     virtual       ~DataDefinition();
+    DataDefinition& operator=(const DataDefinition&) = default;
 
     virtual uint  getTemplateNumber() const;
     virtual void  print(std::ostream& stream,uint level,uint optionFlags) const;

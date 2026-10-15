@@ -44,6 +44,7 @@ class IndicatorSection : public GRID::MessageSection
                   IndicatorSection();
                   IndicatorSection(const IndicatorSection& other);
     ~IndicatorSection() override;
+    IndicatorSection& operator=(const IndicatorSection&) = default;
 
     // ### Common methods for all message sections
 
@@ -79,7 +80,7 @@ class IndicatorSection : public GRID::MessageSection
     /*! \brief The section start position in the file. */
     T::FilePosition mFilePosition;
 
-    uchar           mIdentifier[4];  //!< GRIB magic bytes ("GRIB", octets 1-4).
+    uchar           mIdentifier[4]{};  //!< GRIB magic bytes ("GRIB", octets 1-4).
     std::uint32_t   mTotalLength;    //!< Total length of the GRIB message in octets (octets 5-7).
     std::uint8_t    mEditionNumber;  //!< GRIB edition number (octet 8).
 };

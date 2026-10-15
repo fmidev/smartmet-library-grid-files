@@ -163,6 +163,8 @@ bool GridSection::getProperty(uint propertyId,Int64& value)
       case Property::GridSection::DataRepresentationType:
         value = mDataRepresentationType;
         return true;
+      default:
+        break;
     }
 
     if (mGridDefinition)
@@ -228,6 +230,8 @@ bool GridSection::setProperty(uint propertyId,Int64 value)
       case Property::GridSection::DataRepresentationType:
         setDataRepresentationType(value);
         return true;
+      default:
+        break;
     }
 
     if (mGridDefinition)

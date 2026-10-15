@@ -9,7 +9,7 @@
 
 struct FlowField
 {
-    int w, h;
+    int w = 0, h = 0;
     std::vector<float> u;
     std::vector<float> v;
 };

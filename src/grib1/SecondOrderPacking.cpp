@@ -409,8 +409,8 @@ void SecondOrderPacking::decodeValues_SPD(
     decodedValues.reserve(numOfValues);
 
     uint numberOfGroups = mP1  + 65536 * mExtraValues;
-    uint N1 = mN1;
-    uint N2 = mN2;
+    uint N1 = 0;
+    uint N2 = 0;
     uint widthOfWidths = 0;
     uint widthOfLengths = 0;
     uint NL = 0;
@@ -597,6 +597,8 @@ void SecondOrderPacking::decodeValues_SPD(
         }
       }
       break;
+      default:
+        break;
     }
 
     double s = grib_power(binaryScaleFactor,2);
@@ -610,7 +612,6 @@ void SecondOrderPacking::decodeValues_SPD(
     if (mExtendedFlags & BoustrophedonicOrdering)
     {
       uint nx = dimensions.nx();
-      uint inc = nx;
       uint count = nx;
 
       // Only complete rows can be reversed
@@ -627,8 +628,7 @@ void SecondOrderPacking::decodeValues_SPD(
           right--;
           left++;
         }
-        inc = nx*2;
-        count += inc;
+        count += nx*2;
       }
     }
 

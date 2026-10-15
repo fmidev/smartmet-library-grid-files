@@ -155,6 +155,8 @@ void FloatingPointGridDataRepresentationImpl::decodeValues(Message *message,T::P
 
         case 3: // 128 bits
           break;
+        default:
+          break;
     }
   }
   catch (...)

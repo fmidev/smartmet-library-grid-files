@@ -401,7 +401,7 @@ void GaussianImpl::print(std::ostream& stream,uint level,uint optionFlags) const
           {
             T::Coordinate coord = coordinateList->at(c);
 
-            sprintf(str,"* [%03d,%03d] %f,%f",x,y,coord.x(),coord.y());
+            sprintf(str,"* [%03u,%03u] %f,%f",x,y,coord.x(),coord.y());
             stream << space(level+2) << str << "\n";
           }
           c++;

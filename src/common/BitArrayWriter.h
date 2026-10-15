@@ -22,6 +22,8 @@ class BitArrayWriter
      *  \param[in] numberOfBits  Total writable bit capacity. */
                 BitArrayWriter(unsigned char *data,UInt64 numberOfBits);
     virtual     ~BitArrayWriter();
+    BitArrayWriter(const BitArrayWriter&) = default;
+    BitArrayWriter& operator=(const BitArrayWriter&) = default;
 
     /*! \brief Return the total writable bit capacity. */
     UInt64      getNumberOfBits() const;

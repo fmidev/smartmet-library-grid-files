@@ -149,14 +149,14 @@ std::string MercatorImpl::getGridGeometryString() const
     if ((scanningMode & 0x40) == 0)
     {
       dy = -dy;
-      p += sprintf(p,"-y");
+      sprintf(p,"-y");
     }
     else
     {
-      p += sprintf(p,"+y");
+      sprintf(p,"+y");
     }
 
-    sprintf(buf,"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;description",
+    sprintf(buf,"%d;id;name;%u;%u;%.6f;%.6f;%.6f;%.6f;%s;%.6f;description",
         T::GridProjectionValue::Mercator,*mNi,*mNj,x,y,fabs(dx),fabs(dy),sm,latin);
 
     return std::string(buf);
@@ -454,6 +454,8 @@ bool MercatorImpl::setProperty(uint propertyId,Int64 value)
       case Property::GridSection::Mercator::ScanningMode:
         mScanningMode.setScanningMode(value);
         return true;
+      default:
+        break;
     }
 
     return GridDefinition::setProperty(propertyId,value);

@@ -25,6 +25,8 @@ class QueryDataFile
 
                         QueryDataFile(const char *filename);
     virtual             ~QueryDataFile();
+    QueryDataFile(const QueryDataFile&) = delete;
+    QueryDataFile& operator=(const QueryDataFile&) = delete;
 
     void                read(MessageInfoVec& messageInfoList);
     void                print(std::ostream& stream,uint level,uint optionFlags) const;

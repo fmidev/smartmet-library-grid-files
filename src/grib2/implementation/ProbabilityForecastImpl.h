@@ -14,6 +14,7 @@ class ProbabilityForecastImpl : public ProbabilityForecast
                         ProbabilityForecastImpl();
                         ProbabilityForecastImpl(const ProbabilityForecastImpl& other);
     ~ProbabilityForecastImpl() override;
+    ProbabilityForecastImpl& operator=(const ProbabilityForecastImpl&) = default;
 
     ProductDefinition*  createProductDefinition() const override;
 

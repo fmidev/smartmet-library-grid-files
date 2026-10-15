@@ -208,7 +208,7 @@ int DataFetcher_filesys::getData(uint /*serverType*/,uint /*protocol*/,const cha
             memset(dataPtr + n, 0, dataSize - n);
             return dataSize;
           }
-          printf("### WARNING: Cannot read all requested data (%s) filepos = %ld  %d/%d\n",filename,filePosition,n,dataSize);
+          printf("### WARNING: Cannot read all requested data (%s) filepos = %zu  %d/%d\n",filename,filePosition,n,dataSize);
         }
 
         return n;
@@ -270,7 +270,7 @@ void DataFetcher_filesys::getFileList(const char *dirName,std::vector<std::strin
         }
         else
         {
-          struct stat s;
+          struct stat s{};
           if (stat(fullName, &s) == 0)
           {
             if (ep->d_type == DT_REG || ep->d_type == DT_LNK)
@@ -350,7 +350,7 @@ Int64 DataFetcher_filesys::getFileSize(uint /*serverType*/,uint /*protocol*/,con
   FUNCTION_TRACE
   try
   {
-    struct stat buf;
+    struct stat buf{};
     if (stat(filename, &buf) == 0)
       return (Int64)buf.st_size;
 

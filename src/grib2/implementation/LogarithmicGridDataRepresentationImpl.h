@@ -13,6 +13,7 @@ class LogarithmicGridDataRepresentationImpl : public LogarithmicGridDataRepresen
               LogarithmicGridDataRepresentationImpl();
               LogarithmicGridDataRepresentationImpl(const LogarithmicGridDataRepresentationImpl& other);
     ~LogarithmicGridDataRepresentationImpl() override;
+    LogarithmicGridDataRepresentationImpl& operator=(const LogarithmicGridDataRepresentationImpl&) = default;
 
     RepresentationDefinition* createRepresentationDefinition() const override;
 

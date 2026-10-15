@@ -15,6 +15,7 @@ class EnsembleReforecastImpl : public EnsembleReforecast
                         EnsembleReforecastImpl();
                         EnsembleReforecastImpl(const EnsembleReforecastImpl& other);
     ~EnsembleReforecastImpl() override;
+    EnsembleReforecastImpl& operator=(const EnsembleReforecastImpl&) = default;
 
     ProductDefinition*  createProductDefinition() const override;
 

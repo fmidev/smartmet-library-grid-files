@@ -20,6 +20,8 @@ class MemoryWriter : public DataWriter
      *  \param[in] _dataRelease  If true, `delete[]` the buffer on destruction. */
                 MemoryWriter(uchar *_data,UInt64 _dataSize,bool _dataRelease);
     ~MemoryWriter() override;
+    MemoryWriter(const MemoryWriter&) = delete;
+    MemoryWriter& operator=(const MemoryWriter&) = delete;
 
     /*! \brief Return a pointer to the start of the buffer. */
     uchar*      getDataPtr();

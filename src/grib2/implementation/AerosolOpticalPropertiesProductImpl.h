@@ -15,6 +15,7 @@ class AerosolOpticalPropertiesProductImpl : public AerosolOpticalPropertiesProdu
                         AerosolOpticalPropertiesProductImpl();
                         AerosolOpticalPropertiesProductImpl(const AerosolOpticalPropertiesProductImpl& other);
     ~AerosolOpticalPropertiesProductImpl() override;
+    AerosolOpticalPropertiesProductImpl& operator=(const AerosolOpticalPropertiesProductImpl&) = default;
 
     ProductDefinition*  createProductDefinition() const override;
 

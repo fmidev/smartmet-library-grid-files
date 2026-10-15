@@ -14,6 +14,7 @@ class LatLonImpl : public LatLon
                         LatLonImpl();
                         LatLonImpl(const LatLonImpl& other);
     ~LatLonImpl() override;
+    LatLonImpl& operator=(const LatLonImpl&) = default;
 
     GridDefinition*     createGridDefinition() const override;
 

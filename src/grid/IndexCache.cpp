@@ -75,8 +75,7 @@ void IndexCache::addIndexVector(Int64 hash,const T::IndexVector& indexVector)
       mTimeVector.insert(mTimeVector.begin(),time(nullptr));
       mVector.insert(mVector.begin(),indexVector);
     }
-    else
-    if (idx >= C_INT(mHashVector.size()))
+    else if (idx >= C_INT(mHashVector.size()))
     {
       mHashVector.emplace_back(hash);
       mTimeVector.emplace_back(time(nullptr));

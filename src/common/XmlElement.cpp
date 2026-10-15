@@ -16,7 +16,7 @@ XmlElement::XmlElement()
     parent = nullptr;
     filePosition = 0;
   }
-  catch (Fmi::Exception& e)
+  catch (Fmi::Exception&)
   {
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
@@ -35,7 +35,7 @@ XmlElement::XmlElement(const char *data,int size)
     filePosition = 0;
     parseXml(data,size,*this);
   }
-  catch (Fmi::Exception& e)
+  catch (Fmi::Exception&)
   {
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
@@ -72,7 +72,7 @@ void XmlElement::print(std::ostream& stream,uint level,uint /*optionFlags*/)
 
     stream << space(level) << "END " << tag << "\n";
   }
-  catch (Fmi::Exception& e)
+  catch (Fmi::Exception&)
   {
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
@@ -131,7 +131,7 @@ int XmlElement::getTagNameAndType(const char *data,char *name,const ParameterLis
     }
     return type;
   }
-  catch (Fmi::Exception& e)
+  catch (Fmi::Exception&)
   {
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
@@ -224,7 +224,7 @@ void XmlElement::parseXml(const char *data,int size,XmlElement& xmlRoot)
       c++;
     }
   }
-  catch (Fmi::Exception& e)
+  catch (Fmi::Exception&)
   {
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }

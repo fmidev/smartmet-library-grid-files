@@ -73,6 +73,7 @@ class ProductSection : public GRID::MessageSection
                       ProductSection();
                       ProductSection(const ProductSection& other);
     ~ProductSection() override;
+    ProductSection& operator=(const ProductSection&) = delete;
 
     // ### Common methods for all message sections
 

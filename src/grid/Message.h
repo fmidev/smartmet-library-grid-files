@@ -71,6 +71,7 @@ class Message
                                 /*! \brief Copy constructor. */
                                 Message(const Message& message);
     virtual                     ~Message();
+    Message& operator=(const Message&) = default;
 
     /*! \brief Populate \p attributeList with all message fields as key/value pairs.
      *  \param[in]  prefix         String prepended to every attribute key.

@@ -15,6 +15,7 @@ class TimeIntervalAtmosphericChemicalEnsembleProductImpl : public TimeIntervalAt
                         TimeIntervalAtmosphericChemicalEnsembleProductImpl();
                         TimeIntervalAtmosphericChemicalEnsembleProductImpl(const TimeIntervalAtmosphericChemicalEnsembleProductImpl& other);
     ~TimeIntervalAtmosphericChemicalEnsembleProductImpl() override;
+    TimeIntervalAtmosphericChemicalEnsembleProductImpl& operator=(const TimeIntervalAtmosphericChemicalEnsembleProductImpl&) = default;
 
     ProductDefinition*  createProductDefinition() const override;
 

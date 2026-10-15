@@ -15,6 +15,7 @@ class AuxiliarySatelliteProductImpl : public AuxiliarySatelliteProduct
                         AuxiliarySatelliteProductImpl();
                         AuxiliarySatelliteProductImpl(const AuxiliarySatelliteProductImpl& other);
     ~AuxiliarySatelliteProductImpl() override;
+    AuxiliarySatelliteProductImpl& operator=(const AuxiliarySatelliteProductImpl&) = default;
 
     ProductDefinition*  createProductDefinition() const override;
 

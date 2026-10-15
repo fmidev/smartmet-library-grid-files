@@ -445,10 +445,10 @@ void Log::print(time_t _time,const char *_event)
     if (!enabled  ||  file == nullptr  ||  _event == nullptr)
       return;
 
-    struct tm x_tm;
+    struct tm x_tm{};
     localtime_r(&_time,&x_tm);
     AutoThreadLock tLock(&threadLock);
-    fprintf(file,"[%04u-%02u-%02u/%02u:%02u:%02u] %s",x_tm.tm_year+1900,x_tm.tm_mon+1,x_tm.tm_mday,x_tm.tm_hour,x_tm.tm_min,x_tm.tm_sec,_event);
+    fprintf(file,"[%04d-%02d-%02d/%02d:%02d:%02d] %s",x_tm.tm_year+1900,x_tm.tm_mon+1,x_tm.tm_mday,x_tm.tm_hour,x_tm.tm_min,x_tm.tm_sec,_event);
     (void)fflush(file);
   }
   catch (...)
@@ -470,10 +470,10 @@ void Log::print(time_t _time,const char *_filename,uint _line,const char *_funct
     if (!enabled  ||  file == nullptr  ||  _event == nullptr  ||  _filename == nullptr  ||  _function == nullptr)
       return;
 
-    struct tm x_tm;
+    struct tm x_tm{};
     localtime_r(&_time,&x_tm);
     AutoThreadLock tLock(&threadLock);
-    fprintf(file,"[%04u-%02u-%02u/%02u:%02u:%02u][%s:%u:%s()] %s",x_tm.tm_year+1900,x_tm.tm_mon+1,x_tm.tm_mday,x_tm.tm_hour,x_tm.tm_min,x_tm.tm_sec,_filename,_line,_function,_event);
+    fprintf(file,"[%04d-%02d-%02d/%02d:%02d:%02d][%s:%u:%s()] %s",x_tm.tm_year+1900,x_tm.tm_mon+1,x_tm.tm_mday,x_tm.tm_hour,x_tm.tm_min,x_tm.tm_sec,_filename,_line,_function,_event);
     (void)fflush(file);
   }
   catch (...)

@@ -15,6 +15,7 @@ class LambertConformalImpl : public LambertConformal
                         LambertConformalImpl();
                         LambertConformalImpl(const LambertConformalImpl& other);
     ~LambertConformalImpl() override;
+    LambertConformalImpl& operator=(const LambertConformalImpl&) = default;
 
     GridDefinition*     createGridDefinition() const override;
 

@@ -23,6 +23,8 @@ class FmiParameterDef
   public:
                   FmiParameterDef();
     virtual       ~FmiParameterDef();
+    FmiParameterDef(const FmiParameterDef&) = default;
+    FmiParameterDef& operator=(const FmiParameterDef&) = default;
 
     /*! \brief Write a human-readable dump to \p stream (for debugging). */
     void          print(std::ostream& stream,uint level,uint optionFlags) const;

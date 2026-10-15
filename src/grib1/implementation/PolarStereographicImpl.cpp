@@ -231,11 +231,11 @@ std::string PolarStereographicImpl::getGridGeometryString() const
     if ((scanningMode & 0x40) == 0)
     {
       dy = -dy;
-      p += sprintf(p,"-y");
+      sprintf(p,"-y");
     }
     else
     {
-      p += sprintf(p,"+y");
+      sprintf(p,"+y");
     }
 
     sprintf(buf,"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;description",
@@ -540,6 +540,8 @@ bool PolarStereographicImpl::getProperty(uint propertyId,Int64& value)
       case Property::GridSection::PolarStereographic::ProjectionCentreFlag:
         value = getProjectionCentreFlag();
         return true;
+      default:
+        break;
     }
 
     return GridDefinition::getProperty(propertyId,value);
@@ -602,6 +604,8 @@ bool PolarStereographicImpl::setProperty(uint propertyId,Int64 value)
       case Property::GridSection::PolarStereographic::ProjectionCentreFlag:
         setProjectionCentreFlag(value);
         return true;
+      default:
+        break;
     }
 
     return GridDefinition::setProperty(propertyId,value);

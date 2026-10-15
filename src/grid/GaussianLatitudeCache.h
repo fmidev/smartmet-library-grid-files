@@ -25,6 +25,8 @@ class GaussianLatitudeCache
   public:
               GaussianLatitudeCache();
     virtual   ~GaussianLatitudeCache();
+    GaussianLatitudeCache(const GaussianLatitudeCache&) = delete;
+    GaussianLatitudeCache& operator=(const GaussianLatitudeCache&) = delete;
 
     /*! \brief Return the array of nj Gaussian latitudes for the given N parameter.
      *  \param[in] nj  Number of latitude rows.
@@ -51,8 +53,8 @@ class GaussianLatitudeCache
 
   protected:
 
-    double*   mLatitudes[GaussianLatitudeCacheSize];      //!< Cached latitude arrays (nullptr = empty slot)
-    long      mLatitudes_number[GaussianLatitudeCacheSize]; //!< Gaussian N parameter for each cached array
+    double*   mLatitudes[GaussianLatitudeCacheSize]{};      //!< Cached latitude arrays (nullptr = empty slot)
+    long      mLatitudes_number[GaussianLatitudeCacheSize]{}; //!< Gaussian N parameter for each cached array
     uint      lastAccess;                                 //!< LRU eviction counter
 
 };

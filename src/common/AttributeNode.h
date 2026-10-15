@@ -41,6 +41,7 @@ class AttributeNode
      *  \param[in] name  Node name. */
                     AttributeNode(const char *name);
      virtual        ~AttributeNode();
+     AttributeNode& operator=(const AttributeNode&) = default;
 
     /*! \brief Append a child node with the given name and no value.
      *  \param[in] name  Child node name.

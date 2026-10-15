@@ -50,6 +50,7 @@ class Message : public GRID::Message
                         Message(const Message& message);
                         Message(GRID::GridFile *gridFile,QueryDataFile *queryDataFile,T::MessageIndex messageIndex,const QueryData::MessageInfo& messageInfo);
     ~Message() override;
+    Message& operator=(const Message&) = default;
 
     void                getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const override;
     T::FileId           getFileId() const override;
@@ -129,7 +130,7 @@ class Message : public GRID::Message
     UInt64              mParameterIndex;    //!< Parameter index in NFmiFastQueryInfo.
     UInt64              mLevelIndex;        //!< Level index in NFmiFastQueryInfo.
     UInt64              mTimeIndex;         //!< Time index in NFmiFastQueryInfo.
-    int                 mParameterLevelId;  //!< FMI level type identifier.
+    int                 mParameterLevelId = 0;  //!< FMI level type identifier.
     int                 mParameterLevel;    //!< Level value (pressure, height, etc.).
     int                 mGeometryId;        //!< FMI geometry identifier.
     T::ForecastType     mForecastType;      //!< Forecast type code.

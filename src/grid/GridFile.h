@@ -43,6 +43,7 @@ class GridFile
                            *  \param[in] gridFile  Source GridFile to copy metadata from. */
                           GridFile(GridFile *gridFile);
     virtual               ~GridFile();
+    GridFile& operator=(const GridFile&) = delete;
 
     /*! \brief Register a file that this file depends on (e.g. a shared bitmap file).
      *  \param[in] fileId  Identifier of the dependency file. */

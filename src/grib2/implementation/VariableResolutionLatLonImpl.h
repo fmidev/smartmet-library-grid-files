@@ -14,6 +14,7 @@ class VariableResolutionLatLonImpl : public VariableResolutionLatLon
                         VariableResolutionLatLonImpl();
                         VariableResolutionLatLonImpl(const VariableResolutionLatLonImpl& other);
     ~VariableResolutionLatLonImpl() override;
+    VariableResolutionLatLonImpl& operator=(const VariableResolutionLatLonImpl&) = default;
 
     GridDefinition*     createGridDefinition() const override;
 

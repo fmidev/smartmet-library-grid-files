@@ -27,6 +27,8 @@ class Grib2ParameterDef
 
                     Grib2ParameterDef();
     virtual         ~Grib2ParameterDef();
+    Grib2ParameterDef(const Grib2ParameterDef&) = default;
+    Grib2ParameterDef& operator=(const Grib2ParameterDef&) = default;
 
     /*! \brief Write a human-readable dump to \p stream (for debugging). */
     void            print(std::ostream& stream,uint level,uint optionFlags) const;

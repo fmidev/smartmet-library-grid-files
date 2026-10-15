@@ -13,6 +13,7 @@ class AzimuthRangeImpl : public AzimuthRange
                         AzimuthRangeImpl();
                         AzimuthRangeImpl(const AzimuthRangeImpl& other);
     ~AzimuthRangeImpl() override;
+    AzimuthRangeImpl& operator=(const AzimuthRangeImpl&) = default;
 
     GridDefinition*     createGridDefinition() const override;
 

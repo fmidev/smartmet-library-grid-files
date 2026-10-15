@@ -15,6 +15,7 @@ class PartitionedProductImpl : public PartitionedProduct
                         PartitionedProductImpl();
                         PartitionedProductImpl(const PartitionedProductImpl& other);
     ~PartitionedProductImpl() override;
+    PartitionedProductImpl& operator=(const PartitionedProductImpl&) = default;
 
     ProductDefinition*  createProductDefinition() const override;
 

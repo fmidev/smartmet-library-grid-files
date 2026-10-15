@@ -146,7 +146,7 @@ void SpectralGridDataRepresentationImpl::decodeValues(Message *message,T::ParamV
     {
       AutoThreadLock lock(&AEC_threadLock);
 
-      struct aec_stream strm;
+      struct aec_stream strm{};
       strm.bits_per_sample = bits_per_value;
 
       strm.block_size = 32;

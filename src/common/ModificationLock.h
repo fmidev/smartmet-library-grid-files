@@ -173,7 +173,7 @@ class ModificationLock
 
   protected:
 
-    timespec          r1, r2;         //!< nanosleep interval used while spinning in writeLock()
+    timespec          r1{}, r2{};         //!< nanosleep interval used while spinning in writeLock()
     ThreadLock        mThreadLock;    //!< Underlying POSIX mutex for exclusive access
     std::atomic<int>  mReadCounter;   //!< Number of active readers
     std::atomic<int>  mWriteCounter;  //!< Non-zero when a writer is waiting or active

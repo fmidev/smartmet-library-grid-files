@@ -15,6 +15,7 @@ class CharacterStringProductImpl : public CharacterStringProduct
                         CharacterStringProductImpl();
                         CharacterStringProductImpl(const CharacterStringProductImpl& other);
     ~CharacterStringProductImpl() override;
+    CharacterStringProductImpl& operator=(const CharacterStringProductImpl&) = default;
 
     ProductDefinition*  createProductDefinition() const override;
 

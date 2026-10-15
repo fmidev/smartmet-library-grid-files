@@ -40,6 +40,8 @@ class GridValue
                   //! \overload
                   GridValue(double x,double y, T::ParamValue value, const char *valueString);
     virtual       ~GridValue();
+    GridValue(const GridValue&) = default;
+    GridValue& operator=(const GridValue&) = default;
 
     /*! \brief Print the grid value to a stream (for debugging).
      *  \param[in] stream      Output stream.

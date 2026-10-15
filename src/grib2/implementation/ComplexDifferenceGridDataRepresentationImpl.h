@@ -14,6 +14,7 @@ class ComplexDifferenceGridDataRepresentationImpl : public ComplexDifferenceGrid
               ComplexDifferenceGridDataRepresentationImpl();
               ComplexDifferenceGridDataRepresentationImpl(const ComplexDifferenceGridDataRepresentationImpl& other);
     ~ComplexDifferenceGridDataRepresentationImpl() override;
+    ComplexDifferenceGridDataRepresentationImpl& operator=(const ComplexDifferenceGridDataRepresentationImpl&) = default;
 
     RepresentationDefinition* createRepresentationDefinition() const override;
 

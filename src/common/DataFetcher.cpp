@@ -280,7 +280,7 @@ void DataFetcher::parseHeaders(char *data,int dataSize,std::map<std::string,std:
       }
     }
   }
-  catch (Fmi::Exception& e)
+  catch (Fmi::Exception&)
   {
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
@@ -308,8 +308,7 @@ void DataFetcher::splitUrl(const char *urlStr,uint& protocol,std::string& server
       protocol = 1;
       s = url+7;
     }
-    else
-    if (strncasecmp(url,"https://",8) == 0)
+    else if (strncasecmp(url,"https://",8) == 0)
     {
       protocol = 2;
       s = url+8;
@@ -329,7 +328,7 @@ void DataFetcher::splitUrl(const char *urlStr,uint& protocol,std::string& server
       filename = "/";
     }
   }
-  catch (Fmi::Exception& e)
+  catch (Fmi::Exception&)
   {
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }

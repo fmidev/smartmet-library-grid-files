@@ -15,6 +15,7 @@ class ForecastErrorImpl : public ForecastError
                         ForecastErrorImpl();
                         ForecastErrorImpl(const ForecastErrorImpl& other);
     ~ForecastErrorImpl() override;
+    ForecastErrorImpl& operator=(const ForecastErrorImpl&) = default;
 
     ProductDefinition*  createProductDefinition() const override;
 

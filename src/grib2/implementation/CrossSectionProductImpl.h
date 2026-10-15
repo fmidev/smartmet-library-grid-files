@@ -15,6 +15,7 @@ class CrossSectionProductImpl : public CrossSectionProduct
                         CrossSectionProductImpl();
                         CrossSectionProductImpl(const CrossSectionProductImpl& other);
     ~CrossSectionProductImpl() override;
+    CrossSectionProductImpl& operator=(const CrossSectionProductImpl&) = default;
 
     ProductDefinition*  createProductDefinition() const override;
 

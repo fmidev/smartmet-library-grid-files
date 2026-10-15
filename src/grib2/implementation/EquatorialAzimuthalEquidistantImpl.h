@@ -14,6 +14,7 @@ class EquatorialAzimuthalEquidistantImpl : public EquatorialAzimuthalEquidistant
                         EquatorialAzimuthalEquidistantImpl();
                         EquatorialAzimuthalEquidistantImpl(const EquatorialAzimuthalEquidistantImpl& other);
     ~EquatorialAzimuthalEquidistantImpl() override;
+    EquatorialAzimuthalEquidistantImpl& operator=(const EquatorialAzimuthalEquidistantImpl&) = default;
 
     GridDefinition*     createGridDefinition() const override;
 

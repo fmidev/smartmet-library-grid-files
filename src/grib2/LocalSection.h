@@ -44,6 +44,7 @@ class LocalSection : public GRID::MessageSection
                     LocalSection();
                     LocalSection(const LocalSection& other);
     ~LocalSection() override;
+    LocalSection& operator=(const LocalSection&) = delete;
 
     // ### Common methods for all message sections
 

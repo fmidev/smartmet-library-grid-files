@@ -15,6 +15,7 @@ class NormalProductImpl : public NormalProduct
                         NormalProductImpl();
                         NormalProductImpl(const NormalProductImpl& other);
     ~NormalProductImpl() override;
+    NormalProductImpl& operator=(const NormalProductImpl&) = default;
 
     ProductDefinition*  createProductDefinition() const override;
 

@@ -26,6 +26,8 @@ class FmiLevelId_grib
   public:
                     FmiLevelId_grib();
     virtual         ~FmiLevelId_grib();
+    FmiLevelId_grib(const FmiLevelId_grib&) = default;
+    FmiLevelId_grib& operator=(const FmiLevelId_grib&) = default;
 
     /*! \brief Write a human-readable dump to \p stream (for debugging). */
     void            print(std::ostream& stream,uint level,uint optionFlags) const;

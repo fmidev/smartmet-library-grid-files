@@ -20,6 +20,8 @@ class ForecastTypeDef
   public:
                     ForecastTypeDef();
     virtual         ~ForecastTypeDef();
+    ForecastTypeDef(const ForecastTypeDef&) = default;
+    ForecastTypeDef& operator=(const ForecastTypeDef&) = default;
 
     /*! \brief Write a human-readable dump to \p stream (for debugging). */
     void            print(std::ostream& stream,uint level,uint optionFlags) const;

@@ -16,6 +16,7 @@ class PolarStereographicImpl : public PolarStereographic
                         PolarStereographicImpl();
                         PolarStereographicImpl(const PolarStereographicImpl& other);
     ~PolarStereographicImpl() override;
+    PolarStereographicImpl& operator=(const PolarStereographicImpl&) = default;
 
     GridDefinition*     createGridDefinition() const override;
 
@@ -41,11 +42,11 @@ class PolarStereographicImpl : public PolarStereographic
 
     void                init() const;
 
-    mutable double      mDxx;
-    mutable double      mDyy;
-    mutable double      mStartX;
-    mutable double      mStartY;
-    mutable bool        mInitialized;
+    mutable double      mDxx = 0.0;
+    mutable double      mDyy = 0.0;
+    mutable double      mStartX = 0.0;
+    mutable double      mStartY = 0.0;
+    mutable bool        mInitialized = false;
 
 
 };

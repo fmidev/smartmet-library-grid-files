@@ -60,6 +60,7 @@ class IdentificationSection : public GRID::MessageSection
                     IdentificationSection();
                     IdentificationSection(const IdentificationSection& other);
     ~IdentificationSection() override;
+    IdentificationSection& operator=(const IdentificationSection&) = delete;
 
     // ### Common methods for all message sections
 

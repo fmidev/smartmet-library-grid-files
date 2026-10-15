@@ -15,6 +15,7 @@ class PercentileForecastImpl : public PercentileForecast
                         PercentileForecastImpl();
                         PercentileForecastImpl(const PercentileForecastImpl& other);
     ~PercentileForecastImpl() override;
+    PercentileForecastImpl& operator=(const PercentileForecastImpl&) = default;
 
     ProductDefinition*  createProductDefinition() const override;
 

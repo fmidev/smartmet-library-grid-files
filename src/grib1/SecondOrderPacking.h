@@ -43,6 +43,7 @@ class SecondOrderPacking : public DataDefinition
                     SecondOrderPacking();
                     SecondOrderPacking(const SecondOrderPacking& other);
     ~SecondOrderPacking() override;
+    SecondOrderPacking& operator=(const SecondOrderPacking&) = default;
 
     DataDefinition* createDataDefinition() const override;
     void            decodeValues(Message *message,T::ParamValue_vec& decodedValues) const override;

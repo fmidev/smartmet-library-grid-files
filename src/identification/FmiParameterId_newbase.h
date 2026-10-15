@@ -21,6 +21,8 @@ class FmiParameterId_newbase
   public:
                       FmiParameterId_newbase();
     virtual           ~FmiParameterId_newbase();
+    FmiParameterId_newbase(const FmiParameterId_newbase&) = default;
+    FmiParameterId_newbase& operator=(const FmiParameterId_newbase&) = default;
 
     /*! \brief Write a human-readable dump to \p stream (for debugging). */
     void              print(std::ostream& stream,uint level,uint optionFlags) const;

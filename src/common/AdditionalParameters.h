@@ -34,6 +34,8 @@ class AdditionalParameters
                     const Fmi::ValueFormatter& valueFormatter);
 
     virtual     ~AdditionalParameters();
+    AdditionalParameters(const AdditionalParameters&) = default;
+    AdditionalParameters& operator=(const AdditionalParameters&) = default;
 
     /*! \brief Return true if \p parameterName is handled by this class.
      *  \param[in] parameterName  Parameter name to test. */

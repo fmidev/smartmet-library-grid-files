@@ -317,8 +317,7 @@ void ComplexDifferenceGridDataRepresentationImpl::decodeValues(Message *message,
         readPosition = readPosition + (groupValueSize[g] * groupSize[g]);
       }
     }
-    else
-    if (*mMissingValueManagementUsed == 1 || *mMissingValueManagementUsed == 2)
+    else if (*mMissingValueManagementUsed == 1 || *mMissingValueManagementUsed == 2)
     {
       for (std::size_t i=0; i<numberOfValues; i++)
         missingDataValue[i] = 0;
@@ -344,8 +343,7 @@ void ComplexDifferenceGridDataRepresentationImpl::decodeValues(Message *message,
             {
                missingDataValue[n] = 1;
             }
-            else
-            if (*mMissingValueManagementUsed == 2 && dataValue[n] == missingValueIndicator2)
+            else if (*mMissingValueManagementUsed == 2 && dataValue[n] == missingValueIndicator2)
             {
                missingDataValue[n] = 2;
             }
@@ -372,8 +370,7 @@ void ComplexDifferenceGridDataRepresentationImpl::decodeValues(Message *message,
               // codechecker_false_positive [security.ArrayBound] the group sizes have been validated to sum to numberOfValues
               missingDataValue[l] = 1;
           }
-          else
-          if (*mMissingValueManagementUsed == 2 && groupReference[g] == missingValueIndicator2)
+          else if (*mMissingValueManagementUsed == 2 && groupReference[g] == missingValueIndicator2)
           {
             int lEnd = n + groupSize[g];
             for (int l=n; l<lEnd; l++)
@@ -417,8 +414,7 @@ void ComplexDifferenceGridDataRepresentationImpl::decodeValues(Message *message,
         dataValue[n] = dataValue[n] + dataValue[n-1];
       }
     }
-    else
-    if (*mOrderOfSpatialDifferencing == 2)
+    else if (*mOrderOfSpatialDifferencing == 2)
     {
       std::size_t itemp = 0;
       if (numberOfValues >= 1)
@@ -446,8 +442,7 @@ void ComplexDifferenceGridDataRepresentationImpl::decodeValues(Message *message,
         value[i] = (((float)dataValue[i] * bscale) + ref) * dscale;
       }
     }
-    else
-    if (*mMissingValueManagementUsed == 1 || *mMissingValueManagementUsed == 2)
+    else if (*mMissingValueManagementUsed == 1 || *mMissingValueManagementUsed == 2)
     {
       std::size_t n=0;
       for (std::size_t i=0; i<numberOfValues; i++)

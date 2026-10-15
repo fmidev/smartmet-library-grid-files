@@ -15,6 +15,7 @@ class EnsembleForecastImpl : public EnsembleForecast
                         EnsembleForecastImpl();
                         EnsembleForecastImpl(const EnsembleForecastImpl& other);
     ~EnsembleForecastImpl() override;
+    EnsembleForecastImpl& operator=(const EnsembleForecastImpl&) = default;
 
     ProductDefinition*  createProductDefinition() const override;
 

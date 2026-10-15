@@ -14,6 +14,7 @@ class AlbersImpl : public Albers
                         AlbersImpl();
                         AlbersImpl(const AlbersImpl& other);
     ~AlbersImpl() override;
+    AlbersImpl& operator=(const AlbersImpl&) = default;
 
     GridDefinition*     createGridDefinition() const override;
 

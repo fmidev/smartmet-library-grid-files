@@ -13,6 +13,7 @@ class MatrixDataRepresentationImpl : public MatrixDataRepresentation
               MatrixDataRepresentationImpl();
               MatrixDataRepresentationImpl(const MatrixDataRepresentationImpl& other);
     ~MatrixDataRepresentationImpl() override;
+    MatrixDataRepresentationImpl& operator=(const MatrixDataRepresentationImpl&) = default;
 
     RepresentationDefinition* createRepresentationDefinition() const override;
 

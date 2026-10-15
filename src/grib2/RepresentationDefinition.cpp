@@ -177,6 +177,8 @@ bool RepresentationDefinition::getProperty_Packing(uint propertyId,Int64& value)
       case Property::RepresentationSection::Packing::BitsPerValue:
         value = *packing->getBitsPerValue();
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -206,6 +208,8 @@ bool RepresentationDefinition::getProperty_OriginalValues(uint propertyId,Int64&
       case Property::RepresentationSection::OriginalValues::TypeOfOriginalFieldValues:
         value = *originalValues->getTypeOfOriginalFieldValues();
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -276,6 +280,8 @@ bool RepresentationDefinition::setProperty_Packing(uint propertyId,Int64 value)
       case Property::RepresentationSection::Packing::BitsPerValue:
         packing->setBitsPerValue(value);
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -305,6 +311,8 @@ bool RepresentationDefinition::setProperty_OriginalValues(uint propertyId,Int64 
       case Property::RepresentationSection::OriginalValues::TypeOfOriginalFieldValues:
         originalValues->setTypeOfOriginalFieldValues(value);
         return true;
+      default:
+        break;
     }
 
     return false;

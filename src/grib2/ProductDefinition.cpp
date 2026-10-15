@@ -541,6 +541,8 @@ bool ProductDefinition::getProperty_ParameterSettings(uint propertyId,Int64& val
       case Property::ProductSection::ParameterSettings::ForecastTime:
         value = *p->getForecastTime();
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -590,6 +592,8 @@ bool ProductDefinition::getProperty_HorizontalSettings(uint propertyId,Int64& va
       case Property::ProductSection::HorizontalSettings::ScaledValueOfSecondFixedSurface:
         value = *h->getScaledValueOfSecondFixedSurface();
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -671,6 +675,8 @@ bool ProductDefinition::getProperty_StatisticalSettings(uint propertyId,Int64& v
       case Property::ProductSection::StatisticalSettings::TimeIncrement:
         value = *p->getTimeIncrement();
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -708,6 +714,8 @@ bool ProductDefinition::getProperty_EpsSettings(uint propertyId,Int64& value)
       case Property::ProductSection::EpsSettings::NumberOfForecastsInEnsemble:
         value = *p->getNumberOfForecastsInEnsemble();
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -741,6 +749,8 @@ bool ProductDefinition::getProperty_DerivedSettings(uint propertyId,Int64& value
       case Property::ProductSection::DerivedSettings::NumberOfForecastsInEnsemble:
         value = *p->getNumberOfForecastsInEnsemble();
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -822,6 +832,8 @@ bool ProductDefinition::getProperty_RectangularClusterSettings(uint propertyId,I
       case Property::ProductSection::RectangularClusterSettings::ScaledValueOfDistanceFromEnsembleMean:
         value = *p->getScaledValueOfDistanceFromEnsembleMean();
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -875,6 +887,8 @@ bool ProductDefinition::getProperty_ProbabilitySettings(uint propertyId,Int64& v
       case Property::ProductSection::ProbabilitySettings::ScaledValueOfUpperLimit:
         value = *p->getScaledValueOfUpperLimit();
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -904,6 +918,8 @@ bool ProductDefinition::getProperty_PercentileSettings(uint propertyId,Int64& va
       case Property::ProductSection::PercentileSettings::PercentileValue:
         value = *p->getPercentileValue();
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -957,6 +973,8 @@ bool ProductDefinition::getProperty_CategoricalSettings(uint propertyId,Int64& v
       case Property::ProductSection::CategoricalSettings::ScaledValueOfUpperLimit:
         value = *p->getScaledValueOfUpperLimit();
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -1068,6 +1086,8 @@ bool ProductDefinition::setProperty_ParameterSettings(uint propertyId,Int64 valu
       case Property::ProductSection::ParameterSettings::ForecastTime:
         p->setForecastTime(value);
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -1117,6 +1137,8 @@ bool ProductDefinition::setProperty_HorizontalSettings(uint propertyId,Int64 val
       case Property::ProductSection::HorizontalSettings::ScaledValueOfSecondFixedSurface:
         h->setScaledValueOfSecondFixedSurface(value);
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -1198,6 +1220,8 @@ bool ProductDefinition::setProperty_StatisticalSettings(uint propertyId,Int64 va
       case Property::ProductSection::StatisticalSettings::TimeIncrement:
         p->setTimeIncrement(value);
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -1235,6 +1259,8 @@ bool ProductDefinition::setProperty_EpsSettings(uint propertyId,Int64 value)
       case Property::ProductSection::EpsSettings::NumberOfForecastsInEnsemble:
         p->setNumberOfForecastsInEnsemble(value);
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -1268,6 +1294,8 @@ bool ProductDefinition::setProperty_DerivedSettings(uint propertyId,Int64 value)
       case Property::ProductSection::DerivedSettings::NumberOfForecastsInEnsemble:
         p->setNumberOfForecastsInEnsemble(value);
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -1349,6 +1377,8 @@ bool ProductDefinition::setProperty_RectangularClusterSettings(uint propertyId,I
       case Property::ProductSection::RectangularClusterSettings::ScaledValueOfDistanceFromEnsembleMean:
         p->setScaledValueOfDistanceFromEnsembleMean(value);
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -1402,6 +1432,8 @@ bool ProductDefinition::setProperty_ProbabilitySettings(uint propertyId,Int64 va
       case Property::ProductSection::ProbabilitySettings::ScaledValueOfUpperLimit:
         p->setScaledValueOfUpperLimit(value);
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -1431,6 +1463,8 @@ bool ProductDefinition::setProperty_PercentileSettings(uint propertyId,Int64 val
       case Property::ProductSection::PercentileSettings::PercentileValue:
         p->setPercentileValue(value);
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -1484,6 +1518,8 @@ bool ProductDefinition::setProperty_CategoricalSettings(uint propertyId,Int64 va
       case Property::ProductSection::CategoricalSettings::ScaledValueOfUpperLimit:
         p->setScaledValueOfUpperLimit(value);
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -1766,6 +1802,8 @@ T::TimeString ProductDefinition::countForecastStartTime(T::TimeString referenceT
       case 11:  unitSeconds = 6 * 3600; break;    //  6h 6 hours
       case 12:  unitSeconds = 12 * 3600; break;   //  12h 12 hours
       case 13:  unitSeconds = 1; break;           //  s Second
+      default:
+        break;
     }
 
     const std::int64_t totalSeconds = forecastTime * unitSeconds;
@@ -1854,6 +1892,8 @@ T::TimeString ProductDefinition::countForecastStartTime(T::TimeString referenceT
 
       case 13: //  s Second
         dt = Fmi::TimeDuration(0,0,forecastTime);
+        break;
+      default:
         break;
     }
 

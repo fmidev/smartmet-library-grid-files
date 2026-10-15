@@ -15,6 +15,7 @@ class TimeIntervalEnsembleReforecastImpl : public TimeIntervalEnsembleReforecast
                         TimeIntervalEnsembleReforecastImpl();
                         TimeIntervalEnsembleReforecastImpl(const TimeIntervalEnsembleReforecastImpl& other);
     ~TimeIntervalEnsembleReforecastImpl() override;
+    TimeIntervalEnsembleReforecastImpl& operator=(const TimeIntervalEnsembleReforecastImpl&) = default;
 
     ProductDefinition*  createProductDefinition() const override;
 

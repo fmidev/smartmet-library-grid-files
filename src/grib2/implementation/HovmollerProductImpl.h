@@ -15,6 +15,7 @@ class HovmollerProductImpl : public HovmollerProduct
                         HovmollerProductImpl();
                         HovmollerProductImpl(const HovmollerProductImpl& other);
     ~HovmollerProductImpl() override;
+    HovmollerProductImpl& operator=(const HovmollerProductImpl&) = default;
 
     ProductDefinition*  createProductDefinition() const override;
 

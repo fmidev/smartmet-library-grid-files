@@ -137,6 +137,9 @@ libraries, the grid engine and the plugins using it
 - Fixed mechanical clang-tidy findings (internal linkage, unused parameters, initialization, redundant code), no functional changes
 - Fixed clang-tidy style findings (loops, nested conditionals, dead code)
 - copyFile now fails on write errors instead of ignoring them
+- Fixed clang-tidy correctness findings (member initialization, rule of five, printf formats, dead stores)
+- PNG write errors are reported instead of terminating the process, and the PNG writer no longer leaks
+- TcpClient resolves addresses with the thread safe getaddrinfo
 
 * Sun Oct 11 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.11-1.fmi
 - Failed file writes, closes and seeks are now reported instead of being ignored

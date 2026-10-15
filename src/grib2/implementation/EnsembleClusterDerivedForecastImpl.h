@@ -15,6 +15,7 @@ class EnsembleClusterDerivedForecastImpl : public EnsembleClusterDerivedForecast
                         EnsembleClusterDerivedForecastImpl();
                         EnsembleClusterDerivedForecastImpl(const EnsembleClusterDerivedForecastImpl& other);
     ~EnsembleClusterDerivedForecastImpl() override;
+    EnsembleClusterDerivedForecastImpl& operator=(const EnsembleClusterDerivedForecastImpl&) = default;
 
     ProductDefinition*  createProductDefinition() const override;
 

@@ -15,6 +15,7 @@ class TimeIntervalAerosolEnsembleProductImpl : public TimeIntervalAerosolEnsembl
                         TimeIntervalAerosolEnsembleProductImpl();
                         TimeIntervalAerosolEnsembleProductImpl(const TimeIntervalAerosolEnsembleProductImpl& other);
     ~TimeIntervalAerosolEnsembleProductImpl() override;
+    TimeIntervalAerosolEnsembleProductImpl& operator=(const TimeIntervalAerosolEnsembleProductImpl&) = default;
 
     ProductDefinition*  createProductDefinition() const override;
 

@@ -291,11 +291,11 @@ std::string LatLonImpl::getGridGeometryString() const
     if ((scanningMode & 0x40) == 0)
     {
       dy = -dy;
-      p += sprintf(p,"-y");
+      sprintf(p,"-y");
     }
     else
     {
-      p += sprintf(p,"+y");
+      sprintf(p,"+y");
     }
 
 
@@ -794,8 +794,7 @@ void LatLonImpl::initSpatialReference()
 
     if (len >= 360)
       mGlobal = true;
-    else
-    if (!mLatLon.getGrid()->getLongitudeOfFirstGridPoint()  &&  !mLatLon.getGrid()->getLongitudeOfLastGridPoint())
+    else if (!mLatLon.getGrid()->getLongitudeOfFirstGridPoint()  &&  !mLatLon.getGrid()->getLongitudeOfLastGridPoint())
     {
       double longitudeOfFirstGridPoint = C_DOUBLE(*mLatLon.getGrid()->getLongitudeOfFirstGridPoint()) / 1000000;
       double longitudeOfLastGridPoint = C_DOUBLE(*mLatLon.getGrid()->getLongitudeOfLastGridPoint()) / 1000000;

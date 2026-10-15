@@ -22,12 +22,14 @@ class FmiParameterId_grib
   public:
                     FmiParameterId_grib();
     virtual         ~FmiParameterId_grib();
+    FmiParameterId_grib(const FmiParameterId_grib&) = default;
+    FmiParameterId_grib& operator=(const FmiParameterId_grib&) = default;
 
     /*! \brief Write a human-readable dump to \p stream (for debugging). */
     void            print(std::ostream& stream,uint level,uint optionFlags) const;
 
     T::FmiParamId   mFmiParameterId;              //!< FMI parameter identifier
-    T::GribParamId  mGribParameterId;             //!< Corresponding GRIB parameter identifier
+    T::GribParamId  mGribParameterId = 0;             //!< Corresponding GRIB parameter identifier
     std::string     mConversionFunction;          //!< Expression to convert GRIB value → FMI value (empty = no-op)
     std::string     mReverseConversionFunction;   //!< Expression to convert FMI value → GRIB value (empty = no-op)
 };

@@ -36,6 +36,8 @@ class MemoryReader
      *  \param[in] _endPtr    One-past-the-end of the readable region. */
                         MemoryReader(unsigned char *_startPtr,unsigned char *_endPtr);
     virtual             ~MemoryReader();
+    MemoryReader(const MemoryReader&) = delete;
+    MemoryReader& operator=(const MemoryReader&) = delete;
 
     /*! \brief Return the total buffer size in bytes. */
     UInt64              getDataSize();

@@ -345,6 +345,8 @@ bool IdentificationSection::getProperty(uint propertyId,Int64& value)
       case Property::IdentificationSection::TypeOfProcessedData:
         value = *mTypeOfProcessedData;
         return true;
+      default:
+        break;
     }
     return false;
   }
@@ -478,6 +480,8 @@ bool IdentificationSection::setProperty(uint propertyId,Int64 value)
       case Property::IdentificationSection::TypeOfProcessedData:
         setTypeOfProcessedData(value);
         return true;
+      default:
+        break;
     }
     return false;
   }

@@ -67,18 +67,21 @@ void TcpClient::openConnection(const char *serverAddress,int serverPort)
     mServerAddress = serverAddress;
     mServerPort = serverPort;
 
-    struct sockaddr_in serv_addr;
-    struct hostent *server = gethostbyname(serverAddress);
-    if(server == nullptr)
+    // getaddrinfo is thread safe, unlike gethostbyname
+    struct addrinfo hints{};
+    hints.ai_family = AF_INET;
+    hints.ai_socktype = SOCK_STREAM;
+    struct addrinfo *addresses = nullptr;
+    if (getaddrinfo(serverAddress,nullptr,&hints,&addresses) != 0  ||  addresses == nullptr)
     {
       Fmi::Exception exception(BCP,"Unknown server!");
       exception.addParameter("serverAddress",serverAddress);
       throw exception;
     }
 
-    bzero((char*) &serv_addr, sizeof(serv_addr));
-    serv_addr.sin_family = AF_INET;
-    bcopy((char*) server->h_addr, (char*) &serv_addr.sin_addr.s_addr, server->h_length);
+    struct sockaddr_in serv_addr{};
+    memcpy(&serv_addr, addresses->ai_addr, sizeof(serv_addr));
+    freeaddrinfo(addresses);
     serv_addr.sin_port = htons(mServerPort);
 
     mSockfd = socket(AF_INET, SOCK_STREAM, 0);

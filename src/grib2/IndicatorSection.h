@@ -46,6 +46,7 @@ class IndicatorSection : public GRID::MessageSection
                       IndicatorSection();
                       IndicatorSection(const IndicatorSection& other);
     ~IndicatorSection() override;
+    IndicatorSection& operator=(const IndicatorSection&) = default;
 
     // ### Common methods for all message sections
 
@@ -89,7 +90,7 @@ class IndicatorSection : public GRID::MessageSection
     std::uint64_t     mTotalLength;
 
     /*! \brief The GRIB file identifier ('GRIB'). */
-    uchar             mIdentifier[4];
+    uchar             mIdentifier[4]{};
 
     /*! \brief Reserved bytes. */
     T::UInt16_opt     mReserved;

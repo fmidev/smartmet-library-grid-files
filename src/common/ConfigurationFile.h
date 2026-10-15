@@ -31,6 +31,8 @@ class ConfigurationFile
      *  \param[in] filename  Path to the configuration file. */
                   ConfigurationFile(const std::string& filename);
     virtual       ~ConfigurationFile();
+    ConfigurationFile(const ConfigurationFile&) = default;
+    ConfigurationFile& operator=(const ConfigurationFile&) = default;
 
     /*! \brief Remove all loaded attributes. */
     void          clear();

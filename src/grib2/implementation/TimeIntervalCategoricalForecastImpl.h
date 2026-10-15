@@ -15,6 +15,7 @@ class TimeIntervalCategoricalForecastImpl : public TimeIntervalCategoricalForeca
                         TimeIntervalCategoricalForecastImpl();
                         TimeIntervalCategoricalForecastImpl(const TimeIntervalCategoricalForecastImpl& other);
     ~TimeIntervalCategoricalForecastImpl() override;
+    TimeIntervalCategoricalForecastImpl& operator=(const TimeIntervalCategoricalForecastImpl&) = default;
 
     ProductDefinition*  createProductDefinition() const override;
 

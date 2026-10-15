@@ -14,6 +14,7 @@ class TransverseMercatorImpl : public TransverseMercator
                         TransverseMercatorImpl();
                         TransverseMercatorImpl(const TransverseMercatorImpl& other);
     ~TransverseMercatorImpl() override;
+    TransverseMercatorImpl& operator=(const TransverseMercatorImpl&) = default;
 
     GridDefinition*     createGridDefinition() const override;
 

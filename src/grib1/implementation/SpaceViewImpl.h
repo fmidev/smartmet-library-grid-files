@@ -14,6 +14,7 @@ class SpaceViewImpl : public SpaceView
                         SpaceViewImpl();
                         SpaceViewImpl(const SpaceViewImpl& other);
     ~SpaceViewImpl() override;
+    SpaceViewImpl& operator=(const SpaceViewImpl&) = default;
 
     GridDefinition*     createGridDefinition() const override;
 

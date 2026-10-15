@@ -685,6 +685,8 @@ bool GridDefinition::getProperty_EarthShape(uint propertyId,Int64& value)
       case Property::GridSection::EarthShape::ScaledValueOfEarthMinorAxis:
         value = *earthShape->getScaledValueOfEarthMinorAxis();
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -758,6 +760,8 @@ bool GridDefinition::getProperty_Grid(uint propertyId,Int64& value)
         }
         return false;
       }
+      default:
+        break;
     }
 
     return false;
@@ -796,6 +800,8 @@ bool GridDefinition::getProperty_Rotation(uint propertyId,Int64& value)
       case Property::GridSection::Rotation::AngleOfRotation:
         value = rotation->getAngleOfRotation();
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -841,6 +847,8 @@ bool GridDefinition::getProperty_LatLon(uint propertyId,Int64& value)
         }
         return false;
       }
+      default:
+        break;
     }
 
     return false;
@@ -932,6 +940,8 @@ bool GridDefinition::setProperty_EarthShape(uint propertyId,Int64 value)
       case Property::GridSection::EarthShape::ScaledValueOfEarthMinorAxis:
         earthShape->setScaledValueOfEarthMinorAxis(value);
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -1006,6 +1016,8 @@ bool GridDefinition::setProperty_Grid(uint propertyId,Int64 value)
         }
         return false;
       }
+      default:
+        break;
     }
 
     return false;
@@ -1044,6 +1056,8 @@ bool GridDefinition::setProperty_Rotation(uint propertyId,Int64 value)
       case Property::GridSection::Rotation::AngleOfRotation:
         rotation->setAngleOfRotation(value);
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -1089,6 +1103,8 @@ bool GridDefinition::setProperty_LatLon(uint propertyId,Int64 value)
         }
         return false;
       }
+      default:
+        break;
     }
 
     return false;

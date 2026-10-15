@@ -14,6 +14,7 @@ class PreprocessedGridDataRepresentationImpl : public PreprocessedGridDataRepres
               PreprocessedGridDataRepresentationImpl();
               PreprocessedGridDataRepresentationImpl(const PreprocessedGridDataRepresentationImpl& other);
     ~PreprocessedGridDataRepresentationImpl() override;
+    PreprocessedGridDataRepresentationImpl& operator=(const PreprocessedGridDataRepresentationImpl&) = default;
 
     RepresentationDefinition* createRepresentationDefinition() const override;
 

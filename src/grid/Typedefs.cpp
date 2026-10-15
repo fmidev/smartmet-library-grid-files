@@ -39,6 +39,8 @@ std::string get_fileTypeString(FileType fileType)
 
       case FileTypeValue::GeoTiff:
         return "GeoTiff";
+      default:
+        break;
     }
     return "Undefined";
   }
@@ -82,6 +84,8 @@ std::string get_areaInterpolationMethodString(short interpolationMethod)
 
       case AreaInterpolationMethod::Undefined:
         return "Undefined";
+      default:
+        break;
     }
     return "Undefined";
   }
@@ -123,6 +127,8 @@ std::string get_timeInterpolationMethodString(short interpolationMethod)
 
       case TimeInterpolationMethod::Undefined:
         return "Undefined";
+      default:
+        break;
     }
     return "Undefined";
   }
@@ -167,6 +173,8 @@ std::string get_levelInterpolationMethodString(short interpolationMethod)
 
       case LevelInterpolationMethod::Undefined:
         return "Undefined";
+      default:
+        break;
     }
     return "Undefined";
   }
@@ -256,6 +264,8 @@ std::string get_gridProjectionString(GridProjection projection)
         return "SimplePolyconicProjection";
       case GridProjectionValue::MillersCylindricalProjection:
         return "MillersCylindricalProjection";
+      default:
+        break;
     }
 
     return "Undefined";

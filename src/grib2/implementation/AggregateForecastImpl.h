@@ -14,6 +14,7 @@ class AggregateForecastImpl : public AggregateForecast
                         AggregateForecastImpl();
                         AggregateForecastImpl(const AggregateForecastImpl& other);
      ~AggregateForecastImpl() override;
+     AggregateForecastImpl& operator=(const AggregateForecastImpl&) = default;
 
     ProductDefinition*  createProductDefinition() const override;
 

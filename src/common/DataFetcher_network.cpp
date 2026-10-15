@@ -75,6 +75,8 @@ Client* DataFetcher_network::newClient(uint protocol)
 
       case Protocol::HTTPS:
         return new HttpsClient();
+      default:
+        break;
     }
     return new HttpClient();
   }
@@ -253,7 +255,7 @@ bool DataFetcher_network::getFileList(uint protocol,const char *server,const Xml
     }
     return truncated;
   }
-  catch (Fmi::Exception& e)
+  catch (Fmi::Exception&)
   {
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
@@ -285,9 +287,11 @@ void DataFetcher_network::getFileList(uint serverType,uint protocol,const char *
 
       case ServerType::HTTPD:
         return;
+      default:
+        break;
     }
   }
-  catch (Fmi::Exception& e)
+  catch (Fmi::Exception&)
   {
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
@@ -327,7 +331,7 @@ void DataFetcher_network::getFileList_S3(uint protocol,const char *server,const 
     }
 
   }
-  catch (Fmi::Exception& e)
+  catch (Fmi::Exception&)
   {
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }

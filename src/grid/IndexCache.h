@@ -26,6 +26,8 @@ class IndexCache
   public:
               IndexCache();
     virtual   ~IndexCache();
+    IndexCache(const IndexCache&) = default;
+    IndexCache& operator=(const IndexCache&) = default;
 
     /*! \brief Store an index vector in the cache under the given hash key.
      *  \param[in] hash        64-bit hash key identifying the index set.

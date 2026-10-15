@@ -16,6 +16,8 @@ class HttpClient : public Client
   public:
               HttpClient();
     ~HttpClient() override;
+    HttpClient(const HttpClient&) = delete;
+    HttpClient& operator=(const HttpClient&) = delete;
 
     //! \overload Client::getData()
     int       getData(const char *server,const char *filename,std::size_t filePosition,int dataSize,char *dataPtr) override;

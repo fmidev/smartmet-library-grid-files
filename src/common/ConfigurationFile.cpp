@@ -1035,9 +1035,8 @@ std::string ConfigurationFile::parseConstValue(const std::string& value)
           {
             varValue = getFileDir(mCurrentFilename);
           }
-          else
           // Searching a value for the variable
-          if (!getAttributeValue(var.c_str(),varValue))
+          else if (!getAttributeValue(var.c_str(),varValue))
           {
             // Variable not defined in the configuration file. Maybe it is an environmental variable.
             char *env = getenv(var.c_str());
@@ -1307,8 +1306,7 @@ int ConfigurationFile::readValue(std::vector<std::string>& words,std::vector<UIn
 
       return pos+1;
     }
-    else
-    if (words[pos] == "(")
+    else if (words[pos] == "(")
     {
       T::Attribute attr;
       attr.mName = path + "()";
@@ -1344,8 +1342,7 @@ int ConfigurationFile::readValue(std::vector<std::string>& words,std::vector<UIn
 
       return pos+1;
     }
-    else
-    if (words[pos] == "[")
+    else if (words[pos] == "[")
     {
       std::string tmp;
       uint index = 0;
@@ -1491,8 +1488,7 @@ int ConfigurationFile::readAttribute(std::vector<std::string>& words,std::vector
       }
       pos = pos + 1;
     }
-    else
-    if ((pos+1) < len  &&  words[pos] == "@remove")
+    else if ((pos+1) < len  &&  words[pos] == "@remove")
     {
       std::string pattern = parseValue(words[pos+1]);
 
@@ -1504,8 +1500,7 @@ int ConfigurationFile::readAttribute(std::vector<std::string>& words,std::vector
 
       pos = pos + 1;
     }
-    else
-    if ((pos+1) < len  &&  words[pos] == "@print")
+    else if ((pos+1) < len  &&  words[pos] == "@print")
     {
       std::string message = parseConstValue(words[pos+1]);
       message = parseValue(message);
@@ -1517,13 +1512,11 @@ int ConfigurationFile::readAttribute(std::vector<std::string>& words,std::vector
       printf("%s\n",message.c_str());
       pos = pos + 1;
     }
-    else
-    if ((pos+1) < len  &&  words[pos] == "@location")
+    else if ((pos+1) < len  &&  words[pos] == "@location")
     {
       printf("*** %s [%d:%d]\n",mCurrentFilename.c_str(),C_INT(wordPositions[pos] >> 32),C_INT(wordPositions[pos] & 0xFFFFFFFF));
     }
-    else
-    if ((pos+1) < len  &&  words[pos] == "@throw")
+    else if ((pos+1) < len  &&  words[pos] == "@throw")
     {
       std::string message = parseConstValue(words[pos+1]);
       message = parseValue(message);
@@ -1533,8 +1526,7 @@ int ConfigurationFile::readAttribute(std::vector<std::string>& words,std::vector
       exception.addParameter("Column",std::to_string(wordPositions[pos] & 0xFFFFFFFF));
       throw exception;
     }
-    else
-    if ((pos+1) < len  &&  words[pos] == "@ifdef")
+    else if ((pos+1) < len  &&  words[pos] == "@ifdef")
     {
       int startPos = pos;
       std::string attrName = parseValue(words[pos+1]);
@@ -1575,8 +1567,7 @@ int ConfigurationFile::readAttribute(std::vector<std::string>& words,std::vector
         }
       }
     }
-    else
-    if ((pos+1) < len  &&  words[pos] == "@ifndef")
+    else if ((pos+1) < len  &&  words[pos] == "@ifndef")
     {
       int startPos = pos;
       std::string attrName = parseValue(words[pos+1]);
@@ -1616,8 +1607,7 @@ int ConfigurationFile::readAttribute(std::vector<std::string>& words,std::vector
         }
       }
     }
-    else
-    if (words[pos] == "@endif")
+    else if (words[pos] == "@endif")
     {
       int p = pos-1;
       while (p > 0  &&  words[p] != "@endif"  &&  words[p] != "@else"  &&  words[p] != "@ifdef"  &&  words[p] != "@ifndef")
@@ -1631,8 +1621,7 @@ int ConfigurationFile::readAttribute(std::vector<std::string>& words,std::vector
         throw exception;
       }
     }
-    else
-    if (words[pos] == "@else")
+    else if (words[pos] == "@else")
     {
       int p = pos-1;
       while (p > 0  &&  words[p] != "@endif"  &&  words[p] != "@else"  &&  words[p] != "@ifdef"  &&  words[p] != "@ifndef")
@@ -1646,12 +1635,10 @@ int ConfigurationFile::readAttribute(std::vector<std::string>& words,std::vector
         throw exception;
       }
     }
-    else
-    if (words[pos] == "@ignore")
+    else if (words[pos] == "@ignore")
     {
     }
-    else
-    if ((pos+1) < len  &&  (words[pos+1] == ":" || words[pos+1] == "="))
+    else if ((pos+1) < len  &&  (words[pos+1] == ":" || words[pos+1] == "="))
     {
       std::string attributeName = words[pos];
       std::string newPath = attributeName;

@@ -710,7 +710,7 @@ void convertSvgPathToPolygonPath(const NFmiSvgPath &svgPath, T::Polygon_vec &pol
           {
             int t = C_INT(polygonPoints.size())-1;
             if (t > 0 && (polygonPoints[0].x() != polygonPoints[t].x() || polygonPoints[0].y() != polygonPoints[t].y()))
-            polygonPoints.emplace_back(polygonPoints[0]);
+              polygonPoints.emplace_back(polygonPoints[0]);
 
             polygonPath.emplace_back(polygonPoints);
             polygonPoints.clear();

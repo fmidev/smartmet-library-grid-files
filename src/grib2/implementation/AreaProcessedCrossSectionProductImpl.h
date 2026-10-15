@@ -15,6 +15,7 @@ class AreaProcessedCrossSectionProductImpl : public AreaProcessedCrossSectionPro
                         AreaProcessedCrossSectionProductImpl();
                         AreaProcessedCrossSectionProductImpl(const AreaProcessedCrossSectionProductImpl& other);
     ~AreaProcessedCrossSectionProductImpl() override;
+    AreaProcessedCrossSectionProductImpl& operator=(const AreaProcessedCrossSectionProductImpl&) = default;
 
     ProductDefinition*  createProductDefinition() const override;
 

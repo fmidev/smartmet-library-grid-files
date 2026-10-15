@@ -20,6 +20,8 @@ class AggregationDef
   public:
                     AggregationDef();
     virtual         ~AggregationDef();
+    AggregationDef(const AggregationDef&) = default;
+    AggregationDef& operator=(const AggregationDef&) = default;
 
     /*! \brief Write a human-readable dump to \p stream (for debugging). */
     void            print(std::ostream& stream,uint level,uint optionFlags) const;

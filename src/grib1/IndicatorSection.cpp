@@ -109,6 +109,8 @@ bool IndicatorSection::getProperty(uint propertyId,Int64& value) const
       case Property::IndicatorSection::EditionNumber:
         value = mEditionNumber;
         return true;
+      default:
+        break;
     }
     return false;
   }
@@ -154,6 +156,8 @@ bool IndicatorSection::setProperty(uint propertyId,Int64 value)
       case Property::IndicatorSection::EditionNumber:
         mEditionNumber = value;
         return true;
+      default:
+        break;
     }
     return false;
   }

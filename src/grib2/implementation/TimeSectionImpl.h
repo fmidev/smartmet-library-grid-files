@@ -15,6 +15,7 @@ class TimeSectionImpl : public TimeSection
                         TimeSectionImpl();
                         TimeSectionImpl(const TimeSectionImpl& other);
     ~TimeSectionImpl() override;
+    TimeSectionImpl& operator=(const TimeSectionImpl&) = default;
 
     GridDefinition*     createGridDefinition() const override;
 

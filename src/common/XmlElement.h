@@ -32,6 +32,8 @@ class XmlElement
      *  \param[in] size  Size of \p data in bytes. */
                   XmlElement(const char *data,int size);
     virtual       ~XmlElement();
+    XmlElement(const XmlElement&) = delete;
+    XmlElement& operator=(const XmlElement&) = delete;
 
     /*! \brief Parse \p data into \p xmlRoot (static factory method).
      *  \param[in]  data     XML text buffer.

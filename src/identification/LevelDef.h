@@ -21,6 +21,8 @@ class LevelDef
   public:
                       LevelDef();
     virtual           ~LevelDef();
+    LevelDef(const LevelDef&) = default;
+    LevelDef& operator=(const LevelDef&) = default;
 
     /*! \brief Write a human-readable dump to \p stream (for debugging). */
     void              print(std::ostream& stream,uint level,uint optionFlags) const;

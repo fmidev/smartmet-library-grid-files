@@ -15,6 +15,7 @@ class RotatedLatLonImpl : public RotatedLatLon
                         RotatedLatLonImpl();
                         RotatedLatLonImpl(const RotatedLatLonImpl& other);
     ~RotatedLatLonImpl() override;
+    RotatedLatLonImpl& operator=(const RotatedLatLonImpl&) = default;
 
     GridDefinition*     createGridDefinition() const override;
 

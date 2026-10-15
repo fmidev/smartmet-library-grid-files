@@ -14,6 +14,7 @@ class MercatorImpl : public Mercator
                         MercatorImpl();
                         MercatorImpl(const MercatorImpl& other);
     ~MercatorImpl() override;
+    MercatorImpl& operator=(const MercatorImpl&) = default;
 
     GridDefinition*     createGridDefinition() const override;
 

@@ -1423,6 +1423,8 @@ bool GridDefinition::getProperty_gridArea(uint propertyId,Int64& value)
           value = resolutionFlags->getResolutionAndComponentFlags();
         return true;
       }
+      default:
+        break;
     }
 
     return false;
@@ -1458,6 +1460,8 @@ bool GridDefinition::getProperty_scanningMode(uint propertyId,Int64& value)
       case Property::GridSection::ScanningMode::ScanMode:
         value = scanningMode->getScanningMode();
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -1493,6 +1497,8 @@ bool GridDefinition::getProperty_resolutionFlags(uint propertyId,Int64& value)
       case Property::GridSection::ResolutionFlags::ResolutionAndComponentFlags:
         value = resolutionFlags->getResolutionAndComponentFlags();
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -1536,6 +1542,8 @@ bool GridDefinition::getProperty_rotation(uint propertyId,Int64& value)
       case Property::GridSection::Rotation::AngleOfRotationInDegrees:
         value = rotation->getGeography_angleOfRotationInDegrees()*1000;
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -1579,6 +1587,8 @@ bool GridDefinition::getProperty_rotation(uint propertyId,double& value)
       case Property::GridSection::Rotation::AngleOfRotationInDegrees:
         value = rotation->getGeography_angleOfRotationInDegrees();
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -1707,6 +1717,8 @@ bool GridDefinition::setProperty_gridArea(uint propertyId,Int64 value)
           resolutionFlags->setResolutionAndComponentFlags(value);
         return true;
       }
+      default:
+        break;
     }
 
     return false;
@@ -1742,6 +1754,8 @@ bool GridDefinition::setProperty_scanningMode(uint propertyId,Int64 value)
       case Property::GridSection::ScanningMode::ScanMode:
         scanningMode->setScanningMode(value);
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -1777,6 +1791,8 @@ bool GridDefinition::setProperty_resolutionFlags(uint propertyId,Int64 value)
       case Property::GridSection::ResolutionFlags::ResolutionAndComponentFlags:
         resolutionFlags->setResolutionAndComponentFlags(value);
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -1820,6 +1836,8 @@ bool GridDefinition::setProperty_rotation(uint propertyId,Int64 value)
       case Property::GridSection::Rotation::AngleOfRotationInDegrees:
         rotation->setGeography_angleOfRotationInDegrees((double)value/1000);
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -1863,6 +1881,8 @@ bool GridDefinition::setProperty_rotation(uint propertyId,double value)
       case Property::GridSection::Rotation::AngleOfRotationInDegrees:
         rotation->setGeography_angleOfRotationInDegrees(value);
         return true;
+      default:
+        break;
     }
 
     return false;

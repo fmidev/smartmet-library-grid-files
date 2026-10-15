@@ -39,7 +39,7 @@ BitLine::BitLine(uchar *bits,uint numOfBits)
     changeCount = 0;
     length = 0;
 
-    setValue(bits,numOfBits);
+    BitLine::setValue(bits,numOfBits);
   }
   catch (...)
   {

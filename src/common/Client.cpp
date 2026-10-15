@@ -136,7 +136,7 @@ struct curl_slist* Client::addAuthenticationHeaders(const char *server,const cha
       r += sprintf(r,"x-amz-date:%sZ\n",timeStamp.c_str());
       r += sprintf(r,"\n");
       r += sprintf(r,"host;x-amz-content-sha256;x-amz-date\n");
-      r += sprintf(r,"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855");
+      sprintf(r,"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855");
 
 
       char hexHash[100];
@@ -149,7 +149,7 @@ struct curl_slist* Client::addAuthenticationHeaders(const char *server,const cha
       p += sprintf(p,"AWS4-HMAC-SHA256\n");
       p += sprintf(p,"%sZ\n",timeStamp.c_str());
       p += sprintf(p,"%s/%s/%s/%s\n",date.c_str(),dateRegion.c_str(),dateRegionService.c_str(),signing.c_str());
-      p += sprintf(p,"%s",hexHash);
+      sprintf(p,"%s",hexHash);
 
       //printf("STRING TO SIGN:\n%s\n",stringToSign);
 
@@ -224,11 +224,11 @@ void curl_dump(const char *text,FILE *stream, unsigned char *ptr, size_t size)
   unsigned int width=0x10;
 
   fprintf(stream, "%s, %10.10ld bytes (0x%8.8lx)\n",
-          text, (long)size, (long)size);
+          text, (long)size, (unsigned long)size);
 
   for(i=0; i<size; i+= width)
   {
-    fprintf(stream, "%4.4lx: ", (long)i);
+    fprintf(stream, "%4.4lx: ", (unsigned long)i);
 
     /* show hex to the left */
     for(c = 0; c < width; c++)

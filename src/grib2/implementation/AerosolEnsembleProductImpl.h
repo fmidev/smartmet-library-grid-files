@@ -15,6 +15,7 @@ class AerosolEnsembleProductImpl : public AerosolEnsembleProduct
                         AerosolEnsembleProductImpl();
                         AerosolEnsembleProductImpl(const AerosolEnsembleProductImpl& other);
     ~AerosolEnsembleProductImpl() override;
+    AerosolEnsembleProductImpl& operator=(const AerosolEnsembleProductImpl&) = default;
 
     ProductDefinition*  createProductDefinition() const override;
 

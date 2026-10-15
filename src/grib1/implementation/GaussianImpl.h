@@ -14,6 +14,7 @@ class GaussianImpl : public Gaussian
                         GaussianImpl();
                         GaussianImpl(const GaussianImpl& other);
     ~GaussianImpl() override;
+    GaussianImpl& operator=(const GaussianImpl&) = default;
 
     GridDefinition*     createGridDefinition() const override;
 

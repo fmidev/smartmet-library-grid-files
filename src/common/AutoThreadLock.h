@@ -28,6 +28,8 @@ class AutoThreadLock
     {
       mThreadLock->unlock();
     }
+    AutoThreadLock(const AutoThreadLock&) = delete;
+    AutoThreadLock& operator=(const AutoThreadLock&) = delete;
 
   protected:
 

@@ -43,6 +43,7 @@ class DataDefinition
                             DataDefinition();
                             DataDefinition(const DataDefinition& other);
     virtual                 ~DataDefinition();
+    DataDefinition& operator=(const DataDefinition&) = default;
 
     virtual DataDefinition* createDataDefinition() const;
     virtual void            getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const;

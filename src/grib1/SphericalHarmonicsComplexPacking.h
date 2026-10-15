@@ -39,6 +39,7 @@ class SphericalHarmonicsComplexPacking : public DataDefinition
                     SphericalHarmonicsComplexPacking();
                     SphericalHarmonicsComplexPacking(const SphericalHarmonicsComplexPacking& other);
     ~SphericalHarmonicsComplexPacking() override;
+    SphericalHarmonicsComplexPacking& operator=(const SphericalHarmonicsComplexPacking&) = default;
 
     DataDefinition* createDataDefinition() const override;
     void            decodeValues(Message *message,T::ParamValue_vec& decodedValues) const override;

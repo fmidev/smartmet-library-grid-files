@@ -15,6 +15,7 @@ class TimeIntervalSimulatedSatelliteEnsembleProductImpl : public TimeIntervalSim
                         TimeIntervalSimulatedSatelliteEnsembleProductImpl();
                         TimeIntervalSimulatedSatelliteEnsembleProductImpl(const TimeIntervalSimulatedSatelliteEnsembleProductImpl& other);
     ~TimeIntervalSimulatedSatelliteEnsembleProductImpl() override;
+    TimeIntervalSimulatedSatelliteEnsembleProductImpl& operator=(const TimeIntervalSimulatedSatelliteEnsembleProductImpl&) = default;
 
     ProductDefinition*  createProductDefinition() const override;
 

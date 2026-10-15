@@ -14,6 +14,7 @@ class ComplexSphericalHarmonicsDataRepresentationImpl : public ComplexSphericalH
               ComplexSphericalHarmonicsDataRepresentationImpl();
               ComplexSphericalHarmonicsDataRepresentationImpl(const ComplexSphericalHarmonicsDataRepresentationImpl& other);
     ~ComplexSphericalHarmonicsDataRepresentationImpl() override;
+    ComplexSphericalHarmonicsDataRepresentationImpl& operator=(const ComplexSphericalHarmonicsDataRepresentationImpl&) = default;
 
     RepresentationDefinition* createRepresentationDefinition() const override;
 

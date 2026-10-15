@@ -244,8 +244,8 @@ int time_compare(time_t v1, time_t v2)
 
 void time_usleep(int _sec, int _usec)
 {
-  timespec r1;
-  timespec r2;
+  timespec r1{};
+  timespec r2{};
   r1.tv_sec = _sec;
   r1.tv_nsec = _usec;  // * 1000;
   nanosleep(&r1, &r2);
@@ -431,7 +431,7 @@ UInt64 getTime()
 {
   try
   {
-    struct timeval tt;
+    struct timeval tt{};
     gettimeofday(&tt, nullptr);
     return 1000000 * tt.tv_sec + tt.tv_usec;
   }
@@ -449,7 +449,7 @@ time_t getFileModificationTime(const char *filename)
 {
   try
   {
-    struct stat buf;
+    struct stat buf{};
     if (stat(filename, &buf) == 0) return buf.st_mtime;
 
     return 0;
@@ -506,8 +506,8 @@ void copyFile(const char *sourceFileName,const char *targetFileName,const bool& 
 
     // Checking that the source file and the target file have the same size.
 
-    struct stat s1;
-    struct stat s2;
+    struct stat s1{};
+    struct stat s2{};
     if (stat(sourceFileName, &s1) == 0 && stat(targetFileName, &s2) == 0  &&  s1.st_size == s2.st_size)
       return;
 
@@ -534,7 +534,7 @@ Int64 getFileSize(const char *filename)
     if (filename == nullptr)
       return -1;
 
-    struct stat buf;
+    struct stat buf{};
     if (stat(filename, &buf) == 0)
       return (Int64)buf.st_size;
 
@@ -559,7 +559,7 @@ Int64 getFileSize(FILE *file)
 
     int fd = fileno(file);
 
-    struct stat buf;
+    struct stat buf{};
     if (fstat(fd, &buf) == 0)
       return (Int64)buf.st_size;
 
@@ -751,7 +751,7 @@ time_t localTimeToTimeT(const std::string& localTime, const char *tzone)
 
     const char *str = localTime.c_str();
 
-    struct tm tt;
+    struct tm tt{};
     tt.tm_year = getInt(str, 0, 4) - 1900; /* Year - 1900 */
     tt.tm_mon = getInt(str, 4, 2) - 1;     /* Month (0-11) */
     tt.tm_mday = getInt(str, 6, 2);        /* Day of the month (1-31) */
@@ -782,7 +782,7 @@ time_t utcTimeToTimeT(const char *utcTime)
     if (utcTime == nullptr || strlen(utcTime) != 15)
       throw Fmi::Exception(BCP, "Invalid timestamp format (expected YYYYMMDDTHHMMSS)!");
 
-    struct tm tt;
+    struct tm tt{};
     tt.tm_year = getInt(utcTime, 0, 4) - 1900; /* Year - 1900 */
     tt.tm_mon = getInt(utcTime, 4, 2) - 1;     /* Month (0-11) */
     tt.tm_mday = getInt(utcTime, 6, 2);        /* Day of the month (1-31) */
@@ -831,7 +831,7 @@ time_t utcTimeToTimeT(int year,int month,int day,int hour,int minute,int second)
 {
   try
   {
-    struct tm tt;
+    struct tm tt{};
     tt.tm_year = year - 1900;
     tt.tm_mon = month - 1;
     tt.tm_mday = day;
@@ -909,7 +909,7 @@ std::string localTimeFromTimeT(time_t t, const char *tzone)
 {
   try
   {
-    struct tm tt;
+    struct tm tt{};
     localtime_tz(t, &tt, tzone);
 
     char buf[200];
@@ -974,7 +974,7 @@ Fmi::DateTime localTimeToUtc(const Fmi::DateTime& localTime,Fmi::TimeZonePtr tz)
     auto lTime = Fmi::TimeParser::make_time(localTime.date(), localTime.time_of_day(), tz);
     return lTime.utc_time();
   }
-  catch(const std::exception& e)
+  catch(const std::exception&)
   {
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
@@ -2063,11 +2063,9 @@ void parseNetCdfTime(const std::string& timeStr,int& year,int& month,int& day,in
     {
       if (strncasecmp(partList[0].c_str(),"day",3) == 0)
         unitSize = 3600*24;
-      else
-      if (strncasecmp(partList[0].c_str(),"hour",4) == 0)
+      else if (strncasecmp(partList[0].c_str(),"hour",4) == 0)
         unitSize = 3600;
-      else
-      if (strncasecmp(partList[0].c_str(),"minute",6) == 0)
+      else if (strncasecmp(partList[0].c_str(),"minute",6) == 0)
         unitSize = 60;
       if (strncasecmp(partList[0].c_str(),"second",6) == 0)
         unitSize = 1;
@@ -2820,7 +2818,7 @@ void getFileList(const char *dirName,
         }
         else if (ep->d_type == DT_UNKNOWN)
         {
-          struct stat s;
+          struct stat s{};
           if (stat(fullName, &s) == 0)
           {
             if (includeSubDirs && (s.st_mode & S_IFDIR) != 0 && strcmp(ep->d_name, "..") != 0 &&

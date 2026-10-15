@@ -15,6 +15,7 @@ class TimeIntervalAggregateForecastImpl : public TimeIntervalAggregateForecast
                         TimeIntervalAggregateForecastImpl();
                         TimeIntervalAggregateForecastImpl(const TimeIntervalAggregateForecastImpl& other);
     ~TimeIntervalAggregateForecastImpl() override;
+    TimeIntervalAggregateForecastImpl& operator=(const TimeIntervalAggregateForecastImpl&) = default;
 
     ProductDefinition*  createProductDefinition() const override;
 

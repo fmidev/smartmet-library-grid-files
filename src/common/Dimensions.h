@@ -38,6 +38,8 @@ class Dimensions
      *  \param[in] nz  Depth. */
                 Dimensions(uint nx,uint ny,uint nz);
     virtual     ~Dimensions();
+    Dimensions(const Dimensions&) = default;
+    Dimensions& operator=(const Dimensions&) = default;
 
     /*! \brief Return the width (first axis size). */
     uint        nx() const;
@@ -62,7 +64,7 @@ class Dimensions
   private:
 
     uint        mDimensions;  //!< Number of active axes (1–3)
-    uint        mSizes[3];    //!< Axis sizes indexed [0]=x, [1]=y, [2]=z
+    uint        mSizes[3]{};    //!< Axis sizes indexed [0]=x, [1]=y, [2]=z
 };
 
 }

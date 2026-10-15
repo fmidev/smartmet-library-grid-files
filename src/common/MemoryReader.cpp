@@ -1040,7 +1040,7 @@ std::array<char,16> MemoryReader::read_uuid()
       throw exception;
     }
 
-    std::array<char, 16> ret;
+    std::array<char, 16> ret{};
     for (auto i = 0; i < 16; i++)
       ret[i] = readPtr[i];
 

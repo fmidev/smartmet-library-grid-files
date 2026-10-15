@@ -103,6 +103,7 @@ class CoordinateConverter
       if (sr2 != nullptr)
         OGRSpatialReference::DestroySpatialReference(sr2);
     }
+    CoordinateConverter& operator=(const CoordinateConverter&) = delete;
 
 
     /*! \brief Acquire a free transformation slot index (spins until one is available).
@@ -144,12 +145,12 @@ class CoordinateConverter
 
   protected:
 
-    OGRCoordinateTransformation *transformation[CONVERTER_COUNT]; //!< OGR transformation objects per slot
+    OGRCoordinateTransformation *transformation[CONVERTER_COUNT]{}; //!< OGR transformation objects per slot
     std::atomic<bool> tranformationInProgress[CONVERTER_COUNT];   //!< True while slot is in use
     OGRSpatialReference *sr1;                                     //!< Source spatial reference (owned)
     OGRSpatialReference *sr2;                                     //!< Target spatial reference (owned)
     ThreadLock threadLock[CONVERTER_COUNT];                       //!< Per-slot mutex
-    timespec r1, r2;                                              //!< nanosleep spin interval
+    timespec r1{}, r2{};                                              //!< nanosleep spin interval
     std::shared_ptr<OGRSpatialReference> mPinFrom;                //!< Pins source CRS address while cached
     std::shared_ptr<OGRSpatialReference> mPinTo;                  //!< Pins target CRS address while cached
 };

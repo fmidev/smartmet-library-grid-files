@@ -14,6 +14,7 @@ class StretchedSphericalHarmonicImpl : public StretchedSphericalHarmonic
                         StretchedSphericalHarmonicImpl();
                         StretchedSphericalHarmonicImpl(const StretchedSphericalHarmonicImpl& other);
     ~StretchedSphericalHarmonicImpl() override;
+    StretchedSphericalHarmonicImpl& operator=(const StretchedSphericalHarmonicImpl&) = default;
 
     GridDefinition*     createGridDefinition() const override;
 

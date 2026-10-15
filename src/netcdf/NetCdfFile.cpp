@@ -168,6 +168,8 @@ void NetCdfFile::readAttribute(MemoryReader& memoryReader,std::string& attrName,
         }
       }
       break;
+      default:
+        break;
     }
     memoryReader.setNetworkByteOrder(false);
   }
@@ -409,6 +411,8 @@ void NetCdfFile::readValues(MemoryReader& memoryReader,uint type,uint items,UInt
         }
       }
       break;
+      default:
+        break;
     }
   }
   catch (...)
@@ -496,6 +500,8 @@ void NetCdfFile::readValues(MemoryReader& memoryReader,uint type,uint items,UInt
         }
       }
       break;
+      default:
+        break;
     }
   }
   catch (...)
@@ -1142,8 +1148,7 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
                 timeCount = ii;
                 timeName = dn->second[i];
               }
-              else
-              if (strcasecmp(axis.c_str(),"Z") == 0 ||
+              else if (strcasecmp(axis.c_str(),"Z") == 0 ||
                   strcasecmp(standardName.c_str(),"depth") == 0 || strcasecmp(standardName.c_str(),"height") == 0  || strcasecmp(standardName.c_str(),"level") == 0 ||
                   strcasecmp(longName.c_str(),"depth") == 0 || strcasecmp(longName.c_str(),"height") == 0 || strcasecmp(longName.c_str(),"level") == 0  ||
                   strcasecmp(n.c_str(),"depth") == 0 || strcasecmp(n.c_str(),"height") == 0 || strcasecmp(n.c_str(),"level") == 0)
@@ -1162,8 +1167,7 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
                 if (strcasecmp(units.c_str(),"Pa") == 0 || strcasecmp(units.c_str(),"hPa") == 0)
                   paramLevelId = 2;
               }
-              else
-              if (strcasecmp(axis.c_str(),"Y") == 0 || strcasecmp(standardName.c_str(),"projection_y_coordinate") == 0 ||
+              else if (strcasecmp(axis.c_str(),"Y") == 0 || strcasecmp(standardName.c_str(),"projection_y_coordinate") == 0 ||
                   strcasecmp(standardName.c_str(),"latitude") == 0 || strcasecmp(longName.c_str(),"latitude") == 0 ||
                   strcasecmp(n.c_str(),"lat") == 0 || strcasecmp(n.c_str(),"latitude") == 0)
               {
@@ -1172,8 +1176,7 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
                 yName = n;
                 yStandardName = standardName;
               }
-              else
-              if (strcasecmp(axis.c_str(),"X") == 0 || strcasecmp(standardName.c_str(),"projection_x_coordinate") == 0 ||
+              else if (strcasecmp(axis.c_str(),"X") == 0 || strcasecmp(standardName.c_str(),"projection_x_coordinate") == 0 ||
                   strcasecmp(standardName.c_str(),"longitude") == 0 || strcasecmp(longName.c_str(),"longitude") == 0 ||
                   strcasecmp(n.c_str(),"lon") == 0 || strcasecmp(n.c_str(),"longitude") == 0)
               {
@@ -1515,9 +1518,9 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
               p += sprintf(p,"+x");
 
             if (dy < 0)
-              p += sprintf(p,"-y");
+              sprintf(p,"-y");
             else
-              p += sprintf(p,"+y");
+              sprintf(p,"+y");
 
 
             if (strcasecmp(mappingName.c_str(),"polar_stereographic") == 0 || strcasecmp(mappingName.c_str(),"stereographic") == 0)
@@ -1570,8 +1573,7 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
                 std::cout << projectionString << "\n";
               }
             }
-            else
-            if (strcasecmp(mappingName.c_str(),"lambert_azimuthal_equal_area") == 0)
+            else if (strcasecmp(mappingName.c_str(),"lambert_azimuthal_equal_area") == 0)
             {
               // ***** PROJECTION: Lambert Azimuthal Equal Area *************************************
 
@@ -1621,8 +1623,7 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
                 std::cout << tmp << "\n";
               }
             }
-            else
-            if (strcasecmp(mappingName.c_str(),"lambert_conformal_conic") == 0)
+            else if (strcasecmp(mappingName.c_str(),"lambert_conformal_conic") == 0)
             {
               // ***** PROJECTION: Lambert Conformal *************************************
 
@@ -1688,15 +1689,14 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
               }
 
             }
-            else
-            if (strcasecmp(mappingName.c_str(),"latitude_longitude") == 0 ||
+            else if (strcasecmp(mappingName.c_str(),"latitude_longitude") == 0 ||
                 (mappingName.empty() &&  strcasecmp(xStandardName.c_str(),"longitude") == 0   &&  strcasecmp(yStandardName.c_str(),"latitude") == 0))
             {
               // ***** PROJECTION: Latlon ***********************************************************
 
               projectionId = T::GridProjectionValue::LatLon;
 
-              snprintf(projectionString,sizeof(projectionString),"%d;id;name;%u;%u;%.6f;%.6f;%.6f;%.6f;%s;description",
+              snprintf(projectionString,sizeof(projectionString),"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;description",
                 T::GridProjectionValue::LatLon,(int)mXCoordinates.size(),(int)mYCoordinates.size(),
                 startx,starty,fabs(dx),fabs(dy),sm);
 
@@ -1708,7 +1708,7 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
               else
               {
                 char tmp[4000];
-                snprintf(tmp,sizeof(tmp),"%d;id;name;%u;%u;%.6f;%.6f;%.6f;%.6f;%s;0.000000;0.000000;description",
+                snprintf(tmp,sizeof(tmp),"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;0.000000;0.000000;description",
                   T::GridProjectionValue::LatLon,(int)mXCoordinates.size(),(int)mYCoordinates.size(),
                   startx,starty,fabs(dx),fabs(dy),sm);
                 std::cout << "#### Geometry not found ####\n";

@@ -14,6 +14,7 @@ class CategoricalForecastImpl : public CategoricalForecast
                         CategoricalForecastImpl();
                         CategoricalForecastImpl(const CategoricalForecastImpl& other);
     ~CategoricalForecastImpl() override;
+    CategoricalForecastImpl& operator=(const CategoricalForecastImpl&) = default;
 
     ProductDefinition*  createProductDefinition() const override;
 

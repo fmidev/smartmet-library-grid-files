@@ -240,6 +240,8 @@ bool ProductSection::getProperty(uint propertyId,Int64& value)
       case Property::ProductSection::NV:
         value = *mNV;
         return true;
+      default:
+        break;
     }
 
     if (mProductDefinition)
@@ -304,6 +306,8 @@ bool ProductSection::setProperty(uint propertyId,Int64 value)
       case Property::ProductSection::NV:
         setNV(value);
         return true;
+      default:
+        break;
     }
 
     if (mProductDefinition)
@@ -981,6 +985,8 @@ ProductDefinition* ProductSection::createProductDefinition(std::uint16_t product
 
       case Template::Product_73:
         return new Product_73Impl();
+      default:
+        break;
     }
 
     return nullptr;

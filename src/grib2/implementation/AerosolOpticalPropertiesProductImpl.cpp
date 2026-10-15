@@ -186,6 +186,8 @@ T::TimeString AerosolOpticalPropertiesProductImpl::countForecastStartTime(T::Tim
       case 13: //  s Second
         dt = Fmi::TimeDuration(0,0,forecastTime);
         break;
+      default:
+        break;
     }
 
     if (ft >= 0)

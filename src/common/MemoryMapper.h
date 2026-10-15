@@ -35,6 +35,8 @@ class MemoryMapper
   public:
               MemoryMapper();
               ~MemoryMapper();
+              MemoryMapper(const MemoryMapper&) = delete;
+              MemoryMapper& operator=(const MemoryMapper&) = delete;
 
     /*! \brief Return true if the mapper is enabled (userfaultfd active). */
     bool      isEnabled() const;
@@ -135,7 +137,7 @@ class MemoryMapper
     std::atomic<Int64>        mMessageReadCount;        //!< Total fault messages read
     std::atomic<Int64>        mMessageProcessCount;     //!< Total fault messages processed
     std::atomic<uint>         mThreadsRunning;          //!< Number of active processing threads
-    pthread_t                 mFaultHandlerThread;      //!< Reader thread handle
+    pthread_t                 mFaultHandlerThread = 0;      //!< Reader thread handle
     pthread_t*                mFaultProcessingThread;   //!< Pool of processing thread handles
     bool                      mStopRequired;            //!< Set to true to request thread shutdown
     ThreadLock                mThreadLock;              //!< Guards message dispatch

@@ -61,7 +61,7 @@ int HttpClient::getHeaderData(const char *server,const char *filename,int dataSi
       return 0;
 
     // printf("*** SEND REQUEST %s  : %ld : %d\n",info.filename.c_str(),filePosition,dataSize);
-    Response response;
+    Response response{};
     response.data = dataPtr;
     response.maxSize = dataSize;
     response.dataSize = 0;
@@ -127,7 +127,7 @@ int HttpClient::getData(const char *server,const char *filename,std::size_t file
 
     // printf("*** SEND REQUEST %s  : %ld : %d\n",info.filename.c_str(),filePosition,dataSize);
 
-    Response response;
+    Response response{};
     response.data = dataPtr;
     response.maxSize = dataSize;
     response.dataSize = 0;
@@ -154,7 +154,7 @@ int HttpClient::getData(const char *server,const char *filename,std::size_t file
     if ((int)filePosition != dataSize)
     {
       char tmp[1000];
-      sprintf(tmp,"Range: bytes=%ld-%ld",filePosition,filePosition+dataSize-1);
+      sprintf(tmp,"Range: bytes=%zu-%zu",filePosition,filePosition+dataSize-1);
       headerList = curl_slist_append(headerList, tmp);
     }
 

@@ -14,6 +14,7 @@ class PngGridDataRepresentationImpl : public PngGridDataRepresentation
               PngGridDataRepresentationImpl();
               PngGridDataRepresentationImpl(const PngGridDataRepresentationImpl& other);
     ~PngGridDataRepresentationImpl() override;
+    PngGridDataRepresentationImpl& operator=(const PngGridDataRepresentationImpl&) = default;
 
     RepresentationDefinition* createRepresentationDefinition() const override;
 

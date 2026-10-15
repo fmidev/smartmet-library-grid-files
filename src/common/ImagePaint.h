@@ -42,6 +42,8 @@ class ImagePaint
      *  \param[in] _rotatedY    Flip Y axis. */
             ImagePaint(uint *_image,int _imageWidth,int _imageHeight,uint _backColor,uint _drawColor,uint _fillColor,bool _rotatedX,bool _rotatedY);
     virtual ~ImagePaint();
+    ImagePaint(const ImagePaint&) = delete;
+    ImagePaint& operator=(const ImagePaint&) = delete;
 
     /*! \brief Scan a WKB geometry and compute its bounding box.
      *  \param[in]  _wkb   WKB byte buffer.

@@ -15,6 +15,7 @@ class HovmollerImpl : public Hovmoller
                         HovmollerImpl();
                         HovmollerImpl(const HovmollerImpl& other);
     ~HovmollerImpl() override;
+    HovmollerImpl& operator=(const HovmollerImpl&) = default;
 
     GridDefinition*     createGridDefinition() const override;
 

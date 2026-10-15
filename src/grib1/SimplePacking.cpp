@@ -234,6 +234,8 @@ bool SimplePacking::getValueByIndex(Message *message,uint index,T::ParamValue& v
         case 4:
           X = memoryReader.read_uint32();
           break;
+        default:
+          break;
       }
     }
 
@@ -507,6 +509,8 @@ void SimplePacking::decodeValues(Message *message,T::ParamValue_vec& decodedValu
             }
           }
           break;
+        default:
+          break;
       }
     }
   }
@@ -528,7 +532,6 @@ void SimplePacking::encodeValues(Message *message,T::ParamValue_vec& values)
   {
     std::int16_t binaryScaleFactor = message->getBinaryScaleFactor();
     std::uint16_t decimalScaleFactor = message->getDecimalScaleFactor();
-    std::float_t referenceValue = message->getReferenceValue();
     std::uint8_t bitsPerValue = message->getBitsPerValue();
 
     uint valueCount = 0;
@@ -561,7 +564,7 @@ void SimplePacking::encodeValues(Message *message,T::ParamValue_vec& values)
     std::int16_t E = binaryScaleFactor;
     std::int16_t D = decimalScaleFactor;
 
-    referenceValue = minValue;
+    std::float_t referenceValue = minValue;
     double R = referenceValue;
 
 

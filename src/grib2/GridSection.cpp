@@ -208,6 +208,8 @@ bool GridSection::getProperty(uint propertyId,Int64& value)
       case Property::GridSection::GridDefinitionTemplateNumber:
         value = *mGridDefinitionTemplateNumber;
         return true;
+      default:
+        break;
     }
 
     if (mGridDefinition)
@@ -294,6 +296,8 @@ bool GridSection::setProperty(uint propertyId,Int64 value)
       case Property::GridSection::GridDefinitionTemplateNumber:
         setGridDefinition((std::uint16_t)value);
         return true;
+      default:
+        break;
     }
 
     if (mGridDefinition)

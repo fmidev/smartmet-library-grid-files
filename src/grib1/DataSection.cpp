@@ -161,6 +161,8 @@ bool DataSection::getProperty(uint propertyId,Int64& value) const
       case Property::DataSection::PackingMethod:
         //value = mPackingMethod;
         return true;
+      default:
+        break;
     }
     return false;
   }
@@ -232,6 +234,8 @@ bool DataSection::setProperty(uint propertyId,Int64 value)
       case Property::DataSection::PackingMethod:
         //setPackingMethod(value);
         return true;
+      default:
+        break;
     }
     return false;
   }
@@ -278,6 +282,8 @@ bool DataSection::setProperty(uint propertyId,double value)
       case Property::DataSection::PackingMethod:
         //setPackingMethod(value);
         return true;
+      default:
+        break;
     }
     return false;
   }
@@ -333,9 +339,9 @@ void DataSection::getAttributeList(const std::string& prefix,T::AttributeList& a
       p += sprintf(p,"Floating point values (in the original data) are represented;");
 
     if (mFlags & AdditionalFlags)
-      p += sprintf(p,"Additional flags used;");
+      sprintf(p,"Additional flags used;");
     else
-      p += sprintf(p,"No additional flags;");
+      sprintf(p,"No additional flags;");
 
     sprintf(name,"%sdata.flagsString",prefix.c_str());
     attributeList.addAttribute(name,val);
@@ -488,6 +494,8 @@ void DataSection::setDataDefinition(ushort compressionMethod)
         break;
 
       case T::CompressionMethod::SpectralData_ComplexPacking:
+        break;
+      default:
         break;
     }
 

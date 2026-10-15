@@ -15,6 +15,7 @@ class SatelliteProductImpl : public SatelliteProduct
                         SatelliteProductImpl();
                         SatelliteProductImpl(const SatelliteProductImpl& other);
     ~SatelliteProductImpl() override;
+    SatelliteProductImpl& operator=(const SatelliteProductImpl&) = default;
 
     ProductDefinition*  createProductDefinition() const override;
 

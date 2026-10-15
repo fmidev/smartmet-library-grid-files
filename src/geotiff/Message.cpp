@@ -1382,6 +1382,8 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
           return (T::ParamValue)data[idx];
         }
         break;
+      default:
+        break;
     }
 
 

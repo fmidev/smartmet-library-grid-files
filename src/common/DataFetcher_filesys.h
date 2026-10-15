@@ -12,9 +12,9 @@ namespace SmartMet
 /*! \brief A cached stdio file handle with an associated lock and last-use timestamp. */
 struct FileHandle
 {
-  FILE *fileHandle;                 //!< Open file handle
+  FILE *fileHandle = nullptr;                 //!< Open file handle
   SmartMet::ThreadLock threadLock;  //!< Per-handle mutex (prevents concurrent seeks)
-  time_t lastUsed;                  //!< Unix timestamp of the last access (for LRU eviction)
+  time_t lastUsed = 0;                  //!< Unix timestamp of the last access (for LRU eviction)
 };
 
 
@@ -32,6 +32,8 @@ class DataFetcher_filesys : public DataFetcher
   public:
                       DataFetcher_filesys();
     ~DataFetcher_filesys() override;
+    DataFetcher_filesys(const DataFetcher_filesys&) = delete;
+    DataFetcher_filesys& operator=(const DataFetcher_filesys&) = delete;
 
     //! \overload DataFetcher::getData()
     int               getData(uint serverType,uint protocol,const char *server,const char *filename,std::size_t filePosition,int dataSize,char *dataPtr) override;

@@ -157,6 +157,8 @@ bool RepresentationSection::getProperty(uint propertyId,Int64& value)
       case Property::RepresentationSection::RepresentationTemplateNumber:
         value = *mDataRepresentationTemplateNumber;
         return true;
+      default:
+        break;
     }
 
     if (mRepresentationDefinition)
@@ -213,6 +215,8 @@ bool RepresentationSection::setProperty(uint propertyId,Int64 value)
       case Property::RepresentationSection::RepresentationTemplateNumber:
         setRepresentationDefinition((std::uint16_t)value);
         return true;
+      default:
+        break;
     }
 
     if (mRepresentationDefinition)
@@ -661,6 +665,8 @@ RepresentationDefinition* RepresentationSection::createRepresentationDefinition(
 
       case Template::ComplexSphericalHarmonicsDataRepresentation:
         return new ComplexSphericalHarmonicsDataRepresentationImpl();
+      default:
+        break;
     }
 
     Fmi::Exception exception(BCP,"Unknown representation definition template number!'");

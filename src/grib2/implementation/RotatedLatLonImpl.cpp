@@ -604,11 +604,11 @@ std::string RotatedLatLonImpl::getGridGeometryString() const
     if ((scanningMode & 0x40) == 0)
     {
       dy = -dy;
-      p += sprintf(p,"-y");
+      sprintf(p,"-y");
     }
     else
     {
-      p += sprintf(p,"+y");
+      sprintf(p,"+y");
     }
 
     sprintf(buf,"%d;id;name;%u;%u;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;%.6f;description",

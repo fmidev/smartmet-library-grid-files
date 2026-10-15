@@ -29,6 +29,8 @@ class AutoReadLock
       if (mModificationLock)
         mModificationLock->readUnlock();
     }
+    AutoReadLock(const AutoReadLock&) = delete;
+    AutoReadLock& operator=(const AutoReadLock&) = delete;
 
   protected:
 

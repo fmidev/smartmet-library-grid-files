@@ -15,6 +15,7 @@ class LambertAzimuthalEqualAreaImpl : public LambertAzimuthalEqualArea
                         LambertAzimuthalEqualAreaImpl();
                         LambertAzimuthalEqualAreaImpl(const LambertAzimuthalEqualAreaImpl& other);
     ~LambertAzimuthalEqualAreaImpl() override;
+    LambertAzimuthalEqualAreaImpl& operator=(const LambertAzimuthalEqualAreaImpl&) = default;
 
     GridDefinition*     createGridDefinition() const override;
 
@@ -39,11 +40,11 @@ class LambertAzimuthalEqualAreaImpl : public LambertAzimuthalEqualArea
 
     void                init() const;
 
-    mutable double      mDxx;
-    mutable double      mDyy;
-    mutable double      mStartX;
-    mutable double      mStartY;
-    mutable bool        mInitialized;
+    mutable double      mDxx = 0.0;
+    mutable double      mDyy = 0.0;
+    mutable double      mStartX = 0.0;
+    mutable double      mStartY = 0.0;
+    mutable bool        mInitialized = false;
 };
 
 }

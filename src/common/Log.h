@@ -23,6 +23,8 @@ class Log
   public:
                         Log();
     virtual             ~Log();
+    Log(const Log&) = delete;
+    Log& operator=(const Log&) = delete;
 
     /*! \brief Configure the logger.
      *  \param[in] _enabled       Start enabled if true.

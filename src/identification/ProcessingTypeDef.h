@@ -20,6 +20,8 @@ class ProcessingTypeDef
   public:
                     ProcessingTypeDef();
     virtual         ~ProcessingTypeDef();
+    ProcessingTypeDef(const ProcessingTypeDef&) = default;
+    ProcessingTypeDef& operator=(const ProcessingTypeDef&) = default;
 
     /*! \brief Write a human-readable dump to \p stream (for debugging). */
     void            print(std::ostream& stream,uint level,uint optionFlags) const;

@@ -14,6 +14,7 @@ class IrregularLatLonImpl : public IrregularLatLon
                         IrregularLatLonImpl();
                         IrregularLatLonImpl(const IrregularLatLonImpl& other);
     ~IrregularLatLonImpl() override;
+    IrregularLatLonImpl& operator=(const IrregularLatLonImpl&) = default;
 
     GridDefinition*     createGridDefinition() const override;
 

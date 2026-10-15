@@ -62,6 +62,7 @@ class GridSection : public GRID::MessageSection
                           GridSection();
                           GridSection(const GridSection& other);
     ~GridSection() override;
+    GridSection& operator=(const GridSection&) = default;
 
     // ### Common methods for all message sections
 
@@ -141,7 +142,7 @@ class GridSection : public GRID::MessageSection
     std::vector<std::uint32_t>  mVerticalCoordinates;  //!< Optional list of vertical coordinate parameters (NV entries).
 
     /*! \brief The length of the section. */
-    std::uint32_t         mSectionLength;
+    std::uint32_t         mSectionLength = 0;
 
     /*! \brief The number of the grid point (calculated when the grid is irregular). */
     std::uint32_t         mNumberOfPoints;

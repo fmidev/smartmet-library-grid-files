@@ -15,6 +15,7 @@ class CrossSectionImpl : public CrossSection
                         CrossSectionImpl();
                         CrossSectionImpl(const CrossSectionImpl& other);
     ~CrossSectionImpl() override;
+    CrossSectionImpl& operator=(const CrossSectionImpl&) = default;
 
     GridDefinition*     createGridDefinition() const override;
 

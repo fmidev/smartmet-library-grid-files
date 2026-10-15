@@ -15,6 +15,7 @@ class Product_71Impl : public Product_71
                         Product_71Impl();
                         Product_71Impl(const Product_71Impl& other);
     ~Product_71Impl() override;
+    Product_71Impl& operator=(const Product_71Impl&) = default;
 
     ProductDefinition*  createProductDefinition() const override;
 

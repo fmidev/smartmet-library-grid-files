@@ -13,6 +13,7 @@ class ComplexGridDataRepresentationImpl : public ComplexGridDataRepresentation
               ComplexGridDataRepresentationImpl();
               ComplexGridDataRepresentationImpl(const ComplexGridDataRepresentationImpl& other);
     ~ComplexGridDataRepresentationImpl() override;
+    ComplexGridDataRepresentationImpl& operator=(const ComplexGridDataRepresentationImpl&) = default;
 
     RepresentationDefinition* createRepresentationDefinition() const override;
 

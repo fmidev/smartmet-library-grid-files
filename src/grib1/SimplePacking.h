@@ -27,6 +27,7 @@ class SimplePacking : public DataDefinition
                     SimplePacking();
                     SimplePacking(const SimplePacking& other);
     ~SimplePacking() override;
+    SimplePacking& operator=(const SimplePacking&) = default;
 
     DataDefinition* createDataDefinition() const override;
     void            decodeValues(Message *message,T::ParamValue_vec& decodedValues) const override;

@@ -118,6 +118,8 @@ void MessageProcessing::getGridIsobandsByLevel(const GRID::Message& message1,con
         coordinates = message1.getGridOriginalCoordinates();
         coordinatePtr = coordinates.get();
         break;
+      default:
+        break;
     }
 
     getIsobands(gridValues,coordinatePtr,d.nx(),d.ny(),contourLowValues,contourHighValues,interpolationType,smoothSize,smoothDegree,contours,0,getContourThreads(attributeList));
@@ -241,6 +243,8 @@ void MessageProcessing::getGridIsobandsByTime(const GRID::Message& message1,cons
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
         coordinates = message1.getGridOriginalCoordinates();
         coordinatePtr = coordinates.get();
+        break;
+      default:
         break;
     }
 
@@ -471,6 +475,8 @@ void MessageProcessing::getGridIsobandsByLevelAndGeometry(const GRID::Message& m
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
         coordinatePtr = coordinates.get();
         break;
+      default:
+        break;
     }
 
     getIsobands(gridValues,coordinatePtr,width,height,contourLowValues,contourHighValues,interpolationType,smoothSize,smoothDegree,contours,0,getContourThreads(attributeList));
@@ -574,6 +580,8 @@ void MessageProcessing::getGridIsobandsByLevelAndGrid(const GRID::Message& messa
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
         break;
+      default:
+        break;
     }
 
     attributeList.setAttribute("grid.levelInterpolationMethod",Fmi::to_string(levelInterpolationMethod));
@@ -676,6 +684,8 @@ void MessageProcessing::getGridIsobandsByTimeAndGrid(const GRID::Message& messag
         break;
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
+        break;
+      default:
         break;
     }
 
@@ -924,6 +934,8 @@ void MessageProcessing::getGridIsobandsByTimeAndGeometry(const GRID::Message& me
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
         coordinatePtr = coordinates.get();
         break;
+      default:
+        break;
     }
 
     getIsobands(gridValues,coordinatePtr,width,height,contourLowValues,contourHighValues,interpolationType,smoothSize,smoothDegree,contours,0,getContourThreads(attributeList));
@@ -1031,6 +1043,8 @@ void MessageProcessing::getGridIsobandsByTimeAndLevel(const GRID::Message& messa
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
         coordinates = message1.getGridOriginalCoordinates();
         coordinatePtr = coordinates.get();
+        break;
+      default:
         break;
     }
 
@@ -1263,6 +1277,8 @@ void MessageProcessing::getGridIsobandsByTimeLevelAndGeometry(const GRID::Messag
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
         coordinatePtr = coordinates.get();
         break;
+      default:
+        break;
     }
 
     getIsobands(gridValues,coordinatePtr,width,height,contourLowValues,contourHighValues,interpolationType,smoothSize,smoothDegree,contours,0,getContourThreads(attributeList));
@@ -1430,6 +1446,8 @@ void MessageProcessing::getGridIsolinesByTimeAndLevel(const GRID::Message& messa
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
         coordinates = message1.getGridOriginalCoordinates();
         coordinatePtr = coordinates.get();
+        break;
+      default:
         break;
     }
 
@@ -1672,6 +1690,8 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGeometry(const GRID::Messag
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
         coordinatePtr = coordinates.get();
         break;
+      default:
+        break;
     }
 
     getIsolines(gridValues,coordinatePtr,width,height,contourValues,interpolationType,smoothSize,smoothDegree,contours,0,getContourThreads(attributeList));
@@ -1777,6 +1797,8 @@ void MessageProcessing::getGridIsolinesByLevel(const GRID::Message& message1,con
         coordinates = message1.getGridOriginalCoordinates();
         coordinatePtr = coordinates.get();
         break;
+      default:
+        break;
     }
 
     getIsolines(gridValues,coordinatePtr,d.nx(),d.ny(),contourValues,interpolationType,smoothSize,smoothDegree,contours,0,getContourThreads(attributeList));
@@ -1880,6 +1902,8 @@ void MessageProcessing::getGridIsolinesByTime(const GRID::Message& message1,cons
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
         coordinates = message1.getGridOriginalCoordinates();
         coordinatePtr = coordinates.get();
+        break;
+      default:
         break;
     }
 
@@ -2136,6 +2160,8 @@ void MessageProcessing::getGridIsolinesByLevelAndGeometry(const GRID::Message& m
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
         coordinatePtr = coordinates.get();
+        break;
+      default:
         break;
     }
 
@@ -2397,6 +2423,8 @@ void MessageProcessing::getGridIsolinesByTimeAndGeometry(const GRID::Message& me
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
         coordinatePtr = coordinates.get();
         break;
+      default:
+        break;
     }
 
     getIsolines(gridValues,coordinatePtr,width,height,contourValues,interpolationType,smoothSize,smoothDegree,contours,0,getContourThreads(attributeList));
@@ -2502,6 +2530,8 @@ void MessageProcessing::getGridIsolinesByLevelAndGrid(const GRID::Message& messa
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
         break;
+      default:
+        break;
     }
 
     attributeList.setAttribute("grid.levelInterpolationMethod",Fmi::to_string(levelInterpolationMethod));
@@ -2605,6 +2635,8 @@ void MessageProcessing::getGridIsolinesByTimeAndGrid(const GRID::Message& messag
         break;
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
+        break;
+      default:
         break;
     }
 
@@ -2788,6 +2820,8 @@ void MessageProcessing::getGridStreamlinesByTimeAndLevel(const GRID::Message& me
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
         coordinates = message1.getGridOriginalCoordinates();
         coordinatePtr = coordinates.get();
+        break;
+      default:
         break;
     }
 
@@ -3039,6 +3073,8 @@ void MessageProcessing::getGridStreamlinesByTimeLevelAndGeometry(const GRID::Mes
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
         coordinatePtr = coordinates.get();
         break;
+      default:
+        break;
     }
 
     getStreamlines(gridValues,coordinatePtr,width,height,minStreamLen, maxStreamLen,lineLen,xStep,yStep,streamlines);
@@ -3170,6 +3206,8 @@ void MessageProcessing::getGridStreamlinesByLevel(const GRID::Message& message1,
         coordinates = message1.getGridOriginalCoordinates();
         coordinatePtr = coordinates.get();
         break;
+      default:
+        break;
     }
 
     getStreamlines(gridValues,coordinatePtr,d.nx(),d.ny(),minStreamLen, maxStreamLen,lineLen,xStep,yStep,streamlines);
@@ -3282,6 +3320,8 @@ void MessageProcessing::getGridStreamlinesByTime(const GRID::Message& message1,c
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
         coordinates = message1.getGridOriginalCoordinates();
         coordinatePtr = coordinates.get();
+        break;
+      default:
         break;
     }
 
@@ -3530,6 +3570,8 @@ void MessageProcessing::getGridStreamlinesByLevelAndGeometry(const GRID::Message
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
         coordinatePtr = coordinates.get();
+        break;
+      default:
         break;
     }
 
@@ -3799,6 +3841,8 @@ void MessageProcessing::getGridStreamlinesByTimeAndGeometry(const GRID::Message&
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
         coordinatePtr = coordinates.get();
         break;
+      default:
+        break;
     }
 
     getStreamlines(gridValues,coordinatePtr,width,height,minStreamLen, maxStreamLen,lineLen,xStep,yStep,streamlines);
@@ -3930,6 +3974,8 @@ void MessageProcessing::getGridStreamlinesByLevelAndGrid(const GRID::Message& me
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
         break;
+      default:
+        break;
     }
 
     attributeList.setAttribute("grid.levelInterpolationMethod",Fmi::to_string(levelInterpolationMethod));
@@ -4042,6 +4088,8 @@ void MessageProcessing::getGridStreamlinesByTimeAndGrid(const GRID::Message& mes
         break;
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
+        break;
+      default:
         break;
     }
 

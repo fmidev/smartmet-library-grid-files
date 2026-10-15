@@ -14,6 +14,7 @@ class ObliqueLambertConformalImpl : public ObliqueLambertConformal
                         ObliqueLambertConformalImpl();
                         ObliqueLambertConformalImpl(const ObliqueLambertConformalImpl& other);
     ~ObliqueLambertConformalImpl() override;
+    ObliqueLambertConformalImpl& operator=(const ObliqueLambertConformalImpl&) = default;
 
     GridDefinition*     createGridDefinition() const override;
 

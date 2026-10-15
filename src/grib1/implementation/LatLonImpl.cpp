@@ -295,11 +295,11 @@ std::string LatLonImpl::getGridGeometryString() const
     if ((scanningMode & 0x40) == 0)
     {
       dy = -dy;
-      p += sprintf(p,"-y");
+      sprintf(p,"-y");
     }
     else
     {
-      p += sprintf(p,"+y");
+      sprintf(p,"+y");
     }
 
 
@@ -752,6 +752,8 @@ bool LatLonImpl::getProperty(uint propertyId,Int64& value)
       case Property::GridSection::LatLon::JDirectionIncrement:
         value = getJDirectionIncrement();
         return true;
+      default:
+        break;
     }
 
     return GridDefinition::getProperty(propertyId,value);
@@ -794,6 +796,8 @@ bool LatLonImpl::setProperty(uint propertyId,Int64 value)
       case Property::GridSection::LatLon::JDirectionIncrement:
         setJDirectionIncrement(value);
         return true;
+      default:
+        break;
     }
 
     return GridDefinition::setProperty(propertyId,value);

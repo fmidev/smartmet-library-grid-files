@@ -641,11 +641,11 @@ std::string RotatedLatLonImpl::getGridGeometryString() const
     if ((scanningMode & 0x40) == 0)
     {
       dy = -dy;
-      p += sprintf(p,"-y");
+      sprintf(p,"-y");
     }
     else
     {
-      p += sprintf(p,"+y");
+      sprintf(p,"+y");
     }
 
     sprintf(buf,"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;%.6f;description",
@@ -912,6 +912,8 @@ bool RotatedLatLonImpl::getProperty(uint propertyId,Int64& value)
       case Property::GridSection::RotatedLatLon::JDirectionIncrement:
         value = getJDirectionIncrement();
         return true;
+      default:
+        break;
     }
 
     return GridDefinition::getProperty(propertyId,value);
@@ -954,6 +956,8 @@ bool RotatedLatLonImpl::setProperty(uint propertyId,Int64 value)
       case Property::GridSection::RotatedLatLon::JDirectionIncrement:
         setJDirectionIncrement(value);
         return true;
+      default:
+        break;
     }
 
     return GridDefinition::setProperty(propertyId,value);

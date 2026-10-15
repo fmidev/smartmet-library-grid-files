@@ -62,6 +62,8 @@ class GridDef
   public:
                         GridDef();
     virtual             ~GridDef();
+    GridDef(const GridDef&) = default;
+    GridDef& operator=(const GridDef&) = default;
 
     /*! \brief Initialise all mapping tables from the given libconfig configuration file.
      *  \param[in] configFile  Path to the GridDef configuration file. */
@@ -410,7 +412,7 @@ class GridDef
     FmiParamDef_umap        mFmi_parameterDef_records;
 
     string_vec              mFmi_geometryGroupDef_files;
-    time_t                  mFmi_geometryGroupDef_modificationTime;
+    time_t                  mFmi_geometryGroupDef_modificationTime = 0;
     FmiGeomGroupDef_vec     mFmi_geometryGroupDef_records;
 
     string_vec              mFmi_levelDef_files;
@@ -418,15 +420,15 @@ class GridDef
     LevelDef_vec            mFmi_levelDef_records;
 
     string_vec              mFmi_forecastTypeDef_files;
-    time_t                  mFmi_forecastTypeDef_modificationTime;
+    time_t                  mFmi_forecastTypeDef_modificationTime = 0;
     ForecastTypeDef_vec     mFmi_forecastTypeDef_records;
 
     string_vec              mFmi_aggregationDef_files;
-    time_t                  mFmi_aggregationDef_modificationTime;
+    time_t                  mFmi_aggregationDef_modificationTime = 0;
     AggregationDef_vec      mFmi_aggregationDef_records;
 
     string_vec              mFmi_processingTypeDef_files;
-    time_t                  mFmi_processingTypeDef_modificationTime;
+    time_t                  mFmi_processingTypeDef_modificationTime = 0;
     ProcessingTypeDef_vec   mFmi_processingTypeDef_records;
 
     string_vec              mFmi_parametersFromGrib_files;

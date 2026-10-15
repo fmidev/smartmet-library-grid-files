@@ -47,6 +47,7 @@ class DataSection : public GRID::MessageSection
                     DataSection();
                     DataSection(const DataSection& other);
     ~DataSection() override;
+    DataSection& operator=(const DataSection&) = delete;
 
     // ### Common methods for all message sections
 

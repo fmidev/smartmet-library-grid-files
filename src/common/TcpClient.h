@@ -16,6 +16,8 @@ class TcpClient : public Client
   public:
             TcpClient();
     ~TcpClient() override;
+    TcpClient(const TcpClient&) = delete;
+    TcpClient& operator=(const TcpClient&) = delete;
 
     /*! \brief Open a TCP connection to the given server.
      *  \param[in] serverAddress  Hostname or IP address.

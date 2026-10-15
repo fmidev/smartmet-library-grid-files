@@ -23,6 +23,8 @@ class NewbaseParameterDef
 
                   NewbaseParameterDef();
     virtual       ~NewbaseParameterDef();
+    NewbaseParameterDef(const NewbaseParameterDef&) = default;
+    NewbaseParameterDef& operator=(const NewbaseParameterDef&) = default;
 
     /*! \brief Write a human-readable dump to \p stream (for debugging). */
     void          print(std::ostream& stream,uint level,uint optionFlags) const;

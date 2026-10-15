@@ -14,6 +14,7 @@ class StretchedGaussianImpl : public StretchedGaussian
                         StretchedGaussianImpl();
                         StretchedGaussianImpl(const StretchedGaussianImpl& other);
     ~StretchedGaussianImpl() override;
+    StretchedGaussianImpl& operator=(const StretchedGaussianImpl&) = default;
 
     GridDefinition*     createGridDefinition() const override;
 

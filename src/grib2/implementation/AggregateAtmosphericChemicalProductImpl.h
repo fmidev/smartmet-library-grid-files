@@ -15,6 +15,7 @@ class AggregateAtmosphericChemicalProductImpl : public AggregateAtmosphericChemi
                         AggregateAtmosphericChemicalProductImpl();
                         AggregateAtmosphericChemicalProductImpl(const AggregateAtmosphericChemicalProductImpl& other);
     ~AggregateAtmosphericChemicalProductImpl() override;
+    AggregateAtmosphericChemicalProductImpl& operator=(const AggregateAtmosphericChemicalProductImpl&) = default;
 
     ProductDefinition*  createProductDefinition() const override;
 

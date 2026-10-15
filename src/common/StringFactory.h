@@ -27,6 +27,8 @@ class StringFactory
   public:
                   StringFactory();
                   ~StringFactory();
+                  StringFactory(const StringFactory&) = delete;
+                  StringFactory& operator=(const StringFactory&) = delete;
 
     /*! \brief Intern a string and return its numeric identifier.
      *  \param[in] str  C-string to intern.

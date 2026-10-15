@@ -19,6 +19,8 @@ class FileWriter : public DataWriter
   public:
                 FileWriter();
     ~FileWriter() override;
+    FileWriter(const FileWriter&) = delete;
+    FileWriter& operator=(const FileWriter&) = delete;
 
     /*! \brief Open (or create) a file for writing.
      *  \param[in] _filename  Path to the output file. */

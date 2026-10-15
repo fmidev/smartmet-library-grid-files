@@ -13,6 +13,7 @@ class StretchedLatLonImpl : public StretchedLatLon
                         StretchedLatLonImpl();
                         StretchedLatLonImpl(const StretchedLatLonImpl& other);
     ~StretchedLatLonImpl() override;
+    StretchedLatLonImpl& operator=(const StretchedLatLonImpl&) = default;
 
     GridDefinition*     createGridDefinition() const override;
 

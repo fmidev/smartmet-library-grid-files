@@ -14,6 +14,7 @@ class SphericalHarmonicsDataRepresentationImpl : public SphericalHarmonicsDataRe
               SphericalHarmonicsDataRepresentationImpl();
               SphericalHarmonicsDataRepresentationImpl(const SphericalHarmonicsDataRepresentationImpl& other);
     ~SphericalHarmonicsDataRepresentationImpl() override;
+    SphericalHarmonicsDataRepresentationImpl& operator=(const SphericalHarmonicsDataRepresentationImpl&) = default;
 
     RepresentationDefinition* createRepresentationDefinition() const override;
 

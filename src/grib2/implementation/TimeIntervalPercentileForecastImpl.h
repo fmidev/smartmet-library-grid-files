@@ -15,6 +15,7 @@ class TimeIntervalPercentileForecastImpl : public TimeIntervalPercentileForecast
                         TimeIntervalPercentileForecastImpl();
                         TimeIntervalPercentileForecastImpl(const TimeIntervalPercentileForecastImpl& other);
     ~TimeIntervalPercentileForecastImpl() override;
+    TimeIntervalPercentileForecastImpl& operator=(const TimeIntervalPercentileForecastImpl&) = default;
 
     ProductDefinition*  createProductDefinition() const override;
 

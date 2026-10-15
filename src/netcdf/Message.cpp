@@ -1646,6 +1646,8 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
         return mScaleFactor*(T::ParamValue)(val) + mBaseValue;
       }
       break;
+      default:
+        break;
     }
     return ParamValueMissing;
   }

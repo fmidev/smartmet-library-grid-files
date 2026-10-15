@@ -246,11 +246,11 @@ std::string LambertConformalImpl::getGridGeometryString() const
     if ((scanningMode & 0x40) == 0)
     {
       dy = -dy;
-      p += sprintf(p,"-y");
+      sprintf(p,"-y");
     }
     else
     {
-      p += sprintf(p,"+y");
+      sprintf(p,"+y");
     }
 
 
@@ -561,6 +561,8 @@ bool LambertConformalImpl::getProperty(uint propertyId,Int64& value)
         value = getLongitudeOfSouthernPole();
         return true;
 
+      default:
+        break;
     }
 
     return GridDefinition::getProperty(propertyId,value);
@@ -645,6 +647,8 @@ bool LambertConformalImpl::setProperty(uint propertyId,Int64 value)
           setLongitudeOfSouthernPole(value+360000);
         return true;
 
+      default:
+        break;
     }
 
     return GridDefinition::setProperty(propertyId,value);

@@ -34,6 +34,8 @@ class DataFetcher_network : public DataFetcher
   public:
                   DataFetcher_network();
     ~DataFetcher_network() override;
+    DataFetcher_network(const DataFetcher_network&) = delete;
+    DataFetcher_network& operator=(const DataFetcher_network&) = delete;
 
     //! \overload DataFetcher::getData()
     int           getData(uint serverType,uint protocol,const char *server,const char *filename,std::size_t filePosition,int dataSize,char *dataPtr) override;

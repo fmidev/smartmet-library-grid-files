@@ -14,8 +14,8 @@ struct MessageInfo
 {
   char*              mDataPtr = nullptr;
   uint               mDataSize = 0;
-  uint               mDataType;
-  uint               mBitsPerValue;
+  uint               mDataType = 0;
+  uint               mBitsPerValue = 0;
   time_t             mForecastTimeT = 0;
   uint               mColumns = 0;
   uint               mRows = 0;
@@ -41,6 +41,7 @@ class Message : public GRID::Message
                         Message(const Message& message);
                         Message(GRID::GridFile *gridFile,GeoTiffFile *geoTiffFile,T::MessageIndex messageIndex,const GeoTiff::MessageInfo& messageInfo);
     ~Message() override;
+    Message& operator=(const Message&) = default;
 
     void                getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const override;
     T::FileId           getFileId() const override;

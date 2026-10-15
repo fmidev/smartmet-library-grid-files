@@ -52,6 +52,7 @@ class RepresentationSection : public GRID::MessageSection
                     RepresentationSection();
                     RepresentationSection(const RepresentationSection& other);
     ~RepresentationSection() override;
+    RepresentationSection& operator=(const RepresentationSection&) = default;
 
     // ### Common methods for all message sections
 

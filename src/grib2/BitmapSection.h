@@ -45,6 +45,7 @@ class BitmapSection : public GRID::MessageSection
                     BitmapSection();
                     BitmapSection(const BitmapSection& other);
     ~BitmapSection() override;
+    BitmapSection& operator=(const BitmapSection&) = delete;
 
     // ### Common methods for all message sections
 

@@ -15,6 +15,7 @@ class DeprecatedSatelliteProductImpl : public DeprecatedSatelliteProduct
                         DeprecatedSatelliteProductImpl();
                         DeprecatedSatelliteProductImpl(const DeprecatedSatelliteProductImpl& other);
     ~DeprecatedSatelliteProductImpl() override;
+    DeprecatedSatelliteProductImpl& operator=(const DeprecatedSatelliteProductImpl&) = default;
 
     ProductDefinition*  createProductDefinition() const override;
 

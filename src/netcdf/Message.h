@@ -15,28 +15,28 @@ namespace NetCDF
  *  Populated by NetCdfFile::createMessageInfoList() and passed to the Message constructor. */
 struct MessageInfo
 {
-  std::uint64_t      mFilePosition;          //!< Byte offset of the variable data in the NetCDF file.
-  uint               mMessageSize;           //!< Size of the encoded data block in bytes.
-  T::FileType        mMessageType;           //!< File type tag (always NetCDF for this struct).
-  uint               mColumns;              //!< Number of grid columns (longitude dimension).
-  uint               mRows;                 //!< Number of grid rows (latitude dimension).
-  uint               mRowMultiplier;        //!< Sub-sampling stride in the row direction.
-  uint               mColumnMultiplier;     //!< Sub-sampling stride in the column direction.
-  uint               mLevels;               //!< Number of vertical levels in the variable.
-  uchar              mDataType;             //!< NetCDF data type code for the stored values.
-  double             mBaseValue;            //!< add_offset attribute value.
-  double             mScaleFactor;          //!< scale_factor attribute value.
+  std::uint64_t      mFilePosition = 0;          //!< Byte offset of the variable data in the NetCDF file.
+  uint               mMessageSize = 0;           //!< Size of the encoded data block in bytes.
+  T::FileType        mMessageType = 0;           //!< File type tag (always NetCDF for this struct).
+  uint               mColumns = 0;              //!< Number of grid columns (longitude dimension).
+  uint               mRows = 0;                 //!< Number of grid rows (latitude dimension).
+  uint               mRowMultiplier = 0;        //!< Sub-sampling stride in the row direction.
+  uint               mColumnMultiplier = 0;     //!< Sub-sampling stride in the column direction.
+  uint               mLevels = 0;               //!< Number of vertical levels in the variable.
+  uchar              mDataType = 0;             //!< NetCDF data type code for the stored values.
+  double             mBaseValue = 0.0;            //!< add_offset attribute value.
+  double             mScaleFactor = 0.0;          //!< scale_factor attribute value.
   std::string        mParameterName;        //!< NetCDF variable long_name or name.
   std::string        mParameterStandardName;//!< CF standard_name of the variable.
-  T::ParamLevelId    mParameterLevelId;     //!< FMI level type identifier.
-  T::ParamLevel      mParameterLevel;       //!< Level value (pressure, height, etc.).
+  T::ParamLevelId    mParameterLevelId = 0;     //!< FMI level type identifier.
+  T::ParamLevel      mParameterLevel = 0;       //!< Level value (pressure, height, etc.).
   std::string        mParameterUnits;       //!< CF units attribute string.
-  T::ForecastType    mForecastType;         //!< Forecast type code.
-  T::ForecastNumber  mForecastNumber;       //!< Ensemble member or perturbation number.
-  time_t             mForecastTimeT;        //!< Forecast valid time as a Unix timestamp.
-  T::ParamValue      mMissingValue;         //!< Fill/missing value used for undefined grid points.
-  T::GridProjection  mProjectionId;         //!< Grid projection type.
-  int                mGeometryId;           //!< FMI geometry identifier.
+  T::ForecastType    mForecastType = 0;         //!< Forecast type code.
+  T::ForecastNumber  mForecastNumber = 0;       //!< Ensemble member or perturbation number.
+  time_t             mForecastTimeT = 0;        //!< Forecast valid time as a Unix timestamp.
+  T::ParamValue      mMissingValue = 0.0F;         //!< Fill/missing value used for undefined grid points.
+  T::GridProjection  mProjectionId = 0;         //!< Grid projection type.
+  int                mGeometryId = 0;           //!< FMI geometry identifier.
 };
 
 using MessageInfoVec = std::vector<MessageInfo>;
@@ -62,6 +62,7 @@ class Message : public GRID::Message
                         Message(const Message& message);
                         Message(GRID::GridFile *gridFile,NetCdfFile *netCdfFile,T::MessageIndex messageIndex,const NetCDF::MessageInfo& messageInfo);
     ~Message() override;
+    Message& operator=(const Message&) = default;
 
     void                getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const override;
     T::FileId           getFileId() const override;

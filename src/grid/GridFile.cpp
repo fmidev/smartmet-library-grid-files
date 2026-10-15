@@ -156,7 +156,7 @@ GridFile::~GridFile()
 
     delete mGeoTiffFile;
 
-    if (isMemoryMapped())
+    if (GridFile::isMemoryMapped())
     {
       memoryMapper.unmap(mMemoryMapInfo);
     }
@@ -997,6 +997,8 @@ Message* GridFile::newMessage(T::FileType fileType)
         addMessage(msg);
         return msg;
       }
+      default:
+        break;
     }
     return nullptr;
   }
@@ -1355,6 +1357,8 @@ GRID::Message* GridFile::createMessage(T::MessageIndex messageIndex,const GRID::
         mMessages.insert(std::pair<uint,Message*>(messageIndex,msg));
         return msg;
       }
+      default:
+        break;
     }
     return nullptr;
   }
@@ -1552,12 +1556,11 @@ void GridFile::read(MemoryReader& memoryReader,uint maxMessages)
     auto gribs = searchMessageLocations(memoryReader,maxMessages);
 
     auto *startAddr = memoryReader.getStartPtr();
-    auto *endAddr = memoryReader.getEndPtr();
-
     uint sz = gribs.size();
     for (uint i = 0; i < sz; i++)
     {
       auto *ptr = reinterpret_cast<unsigned char*>(startAddr + gribs[i].second);
+      unsigned char *endAddr = nullptr;
       if ((i+1) < gribs.size())
         endAddr = reinterpret_cast<unsigned char*>(startAddr + gribs[i+1].second);
       else
@@ -1644,6 +1647,8 @@ void GridFile::read(MemoryReader& memoryReader,uint maxMessages)
           }
         }
         break;
+        default:
+          break;
       }
     }
   }

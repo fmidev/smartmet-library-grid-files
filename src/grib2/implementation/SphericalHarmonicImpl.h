@@ -14,6 +14,7 @@ class SphericalHarmonicImpl : public SphericalHarmonic
                         SphericalHarmonicImpl();
                         SphericalHarmonicImpl(const SphericalHarmonicImpl& other);
     ~SphericalHarmonicImpl() override;
+    SphericalHarmonicImpl& operator=(const SphericalHarmonicImpl&) = default;
 
     GridDefinition*     createGridDefinition() const override;
 

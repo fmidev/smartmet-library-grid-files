@@ -1481,8 +1481,7 @@ void Message::read(MemoryReader& memoryReader)
           begin = true;
         }
       }
-      else
-      if (memoryReader.peek_string("7777"))
+      else if (memoryReader.peek_string("7777"))
       {
         break;
       }
@@ -3629,6 +3628,8 @@ T::ForecastType Message::getForecastType() const
       //case 6: // Processed satellite observations
       //case 7: // Processed radar observations
       //case 8: // Event probability
+      default:
+        break;
     }
 
     return 0;

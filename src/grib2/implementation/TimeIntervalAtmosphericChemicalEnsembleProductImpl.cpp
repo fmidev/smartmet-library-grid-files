@@ -186,6 +186,8 @@ T::TimeString TimeIntervalAtmosphericChemicalEnsembleProductImpl::countForecastS
       case 13: //  s Second
         dt = Fmi::TimeDuration(0,0,forecastTime);
         break;
+      default:
+        break;
     }
 
     if (ft >= 0)

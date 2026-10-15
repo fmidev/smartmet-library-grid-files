@@ -15,6 +15,7 @@ class TimeIntervalProbabilityForecastImpl : public TimeIntervalProbabilityForeca
                         TimeIntervalProbabilityForecastImpl();
                         TimeIntervalProbabilityForecastImpl(const TimeIntervalProbabilityForecastImpl& other);
     ~TimeIntervalProbabilityForecastImpl() override;
+    TimeIntervalProbabilityForecastImpl& operator=(const TimeIntervalProbabilityForecastImpl&) = default;
 
     ProductDefinition*  createProductDefinition() const override;
 

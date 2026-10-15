@@ -15,6 +15,7 @@ class TimeIntervalEnsembleClusterDerivedForecastImpl : public TimeIntervalEnsemb
                         TimeIntervalEnsembleClusterDerivedForecastImpl();
                         TimeIntervalEnsembleClusterDerivedForecastImpl(const TimeIntervalEnsembleClusterDerivedForecastImpl& other);
     ~TimeIntervalEnsembleClusterDerivedForecastImpl() override;
+    TimeIntervalEnsembleClusterDerivedForecastImpl& operator=(const TimeIntervalEnsembleClusterDerivedForecastImpl&) = default;
 
     ProductDefinition*  createProductDefinition() const override;
 

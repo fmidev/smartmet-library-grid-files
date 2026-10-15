@@ -15,6 +15,7 @@ class AggregateAerosolProductImpl : public AggregateAerosolProduct
                         AggregateAerosolProductImpl();
                         AggregateAerosolProductImpl(const AggregateAerosolProductImpl& other);
     ~AggregateAerosolProductImpl() override;
+    AggregateAerosolProductImpl& operator=(const AggregateAerosolProductImpl&) = default;
 
     ProductDefinition*  createProductDefinition() const override;
 

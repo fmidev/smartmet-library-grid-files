@@ -14,6 +14,7 @@ class FloatingPointGridDataRepresentationImpl : public FloatingPointGridDataRepr
               FloatingPointGridDataRepresentationImpl();
               FloatingPointGridDataRepresentationImpl(const FloatingPointGridDataRepresentationImpl& other);
     ~FloatingPointGridDataRepresentationImpl() override;
+    FloatingPointGridDataRepresentationImpl& operator=(const FloatingPointGridDataRepresentationImpl&) = default;
 
     RepresentationDefinition* createRepresentationDefinition() const override;
 

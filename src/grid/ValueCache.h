@@ -144,6 +144,8 @@ class ValueCacheEntry
         }
       }
     }
+    ValueCacheEntry(const ValueCacheEntry&) = delete;
+    ValueCacheEntry& operator=(const ValueCacheEntry&) = delete;
 
     uint               mKey;           //!< Opaque key assigned when the entry was inserted
     std::atomic<UInt64> mAccessCounter; //!< Logical access time; used for LRU eviction (updated under the shared read lock, hence atomic)
@@ -173,6 +175,8 @@ class ValueCache
   public:
                 ValueCache();
     virtual     ~ValueCache();
+    ValueCache(const ValueCache&) = delete;
+    ValueCache& operator=(const ValueCache&) = delete;
 
     /*! \brief Store a decoded grid value vector.
      *  \param[in] values  Values to cache.
@@ -230,7 +234,7 @@ class ValueCache
     uint        getEmpty();
 
 
-    uint        mMaxLength;          //!< Maximum number of entries allowed in the cache
+    uint        mMaxLength = 0;          //!< Maximum number of entries allowed in the cache
     UInt64      mMaxSize;            //!< Maximum total size of cached data in megabytes
     uint        mKeyCounter;         //!< Monotonically increasing counter used to generate cache keys
     std::atomic<UInt64> mAccessCounter; //!< Global access clock; incremented on each cache hit (bumped under the shared read lock, hence atomic)

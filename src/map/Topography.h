@@ -32,6 +32,8 @@ class Topography
   public:
                 Topography();
     virtual     ~Topography();
+    Topography(const Topography&) = delete;
+    Topography& operator=(const Topography&) = delete;
 
     void        init(const char* configFile,bool initLandSeaMask,bool initLandShading,bool initSeaShading);
 

@@ -33,6 +33,10 @@ class ThreadLock
     {
       pthread_mutex_destroy(&threadLock);
     }
+    /*! \brief A copy gets a mutex of its own: a mutex cannot be copied. */
+    ThreadLock(const ThreadLock& /* theOther */) : ThreadLock() {}
+    /*! \brief Assignment keeps this object's own mutex. */
+    ThreadLock& operator=(const ThreadLock& /* theOther */) { return *this; }
 
 
     /*! \brief Acquire the mutex, blocking until it is available. */
@@ -59,8 +63,8 @@ class ThreadLock
 
   protected:
 
-    pthread_mutexattr_t attr;    //!< Mutex attribute (error-check mode)
-    pthread_mutex_t threadLock;  //!< Underlying POSIX mutex
+    pthread_mutexattr_t attr{};    //!< Mutex attribute (error-check mode)
+    pthread_mutex_t threadLock{};  //!< Underlying POSIX mutex
 };
 
 

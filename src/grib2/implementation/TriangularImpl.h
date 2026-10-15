@@ -14,6 +14,7 @@ class TriangularImpl : public Triangular
                         TriangularImpl();
                         TriangularImpl(const TriangularImpl& other);
     ~TriangularImpl() override;
+    TriangularImpl& operator=(const TriangularImpl&) = default;
 
     GridDefinition*     createGridDefinition() const override;
 

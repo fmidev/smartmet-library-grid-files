@@ -15,6 +15,7 @@ class GridDataRepresentationImpl : public GridDataRepresentation
               GridDataRepresentationImpl();
               GridDataRepresentationImpl(const GridDataRepresentationImpl& other);
     ~GridDataRepresentationImpl() override;
+    GridDataRepresentationImpl& operator=(const GridDataRepresentationImpl&) = default;
 
     RepresentationDefinition* createRepresentationDefinition() const override;
 
@@ -28,18 +29,18 @@ class GridDataRepresentationImpl : public GridDataRepresentation
     void      init(Message *message) const;
 
 
-    mutable T::Data_ptr     mData;
-    mutable std::size_t     mDataSize;
-    mutable std::int16_t    mBinaryScaleFactor;
-    mutable std::uint16_t   mDecimalScaleFactor;
-    mutable std::float_t    mReferenceValue;
-    mutable std::uint8_t    mBitsPerValue;
-    mutable double          mEfac;
-    mutable double          mDfac;
-    mutable double          mRDfac;
-    mutable double          mEDfac;
-    mutable bool            mInitialized;
-    mutable T::Data_ptr     mBitmap;
+    mutable T::Data_ptr     mData = nullptr;
+    mutable std::size_t     mDataSize = 0;
+    mutable std::int16_t    mBinaryScaleFactor = 0;
+    mutable std::uint16_t   mDecimalScaleFactor = 0;
+    mutable std::float_t    mReferenceValue = 0.0F;
+    mutable std::uint8_t    mBitsPerValue = 0;
+    mutable double          mEfac = 0.0;
+    mutable double          mDfac = 0.0;
+    mutable double          mRDfac = 0.0;
+    mutable double          mEDfac = 0.0;
+    mutable bool            mInitialized = false;
+    mutable T::Data_ptr     mBitmap = nullptr;
 
 
 };

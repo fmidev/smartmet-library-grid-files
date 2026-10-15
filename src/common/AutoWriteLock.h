@@ -29,6 +29,8 @@ class AutoWriteLock
       if (mModificationLock)
         mModificationLock->writeUnlock();
     }
+    AutoWriteLock(const AutoWriteLock&) = delete;
+    AutoWriteLock& operator=(const AutoWriteLock&) = delete;
 
   protected:
 

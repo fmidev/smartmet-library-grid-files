@@ -22,6 +22,8 @@ class FmiGeometryGroupDef
   public:
                       FmiGeometryGroupDef();
     virtual           ~FmiGeometryGroupDef();
+    FmiGeometryGroupDef(const FmiGeometryGroupDef&) = default;
+    FmiGeometryGroupDef& operator=(const FmiGeometryGroupDef&) = default;
 
     /*! \brief Write a human-readable dump to \p stream (for debugging). */
     void              print(std::ostream& stream,uint level,uint optionFlags) const;

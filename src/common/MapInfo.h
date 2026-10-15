@@ -61,6 +61,7 @@ class MapInfo
       if (mappedFile)
         mappedFile->close();
     }
+    MapInfo& operator=(const MapInfo&) = delete;
 
   
 

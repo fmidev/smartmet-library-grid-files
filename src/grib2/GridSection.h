@@ -59,6 +59,7 @@ class GridSection : public GRID::MessageSection
                           GridSection();
                           GridSection(const GridSection& other);
     ~GridSection() override;
+    GridSection& operator=(const GridSection&) = default;
 
     // ### Common methods for all message sections
 

@@ -524,6 +524,8 @@ bool ProductSection::getProperty(uint propertyId,Int64& value) const
       case Property::ProductSection::ForecastNumber:
         value = mForecastNumber;
         return true;
+      default:
+        break;
     }
     return false;
   }
@@ -685,6 +687,8 @@ bool ProductSection::setProperty(uint propertyId,Int64 value)
       case Property::ProductSection::ForecastNumber:
         setForecastNumber(value);
         return true;
+      default:
+        break;
     }
     return false;
   }
@@ -792,6 +796,8 @@ void ProductSection::read(MemoryReader& memoryReader)
         case 0x32:
           memoryReader.setReadPosition(rPos + 49);
           mForecastNumber = memoryReader.read_uint8();
+          break;
+        default:
           break;
       }
 
@@ -1473,6 +1479,8 @@ T::TimeString ProductSection::getForecastTime() const
       case 6: // 30Y Normal (30 years)
       case 7: // C Century
         break;
+      default:
+        break;
     }
 
     T::TimeStamp tt = refTime;
@@ -1543,6 +1551,8 @@ T::TimeString ProductSection::getForecastTime() const
 
       case 124: // Accumulation of N uninitialized analyses, starting at the reference time, at intervals of P2.
         tt = refTime + dd*mP2;
+        break;
+      default:
         break;
     }
 

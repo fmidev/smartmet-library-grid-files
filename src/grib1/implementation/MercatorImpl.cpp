@@ -148,11 +148,11 @@ std::string MercatorImpl::getGridGeometryString() const
     if ((scanningMode & 0x40) == 0)
     {
       dy = -dy;
-      p += sprintf(p,"-y");
+      sprintf(p,"-y");
     }
     else
     {
-      p += sprintf(p,"+y");
+      sprintf(p,"+y");
     }
 
     sprintf(buf,"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;description",
@@ -440,6 +440,8 @@ bool MercatorImpl::getProperty(uint propertyId,Int64& value)
       case Property::GridSection::Mercator::DjInMetres:
         value = getDjInMetres();
         return true;
+      default:
+        break;
     }
 
     return GridDefinition::getProperty(propertyId,value);
@@ -486,6 +488,8 @@ bool MercatorImpl::setProperty(uint propertyId,Int64 value)
       case Property::GridSection::Mercator::DjInMetres:
         setDjInMetres(value);
         return true;
+      default:
+        break;
     }
 
     return GridDefinition::setProperty(propertyId,value);

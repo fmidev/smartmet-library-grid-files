@@ -23,6 +23,8 @@ class BitArrayReader
      *  \param[in] numberOfBits  Total number of readable bits. */
                BitArrayReader(const unsigned char *data,UInt64 numberOfBits);
     virtual    ~BitArrayReader();
+    BitArrayReader(const BitArrayReader&) = default;
+    BitArrayReader& operator=(const BitArrayReader&) = default;
 
     /*! \brief Return the total number of bits in the buffer. */
     UInt64     getNumberOfBits() const;

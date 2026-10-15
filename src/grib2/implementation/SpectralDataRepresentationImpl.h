@@ -14,6 +14,7 @@ class SpectralDataRepresentationImpl : public SpectralDataRepresentation
               SpectralDataRepresentationImpl();
               SpectralDataRepresentationImpl(const SpectralDataRepresentationImpl& other);
     ~SpectralDataRepresentationImpl() override;
+    SpectralDataRepresentationImpl& operator=(const SpectralDataRepresentationImpl&) = default;
 
     RepresentationDefinition* createRepresentationDefinition() const override;
 

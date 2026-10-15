@@ -41,6 +41,7 @@ class GridDefinition
                                 GridDefinition();
                                 GridDefinition(const GridDefinition& other);
     virtual                     ~GridDefinition();
+    GridDefinition& operator=(const GridDefinition&) = default;
 
     virtual T::Hash             countHash() const; // Do not call this, call getGridHash() instead.
     virtual GridDefinition*     createGridDefinition() const;

@@ -24,6 +24,7 @@ class SphericalHarmonicsSimplePacking : public DataDefinition
                     SphericalHarmonicsSimplePacking();
                     SphericalHarmonicsSimplePacking(const SphericalHarmonicsSimplePacking& other);
     ~SphericalHarmonicsSimplePacking() override;
+    SphericalHarmonicsSimplePacking& operator=(const SphericalHarmonicsSimplePacking&) = default;
 
     DataDefinition* createDataDefinition() const override;
     void            decodeValues(Message *message,T::ParamValue_vec& decodedValues) const override;

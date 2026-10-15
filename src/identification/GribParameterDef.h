@@ -21,6 +21,8 @@ class GribParameterDef
   public:
                     GribParameterDef();
     virtual         ~GribParameterDef();
+    GribParameterDef(const GribParameterDef&) = default;
+    GribParameterDef& operator=(const GribParameterDef&) = default;
 
     /*! \brief Write a human-readable dump to \p stream (for debugging). */
     virtual void    print(std::ostream& stream,uint level,uint optionFlags) const;

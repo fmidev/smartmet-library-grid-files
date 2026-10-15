@@ -24,6 +24,8 @@ class ShowFunction
      *  \param[in] _function  Function name (__FUNCTION__). */
                  ShowFunction(const char *_file,uint _line,const char *_function);
     virtual      ~ShowFunction(); //!< Log function exit with elapsed time
+    ShowFunction(const ShowFunction&) = delete;
+    ShowFunction& operator=(const ShowFunction&) = delete;
 
   protected:
 

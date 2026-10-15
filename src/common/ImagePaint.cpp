@@ -937,6 +937,8 @@ void ImagePaint::paintWkb(double _mpx,double _mpy,double _dx,double _dy,MemoryRe
         case 7:
           paintWkbGeometryCollection(_mpx,_mpy,_dx,_dy,_memoryReader);
           break;
+        default:
+          break;
       }
     }
   }

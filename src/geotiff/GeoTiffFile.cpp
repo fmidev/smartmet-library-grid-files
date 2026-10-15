@@ -76,8 +76,7 @@ void GeoTiffFile::read(MemoryReader& memoryReader,MessageInfoVec& messageInfoLis
     ushort byteOrder = memoryReader.read_uint16();
     if (byteOrder == 0x4949)
       memoryReader.setLittleEndian(true);
-    else
-    if (byteOrder == 0x4D4D)
+    else if (byteOrder == 0x4D4D)
       throw Fmi::Exception(BCP,"Big-endian geoTiffs not supported!",nullptr);
       //memoryReader.setLittleEndian(false);
     else
@@ -245,6 +244,8 @@ void GeoTiffFile::readIFD(MemoryReader& memoryReader,MessageInfoVec& messageInfo
         case Tag::YCbCrPositioning:
         case Tag::ReferenceBlackWhite:
         case Tag::Copyright:
+          break;
+        default:
           break;
       }
     }

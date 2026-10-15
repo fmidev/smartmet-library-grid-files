@@ -59,6 +59,7 @@ class Message : public GRID::Message
                         Message(GRID::GridFile *gridFile,T::MessageIndex messageIndex,const GRID::MessageInfo& messageInfo);
                         Message(const Message& other);
     ~Message() override;
+    Message& operator=(const Message&) = default;
 
     // ### Common methods for all message types
 

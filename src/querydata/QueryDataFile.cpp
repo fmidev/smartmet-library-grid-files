@@ -195,14 +195,14 @@ uint QueryDataFile::getGeometryId()
       if (w < 0)
         w += 360;
       const double h = area->TopLeftLatLon().Y() - area->BottomLeftLatLon().Y();
-      snprintf(buf,sizeof(buf),"%d;id;name;%u;%u;%.6f;%.6f;%.6f;%.6f;%s;description",
+      snprintf(buf,sizeof(buf),"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;description",
         T::GridProjectionValue::LatLon,cols,rows,area->BottomLeftLatLon().X(),area->BottomLeftLatLon().Y(),
         std::fabs(w/(cols-1)),std::fabs(h/(rows-1)),sm);
       exactString = buf;
 
       float dxx = (area->BottomRightLatLon().X() - area->BottomLeftLatLon().X()) / (float)(cols);
       float dyy = (area->TopLeftLatLon().Y() - area->BottomLeftLatLon().Y()) / (float)(rows-1);
-      snprintf(buf,sizeof(buf),"%d;id;name;%u;%u;%.6f;%.6f;%.6f;%.6f;%s;description",
+      snprintf(buf,sizeof(buf),"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;description",
         T::GridProjectionValue::LatLon,cols,rows,area->BottomLeftLatLon().X(),area->BottomLeftLatLon().Y(),
         fabs(dxx),fabs(dyy),sm);
       legacyString = buf;
@@ -222,14 +222,14 @@ uint QueryDataFile::getGeometryId()
         latlon_to_rotatedLatlon(area->TopRightLatLon().Y(),area->TopRightLatLon().X(),part1[1],part1[2],rotLat2,rotLon2);
 
         float angle = 0;
-        snprintf(buf,sizeof(buf),"%d;id;name;%u;%u;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;%.6f;description",
+        snprintf(buf,sizeof(buf),"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;%.6f;description",
             T::GridProjectionValue::RotatedLatLon,cols,rows,rotLon1,rotLat1,
             std::fabs((rotLon2 - rotLon1) / (cols-1)),std::fabs((rotLat2 - rotLat1) / (rows-1)),sm,part1[2],part1[1],angle);
         exactString = buf;
 
         float dxx = (rotLon2 - rotLon1) / (float)(cols);
         float dyy = (rotLat2 - rotLat1) / (float)(rows-1);
-        snprintf(buf,sizeof(buf),"%d;id;name;%u;%u;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;%.6f;description",
+        snprintf(buf,sizeof(buf),"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;%.6f;description",
             T::GridProjectionValue::RotatedLatLon,cols,rows,rotLon1,rotLat1,fabs(dxx),fabs(dyy),sm,part1[2],part1[1],angle);
         legacyString = buf;
       }
@@ -237,6 +237,8 @@ uint QueryDataFile::getGeometryId()
     break;
 
     case kNFmiMercatorArea:
+      break;
+    default:
       break;
   }
 
@@ -398,7 +400,7 @@ void QueryDataFile::read(MessageInfoVec& messageInfoList)
           NFmiMetTime mt = mFastQueryInfo->ValidTime();
           time_t utcTime = utcTimeToTimeT(mt.GetYear(),mt.GetMonth(),mt.GetDay(),mt.GetHour(),mt.GetMin(),mt.GetSec());
 
-          MessageInfo info;
+          MessageInfo info{};
           info.mColumns = cols;
           info.mRows = rows;
           info.mParameterIndex = mFastQueryInfo->ParamIndex();

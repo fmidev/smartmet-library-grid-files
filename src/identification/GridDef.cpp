@@ -3089,15 +3089,13 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
           if (sr.importFromURN(urn.c_str()) != OGRERR_NONE)
             throw Fmi::Exception(BCP, "Invalid urn '" + std::string(urnStr) + "'!");
         }
-        else
-        if (proj4Str)
+        else if (proj4Str)
         {
           OGRErr err = sr.SetFromUserInput(proj4Str);
           if (err != OGRERR_NONE)
             throw Fmi::Exception(BCP, "Invalid proj4 '" + std::string(proj4Str) + "'!");
         }
-        else
-        if (crsStr)
+        else if (crsStr)
         {
           OGRErr err = sr.SetFromUserInput(crsStr);
           if (err != OGRERR_NONE)
@@ -3114,8 +3112,7 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
 
         if (bboxStr)
           cc = aa;
-        else
-        if (llboxStr)
+        else if (llboxStr)
         {
           reverseTransformation = make_ptr(OGRCreateCoordinateTransformation(&sr_latlon,&sr));
           if (not reverseTransformation)
@@ -3497,14 +3494,12 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
           if (sr.importFromURN(urn.c_str()) != OGRERR_NONE)
             throw Fmi::Exception(BCP, "Invalid urn '" + std::string(urnStr) + "'!");
         }
-        else
-        if (crsStr)
+        else if (crsStr)
         {
           if (sr.SetFromUserInput(crsStr) != OGRERR_NONE)
             throw Fmi::Exception(BCP, "Invalid crs '" + std::string(crsStr) + "'!");
         }
-        else
-        if (proj4Str)
+        else if (proj4Str)
         {
           OGRErr err = sr.SetFromUserInput(proj4Str);
           if (err != OGRERR_NONE)
@@ -3521,8 +3516,7 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
 
         if (bboxStr)
           cc = aa;
-        else
-        if (llboxStr)
+        else if (llboxStr)
         {
           reverseTransformation = make_ptr(OGRCreateCoordinateTransformation(&sr_latlon,&sr));
           if (not reverseTransformation)
@@ -4408,22 +4402,19 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
             lastLatitude = latitude + jSpan;
             scanningMode1.setScanningMode(0x40);
           }
-          else
-          if (strcasecmp(scanningMode,"-x+y") == 0)
+          else if (strcasecmp(scanningMode,"-x+y") == 0)
           {
             lastLongitude = longitude - iSpan;
             lastLatitude = latitude + jSpan;
             scanningMode1.setScanningMode(0x80+0x40);
           }
-          else
-          if (strcasecmp(scanningMode,"+x-y") == 0)
+          else if (strcasecmp(scanningMode,"+x-y") == 0)
           {
             lastLongitude = longitude + iSpan;
             lastLatitude = latitude - jSpan;
             scanningMode1.setScanningMode(0);
           }
-          else
-          if (strcasecmp(scanningMode,"-x-y") == 0)
+          else if (strcasecmp(scanningMode,"-x-y") == 0)
           {
             lastLongitude = longitude - iSpan;
             lastLatitude = latitude - jSpan;
@@ -4502,22 +4493,19 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
             lastLatitude = latitude + jSpan;
             scanningMode1.setScanningMode(0x40);
           }
-          else
-          if (strcasecmp(scanningMode,"-x+y") == 0)
+          else if (strcasecmp(scanningMode,"-x+y") == 0)
           {
             lastLongitude = longitude - iSpan;
             lastLatitude = latitude + jSpan;
             scanningMode1.setScanningMode(0x80+0x40);
           }
-          else
-          if (strcasecmp(scanningMode,"+x-y") == 0)
+          else if (strcasecmp(scanningMode,"+x-y") == 0)
           {
             lastLongitude = longitude + iSpan;
             lastLatitude = latitude - jSpan;
             scanningMode1.setScanningMode(0);
           }
-          else
-          if (strcasecmp(scanningMode,"-x-y") == 0)
+          else if (strcasecmp(scanningMode,"-x-y") == 0)
           {
             lastLongitude = longitude - iSpan;
             lastLatitude = latitude - jSpan;
@@ -4601,22 +4589,19 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
             lastLatitude = latitude + nj*jInc - jInc;
             scanningMode1.setScanningMode(0x40);
           }
-          else
-          if (strcasecmp(scanningMode,"-x+y") == 0)
+          else if (strcasecmp(scanningMode,"-x+y") == 0)
           {
             lastLongitude = longitude - ni*iInc + iInc;
             lastLatitude = latitude + nj*jInc - jInc;
             scanningMode1.setScanningMode(0x80+0x40);
           }
-          else
-          if (strcasecmp(scanningMode,"+x-y") == 0)
+          else if (strcasecmp(scanningMode,"+x-y") == 0)
           {
             lastLongitude = longitude + ni*iInc - iInc;
             lastLatitude = latitude - nj*jInc + jInc;
             scanningMode1.setScanningMode(0);
           }
-          else
-          if (strcasecmp(scanningMode,"-x-y") == 0)
+          else if (strcasecmp(scanningMode,"-x-y") == 0)
           {
             lastLongitude = longitude - ni*iInc + iInc;
             lastLatitude = latitude - nj*jInc + jInc;
@@ -4682,14 +4667,11 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
 
           if (strcasecmp(scanningMode,"+x+y") == 0)
             scanningMode1.setScanningMode(0x40);
-          else
-          if (strcasecmp(scanningMode,"-x+y") == 0)
+          else if (strcasecmp(scanningMode,"-x+y") == 0)
             scanningMode1.setScanningMode(0x80+0x40);
-          else
-          if (strcasecmp(scanningMode,"+x-y") == 0)
+          else if (strcasecmp(scanningMode,"+x-y") == 0)
             scanningMode1.setScanningMode(0);
-          else
-          if (strcasecmp(scanningMode,"-x-y") == 0)
+          else if (strcasecmp(scanningMode,"-x-y") == 0)
             scanningMode1.setScanningMode(0x80);
 
           def1->setScanningMode(scanningMode1);
@@ -4748,14 +4730,11 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
 
           if (strcasecmp(scanningMode,"+x+y") == 0)
              scanningMode1.setScanningMode(0x40);
-          else
-          if (strcasecmp(scanningMode,"-x+y") == 0)
+          else if (strcasecmp(scanningMode,"-x+y") == 0)
             scanningMode1.setScanningMode(0x80+0x40);
-          else
-          if (strcasecmp(scanningMode,"+x-y") == 0)
+          else if (strcasecmp(scanningMode,"+x-y") == 0)
             scanningMode1.setScanningMode(0);
-          else
-          if (strcasecmp(scanningMode,"-x-y") == 0)
+          else if (strcasecmp(scanningMode,"-x-y") == 0)
             scanningMode1.setScanningMode(0x80);
 
           def1->setScanningMode(scanningMode1);
@@ -4853,6 +4832,8 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
 
         case T::GridProjectionValue::MillersCylindricalProjection:
           break;
+        default:
+          break;
       }
     }
     return nullptr;
@@ -4946,22 +4927,19 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
             lastLatitude = latitude + nj*jInc - jInc;
             scanningMode2.setScanningMode(0x40);
           }
-          else
-          if (strcasecmp(scanningMode,"-x+y") == 0)
+          else if (strcasecmp(scanningMode,"-x+y") == 0)
           {
             lastLongitude = longitude - (ni*iInc - iInc);
             lastLatitude = latitude + nj*jInc - jInc;
             scanningMode2.setScanningMode(0x80+0x40);
           }
-          else
-          if (strcasecmp(scanningMode,"+x-y") == 0)
+          else if (strcasecmp(scanningMode,"+x-y") == 0)
           {
             lastLongitude = longitude + ni*iInc - iInc;
             lastLatitude = latitude - (nj*jInc - jInc);
             scanningMode2.setScanningMode(0);
           }
-          else
-          if (strcasecmp(scanningMode,"-x-y") == 0)
+          else if (strcasecmp(scanningMode,"-x-y") == 0)
           {
             lastLongitude = longitude - (ni*iInc - iInc);
             lastLatitude = latitude - (nj*jInc - jInc);
@@ -5035,18 +5013,15 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           {
             scanningMode2.setScanningMode(0x40);
           }
-          else
-          if (strcasecmp(scanningMode,"-x+y") == 0)
+          else if (strcasecmp(scanningMode,"-x+y") == 0)
           {
             scanningMode2.setScanningMode(0x80+0x40);
           }
-          else
-          if (strcasecmp(scanningMode,"+x-y") == 0)
+          else if (strcasecmp(scanningMode,"+x-y") == 0)
           {
             scanningMode2.setScanningMode(0);
           }
-          else
-          if (strcasecmp(scanningMode,"-x-y") == 0)
+          else if (strcasecmp(scanningMode,"-x-y") == 0)
           {
             scanningMode2.setScanningMode(0x80);
           }
@@ -5138,14 +5113,11 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
 
           if (strcasecmp(scanningMode,"+x+y") == 0)
             scanningMode2.setScanningMode(0x40);
-          else
-          if (strcasecmp(scanningMode,"-x+y") == 0)
+          else if (strcasecmp(scanningMode,"-x+y") == 0)
             scanningMode2.setScanningMode(0x80+0x40);
-          else
-          if (strcasecmp(scanningMode,"+x-y") == 0)
+          else if (strcasecmp(scanningMode,"+x-y") == 0)
             scanningMode2.setScanningMode(0);
-          else
-          if (strcasecmp(scanningMode,"-x-y") == 0)
+          else if (strcasecmp(scanningMode,"-x-y") == 0)
             scanningMode2.setScanningMode(0x80);
 
           def2->setScanningMode(scanningMode2);
@@ -5221,14 +5193,11 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
 
           if (strcasecmp(scanningMode,"+x+y") == 0)
             scanningMode2.setScanningMode(0x40);
-          else
-          if (strcasecmp(scanningMode,"-x+y") == 0)
+          else if (strcasecmp(scanningMode,"-x+y") == 0)
             scanningMode2.setScanningMode(0x80+0x40);
-          else
-          if (strcasecmp(scanningMode,"+x-y") == 0)
+          else if (strcasecmp(scanningMode,"+x-y") == 0)
             scanningMode2.setScanningMode(0);
-          else
-          if (strcasecmp(scanningMode,"-x-y") == 0)
+          else if (strcasecmp(scanningMode,"-x-y") == 0)
             scanningMode2.setScanningMode(0x80);
 
           def2->setScanningMode(scanningMode2);
@@ -5295,14 +5264,11 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
 
           if (strcasecmp(scanningMode,"+x+y") == 0)
             scanningMode2.setScanningMode(0x40);
-          else
-          if (strcasecmp(scanningMode,"-x+y") == 0)
+          else if (strcasecmp(scanningMode,"-x+y") == 0)
             scanningMode2.setScanningMode(0x80+0x40);
-          else
-          if (strcasecmp(scanningMode,"+x-y") == 0)
+          else if (strcasecmp(scanningMode,"+x-y") == 0)
             scanningMode2.setScanningMode(0);
-          else
-          if (strcasecmp(scanningMode,"-x-y") == 0)
+          else if (strcasecmp(scanningMode,"-x-y") == 0)
             scanningMode2.setScanningMode(0x80);
 
           def2->setScanningMode(scanningMode2);
@@ -5417,14 +5383,11 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
 
           if (strcasecmp(scanningMode,"+x+y") == 0)
             scanningMode2.setScanningMode(0x40);
-          else
-          if (strcasecmp(scanningMode,"-x+y") == 0)
+          else if (strcasecmp(scanningMode,"-x+y") == 0)
             scanningMode2.setScanningMode(0x80+0x40);
-          else
-          if (strcasecmp(scanningMode,"+x-y") == 0)
+          else if (strcasecmp(scanningMode,"+x-y") == 0)
             scanningMode2.setScanningMode(0);
-          else
-          if (strcasecmp(scanningMode,"-x-y") == 0)
+          else if (strcasecmp(scanningMode,"-x-y") == 0)
             scanningMode2.setScanningMode(0x80);
 
           def2->setScanningMode(scanningMode2);
@@ -5470,6 +5433,8 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           break;
 
         case T::GridProjectionValue::MillersCylindricalProjection:
+          break;
+        default:
           break;
       }
     }

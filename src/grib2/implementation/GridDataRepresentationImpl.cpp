@@ -213,6 +213,8 @@ bool GridDataRepresentationImpl::getValueByIndex(Message *message,uint index,T::
         case 4:
           X = read_uint32(mData,mDataSize,index * b);
           break;
+        default:
+          break;
       }
     }
 
@@ -460,6 +462,8 @@ void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec
             }
           }
           break;
+        default:
+          break;
       }
     }
 
@@ -484,7 +488,6 @@ void GridDataRepresentationImpl::encodeValues(Message *message,T::ParamValue_vec
     T::Int16_opt decimalScaleFactor = 0;
     binaryScaleFactor = mPacking.getBinaryScaleFactor();
     decimalScaleFactor = mPacking.getDecimalScaleFactor();
-    auto referenceValue = mPacking.getReferenceValue();
     auto bitsPerValue = mPacking.getBitsPerValue();
 
 
@@ -522,7 +525,7 @@ void GridDataRepresentationImpl::encodeValues(Message *message,T::ParamValue_vec
     if (decimalScaleFactor)
       D = *decimalScaleFactor;
 
-    referenceValue = minValue;
+    float referenceValue = minValue;
     float R = referenceValue;
 
 
