@@ -337,7 +337,12 @@ void MessageProcessing::getGridIsobandsByLevelAndGeometry(const GRID::Message& m
         uint py2 = d.ny()-1;
 
         if (message1.reverseYDirection())
-          px1 = 0,py1 = d.ny()-1,px2 = d.nx()-1,py2 = 0;
+        {
+          px1 = 0;
+          py1 = d.ny()-1;
+          px2 = d.nx()-1;
+          py2 = 0;
+        }
 
         char tmp[1400];  // four %.15f values of any magnitude
         if (message1.getGridLatLonCoordinatesByGridPoint(px1,py1,y1,x1)  &&  message1.getGridLatLonCoordinatesByGridPoint(px2,py2,y2,x2))
@@ -779,7 +784,12 @@ void MessageProcessing::getGridIsobandsByTimeAndGeometry(const GRID::Message& me
         uint py2 = d.ny()-1;
 
         if (message1.reverseYDirection())
-          px1 = 0,py1 = d.ny()-1,px2 = d.nx()-1,py2 = 0;
+        {
+          px1 = 0;
+          py1 = d.ny()-1;
+          px2 = d.nx()-1;
+          py2 = 0;
+        }
 
         char tmp[1400];  // four %.15f values of any magnitude
         if (message1.getGridLatLonCoordinatesByGridPoint(px1,py1,y1,x1)  &&  message1.getGridLatLonCoordinatesByGridPoint(px2,py2,y2,x2))
@@ -1139,7 +1149,12 @@ void MessageProcessing::getGridIsobandsByTimeLevelAndGeometry(const GRID::Messag
         uint py2 = d.ny()-1;
 
         if (message1.reverseYDirection())
-          px1 = 0,py1 = d.ny()-1,px2 = d.nx()-1,py2 = 0;
+        {
+          px1 = 0;
+          py1 = d.ny()-1;
+          px2 = d.nx()-1;
+          py2 = 0;
+        }
 
         char tmp[1400];  // four %.15f values of any magnitude
         if (message1.getGridLatLonCoordinatesByGridPoint(px1,py1,y1,x1)  &&  message1.getGridLatLonCoordinatesByGridPoint(px2,py2,y2,x2))
@@ -1542,7 +1557,12 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGeometry(const GRID::Messag
         uint py2 = d.ny()-1;
 
         if (message1.reverseYDirection())
-          px1 = 0,py1 = d.ny()-1,px2 = d.nx()-1,py2 = 0;
+        {
+          px1 = 0;
+          py1 = d.ny()-1;
+          px2 = d.nx()-1;
+          py2 = 0;
+        }
 
         char tmp[1400];  // four %.15f values of any magnitude
         if (message1.getGridLatLonCoordinatesByGridPoint(px1,py1,y1,x1)  &&  message1.getGridLatLonCoordinatesByGridPoint(px2,py2,y2,x2))
@@ -1996,7 +2016,12 @@ void MessageProcessing::getGridIsolinesByLevelAndGeometry(const GRID::Message& m
         uint py2 = d.ny()-1;
 
         if (message1.reverseYDirection())
-          px1 = 0,py1 = d.ny()-1,px2 = d.nx()-1,py2 = 0;
+        {
+          px1 = 0;
+          py1 = d.ny()-1;
+          px2 = d.nx()-1;
+          py2 = 0;
+        }
 
         char tmp[1400];  // four %.15f values of any magnitude
         if (message1.getGridLatLonCoordinatesByGridPoint(px1,py1,y1,x1)  &&  message1.getGridLatLonCoordinatesByGridPoint(px2,py2,y2,x2))
@@ -2257,7 +2282,12 @@ void MessageProcessing::getGridIsolinesByTimeAndGeometry(const GRID::Message& me
         uint py2 = d.ny()-1;
 
         if (message1.reverseYDirection())
-          px1 = 0,py1 = d.ny()-1,px2 = d.nx()-1,py2 = 0;
+        {
+          px1 = 0;
+          py1 = d.ny()-1;
+          px2 = d.nx()-1;
+          py2 = 0;
+        }
 
         char tmp[1400];  // four %.15f values of any magnitude
         if (message1.getGridLatLonCoordinatesByGridPoint(px1,py1,y1,x1)  &&  message1.getGridLatLonCoordinatesByGridPoint(px2,py2,y2,x2))
@@ -2915,7 +2945,12 @@ void MessageProcessing::getGridStreamlinesByTimeLevelAndGeometry(const GRID::Mes
         uint py2 = d.ny()-1;
 
         if (message1.reverseYDirection())
-          px1 = 0,py1 = d.ny()-1,px2 = d.nx()-1,py2 = 0;
+        {
+          px1 = 0;
+          py1 = d.ny()-1;
+          px2 = d.nx()-1;
+          py2 = 0;
+        }
 
         char tmp[1400];  // four %.15f values of any magnitude
         if (message1.getGridLatLonCoordinatesByGridPoint(px1,py1,y1,x1)  &&  message1.getGridLatLonCoordinatesByGridPoint(px2,py2,y2,x2))
@@ -3413,7 +3448,12 @@ void MessageProcessing::getGridStreamlinesByLevelAndGeometry(const GRID::Message
         uint py2 = d.ny()-1;
 
         if (message1.reverseYDirection())
-          px1 = 0,py1 = d.ny()-1,px2 = d.nx()-1,py2 = 0;
+        {
+          px1 = 0;
+          py1 = d.ny()-1;
+          px2 = d.nx()-1;
+          py2 = 0;
+        }
 
         char tmp[1400];  // four %.15f values of any magnitude
         if (message1.getGridLatLonCoordinatesByGridPoint(px1,py1,y1,x1)  &&  message1.getGridLatLonCoordinatesByGridPoint(px2,py2,y2,x2))
@@ -3683,7 +3723,12 @@ void MessageProcessing::getGridStreamlinesByTimeAndGeometry(const GRID::Message&
         uint py2 = d.ny()-1;
 
         if (message1.reverseYDirection())
-          px1 = 0,py1 = d.ny()-1,px2 = d.nx()-1,py2 = 0;
+        {
+          px1 = 0;
+          py1 = d.ny()-1;
+          px2 = d.nx()-1;
+          py2 = 0;
+        }
 
         char tmp[1400];  // four %.15f values of any magnitude
         if (message1.getGridLatLonCoordinatesByGridPoint(px1,py1,y1,x1)  &&  message1.getGridLatLonCoordinatesByGridPoint(px2,py2,y2,x2))
