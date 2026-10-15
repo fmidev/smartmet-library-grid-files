@@ -44,7 +44,6 @@ void* fault_handler_thread(void *arg)
   auto *mapper = (MemoryMapper*)arg;
   mapper->faultHandlerThread();
   pthread_exit(nullptr);
-  return nullptr;
 }
 
 
@@ -58,7 +57,6 @@ void* fault_processing_thread(void *arg)
   auto *mapper = (MemoryMapper*)arg;
   mapper->faultProcessingThread();
   pthread_exit(nullptr);
-  return nullptr;
 }
 
 /*! \brief Converts a Unix file mode bitmask into a human-readable rwx permission string. */

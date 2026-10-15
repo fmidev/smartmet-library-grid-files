@@ -1569,7 +1569,6 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
 
         return mScaleFactor*(T::ParamValue)(*v) + mBaseValue;
       }
-      break;
 
       case 2:  // char
       {
@@ -1579,7 +1578,6 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
 
         return mScaleFactor*(T::ParamValue)(*v) + mBaseValue;
       }
-      break;
 
       case 3:  // short
       {
@@ -1593,7 +1591,6 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
 
         return mScaleFactor*(T::ParamValue)val + mBaseValue;
       }
-      break;
 
       case 4:  // int
       {
@@ -1609,7 +1606,6 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
 
         return mScaleFactor*(T::ParamValue)val + mBaseValue;
       }
-      break;
 
       case 5:  // float
       {
@@ -1625,7 +1621,6 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
 
         return mScaleFactor*(T::ParamValue)(val) + mBaseValue;
       }
-      break;
 
       case 6:  // double
       {
@@ -1645,7 +1640,6 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
         //printf("VAL %016x  %f  %f  %f\n",*v,mScaleFactor,val,mBaseValue);
         return mScaleFactor*(T::ParamValue)(val) + mBaseValue;
       }
-      break;
       default:
         break;
     }

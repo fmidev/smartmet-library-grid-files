@@ -2378,7 +2378,6 @@ float Message::getGridPointAngle(T::CoordinateType coordinateType,double x,doubl
         getGridLatLonCoordinatesByGridPosition(x,y,lat,lon);
         return getGridPointAngleByLatLonCoordinates(lat,lon);
       }
-      break;
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
       {
@@ -2387,7 +2386,6 @@ float Message::getGridPointAngle(T::CoordinateType coordinateType,double x,doubl
         getGridLatLonCoordinatesByOriginalCoordinates(x,y,lat,lon);
         return getGridPointAngleByLatLonCoordinates(lat,lon);
       }
-      break;
 
       default:
       {

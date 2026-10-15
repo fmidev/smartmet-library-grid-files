@@ -272,7 +272,6 @@ bool AdditionalParameters::getParameterValueByLocation(
       }
       value = loc->area;
       return true;
-      return false;
     }
 
     return false;

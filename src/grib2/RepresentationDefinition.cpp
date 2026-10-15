@@ -164,7 +164,6 @@ bool RepresentationDefinition::getProperty_Packing(uint propertyId,Int64& value)
         value = packing->getReferenceValue();
         return true;
       }
-      break;
 
       case Property::RepresentationSection::Packing::BinaryScaleFactor:
         value = *packing->getBinaryScaleFactor();

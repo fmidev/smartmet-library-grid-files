@@ -36,7 +36,6 @@ void png_read_callback(png_structp png,png_bytep data, png_size_t length)
   if (p == nullptr || p->buffer == nullptr || length > p->length || p->offset > p->length - length)
   {
     png_error(png, "PNG read past end of input buffer");
-    return;
   }
   memcpy(data,p->buffer+p->offset,length);
   p->offset += length;

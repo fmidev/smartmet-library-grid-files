@@ -223,7 +223,6 @@ int GridPointValue::compare(ComparisonMethod comparisonMethod,GridPointValue *gr
           return res;
         return num_compare(mValue,gridPointValue->mValue);
     }
-    return 0;
   }
   catch (...)
   {

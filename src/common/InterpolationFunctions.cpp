@@ -379,29 +379,24 @@ T::ParamValue levelInterpolation(T::ParamValue value1,T::ParamValue value2,doubl
           return value1;
         else
           return value2;
-        break;
 
       case T::LevelInterpolationMethod::Min:
         if (value1 < value2)
           return value1;
         else
           return value2;
-        break;
 
       case T::LevelInterpolationMethod::Max:
         if (value1 > value2)
           return value1;
         else
           return value2;
-        break;
 
       case T::LevelInterpolationMethod::Previous:
         return value1;
-        break;
 
       case T::LevelInterpolationMethod::Next:
         return value2;
-        break;
 
       case T::LevelInterpolationMethod::Logarithmic:
         return logarithmicInterpolation(newLevel, level1, level2, value1, value2);
@@ -418,7 +413,6 @@ T::ParamValue levelInterpolation(T::ParamValue value1,T::ParamValue value2,doubl
         {
           return ParamValueMissing;
         }
-        break;
     }
     return ParamValueMissing;
   }

@@ -1403,7 +1403,6 @@ int ConfigurationFile::readValue(std::vector<std::string>& words,std::vector<UIn
       setAttributeValue(path.c_str(),attributeValue);
       return pos + 1;
     }
-    return pos;
   }
   catch (...)
   {

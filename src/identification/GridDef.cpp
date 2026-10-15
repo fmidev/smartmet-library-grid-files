@@ -4453,7 +4453,6 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
 
           return def1;
         }
-        break;
 
         case T::GridProjectionValue::RotatedLatLon:
         {
@@ -4545,7 +4544,6 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
 
           return def1;
         }
-        break;
 
         case T::GridProjectionValue::StretchedLatLon:
           break;
@@ -4638,7 +4636,6 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
 
           return def1;
         }
-        break;
 
         case T::GridProjectionValue::TransverseMercator:
           break;
@@ -4700,7 +4697,6 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
 
           return def1;
         }
-        break;
 
         case T::GridProjectionValue::LambertConformal:
         {
@@ -4762,7 +4758,6 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
 
           return def1;
         }
-        break;
 
         case T::GridProjectionValue::ObliqueLambertConformal:
           break;
@@ -4976,7 +4971,6 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
 
           return def2;
         }
-        break;
 
         case T::GridProjectionValue::RotatedLatLon:
         {
@@ -5068,7 +5062,6 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
 
           return def2;
         }
-        break;
 
         case T::GridProjectionValue::StretchedLatLon:
           break;
@@ -5167,7 +5160,6 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
 
           return def2;
         }
-        break;
 
         case T::GridProjectionValue::PolarStereographic:
         {
@@ -5231,7 +5223,6 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           def2->countHash();
           return def2;
         }
-        break;
 
         case T::GridProjectionValue::LambertConformal:
         {
@@ -5309,7 +5300,6 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
 
           return def2;
         }
-        break;
 
         case T::GridProjectionValue::ObliqueLambertConformal:
           break;
@@ -5415,7 +5405,6 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
 
           return def2;
         }
-        break;
 
         case T::GridProjectionValue::CrossSection:
           break;
