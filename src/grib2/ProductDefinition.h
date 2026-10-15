@@ -36,6 +36,8 @@ class ProductDefinition
                                         ProductDefinition();
                                         //ProductDefinition(const ProductDefinition& other);
     virtual                             ~ProductDefinition();
+    ProductDefinition(const ProductDefinition&) = default;
+    ProductDefinition& operator=(const ProductDefinition&) = default;
 
     virtual ProductDefinition*          createProductDefinition() const;
 

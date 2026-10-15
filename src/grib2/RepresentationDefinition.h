@@ -30,6 +30,7 @@ class RepresentationDefinition
                   RepresentationDefinition();
                   //RepresentationDefinition(const RepresentationDefinition& other);
     virtual       ~RepresentationDefinition();
+    RepresentationDefinition(const RepresentationDefinition&) = default;
 
     virtual void  decodeValues(Message *message,T::ParamValue_vec& decodedValues) const;
     virtual void  encodeValues(Message *message,T::ParamValue_vec& values);
