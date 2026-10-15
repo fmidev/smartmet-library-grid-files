@@ -36,6 +36,7 @@ class ThreadLock
     /*! \brief A copy gets a mutex of its own: a mutex cannot be copied. */
     ThreadLock(const ThreadLock& /* theOther */) : ThreadLock() {}
     /*! \brief Assignment keeps this object's own mutex. */
+    // NOLINTNEXTLINE(cert-oop54-cpp): nothing is copied, so self-assignment is harmless
     ThreadLock& operator=(const ThreadLock& /* theOther */) { return *this; }
 
 

@@ -62,8 +62,8 @@ class GridDef
   public:
                         GridDef();
     virtual             ~GridDef();
-    GridDef(const GridDef&) = default;
-    GridDef& operator=(const GridDef&) = default;
+    GridDef(const GridDef&) = delete;
+    GridDef& operator=(const GridDef&) = delete;
 
     /*! \brief Initialise all mapping tables from the given libconfig configuration file.
      *  \param[in] configFile  Path to the GridDef configuration file. */
