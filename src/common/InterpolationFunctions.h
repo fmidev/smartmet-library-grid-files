@@ -76,7 +76,7 @@ void levelInterpolation(const T::GridValueList& values1,const T::GridValueList& 
 T::ParamValue timeInterpolation(T::ParamValue value1,const T::ParamValue& value2,time_t t1,time_t t2,time_t newTime,short timeInterpolationMethod);
 
 //! \overload (times given as ISO-8601 strings)
-T::ParamValue timeInterpolation(T::ParamValue value1,const T::ParamValue& value2,std::string time1,std::string time2,std::string newTime,short timeInterpolationMethod);
+T::ParamValue timeInterpolation(T::ParamValue value1,const T::ParamValue& value2,const std::string& time1,const std::string& time2,const std::string& newTime,short timeInterpolationMethod);
 
 /*! \brief Interpolate a full grid (w×h values) between two time steps.
  *  \param[in]  values1  Grid values at t1.
@@ -91,13 +91,13 @@ T::ParamValue timeInterpolation(T::ParamValue value1,const T::ParamValue& value2
 void timeInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,int width,int height,time_t t1,time_t t2,time_t newTime,short timeInterpolationMethod,T::ParamValue_vec& newValues);
 
 //! \overload (times given as ISO-8601 strings)
-void timeInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,int width,int height,std::string time1,std::string time2,std::string newTime,short timeInterpolationMethod,T::ParamValue_vec& newValues);
+void timeInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,int width,int height,const std::string& time1,const std::string& time2,const std::string& newTime,short timeInterpolationMethod,T::ParamValue_vec& newValues);
 
 //! \overload (operates on GridValueList instead of ParamValue_vec)
 void timeInterpolation(const T::GridValueList& values1,const T::GridValueList& values2,time_t t1,time_t t2,time_t newTime,short timeInterpolationMethod,T::GridValueList& valueList);
 
 //! \overload (times as strings, GridValueList)
-void timeInterpolation(const T::GridValueList& values1,const T::GridValueList& values2,std::string time1,std::string time2,std::string newTime,short timeInterpolationMethod,T::GridValueList& valueList);
+void timeInterpolation(const T::GridValueList& values1,const T::GridValueList& values2,const std::string& time1,const std::string& time2,const std::string& newTime,short timeInterpolationMethod,T::GridValueList& valueList);
 
 
 /*! \brief Landscape-aware spatial interpolation accounting for elevation and land/sea cover.

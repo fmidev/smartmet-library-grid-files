@@ -30,14 +30,14 @@ class MapInfo
   public:
 
     /*! \brief Construct a zeroed descriptor. */
-    MapInfo()
+    MapInfo() :   server(""),   memoryPtr(nullptr)
     {
-      protocol = 0;
-      serverType = 1;
-      server = ""; // "127.0.0.1";
-      fileSize = 0;
-      allocatedSize = 0;
-      memoryPtr = nullptr;
+
+
+      // "127.0.0.1";
+
+
+
       mappingError = false;
       mappingTime = 0;
     }
@@ -65,12 +65,12 @@ class MapInfo
 
   
 
-    uint            protocol;      //!< Transport protocol (see MapInfo::Protocol)
-    uint            serverType;    //!< Server category (see MapInfo::ServerType)
+    uint            protocol{0};      //!< Transport protocol (see MapInfo::Protocol)
+    uint            serverType{1};    //!< Server category (see MapInfo::ServerType)
     std::string     server;        //!< Server hostname or URL (empty for local files)
     std::string     filename;      //!< File path on the server (or local path)
-    std::size_t     fileSize;      //!< On-disk file size in bytes
-    std::size_t     allocatedSize; //!< Size of the virtual memory reservation in bytes
+    std::size_t     fileSize{0};      //!< On-disk file size in bytes
+    std::size_t     allocatedSize{0}; //!< Size of the virtual memory reservation in bytes
     time_t          mappingTime;   //!< Unix timestamp when the mapping was established
     char*           memoryPtr;     //!< Base address of the mapped region (nullptr if not yet mapped)
     bool            mappingError;  //!< True if the last mapping attempt failed

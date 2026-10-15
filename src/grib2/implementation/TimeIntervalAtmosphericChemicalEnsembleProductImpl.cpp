@@ -126,7 +126,7 @@ T::UInt8_opt TimeIntervalAtmosphericChemicalEnsembleProductImpl::getGeneratingPr
 
 
 
-T::TimeString TimeIntervalAtmosphericChemicalEnsembleProductImpl::countForecastStartTime(T::TimeString referenceTime) const
+T::TimeString TimeIntervalAtmosphericChemicalEnsembleProductImpl::countForecastStartTime(const T::TimeString& referenceTime) const
 {
   try
   {

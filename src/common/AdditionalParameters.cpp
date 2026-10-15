@@ -135,10 +135,10 @@ bool AdditionalParameters::isAdditionalParameter(const char *parameterName)
 /*! \brief Returns the value of a location-based additional parameter. */
 
 bool AdditionalParameters::getParameterValueByLocation(
-    std::string parameterName,
+    const std::string& parameterName,
     std::string tag,
-    Spine::LocationPtr loc,
-    std::string country,
+    const Spine::LocationPtr& loc,
+    const std::string& country,
     int precision,
     std::string& value)
 {
@@ -290,11 +290,11 @@ bool AdditionalParameters::getParameterValueByLocation(
 /*! \brief Returns the value of a location- and time-based additional parameter. */
 
 bool AdditionalParameters::getParameterValueByLocationAndTime(
-    std::string parameterName,
-    std::string /*tag*/,
-    Spine::LocationPtr loc,
-    Fmi::LocalDateTime queryTime,
-    Fmi::TimeZonePtr tz,
+    const std::string& parameterName,
+    const std::string& /*tag*/,
+    const Spine::LocationPtr& loc,
+    const Fmi::LocalDateTime& queryTime,
+    const Fmi::TimeZonePtr& tz,
     int precision,
     std::string& value)
 {
@@ -591,7 +591,7 @@ std::string AdditionalParameters::formatDate(
 std::string AdditionalParameters::formatDate(
     const Fmi::LocalDateTime& ldt,
     const std::locale& llocale,
-    std::string fmt)
+    const std::string& fmt)
 {
   FUNCTION_TRACE
   try

@@ -61,9 +61,9 @@ time_t      utcTimeToTimeT(const std::string& utcTime);
 time_t      utcTimeToTimeT(const char *utcTime);
 time_t      utcTimeToTimeT(int year,int month,int day,int hour,int minute,int second);
 std::string localTimeFromTimeT(time_t t,const char *tzone);
-Fmi::DateTime toTimeStamp(T::TimeString timeStr);
-std::string localTimeToUtc(const std::string& localTime,Fmi::TimeZonePtr tz);
-Fmi::DateTime localTimeToUtc(const Fmi::DateTime& localTime,Fmi::TimeZonePtr tz);
+Fmi::DateTime toTimeStamp(const T::TimeString& timeStr);
+std::string localTimeToUtc(const std::string& localTime,const Fmi::TimeZonePtr& tz);
+Fmi::DateTime localTimeToUtc(const Fmi::DateTime& localTime,const Fmi::TimeZonePtr& tz);
 void splitTimeString(const std::string& timeStr,int& year,int& month,int& day,int& hour,int& minute,int& second);
 void splitTimeString(const std::string& timeStr, short &year, uchar &month, uchar &day, uchar &hour, uchar &minute, uchar &second);
 
@@ -75,7 +75,7 @@ time_t timeToValue(uint year,uint month,uint day,uint hour,uint min,uint sec,uin
 void valueToTime(time_t value,uint& year,uint& month,uint& day,uint& hour,uint& min,uint& sec,uint& usec);
 
 
-time_t toTimeT(Fmi::DateTime tim);
+time_t toTimeT(const Fmi::DateTime& tim);
 time_t getFileModificationTime(const char *filename);
 void copyFile(const char *sourceFileName,const char *targetFileName,const bool& shutdownRequested);
 Int64 getFileSize(const char *filename);
@@ -135,7 +135,7 @@ std::string toString(T::Int16_opt value);
 std::string toString(T::Int32_opt value);
 std::string toString(T::Int64_opt value);
 
-std::string toString(Fmi::DateTime time);
+std::string toString(const Fmi::DateTime& time);
 
 std::string toLowerString(const char *sourceString);
 std::string toLowerString(const std::string& sourceString);
@@ -149,7 +149,7 @@ int decompressData(void *_compressedData,uint _compressedDataSize,void *_decompr
 void parseLatLonCoordinates(const std::string& latLonCoordinates,std::vector<T::Coordinate>& coordinates);
 void parseUnits(const char *unitString,double& value,std::string& units);
 
-std::string stringReplaceAll(const std::string& st,const std::string& oldStr,std::string newStr);
+std::string stringReplaceAll(const std::string& st,const std::string& oldStr,const std::string& newStr);
 
 void splitString(const char *str,char separator,std::vector<uint>& partList);
 void splitString(const std::string& str,char separator,std::vector<uint>& partList);

@@ -20,21 +20,21 @@ class Coordinate
   public:
 
     /*! \brief Construct the origin (0, 0). */
-    Coordinate() : mX(0), mY(0) {};
+    Coordinate() : mX(0), mY(0) {}
     //Coordinate(const Coordinate& coordinate) {mX = coordinate.mX; mY = coordinate.mY;}
 
     /*! \brief Construct from double-precision coordinates.
      *  \param[in] x  Horizontal component.
      *  \param[in] y  Vertical component. */
-    Coordinate(double x, double y) : mX(x), mY(y) {};
+    Coordinate(double x, double y) : mX(x), mY(y) {}
 
     /*! \brief Construct from integer coordinates (widened to double).
      *  \param[in] x  Horizontal component.
      *  \param[in] y  Vertical component. */
-    Coordinate(int x, int y) : mX(static_cast<double>(x)), mY(static_cast<double>(y)) {};
+    Coordinate(int x, int y) : mX(static_cast<double>(x)), mY(static_cast<double>(y)) {}
 
     //! \overload
-    Coordinate(unsigned int x, unsigned int y) : mX(static_cast<double>(x)), mY(static_cast<double>(y)) {};
+    Coordinate(unsigned int x, unsigned int y) : mX(static_cast<double>(x)), mY(static_cast<double>(y)) {}
 
     /*! \brief Return the horizontal component. */
     double x() const { return mX; }

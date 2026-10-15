@@ -76,8 +76,8 @@ class ProductDefinition
     // These are helper methods used in child classes. The point is that there are
     // several child classes that need to do the same calculations.
 
-    T::TimeString                       countForecastStartTime(T::TimeString referenceTime,const ParameterSettings& parameter) const;
-    T::TimeString                       countForecastStartTime(T::TimeString referenceTime,const PostprocSettings& parameter) const;
+    T::TimeString                       countForecastStartTime(const T::TimeString& referenceTime,const ParameterSettings& parameter) const;
+    T::TimeString                       countForecastStartTime(const T::TimeString& referenceTime,const PostprocSettings& parameter) const;
     T::TimeString                       countForecastEndTime(const StatisticalSettings& stat) const;
 
     virtual void                        getProperties_ParameterSettings(T::PropertySettingVec& properties);

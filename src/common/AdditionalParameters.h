@@ -50,10 +50,10 @@ class AdditionalParameters
      *  \param[out] value          Receives the computed value string.
      *  \return True if the parameter was computed successfully. */
     bool        getParameterValueByLocation(
-                    std::string parameterName,
+                    const std::string& parameterName,
                     std::string tag,
-                    Spine::LocationPtr loc,
-                    std::string country,
+                    const Spine::LocationPtr& loc,
+                    const std::string& country,
                     int precision,
                     std::string& value);
 
@@ -67,11 +67,11 @@ class AdditionalParameters
      *  \param[out] value          Receives the computed value string.
      *  \return True if the parameter was computed successfully. */
     bool        getParameterValueByLocationAndTime(
-                    std::string parameterName,
-                    std::string tag,
-                    Spine::LocationPtr loc,
-                    Fmi::LocalDateTime localTime,
-                    Fmi::TimeZonePtr tz,
+                    const std::string& parameterName,
+                    const std::string& tag,
+                    const Spine::LocationPtr& loc,
+                    const Fmi::LocalDateTime& localTime,
+                    const Fmi::TimeZonePtr& tz,
                     int precision,
                     std::string& value);
 
@@ -85,7 +85,7 @@ class AdditionalParameters
     std::string formatDate(
                     const Fmi::LocalDateTime& ldt,
                     const std::locale& llocale,
-                    std::string fmt);
+                    const std::string& fmt);
 
     const Fmi::TimeZones&         mTimezones;      //!< Available time zone data
     std::locale                   mLocale;          //!< Locale for formatting

@@ -19,11 +19,11 @@ namespace GRIB1
 LatLonImpl::LatLonImpl()
 {
   mGridProjection = T::GridProjectionValue::LatLon;
-  mDx = 0;
-  mDy = 0;
-  mStartX = 0;
-  mStartY = 0;
-  mInitialized = false;
+
+
+
+
+
 }
 
 

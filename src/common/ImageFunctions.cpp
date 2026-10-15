@@ -1432,7 +1432,7 @@ void saveGeometryAsJpeg(const char *_filename,int width,int height,uint backgrou
 
 /*! \brief Renders a collection of OGR geometries into a shared image and saves it as a JPEG file. */
 
-void saveGeometryAsJpeg(const char *_filename,int width,int height,uint backgroundColor,uint drawColor,uint fillColor,std::vector<std::shared_ptr<OGRGeometry>> geomVec,bool autoscale)
+void saveGeometryAsJpeg(const char *_filename,int width,int height,uint backgroundColor,uint drawColor,uint fillColor,const std::vector<std::shared_ptr<OGRGeometry>>& geomVec,bool autoscale)
 {
   try
   {

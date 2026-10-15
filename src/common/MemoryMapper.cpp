@@ -140,7 +140,7 @@ MemoryMapper::~MemoryMapper()
 
 /*! \brief Inserts a new memory-mapping descriptor into the sorted mapping list. */
 
-void MemoryMapper::addMapInfo(MapInfo_sptr mapInfo)
+void MemoryMapper::addMapInfo(const MapInfo_sptr& mapInfo)
 {
   FUNCTION_TRACE
   try
@@ -452,7 +452,7 @@ void MemoryMapper::setEnabled(bool enabled)
 
 /*! \brief Memory-maps the file described by the given MapInfo, using userfaultfd when enabled. */
 
-void MemoryMapper::map(MapInfo_sptr info)
+void MemoryMapper::map(const MapInfo_sptr& info)
 {
   FUNCTION_TRACE
   try
@@ -549,7 +549,7 @@ void MemoryMapper::map(MapInfo_sptr info)
 
 /*! \brief Releases the memory mapping described by the given MapInfo. */
 
-void MemoryMapper::unmap(MapInfo_sptr info)
+void MemoryMapper::unmap(const MapInfo_sptr& info)
 {
   FUNCTION_TRACE
   try
@@ -821,7 +821,7 @@ Int64 MemoryMapper::getFileSize(uint serverType,uint protocol,const char *server
 
 /*! \brief Fetches a block of data from the page cache or the underlying data fetcher. */
 
-int MemoryMapper::getData(MapInfo_sptr info,std::size_t filePosition,int dataSize,char *dataPtr)
+int MemoryMapper::getData(const MapInfo_sptr& info,std::size_t filePosition,int dataSize,char *dataPtr)
 {
   try
   {
@@ -1135,7 +1135,7 @@ void MemoryMapper::faultHandlerThread()
 
 /*! \brief Adds the mapper's current runtime state as attributes under the given parent node. */
 
-void MemoryMapper::getStateAttributes(std::shared_ptr<T::AttributeNode> parent)
+void MemoryMapper::getStateAttributes(const std::shared_ptr<T::AttributeNode>& parent)
 {
   FUNCTION_TRACE
   try

@@ -716,7 +716,7 @@ void levelInterpolation(const T::GridValueList& values1,const T::GridValueList& 
 
 /*! \brief Interpolates a parameter value between two timestamps given as strings. */
 
-T::ParamValue timeInterpolation(T::ParamValue value1,const T::ParamValue& value2,std::string time1,std::string time2,std::string newTime,short timeInterpolationMethod)
+T::ParamValue timeInterpolation(T::ParamValue value1,const T::ParamValue& value2,const std::string& time1,const std::string& time2,const std::string& newTime,short timeInterpolationMethod)
 {
   try
   {
@@ -823,7 +823,7 @@ T::ParamValue timeInterpolation(T::ParamValue value1,const T::ParamValue& value2
 
 /*! \brief Interpolates two value vectors between two timestamps given as strings. */
 
-void timeInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,int width,int height,std::string time1,std::string time2,std::string newTime,short timeInterpolationMethod,T::ParamValue_vec& newValues)
+void timeInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,int width,int height,const std::string& time1,const std::string& time2,const std::string& newTime,short timeInterpolationMethod,T::ParamValue_vec& newValues)
 {
   try
   {
@@ -965,7 +965,7 @@ void timeInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,int
 
 /*! \brief Interpolates two grid value lists between two timestamps given as strings. */
 
-void timeInterpolation(const T::GridValueList& values1,const T::GridValueList& values2,std::string time1,std::string time2,std::string newTime,short timeInterpolationMethod,T::GridValueList& valueList)
+void timeInterpolation(const T::GridValueList& values1,const T::GridValueList& values2,const std::string& time1,const std::string& time2,const std::string& newTime,short timeInterpolationMethod,T::GridValueList& valueList)
 {
   try
   {

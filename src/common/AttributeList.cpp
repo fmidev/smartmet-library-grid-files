@@ -124,7 +124,7 @@ void  AttributeList::addAttribute(Attribute *attribute)
 
 /*! \brief Creates and adds a new attribute from a C-string name and value. */
 
-void AttributeList::addAttribute(const char *name,std::string value)
+void AttributeList::addAttribute(const char *name,const std::string& value)
 {
   try
   {

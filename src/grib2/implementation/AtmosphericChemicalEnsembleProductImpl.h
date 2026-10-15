@@ -29,7 +29,7 @@ class AtmosphericChemicalEnsembleProductImpl : public AtmosphericChemicalEnsembl
 
   protected:
 
-    T::TimeString       countForecastStartTime(T::TimeString referenceTime) const;
+    T::TimeString       countForecastStartTime(const T::TimeString& referenceTime) const;
 };
 
 }  // namespace GRIB2

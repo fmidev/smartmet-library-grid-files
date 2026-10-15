@@ -35,7 +35,7 @@ class AttributeList
     /*! \brief Append a new attribute from a C-string name and string value.
      *  \param[in] name   Attribute name.
      *  \param[in] value  Attribute value. */
-    void            addAttribute(const char *name,std::string value);
+    void            addAttribute(const char *name,const std::string& value);
 
     //! \overload
     void            addAttribute(const std::string& name,const std::string& value);

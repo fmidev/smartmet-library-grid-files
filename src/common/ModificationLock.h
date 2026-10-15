@@ -31,7 +31,7 @@ class ModificationLock
     {
       mReadCounter.store(0);
       mWriteCounter.store(0);
-      mLockingEnabled = true;
+
 
       r1.tv_sec = 0;
       r1.tv_nsec = 10;
@@ -177,7 +177,7 @@ class ModificationLock
     ThreadLock        mThreadLock;    //!< Underlying POSIX mutex for exclusive access
     std::atomic<int>  mReadCounter;   //!< Number of active readers
     std::atomic<int>  mWriteCounter;  //!< Non-zero when a writer is waiting or active
-    bool              mLockingEnabled; //!< When false all lock/unlock calls are no-ops
+    bool              mLockingEnabled{true}; //!< When false all lock/unlock calls are no-ops
 };
 
 

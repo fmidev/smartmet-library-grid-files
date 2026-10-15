@@ -59,12 +59,12 @@ int clampContourThreads(int threads)
 class TraxGrid: public Trax::Grid
 {
   public:
-    TraxGrid(std::vector<float> *gridData, std::vector<T::Coordinate> *coordinates, long width, long height)
+    TraxGrid(std::vector<float> *gridData, std::vector<T::Coordinate> *coordinates, long width, long height) : mGridData(gridData), mCoordinates(coordinates), mWidth(width), mHeight(height)
     {
-      mGridData = gridData;
-      mCoordinates = coordinates;
-      mWidth = width;
-      mHeight = height;
+
+
+
+
     }
 
     std::size_t width() const override

@@ -126,7 +126,7 @@ T::UInt8_opt AggregateAerosolProductImpl::getGeneratingProcessIdentifier() const
 
 
 
-T::TimeString AggregateAerosolProductImpl::countForecastStartTime(T::TimeString referenceTime) const
+T::TimeString AggregateAerosolProductImpl::countForecastStartTime(const T::TimeString& referenceTime) const
 {
   try
   {

@@ -36,7 +36,7 @@ class StringFactory
     uint          create(const char *str);
 
     //! \overload
-    uint          create(std::string str);
+    uint          create(const std::string& str);
 
     /*! \brief Return the interned string for the given id.
      *  \param[in] index  Numeric id returned by create().

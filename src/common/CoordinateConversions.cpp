@@ -30,7 +30,7 @@ Fmi::Cache::Cache<std::size_t,std::shared_ptr<SmartMet::CoordinateConverter>> co
 
 /*! \brief Converts coordinates between two spatial references using a cached converter. */
 
-bool convert(const std::shared_ptr<OGRSpatialReference> sr_from,const std::shared_ptr<OGRSpatialReference> sr_to,int nCount,double *x,double *y)
+bool convert(const std::shared_ptr<OGRSpatialReference>& sr_from,const std::shared_ptr<OGRSpatialReference>& sr_to,int nCount,double *x,double *y)
 {
   try
   {

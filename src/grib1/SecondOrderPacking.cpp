@@ -295,7 +295,7 @@ void SecondOrderPacking::decodeValues(Message *message,T::ParamValue_vec& decode
 
 void SecondOrderPacking::decodeValues_rowByRow(
     std::size_t /*numOfValues*/,
-    T::Dimensions /*dimensions*/,
+    const T::Dimensions& /*dimensions*/,
     T::Data_ptr /*data*/,
     std::size_t /*dataSize*/,
     T::Data_ptr /*bitmap*/,
@@ -325,7 +325,7 @@ void SecondOrderPacking::decodeValues_rowByRow(
 
 void SecondOrderPacking::decodeValues_constantWidth(
     std::size_t /*numOfValues*/,
-    T::Dimensions /*dimensions*/,
+    const T::Dimensions& /*dimensions*/,
     T::Data_ptr /*data*/,
     std::size_t /*dataSize*/,
     T::Data_ptr /*bitmap*/,
@@ -355,7 +355,7 @@ void SecondOrderPacking::decodeValues_constantWidth(
 
 void SecondOrderPacking::decodeValues_differentWidth(
     std::size_t /*numOfValues*/,
-    T::Dimensions /*dimensions*/,
+    const T::Dimensions& /*dimensions*/,
     T::Data_ptr /*data*/,
     std::size_t /*dataSize*/,
     T::Data_ptr /*bitmap*/,
@@ -385,7 +385,7 @@ void SecondOrderPacking::decodeValues_differentWidth(
 
 void SecondOrderPacking::decodeValues_SPD(
     std::size_t numOfValues,
-    T::Dimensions dimensions,
+    const T::Dimensions& dimensions,
     T::Data_ptr data,
     std::size_t dataSize,
     T::Data_ptr bitmap,

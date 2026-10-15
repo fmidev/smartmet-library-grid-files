@@ -66,7 +66,7 @@ class SecondOrderPacking : public DataDefinition
 
     [[noreturn]] void decodeValues_rowByRow(
         std::size_t numOfValues,
-        T::Dimensions dimensions,
+        const T::Dimensions& dimensions,
         T::Data_ptr data,
         std::size_t dataSize,
         T::Data_ptr bitmap,
@@ -80,7 +80,7 @@ class SecondOrderPacking : public DataDefinition
 
     [[noreturn]] void decodeValues_constantWidth(
         std::size_t numOfValues,
-        T::Dimensions dimensions,
+        const T::Dimensions& dimensions,
         T::Data_ptr data,
         std::size_t dataSize,
         T::Data_ptr bitmap,
@@ -94,7 +94,7 @@ class SecondOrderPacking : public DataDefinition
 
     [[noreturn]] void decodeValues_differentWidth(
         std::size_t numOfValues,
-        T::Dimensions dimensions,
+        const T::Dimensions& dimensions,
         T::Data_ptr data,
         std::size_t dataSize,
         T::Data_ptr bitmap,
@@ -108,7 +108,7 @@ class SecondOrderPacking : public DataDefinition
 
     void decodeValues_SPD(
         std::size_t numOfValues,
-        T::Dimensions dimensions,
+        const T::Dimensions& dimensions,
         T::Data_ptr data,
         std::size_t dataSize,
         T::Data_ptr bitmap,

@@ -99,11 +99,11 @@ class MemoryMapper
 
     /*! \brief Establish a userfaultfd-backed virtual mapping for \p info.
      *  \param[in] info  MapInfo describing the file and its allocation. */
-    void      map(MapInfo_sptr info);
+    void      map(const MapInfo_sptr& info);
 
     /*! \brief Release the virtual mapping for \p info.
      *  \param[in] info  MapInfo to unmap. */
-    void      unmap(MapInfo_sptr info);
+    void      unmap(const MapInfo_sptr& info);
 
     /*! \brief Launch the background fault-handler and processing threads. */
     void      startFaultHandler();
@@ -119,12 +119,12 @@ class MemoryMapper
 
     /*! \brief Populate \p parent with an attribute sub-tree describing internal state.
      *  \param[in,out] parent  Root node to append state attributes to. */
-    void      getStateAttributes(std::shared_ptr<T::AttributeNode> parent);
+    void      getStateAttributes(const std::shared_ptr<T::AttributeNode>& parent);
 
   protected:
 
-    void      addMapInfo(MapInfo_sptr mapInfo);
-    int       getData(MapInfo_sptr info,std::size_t filePosition,int dataSize,char *dataPtr);
+    void      addMapInfo(const MapInfo_sptr& mapInfo);
+    int       getData(const MapInfo_sptr& info,std::size_t filePosition,int dataSize,char *dataPtr);
     int       getClosestIndex(char *address);
 
 

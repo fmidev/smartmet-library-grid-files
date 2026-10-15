@@ -128,7 +128,7 @@ uint StringFactory::create(const char *str)
 
 /*! \brief Interns a std::string and returns its index in the string table. */
 
-uint StringFactory::create(std::string str)
+uint StringFactory::create(const std::string& str)
 {
   try
   {

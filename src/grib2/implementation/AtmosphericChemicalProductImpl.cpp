@@ -126,7 +126,7 @@ T::UInt8_opt AtmosphericChemicalProductImpl::getGeneratingProcessIdentifier() co
 
 
 
-T::TimeString AtmosphericChemicalProductImpl::countForecastStartTime(T::TimeString referenceTime) const
+T::TimeString AtmosphericChemicalProductImpl::countForecastStartTime(const T::TimeString& referenceTime) const
 {
   try
   {

@@ -140,7 +140,7 @@ class DataFetcher
 
   protected:
 
-    bool                mDebugEnabled; //!< True when debug logging is active
+    bool                mDebugEnabled{false}; //!< True when debug logging is active
     AccessMap           mAccessMap;    //!< Per-server authentication credentials
 };
 

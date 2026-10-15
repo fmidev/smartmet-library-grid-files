@@ -48,11 +48,11 @@ class LatLonImpl : public LatLon
 
     void                init() const;
 
-    mutable double      mDx;
-    mutable double      mDy;
-    mutable double      mStartX;
-    mutable double      mStartY;
-    mutable bool        mInitialized;
+    mutable double      mDx{0};
+    mutable double      mDy{0};
+    mutable double      mStartX{0};
+    mutable double      mStartY{0};
+    mutable bool        mInitialized{false};
 };
 
 }  // namespace GRIB1

@@ -30,8 +30,8 @@ class TransverseMercatorImpl : public TransverseMercator
     void                print(std::ostream& stream,uint level,uint optionFlags) const override;
     void                read(MemoryReader& memoryReader) override;
 
-    double              mLongitude;
-    double              mLatitude;
+    double              mLongitude{0};
+    double              mLatitude{0};
 };
 
 

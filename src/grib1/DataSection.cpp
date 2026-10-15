@@ -326,12 +326,12 @@ void DataSection::getAttributeList(const std::string& prefix,T::AttributeList& a
     if (mFlags & SphercicalHarmonicCoefficients)
       p += sprintf(p,"Spherical harmonic coefficients;");
     else
-      p += sprintf(p,"Grid-point data;");;
+      p += sprintf(p,"Grid-point data;");
 
     if (mFlags & ComplexPacking)
       p += sprintf(p,"Complex or second-order packing;");
     else
-      p += sprintf(p,"Simple packing;");;
+      p += sprintf(p,"Simple packing;");
 
     if (mFlags & IntegerValues)
       p += sprintf(p,"Integer values (in the original data) are represented;");

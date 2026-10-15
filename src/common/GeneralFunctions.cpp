@@ -575,7 +575,7 @@ Int64 getFileSize(FILE *file)
 
 /*! \brief Replaces all occurrences of a substring within a string. */
 
-std::string stringReplaceAll(const std::string& st,const std::string& oldStr,std::string newStr)
+std::string stringReplaceAll(const std::string& st,const std::string& oldStr,const std::string& newStr)
 {
   try
   {
@@ -756,11 +756,11 @@ time_t localTimeToTimeT(const std::string& localTime, const char *tzone)
     tt.tm_mon = getInt(str, 4, 2) - 1;     /* Month (0-11) */
     tt.tm_mday = getInt(str, 6, 2);        /* Day of the month (1-31) */
     tt.tm_hour = getInt(str, 9, 2);
-    ; /* Hours (0-23) */
+    /* Hours (0-23) */
     tt.tm_min = getInt(str, 11, 2);
-    ; /* Minutes (0-59) */
+    /* Minutes (0-59) */
     tt.tm_sec = getInt(str, 13, 2);
-    ;                 /* Seconds (0-60) */
+    /* Seconds (0-60) */
     tt.tm_isdst = -1; /* Daylight saving time */
 
     return mktime_tz(&tt, tzone);
@@ -787,11 +787,11 @@ time_t utcTimeToTimeT(const char *utcTime)
     tt.tm_mon = getInt(utcTime, 4, 2) - 1;     /* Month (0-11) */
     tt.tm_mday = getInt(utcTime, 6, 2);        /* Day of the month (1-31) */
     tt.tm_hour = getInt(utcTime, 9, 2);
-    ; /* Hours (0-23) */
+    /* Hours (0-23) */
     tt.tm_min = getInt(utcTime, 11, 2);
-    ; /* Minutes (0-59) */
+    /* Minutes (0-59) */
     tt.tm_sec = getInt(utcTime, 13, 2);
-    ;                 /* Seconds (0-60) */
+    /* Seconds (0-60) */
     tt.tm_isdst = -1; /* Daylight saving time */
 
     return mktime_tz(&tt, "");
@@ -965,7 +965,7 @@ std::string localTimeToUtcTime(const std::string& localTime, const char *tzone)
 
 /*! \brief Converts a local DateTime in the given timezone to UTC. */
 
-Fmi::DateTime localTimeToUtc(const Fmi::DateTime& localTime,Fmi::TimeZonePtr tz)
+Fmi::DateTime localTimeToUtc(const Fmi::DateTime& localTime,const Fmi::TimeZonePtr& tz)
 {
   // Used inteentionally boost::(local|posix_time) here to force update
   // after macgyver changes (AP)
@@ -983,7 +983,7 @@ Fmi::DateTime localTimeToUtc(const Fmi::DateTime& localTime,Fmi::TimeZonePtr tz)
 
 /*! \brief Converts a local-time ISO string in the given timezone to a UTC ISO string. */
 
-std::string localTimeToUtc(const std::string& localTime, Fmi::TimeZonePtr tz)
+std::string localTimeToUtc(const std::string& localTime, const Fmi::TimeZonePtr& tz)
 {
   try
   {
@@ -1017,7 +1017,7 @@ std::string utcTimeToLocalTime(const std::string& utcTime, const char *tzone)
 
 /*! \brief Converts an Fmi::DateTime to a time_t. */
 
-time_t toTimeT(Fmi::DateTime tim)
+time_t toTimeT(const Fmi::DateTime& tim)
 {
   try
   {
@@ -1775,7 +1775,7 @@ std::string toString(T::Int64_opt value)
 
 /*! \brief Converts an Fmi::DateTime to an ISO timestamp string. */
 
-std::string toString(Fmi::DateTime time)
+std::string toString(const Fmi::DateTime& time)
 {
   try
   {
@@ -1874,7 +1874,7 @@ std::string toUpperString(const std::string& sourceString)
 
 /*! \brief Parses an ISO time string into an Fmi::DateTime value. */
 
-Fmi::DateTime toTimeStamp(T::TimeString timeStr)
+Fmi::DateTime toTimeStamp(const T::TimeString& timeStr)
 {
   try
   {

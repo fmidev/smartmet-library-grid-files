@@ -517,7 +517,7 @@ void NetCdfFile::readValues(MemoryReader& memoryReader,uint type,uint items,UInt
 
 /*! \brief Returns the indexed property value as a string and true if the property exists. */
 
-bool NetCdfFile::getProperty(std::string propertyName,uint index,std::string& propertyValue)
+bool NetCdfFile::getProperty(const std::string& propertyName,uint index,std::string& propertyValue)
 {
   FUNCTION_TRACE
   try
@@ -546,7 +546,7 @@ bool NetCdfFile::getProperty(std::string propertyName,uint index,std::string& pr
 
 /*! \brief Returns the indexed property value as a signed int and true if the property exists. */
 
-bool NetCdfFile::getProperty(std::string propertyName,uint index,int& propertyValue)
+bool NetCdfFile::getProperty(const std::string& propertyName,uint index,int& propertyValue)
 {
   FUNCTION_TRACE
   try
@@ -574,7 +574,7 @@ bool NetCdfFile::getProperty(std::string propertyName,uint index,int& propertyVa
 
 /*! \brief Returns the indexed property value as an unsigned int and true if the property exists. */
 
-bool NetCdfFile::getProperty(std::string propertyName,uint index,uint& propertyValue)
+bool NetCdfFile::getProperty(const std::string& propertyName,uint index,uint& propertyValue)
 {
   FUNCTION_TRACE
   try
@@ -603,7 +603,7 @@ bool NetCdfFile::getProperty(std::string propertyName,uint index,uint& propertyV
 
 /*! \brief Returns the indexed property value as a 64-bit integer and true if the property exists. */
 
-bool NetCdfFile::getProperty(std::string propertyName,uint index,Int64& propertyValue)
+bool NetCdfFile::getProperty(const std::string& propertyName,uint index,Int64& propertyValue)
 {
   FUNCTION_TRACE
   try
@@ -631,7 +631,7 @@ bool NetCdfFile::getProperty(std::string propertyName,uint index,Int64& property
 
 /*! \brief Returns the indexed property value as a float and true if the property exists. */
 
-bool NetCdfFile::getProperty(std::string propertyName,uint index,float& propertyValue)
+bool NetCdfFile::getProperty(const std::string& propertyName,uint index,float& propertyValue)
 {
   FUNCTION_TRACE
   try
@@ -659,7 +659,7 @@ bool NetCdfFile::getProperty(std::string propertyName,uint index,float& property
 
 /*! \brief Returns the indexed property value as a double and true if the property exists. */
 
-bool NetCdfFile::getProperty(std::string propertyName,uint index,double& propertyValue)
+bool NetCdfFile::getProperty(const std::string& propertyName,uint index,double& propertyValue)
 {
   FUNCTION_TRACE
   try
@@ -687,7 +687,7 @@ bool NetCdfFile::getProperty(std::string propertyName,uint index,double& propert
 
 /*! \brief Inserts a property containing a vector of string values into the property list. */
 
-void NetCdfFile::insertProperty(std::string propertyName,const std::vector<std::string>& propertyValue)
+void NetCdfFile::insertProperty(const std::string& propertyName,const std::vector<std::string>& propertyValue)
 {
   FUNCTION_TRACE
   try
@@ -706,7 +706,7 @@ void NetCdfFile::insertProperty(std::string propertyName,const std::vector<std::
 
 /*! \brief Inserts a single string-valued property into the property list. */
 
-void NetCdfFile::insertProperty(std::string propertyName,std::string propertyValue)
+void NetCdfFile::insertProperty(const std::string& propertyName,const std::string& propertyValue)
 {
   FUNCTION_TRACE
   try
@@ -727,7 +727,7 @@ void NetCdfFile::insertProperty(std::string propertyName,std::string propertyVal
 
 /*! \brief Inserts a signed integer property into the property list. */
 
-void NetCdfFile::insertProperty(std::string propertyName,int propertyValue)
+void NetCdfFile::insertProperty(const std::string& propertyName,int propertyValue)
 {
   FUNCTION_TRACE
   try
@@ -748,7 +748,7 @@ void NetCdfFile::insertProperty(std::string propertyName,int propertyValue)
 
 /*! \brief Inserts an unsigned integer property into the property list. */
 
-void NetCdfFile::insertProperty(std::string propertyName,uint propertyValue)
+void NetCdfFile::insertProperty(const std::string& propertyName,uint propertyValue)
 {
   FUNCTION_TRACE
   try
@@ -769,7 +769,7 @@ void NetCdfFile::insertProperty(std::string propertyName,uint propertyValue)
 
 /*! \brief Inserts a 64-bit integer property into the property list. */
 
-void NetCdfFile::insertProperty(std::string propertyName,Int64 propertyValue)
+void NetCdfFile::insertProperty(const std::string& propertyName,Int64 propertyValue)
 {
   FUNCTION_TRACE
   try
@@ -790,7 +790,7 @@ void NetCdfFile::insertProperty(std::string propertyName,Int64 propertyValue)
 
 /*! \brief Inserts a double-valued property into the property list. */
 
-void NetCdfFile::insertProperty(std::string propertyName,double propertyValue)
+void NetCdfFile::insertProperty(const std::string& propertyName,double propertyValue)
 {
   FUNCTION_TRACE
   try

@@ -16,8 +16,8 @@ namespace GRIB2
 TransverseMercatorImpl::TransverseMercatorImpl()
 {
   mGridProjection = T::GridProjectionValue::TransverseMercator;
-  mLongitude = 0;
-  mLatitude = 0;
+
+
 
 }
 

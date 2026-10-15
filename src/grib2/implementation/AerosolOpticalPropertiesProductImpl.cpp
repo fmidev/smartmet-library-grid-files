@@ -126,7 +126,7 @@ T::UInt8_opt AerosolOpticalPropertiesProductImpl::getGeneratingProcessIdentifier
 
 
 
-T::TimeString AerosolOpticalPropertiesProductImpl::countForecastStartTime(T::TimeString referenceTime) const
+T::TimeString AerosolOpticalPropertiesProductImpl::countForecastStartTime(const T::TimeString& referenceTime) const
 {
   try
   {

@@ -14,7 +14,7 @@ namespace SmartMet
 
 DataFetcher::DataFetcher()
 {
-  mDebugEnabled = false;
+
 }
 
 

@@ -5,6 +5,7 @@
 #include "../common/Typedefs.h"
 
 #include <cstdint>
+#include <utility>
 #include <vector>
 #include <set>
 #include <optional>
@@ -56,18 +57,18 @@ class PropertySetting
 {
   public:
 
-    PropertySetting() {propertyId = 0;}
-    PropertySetting(uint id,std::string value) {propertyId = id; propertyValue = value;}
-    PropertySetting(uint id,char value) {propertyId = id; propertyValue = std::to_string(value);}
-    PropertySetting(uint id,uchar value) {propertyId = id; propertyValue = std::to_string(value);}
-    PropertySetting(uint id,short value) {propertyId = id; propertyValue = std::to_string(value);}
-    PropertySetting(uint id,unsigned short value) {propertyId = id; propertyValue = std::to_string(value);}
-    PropertySetting(uint id,int value) {propertyId = id; propertyValue = std::to_string(value);}
-    PropertySetting(uint id,uint value) {propertyId = id; propertyValue = std::to_string(value);}
-    PropertySetting(uint id,Int64 value) {propertyId = id; propertyValue = std::to_string(value);}
-    PropertySetting(uint id,UInt64 value) {propertyId = id; propertyValue = std::to_string(value);}
-    PropertySetting(uint id,float value) {propertyId = id; propertyValue = std::to_string(value);}
-    PropertySetting(uint id,double value) {propertyId = id; propertyValue = std::to_string(value);}
+    PropertySetting() : propertyId(0) {}
+    PropertySetting(uint id,std::string value) : propertyId(id), propertyValue(std::move(value)) { }
+    PropertySetting(uint id,char value) : propertyId(id) { propertyValue = std::to_string(value);}
+    PropertySetting(uint id,uchar value) : propertyId(id) { propertyValue = std::to_string(value);}
+    PropertySetting(uint id,short value) : propertyId(id) { propertyValue = std::to_string(value);}
+    PropertySetting(uint id,unsigned short value) : propertyId(id) { propertyValue = std::to_string(value);}
+    PropertySetting(uint id,int value) : propertyId(id) { propertyValue = std::to_string(value);}
+    PropertySetting(uint id,uint value) : propertyId(id) { propertyValue = std::to_string(value);}
+    PropertySetting(uint id,Int64 value) : propertyId(id) { propertyValue = std::to_string(value);}
+    PropertySetting(uint id,UInt64 value) : propertyId(id) { propertyValue = std::to_string(value);}
+    PropertySetting(uint id,float value) : propertyId(id) { propertyValue = std::to_string(value);}
+    PropertySetting(uint id,double value) : propertyId(id) { propertyValue = std::to_string(value);}
 
     uint        propertyId;   //!< Numeric property identifier (corresponds to a Message getter/setter)
     std::string propertyValue; //!< Value serialised as a string

@@ -37,12 +37,12 @@ class NetCdfFile
     void        print(std::ostream& stream,uint level,uint optionFlags) const;
 
     void        createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec& messageInfoList);
-    void        insertProperty(std::string propertyName,const std::vector<std::string>& propertyValue);
-    void        insertProperty(std::string propertyName,std::string propertyValue);
-    void        insertProperty(std::string propertyName,int propertyValue);
-    void        insertProperty(std::string propertyName,uint propertyValue);
-    void        insertProperty(std::string propertyName,Int64 propertyValue);
-    void        insertProperty(std::string propertyName,double propertyValue);
+    void        insertProperty(const std::string& propertyName,const std::vector<std::string>& propertyValue);
+    void        insertProperty(const std::string& propertyName,const std::string& propertyValue);
+    void        insertProperty(const std::string& propertyName,int propertyValue);
+    void        insertProperty(const std::string& propertyName,uint propertyValue);
+    void        insertProperty(const std::string& propertyName,Int64 propertyValue);
+    void        insertProperty(const std::string& propertyName,double propertyValue);
     void        readAttribute(MemoryReader& memoryReader,std::string& attrName,std::vector<std::string>& attrValues);
     void        readPropertyList(MemoryReader& memoryReader);
     void        readValues(MemoryReader& memoryReader,uint items,UInt64 offset,std::vector<char>& values);
@@ -59,12 +59,12 @@ class NetCdfFile
     bool        getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;
 */
 
-    bool        getProperty(std::string propertyName,uint index,std::string& propertyValue);
-    bool        getProperty(std::string propertyName,uint index,int& propertyValue);
-    bool        getProperty(std::string propertyName,uint index,uint& propertyValue);
-    bool        getProperty(std::string propertyName,uint index,Int64& propertyValue);
-    bool        getProperty(std::string propertyName,uint index,float& propertyValue);
-    bool        getProperty(std::string propertyName,uint index,double& propertyValue);
+    bool        getProperty(const std::string& propertyName,uint index,std::string& propertyValue);
+    bool        getProperty(const std::string& propertyName,uint index,int& propertyValue);
+    bool        getProperty(const std::string& propertyName,uint index,uint& propertyValue);
+    bool        getProperty(const std::string& propertyName,uint index,Int64& propertyValue);
+    bool        getProperty(const std::string& propertyName,uint index,float& propertyValue);
+    bool        getProperty(const std::string& propertyName,uint index,double& propertyValue);
 
   protected:
 

@@ -26,11 +26,11 @@ class CImage
 {
   public:
     /*! \brief Construct an empty (0×0) image with no pixel buffer. */
-    CImage()
+    CImage() : width(0), height(0), pixel(nullptr)
     {
-      width = 0;
-      height = 0;
-      pixel = nullptr;
+
+
+
     }
 
     /*! \brief Deep-copy constructor. */
@@ -50,11 +50,11 @@ class CImage
     /*! \brief Allocate a width×height pixel buffer filled with opaque white (0xFFFFFFFF).
      *  \param[in] _width   Image width in pixels.
      *  \param[in] _height  Image height in pixels. */
-    CImage(int _width,int _height)
+    CImage(int _width,int _height) : width(_width), height(_height), pixel(nullptr)
     {
-      width = _width;
-      height = _height;
-      pixel = nullptr;
+
+
+
       if (width != 0  &&  height != 0)
       {
         int sz = width*height;
@@ -68,11 +68,11 @@ class CImage
      *  \param[in] _width   Image width.
      *  \param[in] _height  Image height.
      *  \param[in] _pixel   Existing pixel array (caller retains ownership). */
-    CImage(int _width,int _height,uint *_pixel)
+    CImage(int _width,int _height,uint *_pixel) : width(_width), height(_height), pixel(_pixel)
     {
-      width = _width;
-      height = _height;
-      pixel = _pixel;
+
+
+
     }
 
     virtual ~CImage()
@@ -149,7 +149,7 @@ uint rgb(uint red, uint green, uint blue);
 /*! \brief Render a single OGR geometry into a JPEG image file. */
 void saveGeometryAsJpeg(const char *_filename,int width,int height,uint backgroundColor,uint drawColor,uint fillColor,const OGRGeometry *geom,bool autoscale);
 //! \overload (renders a list of geometries)
-void saveGeometryAsJpeg(const char *_filename,int width,int height,uint backgroundColor,uint drawColor,uint fillColor,std::vector<std::shared_ptr<OGRGeometry>> geomVec,bool autoscale);
+void saveGeometryAsJpeg(const char *_filename,int width,int height,uint backgroundColor,uint drawColor,uint fillColor,const std::vector<std::shared_ptr<OGRGeometry>>& geomVec,bool autoscale);
 
 /*! \brief Alpha-composite two ARGB pixels using standard "over" blending.
  *  \param[in] top     Foreground ARGB pixel.

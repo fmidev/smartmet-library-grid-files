@@ -189,7 +189,7 @@ void ValueCache::getCacheStats(Fmi::Cache::CacheStatistics& statistics) const
 
 /*! \brief Adds the current cache configuration and usage attributes to the given parent node. */
 
-void ValueCache::getStateAttributes(std::shared_ptr<T::AttributeNode> parent)
+void ValueCache::getStateAttributes(const std::shared_ptr<T::AttributeNode>& parent)
 {
   try
   {

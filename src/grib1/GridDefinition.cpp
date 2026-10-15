@@ -2119,7 +2119,7 @@ void GridDefinition::getGridCellAverageSize(double& width,double& height) const
       double lat1 = 0;
       double lon1 = 0;
       double lat2 = 0;
-      double lon2 = 0;;
+      double lon2 = 0;
       if (getGridLatLonCoordinatesByGridPoint(x,y,lat1,lon1)  &&  getGridLatLonCoordinatesByGridPoint(x+1,y+1,lat2,lon2))
       {
         width = latlon_distance(lat1,lon1,lat1,lon2);

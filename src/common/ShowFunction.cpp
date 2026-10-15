@@ -15,11 +15,11 @@ int globalTraceLevel = 0;
 
 /*! \brief Constructs a trace logger and prints a START entry for the scope. */
 
-ShowFunction::ShowFunction(const char *_file,uint _line,const char *_function)
+ShowFunction::ShowFunction(const char *_file,uint _line,const char *_function) : function(_function), filename(_file), line(_line)
 {
-  filename = _file;
-  line = _line;
-  function = _function;
+
+
+
   startTime = getTime();
 
   if (globalTraceLog != nullptr)

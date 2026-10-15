@@ -58,13 +58,13 @@ class ValueCacheEntry
   public:
 
     /*! \brief Construct an empty (invalid) entry. */
-    ValueCacheEntry()
+    ValueCacheEntry() : mKey(0), mAccessCounter(0), mMappedFile(nullptr), mGrid(nullptr), mSize(0)
     {
-      mKey = 0;
-      mAccessCounter = 0;
-      mMappedFile = nullptr;
-      mGrid = nullptr;
-      mSize = 0;
+
+
+
+
+
     }
 
     /*! \brief Construct an entry that stores \p values under \p key.
@@ -72,11 +72,11 @@ class ValueCacheEntry
      *  \param[in] values  Grid values to store.
      *  \param[in] fname   If non-null, write values to this file and memory-map it;
      *                     otherwise copy values into a heap array. */
-    ValueCacheEntry(uint key,T::ParamValue_vec& values,const char *fname)
+    ValueCacheEntry(uint key,T::ParamValue_vec& values,const char *fname) : mKey(key), mAccessCounter(0), mMappedFile(nullptr)
     {
-      mKey =  key;
-      mAccessCounter = 0;
-      mMappedFile = nullptr;
+
+
+
       mSize = values.size();
       if (mSize > 0)
       {
@@ -208,7 +208,7 @@ class ValueCache
 
     /*! \brief Populate \p parent with an attribute sub-tree describing internal state.
      *  \param[in,out] parent  Attribute node that receives cache state attributes. */
-    void        getStateAttributes(std::shared_ptr<T::AttributeNode> parent);
+    void        getStateAttributes(const std::shared_ptr<T::AttributeNode>& parent);
 
     /*! \brief Initialise the cache with given limits (heap mode).
      *  \param[in] maxLen   Maximum number of entries.

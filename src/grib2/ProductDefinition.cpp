@@ -1763,7 +1763,7 @@ T::ParamLevelId ProductDefinition::getGribParameterLevelId() const
 
 /*! \brief The method computes the forecast start time from parameter settings. */
 
-T::TimeString ProductDefinition::countForecastStartTime(T::TimeString referenceTime,const ParameterSettings& parameter) const
+T::TimeString ProductDefinition::countForecastStartTime(const T::TimeString& referenceTime,const ParameterSettings& parameter) const
 {
   try
   {
@@ -1833,7 +1833,7 @@ T::TimeString ProductDefinition::countForecastStartTime(T::TimeString referenceT
 
 /*! \brief The method computes the forecast start time from postprocessing settings. */
 
-T::TimeString ProductDefinition::countForecastStartTime(T::TimeString referenceTime,const PostprocSettings& parameter) const
+T::TimeString ProductDefinition::countForecastStartTime(const T::TimeString& referenceTime,const PostprocSettings& parameter) const
 {
   try
   {
