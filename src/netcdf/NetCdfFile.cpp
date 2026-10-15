@@ -69,7 +69,8 @@ void NetCdfFile::readAttribute(MemoryReader& memoryReader,std::string& attrName,
     for (uint n = 0; n<nameLen; n++)
       name += static_cast<char>(memoryReader.read_int8());
 
-    attrName = name;
+    // NetCDF names may be NUL padded: keep the part before the first NUL
+    attrName = name.substr(0, name.find('\0'));
 
 
     uint attrType = 0;
@@ -1119,7 +1120,8 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
               if (i < 0 || C_UINT64(i) >= dl->second.size() || C_UINT64(i) >= dn->second.size())
                 throw Fmi::Exception(BCP,"Invalid NetCDF dimension index!");
               int ii = toInt32(dl->second[i].c_str());
-              std::string n = dn->second[i];
+              // the values may be NUL padded: keep the part before the first NUL
+              std::string n = dn->second[i].substr(0, dn->second[i].find('\0'));
               //printf("DIM [%s][%s][%s]\n",itm->c_str(),dl->second[i].c_str(),dn->second[i].c_str());
 
               if (strcasecmp(n.c_str(),"x") == 0  &&  !xName.empty())
