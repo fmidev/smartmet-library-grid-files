@@ -283,7 +283,7 @@ uint QueryDataFile::getGeometryId()
     {
       static std::mutex warnedMutex;
       static std::set<T::GeometryId> warned;
-      std::lock_guard<std::mutex> lock(warnedMutex);
+      std::scoped_lock lock(warnedMutex);
       if (warned.insert(geometryId).second)
       {
         std::string line = configLine;

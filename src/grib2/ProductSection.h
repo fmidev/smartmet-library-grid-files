@@ -68,10 +68,10 @@ class ProductSection : public GRID::MessageSection
     // ### Section specific methods
 
     T::TimeString         getForecastTime(T::TimeString referenceTime) const;
-    const T::UInt8_opt    getGribParameterCategory() const;
+    T::UInt8_opt    getGribParameterCategory() const;
     T::ParamLevel         getGribParameterLevel() const;
     T::ParamLevelId       getGribParameterLevelId() const;
-    const T::UInt8_opt    getGribParameterNumber() const;
+    T::UInt8_opt    getGribParameterNumber() const;
     T::UInt8_opt          getGeneratingProcessIdentifier() const;
     T::ForecastType       getForecastType() const;
     T::ForecastNumber     getForecastNumber() const;

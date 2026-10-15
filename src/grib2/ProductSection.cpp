@@ -611,7 +611,7 @@ T::TimeString ProductSection::getForecastTime(T::TimeString referenceTime) const
 
 /*! \brief The method returns the GRIB parameter category. */
 
-const T::UInt8_opt ProductSection::getGribParameterCategory() const
+T::UInt8_opt ProductSection::getGribParameterCategory() const
 {
   try
   {
@@ -633,7 +633,7 @@ const T::UInt8_opt ProductSection::getGribParameterCategory() const
 
 /*! \brief The method returns the GRIB parameter number. */
 
-const T::UInt8_opt ProductSection::getGribParameterNumber() const
+T::UInt8_opt ProductSection::getGribParameterNumber() const
 {
   try
   {

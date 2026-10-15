@@ -214,7 +214,7 @@ double* GaussianLatitudeCache::getLatitudes(uint nj,long n)
     // The same number of rows may come from different N values in subgrids
     const long key = (n << 32) | nj;
 
-    std::lock_guard<std::mutex> lock(gaussianLatitudeCacheMutex);
+    std::scoped_lock lock(gaussianLatitudeCacheMutex);
 
     if (mLatitudes[lastAccess] != nullptr  &&  mLatitudes_number[lastAccess] == key)
       return mLatitudes[lastAccess];
