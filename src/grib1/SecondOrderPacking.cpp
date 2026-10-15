@@ -415,7 +415,6 @@ void SecondOrderPacking::decodeValues_SPD(
     uint widthOfLengths = 0;
     uint NL = 0;
     uint widthOfSPD = 0;
-    uint totalWidth = 0;
     uint totalLength = 0;
 
     // Validate the (attacker-controllable) descriptors before allocating. The group arrays
@@ -471,7 +470,6 @@ void SecondOrderPacking::decodeValues_SPD(
       for (uint g=0; g<numberOfGroups; g++)
       {
         bitArrayReader.readBits(widthOfWidths,valueSize[g]);
-        totalWidth += valueSize[g];
       }
     }
     catch (...)
