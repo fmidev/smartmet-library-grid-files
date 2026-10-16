@@ -135,6 +135,8 @@ class Message : public GRID::Message
 
   protected:
 
+    void                printCornerData(std::ostream& stream,uint level) const;
+
     std::uint64_t       mFilePosition;    //!< Byte offset of the variable slice in the file.
     uint                mColumns;         //!< Number of grid columns.
     uint                mRows;            //!< Number of grid rows.
