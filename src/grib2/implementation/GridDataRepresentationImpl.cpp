@@ -478,6 +478,39 @@ void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec
 
 
 
+namespace
+{
+
+/*! \brief Counts the valid and missing values and finds the value range of the valid values. */
+
+void scanValueRange(const T::ParamValue_vec& values,uint& valueCount,uint& missingCount,T::ParamValue& minValue,T::ParamValue& maxValue)
+{
+  for (const float & value : values)
+  {
+    if (value != ParamValueMissing)
+    {
+      if (minValue == ParamValueMissing || (value < minValue))
+      {
+        minValue = value;
+      }
+
+      if (maxValue == ParamValueMissing || (value > maxValue))
+      {
+        maxValue = value;
+      }
+      valueCount++;
+    }
+    else
+    {
+      missingCount++;
+    }
+  }
+}
+
+}  // namespace
+
+
+
 /*! \brief Encodes the given grid values into the packed data buffer of the message. */
 
 void GridDataRepresentationImpl::encodeValues(Message *message,T::ParamValue_vec& values)
@@ -496,26 +529,7 @@ void GridDataRepresentationImpl::encodeValues(Message *message,T::ParamValue_vec
     T::ParamValue minValue = ParamValueMissing;
     T::ParamValue maxValue = ParamValueMissing;
 
-    for (float & value : values)
-    {
-      if (value != ParamValueMissing)
-      {
-        if (minValue == ParamValueMissing || (value < minValue))
-        {
-          minValue = value;
-        }
-
-        if (maxValue == ParamValueMissing || (value > maxValue))
-        {
-          maxValue = value;
-        }
-        valueCount++;
-      }
-      else
-      {
-        missingCount++;
-      }
-    }
+    scanValueRange(values,valueCount,missingCount,minValue,maxValue);
 
     std::int16_t E = 0;
     if (binaryScaleFactor)
