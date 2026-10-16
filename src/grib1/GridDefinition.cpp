@@ -2,7 +2,6 @@
 #include "Properties.h"
 #include <macgyver/Exception.h>
 #include <macgyver/Cache.h>
-#include <macgyver/Cache.h>
 #include "../common/GeneralFunctions.h"
 #include "../common/GeneralDefinitions.h"
 #include "../common/AutoWriteLock.h"

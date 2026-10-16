@@ -16,11 +16,9 @@
 #include <trax/IsobandLimits.h>
 #include <trax/Smoother.h>
 #include <fmt/format.h>
-#include <cmath>
 #include <memory>
 #include <vector>
 
-#include <algorithm>
 #include <sstream>
 #include <stack>
 #include <thread>
@@ -29,7 +27,6 @@
 #include <geos/version.h>
 #include <macgyver/Exception.h>
 #include <macgyver/FastMath.h>
-#include <macgyver/Cache.h>
 #include <macgyver/Cache.h>
 #include <boost/algorithm/string/replace.hpp>
 #include <macgyver/Hash.h>

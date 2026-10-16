@@ -3,7 +3,6 @@
 #include "../common/CoordinateConversions.h"
 #include <macgyver/Exception.h>
 #include <macgyver/Cache.h>
-#include <macgyver/Cache.h>
 #include "../common/ShowFunction.h"
 #include "../common/AutoWriteLock.h"
 #include "../common/AutoReadLock.h"
@@ -13,7 +12,6 @@
 #include <map>
 #include <memory>
 #include <unordered_map>
-#include <iostream>
 #include <cmath>
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF

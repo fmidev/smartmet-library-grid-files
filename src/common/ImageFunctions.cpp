@@ -20,7 +20,6 @@ extern "C"
 #include <stdlib.h>
   #include <stdio.h>
   #include <jpeglib.h>
-  #include <math.h>
   #include <png.h>
   #include <setjmp.h>
   #include <webp/encode.h>

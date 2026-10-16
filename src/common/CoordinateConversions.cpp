@@ -8,7 +8,6 @@
 
 #include <macgyver/Exception.h>
 #include <macgyver/Cache.h>
-#include <macgyver/Cache.h>
 #include <macgyver/Hash.h>
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/filesystem/operations.hpp>

@@ -12,7 +12,6 @@
 #include <macgyver/Exception.h>
 #include <macgyver/FastMath.h>
 #include <macgyver/Cache.h>
-#include <macgyver/Cache.h>
 #include <macgyver/Hash.h>
 #include <cmath>
 
