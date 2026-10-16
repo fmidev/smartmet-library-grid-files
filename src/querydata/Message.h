@@ -124,6 +124,8 @@ class Message : public GRID::Message
 
   protected:
 
+    void                printCornerData(std::ostream& stream,uint level) const;
+
     GRID::GridFile*     mGridFile;          //!< Owning GridFile (not owned by this object).
     uint                mColumns;           //!< Number of grid columns.
     uint                mRows;              //!< Number of grid rows.

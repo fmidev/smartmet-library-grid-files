@@ -1872,43 +1872,66 @@ void Message::print(std::ostream& stream,uint level,uint optionFlags) const
     mGeometryDef->print(stream,level,optionFlags);
 
     if (optionFlags &  GRID::PrintFlag::data)
+      printCornerData(stream,level);
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
+}
+
+
+
+
+
+/*! \brief The method prints the grid values and coordinates of the grid corners.
+
+        \param stream      The output stream.
+        \param level        The print level (used when printing multi-level structures).
+*/
+
+void Message::printCornerData(std::ostream& stream,uint level) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    T::ParamValue_vec values;
+    getGridValueVector(values);
+
+    stream << space(level+1) << "- data (from the grid corners):\n";
+
+    char st[1000];
+    uint ny = getGridRowCount();
+    uint nx = getGridColumnCount();
+    uint c = 0;
+    std::size_t sz = values.size();
+
+    for (uint y=0; y < ny; y++)
     {
-      T::ParamValue_vec values;
-      getGridValueVector(values);
-
-      stream << space(level+1) << "- data (from the grid corners):\n";
-
-      char st[1000];
-      uint ny = getGridRowCount();
-      uint nx = getGridColumnCount();
-      uint c = 0;
-      std::size_t sz = values.size();
-
-      for (uint y=0; y < ny; y++)
+      for (uint x=0; x < nx; x++)
       {
-        for (uint x=0; x < nx; x++)
+        if ((y < 3  ||  y >= ny-3)  &&  (x < 3  ||  x >= nx-3))
         {
-          if ((y < 3  ||  y >= ny-3)  &&  (x < 3  ||  x >= nx-3))
+          if (c < sz)
           {
-            if (c < sz)
-            {
-              auto val = getGridValueByGridPoint(x,y);
-              double xx = 0;
-              double yy = 0;
-              getGridOriginalCoordinatesByGridPoint(x,y,xx,yy);
-              double xxx = 0;
-              double yyy = 0;
-              getGridLatLonCoordinatesByGridPoint(x,y,xxx,yyy);
-              //auto val = values[c];
-              if (val != ParamValueMissing)
-                sprintf(st,"[%u,%u] [%f,%f] [%f,%f] %f",y+1,x+1,xx,yy,xxx,yyy,val);
-              else
-                sprintf(st,"[%u,%u] [%f,%f] NA",y+1,x+1,xx,yy);
-              stream << space(level+3) << st << "\n";
-            }
+            auto val = getGridValueByGridPoint(x,y);
+            double xx = 0;
+            double yy = 0;
+            getGridOriginalCoordinatesByGridPoint(x,y,xx,yy);
+            double xxx = 0;
+            double yyy = 0;
+            getGridLatLonCoordinatesByGridPoint(x,y,xxx,yyy);
+            //auto val = values[c];
+            if (val != ParamValueMissing)
+              sprintf(st,"[%u,%u] [%f,%f] [%f,%f] %f",y+1,x+1,xx,yy,xxx,yyy,val);
+            else
+              sprintf(st,"[%u,%u] [%f,%f] NA",y+1,x+1,xx,yy);
+            stream << space(level+3) << st << "\n";
           }
-          c++;
         }
+        c++;
       }
     }
   }

@@ -115,6 +115,8 @@ class Message : public GRID::Message
 
   protected:
 
+    void                printCornerData(std::ostream& stream,uint level) const;
+
     GRID::GridFile*     mGridFile;
     char*               mDataPtr;
     uint                mDataSize;
