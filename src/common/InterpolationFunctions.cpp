@@ -202,6 +202,54 @@ double linearInterpolation(double x,double y,double x1,double y1,double x2,doubl
 
 
 
+namespace
+{
+
+/*! \brief Integer-based triangular interpolation when exactly one corner value is missing. */
+
+Int64 triangularInterpolation(Int64 dist_x1,Int64 dist_x2,Int64 dist_y1,Int64 dist_y2,Int64 val_q11,Int64 val_q21,Int64 val_q22,Int64 val_q12)
+{
+  if (val_q11 == ParamValueMissing && val_q21 != ParamValueMissing  &&
+      val_q12 != ParamValueMissing &&  val_q22 != ParamValueMissing)
+  {
+    Int64 wsum = (dist_x2 * dist_y1 + dist_x1 * dist_y1 + dist_x1 * dist_y2);
+    return ((dist_x1 * dist_y2 * val_q21 + dist_x2 * dist_y1 * val_q12 +
+        dist_x1 * dist_y1 * val_q22) / wsum);
+  }
+
+  if (val_q11 != ParamValueMissing && val_q21 == ParamValueMissing  &&
+      val_q12 != ParamValueMissing &&  val_q22 != ParamValueMissing)
+  {
+    Int64 wsum = (dist_x2 * dist_y2 + dist_x2 * dist_y1 + dist_x1 * dist_y1);
+    return ((dist_x2 * dist_y2 * val_q11 + dist_x2 * dist_y1 * val_q12 +
+        dist_x1 * dist_y1 * val_q22) / wsum);
+  }
+
+  if (val_q11 != ParamValueMissing && val_q21 != ParamValueMissing  &&
+      val_q12 == ParamValueMissing &&  val_q22 != ParamValueMissing)
+  {
+    Int64 wsum = (dist_x1 * dist_y1 + dist_x2 * dist_y2 + dist_x1 * dist_y2);
+    return ((dist_x2 * dist_y2 * val_q11 + dist_x1 * dist_y2 * val_q21 +
+      dist_x1 * dist_y1 * val_q22) / wsum);
+  }
+
+  if (val_q11 != ParamValueMissing && val_q21 != ParamValueMissing  &&
+      val_q12 != ParamValueMissing &&  val_q22 == ParamValueMissing)
+  {
+    Int64 wsum = (dist_x2 * dist_y1 + dist_x2 * dist_y2 + dist_x1 * dist_y2);
+    return ((dist_x2 * dist_y2 * val_q11 + dist_x1 * dist_y2 * val_q21 +
+      dist_x2 * dist_y1 * val_q12) / wsum);
+  }
+
+  return ParamValueMissing;
+}
+
+}  // namespace
+
+
+
+
+
 /*! \brief Performs integer-based bilinear interpolation on a quadrilateral, handling missing corner values. */
 
 Int64 linearInterpolation(Int64 x,Int64 y,Int64 x1,Int64 y1,Int64 x2,Int64 y2,Int64 val_q11,Int64 val_q21,Int64 val_q22,Int64 val_q12)
@@ -272,39 +320,7 @@ Int64 linearInterpolation(Int64 x,Int64 y,Int64 x1,Int64 y1,Int64 x2,Int64 y2,In
 
     // Three corners have a value (triangular interpolation).
 
-    if (val_q11 == ParamValueMissing && val_q21 != ParamValueMissing  &&
-        val_q12 != ParamValueMissing &&  val_q22 != ParamValueMissing)
-    {
-      Int64 wsum = (dist_x2 * dist_y1 + dist_x1 * dist_y1 + dist_x1 * dist_y2);
-      return ((dist_x1 * dist_y2 * val_q21 + dist_x2 * dist_y1 * val_q12 +
-          dist_x1 * dist_y1 * val_q22) / wsum);
-    }
-
-    if (val_q11 != ParamValueMissing && val_q21 == ParamValueMissing  &&
-        val_q12 != ParamValueMissing &&  val_q22 != ParamValueMissing)
-    {
-      Int64 wsum = (dist_x2 * dist_y2 + dist_x2 * dist_y1 + dist_x1 * dist_y1);
-      return ((dist_x2 * dist_y2 * val_q11 + dist_x2 * dist_y1 * val_q12 +
-          dist_x1 * dist_y1 * val_q22) / wsum);
-    }
-
-    if (val_q11 != ParamValueMissing && val_q21 != ParamValueMissing  &&
-        val_q12 == ParamValueMissing &&  val_q22 != ParamValueMissing)
-    {
-      Int64 wsum = (dist_x1 * dist_y1 + dist_x2 * dist_y2 + dist_x1 * dist_y2);
-      return ((dist_x2 * dist_y2 * val_q11 + dist_x1 * dist_y2 * val_q21 +
-        dist_x1 * dist_y1 * val_q22) / wsum);
-    }
-
-    if (val_q11 != ParamValueMissing && val_q21 != ParamValueMissing  &&
-        val_q12 != ParamValueMissing &&  val_q22 == ParamValueMissing)
-    {
-      Int64 wsum = (dist_x2 * dist_y1 + dist_x2 * dist_y2 + dist_x1 * dist_y2);
-      return ((dist_x2 * dist_y2 * val_q11 + dist_x1 * dist_y2 * val_q21 +
-        dist_x2 * dist_y1 * val_q12) / wsum);
-    }
-
-    return ParamValueMissing;
+    return triangularInterpolation(dist_x1,dist_x2,dist_y1,dist_y2,val_q11,val_q21,val_q22,val_q12);
   }
   catch (...)
   {
