@@ -134,6 +134,8 @@ class GridSection : public GRID::MessageSection
 
   private:
 
+    void                  readNumbersOfPoints(MemoryReader& memoryReader);
+
     GridDefinition*       createGridDefinition(std::uint16_t templateNumber);
 
     /*! \brief The pointer to the message object. */

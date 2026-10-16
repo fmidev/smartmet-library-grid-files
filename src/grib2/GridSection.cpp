@@ -315,6 +315,69 @@ bool GridSection::setProperty(uint propertyId,Int64 value)
 
 
 
+/*! \brief The method reads the optional list of numbers of points per row (or column).
+
+        \param memoryReader  This object controls the access to the memory mapped file.
+*/
+
+void GridSection::readNumbersOfPoints(MemoryReader& memoryReader)
+{
+  FUNCTION_TRACE
+  try
+  {
+    const auto octets = *mNumberOfOctetsForNumberOfPoints;
+    if (octets != 1 && octets != 2 && octets != 4)
+    {
+      Fmi::Exception exception(BCP,"Unsupported size for the optional list of numbers of points");
+      exception.addParameter("Octets",std::to_string(octets));
+      throw exception;
+    }
+
+    const auto sectionEnd = mFilePosition + *mSectionLength;
+    const auto pos = memoryReader.getGlobalReadPosition();
+    if (pos > sectionEnd)
+      throw Fmi::Exception(BCP,"The grid definition extends beyond the end of the grid section");
+
+    // The section length comes from the file: never read (or allocate) beyond the data
+    const auto available = static_cast<std::uint64_t>(memoryReader.getEndPtr() - memoryReader.getReadPtr());
+    if (sectionEnd - pos > available)
+      throw Fmi::Exception(BCP,"The grid section extends beyond the end of the data");
+
+    const auto count = (sectionEnd - pos) / octets;
+    mDataPoints.clear();
+    mDataPoints.reserve(count);
+    for (std::size_t t = 0; t < count; t++)
+    {
+      if (octets == 1)
+      {
+        std::uint8_t v = 0;
+        memoryReader >> v;
+        mDataPoints.push_back(v);
+      }
+      else if (octets == 2)
+      {
+        std::uint16_t v = 0;
+        memoryReader >> v;
+        mDataPoints.push_back(v);
+      }
+      else
+      {
+        std::uint32_t v = 0;
+        memoryReader >> v;
+        mDataPoints.push_back(v);
+      }
+    }
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
 /*! \brief The method reads and initializes all data related to the current section object.
 
         \param memoryReader  This object controls the access to the memory mapped file.
@@ -389,50 +452,7 @@ void GridSection::read(MemoryReader& memoryReader)
     // in mNumberOfGridPoints, so the list is only stored. Rejecting it made the whole file
     // unreadable when it contained a single reduced message.
     if (*mNumberOfOctetsForNumberOfPoints != 0)
-    {
-      const auto octets = *mNumberOfOctetsForNumberOfPoints;
-      if (octets != 1 && octets != 2 && octets != 4)
-      {
-        Fmi::Exception exception(BCP,"Unsupported size for the optional list of numbers of points");
-        exception.addParameter("Octets",std::to_string(octets));
-        throw exception;
-      }
-
-      const auto sectionEnd = mFilePosition + *mSectionLength;
-      const auto pos = memoryReader.getGlobalReadPosition();
-      if (pos > sectionEnd)
-        throw Fmi::Exception(BCP,"The grid definition extends beyond the end of the grid section");
-
-      // The section length comes from the file: never read (or allocate) beyond the data
-      const auto available = static_cast<std::uint64_t>(memoryReader.getEndPtr() - memoryReader.getReadPtr());
-      if (sectionEnd - pos > available)
-        throw Fmi::Exception(BCP,"The grid section extends beyond the end of the data");
-
-      const auto count = (sectionEnd - pos) / octets;
-      mDataPoints.clear();
-      mDataPoints.reserve(count);
-      for (std::size_t t = 0; t < count; t++)
-      {
-        if (octets == 1)
-        {
-          std::uint8_t v = 0;
-          memoryReader >> v;
-          mDataPoints.push_back(v);
-        }
-        else if (octets == 2)
-        {
-          std::uint16_t v = 0;
-          memoryReader >> v;
-          mDataPoints.push_back(v);
-        }
-        else
-        {
-          std::uint32_t v = 0;
-          memoryReader >> v;
-          mDataPoints.push_back(v);
-        }
-      }
-    }
+      readNumbersOfPoints(memoryReader);
 
     if (mGridDefinition)
     {
