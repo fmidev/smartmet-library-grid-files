@@ -684,7 +684,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,std::vector<
       }
     }
 
-    return attributeValueVec.size() > 0  ||  exists;
+    return !attributeValueVec.empty()  ||  exists;
   }
   catch (...)
   {
@@ -787,7 +787,7 @@ bool ConfigurationFile::getAttributeFields(const char *attributeName,std::set<st
       }
     }
 
-    return attributeFields.size() > 0;
+    return !attributeFields.empty();
   }
   catch (...)
   {
@@ -828,7 +828,7 @@ bool ConfigurationFile::getSubAttributes(const char *attributeName,std::vector<s
       }
     }
 
-    return attributeNames.size() > 0;
+    return !attributeNames.empty();
   }
   catch (...)
   {
