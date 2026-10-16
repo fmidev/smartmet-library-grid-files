@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 26.10.15
+Version: 26.10.16
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -22,10 +22,10 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires: rpm-build
 BuildRequires: smartmet-utils-devel >= 26.9.3
-BuildRequires: smartmet-library-newbase-devel >= 26.10.15
-BuildRequires: smartmet-library-spine-devel >= 26.10.15
-BuildRequires: smartmet-library-macgyver-devel >= 26.10.15
-BuildRequires: smartmet-library-trax-devel >= 26.10.15
+BuildRequires: smartmet-library-newbase-devel >= 26.10.16
+BuildRequires: smartmet-library-spine-devel >= 26.10.16
+BuildRequires: smartmet-library-macgyver-devel >= 26.10.16
+BuildRequires: smartmet-library-trax-devel >= 26.10.16
 BuildRequires: %{smartmet_boost}-devel
 BuildRequires: gcc-c++
 BuildRequires: gdal312-devel
@@ -50,10 +50,10 @@ Requires: libaec
 Requires: libcurl
 Requires: openjpeg2
 Requires: libwebp13 >= 1.3.2
-Requires: smartmet-library-newbase >= 26.10.15
-Requires: smartmet-library-macgyver >= 26.10.15
-Requires: smartmet-library-spine >= 26.10.15
-Requires: smartmet-library-trax >= 26.10.15
+Requires: smartmet-library-newbase >= 26.10.16
+Requires: smartmet-library-macgyver >= 26.10.16
+Requires: smartmet-library-spine >= 26.10.16
+Requires: smartmet-library-trax >= 26.10.16
 Requires: smartmet-topography-data >= 1.0.0
 #TestRequires: %{smartmet_boost}-devel
 #TestRequires: gcc-c++
@@ -61,12 +61,12 @@ Requires: smartmet-topography-data >= 1.0.0
 #TestRequires: gdal312-devel
 #TestRequires: geos313-devel
 #TestRequires: libwebp13-devel >= 1.3.2
-#TestRequires: smartmet-library-macgyver-devel >= 26.10.15
-#TestRequires: smartmet-library-newbase-devel >= 26.10.15
-#TestRequires: smartmet-library-spine-devel >= 26.10.15
-#TestRequires: smartmet-library-trax-devel >= 26.10.15
+#TestRequires: smartmet-library-macgyver-devel >= 26.10.16
+#TestRequires: smartmet-library-newbase-devel >= 26.10.16
+#TestRequires: smartmet-library-spine-devel >= 26.10.16
+#TestRequires: smartmet-library-trax-devel >= 26.10.16
 #TestRequires: smartmet-test-data >= 26.8.26
-#TestRequires: smartmet-qdtools-test-data >= 26.7.9
+#TestRequires: smartmet-qdtools-test-data >= 26.10.16
 
 %description
 FMI Grid File handling library
@@ -96,9 +96,9 @@ rm -rf $RPM_BUILD_ROOT
 Summary: FMI Grid File library development files
 Provides: %{SPECNAME}-devel
 Requires: %{SPECNAME} = %{version}-%{release}
-Requires: smartmet-library-newbase-devel >= 26.10.15
+Requires: smartmet-library-newbase-devel >= 26.10.16
 Requires: smartmet-library-spine-devel
-Requires: smartmet-library-macgyver-devel >= 26.10.15
+Requires: smartmet-library-macgyver-devel >= 26.10.16
 Requires: smartmet-library-trax-devel
 Requires: %{smartmet_boost}-devel
 Requires: libcurl-devel
@@ -127,6 +127,13 @@ libraries, the grid engine and the plugins using it
 %attr(0755,root,root) %{_bindir}/smartmet-grid-test-config-creator
 
 %changelog
+* Fri Oct 16 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.16-1.fmi
+- PRINT_DATA, PRINT_EVENT_LINE and PRINT_EVENT expand to expressions calling new Log members with
+  printf format checking; the unused PRINT_FILE macro is removed
+- Removed the unused localTimeToUtcTime and utcTimeToLocalTime
+- Fixed compiler warnings and clang-tidy findings (unused code, unreachable code, empty statements, member initialization, parameter passing, noexcept), no functional changes
+- ABI change: parameters passed by const reference or by value, removed unused members and defaulted copy operations, dependent packages must be rebuilt
+
 * Thu Oct 15 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.15-1.fmi
 - Declare member functions and parameters const where nothing is modified (const correctness), no functional changes
 - The generated GRIB definition setters take their settings by const reference (PHP generators updated too)
