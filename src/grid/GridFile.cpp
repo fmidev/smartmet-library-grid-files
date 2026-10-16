@@ -1780,6 +1780,70 @@ void GridFile::readGrib2Message(MemoryReader& memoryReader, T::MessageIndex mess
 
 
 
+namespace
+{
+
+/*! \brief Reads the GRIB indicator section and checks it is valid.
+
+        \param memoryReader  The reader positioned at the "GRIB" identifier.
+        \param edition       The returned GRIB edition.
+        \param totalLength   The returned total length of the message.
+        \return              True if the indicator section is valid.
+*/
+
+bool readGribIndicator(MemoryReader& memoryReader,std::uint8_t& edition,std::uint64_t& totalLength)
+{
+  bool valid = true;
+
+  memoryReader.read_null(4);
+
+  std::uint8_t s[3];
+  memoryReader >> s[0];
+  memoryReader >> s[1];
+  memoryReader >> s[2];
+
+
+  edition = 0;
+  memoryReader >> edition;
+
+  // TODO: Keeping this genering for now
+  if (missing(edition))
+  {
+    valid = false;
+  }
+
+  if (edition != 1 &&  edition != 2)
+  {
+    valid = false;
+  }
+
+  totalLength = 0;
+
+  if (edition == 1)
+    totalLength = (s[0] << 16) + (s[1] << 8) + s[2];
+
+  if (edition == 2)
+    memoryReader >> totalLength;
+
+  // The value of the total length contains also 16 bytes in the beginning of the section 0.
+  if (totalLength < 16 || (totalLength-16) > (memoryReader.getDataSize() - memoryReader.getReadPosition()))
+  {
+    valid = false;
+    //Fmi::Exception exception(BCP,"The GRIB size ('totalLength') is out of the limits!");
+    //exception.addParameter("Read position",uint64_toHex(memoryReader.getReadPosition()));
+    //exception.addParameter("totalLength",Fmi::to_string(totalLength));
+    //throw exception;
+  }
+
+  return valid;
+}
+
+}  // namespace
+
+
+
+
+
 /*! \brief This method tries to locate the message start positions in the grib file.
     The method is needed because a grib file itself does not necessary have a well-defined
     structure. In other words, a grib file contains one or several messages, but in some
@@ -1845,50 +1909,12 @@ MessagePos_vec GridFile::searchMessageLocations(MemoryReader& memoryReader,uint 
 
       memoryReader.setReadPosition(memoryReader.getReadPosition()+spos);
 
-      bool valid = true;
-
       // Skip identifier, reserved and discipline and then read the edition number
 
       auto *startPtr = memoryReader.getReadPtr();
-      memoryReader.read_null(4);
-
-      std::uint8_t s[3];
-      memoryReader >> s[0];
-      memoryReader >> s[1];
-      memoryReader >> s[2];
-
-
       std::uint8_t edition = 0;
-      memoryReader >> edition;
-
-      // TODO: Keeping this genering for now
-      if (missing(edition))
-      {
-        valid = false;
-      }
-
-      if (edition != 1 &&  edition != 2)
-      {
-        valid = false;
-      }
-
       std::uint64_t totalLength = 0;
-
-      if (edition == 1)
-        totalLength = (s[0] << 16) + (s[1] << 8) + s[2];
-
-      if (edition == 2)
-        memoryReader >> totalLength;
-
-      // The value of the total length contains also 16 bytes in the beginning of the section 0.
-      if (totalLength < 16 || (totalLength-16) > (memoryReader.getDataSize() - memoryReader.getReadPosition()))
-      {
-        valid = false;
-        //Fmi::Exception exception(BCP,"The GRIB size ('totalLength') is out of the limits!");
-        //exception.addParameter("Read position",uint64_toHex(memoryReader.getReadPosition()));
-        //exception.addParameter("totalLength",Fmi::to_string(totalLength));
-        //throw exception;
-      }
+      bool valid = readGribIndicator(memoryReader,edition,totalLength);
 
       if (valid)
       {
