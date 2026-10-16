@@ -1152,6 +1152,61 @@ int webp_anim_save(const char *filename,
 
 
 
+namespace
+{
+
+/*! \brief Converts an ARGB image to RGBA into a new buffer and adds it as an animation frame. */
+
+void addWebpFrame(WebPAnimEncoder* enc,
+                  const uint *argb,
+                  uint*& rgba,
+                  uint sz,
+                  int image_width,
+                  int image_height,
+                  int ts)
+{
+  WebPConfig config;
+  WebPConfigInit(&config);
+  config.quality = 90;
+  config.lossless = 0;
+
+  WebPPicture frame;
+  if (!WebPPictureInitInternal(&frame, WEBP_ENCODER_ABI_VERSION))
+    throw Fmi::Exception(BCP, "WebPPictureInit failed", nullptr);
+
+  frame.width  = image_width;
+  frame.height = image_height;
+
+  rgba = new uint[sz];
+
+  for (uint s = 0; s < sz; s++)
+  {
+    uint oldCol = argb[s];
+    uint newCol = (oldCol & 0xFF000000) + ((oldCol & 0x00FF0000) >> 16) + (oldCol & 0x0000FF00) +((oldCol & 0x000000FF) << 16);
+    rgba[s] = newCol;
+  }
+
+  if (!WebPPictureImportRGBA(&frame,
+                             reinterpret_cast<uint8_t*>(rgba),
+                             image_width * 4))
+  {
+    WebPPictureFree(&frame);
+    throw Fmi::Exception(BCP, "WebPPictureImportRGBA failed", nullptr);
+  }
+
+  if (!WebPAnimEncoderAdd(enc, &frame, ts, &config))
+  {
+    WebPPictureFree(&frame);
+    throw Fmi::Exception(BCP, "WebPAnimEncoderAdd failed", nullptr);
+  }
+
+  WebPPictureFree(&frame);
+}
+
+}  // namespace
+
+
+
 /*! \brief Encodes a series of ARGB images into an animated WebP file after converting to RGBA. */
 
 int webp_anim_save_ARGB(const char *filename,
@@ -1185,42 +1240,8 @@ int webp_anim_save_ARGB(const char *filename,
 
     for (int t = 0; t < numberOfImages; t++)
     {
-      WebPConfig config;
-      WebPConfigInit(&config);
-      config.quality = 90;
-      config.lossless = 0;
+      addWebpFrame(enc,image[t],newImage[t],sz,image_width,image_height,ts);
 
-      WebPPicture frame;
-      if (!WebPPictureInitInternal(&frame, WEBP_ENCODER_ABI_VERSION))
-        throw Fmi::Exception(BCP, "WebPPictureInit failed", nullptr);
-
-      frame.width  = image_width;
-      frame.height = image_height;
-
-      newImage[t] = new uint[sz];
-
-      for (uint s = 0; s < sz; s++)
-      {
-        uint oldCol = image[t][s];
-        uint newCol = (oldCol & 0xFF000000) + ((oldCol & 0x00FF0000) >> 16) + (oldCol & 0x0000FF00) +((oldCol & 0x000000FF) << 16);
-        newImage[t][s] = newCol;
-      }
-
-      if (!WebPPictureImportRGBA(&frame,
-                                 reinterpret_cast<uint8_t*>(newImage[t]),
-                                 image_width * 4))
-      {
-        WebPPictureFree(&frame);
-        throw Fmi::Exception(BCP, "WebPPictureImportRGBA failed", nullptr);
-      }
-
-      if (!WebPAnimEncoderAdd(enc, &frame, ts, &config))
-      {
-        WebPPictureFree(&frame);
-        throw Fmi::Exception(BCP, "WebPAnimEncoderAdd failed", nullptr);
-      }
-
-      WebPPictureFree(&frame);
       int dt = 50;
       if (t < (int)timeStepMsec.size())
         dt = timeStepMsec[t];
