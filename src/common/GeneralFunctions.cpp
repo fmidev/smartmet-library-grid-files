@@ -3125,6 +3125,53 @@ std::string fileToBase64(const char *filename)
 
 
 
+namespace
+{
+
+/*! \brief Splits a semicolon-separated CSV line into fields and appends them as a record. */
+
+void splitCsvLine(char *st,std::vector<std::vector<std::string>>& records)
+{
+  std::vector<std::string> fields;
+  bool ind = false;
+  char *field[1000];
+  uint c = 1;
+  field[0] = st;
+  char *p = st;
+  while (*p != '\0'  &&  c < 100)
+  {
+    if (*p == '"')
+      ind = !ind;
+
+    if ((*p == ';'  || *p == '\n') && !ind)
+    {
+      *p = '\0';
+      //printf("[%s]",field[c-1]);
+      p++;
+      field[c] = p;
+      c++;
+    }
+    else
+    {
+      p++;
+    }
+  }
+
+  //printf("\n");
+  if (c > 1)
+  {
+    c--;
+    for (uint t=0; t<c; t++)
+      fields.emplace_back(field[t]);
+
+    records.emplace_back(fields);
+  }
+}
+
+}  // namespace
+
+
+
 /*! \brief Reads a semicolon-separated CSV file into rows of fields. */
 
 void readCsvFile(const char *filename,std::vector<std::vector<std::string>>& records)
@@ -3144,42 +3191,7 @@ void readCsvFile(const char *filename,std::vector<std::vector<std::string>>& rec
     while (fgets(st,10000,file) != nullptr)
     {
       if (st[0] != '#')
-      {
-        std::vector<std::string> fields;
-        bool ind = false;
-        char *field[1000];
-        uint c = 1;
-        field[0] = st;
-        char *p = st;
-        while (*p != '\0'  &&  c < 100)
-        {
-          if (*p == '"')
-            ind = !ind;
-
-          if ((*p == ';'  || *p == '\n') && !ind)
-          {
-            *p = '\0';
-            //printf("[%s]",field[c-1]);
-            p++;
-            field[c] = p;
-            c++;
-          }
-          else
-          {
-            p++;
-          }
-        }
-
-        //printf("\n");
-        if (c > 1)
-        {
-          c--;
-          for (uint t=0; t<c; t++)
-            fields.emplace_back(field[t]);
-
-          records.emplace_back(fields);
-        }
-      }
+        splitCsvLine(st,records);
     }
     (void)fclose(file);
   }
@@ -4042,12 +4054,7 @@ Int64 getCsvInt64Field(const char *csv,uint fieldIndex)
       if (*p == ';' || *p == '\n' || *p == '\0')
       {
         if (cnt == fieldIndex)
-        {
-          if (neg)
-            return -val;
-          else
-            return val;
-        }
+          return neg ? -val : val;
 
         if (*p == '\0')
           return 0;
@@ -4055,18 +4062,16 @@ Int64 getCsvInt64Field(const char *csv,uint fieldIndex)
         cnt++;
       }
       else
+      if (cnt == fieldIndex)
       {
-        if (cnt == fieldIndex)
+        if (*p == '-')
         {
-          if (*p == '-')
-          {
-            neg = true;
-          }
-          else
-          {
-            val = val * 10;
-            val = val + (*p - '0');
-          }
+          neg = true;
+        }
+        else
+        {
+          val = val * 10;
+          val = val + (*p - '0');
         }
       }
 
