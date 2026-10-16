@@ -2597,6 +2597,52 @@ void Message::getGridMinAndMaxValues(T::ParamValue& minValue,T::ParamValue& maxV
 
 
 
+/*! \brief The method reads the grid value directly from simple packed data without a bitmap.
+
+        \param idx      The value index.
+        \param value    The returned parameter value.
+        \return         True if the value could be read directly.
+*/
+
+bool Message::getSimplePackedValueByIndex(int idx,T::ParamValue& value) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mBitmapSection == nullptr  ||  mBitmapSection->getBitmapDataSizeInBytes() == 0)
+    {
+      if (mDataSection->getPackingMethod() == PackingMethod::SIMPLE_PACKING)
+      {
+        //mRequestCounter++;
+        if (!mPremapped  &&  memoryMapper.isPremapEnabled())
+          premap();
+
+        if (mDataSection->getValueByIndex(idx,value))
+        {
+          if (mGridFilePtr->hasMemoryMapperError())
+          {
+            Fmi::Exception exception(BCP,"Memory mapper has set fail flag for the current file!",nullptr);
+            exception.addParameter("Filename",mGridFilePtr->getFileName());
+            throw exception;
+          }
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
+}
+
+
+
+
+
 /*! \brief The method returns the grid value in the given (exact) point.
 
         \param grid_i   The grid i-position.
@@ -2633,26 +2679,8 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
       return ParamValueMissing;
 
     T::ParamValue value = 0;
-    if (mBitmapSection == nullptr  ||  mBitmapSection->getBitmapDataSizeInBytes() == 0)
-    {
-      if (mDataSection->getPackingMethod() == PackingMethod::SIMPLE_PACKING)
-      {
-        //mRequestCounter++;
-        if (!mPremapped  &&  memoryMapper.isPremapEnabled())
-          premap();
-
-        if (mDataSection->getValueByIndex(idx,value))
-        {
-          if (mGridFilePtr->hasMemoryMapperError())
-          {
-            Fmi::Exception exception(BCP,"Memory mapper has set fail flag for the current file!",nullptr);
-            exception.addParameter("Filename",mGridFilePtr->getFileName());
-            throw exception;
-          }
-          return value;
-        }
-      }
-    }
+    if (getSimplePackedValueByIndex(idx,value))
+      return value;
 
     if (mCacheKey > 0)
     {

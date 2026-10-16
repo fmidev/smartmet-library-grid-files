@@ -181,6 +181,8 @@ class Message : public GRID::Message
 
   private:
 
+    bool                getSimplePackedValueByIndex(int idx,T::ParamValue& value) const;
+
     /*! \brief The message start position in the file. */
     T::FilePosition     mFilePosition;
 
