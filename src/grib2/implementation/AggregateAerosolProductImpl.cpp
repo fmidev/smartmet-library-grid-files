@@ -130,7 +130,7 @@ T::TimeString AggregateAerosolProductImpl::countForecastStartTime(const T::TimeS
 {
   try
   {
-    T::TimeStamp refTime = toTimeStamp(std::move(referenceTime));
+    T::TimeStamp refTime = toTimeStamp(referenceTime);
     T::TimeStamp tt = refTime;
 
     auto forecastTimeP = mParameterAerosol.getForecastTime();

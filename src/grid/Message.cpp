@@ -2394,7 +2394,6 @@ float Message::getGridPointAngle(T::CoordinateType coordinateType,double x,doubl
         throw exception;
       }
     }
-    return 0;
   }
   catch (...)
   {

@@ -223,14 +223,12 @@ void SecondOrderPacking::decodeValues(Message *message,T::ParamValue_vec& decode
         {
           decodeValues_rowByRow(numOfValues,dimensions,data,dataSize,bitmap,bitmapSizeInBytes,
               binaryScaleFactor,decimalScaleFactor,referenceValue,bitsPerValue,flags,decodedValues);
-          return;
         }
 
         if (!secondOrderOfDifferentWidth  &&  secondaryBitmapPresent  &&  !generalExtended2ordr)
         {
           decodeValues_constantWidth(numOfValues,dimensions,data,dataSize,bitmap,bitmapSizeInBytes,
               binaryScaleFactor,decimalScaleFactor,referenceValue,bitsPerValue,flags,decodedValues);
-          return;
         }
 
 
@@ -238,7 +236,6 @@ void SecondOrderPacking::decodeValues(Message *message,T::ParamValue_vec& decode
         {
           decodeValues_differentWidth(numOfValues,dimensions,data,dataSize,bitmap,bitmapSizeInBytes,
               binaryScaleFactor,decimalScaleFactor,referenceValue,bitsPerValue,flags,decodedValues);
-          return;
         }
 
         if (secondOrderOfDifferentWidth  &&  !secondaryBitmapPresent  &&  generalExtended2ordr  &&  !plusOneinOrdersOfSPD  &&  !twoOrdersOfSPD)

@@ -13,9 +13,7 @@ namespace SmartMet
 /*! \brief Default constructor for DataFetcher. */
 
 DataFetcher::DataFetcher()
-{
-
-}
+= default;
 
 
 

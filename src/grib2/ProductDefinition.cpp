@@ -1767,7 +1767,7 @@ T::TimeString ProductDefinition::countForecastStartTime(const T::TimeString& ref
 {
   try
   {
-    T::TimeStamp refTime = toTimeStamp(std::move(referenceTime));
+    T::TimeStamp refTime = toTimeStamp(referenceTime);
     T::TimeStamp tt = refTime;
 
     auto forecastTimeP = parameter.getForecastTime();
@@ -1837,7 +1837,7 @@ T::TimeString ProductDefinition::countForecastStartTime(const T::TimeString& ref
 {
   try
   {
-    T::TimeStamp refTime = toTimeStamp(std::move(referenceTime));
+    T::TimeStamp refTime = toTimeStamp(referenceTime);
     T::TimeStamp tt = refTime;
 
     auto forecastTimeP = parameter.getForecastTime();

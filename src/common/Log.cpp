@@ -529,7 +529,7 @@ void printEventPrefix(FILE *_file,UInt64 _eventCounter)
 
 /*! \brief Writes printf formatted text to the log. */
 
-void Log::printData(const char *_format,...)
+void Log::printData(const char *_format,...)  // NOLINT(cert-dcl50-cpp): printf style by design
 {
   try
   {
@@ -561,7 +561,7 @@ void Log::printData(const char *_format,...)
 
 /*! \brief Writes a timestamped, numbered event line of printf formatted text to the log. */
 
-void Log::printEventLine(const char *_format,...)
+void Log::printEventLine(const char *_format,...)  // NOLINT(cert-dcl50-cpp): printf style by design
 {
   try
   {
@@ -595,7 +595,7 @@ void Log::printEventLine(const char *_format,...)
 
 /*! \brief Writes a timestamped, numbered event of printf formatted text with its source location to the log. */
 
-void Log::printEvent(const char *_filename,uint _line,const char *_function,const char *_format,...)
+void Log::printEvent(const char *_filename,uint _line,const char *_function,const char *_format,...)  // NOLINT(cert-dcl50-cpp): printf style by design
 {
   try
   {

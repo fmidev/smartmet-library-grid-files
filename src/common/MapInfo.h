@@ -30,7 +30,7 @@ class MapInfo
   public:
 
     /*! \brief Construct a zeroed descriptor. */
-    MapInfo() :   server(""),   memoryPtr(nullptr)
+    MapInfo()
     {
 
 
@@ -72,7 +72,7 @@ class MapInfo
     std::size_t     fileSize{0};      //!< On-disk file size in bytes
     std::size_t     allocatedSize{0}; //!< Size of the virtual memory reservation in bytes
     time_t          mappingTime;   //!< Unix timestamp when the mapping was established
-    char*           memoryPtr;     //!< Base address of the mapped region (nullptr if not yet mapped)
+    char*           memoryPtr{nullptr};     //!< Base address of the mapped region (nullptr if not yet mapped)
     bool            mappingError;  //!< True if the last mapping attempt failed
     MappedFile_uptr mappedFile;    //!< Boost-mapped file handle (non-null for local file mappings)
 

@@ -22,6 +22,7 @@ class MessageSection
                             MessageSection();
     virtual                 ~MessageSection();
     MessageSection(const MessageSection&) = default;
+    MessageSection& operator=(const MessageSection&) = default;
 
     /*! \brief Populate an AttributeList with all section fields as key/value pairs.
      *  \param[in]  prefix         String prepended to every attribute key.

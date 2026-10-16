@@ -130,7 +130,7 @@ T::TimeString AggregateAtmosphericChemicalProductImpl::countForecastStartTime(co
 {
   try
   {
-    T::TimeStamp refTime = toTimeStamp(std::move(referenceTime));
+    T::TimeStamp refTime = toTimeStamp(referenceTime);
     T::TimeStamp tt = refTime;
 
     auto forecastTimeP = mParameterChemical.getForecastTime();

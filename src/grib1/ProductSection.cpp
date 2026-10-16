@@ -1522,9 +1522,6 @@ T::TimeString ProductSection::getForecastTime() const
         break;
 
       case 113: // Average of N forecasts (or initialized analyses); each product has forecast period of P1 (P1=0 for initialized analyses); products have reference times at intervals of P2, beginning at the given reference time.
-        tt = refTime + dd*mP2;
-        break;
-
       case 114: // Accumulation of N forecasts (or initialized analyses); each product has forecast period of P1 (P1=0 for initialized analyses); products have reference times at intervals of P2, beginning at the given reference time.
         tt = refTime + dd*mP2;
         break;
