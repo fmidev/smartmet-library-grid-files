@@ -9,7 +9,6 @@
 namespace SmartMet
 {
 
-using Int64 = Int64;
 
 /*! \brief Linearly interpolates a value between two positions. */
 
@@ -202,131 +201,6 @@ double linearInterpolation(double x,double y,double x1,double y1,double x2,doubl
 
 
 
-namespace
-{
-
-/*! \brief Integer-based triangular interpolation when exactly one corner value is missing. */
-
-Int64 triangularInterpolation(Int64 dist_x1,Int64 dist_x2,Int64 dist_y1,Int64 dist_y2,Int64 val_q11,Int64 val_q21,Int64 val_q22,Int64 val_q12)
-{
-  if (val_q11 == ParamValueMissing && val_q21 != ParamValueMissing  &&
-      val_q12 != ParamValueMissing &&  val_q22 != ParamValueMissing)
-  {
-    Int64 wsum = (dist_x2 * dist_y1 + dist_x1 * dist_y1 + dist_x1 * dist_y2);
-    return ((dist_x1 * dist_y2 * val_q21 + dist_x2 * dist_y1 * val_q12 +
-        dist_x1 * dist_y1 * val_q22) / wsum);
-  }
-
-  if (val_q11 != ParamValueMissing && val_q21 == ParamValueMissing  &&
-      val_q12 != ParamValueMissing &&  val_q22 != ParamValueMissing)
-  {
-    Int64 wsum = (dist_x2 * dist_y2 + dist_x2 * dist_y1 + dist_x1 * dist_y1);
-    return ((dist_x2 * dist_y2 * val_q11 + dist_x2 * dist_y1 * val_q12 +
-        dist_x1 * dist_y1 * val_q22) / wsum);
-  }
-
-  if (val_q11 != ParamValueMissing && val_q21 != ParamValueMissing  &&
-      val_q12 == ParamValueMissing &&  val_q22 != ParamValueMissing)
-  {
-    Int64 wsum = (dist_x1 * dist_y1 + dist_x2 * dist_y2 + dist_x1 * dist_y2);
-    return ((dist_x2 * dist_y2 * val_q11 + dist_x1 * dist_y2 * val_q21 +
-      dist_x1 * dist_y1 * val_q22) / wsum);
-  }
-
-  if (val_q11 != ParamValueMissing && val_q21 != ParamValueMissing  &&
-      val_q12 != ParamValueMissing &&  val_q22 == ParamValueMissing)
-  {
-    Int64 wsum = (dist_x2 * dist_y1 + dist_x2 * dist_y2 + dist_x1 * dist_y2);
-    return ((dist_x2 * dist_y2 * val_q11 + dist_x1 * dist_y2 * val_q21 +
-      dist_x2 * dist_y1 * val_q12) / wsum);
-  }
-
-  return ParamValueMissing;
-}
-
-}  // namespace
-
-
-
-
-
-/*! \brief Performs integer-based bilinear interpolation on a quadrilateral, handling missing corner values. */
-
-Int64 linearInterpolation(Int64 x,Int64 y,Int64 x1,Int64 y1,Int64 x2,Int64 y2,Int64 val_q11,Int64 val_q21,Int64 val_q22,Int64 val_q12)
-{
-  try
-  {
-    Int64 XParamValueMissing = 0x7FFFFFFFFFFFFFFF;
-    // https://en.wikipedia.org/wiki/Bilinear_interpolation
-
-    Int64 dist_x1 = x-x1;
-    Int64 dist_x2 = x2-x;
-    Int64 dist_y1 = y-y1;
-    Int64 dist_y2 = y2-y;
-
-
-    // Bilinear interpolation
-
-    if (val_q11 != XParamValueMissing && val_q21 != XParamValueMissing  &&
-        val_q12 != XParamValueMissing &&  val_q22 != XParamValueMissing)
-    {
-      // All corners have a value.
-
-      Int64 fy1 = dist_x2*val_q11 + dist_x1*val_q21;
-      Int64 fy2 = dist_x2*val_q12 + dist_x1*val_q22;
-      return (dist_y2*fy1 + dist_y1*fy2);
-    }
-
-
-    // If the given point is on the border then we can do simple
-    // linear interpolation.
-
-    if (dist_x1 == 0)
-    {
-      // Linear interpolation x1,y1 - x1,y2
-      if (val_q11 != XParamValueMissing  &&  val_q12 != XParamValueMissing)
-        return (dist_y1*val_q11 + dist_y2*val_q12);
-
-      return XParamValueMissing;
-    }
-
-    if (dist_x2 == 0)
-    {
-      // Linear interpolation x2,y1 - x2,y2
-      if (val_q21 != XParamValueMissing  &&  val_q22 != XParamValueMissing)
-        return (dist_y1*val_q21 + dist_y2*val_q22);
-
-      return XParamValueMissing;
-    }
-
-    if (dist_y1 == 0)
-    {
-      // Linear interpolation x1,y1 - x2,y1
-      if (val_q11 != ParamValueMissing  &&  val_q21 != ParamValueMissing)
-        return (dist_x1*val_q11 + dist_x2*val_q21);
-
-      return ParamValueMissing;
-    }
-
-    if (dist_y2 == 0)
-    {
-      // Linear interpolation x1,y2 - x2,y2
-      if (val_q12 != ParamValueMissing  &&  val_q22 != ParamValueMissing)
-        return (dist_x1*val_q12 + dist_x2*val_q22);
-
-      return ParamValueMissing;
-    }
-
-
-    // Three corners have a value (triangular interpolation).
-
-    return triangularInterpolation(dist_x1,dist_x2,dist_y1,dist_y2,val_q11,val_q21,val_q22,val_q12);
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
 
 
 
