@@ -229,6 +229,74 @@ int DataFetcher_filesys::getData(uint /*serverType*/,uint /*protocol*/,const cha
 
 
 
+namespace
+{
+/*! \brief The type of a directory entry. */
+
+enum class EntryType
+{
+  Directory,
+  File,
+  Other
+};
+
+
+
+/*! \brief Checks if the entry is "." or "..". */
+
+bool isDotEntry(const struct dirent *ep)
+{
+  return (strcmp(ep->d_name, "..") == 0  ||  strcmp(ep->d_name, ".") == 0);
+}
+
+
+
+/*! \brief Classifies the directory entry. The file status is read into s unless the entry
+    is known to be a directory. */
+
+EntryType classifyEntry(const struct dirent *ep,const char *fullName,struct stat& s)
+{
+  if (ep->d_type == DT_DIR && !isDotEntry(ep))
+    return EntryType::Directory;
+
+  if (stat(fullName, &s) != 0)
+    return EntryType::Other;
+
+  if (ep->d_type == DT_REG || ep->d_type == DT_LNK)
+    return EntryType::File;
+
+  if (ep->d_type != DT_UNKNOWN)
+    return EntryType::Other;
+
+  if ((s.st_mode & S_IFDIR) != 0 && !isDotEntry(ep))
+    return EntryType::Directory;
+
+  if ((s.st_mode & S_IFREG)  || (s.st_mode & S_IFLNK))
+    return EntryType::File;
+
+  return EntryType::Other;
+}
+
+
+
+/*! \brief Adds the file into the file list. */
+
+void addFileRecord(const char *fullName,const struct stat& s,std::vector<DataFetcher::FileRec>& fileList)
+{
+  DataFetcher::FileRec rec;
+  rec.filename = fullName;
+  rec.size = s.st_size;
+  rec.lastModified = s.st_mtime;
+  rec.serverType = DataFetcher::ServerType::Filesys;
+  rec.protocol = 0;
+  fileList.emplace_back(rec);
+}
+}  // namespace
+
+
+
+
+
 /*! \brief Recursively lists matching files under a directory into the given vector. */
 
 void DataFetcher_filesys::getFileList(const char *dirName,std::vector<std::string> &filePatterns,std::set<std::string> &dirList,std::vector<FileRec>& fileList)
@@ -263,50 +331,16 @@ void DataFetcher_filesys::getFileList(const char *dirName,std::vector<std::strin
         char fullName[2000];
         sprintf(fullName, "%s/%s", path, ep->d_name);
 
-        if (ep->d_type == DT_DIR && strcmp(ep->d_name, "..") != 0 &&
-            strcmp(ep->d_name, ".") != 0)
+        struct stat s{};
+        EntryType type = classifyEntry(ep,fullName,s);
+
+        if (type == EntryType::Directory)
         {
           getFileList(fullName,filePatterns, dirList, fileList);
         }
-        else
+        else if (type == EntryType::File  &&  (filePatterns.empty() || patternMatch(fullName,filePatterns)))
         {
-          struct stat s{};
-          if (stat(fullName, &s) == 0)
-          {
-            if (ep->d_type == DT_REG || ep->d_type == DT_LNK)
-            {
-              if (filePatterns.empty() || patternMatch(fullName,filePatterns))
-              {
-                FileRec rec;
-                rec.filename = fullName;
-                rec.size = s.st_size;
-                rec.lastModified = s.st_mtime;
-                rec.serverType = ServerType::Filesys;
-                rec.protocol = 0;
-                fileList.emplace_back(rec);
-              }
-            }
-            else if (ep->d_type == DT_UNKNOWN)
-            {
-              if ((s.st_mode & S_IFDIR) != 0 && strcmp(ep->d_name, "..") != 0 &&  strcmp(ep->d_name, ".") != 0)
-              {
-                getFileList(fullName, filePatterns, dirList, fileList);
-              }
-              else if ((s.st_mode & S_IFREG)  || (s.st_mode & S_IFLNK))
-              {
-                if (filePatterns.empty() || patternMatch(fullName,filePatterns))
-                {
-                  FileRec rec;
-                  rec.filename = fullName;
-                  rec.size = s.st_size;
-                  rec.lastModified = s.st_mtime;
-                  rec.serverType = ServerType::Filesys;
-                  rec.protocol = 0;
-                  fileList.emplace_back(rec);
-                }
-              }
-            }
-          }
+          addFileRecord(fullName,s,fileList);
         }
       }
       else
