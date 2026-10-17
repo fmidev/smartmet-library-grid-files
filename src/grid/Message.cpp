@@ -5232,6 +5232,140 @@ void Message::getGridValueListByPointList(T::CoordinateType coordinateType,std::
         \param valueList         The list of grid point values are returned in this parameter.
 */
 
+namespace
+{
+/*! \brief Converts the latlon polygon points into grid points, ignoring the points outside of the grid. */
+
+void latLonPolygonToGridPoints(const Message& message,const std::vector<T::Coordinate>& polygonPoints,std::vector<T::Coordinate>& newPolygonPoints)
+{
+  for (auto& polygonPoint : polygonPoints)
+  {
+    double grid_i = 0;
+    double grid_j = 0;
+    if (message.getGridPointByLatLonCoordinates(polygonPoint.y(),polygonPoint.x(),grid_i,grid_j))
+      newPolygonPoints.emplace_back(grid_i,grid_j);
+  }
+}
+
+
+
+
+
+/*! \brief Converts the polygon points in the original coordinates into grid points. */
+
+void originalPolygonToGridPoints(const Message& message,const std::vector<T::Coordinate>& polygonPoints,std::vector<T::Coordinate>& newPolygonPoints)
+{
+  for (auto& polygonPoint : polygonPoints)
+  {
+    double grid_i = 0;
+    double grid_j = 0;
+    message.getGridPointByOriginalCoordinates(polygonPoint.x(),polygonPoint.y(),grid_i,grid_j);
+    newPolygonPoints.emplace_back(grid_i,grid_j);
+  }
+}
+
+
+
+
+
+/*! \brief Adds the values of the grid points with their latlon coordinates. */
+
+void addLatLonGridValues(const Message& message,std::vector<T::Point>& gridPoints,T::GridValueList& valueList)
+{
+  T::ParamValue_vec values;
+  message.getGridValuesByPointList(gridPoints,values);
+
+  uint sz1 = gridPoints.size();
+  uint sz2 = values.size();
+
+  if (sz1 == 0 || sz1 != sz2)
+    return;
+
+  T::Coordinate_vec coordinates;
+  std::vector<bool> found;
+  message.getGridLatLonCoordinatesByGridPointList(gridPoints,coordinates,found);
+
+  for (uint t=0; t<sz1; t++)
+  {
+    T::GridValue rec;
+
+    if (found[t])
+    {
+      rec.mX = coordinates[t].x();
+      rec.mY = coordinates[t].y();
+    }
+
+    rec.mValue = values[t];
+    valueList.addGridValue(rec);
+  }
+}
+
+
+
+
+
+/*! \brief Adds the values of the grid points with their grid coordinates. */
+
+void addGridPointValues(const Message& message,std::vector<T::Point>& gridPoints,T::GridValueList& valueList)
+{
+  T::ParamValue_vec values;
+  message.getGridValuesByPointList(gridPoints,values);
+
+  uint sz1 = gridPoints.size();
+  uint sz2 = values.size();
+
+  if (sz1 == 0 || sz1 != sz2)
+    return;
+
+  for (uint t=0; t<sz1; t++)
+  {
+    T::GridValue rec;
+    rec.mX = gridPoints[t].x();
+    rec.mY = gridPoints[t].y();
+    rec.mValue = values[t];
+    valueList.addGridValue(rec);
+  }
+}
+
+
+
+
+
+/*! \brief Adds the values of the grid points with their original coordinates. */
+
+void addOriginalGridValues(const Message& message,std::vector<T::Point>& gridPoints,T::GridValueList& valueList)
+{
+  T::ParamValue_vec values;
+  message.getGridValuesByPointList(gridPoints,values);
+
+  uint sz1 = gridPoints.size();
+  uint sz2 = values.size();
+
+  if (sz1 == 0 || sz1 != sz2)
+    return;
+
+  for (uint t=0; t<sz1; t++)
+  {
+    T::GridValue rec;
+
+    double x = 0;
+    double y = 0;
+    if (message.getGridOriginalCoordinatesByGridPoint(gridPoints[t].x(),gridPoints[t].y(),x,y))
+    {
+      rec.mX = x;
+      rec.mY = y;
+    }
+
+    rec.mValue = values[t];
+    valueList.addGridValue(rec);
+  }
+}
+}  // namespace
+
+
+
+
+
 void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::vector<T::Coordinate>& polygonPoints,T::GridValueList& valueList) const
 {
   FUNCTION_TRACE
@@ -5290,44 +5424,12 @@ void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::ve
       case T::CoordinateTypeValue::LATLON_COORDINATES:
       {
         std::vector<T::Coordinate> newPolygonPoints;
-
-        for (auto& polygonPoint : polygonPoints)
-        {
-          double grid_i = 0;
-          double grid_j = 0;
-          if (getGridPointByLatLonCoordinates(polygonPoint.y(),polygonPoint.x(),grid_i,grid_j))
-            newPolygonPoints.emplace_back(grid_i,grid_j);
-        }
+        latLonPolygonToGridPoints(*this,polygonPoints,newPolygonPoints);
 
         std::vector<T::Point> gridPoints;
         getPointsInsidePolygon(cols,rows,newPolygonPoints,gridPoints);
 
-        T::ParamValue_vec values;
-        getGridValuesByPointList(gridPoints,values);
-
-        uint sz1 = gridPoints.size();
-        uint sz2 = values.size();
-
-        if (sz1 == 0 || sz1 != sz2)
-          return;
-
-        T::Coordinate_vec coordinates;
-        std::vector<bool> found;
-        getGridLatLonCoordinatesByGridPointList(gridPoints,coordinates,found);
-
-        for (uint t=0; t<sz1; t++)
-        {
-          T::GridValue rec;
-
-          if (found[t])
-          {
-            rec.mX = coordinates[t].x();
-            rec.mY = coordinates[t].y();
-          }
-
-          rec.mValue = values[t];
-          valueList.addGridValue(rec);
-        }
+        addLatLonGridValues(*this,gridPoints,valueList);
       }
       break;
 
@@ -5341,23 +5443,7 @@ void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::ve
         std::vector<T::Point> gridPoints;
         getPointsInsidePolygon(k*cols,rows,polygonPoints,gridPoints);
 
-        T::ParamValue_vec values;
-        getGridValuesByPointList(gridPoints,values);
-
-        uint sz1 = gridPoints.size();
-        uint sz2 = values.size();
-
-        if (sz1 == 0 || sz1 != sz2)
-          return;
-
-        for (uint t=0; t<sz1; t++)
-        {
-          T::GridValue rec;
-          rec.mX = gridPoints[t].x();
-          rec.mY = gridPoints[t].y();
-          rec.mValue = values[t];
-          valueList.addGridValue(rec);
-        }
+        addGridPointValues(*this,gridPoints,valueList);
       }
       break;
 
@@ -5365,42 +5451,12 @@ void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::ve
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
       {
         std::vector<T::Coordinate> newPolygonPoints;
-
-        for (auto& polygonPoint : polygonPoints)
-        {
-          double grid_i = 0;
-          double grid_j = 0;
-          getGridPointByOriginalCoordinates(polygonPoint.x(),polygonPoint.y(),grid_i,grid_j);
-          newPolygonPoints.emplace_back(grid_i,grid_j);
-        }
+        originalPolygonToGridPoints(*this,polygonPoints,newPolygonPoints);
 
         std::vector<T::Point> gridPoints;
         getPointsInsidePolygon(cols,rows,newPolygonPoints,gridPoints);
 
-        T::ParamValue_vec values;
-        getGridValuesByPointList(gridPoints,values);
-
-        uint sz1 = gridPoints.size();
-        uint sz2 = values.size();
-
-        if (sz1 == 0 || sz1 != sz2)
-          return;
-
-        for (uint t=0; t<sz1; t++)
-        {
-          T::GridValue rec;
-
-          double x = 0;
-          double y = 0;
-          if (getGridOriginalCoordinatesByGridPoint(gridPoints[t].x(),gridPoints[t].y(),x,y))
-          {
-            rec.mX = x;
-            rec.mY = y;
-          }
-
-          rec.mValue = values[t];
-          valueList.addGridValue(rec);
-        }
+        addOriginalGridValues(*this,gridPoints,valueList);
       }
       break;
       default:
@@ -5465,48 +5521,14 @@ void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std
         for (auto& polygonPoints : polygonPath)
         {
           std::vector<T::Coordinate> newPolygonPoints;
-
-          for (auto it = polygonPoints.begin(); it != polygonPoints.end(); ++it)
-          {
-
-            double grid_i = 0;
-            double grid_j = 0;
-
-            if (getGridPointByLatLonCoordinates(it->y(),it->x(),grid_i,grid_j))
-              newPolygonPoints.emplace_back(grid_i,grid_j);
-          }
+          latLonPolygonToGridPoints(*this,polygonPoints,newPolygonPoints);
           newPolygonPath.emplace_back(newPolygonPoints);
         }
 
         std::vector<T::Point> gridPoints;
         getPointsInsidePolygonPath(cols,rows,newPolygonPath,gridPoints);
 
-        T::ParamValue_vec values;
-        getGridValuesByPointList(gridPoints,values);
-
-        uint sz1 = gridPoints.size();
-        uint sz2 = values.size();
-
-        if (sz1 == 0 || sz1 != sz2)
-          return;
-
-        T::Coordinate_vec coordinates;
-        std::vector<bool> found;
-        getGridLatLonCoordinatesByGridPointList(gridPoints,coordinates,found);
-
-        for (uint t=0; t<sz1; t++)
-        {
-          T::GridValue rec;
-
-          if (found[t])
-          {
-            rec.mX = coordinates[t].x();
-            rec.mY = coordinates[t].y();
-          }
-
-          rec.mValue = values[t];
-          valueList.addGridValue(rec);
-        }
+        addLatLonGridValues(*this,gridPoints,valueList);
       }
       break;
 
@@ -5516,23 +5538,7 @@ void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std
         std::vector<T::Point> gridPoints;
         getPointsInsidePolygonPath(cols,rows,polygonPath,gridPoints);
 
-        T::ParamValue_vec values;
-        getGridValuesByPointList(gridPoints,values);
-
-        uint sz1 = gridPoints.size();
-        uint sz2 = values.size();
-
-        if (sz1 == 0 || sz1 != sz2)
-          return;
-
-        for (uint t=0; t<sz1; t++)
-        {
-          T::GridValue rec;
-          rec.mX = gridPoints[t].x();
-          rec.mY = gridPoints[t].y();
-          rec.mValue = values[t];
-          valueList.addGridValue(rec);
-        }
+        addGridPointValues(*this,gridPoints,valueList);
       }
       break;
 
@@ -5544,46 +5550,14 @@ void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std
         for (auto& polygonPoints : polygonPath)
         {
           std::vector<T::Coordinate> newPolygonPoints;
-
-          for (auto it = polygonPoints.begin(); it != polygonPoints.end(); ++it)
-          {
-            double grid_i = 0;
-            double grid_j = 0;
-            getGridPointByOriginalCoordinates(it->x(),it->y(),grid_i,grid_j);
-            newPolygonPoints.emplace_back(grid_i,grid_j);
-          }
+          originalPolygonToGridPoints(*this,polygonPoints,newPolygonPoints);
           newPolygonPath.emplace_back(newPolygonPoints);
         }
 
         std::vector<T::Point> gridPoints;
         getPointsInsidePolygonPath(cols,rows,newPolygonPath,gridPoints);
 
-        T::ParamValue_vec values;
-        getGridValuesByPointList(gridPoints,values);
-
-        uint sz1 = gridPoints.size();
-        uint sz2 = values.size();
-
-        if (sz1 == 0 || sz1 != sz2)
-          return;
-
-        T::Coordinate_vec coordinates;
-        std::vector<bool> found;
-        getGridLatLonCoordinatesByGridPointList(gridPoints,coordinates,found);
-
-        for (uint t=0; t<sz1; t++)
-        {
-          T::GridValue rec;
-
-          if (found[t])
-          {
-            rec.mX = coordinates[t].x();
-            rec.mY = coordinates[t].y();
-          }
-
-          rec.mValue = values[t];
-          valueList.addGridValue(rec);
-        }
+        addLatLonGridValues(*this,gridPoints,valueList);
       }
       break;
       default:
