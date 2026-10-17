@@ -1407,6 +1407,112 @@ bool getLineIntersectionPoint(double x1, double y1, double x2, double y2, double
 
 
 
+namespace
+{
+/*! \brief Finds the point where the direction line leaves the current grid cell. The crossing
+    must stay on the same row (left/right) or on the same column (up/down). */
+
+bool nextCellCrossing(double a, double x1, double y1, double x2, double y2, double xo, double yo, double &ix, double &iy)
+{
+  bool sec = false;
+  if (a >= 0 && a < 180)
+  {
+    // Right
+    sec = getLineIntersectionPoint(x1, y1, x2, y2, xo + 1.001, 0, xo + 1.001, 10, ix, iy);
+    if (sec && (int) iy == (int) y1)
+      return true;
+
+    if (a >= 0 && a < 90)
+    {
+      // Top
+      sec = getLineIntersectionPoint(x1, y1, x2, y2, 0, yo - 0.001, 10, yo - 0.001, ix, iy);
+      return (sec && (int) ix == (int) x1);
+    }
+
+    // Down
+    sec = getLineIntersectionPoint(x1, y1, x2, y2, 0, yo + 1.001, 10, yo + 1.001, ix, iy);
+    return (sec && (int) ix == (int) x1);
+  }
+
+  // Left
+  sec = getLineIntersectionPoint(x1, y1, x2, y2, xo - 0.001, 0, xo - 0.001, 10, ix, iy);
+  if (sec && (int) iy == (int) y1)
+    return true;
+
+  if (a >= 270 && a < 360)
+  {
+    // Up
+    sec = getLineIntersectionPoint(x1, y1, x2, y2, 0, yo - 0.001, 10, yo - 0.001, ix, iy);
+    return (sec && (int) ix == (int) x1);
+  }
+
+  // Down
+  sec = getLineIntersectionPoint(x1, y1, x2, y2, 0, yo + 1.001, 10, yo + 1.001, ix, iy);
+  return (sec && (int) ix == (int) x1);
+}
+
+
+
+/*! \brief Returns the absolute difference between two doubles, or zero if their integer parts match. */
+
+double diff(double a, double b)
+{
+  if ((int) a == (int) b)
+    return 0;
+
+  if (a < b)
+    return b - a;
+
+  return a - b;
+}
+
+
+
+/*! \brief Finds the point where the direction line leaves the current grid cell. The crossing
+    must stay (almost) on the same row (left/right) or on the same column (up/down). */
+
+bool nextCellCrossingByDiff(double a, double x1, double y1, double x2, double y2, double xo, double yo, double &ix, double &iy)
+{
+  double d0 = 0.000001;
+  double d1 = 1.000001;
+  double aa = 0.001;
+  bool sec = false;
+
+  if (a >= 0 && a < 180)
+  {
+    sec = getLineIntersectionPoint(x1, y1, x2, y2, xo + d1, 0, xo + d1, 10, ix, iy);
+    if (sec && diff(iy, y1) < aa)
+      return true;
+
+    if (a >= 0 && a < 90)
+    {
+      sec = getLineIntersectionPoint(x1, y1, x2, y2, 0, yo - d0, 10, yo - d0, ix, iy);
+      return (sec && diff(ix, x1) < aa);
+    }
+
+    sec = getLineIntersectionPoint(x1, y1, x2, y2, 0, yo + d1, 10, yo + d1, ix, iy);
+    return (sec && diff(ix, x1) < aa);
+  }
+
+  sec = getLineIntersectionPoint(x1, y1, x2, y2, xo - d0, 0, xo - d0, 10, ix, iy);
+  if (sec && diff(iy, y1) < aa)
+    return true;
+
+  if (a >= 270 && a < 360)
+  {
+    sec = getLineIntersectionPoint(x1, y1, x2, y2, 0, yo - d0, 10, yo - d0, ix, iy);
+    return (sec && diff(ix, x1) < aa);
+  }
+
+  sec = getLineIntersectionPoint(x1, y1, x2, y2, 0, yo + d1, 10, yo + d1, ix, iy);
+  return (sec && diff(ix, x1) < aa);
+}
+}  // namespace
+
+
+
+
+
 /*! \brief Recursively traces a streamline through a wind/direction grid using a visited mask. */
 
 int findPath(std::vector<float> &direction, bool *visited, int width, int height, int maxLength, double x1, double y1, int level, uint cellCount,
@@ -1479,7 +1585,6 @@ int findPath(std::vector<float> &direction, bool *visited, int width, int height
 
     double ix = NAN;
     double iy = NAN;
-    bool sec = false;
 
     /*
 
@@ -1500,67 +1605,9 @@ int findPath(std::vector<float> &direction, bool *visited, int width, int height
      }
      */
 
-    if (a >= 0 && a < 180)
-    {
-      sec = getLineIntersectionPoint(x1, y1, x2, y2, xo + 1.001, 0, xo + 1.001, 10, ix, iy);
-      if (sec && (int) iy == (int) y1)
-      {
-        // Right
-        //printf("RIGHT %f   %f,%f => %f,%f\n",a,x1,y1,ix,iy);
-        return findPath(direction, visited, width, height, maxLength, ix, iy, level + 1, cellCount, coordinates);
-      }
+    if (nextCellCrossing(a, x1, y1, x2, y2, xo, yo, ix, iy))
+      return findPath(direction, visited, width, height, maxLength, ix, iy, level + 1, cellCount, coordinates);
 
-      if (a >= 0 && a < 90)
-      {
-        // Top
-        sec = getLineIntersectionPoint(x1, y1, x2, y2, 0, yo - 0.001, 10, yo - 0.001, ix, iy);
-        if (sec && (int) ix == (int) x1)
-        {
-          //printf("UP %f   %f,%f => %f,%f\n",a,x1,y1,ix,iy);
-          return findPath(direction, visited, width, height, maxLength, ix, iy, level + 1, cellCount, coordinates);
-        }
-      }
-      else
-      {
-        sec = getLineIntersectionPoint(x1, y1, x2, y2, 0, yo + 1.001, 10, yo + 1.001, ix, iy);
-        if (sec && (int) ix == (int) x1)
-        {
-          //printf("DOWN %f   %f,%f => %f,%f\n",a,x1,y1,ix,iy);
-          return findPath(direction, visited, width, height, maxLength, ix, iy, level + 1, cellCount, coordinates);
-        }
-      }
-    }
-    else
-    {
-      sec = getLineIntersectionPoint(x1, y1, x2, y2, xo - 0.001, 0, xo - 0.001, 10, ix, iy);
-      if (sec && (int) iy == (int) y1)
-      {
-        // Left
-        //printf("LEFT %f   %f,%f => %f,%f\n",a,x1,y1,ix,iy);
-        return findPath(direction, visited, width, height, maxLength, ix, iy, level + 1, cellCount, coordinates);
-      }
-
-      if (a >= 270 && a < 360)
-      {
-        sec = getLineIntersectionPoint(x1, y1, x2, y2, 0, yo - 0.001, 10, yo - 0.001, ix, iy);
-        if (sec && (int) ix == (int) x1)
-        {
-          //printf("XUP %f   %f,%f => %f,%f\n",a,x1,y1,ix,iy);
-          return findPath(direction, visited, width, height, maxLength, ix, iy, level + 1, cellCount, coordinates);
-        }
-      }
-      else
-      {
-        sec = getLineIntersectionPoint(x1, y1, x2, y2, 0, yo + 1.001, 10, yo + 1.001, ix, iy);
-        if (sec && (int) ix == (int) x1)
-        {
-          //printf("XDOWN %f   %f,%f => %f,%f\n",a,x1,y1,ix[3],iy[3]);
-          return findPath(direction, visited, width, height, maxLength, ix, iy, level + 1, cellCount, coordinates);
-        }
-      }
-    }
-
-    //printf("EXIT %u\n\n",level);
     return cellCount;
   }
   catch (...)
@@ -1571,21 +1618,6 @@ int findPath(std::vector<float> &direction, bool *visited, int width, int height
 
 
 
-/*! \brief Returns the absolute difference between two doubles, or zero if their integer parts match. */
-
-namespace
-{
-double diff(double a, double b)
-{
-  if ((int) a == (int) b)
-    return 0;
-
-  if (a < b)
-    return b - a;
-
-  return a - b;
-}
-}  // namespace
 
 
 
@@ -1656,68 +1688,9 @@ int findPath(float *direction, uint *image, int width, int height, int maxLength
 
     double ix = NAN;
     double iy = NAN;
-    bool sec = false;
-    double d0 = 0.000001;
-    double d1 = 1.000001;
-    double aa = 0.001;
 
-    if (a >= 0 && a < 180)
-    {
-      sec = getLineIntersectionPoint(x1, y1, x2, y2, xo + d1, 0, xo + d1, 10, ix, iy);
-      if (sec && diff(iy, y1) < aa)
-      {
-        // Right
-        return findPath(direction, image, width, height, maxLength, backColor, ix, iy, level + 1, cellCount, coordinates);
-      }
-
-      if (a >= 0 && a < 90)
-      {
-        // Top
-        sec = getLineIntersectionPoint(x1, y1, x2, y2, 0, yo - d0, 10, yo - d0, ix, iy);
-        if (sec && diff(ix, x1) < aa)
-        {
-          // Up
-          return findPath(direction, image, width, height, maxLength, backColor, ix, iy, level + 1, cellCount, coordinates);
-        }
-      }
-      else
-      {
-        sec = getLineIntersectionPoint(x1, y1, x2, y2, 0, yo + d1, 10, yo + d1, ix, iy);
-        if (sec && diff(ix, x1) < aa)
-        {
-          // Down
-          return findPath(direction, image, width, height, maxLength, backColor, ix, iy, level + 1, cellCount, coordinates);
-        }
-      }
-    }
-    else
-    {
-      sec = getLineIntersectionPoint(x1, y1, x2, y2, xo - d0, 0, xo - d0, 10, ix, iy);
-      if (sec && diff(iy, y1) < aa)
-      {
-        // Left
-        return findPath(direction, image, width, height, maxLength, backColor, ix, iy, level + 1, cellCount, coordinates);
-      }
-
-      if (a >= 270 && a < 360)
-      {
-        sec = getLineIntersectionPoint(x1, y1, x2, y2, 0, yo - d0, 10, yo - d0, ix, iy);
-        if (sec && diff(ix, x1) < aa)
-        {
-          // Up
-          return findPath(direction, image, width, height, maxLength, backColor, ix, iy, level + 1, cellCount, coordinates);
-        }
-      }
-      else
-      {
-        sec = getLineIntersectionPoint(x1, y1, x2, y2, 0, yo + d1, 10, yo + d1, ix, iy);
-        if (sec && diff(ix, x1) < aa)
-        {
-          // Down
-          return findPath(direction, image, width, height, maxLength, backColor, ix, iy, level + 1, cellCount, coordinates);
-        }
-      }
-    }
+    if (nextCellCrossingByDiff(a, x1, y1, x2, y2, xo, yo, ix, iy))
+      return findPath(direction, image, width, height, maxLength, backColor, ix, iy, level + 1, cellCount, coordinates);
 
     return cellCount;
   }
@@ -1796,67 +1769,11 @@ int findPath(std::vector<float>& direction, uint *image, int width, int height, 
 
     double ix = NAN;
     double iy = NAN;
-    bool sec = false;
 
-    double d0 = 0.000001;
-    double d1 = 1.000001;
-    double aa = 0.001;
 
-    if (a >= 0 && a < 180)
-    {
-      sec = getLineIntersectionPoint(x1, y1, x2, y2, xo + d1, 0, xo + d1, 10, ix, iy);
-      if (sec && diff(iy, y1) < aa)
-      {
-        // Right
-        return findPath(direction, image, width, height, maxLength, backColor, ix, iy, level + 1, cellCount, coordinates);
-      }
+    if (nextCellCrossingByDiff(a, x1, y1, x2, y2, xo, yo, ix, iy))
+      return findPath(direction, image, width, height, maxLength, backColor, ix, iy, level + 1, cellCount, coordinates);
 
-      if (a >= 0 && a < 90)
-      {
-        // Top
-        sec = getLineIntersectionPoint(x1, y1, x2, y2, 0, yo - d0, 10, yo - d0, ix, iy);
-        if (sec && diff(ix, x1) < aa)
-        {
-          // Up
-          return findPath(direction, image, width, height, maxLength, backColor, ix, iy, level + 1, cellCount, coordinates);
-        }
-      }
-      else
-      {
-        sec = getLineIntersectionPoint(x1, y1, x2, y2, 0, yo + d1, 10, yo + d1, ix, iy);
-        if (sec && diff(ix, x1) < aa)
-        {
-          // Down
-          return findPath(direction, image, width, height, maxLength, backColor, ix, iy, level + 1, cellCount, coordinates);
-        }
-      }
-    }
-    else
-    {
-      sec = getLineIntersectionPoint(x1, y1, x2, y2, xo - d0, 0, xo - d0, 10, ix, iy);
-      if (sec && diff(iy, y1) < aa)
-      {
-        // Left
-        return findPath(direction, image, width, height, maxLength, backColor, ix, iy, level + 1, cellCount, coordinates);
-      }
-
-      if (a >= 270 && a < 360)
-      {
-        sec = getLineIntersectionPoint(x1, y1, x2, y2, 0, yo - d0, 10, yo - d0, ix, iy);
-        if (sec && diff(ix, x1) < aa)
-        {
-          return findPath(direction, image, width, height, maxLength, backColor, ix, iy, level + 1, cellCount, coordinates);
-        }
-      }
-      else
-      {
-        sec = getLineIntersectionPoint(x1, y1, x2, y2, 0, yo + d1, 10, yo + d1, ix, iy);
-        if (sec && diff(ix, x1) < aa)
-        {
-          return findPath(direction, image, width, height, maxLength, backColor, ix, iy, level + 1, cellCount, coordinates);
-        }
-      }
-    }
     return cellCount;
   }
   catch (...)
