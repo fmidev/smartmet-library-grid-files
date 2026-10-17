@@ -132,6 +132,25 @@ void readCsvRecords(const char *filename,uint minFields,const std::function<void
   }
   (void)fclose(file);
 }
+
+
+
+
+
+/*! \brief Calls the clear function and the load function for each file if the
+    modification time of the files has changed. */
+
+void reloadIfModified(const string_vec& files,time_t tt,time_t& modificationTime,const std::function<void()>& clear,const std::function<void(const char *file)>& load)
+{
+  if (tt == modificationTime)
+    return;
+
+  clear();
+  for (const auto& file : files)
+    load(file.c_str());
+
+  modificationTime = tt;
+}
 }  // namespace
 
 
@@ -436,155 +455,57 @@ void GridDef::updateFmi()
   FUNCTION_TRACE
   try
   {
-    time_t tt = getModificationTime(mFmi_parameterDef_files);
-    if (tt != mFmi_parameterDef_modificationTime)
-    {
-      mFmi_parameterDef_records.clear();
-      mFmiNameToId.clear();
-      for (auto& mFmi_parameterDef_file : mFmi_parameterDef_files)
-      {
-        loadFmiParameterDefinitions(mFmi_parameterDef_file.c_str());
-      }
-      mFmi_parameterDef_modificationTime = tt;
-    }
+    reloadIfModified(mFmi_parameterDef_files,getModificationTime(mFmi_parameterDef_files),mFmi_parameterDef_modificationTime,
+        [&]{ mFmi_parameterDef_records.clear(); mFmiNameToId.clear(); },
+        [&](const char *file){ loadFmiParameterDefinitions(file); });
 
-    tt = getModificationTime(mFmi_geometryGroupDef_files);
-    if (tt != mFmi_geometryGroupDef_modificationTime)
-    {
-      mFmi_geometryGroupDef_records.clear();
-      for (auto& mFmi_geometryGroupDef_file : mFmi_geometryGroupDef_files)
-      {
-        loadFmiGeometryGroupDefinitions(mFmi_geometryGroupDef_file.c_str());
-      }
-      mFmi_geometryGroupDef_modificationTime = tt;
-    }
+    reloadIfModified(mFmi_geometryGroupDef_files,getModificationTime(mFmi_geometryGroupDef_files),mFmi_geometryGroupDef_modificationTime,
+        [&]{ mFmi_geometryGroupDef_records.clear(); },
+        [&](const char *file){ loadFmiGeometryGroupDefinitions(file); });
 
-    tt = getModificationTime(mFmi_levelDef_files);
-    if (tt != mFmi_levelDef_modificationTime)
-    {
-      mFmi_levelDef_records.clear();
-      for (auto& mFmi_levelDef_file : mFmi_levelDef_files)
-      {
-        loadFmiLevelDefinitions(mFmi_levelDef_file.c_str());
-      }
-      mFmi_levelDef_modificationTime = tt;
-    }
+    reloadIfModified(mFmi_levelDef_files,getModificationTime(mFmi_levelDef_files),mFmi_levelDef_modificationTime,
+        [&]{ mFmi_levelDef_records.clear(); },
+        [&](const char *file){ loadFmiLevelDefinitions(file); });
 
-    tt = getModificationTime(mFmi_forecastTypeDef_files);
-    if (tt != mFmi_forecastTypeDef_modificationTime)
-    {
-      mFmi_forecastTypeDef_records.clear();
-      for (auto& mFmi_forecastTypeDef_file : mFmi_forecastTypeDef_files)
-      {
-        loadFmiForecastTypeDefinitions(mFmi_forecastTypeDef_file.c_str());
-      }
-      mFmi_forecastTypeDef_modificationTime = tt;
-    }
+    reloadIfModified(mFmi_forecastTypeDef_files,getModificationTime(mFmi_forecastTypeDef_files),mFmi_forecastTypeDef_modificationTime,
+        [&]{ mFmi_forecastTypeDef_records.clear(); },
+        [&](const char *file){ loadFmiForecastTypeDefinitions(file); });
 
-    tt = getModificationTime(mFmi_processingTypeDef_files);
-    if (tt != mFmi_processingTypeDef_modificationTime)
-    {
-      mFmi_processingTypeDef_records.clear();
-      for (auto& mFmi_processingTypeDef_file : mFmi_processingTypeDef_files)
-      {
-        loadFmiProcessingTypeDefinitions(mFmi_processingTypeDef_file.c_str());
-      }
-      mFmi_processingTypeDef_modificationTime = tt;
-    }
+    reloadIfModified(mFmi_processingTypeDef_files,getModificationTime(mFmi_processingTypeDef_files),mFmi_processingTypeDef_modificationTime,
+        [&]{ mFmi_processingTypeDef_records.clear(); },
+        [&](const char *file){ loadFmiProcessingTypeDefinitions(file); });
 
-    tt = getModificationTime(mFmi_aggregationDef_files);
-    if (tt != mFmi_aggregationDef_modificationTime)
-    {
-      mFmi_aggregationDef_records.clear();
-      for (auto& mFmi_aggregationDef_file : mFmi_aggregationDef_files)
-      {
-        loadFmiAggregationDefinitions(mFmi_aggregationDef_file.c_str());
-      }
-      mFmi_aggregationDef_modificationTime = tt;
-    }
+    reloadIfModified(mFmi_aggregationDef_files,getModificationTime(mFmi_aggregationDef_files),mFmi_aggregationDef_modificationTime,
+        [&]{ mFmi_aggregationDef_records.clear(); },
+        [&](const char *file){ loadFmiAggregationDefinitions(file); });
 
-    tt = getModificationTime(mFmi_parametersFromGrib_files);
-    if (tt != mFmi_parametersFromGrib_modificationTime)
-    {
-      mFmi_parametersFromGrib_records.clear();
-      mGribIdToFmiId.clear();
-      for (auto& mFmi_parametersFromGrib_file : mFmi_parametersFromGrib_files)
-      {
-        loadFmiParameterId_grib(mFmi_parametersFromGrib_file.c_str());
-      }
-      mFmi_parametersFromGrib_modificationTime = tt;
-    }
+    reloadIfModified(mFmi_parametersFromGrib_files,getModificationTime(mFmi_parametersFromGrib_files),mFmi_parametersFromGrib_modificationTime,
+        [&]{ mFmi_parametersFromGrib_records.clear(); mGribIdToFmiId.clear(); },
+        [&](const char *file){ loadFmiParameterId_grib(file); });
 
-    tt = getModificationTime(mFmi_parametersFromNewbase_files);
-    if (tt != mFmi_parametersFromNewbase_modificationTime)
-    {
-      mFmi_parametersFromNewbase_records.clear();
-      mNewbaseIdToFmiId.clear();
-      mFmiIdToNewbaseId.clear();
-      for (auto& mFmi_parametersFromNewbase_file : mFmi_parametersFromNewbase_files)
-      {
-        loadFmiParameterId_newbase(mFmi_parametersFromNewbase_file.c_str());
-      }
-      mFmi_parametersFromNewbase_modificationTime = tt;
-    }
+    reloadIfModified(mFmi_parametersFromNewbase_files,getModificationTime(mFmi_parametersFromNewbase_files),mFmi_parametersFromNewbase_modificationTime,
+        [&]{ mFmi_parametersFromNewbase_records.clear(); mNewbaseIdToFmiId.clear(); mFmiIdToNewbaseId.clear(); },
+        [&](const char *file){ loadFmiParameterId_newbase(file); });
 
-    tt = getModificationTime(mFmi_parametersFromNetCdf_files);
-    if (tt != mFmi_parametersFromNetCdf_modificationTime)
-    {
-      mFmi_parametersFromNetCdf_records.clear();
-      mNetCdfNameToFmiId.clear();
-      for (auto& mFmi_parametersFromNetCdf_file : mFmi_parametersFromNetCdf_files)
-      {
-        loadFmiParameterId_netCdf(mFmi_parametersFromNetCdf_file.c_str());
-      }
-      mFmi_parametersFromNetCdf_modificationTime = tt;
-    }
+    reloadIfModified(mFmi_parametersFromNetCdf_files,getModificationTime(mFmi_parametersFromNetCdf_files),mFmi_parametersFromNetCdf_modificationTime,
+        [&]{ mFmi_parametersFromNetCdf_records.clear(); mNetCdfNameToFmiId.clear(); },
+        [&](const char *file){ loadFmiParameterId_netCdf(file); });
 
-    tt = getModificationTime(mFmi_levelsFromGrib1_files);
-    if (tt != mFmi_levelsFromGrib1_modificationTime)
-    {
-      mFmi_levelsFromGrib1_records.clear();
-      for (auto& mFmi_levelsFromGrib1_file : mFmi_levelsFromGrib1_files)
-      {
-        loadFmiLevelId_grib1(mFmi_levelsFromGrib1_file.c_str());
-      }
-      mFmi_levelsFromGrib1_modificationTime = tt;
-    }
+    reloadIfModified(mFmi_levelsFromGrib1_files,getModificationTime(mFmi_levelsFromGrib1_files),mFmi_levelsFromGrib1_modificationTime,
+        [&]{ mFmi_levelsFromGrib1_records.clear(); },
+        [&](const char *file){ loadFmiLevelId_grib1(file); });
 
-    tt = getModificationTime(mFmi_levelsFromGrib2_files);
-    if (tt != mFmi_levelsFromGrib2_modificationTime)
-    {
-      mFmi_levelsFromGrib2_records.clear();
-      for (auto& mFmi_levelsFromGrib2_file : mFmi_levelsFromGrib2_files)
-      {
-        loadFmiLevelId_grib2(mFmi_levelsFromGrib2_file.c_str());
-      }
-      mFmi_levelsFromGrib2_modificationTime = tt;
-    }
+    reloadIfModified(mFmi_levelsFromGrib2_files,getModificationTime(mFmi_levelsFromGrib2_files),mFmi_levelsFromGrib2_modificationTime,
+        [&]{ mFmi_levelsFromGrib2_records.clear(); },
+        [&](const char *file){ loadFmiLevelId_grib2(file); });
 
-    tt = getModificationTime(mFmi_levelsFromNewbase_files);
-    if (tt != mFmi_levelsFromNewbase_modificationTime)
-    {
-      mNewbaseLevelIdToFmiLevelId.clear();
-      for (auto& mFmi_levelsFromNewbase_file : mFmi_levelsFromNewbase_files)
-      {
-        loadFmiLevelId_newbase(mFmi_levelsFromNewbase_file.c_str());
-      }
-      mFmi_levelsFromNewbase_modificationTime = tt;
-    }
+    reloadIfModified(mFmi_levelsFromNewbase_files,getModificationTime(mFmi_levelsFromNewbase_files),mFmi_levelsFromNewbase_modificationTime,
+        [&]{ mNewbaseLevelIdToFmiLevelId.clear(); },
+        [&](const char *file){ loadFmiLevelId_newbase(file); });
 
-    tt = getModificationTime(mFmi_geometryDef_files);
-    if (tt != mFmi_geometryDef_modificationTime)
-    {
-      mGridDefinitions1.clear();
-      mGridDefinitions2.clear();
-
-      for (auto& mFmi_geometryDef_file : mFmi_geometryDef_files)
-      {
-        loadGeometryDefinitions(mFmi_geometryDef_file.c_str());
-      }
-      mFmi_geometryDef_modificationTime = tt;
-    }
+    reloadIfModified(mFmi_geometryDef_files,getModificationTime(mFmi_geometryDef_files),mFmi_geometryDef_modificationTime,
+        [&]{ mGridDefinitions1.clear(); mGridDefinitions2.clear(); },
+        [&](const char *file){ loadGeometryDefinitions(file); });
 
   }
   catch (...)
