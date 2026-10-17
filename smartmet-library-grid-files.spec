@@ -4,7 +4,7 @@
 Summary: grid file handling library
 Name: %{SPECNAME}
 Version: 26.10.17
-Release: 1%{?dist}.fmi
+Release: 2%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
 URL: https://github.com/fmidev/smartmet-library-grid-files
@@ -127,6 +127,9 @@ libraries, the grid engine and the plugins using it
 %attr(0755,root,root) %{_bindir}/smartmet-grid-test-config-creator
 
 %changelog
+* Sat Oct 17 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.17-2.fmi
+- Grid test fixture: MEPS on 65 hybrid levels around Helsinki (producer meps_ml, geometry
+  5910) with pressure, temperature, dewpoint, humidity and wind on each level, for soundings
 * Sat Oct 17 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.17-1.fmi
 - Isolines and isobands are computed again when no coordinate vector is given (grid
   coordinates, contour.coordinateType = GRID_COORDINATES); since 2024-10 they were always empty
