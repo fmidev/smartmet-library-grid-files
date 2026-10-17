@@ -2948,6 +2948,67 @@ void Message::getGridValueVector(T::ParamValue_vec& /*values*/) const
 
 
 
+namespace
+{
+/*! \brief Applies the operation to the values and the corresponding modification parameters
+    when both are not missing. Nothing is done if the vector sizes differ. */
+
+template <class Func>
+void applyGridOperation(T::ParamValue_vec& values,const double_vec& modificationParameters,Func op)
+{
+  uint vsz = values.size();
+  if (modificationParameters.size() != vsz)
+    return;
+
+  for (uint v=0; v<vsz; v++)
+  {
+    if (modificationParameters[v] != ParamValueMissing  &&  values[v] != ParamValueMissing)
+      values[v] = op(values[v],modificationParameters[v]);
+  }
+}
+
+
+
+
+
+/*! \brief Applies the operation with the first modification parameter to all values if the
+    parameter is not missing. */
+
+template <class Func>
+void applyConstantOperation(T::ParamValue_vec& values,const double_vec& modificationParameters,Func op)
+{
+  if (modificationParameters.size() > 0 && modificationParameters[0] != ParamValueMissing)
+  {
+    auto val = modificationParameters[0];
+    uint vsz = values.size();
+    for (uint v=0; v<vsz; v++)
+    {
+      values[v] = op(values[v],val);
+    }
+  }
+}
+
+
+
+
+
+/*! \brief Applies the operation to all values. */
+
+template <class Func>
+void applyValueOperation(T::ParamValue_vec& values,Func op)
+{
+  uint vsz = values.size();
+  for (uint v=0; v<vsz; v++)
+  {
+    values[v] = op(values[v]);
+  }
+}
+}  // namespace
+
+
+
+
+
 /*! \brief Applies the requested modification operation to a grid value vector in place. */
 
 void Message::modifyGridValueVector(uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const
@@ -2968,198 +3029,96 @@ void Message::modifyGridValueVector(uint modificationOperation,double_vec& modif
         return;
 
       case Operation::GRID_ADD:
-        if (sz == vsz)
-        {
-          for (uint v=0; v<vsz; v++)
-          {
-            if (modificationParameters[v] != ParamValueMissing  &&  values[v] != ParamValueMissing)
-              values[v] = values[v] + modificationParameters[v];
-          }
-        }
+        applyGridOperation(values,modificationParameters,[](T::ParamValue a,double b) { return a + b; });
         return;
 
       case Operation::GRID_DEC:
-        if (sz == vsz)
-        {
-          for (uint v=0; v<vsz; v++)
-          {
-            if (modificationParameters[v] != ParamValueMissing  &&  values[v] != ParamValueMissing)
-              values[v] = values[v] - modificationParameters[v];
-          }
-        }
+        applyGridOperation(values,modificationParameters,[](T::ParamValue a,double b) { return a - b; });
         return;
 
       case Operation::GRID_MUL:
-        if (sz == vsz)
-        {
-          for (uint v=0; v<vsz; v++)
-          {
-            if (modificationParameters[v] != ParamValueMissing  &&  values[v] != ParamValueMissing)
-              values[v] = values[v] * modificationParameters[v];
-          }
-        }
+        applyGridOperation(values,modificationParameters,[](T::ParamValue a,double b) { return a * b; });
         return;
 
       case Operation::GRID_DIV:
-        if (sz == vsz)
-        {
-          for (uint v=0; v<vsz; v++)
-          {
-            if (modificationParameters[v] != ParamValueMissing  &&  values[v] != ParamValueMissing)
-              values[v] = values[v] / modificationParameters[v];
-          }
-        }
+        applyGridOperation(values,modificationParameters,[](T::ParamValue a,double b) { return a / b; });
         return;
 
       case Operation::GRID_HYPOT:
-        if (sz == vsz)
-        {
-          for (uint v=0; v<vsz; v++)
-          {
-            if (modificationParameters[v] != ParamValueMissing  &&  values[v] != ParamValueMissing)
-              values[v] = sqrt(values[v]*values[v] + modificationParameters[v]*modificationParameters[v]);
-          }
-        }
+        applyGridOperation(values,modificationParameters,[](T::ParamValue a,double b) { return sqrt(a*a + b*b); });
         return;
 
       case Operation::ADD:
-        if (sz > 0 && modificationParameters[0] != ParamValueMissing)
-        {
-          auto val = modificationParameters[0];
-          for (uint v=0; v<vsz; v++)
-          {
-            values[v] = values[v] + val;
-          }
-        }
+        applyConstantOperation(values,modificationParameters,[](T::ParamValue a,double b) { return a + b; });
         return;
 
       case Operation::DEC:
-        if (sz > 0 && modificationParameters[0] != ParamValueMissing)
-        {
-          auto val = modificationParameters[0];
-          for (uint v=0; v<vsz; v++)
-          {
-            values[v] = values[v] - val;
-          }
-        }
+        applyConstantOperation(values,modificationParameters,[](T::ParamValue a,double b) { return a - b; });
         return;
 
       case Operation::MUL:
-        if (sz > 0 && modificationParameters[0] != ParamValueMissing)
-        {
-          auto val = modificationParameters[0];
-          for (uint v=0; v<vsz; v++)
-          {
-            values[v] = values[v] * val;
-          }
-        }
+        applyConstantOperation(values,modificationParameters,[](T::ParamValue a,double b) { return a * b; });
         return;
 
       case Operation::DIV:
-        if (sz > 0 && modificationParameters[0] != ParamValueMissing)
-        {
-          auto val = modificationParameters[0];
-          for (uint v=0; v<vsz; v++)
-          {
-            values[v] = values[v] / val;
-          }
-        }
+        applyConstantOperation(values,modificationParameters,[](T::ParamValue a,double b) { return a / b; });
         return;
 
       case Operation::ABS:
-        for (uint v=0; v<vsz; v++)
-        {
-          values[v] = fabs(values[v]);
-        }
+        applyValueOperation(values,[](T::ParamValue a) { return fabs(a); });
         return;
 
       case Operation::NEG:
-        for (uint v=0; v<vsz; v++)
-        {
-          values[v] = -values[v];
-        }
+        applyValueOperation(values,[](T::ParamValue a) { return -a; });
         return;
 
       case Operation::ROUND:
-        for (uint v=0; v<vsz; v++)
-        {
-          values[v] = round(values[v]);
-        }
+        applyValueOperation(values,[](T::ParamValue a) { return round(a); });
         return;
 
       case Operation::FLOOR:
-        for (uint v=0; v<vsz; v++)
-        {
-          values[v] = Fmi::floor(values[v]);
-        }
+        applyValueOperation(values,[](T::ParamValue a) { return Fmi::floor(a); });
         return;
 
       case Operation::CEIL:
-        for (uint v=0; v<vsz; v++)
-        {
-          values[v] = Fmi::floor(values[v]) + 1.0;
-        }
+        applyValueOperation(values,[](T::ParamValue a) { return Fmi::floor(a) + 1.0; });
         return;
 
       case Operation::K2C:
-        for (uint v=0; v<vsz; v++)
-        {
-          values[v] = values[v] - 273.15;
-        }
+        applyValueOperation(values,[](T::ParamValue a) { return a - 273.15; });
         return;
 
       case Operation::C2K:
-        for (uint v=0; v<vsz; v++)
-        {
-          values[v] = values[v] + 273.15;
-        }
+        applyValueOperation(values,[](T::ParamValue a) { return a + 273.15; });
         return;
 
       case Operation::F2C:
-        for (uint v=0; v<vsz; v++)
-        {
-          values[v] = (5*(values[v] - 32.0)/9.0);
-        }
+        applyValueOperation(values,[](T::ParamValue a) { return (5*(a - 32.0)/9.0); });
         return;
 
       case Operation::C2F:
-        for (uint v=0; v<vsz; v++)
-        {
-          values[v] = (values[v]*1.8 + 32.0);
-        }
+        applyValueOperation(values,[](T::ParamValue a) { return (a*1.8 + 32.0); });
         return;
 
       case Operation::F2K:
-        for (uint v=0; v<vsz; v++)
-        {
-          values[v] = ((5.0*(values[v] - 32.0)/9.0) + 273.15);
-        }
+        applyValueOperation(values,[](T::ParamValue a) { return ((5.0*(a - 32.0)/9.0) + 273.15); });
         return;
 
       case Operation::K2F:
-        for (uint v=0; v<vsz; v++)
-        {
-          values[v] = ((values[v] - 273.15)*1.8 + 32.0);
-        }
+        applyValueOperation(values,[](T::ParamValue a) { return ((a - 273.15)*1.8 + 32.0); });
         return;
 
       case Operation::RAD2DEG:
       {
         double m = 360.0/(2*3.1415926535898);
-        for (uint v=0; v<vsz; v++)
-        {
-          values[v] = (m*values[v]);
-        }
+        applyValueOperation(values,[m](T::ParamValue a) { return (m*a); });
       }
       return;
 
       case Operation::DEG2RAD:
       {
         double m = (2*3.1415926535898/360.0);
-        for (uint v=0; v<vsz; v++)
-        {
-          values[v] = (m*values[v]);
-        }
+        applyValueOperation(values,[m](T::ParamValue a) { return (m*a); });
       }
       return;
       default:
