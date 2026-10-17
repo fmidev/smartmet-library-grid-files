@@ -3216,6 +3216,245 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,T::Pa
 
 
 
+namespace
+{
+/*! \brief Sets the grid width and height relative to the data grid size. */
+
+void setGridSizeAttributes(const Message& message,T::AttributeList& attributeList,const char *gridSizeStr)
+{
+  if (gridSizeStr != nullptr)
+  {
+    double m = toDouble(gridSizeStr);
+    if (m > 0)
+    {
+      attributeList.setAttribute("grid.width",Fmi::to_string(C_INT(C_DOUBLE(message.getGridWidth())*m)));
+      attributeList.setAttribute("grid.height",Fmi::to_string(C_INT(C_DOUBLE(message.getGridHeight())*m)));
+    }
+  }
+}
+
+
+
+
+
+/*! \brief Sets the geometry attributes of the data geometry when the "data" CRS is requested. */
+
+void setValueDataGeometryAttributes(const Message& message,T::AttributeList& attributeList,const char *llboxStr,const char *centerStr)
+{
+  const char *gridWidthStr = attributeList.getAttributeValue("grid.width");
+  const char *gridHeightStr = attributeList.getAttributeValue("grid.height");
+  if ((gridWidthStr == nullptr || gridHeightStr == nullptr) &&  centerStr == nullptr)
+  {
+    attributeList.setAttribute("grid.width",Fmi::to_string(message.getGridWidth()));
+    attributeList.setAttribute("grid.height",Fmi::to_string(message.getGridHeight()));
+  }
+
+  attributeList.setAttribute("grid.crs",message.getWKT());
+  attributeList.setAttribute("grid.proj4",message.getProj4());
+
+  if (llboxStr == nullptr  &&  centerStr == nullptr)
+    setDataBBoxAttributes(message,attributeList);
+
+  attributeList.setAttribute("grid.projectionType",Fmi::to_string(message.getGridProjection()));
+}
+
+
+
+
+
+/*! \brief Sets the attributes describing the original grid. */
+
+void setOriginalGridAttributes(const Message& message,T::AttributeList& attributeList,short areaInterpolationMethod)
+{
+  attributeList.setAttribute("grid.original.crs",message.getWKT());
+  attributeList.setAttribute("grid.original.proj4",message.getProj4());
+  attributeList.setAttribute("grid.original.width",Fmi::to_string(message.getGridWidth()));
+  attributeList.setAttribute("grid.original.height",Fmi::to_string(message.getGridHeight()));
+  attributeList.setAttribute("grid.original.relativeUV",Fmi::to_string((int)message.isRelativeUV()));
+  attributeList.setAttribute("grid.original.global",Fmi::to_string((int)message.isGridGlobal()));
+  attributeList.setAttribute("grid.original.reverseYDirection",Fmi::to_string((int)message.reverseYDirection()));
+  attributeList.setAttribute("grid.original.reverseXDirection",Fmi::to_string((int)message.reverseXDirection()));
+  attributeList.setAttribute("grid.original.projectionType",Fmi::to_string(message.getGridProjection()));
+  attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
+
+  double wm = 0;
+  double hm = 0;
+  if (message.getGridMetricCellSize(wm,hm))
+  {
+    attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
+    attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
+  }
+  else
+  {
+    attributeList.setAttribute("grid.original.cell.width.degrees",Fmi::to_string(wm));
+    attributeList.setAttribute("grid.original.cell.height.degrees",Fmi::to_string(hm));
+
+    message.getGridCellAverageSize(wm,hm);
+    attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
+    attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
+  }
+}
+
+
+
+
+
+/*! \brief Swaps the latitudes of the llbox and bbox attributes. */
+
+void swapBoxLatitudes(T::AttributeList& attributeList)
+{
+  const char *boxAttrs[] = { "grid.llbox", "grid.bbox" };
+  for (const auto *boxAttr : boxAttrs)
+  {
+    const char *boxStr = attributeList.getAttributeValue(boxAttr);
+    if (boxStr != nullptr)
+    {
+      std::vector<double> b;
+      splitString(boxStr,',',b);
+      if (b.size() == 4)
+      {
+        std::swap(b[1],b[3]);
+        char tmp[1400];  // four %.15f values of any magnitude
+        sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",b[0],b[1],b[2],b[3]);
+        attributeList.setAttribute(boxAttr,tmp);
+      }
+    }
+  }
+}
+
+
+
+
+
+/*! \brief Reverses the row order of the values to increasing-latitude order. */
+
+void flipRowsToNorthward(const Message& message,T::AttributeList& attributeList,T::ParamValue_vec& values,uint nx,uint ny)
+{
+  T::ParamValue_vec ordered(values.size());
+
+  for (uint j = 0; j < ny; j++)
+  {
+    const T::ParamValue *srcRow = &values[(ny - 1 - j) * nx];
+    std::copy(srcRow, srcRow + nx, &ordered[j * nx]);
+  }
+
+  values = std::move(ordered);
+
+  attributeList.setAttribute("grid.flipped","1");
+
+  // The data rows were just reversed to increasing-latitude (south->north)
+  // order, but grid.llbox/grid.bbox set above were taken from the message
+  // storage corners (0,0)/(nx-1,ny-1) and still describe the latitudes in
+  // north->south order. Swap the box latitudes so they stay consistent with
+  // the reordered data; otherwise the download encoder builds a north->south
+  // header (jScansPositively=0) over south->north data and the grid comes out
+  // vertically flipped. Latitude only: the longitude normalization (storage
+  // corners + getLongitude, here and in the block above) is intentionally kept.
+
+  if (message.getGridProjection() == T::GridProjectionValue::LatLon)
+    swapBoxLatitudes(attributeList);
+}
+
+
+
+
+
+/*! \brief Normalizes the longitudes of the llbox and bbox attributes of a global latlon grid. */
+
+void setGlobalLatLonBoxAttributes(T::AttributeList& attributeList)
+{
+  const char *cwd = attributeList.getAttributeValue("grid.original.cell.width.degrees");
+  const char *chd = attributeList.getAttributeValue("grid.original.cell.height.degrees");
+  if (cwd != nullptr  &&  chd != nullptr)
+  {
+    attributeList.setAttribute("grid.cell.width",cwd);
+    attributeList.setAttribute("grid.cell.height",chd);
+  }
+
+  const char *boxAttrs[] = { "grid.llbox", "grid.bbox" };
+  for (const auto *boxAttr : boxAttrs)
+  {
+    const char *boxStr = attributeList.getAttributeValue(boxAttr);
+    if (boxStr != nullptr)
+    {
+      std::vector<double> b;
+      splitString(boxStr,',',b);
+      if (b.size() == 4)
+      {
+        for (int li : {0,2})
+        {
+          while (b[li] > 180) b[li] -= 360;
+          while (b[li] <= -180) b[li] += 360;
+        }
+        char tmp[1400];  // four %.15f values of any magnitude
+        sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",b[0],b[1],b[2],b[3]);
+        attributeList.setAttribute(boxAttr,tmp);
+      }
+    }
+  }
+}
+
+
+
+
+
+/*! \brief Fetches the grid values by a direct copy of the message values when the requested
+    geometry is the original geometry. Returns false if the generic point sampling should be used. */
+
+bool getGridValueVectorByOriginalGeometry(const Message& message,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values)
+{
+  // The geometryId is the same as the original geometry, so the data can be fetched
+  // by a direct copy of the message values instead of sampling the grid point by point.
+
+  T::Dimensions d = message.getGridDimensions();
+  uint nx = d.nx();
+  uint ny = d.ny();
+
+  if (d.getDimensions() == 2)
+  {
+    message.getGridValueVector(modificationOperation,modificationParameters,values);
+
+    if (values.size() == (std::size_t)nx * ny)
+    {
+      // getGridValueVector() returns the values in the message's own scanning order.
+      // The grid bounding box set above (and thus the rest of the pipeline and the
+      // download output) expects the values starting from the bounding box start
+      // corner, i.e. rows in increasing-latitude order. The bbox corners follow the
+      // message column order but are flipped in the row direction for messages stored
+      // from north to south, so reverse the row order here to match when needed.
+
+      if (message.reverseYDirection())
+        flipRowsToNorthward(message,attributeList,values,nx,ny);
+
+      attributeList.setAttribute("grid.width",Fmi::to_string(nx));
+      attributeList.setAttribute("grid.height",Fmi::to_string(ny));
+
+      // For a global latlon grid the bounding box longitudes computed above are in the
+      // message's native range (e.g. 0..359.9). The generic path normalizes these to the
+      // [-180,180] range expected by the downstream encoder (getLongitude) and reports the
+      // cell size in degrees. Reproduce that here so global grids encode correctly without
+      // having to generate the full coordinate list.
+
+      if (message.isGridGlobal()  &&  message.getGridProjection() == T::GridProjectionValue::LatLon)
+        setGlobalLatLonBoxAttributes(attributeList);
+
+      return true;
+    }
+
+    // Not a plain nx*ny grid (e.g. reduced/quasi-regular); fall back to the generic
+    // point sampling path below.
+
+    values.clear();
+  }
+
+  return false;
+}
+}  // namespace
+
+
+
+
+
 /*! \brief Returns grid values for the geometry described by attributes with value modification. */
 
 void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const
@@ -3240,268 +3479,21 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,uint 
     if (s != nullptr)
       areaInterpolationMethod = toInt16(s);
 
-    if (gridSizeStr != nullptr)
-    {
-      double m = toDouble(gridSizeStr);
-      if (m > 0)
-      {
-        attributeList.setAttribute("grid.width",Fmi::to_string(C_INT(C_DOUBLE(getGridWidth())*m)));
-        attributeList.setAttribute("grid.height",Fmi::to_string(C_INT(C_DOUBLE(getGridHeight())*m)));
-      }
-    }
+    setGridSizeAttributes(*this,attributeList,gridSizeStr);
 
     if (crsStr != nullptr &&  strcasecmp(crsStr,"data") == 0)
-    {
-      const char *gridWidthStr = attributeList.getAttributeValue("grid.width");
-      const char *gridHeightStr = attributeList.getAttributeValue("grid.height");
-      if ((gridWidthStr == nullptr || gridHeightStr == nullptr) &&  centerStr == nullptr)
-      {
-        attributeList.setAttribute("grid.width",Fmi::to_string(getGridWidth()));
-        attributeList.setAttribute("grid.height",Fmi::to_string(getGridHeight()));
-      }
+      setValueDataGeometryAttributes(*this,attributeList,llboxStr,centerStr);
 
-      attributeList.setAttribute("grid.crs",getWKT());
-      attributeList.setAttribute("grid.proj4",getProj4());
-      T::Dimensions  d = getGridDimensions();
+    if (llboxStr == nullptr &&  centerStr != nullptr  &&  !setCenterLLBox(attributeList,centerStr))
+      return;
 
-      if (llboxStr == nullptr  &&  centerStr == nullptr)
-      {
-        double x1 = 0.0;
-        double y1 = 0.0;
-        double x2 = 0.0;
-        double y2 = 0.0;
-
-        char tmp[1400];  // four %.15f values of any magnitude
-
-        // Use the first and last grid points in storage order and normalize the
-        // longitudes to [-180,180]. This matches what
-        // GridDef::getGridLatLonCoordinatesByGeometry stores for the same
-        // attribute, so callers see a consistent grid.llbox regardless of which
-        // code path produced it (interpolation vs. the geometryId fast-path
-        // below). For a global grid such as ECG that wraps around 0, this keeps
-        // the second longitude slightly negative (e.g. -0.1) rather than
-        // pushing it to ~360, which downstream consumers rely on to detect the
-        // wrap.
-
-        if (getGridLatLonCoordinatesByGridPoint(0,0,y1,x1)  &&
-            getGridLatLonCoordinatesByGridPoint(d.nx()-1,d.ny()-1,y2,x2))
-        {
-          x1 = getLongitude(x1);
-          x2 = getLongitude(x2);
-
-          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
-          attributeList.setAttribute("grid.llbox",tmp);
-          if (getGridProjection() == T::GridProjectionValue::LatLon)
-            attributeList.setAttribute("grid.bbox",tmp);
-        }
-
-        if (getGridOriginalCoordinatesByGridPoint(0,0,x1,y1)  &&  getGridOriginalCoordinatesByGridPoint(d.nx()-1,d.ny()-1,x2,y2))
-        {
-          if (getGridProjection() == T::GridProjectionValue::LatLon)
-          {
-            if (x2 < x1  &&  x2 < 0)
-              x2 += 360;
-
-            if (x2 < x1  && x1 >= 180)
-              x1 -= 360;
-          }
-
-          if (reverseYDirection())
-          {
-            double tmp = y1;
-            y1 = y2;
-            y2 = tmp;
-          }
-
-          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
-          if (getGridProjection() != T::GridProjectionValue::LatLon)
-            attributeList.setAttribute("grid.bbox",tmp);
-        }
-      }
-
-      attributeList.setAttribute("grid.projectionType",Fmi::to_string(getGridProjection()));
-    }
-
-    if (llboxStr == nullptr &&  centerStr != nullptr)
-    {
-      // The bbox area is defined by a rectangle and its latlon center coordinates.
-
-      std::vector<double> a;
-      splitString(centerStr,',',a);
-      if (a.size() != 2)
-        return;
-
-      const char *metricWidthStr = attributeList.getAttributeValue("grid.metricWidth");
-      const char *metricHeightStr = attributeList.getAttributeValue("grid.metricHeight");
-
-      if (metricWidthStr != nullptr &&  metricHeightStr != nullptr)
-      {
-        double centerX = a[0];
-        double centerY = a[1];
-        double mWidth = toDouble(metricWidthStr) * 1000;   // km => m
-        double mHeight = toDouble(metricHeightStr) * 1000; // km => m
-
-        double lon1 = 0;
-        double lat1 = 0;
-        double lon2 = 0;
-        double lat2 =0;
-
-        latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
-
-        char tmp[1400];  // four %.15f values of any magnitude
-        sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",lon1,lat1,lon2,lat2);
-        attributeList.setAttribute("grid.llbox",tmp);
-      }
-    }
-
-    attributeList.setAttribute("grid.original.crs",getWKT());
-    attributeList.setAttribute("grid.original.proj4",getProj4());
-    attributeList.setAttribute("grid.original.width",Fmi::to_string(getGridWidth()));
-    attributeList.setAttribute("grid.original.height",Fmi::to_string(getGridHeight()));
-    attributeList.setAttribute("grid.original.relativeUV",Fmi::to_string((int)isRelativeUV()));
-    attributeList.setAttribute("grid.original.global",Fmi::to_string((int)isGridGlobal()));
-    attributeList.setAttribute("grid.original.reverseYDirection",Fmi::to_string((int)reverseYDirection()));
-    attributeList.setAttribute("grid.original.reverseXDirection",Fmi::to_string((int)reverseXDirection()));
-    attributeList.setAttribute("grid.original.projectionType",Fmi::to_string(getGridProjection()));
-    attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
-
-    double wm = 0;
-    double hm = 0;
-    if (getGridMetricCellSize(wm,hm))
-    {
-      attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
-      attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
-    }
-    else
-    {
-      attributeList.setAttribute("grid.original.cell.width.degrees",Fmi::to_string(wm));
-      attributeList.setAttribute("grid.original.cell.height.degrees",Fmi::to_string(hm));
-
-      getGridCellAverageSize(wm,hm);
-      attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
-      attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
-    }
+    setOriginalGridAttributes(*this,attributeList,areaInterpolationMethod);
 
     const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
 
-    if (geometryIdStr != nullptr  &&  getGridGeometryId() == toInt32(geometryIdStr))
-    {
-      // The geometryId is the same as the original geometry, so the data can be fetched
-      // by a direct copy of the message values instead of sampling the grid point by point.
-
-      T::Dimensions d = getGridDimensions();
-      uint nx = d.nx();
-      uint ny = d.ny();
-
-      if (d.getDimensions() == 2)
-      {
-        getGridValueVector(modificationOperation,modificationParameters,values);
-
-        if (values.size() == (std::size_t)nx * ny)
-        {
-          // getGridValueVector() returns the values in the message's own scanning order.
-          // The grid bounding box set above (and thus the rest of the pipeline and the
-          // download output) expects the values starting from the bounding box start
-          // corner, i.e. rows in increasing-latitude order. The bbox corners follow the
-          // message column order but are flipped in the row direction for messages stored
-          // from north to south, so reverse the row order here to match when needed.
-
-          if (reverseYDirection())
-          {
-            T::ParamValue_vec ordered(values.size());
-
-            for (uint j = 0; j < ny; j++)
-            {
-              const T::ParamValue *srcRow = &values[(ny - 1 - j) * nx];
-              std::copy(srcRow, srcRow + nx, &ordered[j * nx]);
-            }
-
-            values = std::move(ordered);
-
-            attributeList.setAttribute("grid.flipped","1");
-
-            // The data rows were just reversed to increasing-latitude (south->north)
-            // order, but grid.llbox/grid.bbox set above were taken from the message
-            // storage corners (0,0)/(nx-1,ny-1) and still describe the latitudes in
-            // north->south order. Swap the box latitudes so they stay consistent with
-            // the reordered data; otherwise the download encoder builds a north->south
-            // header (jScansPositively=0) over south->north data and the grid comes out
-            // vertically flipped. Latitude only: the longitude normalization (storage
-            // corners + getLongitude, here and in the block above) is intentionally kept.
-
-            if (getGridProjection() == T::GridProjectionValue::LatLon)
-            {
-              const char *boxAttrs[] = { "grid.llbox", "grid.bbox" };
-              for (const auto *boxAttr : boxAttrs)
-              {
-                const char *boxStr = attributeList.getAttributeValue(boxAttr);
-                if (boxStr != nullptr)
-                {
-                  std::vector<double> b;
-                  splitString(boxStr,',',b);
-                  if (b.size() == 4)
-                  {
-                    std::swap(b[1],b[3]);
-                    char tmp[1400];  // four %.15f values of any magnitude
-                    sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",b[0],b[1],b[2],b[3]);
-                    attributeList.setAttribute(boxAttr,tmp);
-                  }
-                }
-              }
-            }
-          }
-
-          attributeList.setAttribute("grid.width",Fmi::to_string(nx));
-          attributeList.setAttribute("grid.height",Fmi::to_string(ny));
-
-          // For a global latlon grid the bounding box longitudes computed above are in the
-          // message's native range (e.g. 0..359.9). The generic path normalizes these to the
-          // [-180,180] range expected by the downstream encoder (getLongitude) and reports the
-          // cell size in degrees. Reproduce that here so global grids encode correctly without
-          // having to generate the full coordinate list.
-
-          if (isGridGlobal()  &&  getGridProjection() == T::GridProjectionValue::LatLon)
-          {
-            const char *cwd = attributeList.getAttributeValue("grid.original.cell.width.degrees");
-            const char *chd = attributeList.getAttributeValue("grid.original.cell.height.degrees");
-            if (cwd != nullptr  &&  chd != nullptr)
-            {
-              attributeList.setAttribute("grid.cell.width",cwd);
-              attributeList.setAttribute("grid.cell.height",chd);
-            }
-
-            const char *boxAttrs[] = { "grid.llbox", "grid.bbox" };
-            for (const auto *boxAttr : boxAttrs)
-            {
-              const char *boxStr = attributeList.getAttributeValue(boxAttr);
-              if (boxStr != nullptr)
-              {
-                std::vector<double> b;
-                splitString(boxStr,',',b);
-                if (b.size() == 4)
-                {
-                  for (int li : {0,2})
-                  {
-                    while (b[li] > 180) b[li] -= 360;
-                    while (b[li] <= -180) b[li] += 360;
-                  }
-                  char tmp[1400];  // four %.15f values of any magnitude
-                  sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",b[0],b[1],b[2],b[3]);
-                  attributeList.setAttribute(boxAttr,tmp);
-                }
-              }
-            }
-          }
-
-          return;
-        }
-
-        // Not a plain nx*ny grid (e.g. reduced/quasi-regular); fall back to the generic
-        // point sampling path below.
-
-        values.clear();
-      }
-    }
+    if (geometryIdStr != nullptr  &&  getGridGeometryId() == toInt32(geometryIdStr)  &&
+        getGridValueVectorByOriginalGeometry(*this,attributeList,modificationOperation,modificationParameters,values))
+      return;
 
     uint width = 0;
     uint height = 0;
