@@ -93,6 +93,68 @@ void DataFetcher::setAccessFile(const char *filename)
 
 
 
+namespace
+{
+/*! \brief Splits the CSV line into fields separated by ';' or '\n' (outside of quotes).
+    The separators are replaced by '\0' characters. Returns the number of fields. */
+
+uint splitCsvFields(char *st,char *field[100])
+{
+  bool ind = false;
+  uint c = 1;
+  field[0] = st;
+  char *p = st;
+  while (*p != '\0'  &&  c < 100)
+  {
+    if (*p == '"')
+      ind = !ind;
+
+    if ((*p == ';'  || *p == '\n') && !ind)
+    {
+      *p = '\0';
+      p++;
+      field[c] = p;
+      c++;
+    }
+    else
+    {
+      p++;
+    }
+  }
+  return c;
+}
+
+
+
+/*! \brief Adds the access information of the server. */
+
+void addAccessRecord(char *field[],DataFetcher::AccessMap& mAccessMap)
+{
+  std::string server;
+  DataFetcher::AccessInfo rec;
+
+  if (field[0][0] != '\0')
+    server = field[0];
+
+  if (field[1][0] != '\0')
+    rec.authenticationMethod = toUInt32(field[1]);
+
+  if (field[2][0] != '\0')
+    rec.username = field[2];
+
+  if (field[3][0] != '\0')
+    rec.password = field[3];
+
+  std::string key = toLowerString(server);
+  //printf("ADD ACCESS [%s][%u][%s][%s]\n",server.c_str(),rec.authenticationMethod,rec.username.c_str(),rec.password.c_str());
+  mAccessMap.insert(std::pair<std::string,DataFetcher::AccessInfo>(key,rec));
+}
+}  // namespace
+
+
+
+
+
 /*! \brief Parses an access credentials file into the given access map. */
 
 void DataFetcher::loadAccessFile(const char *filename,AccessMap& mAccessMap)
@@ -119,50 +181,11 @@ void DataFetcher::loadAccessFile(const char *filename,AccessMap& mAccessMap)
     {
       if (st[0] != '#')
       {
-        bool ind = false;
         char *field[100];
-        uint c = 1;
-        field[0] = st;
-        char *p = st;
-        while (*p != '\0'  &&  c < 100)
-        {
-          if (*p == '"')
-            ind = !ind;
-
-          if ((*p == ';'  || *p == '\n') && !ind)
-          {
-            *p = '\0';
-            p++;
-            field[c] = p;
-            c++;
-          }
-          else
-          {
-            p++;
-          }
-        }
+        uint c = splitCsvFields(st,field);
 
         if (c > 3)
-        {
-          std::string server;
-          AccessInfo rec;
-
-          if (field[0][0] != '\0')
-            server = field[0];
-
-          if (field[1][0] != '\0')
-            rec.authenticationMethod = toUInt32(field[1]);
-
-          if (field[2][0] != '\0')
-            rec.username = field[2];
-
-          if (field[3][0] != '\0')
-            rec.password = field[3];
-
-          std::string key = toLowerString(server);
-          //printf("ADD ACCESS [%s][%u][%s][%s]\n",server.c_str(),rec.authenticationMethod,rec.username.c_str(),rec.password.c_str());
-          mAccessMap.insert(std::pair<std::string,AccessInfo>(key,rec));
-        }
+          addAccessRecord(field,mAccessMap);
       }
     }
     (void)fclose(file);
