@@ -60,7 +60,8 @@ void readByteAttribute(MemoryReader& memoryReader,uint attrCount,std::vector<std
   for (uint a=0; a<rCount; a++)
   {
     memoryReader >> val;
-    if (a < rCount)
+    // The padding bytes are not values
+    if (a < attrCount)
       attrValues.push_back(std::to_string((uint)val));
   }
 }
@@ -1020,7 +1021,7 @@ void NetCdfFile::readPropertyList(MemoryReader& memoryReader)
       if (eCount > 0  &&  eType != 0x0C)
       {
         Fmi::Exception exception(BCP,"Expected attribute indicator (0x0C)!");
-        exception.addParameter("Indicator",std::to_string(elemType));
+        exception.addParameter("Indicator",std::to_string(eType));
         throw exception;
       }
 
