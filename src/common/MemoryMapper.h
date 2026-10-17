@@ -126,6 +126,10 @@ class MemoryMapper
     void      addMapInfo(const MapInfo_sptr& mapInfo);
     int       getData(const MapInfo_sptr& info,std::size_t filePosition,int dataSize,char *dataPtr);
     int       getClosestIndex(char *address);
+    int       takeNextMessage(Int64& currentCounter,int ownerId);
+    void      processFaultMessage(int idx,char *page,uint& errorCounter);
+    void      waitForFaultMessages(uint sleepCount,uint threadId);
+    void      readFaultMessage(Int64 idx);
 
 
   

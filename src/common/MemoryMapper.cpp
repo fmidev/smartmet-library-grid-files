@@ -876,6 +876,209 @@ int MemoryMapper::getData(const MapInfo_sptr& info,std::size_t filePosition,int 
 
 
 
+/*! \brief Takes the next unprocessed fault message for the current thread and returns its index, or -1 if there is none. */
+
+int MemoryMapper::takeNextMessage(Int64& currentCounter,int ownerId)
+{
+  try
+  {
+    int idx = -1;
+    Int64 len = 0;
+    {
+      AutoThreadLock tlock(&mThreadLock);
+      len = mMessageReadCount.load() - mMessageProcessCount.load();
+      if (len > 0  &&  currentCounter < mMessageProcessCount)
+      {
+        idx = mMessageProcessCount % mMaxMessages;
+        currentCounter = mMessageProcessCount;
+        if (idx >= 0  &&  mMessage[idx].event == UFFD_EVENT_PAGEFAULT)
+          mMessage[idx].event = ownerId;  // This indicates that the current thread has taken
+                                          // this message for processing.
+        mMessageProcessCount++;
+      }
+    }
+    return idx;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+/*! \brief Fetches the data page of the given fault message and copies it into the faulting region. */
+
+void MemoryMapper::processFaultMessage(int idx,char *page,uint& errorCounter)
+{
+  try
+  {
+    struct uffdio_copy uffdio_copy{};
+
+    AutoReadLock lock(&mModificationLock);
+
+    auto *address = (char*)mMessage[idx].arg.pagefault.address;  // NOLINT(cppcoreguidelines-pro-type-union-access): kernel uffd_msg API
+
+    int index = getClosestIndex(address);
+
+    MapInfo_sptr info = mMemoryMappings[index];
+
+    //printf("SEARCH %d  %lld  %lld - %lld\n",index,(Int64)address,(Int64)info->memoryPtr,(Int64)(info->memoryPtr + info->allocatedSize));
+    if (mMemoryMappings.size() > (std::size_t)index  &&  info->memoryPtr <= address &&
+        (info->memoryPtr + info->allocatedSize) > address)
+    {
+      //printf("FOUND %lld => %lld (%s)\n",(Int64)address,(Int64)info->memoryPtr,info->filename.c_str());
+
+      UInt64 fp = (Int64)address - (Int64)info->memoryPtr;
+      try
+      {
+        int n = 0;
+
+        if (!info->mappingError)
+          n = getData(info,fp,mPageSize,page);
+
+        if (n == 0)
+        {
+          //printf("***** ZERO DATA RETURNED\n");
+          memset(page,0,mPageSize);
+          info->mappingError = true;
+          errorCounter++;
+          if (errorCounter == 1)
+            printf("#### WARNING: Memory mapper got no data!\n");
+        }
+        //else
+        //  info->mappingError = false;
+      }
+      catch (...)
+      {
+        Fmi::Exception exception(BCP,"Cannot fetch memory page!",nullptr);
+        exception.printError();
+        memset(page,0,mPageSize);
+        info->mappingError = true;
+      }
+    }
+    else
+    {
+      //printf("***** MAPPING NOT FOUND\n");
+      memset(page,0,mPageSize);
+      info->mappingError = true;
+      errorCounter++;
+      if (errorCounter == 1)
+        printf("#### WARNING: Memory mapping not found %ld\n",(Int64)mMessageProcessCount);
+    }
+
+    uffdio_copy.src = (unsigned long)page;
+    uffdio_copy.dst = (unsigned long)address & ~(mPageSize - 1);
+    uffdio_copy.len = mPageSize;
+    uffdio_copy.mode = 0;
+    uffdio_copy.copy = 0;
+
+    if (ioctl(mUffd, UFFDIO_COPY, &uffdio_copy) == -1  &&  errno != 17)
+    {
+      Fmi::Exception exception(BCP,"ioctl-UFFDIO_COPY!");
+      exception.addParameter("errno",std::to_string(errno));
+      throw exception;
+    }
+
+    mMessage[idx].event = 0;  // This indicates that the message slot is now free to re-use.
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+/*! \brief Sleeps while waiting for new fault messages. */
+
+void MemoryMapper::waitForFaultMessages(uint sleepCount,uint threadId)
+{
+  try
+  {
+    if (sleepCount < 100  &&  mMessageReadCount.load() > 0)
+    {
+      time_usleep(0,500000);
+    }
+    else
+    {
+      if (threadId < 5)
+        time_usleep(0,10000000);
+      else
+        time_usleep(0,50000000);
+    }
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+/*! \brief Polls userfaultfd and reads the next page-fault message into the given message slot. */
+
+void MemoryMapper::readFaultMessage(Int64 idx)
+{
+  try
+  {
+    struct pollfd pollfd{};
+    pollfd.fd = mUffd;
+    pollfd.events = POLLIN;
+    int nready = poll(&pollfd, 1, 1000);
+    if (nready == -1)
+      throw Fmi::Exception(BCP,"Poll error!");
+
+    if (nready > 0)
+    {
+      ssize_t nread = read(mUffd, &mMessage[idx], sizeof(uffd_msg));
+      if (nread == 0)
+        throw Fmi::Exception(BCP,"EOF on userfaultfd!");
+
+      if (nread == -1)
+        throw Fmi::Exception(BCP,"Read error!");
+
+      if (mMessage[idx].event != UFFD_EVENT_PAGEFAULT)
+        throw Fmi::Exception(BCP,"Unexpected event on userfaultfd!");
+
+      AutoThreadLock tlock(&mThreadLock);
+
+      // Several threads might request the same memory page at the same time. So
+      // we should check that we are not ready handling the same page request.
+
+      /*
+      bool found = false;
+      auto address = mMessage[idx].arg.pagefault.address;  // NOLINT(cppcoreguidelines-pro-type-union-access): kernel uffd_msg API
+      for (auto t = (Int64)mMessageProcessCount; t<(Int64)mMessageReadCount.load()  &&  !found; t++)
+      {
+        auto i = t % mMaxMessages;
+        if (mMessage[i].arg.pagefault.address == address)  // NOLINT(cppcoreguidelines-pro-type-union-access): kernel uffd_msg API
+          found = true;
+      }
+      if (!found)
+      */
+        mMessageReadCount++;
+      //else
+      //  printf("-------------- PAGE ALREADY IN THE MAPPING LIST\n");
+      //printf("READ %lld  %lld\n",(Int64)mMessageReadCount,(Int64)mMessageProcessCount);
+    }
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
 /*! \brief Worker thread loop that resolves userfaultfd page faults by copying data pages. */
 
 void MemoryMapper::faultProcessingThread()
@@ -889,7 +1092,6 @@ void MemoryMapper::faultProcessingThread()
 
     uint threadId = mThreadsRunning;
     mThreadsRunning++;
-    struct uffdio_copy uffdio_copy{};
 
     /* Create a page that will be copied into the faulting region. */
 
@@ -906,21 +1108,7 @@ void MemoryMapper::faultProcessingThread()
     {
       try
       {
-        int idx = -1;
-        Int64 len = 0;
-        {
-          AutoThreadLock tlock(&mThreadLock);
-          len = mMessageReadCount.load() - mMessageProcessCount.load();
-          if (len > 0  &&  currentCounter < mMessageProcessCount)
-          {
-            idx = mMessageProcessCount % mMaxMessages;
-            currentCounter = mMessageProcessCount;
-            if (idx >= 0  &&  mMessage[idx].event == UFFD_EVENT_PAGEFAULT)
-              mMessage[idx].event = ownerId;  // This indicates that the current thread has taken
-                                              // this message for processing.
-            mMessageProcessCount++;
-          }
-        }
+        int idx = takeNextMessage(currentCounter,ownerId);
 
         // Reseting error counter after 10000 processed messages.
         if ((mMessageProcessCount % 10000) == 0)
@@ -928,88 +1116,13 @@ void MemoryMapper::faultProcessingThread()
 
         if (idx >= 0  &&  mMessage[idx].event == ownerId)
         {
-          AutoReadLock lock(&mModificationLock);
-
-          auto *address = (char*)mMessage[idx].arg.pagefault.address;  // NOLINT(cppcoreguidelines-pro-type-union-access): kernel uffd_msg API
-
-          int index = getClosestIndex(address);
-
-          MapInfo_sptr info = mMemoryMappings[index];
-
-          //printf("SEARCH %d  %lld  %lld - %lld\n",index,(Int64)address,(Int64)info->memoryPtr,(Int64)(info->memoryPtr + info->allocatedSize));
-          if (mMemoryMappings.size() > (std::size_t)index  &&  info->memoryPtr <= address &&
-              (info->memoryPtr + info->allocatedSize) > address)
-          {
-            //printf("FOUND %lld => %lld (%s)\n",(Int64)address,(Int64)info->memoryPtr,info->filename.c_str());
-
-            UInt64 fp = (Int64)address - (Int64)info->memoryPtr;
-            try
-            {
-              int n = 0;
-
-              if (!info->mappingError)
-                n = getData(info,fp,mPageSize,page);
-
-              if (n == 0)
-              {
-                //printf("***** ZERO DATA RETURNED\n");
-                memset(page,0,mPageSize);
-                info->mappingError = true;
-                errorCounter++;
-                if (errorCounter == 1)
-                  printf("#### WARNING: Memory mapper got no data!\n");
-              }
-              //else
-              //  info->mappingError = false;
-            }
-            catch (...)
-            {
-              Fmi::Exception exception(BCP,"Cannot fetch memory page!",nullptr);
-              exception.printError();
-              memset(page,0,mPageSize);
-              info->mappingError = true;
-            }
-          }
-          else
-          {
-            //printf("***** MAPPING NOT FOUND\n");
-            memset(page,0,mPageSize);
-            info->mappingError = true;
-            errorCounter++;
-            if (errorCounter == 1)
-              printf("#### WARNING: Memory mapping not found %ld\n",(Int64)mMessageProcessCount);
-          }
-
-          uffdio_copy.src = (unsigned long)page;
-          uffdio_copy.dst = (unsigned long)address & ~(mPageSize - 1);
-          uffdio_copy.len = mPageSize;
-          uffdio_copy.mode = 0;
-          uffdio_copy.copy = 0;
-
-          if (ioctl(mUffd, UFFDIO_COPY, &uffdio_copy) == -1  &&  errno != 17)
-          {
-            Fmi::Exception exception(BCP,"ioctl-UFFDIO_COPY!");
-            exception.addParameter("errno",std::to_string(errno));
-            throw exception;
-          }
-
-          mMessage[idx].event = 0;  // This indicates that the message slot is now free to re-use.
+          processFaultMessage(idx,page,errorCounter);
           sleepCount = 0;
         }
         else
         {
           sleepCount++;
-          if (sleepCount < 100  &&  mMessageReadCount.load() > 0)
-          {
-            time_usleep(0,500000);
-          }
-          else
-          {
-            if (threadId < 5)
-              time_usleep(0,10000000);
-            else
-              time_usleep(0,50000000);
-          }
+          waitForFaultMessages(sleepCount,threadId);
         }
       }
       catch (...)
@@ -1061,46 +1174,7 @@ void MemoryMapper::faultHandlerThread()
 
           if (mMessage[idx].event == 0)
           {
-            struct pollfd pollfd{};
-            pollfd.fd = mUffd;
-            pollfd.events = POLLIN;
-            int nready = poll(&pollfd, 1, 1000);
-            if (nready == -1)
-              throw Fmi::Exception(BCP,"Poll error!");
-
-            if (nready > 0)
-            {
-              ssize_t nread = read(mUffd, &mMessage[idx], sizeof(uffd_msg));
-              if (nread == 0)
-                throw Fmi::Exception(BCP,"EOF on userfaultfd!");
-
-              if (nread == -1)
-                throw Fmi::Exception(BCP,"Read error!");
-
-              if (mMessage[idx].event != UFFD_EVENT_PAGEFAULT)
-                throw Fmi::Exception(BCP,"Unexpected event on userfaultfd!");
-
-              AutoThreadLock tlock(&mThreadLock);
-
-              // Several threads might request the same memory page at the same time. So
-              // we should check that we are not ready handling the same page request.
-
-              /*
-              bool found = false;
-              auto address = mMessage[idx].arg.pagefault.address;  // NOLINT(cppcoreguidelines-pro-type-union-access): kernel uffd_msg API
-              for (auto t = (Int64)mMessageProcessCount; t<(Int64)mMessageReadCount.load()  &&  !found; t++)
-              {
-                auto i = t % mMaxMessages;
-                if (mMessage[i].arg.pagefault.address == address)  // NOLINT(cppcoreguidelines-pro-type-union-access): kernel uffd_msg API
-                  found = true;
-              }
-              if (!found)
-              */
-                mMessageReadCount++;
-              //else
-              //  printf("-------------- PAGE ALREADY IN THE MAPPING LIST\n");
-              //printf("READ %lld  %lld\n",(Int64)mMessageReadCount,(Int64)mMessageProcessCount);
-            }
+            readFaultMessage(idx);
           }
           else
           {
