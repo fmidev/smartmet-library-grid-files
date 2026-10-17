@@ -102,7 +102,7 @@ double borderInterpolation(uint missingFlags,double dist,double dist_x1,double d
   {
     // Linear interpolation x1,y1 - x1,y2
     if (missingFlags == 10)
-      return (dist_y1*val_q11 + dist_y2*val_q12);
+      return (dist_y2*val_q11 + dist_y1*val_q12);
 
     return ParamValueMissing;
   }
@@ -111,7 +111,7 @@ double borderInterpolation(uint missingFlags,double dist,double dist_x1,double d
   {
     // Linear interpolation x2,y1 - x2,y2
     if (missingFlags == 5)
-      return (dist_y1*val_q21 + dist_y2*val_q22);
+      return (dist_y2*val_q21 + dist_y1*val_q22);
 
     return ParamValueMissing;
   }
@@ -120,7 +120,7 @@ double borderInterpolation(uint missingFlags,double dist,double dist_x1,double d
   {
     // Linear interpolation x1,y1 - x2,y1
     if (missingFlags == 12)
-      return (dist_x1*val_q11 + dist_x2*val_q21);
+      return (dist_x2*val_q11 + dist_x1*val_q21);
 
     return ParamValueMissing;
   }
@@ -129,7 +129,7 @@ double borderInterpolation(uint missingFlags,double dist,double dist_x1,double d
   {
     // Linear interpolation x1,y2 - x2,y2
     if (missingFlags == 3)
-      return (dist_x1*val_q12 + dist_x2*val_q22);
+      return (dist_x2*val_q12 + dist_x1*val_q22);
 
     return ParamValueMissing;
   }
