@@ -1,6 +1,7 @@
 #include "GridDef.h"
 #include <macgyver/Exception.h>
 #include <macgyver/Cache.h>
+#include <functional>
 #include "../common/GeneralFunctions.h"
 #include "../common/ShowFunction.h"
 #include "../common/CoordinateConversions.h"
@@ -97,6 +98,39 @@ uint splitCsvFields(char *st,char *field[100])
     }
   }
   return c;
+}
+
+
+
+
+
+/*! \brief Reads the CSV file and calls the handler for each non-comment line
+    containing more than minFields fields. */
+
+void readCsvRecords(const char *filename,uint minFields,const std::function<void(char *field[],uint c)>& handler)
+{
+  FILE *file = fopen(filename,"re");
+  if (file == nullptr)
+  {
+    Fmi::Exception exception(BCP,"Cannot open file!");
+    exception.addParameter("Filename",std::string(filename));
+    throw exception;
+  }
+
+  char st[1000];
+
+  while (fgets(st,1000,file) != nullptr)
+  {
+    if (st[0] != '#')
+    {
+      char *field[100];
+      uint c = splitCsvFields(st,field);
+
+      if (c > minFields)
+        handler(field,c);
+    }
+  }
+  (void)fclose(file);
 }
 }  // namespace
 
@@ -954,45 +988,24 @@ void GridDef::loadGribParameterDefinitions(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"re");
-    if (file == nullptr)
+    readCsvRecords(filename,3,[&](char *field[],uint c)
     {
-      Fmi::Exception exception(BCP,"Cannot open file!");
-      exception.addParameter("Filename",std::string(filename));
-      throw exception;
-    }
+      GribParameterDef rec;
 
-    char st[1000];
+      if (field[0][0] != '\0')
+        rec.mGribParameterId = toUInt32(field[0]);
 
-    while (fgets(st,1000,file) != nullptr)
-    {
-      if (st[0] != '#')
-      {
-        char *field[100];
-        uint c = splitCsvFields(st,field);
+      if (field[1][0] != '\0')
+        rec.mParameterName = field[1];
 
-        if (c > 3)
-        {
-          GribParameterDef rec;
+      if (field[2][0] != '\0')
+        rec.mParameterUnits = field[2];
 
-          if (field[0][0] != '\0')
-            rec.mGribParameterId = toUInt32(field[0]);
+      if (field[3][0] != '\0')
+        rec.mParameterDescription = field[3];
 
-          if (field[1][0] != '\0')
-            rec.mParameterName = field[1];
-
-          if (field[2][0] != '\0')
-            rec.mParameterUnits = field[2];
-
-          if (field[3][0] != '\0')
-            rec.mParameterDescription = field[3];
-
-          mGrib_parameterDef_records.emplace_back(rec);
-        }
-      }
-
-    }
-    (void)fclose(file);
+      mGrib_parameterDef_records.emplace_back(rec);
+    });
   }
   catch (...)
   {
@@ -1484,50 +1497,30 @@ void GridDef::loadGrib1ParameterDefs(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"re");
-    if (file == nullptr)
+    readCsvRecords(filename,1,[&](char *field[],uint c)
     {
-      Fmi::Exception exception(BCP,"Cannot open file!");
-      exception.addParameter("Filename",std::string(filename));
-      throw exception;
-    }
+      Grib1ParameterDef rec;
 
-    char st[1000];
+      if (field[0][0] != '\0')
+        rec.mGribParameterId = toUInt32(field[0]);
 
-    while (fgets(st,1000,file) != nullptr)
-    {
-      if (st[0] != '#')
+      if (field[1][0] != '\0')
       {
-        char *field[100];
-        uint c = splitCsvFields(st,field);
+        std::vector<std::string> partList;
+        splitString(field[1],',',partList);
 
-        if (c > 1)
+        for (auto& it : partList)
         {
-          Grib1ParameterDef rec;
-
-          if (field[0][0] != '\0')
-            rec.mGribParameterId = toUInt32(field[0]);
-
-          if (field[1][0] != '\0')
+          std::vector<std::string> list;
+          splitString(it,'=',list);
+          if (list.size() == 2)
           {
-            std::vector<std::string> partList;
-            splitString(field[1],',',partList);
-
-            for (auto& it : partList)
-            {
-              std::vector<std::string> list;
-              splitString(it,'=',list);
-              if (list.size() == 2)
-              {
-                rec.mParameterList.emplace_back(stringFactory.create(list[0].c_str()),list[1]);
-              }
-            }
+            rec.mParameterList.emplace_back(stringFactory.create(list[0].c_str()),list[1]);
           }
-          mGrib1_parameterDef_records.emplace_back(rec);
         }
       }
-    }
-    (void)fclose(file);
+      mGrib1_parameterDef_records.emplace_back(rec);
+    });
   }
   catch (...)
   {
@@ -1546,51 +1539,31 @@ void GridDef::loadGrib2ParameterDefs(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"re");
-    if (file == nullptr)
+    readCsvRecords(filename,1,[&](char *field[],uint c)
     {
-      Fmi::Exception exception(BCP,"Cannot open file!");
-      exception.addParameter("Filename",std::string(filename));
-      throw exception;
-    }
+      Grib2ParameterDef rec;
 
-    char st[1000];
+      if (field[0][0] != '\0')
+        rec.mGribParameterId = toUInt32(field[0]);
 
-    while (fgets(st,1000,file) != nullptr)
-    {
-      if (st[0] != '#')
+      if (field[1][0] != '\0')
       {
-        char *field[100];
-        uint c = splitCsvFields(st,field);
+        std::vector<std::string> partList;
+        splitString(field[1],',',partList);
 
-        if (c > 1)
+        for (auto& it : partList)
         {
-          Grib2ParameterDef rec;
-
-          if (field[0][0] != '\0')
-            rec.mGribParameterId = toUInt32(field[0]);
-
-          if (field[1][0] != '\0')
+          std::vector<std::string> list;
+          splitString(it,'=',list);
+          if (list.size() == 2)
           {
-            std::vector<std::string> partList;
-            splitString(field[1],',',partList);
-
-            for (auto& it : partList)
-            {
-              std::vector<std::string> list;
-              splitString(it,'=',list);
-              if (list.size() == 2)
-              {
-                rec.mParameterList.emplace_back(stringFactory.create(list[0].c_str()),list[1]);
-              }
-            }
+            rec.mParameterList.emplace_back(stringFactory.create(list[0].c_str()),list[1]);
           }
-
-          mGrib2_parameterDef_records.emplace_back(rec);
         }
       }
-    }
-    (void)fclose(file);
+
+      mGrib2_parameterDef_records.emplace_back(rec);
+    });
   }
   catch (...)
   {
@@ -1609,47 +1582,27 @@ void GridDef::loadFmiLevelDefinitions(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"re");
-    if (file == nullptr)
+    readCsvRecords(filename,3,[&](char *field[],uint c)
     {
-      Fmi::Exception exception(BCP,"Cannot open file!");
-      exception.addParameter("Filename",std::string(filename));
-      throw exception;
-    }
+      LevelDef rec;
 
-    char st[1000];
+      if (field[0][0] != '\0')
+        rec.mLevelId = toUInt32(field[0]);
 
-    while (fgets(st,1000,file) != nullptr)
-    {
-      if (st[0] != '#')
-      {
-        char *field[100];
-        uint c = splitCsvFields(st,field);
+      if (field[1][0] != '\0')
+        rec.mName = field[1];
 
-        if (c > 3)
-        {
-          LevelDef rec;
+      if (field[2][0] != '\0')
+        rec.mType = toUInt32(field[2]);
 
-          if (field[0][0] != '\0')
-            rec.mLevelId = toUInt32(field[0]);
+      if (field[3][0] != '\0')
+        rec.mDescription = field[3];
 
-          if (field[1][0] != '\0')
-            rec.mName = field[1];
+      if (c > 4  && field[4][0] != '\0')
+        rec.mUnits = field[4];
 
-          if (field[2][0] != '\0')
-            rec.mType = toUInt32(field[2]);
-
-          if (field[3][0] != '\0')
-            rec.mDescription = field[3];
-
-          if (c > 4  && field[4][0] != '\0')
-            rec.mUnits = field[4];
-
-          mFmi_levelDef_records.emplace_back(rec);
-        }
-      }
-    }
-    (void)fclose(file);
+      mFmi_levelDef_records.emplace_back(rec);
+    });
   }
   catch (...)
   {
@@ -1668,44 +1621,24 @@ void GridDef::loadFmiGeometryGroupDefinitions(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"re");
-    if (file == nullptr)
+    readCsvRecords(filename,4,[&](char *field[],uint c)
     {
-      Fmi::Exception exception(BCP,"Cannot open file!");
-      exception.addParameter("Filename",std::string(filename));
-      throw exception;
-    }
+      FmiGeometryGroupDef rec;
 
-    char st[1000];
+      if (field[0][0] != '\0')
+        rec.mGeometryGroupId = toUInt32(field[0]);
 
-    while (fgets(st,1000,file) != nullptr)
-    {
-      if (st[0] != '#')
-      {
-        char *field[100];
-        uint c = splitCsvFields(st,field);
+      if (field[1][0] != '\0')
+        rec.mGroupType = toUInt32(field[1]);
 
-        if (c > 4)
-        {
-          FmiGeometryGroupDef rec;
+      if (field[2][0] != '\0')
+        rec.mProducerName = field[2];
 
-          if (field[0][0] != '\0')
-            rec.mGeometryGroupId = toUInt32(field[0]);
+      if (field[3][0] != '\0')
+        splitString(field[3],',',rec.mGeometryIdList);
 
-          if (field[1][0] != '\0')
-            rec.mGroupType = toUInt32(field[1]);
-
-          if (field[2][0] != '\0')
-            rec.mProducerName = field[2];
-
-          if (field[3][0] != '\0')
-            splitString(field[3],',',rec.mGeometryIdList);
-
-          mFmi_geometryGroupDef_records.emplace_back(rec);
-        }
-      }
-    }
-    (void)fclose(file);
+      mFmi_geometryGroupDef_records.emplace_back(rec);
+    });
   }
   catch (...)
   {
@@ -1724,41 +1657,21 @@ void GridDef::loadFmiForecastTypeDefinitions(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"re");
-    if (file == nullptr)
+    readCsvRecords(filename,2,[&](char *field[],uint c)
     {
-      Fmi::Exception exception(BCP,"Cannot open file!");
-      exception.addParameter("Filename",std::string(filename));
-      throw exception;
-    }
+      ForecastTypeDef rec;
 
-    char st[1000];
+      if (field[0][0] != '\0')
+        rec.mForecastTypeId = toInt32(field[0]);
 
-    while (fgets(st,1000,file) != nullptr)
-    {
-      if (st[0] != '#')
-      {
-        char *field[100];
-        uint c = splitCsvFields(st,field);
+      if (field[1][0] != '\0')
+        rec.mName = field[1];
 
-        if (c > 2)
-        {
-          ForecastTypeDef rec;
+      if (field[2][0] != '\0')
+        rec.mDescription = field[2];
 
-          if (field[0][0] != '\0')
-            rec.mForecastTypeId = toInt32(field[0]);
-
-          if (field[1][0] != '\0')
-            rec.mName = field[1];
-
-          if (field[2][0] != '\0')
-            rec.mDescription = field[2];
-
-          mFmi_forecastTypeDef_records.emplace_back(rec);
-        }
-      }
-    }
-    (void)fclose(file);
+      mFmi_forecastTypeDef_records.emplace_back(rec);
+    });
   }
   catch (...)
   {
@@ -1777,41 +1690,21 @@ void GridDef::loadFmiProcessingTypeDefinitions(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"re");
-    if (file == nullptr)
+    readCsvRecords(filename,2,[&](char *field[],uint c)
     {
-      Fmi::Exception exception(BCP,"Cannot open file!");
-      exception.addParameter("Filename",std::string(filename));
-      throw exception;
-    }
+      ProcessingTypeDef rec;
 
-    char st[1000];
+      if (field[0][0] != '\0')
+        rec.mProcessingTypeId = toInt32(field[0]);
 
-    while (fgets(st,1000,file) != nullptr)
-    {
-      if (st[0] != '#')
-      {
-        char *field[100];
-        uint c = splitCsvFields(st,field);
+      if (field[1][0] != '\0')
+        rec.mName = field[1];
 
-        if (c > 2)
-        {
-          ProcessingTypeDef rec;
+      if (field[2][0] != '\0')
+        rec.mDescription = field[2];
 
-          if (field[0][0] != '\0')
-            rec.mProcessingTypeId = toInt32(field[0]);
-
-          if (field[1][0] != '\0')
-            rec.mName = field[1];
-
-          if (field[2][0] != '\0')
-            rec.mDescription = field[2];
-
-          mFmi_processingTypeDef_records.emplace_back(rec);
-        }
-      }
-    }
-    (void)fclose(file);
+      mFmi_processingTypeDef_records.emplace_back(rec);
+    });
   }
   catch (...)
   {
@@ -1830,41 +1723,21 @@ void GridDef::loadFmiAggregationDefinitions(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"re");
-    if (file == nullptr)
+    readCsvRecords(filename,2,[&](char *field[],uint c)
     {
-      Fmi::Exception exception(BCP,"Cannot open file!");
-      exception.addParameter("Filename",std::string(filename));
-      throw exception;
-    }
+      AggregationDef rec;
 
-    char st[1000];
+      if (field[0][0] != '\0')
+        rec.mAggregationId = toInt32(field[0]);
 
-    while (fgets(st,1000,file) != nullptr)
-    {
-      if (st[0] != '#')
-      {
-        char *field[100];
-        uint c = splitCsvFields(st,field);
+      if (field[1][0] != '\0')
+        rec.mName = field[1];
 
-        if (c > 2)
-        {
-          AggregationDef rec;
+      if (field[2][0] != '\0')
+        rec.mDescription = field[2];
 
-          if (field[0][0] != '\0')
-            rec.mAggregationId = toInt32(field[0]);
-
-          if (field[1][0] != '\0')
-            rec.mName = field[1];
-
-          if (field[2][0] != '\0')
-            rec.mDescription = field[2];
-
-          mFmi_aggregationDef_records.emplace_back(rec);
-        }
-      }
-    }
-    (void)fclose(file);
+      mFmi_aggregationDef_records.emplace_back(rec);
+    });
   }
   catch (...)
   {
@@ -1883,56 +1756,36 @@ void GridDef::loadFmiParameterId_grib(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"re");
-    if (file == nullptr)
+    readCsvRecords(filename,2,[&](char *field[],uint c)
     {
-      Fmi::Exception exception(BCP,"Cannot open file!");
-      exception.addParameter("Filename",std::string(filename));
-      throw exception;
-    }
+      FmiParameterId_grib rec;
 
-    char st[1000];
-
-    while (fgets(st,1000,file) != nullptr)
-    {
-      if (st[0] != '#')
+      if (field[0][0] != '\0')
       {
-        char *field[100];
-        uint c = splitCsvFields(st,field);
-
-        if (c > 2)
+        if (isdigit(field[0][0]))
         {
-          FmiParameterId_grib rec;
-
-          if (field[0][0] != '\0')
-          {
-            if (isdigit(field[0][0]))
-            {
-              rec.mFmiParameterId = toUInt32(field[0]);
-            }
-            else
-            {
-              const auto *def = getFmiParameterDefByName(field[0]);
-              if (def)
-                rec.mFmiParameterId = def->mFmiParameterId;
-            }
-          }
-
-          if (field[1][0] != '\0')
-            rec.mGribParameterId = toUInt32(field[1]);
-
-          if (field[2][0] != '\0')
-            rec.mConversionFunction = field[2];
-
-          if (c > 3 && field[3][0] != '\0')
-            rec.mReverseConversionFunction = field[3];
-
-          mFmi_parametersFromGrib_records.insert(std::pair<uint,FmiParameterId_grib>(rec.mFmiParameterId,rec));
-          mGribIdToFmiId.insert(std::pair<uint,uint>(rec.mGribParameterId,rec.mFmiParameterId));
+          rec.mFmiParameterId = toUInt32(field[0]);
+        }
+        else
+        {
+          const auto *def = getFmiParameterDefByName(field[0]);
+          if (def)
+            rec.mFmiParameterId = def->mFmiParameterId;
         }
       }
-    }
-    (void)fclose(file);
+
+      if (field[1][0] != '\0')
+        rec.mGribParameterId = toUInt32(field[1]);
+
+      if (field[2][0] != '\0')
+        rec.mConversionFunction = field[2];
+
+      if (c > 3 && field[3][0] != '\0')
+        rec.mReverseConversionFunction = field[3];
+
+      mFmi_parametersFromGrib_records.insert(std::pair<uint,FmiParameterId_grib>(rec.mFmiParameterId,rec));
+      mGribIdToFmiId.insert(std::pair<uint,uint>(rec.mGribParameterId,rec.mFmiParameterId));
+    });
   }
   catch (...)
   {
@@ -1951,71 +1804,45 @@ void GridDef::loadFmiParameterId_newbase(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"re");
-    if (file == nullptr)
+    readCsvRecords(filename,2,[&](char *field[],uint c)
     {
-      Fmi::Exception exception(BCP,"Cannot open file!");
-      exception.addParameter("Filename",std::string(filename));
-      throw exception;
-    }
+      FmiParameterId_newbase rec;
 
-    char st[1000];
-
-    while (fgets(st,1000,file) != nullptr)
-    {
-      if (st[0] != '#')
+      if (field[0][0] != '\0' && isdigit(field[0][0]))
       {
-        char *field[100];
-        uint c = splitCsvFields(st,field);
-
-        if (c > 2)
-        {
-          FmiParameterId_newbase rec;
-
-          if (field[0][0] != '\0')
-          {
-            if (isdigit(field[0][0]))
-            {
-              rec.mFmiParameterId = toUInt32(field[0]);
-            }
-            else
-            {
-              const auto *def = getFmiParameterDefByName(field[0]);
-              if (def)
-                rec.mFmiParameterId = def->mFmiParameterId;
-            }
-          }
-
-          if (field[1][0] != '\0')
-          {
-            if (isdigit(field[1][0]))
-            {
-              rec.mNewbaseParameterId = toUInt32(field[1]);
-            }
-            else
-            {
-              const auto *def = getNewbaseParameterDefByName(field[1]);
-              if (def)
-                rec.mNewbaseParameterId = def->mNewbaseParameterId;
-            }
-          }
-
-          if (field[2][0] != '\0')
-            rec.mConversionFunction = field[2];
-
-          if (c > 3 && field[3][0] != '\0')
-            rec.mReverseConversionFunction = field[3];
-
-          mFmi_parametersFromNewbase_records.insert(std::pair<uint,FmiParameterId_newbase>(rec.mFmiParameterId,rec));
-          if (rec.mConversionFunction.empty())
-            mNewbaseIdToFmiId.insert(std::pair<uint,uint>(rec.mNewbaseParameterId,rec.mFmiParameterId));
-
-          if (rec.mReverseConversionFunction.empty())
-            mFmiIdToNewbaseId.insert(std::pair<uint,uint>(rec.mFmiParameterId,rec.mNewbaseParameterId));
-        }
+        rec.mFmiParameterId = toUInt32(field[0]);
       }
-    }
-    (void)fclose(file);
+      else if (field[0][0] != '\0')
+      {
+        const auto *def = getFmiParameterDefByName(field[0]);
+        if (def)
+          rec.mFmiParameterId = def->mFmiParameterId;
+      }
+
+      if (field[1][0] != '\0' && isdigit(field[1][0]))
+      {
+        rec.mNewbaseParameterId = toUInt32(field[1]);
+      }
+      else if (field[1][0] != '\0')
+      {
+        const auto *def = getNewbaseParameterDefByName(field[1]);
+        if (def)
+          rec.mNewbaseParameterId = def->mNewbaseParameterId;
+      }
+
+      if (field[2][0] != '\0')
+        rec.mConversionFunction = field[2];
+
+      if (c > 3 && field[3][0] != '\0')
+        rec.mReverseConversionFunction = field[3];
+
+      mFmi_parametersFromNewbase_records.insert(std::pair<uint,FmiParameterId_newbase>(rec.mFmiParameterId,rec));
+      if (rec.mConversionFunction.empty())
+        mNewbaseIdToFmiId.insert(std::pair<uint,uint>(rec.mNewbaseParameterId,rec.mFmiParameterId));
+
+      if (rec.mReverseConversionFunction.empty())
+        mFmiIdToNewbaseId.insert(std::pair<uint,uint>(rec.mFmiParameterId,rec.mNewbaseParameterId));
+    });
   }
   catch (...)
   {
@@ -2034,59 +1861,39 @@ void GridDef::loadFmiParameterId_netCdf(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"re");
-    if (file == nullptr)
+    readCsvRecords(filename,2,[&](char *field[],uint c)
     {
-      Fmi::Exception exception(BCP,"Cannot open file!");
-      exception.addParameter("Filename",std::string(filename));
-      throw exception;
-    }
+      FmiParameterId_netCdf rec;
 
-    char st[1000];
-
-    while (fgets(st,1000,file) != nullptr)
-    {
-      if (st[0] != '#')
+      if (field[0][0] != '\0')
       {
-        char *field[100];
-        uint c = splitCsvFields(st,field);
-
-        if (c > 2)
+        if (isdigit(field[0][0]))
         {
-          FmiParameterId_netCdf rec;
-
-          if (field[0][0] != '\0')
-          {
-            if (isdigit(field[0][0]))
-            {
-              rec.mFmiParameterId = toUInt32(field[0]);
-            }
-            else
-            {
-              const auto *def = getFmiParameterDefByName(field[0]);
-              if (def)
-                rec.mFmiParameterId = def->mFmiParameterId;
-            }
-          }
-
-          if (field[1][0] != '\0')
-            rec.mNetCdfParameterName = field[1];
-
-          if (field[2][0] != '\0')
-            rec.mConversionFunction = field[2];
-
-          if (c > 3 && field[3][0] != '\0')
-            rec.mReverseConversionFunction = field[3];
-
-          //rec.print(std::cout,0,0);
-
-          mFmi_parametersFromNetCdf_records.insert(std::pair<uint,FmiParameterId_netCdf>(rec.mFmiParameterId,rec));
-          std::string key = toUpperString(rec.mNetCdfParameterName);
-          mNetCdfNameToFmiId.insert(std::pair<std::string,uint>(key,rec.mFmiParameterId));
+          rec.mFmiParameterId = toUInt32(field[0]);
+        }
+        else
+        {
+          const auto *def = getFmiParameterDefByName(field[0]);
+          if (def)
+            rec.mFmiParameterId = def->mFmiParameterId;
         }
       }
-    }
-    (void)fclose(file);
+
+      if (field[1][0] != '\0')
+        rec.mNetCdfParameterName = field[1];
+
+      if (field[2][0] != '\0')
+        rec.mConversionFunction = field[2];
+
+      if (c > 3 && field[3][0] != '\0')
+        rec.mReverseConversionFunction = field[3];
+
+      //rec.print(std::cout,0,0);
+
+      mFmi_parametersFromNetCdf_records.insert(std::pair<uint,FmiParameterId_netCdf>(rec.mFmiParameterId,rec));
+      std::string key = toUpperString(rec.mNetCdfParameterName);
+      mNetCdfNameToFmiId.insert(std::pair<std::string,uint>(key,rec.mFmiParameterId));
+    });
   }
   catch (...)
   {
@@ -2105,58 +1912,38 @@ void GridDef::loadFmiParameterDefinitions(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"re");
-    if (file == nullptr)
+    readCsvRecords(filename,3,[&](char *field[],uint c)
     {
-      Fmi::Exception exception(BCP,"Cannot open file!");
-      exception.addParameter("Filename",std::string(filename));
-      throw exception;
-    }
+      FmiParameterDef rec;
 
-    char st[1000];
+      if (field[0][0] != '\0')
+        rec.mFmiParameterId = toUInt32(field[0]);
 
-    while (fgets(st,1000,file) != nullptr)
-    {
-      if (st[0] != '#')
-      {
-        char *field[100];
-        uint c = splitCsvFields(st,field);
+      if (field[1][0] != '\0')
+        rec.mParameterName = field[1];
 
-        if (c > 3)
-        {
-          FmiParameterDef rec;
+      if (field[2][0] != '\0')
+        rec.mParameterUnits = field[2];
 
-          if (field[0][0] != '\0')
-            rec.mFmiParameterId = toUInt32(field[0]);
+      if (field[3][0] != '\0')
+        rec.mParameterDescription = field[3];
 
-          if (field[1][0] != '\0')
-            rec.mParameterName = field[1];
+      if (c > 4 &&  field[4][0] != '\0')
+        rec.mAreaInterpolationMethod = toInt16(field[4]);
 
-          if (field[2][0] != '\0')
-            rec.mParameterUnits = field[2];
+      if (c > 5 &&  field[5][0] != '\0')
+        rec.mTimeInterpolationMethod = toInt16(field[5]);
 
-          if (field[3][0] != '\0')
-            rec.mParameterDescription = field[3];
+      if (c > 6 &&  field[6][0] != '\0')
+        rec.mLevelInterpolationMethod = toInt16(field[6]);
 
-          if (c > 4 &&  field[4][0] != '\0')
-            rec.mAreaInterpolationMethod = toInt16(field[4]);
+      if (c > 7 &&  field[7][0] != '\0')
+        rec.mDefaultPrecision = toInt16(field[7]);
 
-          if (c > 5 &&  field[5][0] != '\0')
-            rec.mTimeInterpolationMethod = toInt16(field[5]);
-
-          if (c > 6 &&  field[6][0] != '\0')
-            rec.mLevelInterpolationMethod = toInt16(field[6]);
-
-          if (c > 7 &&  field[7][0] != '\0')
-            rec.mDefaultPrecision = toInt16(field[7]);
-
-          mFmi_parameterDef_records.insert(std::pair<uint,FmiParameterDef>(rec.mFmiParameterId,rec));
-          std::string key = toUpperString(rec.mParameterName);
-          mFmiNameToId.insert(std::pair<std::string,uint>(key,rec.mFmiParameterId));
-        }
-      }
-    }
-    (void)fclose(file);
+      mFmi_parameterDef_records.insert(std::pair<uint,FmiParameterDef>(rec.mFmiParameterId,rec));
+      std::string key = toUpperString(rec.mParameterName);
+      mFmiNameToId.insert(std::pair<std::string,uint>(key,rec.mFmiParameterId));
+    });
   }
   catch (...)
   {
@@ -2175,51 +1962,31 @@ void GridDef::loadFmiLevelId_grib1(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"re");
-    if (file == nullptr)
+    readCsvRecords(filename,2,[&](char *field[],uint c)
     {
-      Fmi::Exception exception(BCP,"Cannot open file!");
-      exception.addParameter("Filename",std::string(filename));
-      throw exception;
-    }
+      FmiLevelId_grib rec;
 
-    char st[1000];
+      if (field[0][0] != '\0')
+        rec.mFmiLevelId = toUInt32(field[0]);
 
-    while (fgets(st,1000,file) != nullptr)
-    {
-      if (st[0] != '#')
+      if (field[1][0] != '\0')
       {
-        char *field[100];
-        uint c = splitCsvFields(st,field);
+        std::vector<std::string> partList;
+        splitString(field[1],',',partList);
 
-        if (c > 2)
+        for (auto& it : partList)
         {
-          FmiLevelId_grib rec;
-
-          if (field[0][0] != '\0')
-            rec.mFmiLevelId = toUInt32(field[0]);
-
-          if (field[1][0] != '\0')
+          std::vector<std::string> list;
+          splitString(it,'=',list);
+          if (list.size() == 2)
           {
-            std::vector<std::string> partList;
-            splitString(field[1],',',partList);
-
-            for (auto& it : partList)
-            {
-              std::vector<std::string> list;
-              splitString(it,'=',list);
-              if (list.size() == 2)
-              {
-                rec.mParameterList.emplace_back(stringFactory.create(list[0].c_str()),list[1]);
-              }
-            }
+            rec.mParameterList.emplace_back(stringFactory.create(list[0].c_str()),list[1]);
           }
-
-          mFmi_levelsFromGrib1_records.emplace_back(rec);
         }
       }
-    }
-    (void)fclose(file);
+
+      mFmi_levelsFromGrib1_records.emplace_back(rec);
+    });
   }
   catch (...)
   {
@@ -2238,51 +2005,31 @@ void GridDef::loadFmiLevelId_grib2(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"re");
-    if (file == nullptr)
+    readCsvRecords(filename,2,[&](char *field[],uint c)
     {
-      Fmi::Exception exception(BCP,"Cannot open file!");
-      exception.addParameter("Filename",std::string(filename));
-      throw exception;
-    }
+      FmiLevelId_grib rec;
 
-    char st[1000];
+      if (field[0][0] != '\0')
+        rec.mFmiLevelId = toUInt32(field[0]);
 
-    while (fgets(st,1000,file) != nullptr)
-    {
-      if (st[0] != '#')
+      if (field[1][0] != '\0')
       {
-        char *field[100];
-        uint c = splitCsvFields(st,field);
+        std::vector<std::string> partList;
+        splitString(field[1],',',partList);
 
-        if (c > 2)
+        for (auto& it : partList)
         {
-          FmiLevelId_grib rec;
-
-          if (field[0][0] != '\0')
-            rec.mFmiLevelId = toUInt32(field[0]);
-
-          if (field[1][0] != '\0')
+          std::vector<std::string> list;
+          splitString(it,'=',list);
+          if (list.size() == 2)
           {
-            std::vector<std::string> partList;
-            splitString(field[1],',',partList);
-
-            for (auto& it : partList)
-            {
-              std::vector<std::string> list;
-              splitString(it,'=',list);
-              if (list.size() == 2)
-              {
-                rec.mParameterList.emplace_back(stringFactory.create(list[0].c_str()),list[1]);
-              }
-            }
+            rec.mParameterList.emplace_back(stringFactory.create(list[0].c_str()),list[1]);
           }
-
-          mFmi_levelsFromGrib2_records.emplace_back(rec);
         }
       }
-    }
-    (void)fclose(file);
+
+      mFmi_levelsFromGrib2_records.emplace_back(rec);
+    });
   }
   catch (...)
   {
@@ -2376,43 +2123,23 @@ void GridDef::loadNewbaseParameterDefinitions(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"re");
-    if (file == nullptr)
+    readCsvRecords(filename,1,[&](char *field[],uint c)
     {
-      Fmi::Exception exception(BCP,"Cannot open file!");
-      exception.addParameter("Filename",std::string(filename));
-      throw exception;
-    }
+      NewbaseParameterDef rec;
 
-    char st[1000];
+      if (field[0][0] != '\0')
+        rec.mNewbaseParameterId = toUInt32(field[0]);
 
-    while (fgets(st,1000,file) != nullptr)
-    {
-      if (st[0] != '#')
-      {
-        char *field[100];
-        uint c = splitCsvFields(st,field);
+      if (field[1][0] != '\0')
+        rec.mParameterName = field[1];
 
-        if (c > 1)
-        {
-          NewbaseParameterDef rec;
+      if (c > 2  &&  field[2][0] != '\0')
+        rec.mFmiName = field[2];
 
-          if (field[0][0] != '\0')
-            rec.mNewbaseParameterId = toUInt32(field[0]);
-
-          if (field[1][0] != '\0')
-            rec.mParameterName = field[1];
-
-          if (c > 2  &&  field[2][0] != '\0')
-            rec.mFmiName = field[2];
-
-          mNewbase_parameterDef_records.insert(std::pair<uint,NewbaseParameterDef>(rec.mNewbaseParameterId,rec));
-          std::string key = toUpperString(rec.mParameterName);
-          mNewbaseNameToId.insert(std::pair<std::string,uint>(key,rec.mNewbaseParameterId));
-        }
-      }
-    }
-    (void)fclose(file);
+      mNewbase_parameterDef_records.insert(std::pair<uint,NewbaseParameterDef>(rec.mNewbaseParameterId,rec));
+      std::string key = toUpperString(rec.mParameterName);
+      mNewbaseNameToId.insert(std::pair<std::string,uint>(key,rec.mNewbaseParameterId));
+    });
   }
   catch (...)
   {
@@ -2431,41 +2158,21 @@ void GridDef::loadNetCdfParameterDefinitions(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"re");
-    if (file == nullptr)
+    readCsvRecords(filename,1,[&](char *field[],uint c)
     {
-      Fmi::Exception exception(BCP,"Cannot open file!");
-      exception.addParameter("Filename",std::string(filename));
-      throw exception;
-    }
+      NetCdfParameterDef rec;
 
-    char st[1000];
+      if (field[0][0] != '\0')
+        rec.mParameterName = field[0];
 
-    while (fgets(st,1000,file) != nullptr)
-    {
-      if (st[0] != '#')
-      {
-        char *field[100];
-        uint c = splitCsvFields(st,field);
+      if (field[1][0] != '\0')
+        rec.mFmiLevelId = field[1];
 
-        if (c > 1)
-        {
-          NetCdfParameterDef rec;
+      if (c > 2 && field[2][0] != '\0')
+        rec.mParameterUnits = field[2];
 
-          if (field[0][0] != '\0')
-            rec.mParameterName = field[0];
-
-          if (field[1][0] != '\0')
-            rec.mFmiLevelId = field[1];
-
-          if (c > 2 && field[2][0] != '\0')
-            rec.mParameterUnits = field[2];
-
-          mNetCdf_parameterDef_records.insert(std::pair<std::string,NetCdfParameterDef>(toUpperString(rec.mParameterName),rec));
-        }
-      }
-    }
-    (void)fclose(file);
+      mNetCdf_parameterDef_records.insert(std::pair<std::string,NetCdfParameterDef>(toUpperString(rec.mParameterName),rec));
+    });
   }
   catch (...)
   {
