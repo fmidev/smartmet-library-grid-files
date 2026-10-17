@@ -70,6 +70,39 @@ namespace Identification
 
 namespace
 {
+/*! \brief Splits the CSV line into fields separated by ';' or '\n' (outside of quotes).
+    The separators are replaced by '\0' characters. Returns the number of fields. */
+
+uint splitCsvFields(char *st,char *field[100])
+{
+  bool ind = false;
+  uint c = 1;
+  field[0] = st;
+  char *p = st;
+  while (*p != '\0'  &&  c < 100)
+  {
+    if (*p == '"')
+      ind = !ind;
+
+    if ((*p == ';'  || *p == '\n') && !ind)
+    {
+      *p = '\0';
+      p++;
+      field[c] = p;
+      c++;
+    }
+    else
+    {
+      p++;
+    }
+  }
+  return c;
+}
+}  // namespace
+
+
+namespace
+{
     std::shared_ptr<OGRCoordinateTransformation> make_ptr(OGRCoordinateTransformation* transformation)
     {
         const auto destroy_transformation = [](OGRCoordinateTransformation* transformation) {
@@ -935,28 +968,8 @@ void GridDef::loadGribParameterDefinitions(const char *filename)
     {
       if (st[0] != '#')
       {
-        bool ind = false;
         char *field[100];
-        uint c = 1;
-        field[0] = st;
-        char *p = st;
-        while (*p != '\0'  &&  c < 100)
-        {
-          if (*p == '"')
-            ind = !ind;
-
-          if ((*p == ';'  || *p == '\n') && !ind)
-          {
-            *p = '\0';
-            p++;
-            field[c] = p;
-            c++;
-          }
-          else
-          {
-            p++;
-          }
-        }
+        uint c = splitCsvFields(st,field);
 
         if (c > 3)
         {
@@ -1485,28 +1498,8 @@ void GridDef::loadGrib1ParameterDefs(const char *filename)
     {
       if (st[0] != '#')
       {
-        bool ind = false;
         char *field[100];
-        uint c = 1;
-        field[0] = st;
-        char *p = st;
-        while (*p != '\0'  &&  c < 100)
-        {
-          if (*p == '"')
-            ind = !ind;
-
-          if ((*p == ';'  || *p == '\n') && !ind)
-          {
-            *p = '\0';
-            p++;
-            field[c] = p;
-            c++;
-          }
-          else
-          {
-            p++;
-          }
-        }
+        uint c = splitCsvFields(st,field);
 
         if (c > 1)
         {
@@ -1567,28 +1560,8 @@ void GridDef::loadGrib2ParameterDefs(const char *filename)
     {
       if (st[0] != '#')
       {
-        bool ind = false;
         char *field[100];
-        uint c = 1;
-        field[0] = st;
-        char *p = st;
-        while (*p != '\0'  &&  c < 100)
-        {
-          if (*p == '"')
-            ind = !ind;
-
-          if ((*p == ';'  || *p == '\n') && !ind)
-          {
-            *p = '\0';
-            p++;
-            field[c] = p;
-            c++;
-          }
-          else
-          {
-            p++;
-          }
-        }
+        uint c = splitCsvFields(st,field);
 
         if (c > 1)
         {
@@ -1650,28 +1623,8 @@ void GridDef::loadFmiLevelDefinitions(const char *filename)
     {
       if (st[0] != '#')
       {
-        bool ind = false;
         char *field[100];
-        uint c = 1;
-        field[0] = st;
-        char *p = st;
-        while (*p != '\0'  &&  c < 100)
-        {
-          if (*p == '"')
-            ind = !ind;
-
-          if ((*p == ';'  || *p == '\n') && !ind)
-          {
-            *p = '\0';
-            p++;
-            field[c] = p;
-            c++;
-          }
-          else
-          {
-            p++;
-          }
-        }
+        uint c = splitCsvFields(st,field);
 
         if (c > 3)
         {
@@ -1729,28 +1682,8 @@ void GridDef::loadFmiGeometryGroupDefinitions(const char *filename)
     {
       if (st[0] != '#')
       {
-        bool ind = false;
         char *field[100];
-        uint c = 1;
-        field[0] = st;
-        char *p = st;
-        while (*p != '\0'  &&  c < 100)
-        {
-          if (*p == '"')
-            ind = !ind;
-
-          if ((*p == ';'  || *p == '\n') && !ind)
-          {
-            *p = '\0';
-            p++;
-            field[c] = p;
-            c++;
-          }
-          else
-          {
-            p++;
-          }
-        }
+        uint c = splitCsvFields(st,field);
 
         if (c > 4)
         {
@@ -1805,28 +1738,8 @@ void GridDef::loadFmiForecastTypeDefinitions(const char *filename)
     {
       if (st[0] != '#')
       {
-        bool ind = false;
         char *field[100];
-        uint c = 1;
-        field[0] = st;
-        char *p = st;
-        while (*p != '\0'  &&  c < 100)
-        {
-          if (*p == '"')
-            ind = !ind;
-
-          if ((*p == ';'  || *p == '\n') && !ind)
-          {
-            *p = '\0';
-            p++;
-            field[c] = p;
-            c++;
-          }
-          else
-          {
-            p++;
-          }
-        }
+        uint c = splitCsvFields(st,field);
 
         if (c > 2)
         {
@@ -1878,28 +1791,8 @@ void GridDef::loadFmiProcessingTypeDefinitions(const char *filename)
     {
       if (st[0] != '#')
       {
-        bool ind = false;
         char *field[100];
-        uint c = 1;
-        field[0] = st;
-        char *p = st;
-        while (*p != '\0'  &&  c < 100)
-        {
-          if (*p == '"')
-            ind = !ind;
-
-          if ((*p == ';'  || *p == '\n') && !ind)
-          {
-            *p = '\0';
-            p++;
-            field[c] = p;
-            c++;
-          }
-          else
-          {
-            p++;
-          }
-        }
+        uint c = splitCsvFields(st,field);
 
         if (c > 2)
         {
@@ -1951,28 +1844,8 @@ void GridDef::loadFmiAggregationDefinitions(const char *filename)
     {
       if (st[0] != '#')
       {
-        bool ind = false;
         char *field[100];
-        uint c = 1;
-        field[0] = st;
-        char *p = st;
-        while (*p != '\0'  &&  c < 100)
-        {
-          if (*p == '"')
-            ind = !ind;
-
-          if ((*p == ';'  || *p == '\n') && !ind)
-          {
-            *p = '\0';
-            p++;
-            field[c] = p;
-            c++;
-          }
-          else
-          {
-            p++;
-          }
-        }
+        uint c = splitCsvFields(st,field);
 
         if (c > 2)
         {
@@ -2024,29 +1897,8 @@ void GridDef::loadFmiParameterId_grib(const char *filename)
     {
       if (st[0] != '#')
       {
-        bool ind = false;
         char *field[100];
-        uint c = 1;
-        field[0] = st;
-        char *p = st;
-        while (*p != '\0'  &&  c < 100)
-        {
-          if (*p == '"')
-            ind = !ind;
-
-          if ((*p == ';'  || *p == '\n') && !ind)
-          {
-            *p = '\0';
-            p++;
-            field[c] = p;
-            //printf("[%d][%s]\n",c-1,field[c-1]);
-            c++;
-          }
-          else
-          {
-            p++;
-          }
-        }
+        uint c = splitCsvFields(st,field);
 
         if (c > 2)
         {
@@ -2113,28 +1965,8 @@ void GridDef::loadFmiParameterId_newbase(const char *filename)
     {
       if (st[0] != '#')
       {
-        bool ind = false;
         char *field[100];
-        uint c = 1;
-        field[0] = st;
-        char *p = st;
-        while (*p != '\0'  &&  c < 100)
-        {
-          if (*p == '"')
-            ind = !ind;
-
-          if ((*p == ';'  || *p == '\n') && !ind)
-          {
-            *p = '\0';
-            p++;
-            field[c] = p;
-            c++;
-          }
-          else
-          {
-            p++;
-          }
-        }
+        uint c = splitCsvFields(st,field);
 
         if (c > 2)
         {
@@ -2216,28 +2048,8 @@ void GridDef::loadFmiParameterId_netCdf(const char *filename)
     {
       if (st[0] != '#')
       {
-        bool ind = false;
         char *field[100];
-        uint c = 1;
-        field[0] = st;
-        char *p = st;
-        while (*p != '\0'  &&  c < 100)
-        {
-          if (*p == '"')
-            ind = !ind;
-
-          if ((*p == ';'  || *p == '\n') && !ind)
-          {
-            *p = '\0';
-            p++;
-            field[c] = p;
-            c++;
-          }
-          else
-          {
-            p++;
-          }
-        }
+        uint c = splitCsvFields(st,field);
 
         if (c > 2)
         {
@@ -2307,28 +2119,8 @@ void GridDef::loadFmiParameterDefinitions(const char *filename)
     {
       if (st[0] != '#')
       {
-        bool ind = false;
         char *field[100];
-        uint c = 1;
-        field[0] = st;
-        char *p = st;
-        while (*p != '\0'  &&  c < 100)
-        {
-          if (*p == '"')
-            ind = !ind;
-
-          if ((*p == ';'  || *p == '\n') && !ind)
-          {
-            *p = '\0';
-            p++;
-            field[c] = p;
-            c++;
-          }
-          else
-          {
-            p++;
-          }
-        }
+        uint c = splitCsvFields(st,field);
 
         if (c > 3)
         {
@@ -2397,28 +2189,8 @@ void GridDef::loadFmiLevelId_grib1(const char *filename)
     {
       if (st[0] != '#')
       {
-        bool ind = false;
         char *field[100];
-        uint c = 1;
-        field[0] = st;
-        char *p = st;
-        while (*p != '\0'  &&  c < 100)
-        {
-          if (*p == '"')
-            ind = !ind;
-
-          if ((*p == ';'  || *p == '\n') && !ind)
-          {
-            *p = '\0';
-            p++;
-            field[c] = p;
-            c++;
-          }
-          else
-          {
-            p++;
-          }
-        }
+        uint c = splitCsvFields(st,field);
 
         if (c > 2)
         {
@@ -2480,28 +2252,8 @@ void GridDef::loadFmiLevelId_grib2(const char *filename)
     {
       if (st[0] != '#')
       {
-        bool ind = false;
         char *field[100];
-        uint c = 1;
-        field[0] = st;
-        char *p = st;
-        while (*p != '\0'  &&  c < 100)
-        {
-          if (*p == '"')
-            ind = !ind;
-
-          if ((*p == ';'  || *p == '\n') && !ind)
-          {
-            *p = '\0';
-            p++;
-            field[c] = p;
-            c++;
-          }
-          else
-          {
-            p++;
-          }
-        }
+        uint c = splitCsvFields(st,field);
 
         if (c > 2)
         {
@@ -2563,28 +2315,8 @@ void GridDef::loadFmiLevelId_newbase(const char *filename)
     {
       if (st[0] != '#')
       {
-        bool ind = false;
         char *field[100];
-        uint c = 1;
-        field[0] = st;
-        char *p = st;
-        while (*p != '\0'  &&  c < 100)
-        {
-          if (*p == '"')
-            ind = !ind;
-
-          if ((*p == ';'  || *p == '\n') && !ind)
-          {
-            *p = '\0';
-            p++;
-            field[c] = p;
-            c++;
-          }
-          else
-          {
-            p++;
-          }
-        }
+        uint c = splitCsvFields(st,field);
 
         if (c >= 2)
         {
@@ -2658,28 +2390,8 @@ void GridDef::loadNewbaseParameterDefinitions(const char *filename)
     {
       if (st[0] != '#')
       {
-        bool ind = false;
         char *field[100];
-        uint c = 1;
-        field[0] = st;
-        char *p = st;
-        while (*p != '\0'  &&  c < 100)
-        {
-          if (*p == '"')
-            ind = !ind;
-
-          if ((*p == ';'  || *p == '\n') && !ind)
-          {
-            *p = '\0';
-            p++;
-            field[c] = p;
-            c++;
-          }
-          else
-          {
-            p++;
-          }
-        }
+        uint c = splitCsvFields(st,field);
 
         if (c > 1)
         {
@@ -2733,28 +2445,8 @@ void GridDef::loadNetCdfParameterDefinitions(const char *filename)
     {
       if (st[0] != '#')
       {
-        bool ind = false;
         char *field[100];
-        uint c = 1;
-        field[0] = st;
-        char *p = st;
-        while (*p != '\0'  &&  c < 100)
-        {
-          if (*p == '"')
-            ind = !ind;
-
-          if ((*p == ';'  || *p == '\n') && !ind)
-          {
-            *p = '\0';
-            p++;
-            field[c] = p;
-            c++;
-          }
-          else
-          {
-            p++;
-          }
-        }
+        uint c = splitCsvFields(st,field);
 
         if (c > 1)
         {
@@ -4338,29 +4030,9 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
     char st[1000];
     strcpy(st,str);
 
-    bool ind = false;
     const char *empty = "";
     char *field[100] = {(char*)empty};
-    uint c = 1;
-    field[0] = st;
-    char *p = st;
-    while (*p != '\0'  &&  c < 100)
-    {
-      if (*p == '"')
-        ind = !ind;
-
-      if ((*p == ';'  || *p == '\n') && !ind)
-      {
-        *p = '\0';
-        p++;
-        field[c] = p;
-        c++;
-      }
-      else
-      {
-        p++;
-      }
-    }
+    uint c = splitCsvFields(st,field);
 
     if (c > 1)
     {
@@ -4856,29 +4528,9 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
     char st[1000];
     strcpy(st,str);
 
-    bool ind = false;
     const char *empty = "";
     char *field[100] = {(char*)empty};
-    uint c = 1;
-    field[0] = st;
-    char *p = st;
-    while (*p != '\0'  &&  c < 100)
-    {
-      if (*p == '"')
-        ind = !ind;
-
-      if ((*p == ';'  || *p == '\n') && !ind)
-      {
-        *p = '\0';
-        p++;
-        field[c] = p;
-        c++;
-      }
-      else
-      {
-        p++;
-      }
-    }
+    uint c = splitCsvFields(st,field);
 
     if (c > 1)
     {
