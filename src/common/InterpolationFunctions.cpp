@@ -343,6 +343,67 @@ T::ParamValue levelInterpolation(T::ParamValue value1,T::ParamValue value2,doubl
 
 
 
+namespace
+{
+
+/*! \brief Appends func(values1[t],values2[t]) for the first len elements to the output vector. */
+
+template <class Func>
+void combineValues(const T::ParamValue_vec& values1,const T::ParamValue_vec& values2,uint len,T::ParamValue_vec& values,Func func)
+{
+  values.reserve(len);
+  for (uint t = 0; t < len; t++)
+    values.emplace_back(func(values1[t],values2[t]));
+}
+
+
+
+
+
+/*! \brief Appends grid values with the coordinates of values1 and the value func(value1,value2). */
+
+template <class Func>
+void combineGridValues(const T::GridValueList& values1,const T::GridValueList& values2,uint len,T::GridValueList& valueList,Func func)
+{
+  for (uint t = 0; t < len; t++)
+  {
+    T::GridValue val1;
+    T::GridValue val2;
+    T::GridValue rec;
+
+    values1.getGridValueByIndex(t,val1);
+    values2.getGridValueByIndex(t,val2);
+
+    rec.mX = val1.mX;
+    rec.mY = val1.mY;
+    rec.mValue = func(val1.mValue,val2.mValue);
+
+    valueList.addGridValue(rec);
+  }
+}
+
+
+
+
+
+/*! \brief Like combineValues, but appends ParamValueMissing when either value is missing. */
+
+template <class Func>
+void combinePresentValues(const T::ParamValue_vec& values1,const T::ParamValue_vec& values2,uint len,T::ParamValue_vec& values,Func func)
+{
+  combineValues(values1,values2,len,values,[&func](T::ParamValue v1,T::ParamValue v2) {
+    if (v1 != ParamValueMissing  &&  v2 != ParamValueMissing)
+      return T::ParamValue(func(v1,v2));
+    return T::ParamValue(ParamValueMissing);
+  });
+}
+
+}  // namespace
+
+
+
+
+
 /*! \brief Interpolates two value vectors between vertical levels using the given method. */
 
 void levelInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,double level1,double level2,double newLevel,short levelInterpolationMethod,T::ParamValue_vec& values)
@@ -375,87 +436,66 @@ void levelInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,do
     uint len1 = values1.size();
     uint len2 = values2.size();
 
-    if (len1 == len2)
+    if (len1 != len2)
+      return;
+
+    switch (levelInterpolationMethod)
     {
-      switch (levelInterpolationMethod)
-      {
-        case T::LevelInterpolationMethod::None:
+      case T::LevelInterpolationMethod::None:
+        values = values1;
+        break;
+
+      case T::LevelInterpolationMethod::Nearest:
+        if (diff1 < diff2)
           values = values1;
-          break;
-
-        case T::LevelInterpolationMethod::Nearest:
-          if (diff1 < diff2)
-            values = values1;
-          else
-            values = values2;
-          break;
-
-        case T::LevelInterpolationMethod::Min:
-          values.reserve(len1);
-          for (uint t = 0; t < len1; t++)
-          {
-            T::ParamValue val1 = values1[t];
-            T::ParamValue val2 = values2[t];
-
-            if (val1 < val2)
-              values.emplace_back(val1);
-            else
-              values.emplace_back(val2);
-          }
-          break;
-
-        case T::LevelInterpolationMethod::Max:
-          values.reserve(len1);
-          for (uint t = 0; t < len1; t++)
-          {
-            T::ParamValue val1 = values1[t];
-            T::ParamValue val2 = values2[t];
-
-            if (val1 > val2)
-              values.emplace_back(val1);
-            else
-              values.emplace_back(val2);
-          }
-          break;
-
-        case T::LevelInterpolationMethod::Logarithmic:
-          values.reserve(len1);
-          for (uint t = 0; t < len1; t++)
-          {
-            T::ParamValue val1 = values1[t];
-            T::ParamValue val2 = values2[t];
-
-            T::ParamValue val = logarithmicInterpolation(newLevel, level1, level2, val1, val2);
-            values.emplace_back(val);
-          }
-          break;
-
-        case T::LevelInterpolationMethod::Previous:
-          values = values1;
-          break;
-
-        case T::LevelInterpolationMethod::Next:
+        else
           values = values2;
-          break;
+        break;
 
-        default:
-        case T::LevelInterpolationMethod::Linear:
-          values.reserve(len1);
-          for (uint t = 0; t < len1; t++)
+      case T::LevelInterpolationMethod::Min:
+        combineValues(values1,values2,len1,values,[](T::ParamValue val1,T::ParamValue val2) {
+          if (val1 < val2)
+            return val1;
+          return val2;
+        });
+        break;
+
+      case T::LevelInterpolationMethod::Max:
+        combineValues(values1,values2,len1,values,[](T::ParamValue val1,T::ParamValue val2) {
+          if (val1 > val2)
+            return val1;
+          return val2;
+        });
+        break;
+
+      case T::LevelInterpolationMethod::Logarithmic:
+        combineValues(values1,values2,len1,values,[&](T::ParamValue val1,T::ParamValue val2) {
+          T::ParamValue val = logarithmicInterpolation(newLevel, level1, level2, val1, val2);
+          return val;
+        });
+        break;
+
+      case T::LevelInterpolationMethod::Previous:
+        values = values1;
+        break;
+
+      case T::LevelInterpolationMethod::Next:
+        values = values2;
+        break;
+
+      default:
+      case T::LevelInterpolationMethod::Linear:
+        combineValues(values1,values2,len1,values,[&](T::ParamValue val1,T::ParamValue val2) {
+          T::ParamValue val = ParamValueMissing;
+          if (val1 != ParamValueMissing && val2 != ParamValueMissing)
           {
-            T::ParamValue val1 = values1[t];
-            T::ParamValue val2 = values2[t];
-             T::ParamValue val = ParamValueMissing;
-            if (val1 != ParamValueMissing && val2 != ParamValueMissing)
-            {
-              T::ParamValue valueDiff = val2 - val1;
-              T::ParamValue valueStep = valueDiff / levelDiff;
-              val = val1 + (diff1 * valueStep);
-            }
-            values.emplace_back(val);
+            T::ParamValue valueDiff = val2 - val1;
+            T::ParamValue valueStep = valueDiff / levelDiff;
+            val = val1 + (diff1 * valueStep);
           }
-          break;
-      }
+          return val;
+        });
+        break;
     }
   }
   catch (...)
@@ -500,119 +540,64 @@ void levelInterpolation(const T::GridValueList& values1,const T::GridValueList& 
     uint len1 = values1.getLength();
     uint len2 = values2.getLength();
 
-    if (len1 == len2)
+    if (len1 != len2)
+      return;
+
+    switch (levelInterpolationMethod)
     {
-      switch (levelInterpolationMethod)
-      {
-        case T::LevelInterpolationMethod::None:
+      case T::LevelInterpolationMethod::None:
+        valueList = values1;
+        break;
+
+      case T::LevelInterpolationMethod::Nearest:
+        if (diff1 < diff2)
           valueList = values1;
-          break;
-
-        case T::LevelInterpolationMethod::Nearest:
-          if (diff1 < diff2)
-            valueList = values1;
-          else
-            valueList = values2;
-          break;
-
-        case T::LevelInterpolationMethod::Min:
-          for (uint t = 0; t < len1; t++)
-          {
-            T::GridValue val1;
-            T::GridValue val2;
-            T::GridValue rec;
-
-            values1.getGridValueByIndex(t,val1);
-            values2.getGridValueByIndex(t,val2);
-
-            rec.mX = val1.mX;
-            rec.mY = val1.mY;
-
-            if (val1.mValue < val2.mValue)
-              rec.mValue = val1.mValue;
-            else
-              rec.mValue = val2.mValue;
-
-            valueList.addGridValue(rec);
-          }
-          break;
-
-        case T::LevelInterpolationMethod::Max:
-          for (uint t = 0; t < len1; t++)
-          {
-            T::GridValue val1;
-            T::GridValue val2;
-            T::GridValue rec;
-
-            values1.getGridValueByIndex(t,val1);
-            values2.getGridValueByIndex(t,val2);
-
-            rec.mX = val1.mX;
-            rec.mY = val1.mY;
-
-            if (val1.mValue > val2.mValue)
-              rec.mValue = val1.mValue;
-            else
-              rec.mValue = val2.mValue;
-
-            valueList.addGridValue(rec);
-          }
-          break;
-
-        case T::LevelInterpolationMethod::Logarithmic:
-          for (uint t = 0; t < len1; t++)
-          {
-            T::GridValue val1;
-            T::GridValue val2;
-            T::GridValue rec;
-
-            values1.getGridValueByIndex(t,val1);
-            values2.getGridValueByIndex(t,val2);
-
-            rec.mX = val1.mX;
-            rec.mY = val1.mY;
-            rec.mValue = logarithmicInterpolation(newLevel, level1, level2, val1.mValue, val2.mValue);
-
-            valueList.addGridValue(rec);
-          }
-          break;
-
-        case T::LevelInterpolationMethod::Previous:
-          valueList = values1;
-          break;
-
-        case T::LevelInterpolationMethod::Next:
+        else
           valueList = values2;
-          break;
+        break;
 
-        default:
-        case T::LevelInterpolationMethod::Linear:
-          for (uint t = 0; t < len1; t++)
+      case T::LevelInterpolationMethod::Min:
+        combineGridValues(values1,values2,len1,valueList,[](T::ParamValue val1,T::ParamValue val2) {
+          if (val1 < val2)
+            return val1;
+          return val2;
+        });
+        break;
+
+      case T::LevelInterpolationMethod::Max:
+        combineGridValues(values1,values2,len1,valueList,[](T::ParamValue val1,T::ParamValue val2) {
+          if (val1 > val2)
+            return val1;
+          return val2;
+        });
+        break;
+
+      case T::LevelInterpolationMethod::Logarithmic:
+        combineGridValues(values1,values2,len1,valueList,[&](T::ParamValue val1,T::ParamValue val2) {
+          return T::ParamValue(logarithmicInterpolation(newLevel, level1, level2, val1, val2));
+        });
+        break;
+
+      case T::LevelInterpolationMethod::Previous:
+        valueList = values1;
+        break;
+
+      case T::LevelInterpolationMethod::Next:
+        valueList = values2;
+        break;
+
+      default:
+      case T::LevelInterpolationMethod::Linear:
+        combineGridValues(values1,values2,len1,valueList,[&](T::ParamValue val1,T::ParamValue val2) {
+          if (val1 != ParamValueMissing && val2 != ParamValueMissing)
           {
-            T::GridValue val1;
-            T::GridValue val2;
-            T::GridValue rec;
-
-            values1.getGridValueByIndex(t,val1);
-            values2.getGridValueByIndex(t,val2);
-
-            rec.mX = val1.mX;
-            rec.mY = val1.mY;
-
-            if (val1.mValue != ParamValueMissing && val2.mValue != ParamValueMissing)
-            {
-              T::ParamValue valueDiff = val2.mValue - val1.mValue;
-              T::ParamValue valueStep = valueDiff / levelDiff;
-              rec.mValue = val1.mValue + (diff1 * valueStep);
-            }
-            else
-            {
-              rec.mValue = ParamValueMissing;
-            }
-            valueList.addGridValue(rec);
+            T::ParamValue valueDiff = val2 - val1;
+            T::ParamValue valueStep = valueDiff / levelDiff;
+            return T::ParamValue(val1 + (diff1 * valueStep));
           }
-          break;
-      }
+          return T::ParamValue(ParamValueMissing);
+        });
+        break;
     }
   }
   catch (...)
@@ -780,22 +765,11 @@ void timeInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,int
 
 
       case T::TimeInterpolationMethod::Linear:
-        for (uint t=0; t<sz; t++)
-        {
-          T::ParamValue v1 = values1[t];
-          T::ParamValue v2 = values2[t];
-
-          if (v1 != ParamValueMissing  &&  v2 != ParamValueMissing)
-          {
-            T::ParamValue vd = (v2 - v1)/timeDiff;
-            T::ParamValue newValue = v1 + diff1 * vd;
-            newValues.emplace_back(newValue);
-          }
-          else
-          {
-            newValues.emplace_back(ParamValueMissing);
-          }
-        }
+        combinePresentValues(values1,values2,sz,newValues,[&](T::ParamValue v1,T::ParamValue v2) {
+          T::ParamValue vd = (v2 - v1)/timeDiff;
+          T::ParamValue newValue = v1 + diff1 * vd;
+          return newValue;
+        });
         return;
 
 
@@ -808,44 +782,20 @@ void timeInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,int
 
 
       case T::TimeInterpolationMethod::Min:
-        for (uint t=0; t<sz; t++)
-        {
-          T::ParamValue v1 = values1[t];
-          T::ParamValue v2 = values2[t];
-
-          if (v1 != ParamValueMissing  &&  v2 != ParamValueMissing)
-          {
-            if (v1 <= v2)
-              newValues.emplace_back(v1);
-            else
-              newValues.emplace_back(v2);
-          }
-          else
-          {
-            newValues.emplace_back(ParamValueMissing);
-          }
-        }
+        combinePresentValues(values1,values2,sz,newValues,[&](T::ParamValue v1,T::ParamValue v2) {
+          if (v1 <= v2)
+            return v1;
+          return v2;
+        });
         return;
 
 
       case T::TimeInterpolationMethod::Max:
-        for (uint t=0; t<sz; t++)
-        {
-          T::ParamValue v1 = values1[t];
-          T::ParamValue v2 = values2[t];
-
-          if (v1 != ParamValueMissing  &&  v2 != ParamValueMissing)
-          {
-            if (v1 >= v2)
-              newValues.emplace_back(v1);
-            else
-              newValues.emplace_back(v2);
-          }
-          else
-          {
-            newValues.emplace_back(ParamValueMissing);
-          }
-        }
+        combinePresentValues(values1,values2,sz,newValues,[&](T::ParamValue v1,T::ParamValue v2) {
+          if (v1 >= v2)
+            return v1;
+          return v2;
+        });
         return;
 
       case T::TimeInterpolationMethod::Previous:
@@ -922,103 +872,60 @@ void timeInterpolation(const T::GridValueList& values1,const T::GridValueList& v
     uint len1 = values1.getLength();
     uint len2 = values2.getLength();
 
-    if (len1 == len2)
+    if (len1 != len2)
+      return;
+
+    switch (timeInterpolationMethod)
     {
-      switch (timeInterpolationMethod)
-      {
-        case T::TimeInterpolationMethod::None:
+      case T::TimeInterpolationMethod::None:
+        valueList = values1;
+        break;
+
+      case T::TimeInterpolationMethod::Nearest:
+        // diff2 is the whole interval here: the nearest time is the first one when the new
+        // time is in the first half. (Comparing diff1 to diff2 always chose the first time.)
+        if (2 * diff1 <= diff2)
           valueList = values1;
-          break;
-
-        case T::TimeInterpolationMethod::Nearest:
-          // diff2 is the whole interval here: the nearest time is the first one when the new
-          // time is in the first half. (Comparing diff1 to diff2 always chose the first time.)
-          if (2 * diff1 <= diff2)
-            valueList = values1;
-          else
-            valueList = values2;
-          break;
-
-        case T::TimeInterpolationMethod::Min:
-          for (uint t = 0; t < len1; t++)
-          {
-            T::GridValue val1;
-            T::GridValue val2;
-            T::GridValue rec;
-
-            values1.getGridValueByIndex(t,val1);
-            values2.getGridValueByIndex(t,val2);
-
-            rec.mX = val1.mX;
-            rec.mY = val1.mY;
-
-            if (val1.mValue < val2.mValue)
-              rec.mValue = val1.mValue;
-            else
-              rec.mValue = val2.mValue;
-
-            valueList.addGridValue(rec);
-          }
-          break;
-
-        case T::TimeInterpolationMethod::Max:
-          for (uint t = 0; t < len1; t++)
-          {
-            T::GridValue val1;
-            T::GridValue val2;
-            T::GridValue rec;
-
-            values1.getGridValueByIndex(t,val1);
-            values2.getGridValueByIndex(t,val2);
-
-            rec.mX = val1.mX;
-            rec.mY = val1.mY;
-
-            if (val1.mValue > val2.mValue)
-              rec.mValue = val1.mValue;
-            else
-              rec.mValue = val2.mValue;
-
-            valueList.addGridValue(rec);
-          }
-          break;
-
-        case T::TimeInterpolationMethod::Previous:
-          valueList = values1;
-          break;
-
-        case T::TimeInterpolationMethod::Next:
+        else
           valueList = values2;
-          break;
+        break;
 
-        default:
-        case T::TimeInterpolationMethod::Linear:
-          for (uint t = 0; t < len1; t++)
+      case T::TimeInterpolationMethod::Min:
+        combineGridValues(values1,values2,len1,valueList,[](T::ParamValue val1,T::ParamValue val2) {
+          if (val1 < val2)
+            return val1;
+          return val2;
+        });
+        break;
+
+      case T::TimeInterpolationMethod::Max:
+        combineGridValues(values1,values2,len1,valueList,[](T::ParamValue val1,T::ParamValue val2) {
+          if (val1 > val2)
+            return val1;
+          return val2;
+        });
+        break;
+
+      case T::TimeInterpolationMethod::Previous:
+        valueList = values1;
+        break;
+
+      case T::TimeInterpolationMethod::Next:
+        valueList = values2;
+        break;
+
+      default:
+      case T::TimeInterpolationMethod::Linear:
+        combineGridValues(values1,values2,len1,valueList,[&](T::ParamValue val1,T::ParamValue val2) {
+          if (val1 != ParamValueMissing && val2 != ParamValueMissing)
           {
-            T::GridValue val1;
-            T::GridValue val2;
-            T::GridValue rec;
-
-            values1.getGridValueByIndex(t,val1);
-            values2.getGridValueByIndex(t,val2);
-
-            rec.mX = val1.mX;
-            rec.mY = val1.mY;
-
-            if (val1.mValue != ParamValueMissing && val2.mValue != ParamValueMissing)
-            {
-              double valueDiff = val2.mValue - val1.mValue;
-              double valueStep = valueDiff / diff2;
-              rec.mValue = val1.mValue + (diff1 * valueStep);
-            }
-            else
-            {
-              rec.mValue = ParamValueMissing;
-            }
-            valueList.addGridValue(rec);
+            double valueDiff = val2 - val1;
+            double valueStep = valueDiff / diff2;
+            return T::ParamValue(val1 + (diff1 * valueStep));
           }
-          break;
-      }
+          return T::ParamValue(ParamValueMissing);
+        });
+        break;
     }
   }
   catch (...)
