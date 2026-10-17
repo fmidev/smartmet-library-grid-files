@@ -260,6 +260,141 @@ void addLine(double x1, double y1, double x2, double y2, std::set<UInt64> &cList
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
+
+
+
+/*! \brief Adds the polygon point coordinates into the hash. */
+
+void hashPolygonPoints(std::size_t& hash, const T::Coordinate_vec &polygonPoints)
+{
+  uint numOfPoints = polygonPoints.size();
+  for (uint t = 0; t < numOfPoints; t++)
+  {
+    Fmi::hash_merge(hash, polygonPoints[t].x());
+    Fmi::hash_merge(hash, polygonPoints[t].y());
+  }
+}
+
+
+
+/*! \brief Closes the polygon (if the last point is not the first point) and adds the points
+    below the polygon edges. Returns the number of polygon points. */
+
+uint closePolygonAndAddEdges(T::Coordinate_vec &polygonPoints, std::set<UInt64> &cList)
+{
+  uint numOfPoints = polygonPoints.size();
+
+  // It the last polygon point is not same than the first point, then we should add it to the list.
+
+  if (polygonPoints[0].x() != polygonPoints[numOfPoints - 1].x() || polygonPoints[0].y() != polygonPoints[numOfPoints - 1].y())
+  {
+    polygonPoints.emplace_back(polygonPoints[0]);
+    numOfPoints++;
+  }
+
+  for (uint t = 1; t < numOfPoints; t++)
+  {
+    addLine(polygonPoints[t - 1].x(), polygonPoints[t - 1].y(), polygonPoints[t].x(), polygonPoints[t].y(), cList);
+  }
+  return numOfPoints;
+}
+
+
+
+/*! \brief Updates the row range of the polygon. */
+
+void updateYRange(const T::Coordinate_vec &polygonPoints, int &minY, int &maxY)
+{
+  for (const auto& polygonPoint : polygonPoints)
+  {
+    double yp = round(polygonPoint.y());
+
+    if (yp < minY)
+      minY = C_INT(yp);
+
+    if (yp > maxY)
+      maxY = C_INT(yp);
+  }
+}
+
+
+
+/*! \brief Adds the x-coordinates where the polygon edges cross the row. */
+
+void addScanlineNodes(const T::Coordinate_vec &polygonPoints, int cnt, int y, std::vector<double> &nodeX, int &nodes)
+{
+  int j = cnt - 1;
+  for (int i = 0; i < cnt; i++)
+  {
+    double xi = polygonPoints[i].x();
+    double yi = polygonPoints[i].y();
+
+    double xj = polygonPoints[j].x();
+    double yj = polygonPoints[j].y();
+
+    auto dy = C_DOUBLE(y);
+
+    if ((yi < dy && yj >= dy) || (yj < dy && yi >= dy))
+    {
+      auto xx = C_DOUBLE(xi + (y - yi) / (yj - yi) * (xj - xi));
+      if (nodes >= C_INT(nodeX.size()))
+        nodeX.resize(2 * nodeX.size());
+      nodeX[nodes++] = C_DOUBLE(xx);
+    }
+    j = i;
+  }
+}
+
+
+
+/*! \brief Adds the grid points between the node pairs of the row. */
+
+void addScanlineSpans(std::vector<double> &nodeX, int nodes, int minX, int maxX, int y, std::set<UInt64> &cList)
+{
+  for (int i = 0; i < nodes; i += 2)
+  {
+    if (nodeX[i] >= maxX || (i + 1) >= nodes)
+      break;
+
+    if (nodeX[i + 1] > minX)
+    {
+      nodeX[i] = std::max<__gnu_cxx::__alloc_traits<class std::allocator<double> >::value_type>(nodeX[i], minX);
+
+      nodeX[i + 1] = std::min<__gnu_cxx::__alloc_traits<class std::allocator<double> >::value_type>(nodeX[i + 1], maxX);
+
+      int xStart = C_INT(nodeX[i]);
+      int xEnd = C_INT(nodeX[i + 1]);
+
+      if ((nodeX[i] - xStart) > 0)
+        xStart++;
+
+      if ((xEnd - nodeX[i + 1]) > 0)
+        xEnd--;
+
+      for (int x = xStart; x <= xEnd; x++)
+      {
+        UInt64 p = (C_UINT64(y)<< 32) + (UInt64)x;
+        //if (cList.find(p) == cList.end())
+        cList.insert(p);
+      }
+    }
+  }
+}
+
+
+
+/*! \brief Converts the point keys into grid points. */
+
+void convertToGridPoints(const std::set<UInt64> &cList, std::vector<T::Point> &gridPoints)
+{
+  for (unsigned long it : cList)
+  {
+    int y = C_INT(it >> 32);
+    int x = C_INT(it & 0xFFFFFFFF);
+
+    gridPoints.emplace_back(x, y);
+  }
+}
 }  // namespace
 
 
@@ -278,11 +413,7 @@ void getPointsInsidePolygon(int gridWidth, int gridHeight, T::Coordinate_vec &po
     Fmi::hash_merge(hash, gridWidth);
     Fmi::hash_merge(hash, gridHeight);
 
-    for (uint t = 0; t < numOfPoints; t++)
-    {
-      Fmi::hash_merge(hash, polygonPoints[t].x());
-      Fmi::hash_merge(hash, polygonPoints[t].y());
-    }
+    hashPolygonPoints(hash, polygonPoints);
 
     auto it = gridPointsCache.find(hash);
     if (it)
@@ -295,18 +426,9 @@ void getPointsInsidePolygon(int gridWidth, int gridHeight, T::Coordinate_vec &po
 
     // It the last polygon point is not same than the first point, then we should add it to the list.
 
-    if (polygonPoints[0].x() != polygonPoints[numOfPoints - 1].x() || polygonPoints[0].y() != polygonPoints[numOfPoints - 1].y())
-    {
-      polygonPoints.emplace_back(polygonPoints[0]);
-      numOfPoints++;
-    }
-
     // Adding points that are below the polygon line.
 
-    for (uint t = 1; t < numOfPoints; t++)
-    {
-      addLine(polygonPoints[t - 1].x(), polygonPoints[t - 1].y(), polygonPoints[t].x(), polygonPoints[t].y(), cList);
-    }
+    numOfPoints = closePolygonAndAddEdges(polygonPoints, cList);
 
     // Adding points that are inside the polygon line.
 
@@ -315,16 +437,7 @@ void getPointsInsidePolygon(int gridWidth, int gridHeight, T::Coordinate_vec &po
     int minX = 0;
     int maxX = gridWidth - 1;
 
-    for (auto& polygonPoint : polygonPoints)
-    {
-      double yp = round(polygonPoint.y());
-
-      if (yp < minY)
-        minY = C_INT(yp);
-
-      if (yp > maxY)
-        maxY = C_INT(yp);
-    }
+    updateYRange(polygonPoints, minY, maxY);
 
     minY = std::max(minY, 0);
 
@@ -336,69 +449,16 @@ void getPointsInsidePolygon(int gridWidth, int gridHeight, T::Coordinate_vec &po
     for (int y = minY; y <= maxY; y++)
     {
       int nodes = 0;
-      int cnt = numOfPoints;
-      int j = cnt - 1;
-      for (int i = 0; i < cnt; i++)
-      {
-        double xi = polygonPoints[i].x();
-        double yi = polygonPoints[i].y();
-
-        double xj = polygonPoints[j].x();
-        double yj = polygonPoints[j].y();
-
-        auto dy = C_DOUBLE(y);
-
-        if ((yi < dy && yj >= dy) || (yj < dy && yi >= dy))
-        {
-          auto xx = C_DOUBLE(xi + (y - yi) / (yj - yi) * (xj - xi));
-          if (nodes >= C_INT(nodeX.size()))
-            nodeX.resize(2 * nodeX.size());
-          nodeX[nodes++] = C_DOUBLE(xx);
-        }
-        j = i;
-      }
+      addScanlineNodes(polygonPoints, numOfPoints, y, nodeX, nodes);
 
       qsort(nodeX.data(), nodes, sizeof(double), compare_points);
 
-      for (int i = 0; i < nodes; i += 2)
-      {
-        if (nodeX[i] >= maxX || (i + 1) >= nodes)
-          break;
-
-        if (nodeX[i + 1] > minX)
-        {
-          nodeX[i] = std::max<__gnu_cxx::__alloc_traits<class std::allocator<double> >::value_type>(nodeX[i], minX);
-
-          nodeX[i + 1] = std::min<__gnu_cxx::__alloc_traits<class std::allocator<double> >::value_type>(nodeX[i + 1], maxX);
-
-          int xStart = C_INT(nodeX[i]);
-          int xEnd = C_INT(nodeX[i + 1]);
-
-          if ((nodeX[i] - xStart) > 0)
-            xStart++;
-
-          if ((xEnd - nodeX[i + 1]) > 0)
-            xEnd--;
-
-          for (int x = xStart; x <= xEnd; x++)
-          {
-            UInt64 p = (C_UINT64(y)<< 32) + (UInt64)x;
-            //if (cList.find(p) == cList.end())
-            cList.insert(p);
-          }
-        }
-      }
+      addScanlineSpans(nodeX, nodes, minX, maxX, y, cList);
     }
 
     // Converting the list to the actual PointList.
 
-    for (unsigned long it : cList)
-    {
-      int y = C_INT(it >> 32);
-      int x = C_INT(it & 0xFFFFFFFF);
-
-      gridPoints.emplace_back(x, y);
-    }
+    convertToGridPoints(cList, gridPoints);
 
     gridPointsCache.insert(hash, gridPoints);
   }
@@ -423,14 +483,7 @@ void getPointsInsidePolygonPath(int gridWidth, int gridHeight, T::Polygon_vec &p
     Fmi::hash_merge(hash, gridWidth);
     Fmi::hash_merge(hash, gridHeight);
     for (auto& polygonPoints : polygonPath)
-    {
-      uint numOfPoints = polygonPoints.size();
-      for (uint t = 0; t < numOfPoints; t++)
-      {
-        Fmi::hash_merge(hash, polygonPoints[t].x());
-        Fmi::hash_merge(hash, polygonPoints[t].y());
-      }
-    }
+      hashPolygonPoints(hash, polygonPoints);
 
     auto it = gridPointsCache.find(hash);
     if (it)
@@ -446,42 +499,18 @@ void getPointsInsidePolygonPath(int gridWidth, int gridHeight, T::Polygon_vec &p
     int minX = 0;
     int maxX = gridWidth - 1;
     std::vector<double> nodeX(10000, 0.0);
-    std::vector<double> pointsX(200000);
-    std::vector<double> pointsY(200000);
 
     for (auto& polygonPoints : polygonPath)
     {
-      uint numOfPoints = polygonPoints.size();
-
-      if (numOfPoints > 0)
+      if (!polygonPoints.empty())
       {
-        // It the last polygon point is not same than the first point, then we should add it to the list.
-
-        if (polygonPoints[0].x() != polygonPoints[numOfPoints - 1].x() || polygonPoints[0].y() != polygonPoints[numOfPoints - 1].y())
-        {
-          polygonPoints.emplace_back(polygonPoints[0]);
-          numOfPoints++;
-        }
-
         // Adding points that are below the polygon line.
 
-        for (uint t = 1; t < numOfPoints; t++)
-        {
-          addLine(polygonPoints[t - 1].x(), polygonPoints[t - 1].y(), polygonPoints[t].x(), polygonPoints[t].y(), cList);
-        }
+        closePolygonAndAddEdges(polygonPoints, cList);
 
         // Adding points that are inside the polygon line.
 
-        for (auto it = polygonPoints.begin(); it != polygonPoints.end(); ++it)
-        {
-          double yp = round(it->y());
-
-          if (yp < minY)
-            minY = C_INT(yp);
-
-          if (yp > maxY)
-            maxY = C_INT(yp);
-        }
+        updateYRange(polygonPoints, minY, maxY);
       }
     }
 
@@ -497,86 +526,21 @@ void getPointsInsidePolygonPath(int gridWidth, int gridHeight, T::Polygon_vec &p
       int nodes = 0;
       for (auto& polygonPoints : polygonPath)
       {
-        uint numOfPoints = polygonPoints.size();
+        if (polygonPoints.size() >= 200000)
+          throw Fmi::Exception(BCP, "Not enough space for the point list!", nullptr);
 
-        uint c = 0;
-        for (auto it = polygonPoints.begin(); it != polygonPoints.end(); ++it)
-        {
-          pointsX[c] = it->x();
-          pointsY[c] = it->y();
-          c++;
-
-          if (c >= 200000)
-          {
-            throw Fmi::Exception(BCP, "Not enough space for the point list!", nullptr);
-          }
-        }
-
-        int cnt = numOfPoints;
-        int j = cnt - 1;
-        for (int i = 0; i < cnt; i++)
-        {
-          double xi = pointsX[i];
-          double yi = pointsY[i];
-
-          double xj = pointsX[j];
-          double yj = pointsY[j];
-
-          auto dy = C_DOUBLE(y);
-
-          if ((yi < dy && yj >= dy) || (yj < dy && yi >= dy))
-          {
-            auto xx = C_DOUBLE(xi + (y - yi) / (yj - yi) * (xj - xi));
-            if (nodes >= C_INT(nodeX.size()))
-              nodeX.resize(2 * nodeX.size());
-            nodeX[nodes++] = C_DOUBLE(xx);
-          }
-          j = i;
-        }
+        addScanlineNodes(polygonPoints, polygonPoints.size(), y, nodeX, nodes);
       }
       qsort(nodeX.data(), nodes, sizeof(double), compare_points);
 
       //  Fill the pixels between node pairs.
 
-      for (int i = 0; i < nodes; i += 2)
-      {
-        if (nodeX[i] >= maxX || (i + 1) >= nodes)
-          break;
-
-        if (nodeX[i + 1] > minX)
-        {
-          nodeX[i] = std::max<__gnu_cxx::__alloc_traits<class std::allocator<double> >::value_type>(nodeX[i], minX);
-
-          nodeX[i + 1] = std::min<__gnu_cxx::__alloc_traits<class std::allocator<double> >::value_type>(nodeX[i + 1], maxX);
-
-          int xStart = C_INT(nodeX[i]);
-          int xEnd = C_INT(nodeX[i + 1]);
-
-          if ((nodeX[i] - xStart) > 0)
-            xStart++;
-
-          if ((xEnd - nodeX[i + 1]) > 0)
-            xEnd--;
-
-          for (int x = xStart; x <= xEnd; x++)
-          {
-            UInt64 p = (C_UINT64(y)<< 32) + x;
-            //if (cList.find(p) == cList.end())
-            cList.insert(p);
-          }
-        }
-      }
+      addScanlineSpans(nodeX, nodes, minX, maxX, y, cList);
     }
 
     // Converting the list to the actual PointList.
 
-    for (unsigned long it : cList)
-    {
-      int y = C_INT(it >> 32);
-      int x = C_INT(it & 0xFFFFFFFF);
-
-      gridPoints.emplace_back(x, y);
-    }
+    convertToGridPoints(cList, gridPoints);
 
     gridPointsCache.insert(hash, gridPoints);
   }
