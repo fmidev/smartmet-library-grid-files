@@ -1622,7 +1622,7 @@ void ConfigurationFile::includeConfigurationFile(std::vector<std::string>& words
     // to the current path.
 
     std::string dir = getFileDir(mCurrentFilename);
-    fname = dir + fname;
+    fname = dir + "/" + fname;
   }
 
   if (mIncludedConfigurationFiles.find(fname) == mIncludedConfigurationFiles.end())
