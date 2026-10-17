@@ -35,6 +35,46 @@ int gridPointValue_compare(const void *_val1,const void *_val2)
   }
   return 0;
 }
+
+
+
+/*! \brief Finds the index of the first value equal to the given value by a linear search,
+    zero if not found. */
+
+int findEqualIndex(GridPointValuePtr *array,uint length,GridPointValue::ComparisonMethod comparisonMethod,GridPointValue& gridPointValue)
+{
+  for (uint t=0; t<length; t++)
+  {
+    if (array[t] != nullptr)
+    {
+      int res = array[t]->compare(comparisonMethod,&gridPointValue);
+      if (res == 0)
+      {
+        return t;
+      }
+    }
+  }
+  return 0;
+}
+
+
+
+/*! \brief Moves the index found by an unsuccessful binary search to the closest preceding value. */
+
+int adjustClosestIndex(GridPointValuePtr *array,int mid,int sz,GridPointValue::ComparisonMethod comparisonMethod,GridPointValue& gridPointValue)
+{
+  if (array[mid]->compare(comparisonMethod,&gridPointValue) < 0)
+  {
+    while (mid < sz  &&  array[mid] != nullptr  &&   array[mid]->compare(comparisonMethod,&gridPointValue) < 0)
+      mid++;
+
+    return mid-1;
+  }
+  while (mid > 0  &&  array[mid] != nullptr  &&   array[mid]->compare(comparisonMethod,&gridPointValue) > 0)
+    mid--;
+
+  return mid;
+}
 }  // namespace
 
 
@@ -360,20 +400,7 @@ int GridPointValueList::getClosestIndex(GridPointValue::ComparisonMethod compari
           return 0;
 
     if (comparisonMethod != mComparisonMethod)
-    {
-      for (uint t=0; t<mLength; t++)
-      {
-        if (mArray[t] != nullptr)
-        {
-          int res = mArray[t]->compare(comparisonMethod,&gridPointValue);
-          if (res == 0)
-          {
-            return t;
-          }
-        }
-      }
-      return 0;
-    }
+      return findEqualIndex(mArray,mLength,comparisonMethod,gridPointValue);
 
     int low = 0;
     int len = C_INT(mLength);
@@ -401,19 +428,8 @@ int GridPointValueList::getClosestIndex(GridPointValue::ComparisonMethod compari
     }
 
     if (mid >= 0  &&  mid < len  &&  mArray[mid] != nullptr)
-    {
-      if (mArray[mid]->compare(comparisonMethod,&gridPointValue) < 0)
-      {
-        while (mid < sz  &&  mArray[mid] != nullptr  &&   mArray[mid]->compare(comparisonMethod,&gridPointValue) < 0)
-          mid++;
+      return adjustClosestIndex(mArray,mid,sz,comparisonMethod,gridPointValue);
 
-        return mid-1;
-      }
-      while (mid > 0  &&  mArray[mid] != nullptr  &&   mArray[mid]->compare(comparisonMethod,&gridPointValue) > 0)
-        mid--;
-
-      return mid;
-    }
     return 0;
   }
   catch (...)
