@@ -2803,12 +2803,15 @@ void getFileList(const char *dirName,
 {
   try
   {
-    char *path = realpath(dirName, nullptr);
-    if (path == nullptr)
+    char *real = realpath(dirName, nullptr);
+    if (real == nullptr)
     {
       return;
     }
+    const std::string path(real);
+    free(real);
 
+    // Directories are identified by their real path, which also stops symbolic link loops
     if (dirList.find(path) != dirList.end())
       return;  // Dir already processed
 
@@ -2818,7 +2821,7 @@ void getFileList(const char *dirName,
       return;
     }
 
-    dirList.insert(std::string(dirName));
+    dirList.insert(path);
 
     bool ind = true;
 
@@ -2828,7 +2831,9 @@ void getFileList(const char *dirName,
       if (ep != nullptr)
       {
         char fullName[2000];
-        sprintf(fullName, "%s/%s", path, ep->d_name);
+        int len = snprintf(fullName, sizeof(fullName), "%s/%s", path.c_str(), ep->d_name);
+        if (len < 0 || len >= C_INT(sizeof(fullName)))
+          continue;  // Name does not fit
 
         DirEntryType type = classifyDirEntry(ep,fullName,includeSubDirs);
 
@@ -2847,7 +2852,6 @@ void getFileList(const char *dirName,
       }
     }
     closedir(dp);
-    free(path);
   }
   catch (...)
   {
