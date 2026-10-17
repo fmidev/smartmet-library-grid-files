@@ -79,6 +79,288 @@ void ComplexGridDataRepresentationImpl::read(MemoryReader& memoryReader)
 
 
 
+namespace
+{
+
+/*! \brief Reads one group descriptor value of each group (or sets them to zero when the
+    descriptor width is zero) and returns the byte-aligned read position after them. */
+
+int readGroupDescriptors(BitArrayReader& dataReader,int bits,int *values,int numberOfGroups,int readPosition)
+{
+  if (bits == 0)
+  {
+    for (int g=0; g<numberOfGroups; g++)
+      values[g] = 0;
+    return readPosition;
+  }
+
+  dataReader.setReadPosition(readPosition);
+  dataReader.readBits(bits,values,numberOfGroups);
+
+  int itemp = bits * numberOfGroups;
+  readPosition = readPosition + itemp;
+  if ((itemp % 8) != 0)
+    readPosition = readPosition + (8-(itemp % 8));
+  return readPosition;
+}
+
+
+
+
+
+/*! \brief Validates the (attacker-controllable) group descriptors before unpacking.
+
+    The unpack loops write dataValue[n] / missingDataValue[n] with n running over the
+    cumulative sum of the group sizes. Both arrays are only 'numberOfValues' long, so a
+    crafted GRIB2 message whose group sizes sum to more than numberOfValues would cause a
+    heap buffer overflow. Enforce the GRIB2 invariant that the group lengths sum exactly to
+    the declared value count, and that the per-group bit widths are sane. */
+
+void validateGroups(const int *groupSize,const int *groupValueSize,int numberOfGroups,std::size_t numberOfValues)
+{
+  std::size_t totalGroupValues = 0;
+  for (int g=0; g<numberOfGroups; g++)
+  {
+    if (groupSize[g] < 0)
+      throw Fmi::Exception(BCP,"Invalid GRIB2 complex-packing group size (negative)!");
+
+    if (groupValueSize[g] < 0 || groupValueSize[g] > 32)
+      throw Fmi::Exception(BCP,"Invalid GRIB2 complex-packing group value width!");
+
+    totalGroupValues += static_cast<std::size_t>(groupSize[g]);
+  }
+
+  if (totalGroupValues != numberOfValues)
+    throw Fmi::Exception(BCP,"GRIB2 complex-packing group sizes do not sum to the expected value count!");
+}
+
+
+
+
+
+/*! \brief Unpacks the data values of all groups when there are no missing values. */
+
+void unpackGroups(BitArrayReader& dataReader,int readPosition,int numberOfGroups,const int *groupValueSize,const int *groupSize,const int *groupReference,int *dataValue)
+{
+  int n = 0;
+  for (int g=0; g<numberOfGroups; g++)
+  {
+    if (groupValueSize[g] != 0)
+    {
+      dataReader.setReadPosition(readPosition);
+      for (int k=0; k<groupSize[g]; k++)
+      {
+        dataReader.readBits(groupValueSize[g],dataValue[n]);
+        // The group reference value is added to the actual value.
+
+        dataValue[n] = dataValue[n] + groupReference[g];
+        n++;
+      }
+    }
+    else
+    {
+      // The value size in the group is 0 bits, so the value of the each
+      // is the same as the value of the group reference.
+
+      int lEnd = n+groupSize[g];
+      for (int l=n; l<lEnd; l++)
+        dataValue[l] = groupReference[g];
+
+      n = n + groupSize[g];
+    }
+    readPosition = readPosition + (groupValueSize[g] * groupSize[g]);
+  }
+}
+
+
+
+
+
+/*! \brief Unpacks the values of a group with a non-zero value width, marking the missing values.
+    The non-missing values are packed to the beginning of dataValue (index c). */
+
+void unpackGroupWithMissing(BitArrayReader& dataReader,int readPosition,int valueSize,int size,int reference,int missingValueManagementUsed,int *dataValue,int *missingDataValue,int& n,int& c)
+{
+  // The following values are used for indicating that the actual value is missing.
+
+  int missingValueIndicator1 = C_INT(int_power(2.0,valueSize)-1);
+  int missingValueIndicator2 = missingValueIndicator1-1;
+
+  dataReader.setReadPosition(readPosition);
+
+  for (int k=0; k<size; k++)
+  {
+    // codechecker_false_positive [security.ArrayBound] the group sizes have been validated to sum to numberOfValues
+    dataReader.readBits(valueSize,dataValue[n]);
+
+    if (dataValue[n] == missingValueIndicator1)
+    {
+       missingDataValue[n] = 1;
+    }
+    else if (missingValueManagementUsed == 2 && dataValue[n] == missingValueIndicator2)
+    {
+       missingDataValue[n] = 2;
+    }
+    else
+    {
+       missingDataValue[n] = 0;
+       dataValue[c++] = dataValue[n] + reference;
+    }
+    n++;
+  }
+}
+
+
+
+
+
+/*! \brief Sets the values of a group with a zero value width, marking the missing values.
+    The non-missing values are packed to the beginning of dataValue (index c). */
+
+void fillGroupWithMissing(int groupRefBits,int size,int reference,int missingValueManagementUsed,int *dataValue,int *missingDataValue,int& n,int& c)
+{
+  // The following values are used for indicating that the actual value is missing.
+
+  int missingValueIndicator1 = C_INT(int_power(2.0,groupRefBits)-1);
+  int missingValueIndicator2 = missingValueIndicator1 - 1;
+
+  if (reference == missingValueIndicator1)
+  {
+    int lEnd = n + size;
+    for (int l=n; l<lEnd; l++)
+      // codechecker_false_positive [security.ArrayBound] the group sizes have been validated to sum to numberOfValues
+      missingDataValue[l] = 1;
+  }
+  else if (missingValueManagementUsed == 2 && reference == missingValueIndicator2)
+  {
+    int lEnd = n + size;
+    for (int l=n; l<lEnd; l++)
+      // codechecker_false_positive [security.ArrayBound] the group sizes have been validated to sum to numberOfValues
+      missingDataValue[l] = 2;
+  }
+  else
+  {
+    int lEnd = n + size;
+    for (int l=n; l<lEnd; l++)
+      // codechecker_false_positive [security.ArrayBound] the group sizes have been validated to sum to numberOfValues
+      missingDataValue[l] = 0;
+
+    lEnd = c + size;
+    for (int l=c; l<lEnd; l++)
+      dataValue[l] = reference;
+
+    c += size;
+  }
+  n = n + size;
+}
+
+
+
+
+
+/*! \brief Unpacks the data values of all groups when missing value management is used.
+    Returns the number of non-missing values, which are packed to the beginning of dataValue. */
+
+int unpackGroupsWithMissing(BitArrayReader& dataReader,int readPosition,int numberOfGroups,const int *groupValueSize,const int *groupSize,const int *groupReference,int groupRefBits,int missingValueManagementUsed,std::size_t numberOfValues,int *dataValue,int *missingDataValue)
+{
+  for (std::size_t i=0; i<numberOfValues; i++)
+    missingDataValue[i] = 0;
+
+  int n=0;
+  int c = 0;
+  for (int g=0; g<numberOfGroups; g++)
+  {
+    if (groupValueSize[g] != 0)
+    {
+      unpackGroupWithMissing(dataReader,readPosition,groupValueSize[g],groupSize[g],groupReference[g],missingValueManagementUsed,dataValue,missingDataValue,n,c);
+      readPosition = readPosition + (groupValueSize[g] * groupSize[g]);
+    }
+    else
+    {
+      fillGroupWithMissing(groupRefBits,groupSize[g],groupReference[g],missingValueManagementUsed,dataValue,missingDataValue,n,c);
+    }
+  }
+  return c;
+}
+
+
+
+
+
+/*! \brief Scales the unpacked data values into physical values. */
+
+void scaleValues(int missingValueManagementUsed,std::size_t numberOfValues,const int *dataValue,const int *missingDataValue,T::ParamValue bscale,T::ParamValue ref,T::ParamValue dscale,T::ParamValue *value)
+{
+  if (missingValueManagementUsed == 0 )
+  {
+    for (std::size_t i=0; i<numberOfValues; i++)
+    {
+      value[i] = (((float)dataValue[i] * bscale) + ref) * dscale;
+    }
+  }
+  else if (missingValueManagementUsed == 1 || missingValueManagementUsed == 2)
+  {
+    std::size_t n=0;
+    for (std::size_t i=0; i<numberOfValues; i++)
+    {
+      if (missingDataValue[i] == 0)
+        value[i] = (((float)dataValue[n++] * bscale) + ref) * dscale;
+      else
+      if (missingDataValue[i] == 1)
+         value[i] = ParamValueMissing; // missingValue1;
+      else
+      if (missingDataValue[i] == 2)
+        value[i] = ParamValueMissing; // missingValue2;
+    }
+  }
+}
+
+
+
+
+
+/*! \brief Returns the values, inserting ParamValueMissing where the bitmap bit is not set. */
+
+void storeValues(const T::ParamValue *value,std::size_t numberOfValues,T::Data_ptr bitmap,std::size_t bitmapSizeInBytes,T::ParamValue_vec& decodedValues)
+{
+  if (bitmap == nullptr)
+  {
+    // No bitmap defined.
+
+    for (std::size_t n=0; n<numberOfValues; n++)
+      decodedValues.emplace_back(value[n]);
+
+    return;
+  }
+  // Bitmap defined.
+
+  const int bitmask[] = {128, 64, 32, 16, 8, 4, 2, 1};
+
+  std::size_t n = 0;
+  for (std::size_t i = 0; i < numberOfValues; i++)
+  {
+    // Guard against a bitmap that is shorter than the grid implies (OOB read).
+    if ((i / 8) >= bitmapSizeInBytes)
+      throw Fmi::Exception(BCP,"GRIB2 bitmap is too short for the declared value count!");
+
+    if ((bitmap[i / 8] & bitmask[i % 8]) == 0)
+    {
+      decodedValues.emplace_back(ParamValueMissing);
+    }
+    else
+    {
+      decodedValues.emplace_back(value[n]);
+      n++;
+    }
+  }
+}
+
+}  // namespace
+
+
+
+
+
 /*! \brief Decodes the complex-packed grid values into a vector of parameter values. */
 
 void ComplexGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec& decodedValues) const
@@ -165,40 +447,12 @@ void ComplexGridDataRepresentationImpl::decodeValues(Message *message,T::ParamVa
     // ### Finding out the reference data values used in the groups. These reference
     // ### values are added to the actual values read from the group.
 
-    if (groupRefBits == 0)
-    {
-      for (int g=0; g<numberOfGroups; g++)
-        groupReference[g] = 0;
-    }
-    else
-    {
-      dataReader.setReadPosition(readPosition);
-      dataReader.readBits(groupRefBits,groupReference,numberOfGroups);
-
-      int itemp = groupRefBits * numberOfGroups;
-      readPosition = readPosition + itemp;
-      if ((itemp % 8) != 0)
-        readPosition = readPosition + (8-(itemp % 8));
-    }
+    readPosition = readGroupDescriptors(dataReader,groupRefBits,groupReference,numberOfGroups,readPosition);
 
 
     //  ### Finding out the number of bits used for defining values in each group.
 
-    if (groupValueSizeBits == 0)
-    {
-      for (int g=0; g<numberOfGroups; g++)
-        groupValueSize[g] = 0;
-    }
-    else
-    {
-      dataReader.setReadPosition(readPosition);
-      dataReader.readBits(groupValueSizeBits,groupValueSize,numberOfGroups);
-
-      int itemp = groupValueSizeBits * numberOfGroups;
-      readPosition = readPosition + itemp;
-      if ((itemp % 8) != 0)
-        readPosition = readPosition + (8-(itemp % 8));
-    }
+    readPosition = readGroupDescriptors(dataReader,groupValueSizeBits,groupValueSize,numberOfGroups,readPosition);
 
     for (int g=0; g<numberOfGroups; g++)
       groupValueSize[g] = groupValueSize[g] + *mReferenceForGroupWidths;
@@ -207,20 +461,7 @@ void ComplexGridDataRepresentationImpl::decodeValues(Message *message,T::ParamVa
 
     // ### Finding out the number of actual values in each group.
 
-    if (groupSizeBits == 0)
-    {
-      for (int g=0; g<numberOfGroups; g++)
-        groupSize[g] = 0;
-    }
-    else
-    {
-      dataReader.setReadPosition(readPosition);
-      dataReader.readBits(groupSizeBits,groupSize,numberOfGroups);
-      int itemp = groupSizeBits * numberOfGroups;
-      readPosition = readPosition + itemp;
-      if ((itemp % 8) != 0)
-        readPosition = readPosition + (8-(itemp % 8));
-    }
+    readPosition = readGroupDescriptors(dataReader,groupSizeBits,groupSize,numberOfGroups,readPosition);
 
     for (int g=0; g<numberOfGroups; g++)
       groupSize[g] = (groupSize[g] * (*mLengthIncrementForTheGroupLengths)) + *mReferenceForGroupLengths;
@@ -230,26 +471,8 @@ void ComplexGridDataRepresentationImpl::decodeValues(Message *message,T::ParamVa
 
 
     // ### Validating the (attacker-controllable) group descriptors before unpacking.
-    // The unpack loops below write dataValue[n] / missingDataValue[n] with n running over
-    // the cumulative sum of the group sizes. Both arrays are only 'numberOfValues' long,
-    // so a crafted GRIB2 message whose group sizes sum to more than numberOfValues would
-    // cause a heap buffer overflow. Enforce the GRIB2 invariant that the group lengths sum
-    // exactly to the declared value count, and that the per-group bit widths are sane.
 
-    std::size_t totalGroupValues = 0;
-    for (int g=0; g<numberOfGroups; g++)
-    {
-      if (groupSize[g] < 0)
-        throw Fmi::Exception(BCP,"Invalid GRIB2 complex-packing group size (negative)!");
-
-      if (groupValueSize[g] < 0 || groupValueSize[g] > 32)
-        throw Fmi::Exception(BCP,"Invalid GRIB2 complex-packing group value width!");
-
-      totalGroupValues += static_cast<std::size_t>(groupSize[g]);
-    }
-
-    if (totalGroupValues != numberOfValues)
-      throw Fmi::Exception(BCP,"GRIB2 complex-packing group sizes do not sum to the expected value count!");
+    validateGroups(groupSize,groupValueSize,numberOfGroups,numberOfValues);
 
 
 
@@ -257,174 +480,23 @@ void ComplexGridDataRepresentationImpl::decodeValues(Message *message,T::ParamVa
 
     if (*mMissingValueManagementUsed == 0)
     {
-      int n = 0;
-      for (int g=0; g<numberOfGroups; g++)
-      {
-        if (groupValueSize[g] != 0)
-        {
-          dataReader.setReadPosition(readPosition);
-          for (int k=0; k<groupSize[g]; k++)
-          {
-            dataReader.readBits(groupValueSize[g],dataValue[n]);
-            // The group reference value is added to the actual value.
-
-            dataValue[n] = dataValue[n] + groupReference[g];
-            n++;
-          }
-        }
-        else
-        {
-          // The value size in the group is 0 bits, so the value of the each
-          // is the same as the value of the group reference.
-
-          int lEnd = n+groupSize[g];
-          for (int l=n; l<lEnd; l++)
-            dataValue[l] = groupReference[g];
-
-          n = n + groupSize[g];
-        }
-        readPosition = readPosition + (groupValueSize[g] * groupSize[g]);
-      }
+      unpackGroups(dataReader,readPosition,numberOfGroups,groupValueSize,groupSize,groupReference,dataValue);
     }
     else if (*mMissingValueManagementUsed == 1 || *mMissingValueManagementUsed == 2)
     {
-      for (std::size_t i=0; i<numberOfValues; i++)
-        missingDataValue[i] = 0;
-
-      int n=0;
-      int c = 0;
-      for (int g=0; g<numberOfGroups; g++)
-      {
-        if (groupValueSize[g] != 0)
-        {
-          // The following values are used for indicating that the actual value is missing.
-
-          int missingValueIndicator1 = C_INT(int_power(2.0,groupValueSize[g])-1);
-          int missingValueIndicator2 = missingValueIndicator1-1;
-
-          dataReader.setReadPosition(readPosition);
-
-          for (int k=0; k<groupSize[g]; k++)
-          {
-            // codechecker_false_positive [security.ArrayBound] the group sizes have been validated to sum to numberOfValues
-            dataReader.readBits(groupValueSize[g],dataValue[n]);
-
-            if (dataValue[n] == missingValueIndicator1)
-            {
-               missingDataValue[n] = 1;
-            }
-            else if (*mMissingValueManagementUsed == 2 && dataValue[n] == missingValueIndicator2)
-            {
-               missingDataValue[n] = 2;
-            }
-            else
-            {
-               missingDataValue[n] = 0;
-               dataValue[c++] = dataValue[n] + groupReference[g];
-            }
-            n++;
-          }
-          readPosition = readPosition + (groupValueSize[g] * groupSize[g]);
-        }
-        else
-        {
-          // The following values are used for indicating that the actual value is missing.
-
-          int missingValueIndicator1 = C_INT(int_power(2.0,groupRefBits)-1);
-          int missingValueIndicator2 = missingValueIndicator1 - 1;
-
-          if (groupReference[g] == missingValueIndicator1)
-          {
-            int lEnd = n + groupSize[g];
-            for (int l=n; l<lEnd; l++)
-              // codechecker_false_positive [security.ArrayBound] the group sizes have been validated to sum to numberOfValues
-              missingDataValue[l] = 1;
-          }
-          else if (*mMissingValueManagementUsed == 2 && groupReference[g] == missingValueIndicator2)
-          {
-            int lEnd = n + groupSize[g];
-            for (int l=n; l<lEnd; l++)
-              // codechecker_false_positive [security.ArrayBound] the group sizes have been validated to sum to numberOfValues
-              missingDataValue[l] = 2;
-          }
-          else
-          {
-            int lEnd = n + groupSize[g];
-            for (int l=n; l<lEnd; l++)
-              // codechecker_false_positive [security.ArrayBound] the group sizes have been validated to sum to numberOfValues
-              missingDataValue[l] = 0;
-
-            lEnd = c + groupSize[g];
-             for (int l=c; l<lEnd; l++)
-               dataValue[l] = groupReference[g];
-
-             c += groupSize[g];
-          }
-          n = n + groupSize[g];
-        }
-      }
+      unpackGroupsWithMissing(dataReader,readPosition,numberOfGroups,groupValueSize,groupSize,groupReference,
+          groupRefBits,*mMissingValueManagementUsed,numberOfValues,dataValue,missingDataValue);
     }
 
 
     //  ### Scaling values.
 
-    if (*mMissingValueManagementUsed == 0 )
-    {
-      for (std::size_t i=0; i<numberOfValues; i++)
-      {
-        value[i] = (((float)dataValue[i] * bscale) + ref) * dscale;
-      }
-    }
-    else if (*mMissingValueManagementUsed == 1 || *mMissingValueManagementUsed == 2)
-    {
-      std::size_t n=0;
-      for (std::size_t i=0; i<numberOfValues; i++)
-      {
-        if (missingDataValue[i] == 0)
-          value[i] = (((float)dataValue[n++] * bscale) + ref) * dscale;
-        else
-        if (missingDataValue[i] == 1)
-           value[i] = ParamValueMissing; // missingValue1;
-        else
-        if (missingDataValue[i] == 2)
-          value[i] = ParamValueMissing; // missingValue2;
-      }
-    }
+    scaleValues(*mMissingValueManagementUsed,numberOfValues,dataValue,missingDataValue,bscale,ref,dscale,value);
 
 
     // ### Returning values.
 
-    if (bitmap == nullptr)
-    {
-      // No bitmap defined.
-
-      for (std::size_t n=0; n<numberOfValues; n++)
-        decodedValues.emplace_back(value[n]);
-
-      return;
-    }
-    // Bitmap defined.
-
-    const int bitmask[] = {128, 64, 32, 16, 8, 4, 2, 1};
-
-    std::size_t n = 0;
-    for (std::size_t i = 0; i < numberOfValues; i++)
-    {
-      // Guard against a bitmap that is shorter than the grid implies (OOB read).
-      if ((i / 8) >= bitmapSizeInBytes)
-        throw Fmi::Exception(BCP,"GRIB2 bitmap is too short for the declared value count!");
-
-      if ((bitmap[i / 8] & bitmask[i % 8]) == 0)
-      {
-        decodedValues.emplace_back(ParamValueMissing);
-      }
-      else
-      {
-        decodedValues.emplace_back(value[n]);
-        n++;
-      }
-    }
-    return;
+    storeValues(value,numberOfValues,bitmap,bitmapSizeInBytes,decodedValues);
   }
   catch (...)
   {
