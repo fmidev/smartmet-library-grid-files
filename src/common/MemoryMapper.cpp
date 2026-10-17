@@ -601,7 +601,10 @@ MapInfo_sptr MemoryMapper::getMapInfo(char *address)
   {
     AutoReadLock lock(&mModificationLock);
 
-    int index = getClosestIndex(address);
+    std::size_t index = getClosestIndex(address);
+    if (index >= mMemoryMappings.size())
+      return nullptr;
+
     MapInfo_sptr info = mMemoryMappings[index];
     if (!info || info->memoryPtr != address)
       return nullptr;
@@ -921,13 +924,13 @@ void MemoryMapper::processFaultMessage(int idx,char *page,uint& errorCounter)
 
     auto *address = (char*)mMessage[idx].arg.pagefault.address;  // NOLINT(cppcoreguidelines-pro-type-union-access): kernel uffd_msg API
 
-    int index = getClosestIndex(address);
+    std::size_t index = getClosestIndex(address);
 
-    MapInfo_sptr info = mMemoryMappings[index];
+    MapInfo_sptr info;
+    if (index < mMemoryMappings.size())
+      info = mMemoryMappings[index];
 
-    //printf("SEARCH %d  %lld  %lld - %lld\n",index,(Int64)address,(Int64)info->memoryPtr,(Int64)(info->memoryPtr + info->allocatedSize));
-    if (mMemoryMappings.size() > (std::size_t)index  &&  info->memoryPtr <= address &&
-        (info->memoryPtr + info->allocatedSize) > address)
+    if (info  &&  info->memoryPtr <= address  &&  (info->memoryPtr + info->allocatedSize) > address)
     {
       //printf("FOUND %lld => %lld (%s)\n",(Int64)address,(Int64)info->memoryPtr,info->filename.c_str());
 
@@ -961,9 +964,8 @@ void MemoryMapper::processFaultMessage(int idx,char *page,uint& errorCounter)
     }
     else
     {
-      //printf("***** MAPPING NOT FOUND\n");
+      // The closest mapping does not contain the address, so it must not be marked as failed
       memset(page,0,mPageSize);
-      info->mappingError = true;
       errorCounter++;
       if (errorCounter == 1)
         printf("#### WARNING: Memory mapping not found %ld\n",(Int64)mMessageProcessCount);
