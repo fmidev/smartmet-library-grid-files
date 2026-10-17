@@ -3967,6 +3967,168 @@ void Message::getGridValuesByPointList(std::vector<T::Point>& gridPoints,T::Para
 
 
 
+namespace
+{
+/*! \brief Flat grid indexes of integer grid points, mirroring getGridValueByGridPoint(). */
+
+struct GridIndexer
+{
+  uint w;
+  uint h;
+  bool global;
+
+  // INVALID marks an out-of-range point, which resolves to ParamValueMissing.
+  static constexpr uint INVALID = 0xFFFFFFFFU;
+
+  uint flatIndex(uint gi,uint gj) const
+  {
+    if (gj >= h)
+      return INVALID;
+    if (gi >= w  &&  !global)
+      return INVALID;
+    return gj * w + (gi % w);
+  }
+};
+
+
+
+/*! \brief Nearest / External / default: mirror getGridValueByGridPoint_nearest() corner
+    selection, then return the flat index of the chosen corner. */
+
+uint nearestFlatIndex(const GridIndexer& indexer,double x,double y,uint x1,uint y1,uint x2,uint y2)
+{
+  double dist_x1 = x - C_DOUBLE(x1);
+  double dist_x2 = C_DOUBLE(x2) - x;
+  double dist_y1 = y - C_DOUBLE(y1);
+  double dist_y2 = C_DOUBLE(y2) - y;
+
+  uint gi = x2;
+  uint gj = y2;
+  if (dist_x1 == 0  &&  dist_y1 == 0)
+  {
+    gi = C_UINT(round(x));
+    gj = C_UINT(round(y));
+  }
+  else
+  {
+    double q11 = dist_x1*dist_x1 + dist_y1*dist_y1;
+    double q21 = dist_x2*dist_x2 + dist_y1*dist_y1;
+    double q12 = dist_x1*dist_x1 + dist_y2*dist_y2;
+    double q22 = dist_x2*dist_x2 + dist_y2*dist_y2;
+
+    if (q11 < q21  &&  q11 <= q12  &&  q11 <= q22)      { gi = x1; gj = y1; }
+    else if (q21 < q11  &&  q21 <= q12  &&  q21 <= q22) { gi = x2; gj = y1; }
+    else if (q12 < q11  &&  q12 <= q21  &&  q12 <= q22) { gi = x1; gj = y2; }
+  }
+  return indexer.flatIndex(gi,gj);
+}
+
+
+
+/*! \brief Adds the flat indexes of the stencil points needed for the point. */
+
+void addStencilIndexes(const GridIndexer& indexer,const T::Coordinate& point,short areaInterpolationMethod,bool fourCorners,std::vector<uint>& indexList)
+{
+  double x = point.x();
+  double y = point.y();
+  uint x1 = C_UINT(Fmi::floor(x));
+  uint y1 = C_UINT(Fmi::floor(y));
+  uint x2 = x1 + 1;
+  uint y2 = y1 + 1;
+
+  if (fourCorners)
+  {
+    indexList.push_back(indexer.flatIndex(x1,y1));
+    indexList.push_back(indexer.flatIndex(x2,y1));
+    indexList.push_back(indexer.flatIndex(x1,y2));
+    indexList.push_back(indexer.flatIndex(x2,y2));
+  }
+  else if (areaInterpolationMethod == T::AreaInterpolationMethod::None)
+  {
+    indexList.push_back(indexer.flatIndex(x1,y1));
+  }
+  else
+  {
+    indexList.push_back(nearestFlatIndex(indexer,x,y,x1,y1,x2,y2));
+  }
+}
+
+
+
+/*! \brief Resolves every stencil value in a single pass, mirroring the source precedence of
+    getGridValueByGridPoint() (decompression cache, then whole-grid fallback). */
+
+void fetchStencilValues(const Message& message,uint cacheKey,std::vector<uint>& indexList,T::ParamValue_vec& fetched)
+{
+  uint n = indexList.size();
+  bool resolved = false;
+  if (cacheKey > 0)
+  {
+    if (GRID::valueCache.getValuesByIndexList(cacheKey,indexList,fetched))
+      resolved = true;
+    else
+      fetched.clear();
+  }
+
+  if (!resolved)
+  {
+    // Not in the cache yet: decode the whole grid once (this also populates the cache
+    // for subsequent calls) and index into it locally.
+    T::ParamValue_vec grid;
+    message.getGridValueVector(grid);
+    uint gsz = grid.size();
+    for (uint k=0; k<n; k++)
+    {
+      uint i = indexList[k];
+      fetched.push_back(i < gsz ? grid[i] : ParamValueMissing);
+    }
+  }
+}
+
+
+
+/*! \brief Linear / Min / Max: combines the four bilinear corners per output point. */
+
+void combineStencilCorners(const T::Coordinate_vec& points,const T::ParamValue_vec& fetched,short areaInterpolationMethod,T::ParamValue_vec& values)
+{
+  uint pn = points.size();
+  for (uint t=0; t<pn; t++)
+  {
+    T::ParamValue val_q11 = fetched[t*4 + 0];  // (x1,y1)
+    T::ParamValue val_q21 = fetched[t*4 + 1];  // (x2,y1)
+    T::ParamValue val_q12 = fetched[t*4 + 2];  // (x1,y2)
+    T::ParamValue val_q22 = fetched[t*4 + 3];  // (x2,y2)
+
+    if (areaInterpolationMethod == T::AreaInterpolationMethod::Linear)
+    {
+      double x = points[t].x();
+      double y = points[t].y();
+      uint x1 = C_UINT(Fmi::floor(x));
+      uint y1 = C_UINT(Fmi::floor(y));
+      uint x2 = x1 + 1;
+      uint y2 = y1 + 1;
+      values.emplace_back(linearInterpolation(x,y,x1,y1,x2,y2,val_q11,val_q21,val_q22,val_q12));
+    }
+    else
+    {
+      std::set<T::ParamValue> vals;
+      vals.insert(val_q11);
+      vals.insert(val_q21);
+      vals.insert(val_q12);
+      vals.insert(val_q22);
+      if (areaInterpolationMethod == T::AreaInterpolationMethod::Min)
+        values.emplace_back(*vals.begin());
+      else
+        values.emplace_back(*vals.rbegin());
+    }
+  }
+}
+}  // namespace
+
+
+
+
+
 /*! \brief Returns interpolated grid values for a list of latlon coordinates.
 
     This overrides the generic per-point implementation in GRID::Message. The generic
@@ -4012,21 +4174,7 @@ void Message::getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate
     if (pn == 0)
       return;
 
-    const uint w = mColumnCount;
-    const uint h = mRowCount;
-    const bool global = isGridGlobal();
-    const uint INVALID = 0xFFFFFFFFU;
-
-    // Flat grid index for an integer grid point, mirroring getGridValueByGridPoint().
-    // INVALID marks an out-of-range point, which resolves to ParamValueMissing.
-    auto flatIndex = [&](uint gi,uint gj) -> uint
-    {
-      if (gj >= h)
-        return INVALID;
-      if (gi >= w  &&  !global)
-        return INVALID;
-      return gj * w + (gi % w);
-    };
+    const GridIndexer indexer{mColumnCount,mRowCount,isGridGlobal()};
 
     const bool fourCorners = (areaInterpolationMethod == T::AreaInterpolationMethod::Linear  ||
                               areaInterpolationMethod == T::AreaInterpolationMethod::Min  ||
@@ -4037,55 +4185,7 @@ void Message::getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate
     indexList.reserve(fourCorners ? pn * 4 : pn);
 
     for (auto& point : points)
-    {
-      double x = point.x();
-      double y = point.y();
-      uint x1 = C_UINT(Fmi::floor(x));
-      uint y1 = C_UINT(Fmi::floor(y));
-      uint x2 = x1 + 1;
-      uint y2 = y1 + 1;
-
-      if (fourCorners)
-      {
-        indexList.push_back(flatIndex(x1,y1));
-        indexList.push_back(flatIndex(x2,y1));
-        indexList.push_back(flatIndex(x1,y2));
-        indexList.push_back(flatIndex(x2,y2));
-      }
-      else if (areaInterpolationMethod == T::AreaInterpolationMethod::None)
-      {
-        indexList.push_back(flatIndex(x1,y1));
-      }
-      else
-      {
-        // Nearest / External / default: mirror getGridValueByGridPoint_nearest() corner
-        // selection, then fetch only the chosen corner.
-        double dist_x1 = x - C_DOUBLE(x1);
-        double dist_x2 = C_DOUBLE(x2) - x;
-        double dist_y1 = y - C_DOUBLE(y1);
-        double dist_y2 = C_DOUBLE(y2) - y;
-
-        uint gi = x2;
-        uint gj = y2;
-        if (dist_x1 == 0  &&  dist_y1 == 0)
-        {
-          gi = C_UINT(round(x));
-          gj = C_UINT(round(y));
-        }
-        else
-        {
-          double q11 = dist_x1*dist_x1 + dist_y1*dist_y1;
-          double q21 = dist_x2*dist_x2 + dist_y1*dist_y1;
-          double q12 = dist_x1*dist_x1 + dist_y2*dist_y2;
-          double q22 = dist_x2*dist_x2 + dist_y2*dist_y2;
-
-          if (q11 < q21  &&  q11 <= q12  &&  q11 <= q22)      { gi = x1; gj = y1; }
-          else if (q21 < q11  &&  q21 <= q12  &&  q21 <= q22) { gi = x2; gj = y1; }
-          else if (q12 < q11  &&  q12 <= q21  &&  q12 <= q22) { gi = x1; gj = y2; }
-        }
-        indexList.push_back(flatIndex(gi,gj));
-      }
-    }
+      addStencilIndexes(indexer,point,areaInterpolationMethod,fourCorners,indexList);
 
     // Resolve every stencil value in a single pass, mirroring the source precedence of
     // getGridValueByGridPoint() (decompression cache, then whole-grid fallback).
@@ -4093,28 +4193,7 @@ void Message::getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate
     uint n = indexList.size();
     fetched.reserve(n);
 
-    bool resolved = false;
-    if (mCacheKey > 0)
-    {
-      if (GRID::valueCache.getValuesByIndexList(mCacheKey,indexList,fetched))
-        resolved = true;
-      else
-        fetched.clear();
-    }
-
-    if (!resolved)
-    {
-      // Not in the cache yet: decode the whole grid once (this also populates the cache
-      // for subsequent calls) and index into it locally.
-      T::ParamValue_vec grid;
-      getGridValueVector(grid);
-      uint gsz = grid.size();
-      for (uint k=0; k<n; k++)
-      {
-        uint i = indexList[k];
-        fetched.push_back(i < gsz ? grid[i] : ParamValueMissing);
-      }
-    }
+    fetchStencilValues(*this,mCacheKey,indexList,fetched);
 
     if (fetched.size() != n)
     {
@@ -4134,36 +4213,7 @@ void Message::getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate
     }
 
     // Linear / Min / Max: combine the four bilinear corners per output point.
-    for (uint t=0; t<pn; t++)
-    {
-      T::ParamValue val_q11 = fetched[t*4 + 0];  // (x1,y1)
-      T::ParamValue val_q21 = fetched[t*4 + 1];  // (x2,y1)
-      T::ParamValue val_q12 = fetched[t*4 + 2];  // (x1,y2)
-      T::ParamValue val_q22 = fetched[t*4 + 3];  // (x2,y2)
-
-      if (areaInterpolationMethod == T::AreaInterpolationMethod::Linear)
-      {
-        double x = points[t].x();
-        double y = points[t].y();
-        uint x1 = C_UINT(Fmi::floor(x));
-        uint y1 = C_UINT(Fmi::floor(y));
-        uint x2 = x1 + 1;
-        uint y2 = y1 + 1;
-        values.emplace_back(linearInterpolation(x,y,x1,y1,x2,y2,val_q11,val_q21,val_q22,val_q12));
-      }
-      else
-      {
-        std::set<T::ParamValue> vals;
-        vals.insert(val_q11);
-        vals.insert(val_q21);
-        vals.insert(val_q12);
-        vals.insert(val_q22);
-        if (areaInterpolationMethod == T::AreaInterpolationMethod::Min)
-          values.emplace_back(*vals.begin());
-        else
-          values.emplace_back(*vals.rbegin());
-      }
-    }
+    combineStencilCorners(points,fetched,areaInterpolationMethod,values);
   }
   catch (...)
   {
