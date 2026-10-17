@@ -2827,7 +2827,7 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j,uint modi
         auto w = getGridWidth();
         auto h = getGridHeight();
         auto s = w*h;
-        auto idx = grid_j * h + grid_i;
+        auto idx = grid_j * w + grid_i;
 
         return modifyValueByGridParameter(value,modificationOperation,modificationParameters,idx,s);
       }
