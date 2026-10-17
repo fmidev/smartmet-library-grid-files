@@ -2254,6 +2254,509 @@ T::Coordinate_svec GridDef::getGridLatLonCoordinatesByGeometryId(T::GeometryId  
 
 
 
+namespace
+{
+/*! \brief Sets the latlon coordinates of the geometry definition, flipping the rows if requested. */
+
+void setGeometryLatLonCoordinates(GRIB2::GridDef_sptr& def,const char *flipped,T::Coordinate_svec& latLonCoordinates)
+{
+  if (!flipped)
+  {
+    latLonCoordinates = def->getGridLatLonCoordinates();
+    return;
+  }
+
+  auto originalCoords = def->getGridLatLonCoordinates();
+  int sz = originalCoords->size();
+
+  if (sz)
+  {
+    T::Coordinate_svec newCoords(new T::Coordinate_vec());
+    newCoords->reserve(sz);
+
+    T::Dimensions d = def->getGridDimensions();
+    int nx = d.nx();
+    int ny = d.ny();
+
+    for (int y = ny-1; y >= 0; y--)
+    {
+      for (int x = 0; x < nx; x++)
+      {
+        auto cc = (*originalCoords)[y*nx + x];
+        newCoords->emplace_back(cc);
+      }
+    }
+
+    latLonCoordinates = newCoords;
+  }
+}
+
+
+
+
+
+/*! \brief Sets the grid size and the original cell size attributes of the geometry definition. */
+
+void setGeometryAttributes(GRIB2::GridDef_sptr& def,T::AttributeList& attributeList,uint& width,uint& height)
+{
+  // If we have valid geometry definition then we know the grid width and the height.
+
+  T::Dimensions d = def->getGridDimensions();
+  width = d.nx();
+  height = d.ny();
+  attributeList.setAttribute("grid.original.reverseYDirection",Fmi::to_string((int)def->reverseYDirection()));
+  attributeList.setAttribute("grid.original.reverseXDirection",Fmi::to_string((int)def->reverseXDirection()));
+
+  double wm = 0;
+  double hm = 0;
+  if (def->getGridMetricCellSize(wm,hm))
+  {
+    attributeList.setAttribute("grid.cell.width",Fmi::to_string(wm));
+    attributeList.setAttribute("grid.cell.height",Fmi::to_string(hm));
+  }
+  else
+  {
+    attributeList.setAttribute("grid.original.cell.width.degrees",Fmi::to_string(wm));
+    attributeList.setAttribute("grid.original.cell.height.degrees",Fmi::to_string(hm));
+
+    def->getGridCellAverageSize(wm,hm);
+    attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
+    attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
+  }
+}
+
+
+
+
+
+/*! \brief Resolves the geometry definition by the geometry id or by the geometry string. Returns
+    false if the geometry definition is requested but it cannot be resolved. */
+
+bool resolveGeometryDefinition(GridDef& gridDefinitions,T::AttributeList& attributeList,const char *geometryIdStr,const char *geometryStringStr,const char *flipped,T::Coordinate_svec& latLonCoordinates,uint& width,uint& height)
+{
+  // Checking if the geometry is defined by the geometryId
+
+  GRIB2::GridDef_sptr def;
+  if (geometryIdStr)
+  {
+    def = gridDefinitions.getGrib2DefinitionByGeometryId(toInt32(geometryIdStr));
+    if (!def)
+      return false;
+
+    setGeometryLatLonCoordinates(def,flipped,latLonCoordinates);
+  }
+
+
+  // Checking if the geometry is defigned by the geometry string
+
+  if (!def &&  geometryStringStr)
+  {
+    auto *defPtr = Identification::gridDef.createGrib2GridDefinition(geometryStringStr);
+    if (!defPtr)
+      return false;
+
+    def.reset(defPtr);
+    latLonCoordinates = def->getGridLatLonCoordinates();
+  }
+
+  if (def)
+    setGeometryAttributes(def,attributeList,width,height);
+
+  return true;
+}
+
+
+
+
+
+/*! \brief The grid size related attributes. */
+
+struct GridSizeAttributes
+{
+  const char *gridWidthStr = nullptr;
+  const char *gridHeightStr = nullptr;
+  const char *gridCountSizeStr = nullptr;
+  const char *gridCellWidthStr = nullptr;
+  const char *gridCellHeightStr = nullptr;
+  const char *gridCellWidthDegrStr = nullptr;
+  const char *gridCellHeightDegrStr = nullptr;
+  const char *gridOriginalProjectionStr = nullptr;
+
+  explicit GridSizeAttributes(T::AttributeList& attributeList)
+  {
+    gridWidthStr = attributeList.getAttributeValue("grid.width");
+    gridHeightStr = attributeList.getAttributeValue("grid.height");
+    gridCountSizeStr = attributeList.getAttributeValue("grid.countSize");
+    gridCellWidthStr = attributeList.getAttributeValue("grid.original.cell.width");
+    gridCellHeightStr = attributeList.getAttributeValue("grid.original.cell.height");
+    gridCellWidthDegrStr = attributeList.getAttributeValue("grid.original.cell.width.degrees");
+    gridCellHeightDegrStr = attributeList.getAttributeValue("grid.original.cell.height.degrees");
+    gridOriginalProjectionStr = attributeList.getAttributeValue("grid.original.projectionType");
+  }
+};
+
+
+
+
+
+/*! \brief Checks if the grid size should be counted from the original cell size. */
+
+bool isCountSize(const GridSizeAttributes& attr)
+{
+  bool countSize = false;
+
+  if (attr.gridCountSizeStr)
+  {
+    bool res = (bool)toInt32(attr.gridCountSizeStr);
+    if (res  &&  attr.gridCellWidthStr  &&  attr.gridCellHeightStr)
+      countSize = true;
+  }
+
+  if (!attr.gridWidthStr &&  !attr.gridHeightStr)
+    countSize = true;
+
+  return countSize;
+}
+
+
+
+
+
+/*! \brief Initializes the spatial reference from the URN, the proj4 or the CRS definition. */
+
+void setSpatialReference(OGRSpatialReference& sr,const char *urnStr,const char *proj4Str,const char *crsStr,bool proj4BeforeCrs)
+{
+  if (urnStr)
+  {
+    std::string urn = urnStr;
+    if (strncasecmp(urnStr,"urn:ogc:def:crs:",16) != 0)
+      urn = std::string("urn:ogc:def:crs:") + urnStr;
+
+    if (sr.importFromURN(urn.c_str()) != OGRERR_NONE)
+      throw Fmi::Exception(BCP, "Invalid urn '" + std::string(urnStr) + "'!");
+  }
+  else if (proj4Str && (proj4BeforeCrs || !crsStr))
+  {
+    OGRErr err = sr.SetFromUserInput(proj4Str);
+    if (err != OGRERR_NONE)
+      throw Fmi::Exception(BCP, "Invalid proj4 '" + std::string(proj4Str) + "'!");
+  }
+  else if (crsStr)
+  {
+    OGRErr err = sr.SetFromUserInput(crsStr);
+    if (err != OGRERR_NONE)
+      throw Fmi::Exception(BCP, "Invalid crs '" + std::string(crsStr) + "'!");
+  }
+
+  sr.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
+}
+
+
+
+
+
+/*! \brief Transforms the latlon bounding box into the target projection. */
+
+void transformLatLonBox(OGRSpatialReference& sr_latlon,OGRSpatialReference& sr,const std::vector<double>& aa,std::vector<double>& cc,bool& targetIsLatlon)
+{
+  std::shared_ptr<OGRCoordinateTransformation> reverseTransformation = make_ptr(OGRCreateCoordinateTransformation(&sr_latlon,&sr));
+  if (not reverseTransformation)
+  {
+    throw Fmi::Exception(BCP,"Cannot create coordinate transformation!");
+  }
+
+  double lon1 = aa[0];
+  double lat1 = aa[1];
+  double lon2 = aa[2];
+  double lat2 = aa[3];
+
+  int ok1 = 0;
+  int ok2 = 0;
+  int rc1 = reverseTransformation->Transform(1, &lon1, &lat1, nullptr, &ok1);
+  int rc2 = reverseTransformation->Transform(1, &lon2, &lat2, nullptr, &ok2);
+
+  // Do not silently use an unchanged (failed) result as projected coordinates
+  if (!(rc1 && ok1 && rc2 && ok2))
+    throw Fmi::Exception(BCP, "Failed to transform latlon bbox to the requested crs");
+
+  cc.emplace_back(lon1);
+  cc.emplace_back(lat1);
+  cc.emplace_back(lon2);
+  cc.emplace_back(lat2);
+
+  if (lon1 == aa[0]  &&  lat1 == aa[1]  && lon2 == aa[2]  &&  lat2 == aa[3])
+    targetIsLatlon = true;
+}
+
+
+
+
+
+/*! \brief Counts the grid size from the original cell size. */
+
+void countGridSizeByCellSize(const GridSizeAttributes& attr,const std::vector<double>& cc,bool targetIsLatlon,double diffx,double diffy,uint& width,uint& height)
+{
+  // Size of the original grid cell (this might be metric or in degrees)
+  double dxx = toDouble(attr.gridCellWidthStr);
+  double dyy = toDouble(attr.gridCellHeightStr);
+
+  int origProjectionType = 0;
+  if (attr.gridOriginalProjectionStr)
+    origProjectionType = toInt32(attr.gridOriginalProjectionStr);
+
+  if (!targetIsLatlon)
+  {
+    // The target projection is metric
+
+    width = C_UINT(fabs(diffx) / (dxx*1000) + 1);
+    height = C_UINT(fabs(diffy) / (dyy*1000) + 1);
+    return;
+  }
+
+  // The target projection is latlon
+
+  if (origProjectionType == T::GridProjectionValue::LatLon || origProjectionType == T::GridProjectionValue::RotatedLatLon)
+  {
+    // The source projection is also latlon.
+    if (attr.gridCellWidthDegrStr  &&  attr.gridCellHeightDegrStr)
+    {
+      dxx = toDouble(attr.gridCellWidthDegrStr);
+      dyy = toDouble(attr.gridCellHeightDegrStr);
+    }
+
+    width = C_UINT(fabs(diffx) / dxx + 1);
+    height = C_UINT(fabs(diffy) / dyy + 1);
+  }
+  else
+  {
+    // The source is metric
+
+    // Counting metric width and height of the target projection
+
+    double longitudes = (cc[2]-cc[0]);
+    double latitudes = (cc[3]-cc[1]);
+
+    double centerLongitude = cc[0] + longitudes/2;
+    double centerLatitude = cc[1] + latitudes/2;
+
+    double w = latlon_width(centerLatitude,longitudes);
+    double h = latlon_height(centerLongitude,latitudes);
+
+    // Width and height (in pixels) for the new grid
+
+    width =  C_UINT(w/dxx);
+    height = C_UINT(h/dyy);
+  }
+}
+
+
+
+
+
+/*! \brief Counts the grid size and the grid cell size of the new grid. */
+
+void countGridSize(const GridSizeAttributes& attr,const std::vector<double>& cc,bool targetIsLatlon,bool countSize,uint& width,uint& height,double& dx,double& dy)
+{
+  double diffx = cc[2] - cc[0];
+  double diffy = cc[3] - cc[1];
+
+  if (!countSize  &&  attr.gridWidthStr  &&  attr.gridHeightStr)
+  {
+    width = toUInt32(attr.gridWidthStr);
+    height = toUInt32(attr.gridHeightStr);
+
+    dx = diffx / C_DOUBLE(width-1);
+    dy = diffy / C_DOUBLE(height-1);
+  }
+  else if (attr.gridCellWidthStr  &&  attr.gridCellHeightStr)
+  {
+    // Trying to define width and height for the new grid.
+
+    countGridSizeByCellSize(attr,cc,targetIsLatlon,diffx,diffy,width,height);
+
+    if (attr.gridWidthStr  &&  attr.gridHeightStr)
+    {
+      uint w = toUInt32(attr.gridWidthStr);
+      uint h = toUInt32(attr.gridHeightStr);
+
+      if (width >= w  ||  height >= h)
+      {
+        width = w;
+        height = h;
+      }
+    }
+
+    dx = diffx / C_DOUBLE(width-1);
+    dy = diffy / C_DOUBLE(height-1);
+  }
+
+  if (width == 0 || height == 0 || width > 10000 || height > 10000)
+  {
+    Fmi::Exception exception(BCP,"Invalid grid size!");
+    exception.addParameter("width",std::to_string(width));
+    exception.addParameter("height",std::to_string(height));
+    throw exception;
+  }
+}
+
+
+
+
+
+/*! \brief Creates the grid coordinates in the target projection (if requested) and in latlon. */
+
+void createGridCoordinates(OGRCoordinateTransformation& transformation,const std::vector<double>& cc,uint width,uint height,double dx,double dy,T::Coordinate_svec& latLonCoordinates,T::Coordinate_vec *coordinates)
+{
+  uint sz = width*height;
+
+  if (!latLonCoordinates)
+    latLonCoordinates = std::make_shared<T::Coordinate_vec>();
+
+  latLonCoordinates->reserve(sz);
+
+  auto *lon = new double[sz+1];
+  auto *lat = new double[sz+1];
+
+  std::unique_ptr<double[]> rlat(lat);
+  std::unique_ptr<double[]> rlon(lon);
+
+  double yy = cc[1];
+  int c = 0;
+  for (uint y=0; y<height; y++)
+  {
+    double xx = cc[0];
+    for (uint x=0; x<width; x++)
+    {
+      lon[c] = xx;
+      lat[c] = yy;
+
+      if (coordinates != nullptr)
+        coordinates->emplace_back(xx,yy);
+
+      xx = xx + dx;
+      c++;
+    }
+    yy = yy + dy;
+  }
+
+  transformation.Transform(c,lon,lat);
+
+  for (int t=0; t<c; t++)
+  {
+    latLonCoordinates->emplace_back(getLongitude(lon[t]),lat[t]);
+  }
+}
+
+
+
+
+
+/*! \brief Sets the llbox (and the bbox if the target is latlon) attributes from the corner coordinates. */
+
+void setLatLonBoxAttributes(T::AttributeList& attributeList,T::Coordinate_svec& latLonCoordinates,const char *flipped,bool targetIsLatlon)
+{
+  int last = latLonCoordinates->size() - 1;
+  char tmp[1400];  // four %.15f values of any magnitude
+  sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",(*latLonCoordinates)[0].x(),(*latLonCoordinates)[0].y(),(*latLonCoordinates)[last].x(),(*latLonCoordinates)[last].y());
+
+
+  if (!flipped)
+    attributeList.setAttribute("grid.llbox",tmp);
+
+  if (targetIsLatlon &&  !flipped)
+    attributeList.setAttribute("grid.bbox",tmp);
+}
+
+
+
+
+
+/*! \brief Creates the grid defined by the projection and the bounding box. If the coordinates
+    pointer is given then also the projected coordinates are returned. */
+
+void createProjectedGrid(T::AttributeList& attributeList,const GridSizeAttributes& attr,const char *urnStr,const char *proj4Str,const char *crsStr,bool proj4BeforeCrs,const char *bboxStr,const char *llboxStr,bool countSize,bool& targetIsLatlon,uint& width,uint& height,T::Coordinate_svec& latLonCoordinates,T::Coordinate_svec *coordinates)
+{
+  // If the geometry id defined by the URN / CRS then we need to the bounding box coordinates and preferred grid width and height.
+
+  std::vector<double> aa;
+  std::vector<double> bb;
+
+  if (bboxStr)
+    splitString(bboxStr,',',aa);
+
+  if (llboxStr)
+  {
+    splitString(llboxStr,',',bb);
+    if (bboxStr == nullptr)
+      aa = bb;
+  }
+
+  if (aa.size() == 4  &&  bb.size() == 4 && aa[0] == bb[0]  &&  aa[1] == bb[1]  &&  aa[2] == bb[2]  &&  aa[3] == bb[3])
+    targetIsLatlon = true;
+
+  if (aa.size() != 4)
+    return;
+
+  std::vector<double> cc;
+
+  OGRSpatialReference sr_latlon;
+  // Use the well-known WGS84 geographic CRS rather than importFromEPSG(4326);
+  // the latter carries an authority (lat,lon) axis order that older GDAL/PROJ
+  // versions may not fully override with the traditional axis mapping, which
+  // can make the latlon->projected transform fail and leave the coordinates
+  // unchanged (then used as projected metres, producing a degenerate grid).
+  sr_latlon.SetWellKnownGeogCS("WGS84");
+  sr_latlon.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
+
+  OGRSpatialReference sr;
+  setSpatialReference(sr,urnStr,proj4Str,crsStr,proj4BeforeCrs);
+
+  auto transformation = make_ptr(OGRCreateCoordinateTransformation(&sr,&sr_latlon));
+  if (not transformation)
+    throw Fmi::Exception(BCP,"Cannot create coordinate transformation!");
+
+  if (bboxStr)
+    cc = aa;
+  else if (llboxStr)
+    transformLatLonBox(sr_latlon,sr,aa,cc,targetIsLatlon);
+
+  double dx = 0;
+  double dy = 0;
+
+  countGridSize(attr,cc,targetIsLatlon,countSize,width,height,dx,dy);
+
+  if (targetIsLatlon)
+  {
+    attributeList.setAttribute("grid.cell.width",Fmi::to_string(fabs(dx)));
+    attributeList.setAttribute("grid.cell.height",Fmi::to_string(fabs(dy)));
+  }
+  else
+  {
+    attributeList.setAttribute("grid.cell.width",Fmi::to_string(fabs(dx/1000)));
+    attributeList.setAttribute("grid.cell.height",Fmi::to_string(fabs(dy/1000)));
+  }
+
+  if (!latLonCoordinates || latLonCoordinates->empty())
+  {
+    T::Coordinate_vec *projectedCoordinates = nullptr;
+    if (coordinates != nullptr)
+    {
+      if (!(*coordinates))
+        *coordinates = std::make_shared<T::Coordinate_vec>();
+
+      (*coordinates)->reserve(width*height);
+      projectedCoordinates = coordinates->get();
+    }
+
+    createGridCoordinates(*transformation,cc,width,height,dx,dy,latLonCoordinates,projectedCoordinates);
+  }
+}
+}  // namespace
+
+
+
+
+
 /*! \brief Resolves grid coordinates in the original projection from the given geometry attributes. */
 
 void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeList,T::Coordinate_svec& latLonCoordinates,T::CoordinateType /*coordinateType*/,T::Coordinate_svec& coordinates,uint& width,uint& height)
@@ -2269,14 +2772,7 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
     const char *llboxStr = attributeList.getAttributeValue("grid.llbox");
     const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
     const char *geometryStringStr = attributeList.getAttributeValue("grid.geometryString");
-    const char *gridWidthStr = attributeList.getAttributeValue("grid.width");
-    const char *gridHeightStr = attributeList.getAttributeValue("grid.height");
-    const char *gridCountSizeStr = attributeList.getAttributeValue("grid.countSize");
-    const char *gridCellWidthStr = attributeList.getAttributeValue("grid.original.cell.width");
-    const char *gridCellHeightStr = attributeList.getAttributeValue("grid.original.cell.height");
-    const char *gridCellWidthDegrStr = attributeList.getAttributeValue("grid.original.cell.width.degrees");
-    const char *gridCellHeightDegrStr = attributeList.getAttributeValue("grid.original.cell.height.degrees");
-    const char *gridOriginalProjectionStr = attributeList.getAttributeValue("grid.original.projectionType");
+    GridSizeAttributes attr(attributeList);
     const char *flipped = attributeList.getAttributeValue("grid.flipped");
 
     if (geometryIdStr == nullptr  &&  geometryStringStr == nullptr  &&  urnStr == nullptr  &&  crsStr == nullptr)
@@ -2291,355 +2787,14 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
       crsStr = originalCrsStr;
     }
 
-    // Checking if the geometry is defined by the geometryId
-
-    GRIB2::GridDef_sptr def;
-    if (geometryIdStr)
-    {
-      def = getGrib2DefinitionByGeometryId(toInt32(geometryIdStr));
-      if (!def)
-        return;
-
-      if (flipped)
-      {
-        auto originalCoords = def->getGridLatLonCoordinates();
-        int sz = originalCoords->size();
-
-        if (sz)
-        {
-          T::Coordinate_svec newCoords(new T::Coordinate_vec());
-          newCoords->reserve(sz);
-
-          T::Dimensions d = def->getGridDimensions();
-          int nx = d.nx();
-          int ny = d.ny();
-
-          for (int y = ny-1; y >= 0; y--)
-          {
-            for (int x = 0; x < nx; x++)
-            {
-              auto cc = (*originalCoords)[y*nx + x];
-              newCoords->emplace_back(cc);
-            }
-          }
-
-          latLonCoordinates = newCoords;
-        }
-      }
-      else
-      {
-        latLonCoordinates = def->getGridLatLonCoordinates();
-      }
-    }
-
-
-    // Checking if the geometry is defigned by the geometry string
-
-    if (!def &&  geometryStringStr)
-    {
-      auto *defPtr = Identification::gridDef.createGrib2GridDefinition(geometryStringStr);
-      if (!defPtr)
-        return;
-
-      def.reset(defPtr);
-      latLonCoordinates = def->getGridLatLonCoordinates();
-    }
-
-
-    if (def)
-    {
-      // If we have valid geometry definition then we know the grid width and the height.
-
-      T::Dimensions d = def->getGridDimensions();
-      width = d.nx();
-      height = d.ny();
-      attributeList.setAttribute("grid.original.reverseYDirection",Fmi::to_string((int)def->reverseYDirection()));
-      attributeList.setAttribute("grid.original.reverseXDirection",Fmi::to_string((int)def->reverseXDirection()));
-
-      double wm = 0;
-      double hm = 0;
-      if (def->getGridMetricCellSize(wm,hm))
-      {
-        attributeList.setAttribute("grid.cell.width",Fmi::to_string(wm));
-        attributeList.setAttribute("grid.cell.height",Fmi::to_string(hm));
-      }
-      else
-      {
-        attributeList.setAttribute("grid.original.cell.width.degrees",Fmi::to_string(wm));
-        attributeList.setAttribute("grid.original.cell.height.degrees",Fmi::to_string(hm));
-
-        def->getGridCellAverageSize(wm,hm);
-        attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
-        attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
-      }
-    }
+    if (!resolveGeometryDefinition(*this,attributeList,geometryIdStr,geometryStringStr,flipped,latLonCoordinates,width,height))
+      return;
 
     bool targetIsLatlon = false;
-    bool countSize = false;
+    bool countSize = isCountSize(attr);
 
-    if (gridCountSizeStr)
-    {
-      bool res = (bool)toInt32(gridCountSizeStr);
-      if (res  &&  gridCellWidthStr  &&  gridCellHeightStr)
-        countSize = true;
-    }
-
-    if (!gridWidthStr &&  !gridHeightStr)
-      countSize = true;
-
-    if ((urnStr  || crsStr )  &&  (bboxStr || llboxStr)  &&  ((gridWidthStr &&  gridHeightStr) ||  (gridCellWidthStr  &&  gridCellHeightStr)))
-    {
-      // If the geometry id defined by the URN / CRS then we need to the bounding box coordinates and preferred grid width and height.
-
-      std::vector<double> aa;
-      std::vector<double> bb;
-
-      if (bboxStr)
-        splitString(bboxStr,',',aa);
-
-      if (llboxStr)
-      {
-        splitString(llboxStr,',',bb);
-        if (bboxStr == nullptr)
-          aa = bb;
-      }
-
-      if (aa.size() == 4  &&  bb.size() == 4 && aa[0] == bb[0]  &&  aa[1] == bb[1]  &&  aa[2] == bb[2]  &&  aa[3] == bb[3])
-        targetIsLatlon = true;
-
-      if (aa.size() == 4)
-      {
-        std::vector<double> cc;
-
-        OGRSpatialReference sr_latlon;
-        // Use the well-known WGS84 geographic CRS rather than importFromEPSG(4326);
-        // the latter carries an authority (lat,lon) axis order that older GDAL/PROJ
-        // versions may not fully override with the traditional axis mapping, which
-        // can make the latlon->projected transform fail and leave the coordinates
-        // unchanged (then used as projected metres, producing a degenerate grid).
-        sr_latlon.SetWellKnownGeogCS("WGS84");
-        sr_latlon.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
-
-        OGRSpatialReference sr;
-
-        if (urnStr)
-        {
-          std::string urn = urnStr;
-          if (strncasecmp(urnStr,"urn:ogc:def:crs:",16) != 0)
-            urn = std::string("urn:ogc:def:crs:") + urnStr;
-
-          if (sr.importFromURN(urn.c_str()) != OGRERR_NONE)
-            throw Fmi::Exception(BCP, "Invalid urn '" + std::string(urnStr) + "'!");
-        }
-        else if (proj4Str)
-        {
-          OGRErr err = sr.SetFromUserInput(proj4Str);
-          if (err != OGRERR_NONE)
-            throw Fmi::Exception(BCP, "Invalid proj4 '" + std::string(proj4Str) + "'!");
-        }
-        else if (crsStr)
-        {
-          OGRErr err = sr.SetFromUserInput(crsStr);
-          if (err != OGRERR_NONE)
-            throw Fmi::Exception(BCP, "Invalid crs '" + std::string(crsStr) + "'!");
-        }
-
-        sr.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
-
-        auto transformation = make_ptr(OGRCreateCoordinateTransformation(&sr,&sr_latlon));
-        if (not transformation)
-          throw Fmi::Exception(BCP,"Cannot create coordinate transformation!");
-
-            std::shared_ptr<OGRCoordinateTransformation> reverseTransformation;
-
-        if (bboxStr)
-          cc = aa;
-        else if (llboxStr)
-        {
-          reverseTransformation = make_ptr(OGRCreateCoordinateTransformation(&sr_latlon,&sr));
-          if (not reverseTransformation)
-          {
-            throw Fmi::Exception(BCP,"Cannot create coordinate transformation!");
-          }
-
-          double lon1 = aa[0];
-          double lat1 = aa[1];
-          double lon2 = aa[2];
-          double lat2 = aa[3];
-
-          int ok1 = 0;
-          int ok2 = 0;
-          int rc1 = reverseTransformation->Transform(1, &lon1, &lat1, nullptr, &ok1);
-          int rc2 = reverseTransformation->Transform(1, &lon2, &lat2, nullptr, &ok2);
-
-          // Do not silently use an unchanged (failed) result as projected coordinates
-          if (!(rc1 && ok1 && rc2 && ok2))
-            throw Fmi::Exception(BCP, "Failed to transform latlon bbox to the requested crs");
-
-          cc.emplace_back(lon1);
-          cc.emplace_back(lat1);
-          cc.emplace_back(lon2);
-          cc.emplace_back(lat2);
-
-          if (lon1 == aa[0]  &&  lat1 == aa[1]  && lon2 == aa[2]  &&  lat2 == aa[3])
-            targetIsLatlon = true;
-        }
-
-        double diffx = cc[2] - cc[0];
-        double diffy = cc[3] - cc[1];
-
-        double dx = 0;
-        double dy = 0;
-
-        if (!countSize  &&  gridWidthStr  &&  gridHeightStr)
-        {
-          width = toUInt32(gridWidthStr);
-          height = toUInt32(gridHeightStr);
-
-          dx = diffx / C_DOUBLE(width-1);
-          dy = diffy / C_DOUBLE(height-1);
-        }
-        else
-        {
-          if (gridCellWidthStr  &&  gridCellHeightStr)
-          {
-            // Trying to define width and height for the new grid.
-
-            // Size of the original grid cell (this might be metric or in degrees)
-            double dxx = toDouble(gridCellWidthStr);
-            double dyy = toDouble(gridCellHeightStr);
-
-            int origProjectionType = 0;
-            if (gridOriginalProjectionStr)
-              origProjectionType = toInt32(gridOriginalProjectionStr);
-
-            if (targetIsLatlon)
-            {
-              // The target projection is latlon
-
-              if (origProjectionType == T::GridProjectionValue::LatLon || origProjectionType == T::GridProjectionValue::RotatedLatLon)
-              {
-                // The source projection is also latlon.
-                if (gridCellWidthDegrStr  &&  gridCellHeightDegrStr)
-                {
-                  dxx = toDouble(gridCellWidthDegrStr);
-                  dyy = toDouble(gridCellHeightDegrStr);
-                }
-
-                width = C_UINT(fabs(diffx) / dxx + 1);
-                height = C_UINT(fabs(diffy) / dyy + 1);
-              }
-              else
-              {
-                // The source is metric
-
-                // Counting metric width and height of the target projection
-
-                double longitudes = (cc[2]-cc[0]);
-                double latitudes = (cc[3]-cc[1]);
-
-                double centerLongitude = cc[0] + longitudes/2;
-                double centerLatitude = cc[1] + latitudes/2;
-
-                double w = latlon_width(centerLatitude,longitudes);
-                double h = latlon_height(centerLongitude,latitudes);
-
-                // Width and height (in pixels) for the new grid
-
-                width =  C_UINT(w/dxx);
-                height = C_UINT(h/dyy);
-              }
-            }
-            else
-            {
-              // The target projection is metric
-
-              width = C_UINT(fabs(diffx) / (dxx*1000) + 1);
-              height = C_UINT(fabs(diffy) / (dyy*1000) + 1);
-            }
-
-            if (gridWidthStr  &&  gridHeightStr)
-            {
-              uint w = toUInt32(gridWidthStr);
-              uint h = toUInt32(gridHeightStr);
-
-              if (width >= w  ||  height >= h)
-              {
-                width = w;
-                height = h;
-              }
-            }
-
-            dx = diffx / C_DOUBLE(width-1);
-            dy = diffy / C_DOUBLE(height-1);
-          }
-        }
-
-        if (width == 0 || height == 0 || width > 10000 || height > 10000)
-        {
-          Fmi::Exception exception(BCP,"Invalid grid size!");
-          exception.addParameter("width",std::to_string(width));
-          exception.addParameter("height",std::to_string(height));
-          throw exception;
-        }
-
-        if (targetIsLatlon)
-        {
-          attributeList.setAttribute("grid.cell.width",Fmi::to_string(fabs(dx)));
-          attributeList.setAttribute("grid.cell.height",Fmi::to_string(fabs(dy)));
-        }
-        else
-        {
-          attributeList.setAttribute("grid.cell.width",Fmi::to_string(fabs(dx/1000)));
-          attributeList.setAttribute("grid.cell.height",Fmi::to_string(fabs(dy/1000)));
-        }
-
-        if (!latLonCoordinates || latLonCoordinates->empty())
-        {
-          uint sz = width*height;
-
-          if (!latLonCoordinates)
-            latLonCoordinates = std::make_shared<T::Coordinate_vec>();
-
-          if (!coordinates)
-            coordinates = std::make_shared<T::Coordinate_vec>();
-
-          coordinates->reserve(sz);
-          latLonCoordinates->reserve(sz);
-
-          auto *lon = new double[sz+1];
-          auto *lat = new double[sz+1];
-
-          std::unique_ptr<double[]> rlat(lat);
-          std::unique_ptr<double[]> rlon(lon);
-
-          double yy = cc[1];
-          int c = 0;
-          for (uint y=0; y<height; y++)
-          {
-            double xx = cc[0];
-            for (uint x=0; x<width; x++)
-            {
-              lon[c] = xx;
-              lat[c] = yy;
-
-              coordinates->emplace_back(xx,yy);
-
-              xx = xx + dx;
-              c++;
-            }
-            yy = yy + dy;
-          }
-
-          transformation->Transform(c,lon,lat);
-
-          for (int t=0; t<c; t++)
-          {
-            latLonCoordinates->emplace_back(getLongitude(lon[t]),lat[t]);
-          }
-        }
-      }
-    }
+    if ((urnStr  || crsStr )  &&  (bboxStr || llboxStr)  &&  ((attr.gridWidthStr &&  attr.gridHeightStr) ||  (attr.gridCellWidthStr  &&  attr.gridCellHeightStr)))
+      createProjectedGrid(attributeList,attr,urnStr,proj4Str,crsStr,true,bboxStr,llboxStr,countSize,targetIsLatlon,width,height,latLonCoordinates,&coordinates);
   }
   catch (...)
   {
@@ -2668,14 +2823,7 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
     const char *crop_llboxStr = attributeList.getAttributeValue("grid.crop.llbox");
     const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
     const char *geometryStringStr = attributeList.getAttributeValue("grid.geometryString");
-    const char *gridWidthStr = attributeList.getAttributeValue("grid.width");
-    const char *gridHeightStr = attributeList.getAttributeValue("grid.height");
-    const char *gridCountSizeStr = attributeList.getAttributeValue("grid.countSize");
-    const char *gridCellWidthStr = attributeList.getAttributeValue("grid.original.cell.width");
-    const char *gridCellHeightStr = attributeList.getAttributeValue("grid.original.cell.height");
-    const char *gridCellWidthDegrStr = attributeList.getAttributeValue("grid.original.cell.width.degrees");
-    const char *gridCellHeightDegrStr = attributeList.getAttributeValue("grid.original.cell.height.degrees");
-    const char *gridOriginalProjectionStr = attributeList.getAttributeValue("grid.original.projectionType");
+    GridSizeAttributes attr(attributeList);
     const char *flipped = attributeList.getAttributeValue("grid.flipped");
 
     if (geometryIdStr == nullptr  &&  geometryStringStr == nullptr  &&  urnStr == nullptr  &&  crsStr == nullptr)
@@ -2696,361 +2844,17 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
       crsStr = originalCrsStr;
     }
 
-
-    // Checking if the geometry is defined by the geometryId
-
-    GRIB2::GridDef_sptr def;
-    if (geometryIdStr)
-    {
-      def = getGrib2DefinitionByGeometryId(toInt32(geometryIdStr));
-      if (!def)
-        return;
-
-      if (flipped)
-      {
-        auto originalCoords = def->getGridLatLonCoordinates();
-        int sz = originalCoords->size();
-
-        if (sz)
-        {
-          T::Coordinate_svec newCoords(new T::Coordinate_vec());
-          newCoords->reserve(sz);
-
-          T::Dimensions d = def->getGridDimensions();
-          int nx = d.nx();
-          int ny = d.ny();
-
-          for (int y = ny-1; y >= 0; y--)
-          {
-            for (int x = 0; x < nx; x++)
-            {
-              auto cc = (*originalCoords)[y*nx + x];
-              newCoords->emplace_back(cc);
-            }
-          }
-
-          latLonCoordinates = newCoords;
-        }
-      }
-      else
-      {
-        latLonCoordinates = def->getGridLatLonCoordinates();
-      }
-    }
-
-
-    // Checking if the geometry is defigned by the geometry string
-
-    if (!def &&  geometryStringStr)
-    {
-      auto *defPtr =  Identification::gridDef.createGrib2GridDefinition(geometryStringStr);
-      if (!defPtr)
-        return;
-
-      def.reset(defPtr);
-      latLonCoordinates = def->getGridLatLonCoordinates();
-    }
-
-    if (def)
-    {
-      // If we have valid geometry definition then we know the grid width and the height.
-
-      T::Dimensions d = def->getGridDimensions();
-      width = d.nx();
-      height = d.ny();
-      attributeList.setAttribute("grid.original.reverseYDirection",Fmi::to_string((int)def->reverseYDirection()));
-      attributeList.setAttribute("grid.original.reverseXDirection",Fmi::to_string((int)def->reverseXDirection()));
-
-      double wm = 0;
-      double hm = 0;
-      if (def->getGridMetricCellSize(wm,hm))
-      {
-        attributeList.setAttribute("grid.cell.width",Fmi::to_string(wm));
-        attributeList.setAttribute("grid.cell.height",Fmi::to_string(hm));
-      }
-      else
-      {
-        attributeList.setAttribute("grid.original.cell.width.degrees",Fmi::to_string(wm));
-        attributeList.setAttribute("grid.original.cell.height.degrees",Fmi::to_string(hm));
-
-        def->getGridCellAverageSize(wm,hm);
-        attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
-        attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
-      }
-    }
+    if (!resolveGeometryDefinition(*this,attributeList,geometryIdStr,geometryStringStr,flipped,latLonCoordinates,width,height))
+      return;
 
     bool targetIsLatlon = false;
-    bool countSize = false;
+    bool countSize = isCountSize(attr);
 
-    if (gridCountSizeStr)
-    {
-      bool res = (bool)toInt32(gridCountSizeStr);
-      if (res  &&  gridCellWidthStr  &&  gridCellHeightStr)
-        countSize = true;
-    }
-
-    if (!gridWidthStr &&  !gridHeightStr)
-      countSize = true;
-
-    if ((urnStr || crsStr || proj4Str)  &&  (bboxStr ||  llboxStr) && ((gridWidthStr  &&  gridHeightStr) ||  (gridCellWidthStr  &&  gridCellHeightStr)))
-    {
-      // If the geometry id defined by the URN then we need to the bounding box coordinates and preferred grid width and height.
-
-      std::vector<double> aa;
-      std::vector<double> bb;
-
-      if (bboxStr)
-        splitString(bboxStr,',',aa);
-
-      if (llboxStr)
-      {
-        splitString(llboxStr,',',bb);
-        if (bboxStr == nullptr)
-          aa = bb;
-      }
-
-      if (aa.size() == 4  &&  bb.size() == 4 && aa[0] == bb[0]  &&  aa[1] == bb[1]  &&  aa[2] == bb[2]  &&  aa[3] == bb[3])
-        targetIsLatlon = true;
-
-      if (aa.size() == 4)
-      {
-        std::vector<double> cc;
-
-        OGRSpatialReference sr_latlon;
-        // Use the well-known WGS84 geographic CRS rather than importFromEPSG(4326);
-        // the latter carries an authority (lat,lon) axis order that older GDAL/PROJ
-        // versions may not fully override with the traditional axis mapping, which
-        // can make the latlon->projected transform fail and leave the coordinates
-        // unchanged (then used as projected metres, producing a degenerate grid).
-        sr_latlon.SetWellKnownGeogCS("WGS84");
-        sr_latlon.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
-
-        OGRSpatialReference sr;
-
-        if (urnStr)
-        {
-          std::string urn = urnStr;
-          if (strncasecmp(urnStr,"urn:ogc:def:crs:",16) != 0)
-            urn = std::string("urn:ogc:def:crs:") + urnStr;
-
-          if (sr.importFromURN(urn.c_str()) != OGRERR_NONE)
-            throw Fmi::Exception(BCP, "Invalid urn '" + std::string(urnStr) + "'!");
-        }
-        else if (crsStr)
-        {
-          if (sr.SetFromUserInput(crsStr) != OGRERR_NONE)
-            throw Fmi::Exception(BCP, "Invalid crs '" + std::string(crsStr) + "'!");
-        }
-        else if (proj4Str)
-        {
-          OGRErr err = sr.SetFromUserInput(proj4Str);
-          if (err != OGRERR_NONE)
-            throw Fmi::Exception(BCP, "Invalid proj4 '" + std::string(proj4Str) + "'!");
-        }
-        sr.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
-
-        std::shared_ptr<OGRCoordinateTransformation> transformation =
-            make_ptr(OGRCreateCoordinateTransformation(&sr,&sr_latlon));
-        if (transformation == nullptr)
-          throw Fmi::Exception(BCP,"Cannot create coordinate transformation!");
-
-        std::shared_ptr<OGRCoordinateTransformation> reverseTransformation;
-
-        if (bboxStr)
-          cc = aa;
-        else if (llboxStr)
-        {
-          reverseTransformation = make_ptr(OGRCreateCoordinateTransformation(&sr_latlon,&sr));
-          if (not reverseTransformation)
-          {
-            throw Fmi::Exception(BCP,"Cannot create coordinate transformation!");
-          }
-
-          double lon1 = aa[0];
-          double lat1 = aa[1];
-          double lon2 = aa[2];
-          double lat2 = aa[3];
-
-          int ok1 = 0;
-          int ok2 = 0;
-          int rc1 = reverseTransformation->Transform(1, &lon1, &lat1, nullptr, &ok1);
-          int rc2 = reverseTransformation->Transform(1, &lon2, &lat2, nullptr, &ok2);
-
-          // Do not silently use an unchanged (failed) result as projected coordinates
-          if (!(rc1 && ok1 && rc2 && ok2))
-            throw Fmi::Exception(BCP, "Failed to transform latlon bbox to the requested crs");
-
-          cc.emplace_back(lon1);
-          cc.emplace_back(lat1);
-          cc.emplace_back(lon2);
-          cc.emplace_back(lat2);
-
-          if (lon1 == aa[0]  &&  lat1 == aa[1]  && lon2 == aa[2]  &&  lat2 == aa[3])
-            targetIsLatlon = true;
-        }
-
-        double diffx = cc[2] - cc[0];
-        double diffy = cc[3] - cc[1];
-        double dx = 0;
-        double dy = 0;
-
-        if (!countSize  &&  gridWidthStr  &&  gridHeightStr)
-        {
-          width = toUInt32(gridWidthStr);
-          height = toUInt32(gridHeightStr);
-
-          dx = diffx / C_DOUBLE(width-1);
-          dy = diffy / C_DOUBLE(height-1);
-        }
-        else
-        {
-          if (gridCellWidthStr  &&  gridCellHeightStr)
-          {
-            // Trying to define width and height for the new grid.
-
-            // Size of the original grid cell (this might be metric or in degrees)
-            double dxx = toDouble(gridCellWidthStr);
-            double dyy = toDouble(gridCellHeightStr);
-
-            int origProjectionType = 0;
-            if (gridOriginalProjectionStr != nullptr)
-              origProjectionType = toInt32(gridOriginalProjectionStr);
-
-            if (targetIsLatlon)
-            {
-              // The target projection is latlon
-
-              if (origProjectionType == T::GridProjectionValue::LatLon || origProjectionType == T::GridProjectionValue::RotatedLatLon)
-              {
-                // The source projection is also latlon.
-                if (gridCellWidthDegrStr  &&  gridCellHeightDegrStr)
-                {
-                  dxx = toDouble(gridCellWidthDegrStr);
-                  dyy = toDouble(gridCellHeightDegrStr);
-                }
-
-                width = C_UINT(fabs(diffx) / dxx + 1);
-                height = C_UINT(fabs(diffy) / dyy + 1);
-              }
-              else
-              {
-                // The source is metric
-
-                // Counting metric width and height of the target projection
-
-                double longitudes = (cc[2]-cc[0]);
-                double latitudes = (cc[3]-cc[1]);
-
-                double centerLongitude = cc[0] + longitudes/2;
-                double centerLatitude = cc[1] + latitudes/2;
-
-                double w = latlon_width(centerLatitude,longitudes);
-                double h = latlon_height(centerLongitude,latitudes);
-
-                // Width and height (in pixels) for the new grid
-
-                width =  C_UINT(w/dxx);
-                height = C_UINT(h/dyy);
-              }
-            }
-            else
-            {
-              // The target projection is metric
-
-              width = C_UINT(fabs(diffx) / (dxx*1000) + 1);
-              height = C_UINT(fabs(diffy) / (dyy*1000) + 1);
-            }
-
-            if (gridWidthStr  &&  gridHeightStr)
-            {
-              uint w = toUInt32(gridWidthStr);
-              uint h = toUInt32(gridHeightStr);
-
-              if (width >= w  ||  height >= h)
-              {
-                width = w;
-                height = h;
-              }
-            }
-
-            dx = diffx / C_DOUBLE(width-1);
-            dy = diffy / C_DOUBLE(height-1);
-          }
-        }
-
-        if (width == 0 || height == 0 || width > 10000 || height > 10000)
-        {
-          Fmi::Exception exception(BCP,"Invalid grid size!");
-          exception.addParameter("width",std::to_string(width));
-          exception.addParameter("height",std::to_string(height));
-          throw exception;
-        }
-
-        if (targetIsLatlon)
-        {
-          attributeList.setAttribute("grid.cell.width",Fmi::to_string(fabs(dx)));
-          attributeList.setAttribute("grid.cell.height",Fmi::to_string(fabs(dy)));
-        }
-        else
-        {
-          attributeList.setAttribute("grid.cell.width",Fmi::to_string(fabs(dx/1000)));
-          attributeList.setAttribute("grid.cell.height",Fmi::to_string(fabs(dy/1000)));
-        }
-
-
-        if (!latLonCoordinates || latLonCoordinates->empty())
-        {
-          uint sz = width*height;
-
-          if (!latLonCoordinates)
-            latLonCoordinates = std::make_shared<T::Coordinate_vec>();
-
-          latLonCoordinates->reserve(sz);
-
-          auto *lon = new double[sz+1];
-          auto *lat = new double[sz+1];
-
-          std::unique_ptr<double[]> rlat(lat);
-          std::unique_ptr<double[]> rlon(lon);
-
-          int c = 0;
-          double yy = cc[1];
-          for (uint y=0; y<height; y++)
-          {
-            double xx = cc[0];
-            for (uint x=0; x<width; x++)
-            {
-              lon[c] = xx;
-              lat[c] = yy;
-
-              xx = xx + dx;
-              c++;
-            }
-            yy = yy + dy;
-          }
-
-          transformation->Transform(c,lon,lat);
-          for (int t=0; t<c; t++)
-          {
-            latLonCoordinates->emplace_back(getLongitude(lon[t]),lat[t]);
-          }
-        }
-      }
-    }
+    if ((urnStr || crsStr || proj4Str)  &&  (bboxStr ||  llboxStr) && ((attr.gridWidthStr  &&  attr.gridHeightStr) ||  (attr.gridCellWidthStr  &&  attr.gridCellHeightStr)))
+      createProjectedGrid(attributeList,attr,urnStr,proj4Str,crsStr,false,bboxStr,llboxStr,countSize,targetIsLatlon,width,height,latLonCoordinates,nullptr);
 
     if (latLonCoordinates && !latLonCoordinates->empty())
-    {
-      int last = latLonCoordinates->size() - 1;
-      char tmp[1400];  // four %.15f values of any magnitude
-      sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",(*latLonCoordinates)[0].x(),(*latLonCoordinates)[0].y(),(*latLonCoordinates)[last].x(),(*latLonCoordinates)[last].y());
-
-
-      if (!flipped)
-        attributeList.setAttribute("grid.llbox",tmp);
-
-      if (targetIsLatlon &&  !flipped)
-        attributeList.setAttribute("grid.bbox",tmp);
-    }
+      setLatLonBoxAttributes(attributeList,latLonCoordinates,flipped,targetIsLatlon);
   }
   catch (...)
   {
