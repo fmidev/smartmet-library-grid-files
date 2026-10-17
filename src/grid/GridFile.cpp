@@ -1225,6 +1225,35 @@ GRID::Message* findMessage(Message_ptr_map& messages,T::MessageIndex messageInde
 
   return nullptr;
 }
+
+
+
+/*! \brief Creates the message objects of a file containing several messages until the maximum
+    number of messages is reached. Returns true if the maximum number of messages was reached. */
+
+template <class MessageClass,class FileClass,class InfoVec>
+bool createFileMessagesUpTo(GridFile *gridFile,FileClass *file,InfoVec& messageInfoList,Message_ptr_map& messages,uint maxMessages)
+{
+  uint idx = 0;
+  for (auto& it : messageInfoList)
+  {
+    auto *message = new MessageClass(gridFile,file,idx,it);
+    messages.insert(std::pair<uint,Message*>(idx,message));
+    idx++;
+    if (messages.size() >= maxMessages)
+      return true;
+  }
+  return false;
+}
+
+
+
+/*! \brief The index of the next message (after the last existing one). */
+
+T::MessageIndex nextMessageIndex(const Message_ptr_map& messages)
+{
+  return (messages.empty() ? 0 : messages.rbegin()->first + 1);
+}
 }  // namespace
 
 
@@ -1564,18 +1593,14 @@ void GridFile::read(MemoryReader& memoryReader,uint maxMessages)
     for (uint i = 0; i < sz; i++)
     {
       auto *ptr = reinterpret_cast<unsigned char*>(startAddr + gribs[i].second);
-      unsigned char *endAddr = nullptr;
-      if ((i+1) < gribs.size())
-        endAddr = reinterpret_cast<unsigned char*>(startAddr + gribs[i+1].second);
-      else
-        endAddr = memoryReader.getEndPtr();
+      unsigned char *endAddr = ((i+1) < gribs.size()) ? reinterpret_cast<unsigned char*>(startAddr + gribs[i+1].second) : memoryReader.getEndPtr();
 
       MemoryReader memoryReader2(ptr,endAddr);
       memoryReader2.setParentPtr(startAddr);
 
       // A GRIB2 message may contain several fields, each of which becomes a
       // message of its own, so the message index is not the GRIB message index.
-      const T::MessageIndex nextIndex = (mMessages.empty() ? 0 : mMessages.rbegin()->first + 1);
+      const T::MessageIndex nextIndex = nextMessageIndex(mMessages);
 
       switch (gribs[i].first)
       {
@@ -1590,65 +1615,44 @@ void GridFile::read(MemoryReader& memoryReader,uint maxMessages)
         case T::FileTypeValue::NetCdf3:
         case T::FileTypeValue::NetCdf4:
         {
-          if (mMessages.empty())
-          {
-            memoryReader.setReadPosition(0);
-            mNetCdfFile = new NetCDF::NetCdfFile();
-            NetCDF::MessageInfoVec messageInfoList;
-            mNetCdfFile->read(memoryReader,messageInfoList);
+          if (!mMessages.empty())
+            break;
 
-            uint idx = 0;
-            for (auto& it : messageInfoList)
-            {
-              auto *message = new NetCDF::Message(this,mNetCdfFile,idx,it);
-              mMessages.insert(std::pair<uint,Message*>(idx,message));
-              idx++;
-              if (mMessages.size() >= maxMessages)
-                return;
-            }
-          }
+          memoryReader.setReadPosition(0);
+          mNetCdfFile = new NetCDF::NetCdfFile();
+          NetCDF::MessageInfoVec messageInfoList;
+          mNetCdfFile->read(memoryReader,messageInfoList);
+
+          if (createFileMessagesUpTo<NetCDF::Message>(this,mNetCdfFile,messageInfoList,mMessages,maxMessages))
+            return;
         }
         break;
 
         case T::FileTypeValue::QueryData:
         {
-          if (mMessages.empty())
-          {
-            memoryReader.setReadPosition(0);
-            mQueryDataFile = new QueryData::QueryDataFile(mMemoryMapInfo->filename.c_str());
-            QueryData::MessageInfoVec messageInfoList;
-            mQueryDataFile->read(messageInfoList);
-            uint idx = 0;
-            for (auto& it : messageInfoList)
-            {
-              auto *message = new QueryData::Message(this,mQueryDataFile,idx,it);
-              mMessages.insert(std::pair<uint,Message*>(idx,message));
-              idx++;
-              if (mMessages.size() >= maxMessages)
-                return;
-            }
-          }
+          if (!mMessages.empty())
+            break;
+
+          memoryReader.setReadPosition(0);
+          mQueryDataFile = new QueryData::QueryDataFile(mMemoryMapInfo->filename.c_str());
+          QueryData::MessageInfoVec messageInfoList;
+          mQueryDataFile->read(messageInfoList);
+          if (createFileMessagesUpTo<QueryData::Message>(this,mQueryDataFile,messageInfoList,mMessages,maxMessages))
+            return;
         }
         break;
 
         case T::FileTypeValue::GeoTiff:
         {
-          if (mMessages.empty())
-          {
-            memoryReader.setReadPosition(0);
-            mGeoTiffFile = new GeoTiff::GeoTiffFile(mMemoryMapInfo->filename.c_str());
-            GeoTiff::MessageInfoVec messageInfoList;
-            mGeoTiffFile->read(memoryReader,messageInfoList);
-            uint idx = 0;
-            for (auto& it : messageInfoList)
-            {
-              auto *message = new GeoTiff::Message(this,mGeoTiffFile,idx,it);
-              mMessages.insert(std::pair<uint,Message*>(idx,message));
-              idx++;
-              if (mMessages.size() >= maxMessages)
-                return;
-            }
-          }
+          if (!mMessages.empty())
+            break;
+
+          memoryReader.setReadPosition(0);
+          mGeoTiffFile = new GeoTiff::GeoTiffFile(mMemoryMapInfo->filename.c_str());
+          GeoTiff::MessageInfoVec messageInfoList;
+          mGeoTiffFile->read(memoryReader,messageInfoList);
+          if (createFileMessagesUpTo<GeoTiff::Message>(this,mGeoTiffFile,messageInfoList,mMessages,maxMessages))
+            return;
         }
         break;
         default:
