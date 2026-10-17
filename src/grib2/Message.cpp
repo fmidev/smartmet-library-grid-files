@@ -1510,6 +1510,87 @@ void readNumberedSection(Message *message,MemoryReader& memoryReader,std::uint8_
     throw exception;
   }
 }
+
+
+
+/*! \brief Reads the values of the grid points directly from the section by their value indexes. */
+
+template <class SectionType>
+void getGridValuesByIndex(const Message& message,const SectionType& section,GRID::GridFile *gridFile,std::vector<T::Point>& gridPoints,uint rowCount,uint columnCount,T::ParamValue_vec& values)
+{
+  T::ParamValue value = 0;
+  uint sz = gridPoints.size();
+  for (uint t=0; t<sz; t++)
+  {
+    if (gridPoints[t].y() >= (int)rowCount || (gridPoints[t].x() >= (int)columnCount &&  !message.isGridGlobal()))
+    {
+      values.push_back(ParamValueMissing);
+      continue;
+    }
+
+    uint idx = gridPoints[t].y() * columnCount + (gridPoints[t].x() % columnCount);
+
+    if (section.getValueByIndex(idx,value))
+    {
+      values.push_back(value);
+
+      if (gridFile->hasMemoryMapperError())
+      {
+        Fmi::Exception exception(BCP,"Memory mapper has set fail flag for the current file!",nullptr);
+        exception.addParameter("Filename",gridFile->getFileName());
+        throw exception;
+      }
+    }
+    else
+    {
+      values.push_back(message.getGridValueByGridPoint(gridPoints[t].x(),gridPoints[t].y()));
+    }
+  }
+}
+
+
+
+/*! \brief Tries to find the values of the grid points from the decompression cache. */
+
+bool getCachedGridValues(uint cacheKey,std::vector<T::Point>& gridPoints,uint columnCount,T::ParamValue_vec& values)
+{
+  std::vector<uint> indexList;
+  indexList.reserve(gridPoints.size());
+
+  uint sz = gridPoints.size();
+  for (uint t=0; t<sz; t++)
+  {
+    uint idx = gridPoints[t].y() * columnCount + (gridPoints[t].x() % columnCount);
+    indexList.push_back(idx);
+  }
+
+  return GRID::valueCache.getValuesByIndexList(cacheKey,indexList,values);
+}
+
+
+
+/*! \brief Picks the values of the grid points from the grid value vector. */
+
+void getGridValuesFromVector(const Message& message,const T::ParamValue_vec& gridValues,std::vector<T::Point>& gridPoints,uint rowCount,uint columnCount,T::ParamValue_vec& values)
+{
+  uint vsz = gridValues.size();
+  uint sz = gridPoints.size();
+
+  for (uint t=0; t<sz; t++)
+  {
+    if (gridPoints[t].y() >= (int)rowCount || (gridPoints[t].x() >= (int)columnCount &&  !message.isGridGlobal()))
+    {
+      values.push_back(ParamValueMissing);
+      continue;
+    }
+
+    uint idx = gridPoints[t].y() * columnCount + (gridPoints[t].x() % columnCount);
+    if (idx < vsz)
+      values.push_back(gridValues[idx]);
+    else
+      values.push_back(ParamValueMissing);
+  }
+}
 }  // namespace
 
 
@@ -3856,83 +3937,26 @@ void Message::getGridValuesByPointList(std::vector<T::Point>& gridPoints,T::Para
 
     // Trying to find values from the original grid.
 
-    T::ParamValue value = 0;
-    if (mBitmapSection == nullptr  ||  mBitmapSection->getBitmapDataSizeInBytes() == 0)
+    if ((mBitmapSection == nullptr  ||  mBitmapSection->getBitmapDataSizeInBytes() == 0)  &&  mRepresentationSection->getDataRepresentationTemplateNumber() == RepresentationSection::Template::GridDataRepresentation)
     {
-      if (mRepresentationSection->getDataRepresentationTemplateNumber() == RepresentationSection::Template::GridDataRepresentation)
-      {
-        if (!mPremapped  &&  memoryMapper.isPremapEnabled())
-          premap();
+      if (!mPremapped  &&  memoryMapper.isPremapEnabled())
+        premap();
 
-        for (uint t=0; t<sz; t++)
-        {
-          if (gridPoints[t].y() >= (int)mRowCount || (gridPoints[t].x() >= (int)mColumnCount &&  !isGridGlobal()))
-          {
-            values.push_back(ParamValueMissing);
-            continue;
-          }
-
-          uint idx = gridPoints[t].y() * mColumnCount + (gridPoints[t].x() % mColumnCount);
-
-          if (mRepresentationSection->getValueByIndex(idx,value))
-          {
-            values.push_back(value);
-
-            if (mGridFilePtr->hasMemoryMapperError())
-            {
-              Fmi::Exception exception(BCP,"Memory mapper has set fail flag for the current file!",nullptr);
-              exception.addParameter("Filename",mGridFilePtr->getFileName());
-              throw exception;
-            }
-          }
-          else
-          {
-            values.push_back(getGridValueByGridPoint(gridPoints[t].x(),gridPoints[t].y()));
-          }
-        }
-        return;
-      }
+      getGridValuesByIndex(*this,*mRepresentationSection,mGridFilePtr,gridPoints,mRowCount,mColumnCount,values);
+      return;
     }
 
+    // Trying to find values from the decompression cache
 
-
-    if (mCacheKey > 0)
-    {
-      // Trying to find values from the decompression cache
-
-      std::vector<uint> indexList;
-      indexList.reserve(gridPoints.size());
-
-      for (uint t=0; t<sz; t++)
-      {
-        uint idx = gridPoints[t].y() * mColumnCount + (gridPoints[t].x() % mColumnCount);
-        indexList.push_back(idx);
-      }
-
-      if (GRID::valueCache.getValuesByIndexList(mCacheKey,indexList,values))
-        return;
-    }
+    if (mCacheKey > 0  &&  getCachedGridValues(mCacheKey,gridPoints,mColumnCount,values))
+      return;
 
     // Fetching the whole grid and using its values
 
     T::ParamValue_vec gridValues;
     getGridValueVector(gridValues);
-    uint vsz = gridValues.size();
 
-    for (uint t=0; t<sz; t++)
-    {
-      if (gridPoints[t].y() >= (int)mRowCount || (gridPoints[t].x() >= (int)mColumnCount &&  !isGridGlobal()))
-      {
-        values.push_back(ParamValueMissing);
-        continue;
-      }
-
-      uint idx = gridPoints[t].y() * mColumnCount + (gridPoints[t].x() % mColumnCount);
-      if (idx < vsz)
-        values.push_back(gridValues[idx]);
-      else
-        values.push_back(ParamValueMissing);
-    }
+    getGridValuesFromVector(*this,gridValues,gridPoints,mRowCount,mColumnCount,values);
   }
   catch (...)
   {
