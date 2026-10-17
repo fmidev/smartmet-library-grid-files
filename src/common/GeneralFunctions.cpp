@@ -2739,6 +2739,60 @@ bool patternMatch(const char *str, const std::vector<std::string> &patterns)
 
 
 
+namespace
+{
+/*! \brief The type of a directory entry. */
+
+enum class DirEntryType
+{
+  Directory,
+  File,
+  Other
+};
+
+
+
+/*! \brief Checks if the entry is "." or "..". */
+
+bool isDotDirEntry(const struct dirent *ep)
+{
+  return (strcmp(ep->d_name, "..") == 0  ||  strcmp(ep->d_name, ".") == 0);
+}
+
+
+
+/*! \brief Classifies the directory entry. Directories are reported only when subdirectories
+    are included. */
+
+DirEntryType classifyDirEntry(const struct dirent *ep,const char *fullName,bool includeSubDirs)
+{
+  if (includeSubDirs && ep->d_type == DT_DIR && !isDotDirEntry(ep))
+    return DirEntryType::Directory;
+
+  if (ep->d_type == DT_REG)
+    return DirEntryType::File;
+
+  if (ep->d_type != DT_UNKNOWN)
+    return DirEntryType::Other;
+
+  struct stat s{};
+  if (stat(fullName, &s) != 0)
+    return DirEntryType::Other;
+
+  if (includeSubDirs && (s.st_mode & S_IFDIR) != 0 && !isDotDirEntry(ep))
+    return DirEntryType::Directory;
+
+  if (s.st_mode & S_IFREG)
+    return DirEntryType::File;
+
+  return DirEntryType::Other;
+}
+}  // namespace
+
+
+
+
+
 /*! \brief Recursively lists files in a directory that match the given patterns. */
 
 void getFileList(const char *dirName,
@@ -2776,32 +2830,15 @@ void getFileList(const char *dirName,
         char fullName[2000];
         sprintf(fullName, "%s/%s", path, ep->d_name);
 
-        if (includeSubDirs && ep->d_type == DT_DIR && strcmp(ep->d_name, "..") != 0 &&
-            strcmp(ep->d_name, ".") != 0)
+        DirEntryType type = classifyDirEntry(ep,fullName,includeSubDirs);
+
+        if (type == DirEntryType::Directory)
         {
           getFileList(fullName, filePatterns, includeSubDirs, dirList, fileList);
         }
-        else if (ep->d_type == DT_REG)
+        else if (type == DirEntryType::File  &&  (filePatterns.empty() || patternMatch(ep->d_name, filePatterns)))
         {
-          if (filePatterns.empty() || patternMatch(ep->d_name, filePatterns))
-            fileList.emplace_back(path, ep->d_name);
-        }
-        else if (ep->d_type == DT_UNKNOWN)
-        {
-          struct stat s{};
-          if (stat(fullName, &s) == 0)
-          {
-            if (includeSubDirs && (s.st_mode & S_IFDIR) != 0 && strcmp(ep->d_name, "..") != 0 &&
-                strcmp(ep->d_name, ".") != 0)
-            {
-              getFileList(fullName, filePatterns, includeSubDirs, dirList, fileList);
-            }
-            else if (s.st_mode & S_IFREG)
-            {
-              if (filePatterns.empty() || patternMatch(ep->d_name, filePatterns))
-                fileList.emplace_back(path, ep->d_name);
-            }
-          }
+          fileList.emplace_back(path, ep->d_name);
         }
       }
       else
