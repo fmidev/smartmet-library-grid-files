@@ -468,6 +468,26 @@ bool Message::setProperty(const char *propertyName,double value)
 
 
 
+namespace
+{
+/*! \brief Fetches the property from the section if the property belongs to the section and the
+    section exists. Returns false if the section cannot provide the property. */
+
+template <class SectionPtr>
+bool propertyOfSection(const SectionPtr& section,uint propertyId,uint firstProperty,uint lastProperty,Int64& value,bool& result)
+{
+  if (propertyId < firstProperty  ||  propertyId > lastProperty  ||  !section)
+    return false;
+
+  result = section->getProperty(propertyId,value);
+  return true;
+}
+}  // namespace
+
+
+
+
+
 /*! \brief The method is used for fetching a (Int64 ) value for the property according to the property id.
 
         \param propertyId  The (numeric) identifier of the requested property.
@@ -480,53 +500,16 @@ bool Message::getProperty(uint propertyId,Int64& value)
   FUNCTION_TRACE
   try
   {
-    if (propertyId >= Property::IndicatorSection::FirstProperty  &&  propertyId <= Property::IndicatorSection::LastProperty)
-    {
-      if (mIndicatorSection)
-        return mIndicatorSection->getProperty(propertyId,value);
-    }
-
-    if (propertyId >= Property::IdentificationSection::FirstProperty  &&  propertyId <= Property::IdentificationSection::LastProperty)
-    {
-      if (mIdentificationSection)
-        return mIdentificationSection->getProperty(propertyId,value);
-    }
-
-    if (propertyId >= Property::LocalSection::FirstProperty  &&  propertyId <= Property::LocalSection::LastProperty)
-    {
-      if (mLocalSection)
-        return mLocalSection->getProperty(propertyId,value);
-    }
-
-    if (propertyId >= Property::GridSection::FirstProperty  &&  propertyId <= Property::GridSection::LastProperty)
-    {
-      if (mGridSection)
-        return mGridSection->getProperty(propertyId,value);
-    }
-
-    if (propertyId >= Property::ProductSection::FirstProperty  &&  propertyId <= Property::ProductSection::LastProperty)
-    {
-      if (mProductSection)
-        return mProductSection->getProperty(propertyId,value);
-    }
-
-    if (propertyId >= Property::RepresentationSection::FirstProperty  &&  propertyId <= Property::RepresentationSection::LastProperty)
-    {
-      if (mRepresentationSection)
-        return mRepresentationSection->getProperty(propertyId,value);
-    }
-
-    if (propertyId >= Property::BitmapSection::FirstProperty  &&  propertyId <= Property::BitmapSection::LastProperty)
-    {
-      if (mBitmapSection)
-        return mBitmapSection->getProperty(propertyId,value);
-    }
-
-    if (propertyId >= Property::DataSection::FirstProperty  &&  propertyId <= Property::DataSection::LastProperty)
-    {
-      if (mDataSection)
-        return mDataSection->getProperty(propertyId,value);
-    }
+    bool result = false;
+    if (propertyOfSection(mIndicatorSection,propertyId,Property::IndicatorSection::FirstProperty,Property::IndicatorSection::LastProperty,value,result) ||
+        propertyOfSection(mIdentificationSection,propertyId,Property::IdentificationSection::FirstProperty,Property::IdentificationSection::LastProperty,value,result) ||
+        propertyOfSection(mLocalSection,propertyId,Property::LocalSection::FirstProperty,Property::LocalSection::LastProperty,value,result) ||
+        propertyOfSection(mGridSection,propertyId,Property::GridSection::FirstProperty,Property::GridSection::LastProperty,value,result) ||
+        propertyOfSection(mProductSection,propertyId,Property::ProductSection::FirstProperty,Property::ProductSection::LastProperty,value,result) ||
+        propertyOfSection(mRepresentationSection,propertyId,Property::RepresentationSection::FirstProperty,Property::RepresentationSection::LastProperty,value,result) ||
+        propertyOfSection(mBitmapSection,propertyId,Property::BitmapSection::FirstProperty,Property::BitmapSection::LastProperty,value,result) ||
+        propertyOfSection(mDataSection,propertyId,Property::DataSection::FirstProperty,Property::DataSection::LastProperty,value,result))
+      return result;
 
     return false;
   }
