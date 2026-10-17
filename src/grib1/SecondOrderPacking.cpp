@@ -155,6 +155,120 @@ void SecondOrderPacking::write(DataWriter& /*dataWriter*/)
 
 
 
+namespace
+{
+
+/*! \brief Unpacks the second order values of all groups starting at the index c. */
+
+void unpackGroupValues(BitArrayReader& bitArrayReader,uint numberOfGroups,const std::vector<uint>& valueSize,const std::vector<uint>& groupLength,const std::vector<uint>& groupValue,double *dataValues,uint& c)
+{
+  for (uint g=0; g<numberOfGroups; g++)
+  {
+    if (valueSize[g] > 0)
+    {
+      for (uint t=0; t<groupLength[g]; t++)
+      {
+        uint val = 0;
+        bitArrayReader.readBits(valueSize[g],val);
+        val += groupValue[g];
+        dataValues[c] = val;
+        c++;
+      }
+    }
+    else
+    {
+      for (uint t=0; t<groupLength[g]; t++)
+      {
+        dataValues[c] = groupValue[g];
+        c++;
+      }
+    }
+  }
+}
+
+
+
+
+
+/*! \brief Reverses the spatial differencing of the given order in place. */
+
+void undoSpatialDifferencing(double *dataValues,std::size_t numOfValues,uint orderOfSPD,double bias)
+{
+  switch (orderOfSPD)
+  {
+    case 1:
+    {
+      for (uint n=1; n<numOfValues; n++)
+      {
+        dataValues[n] = dataValues[n] + bias;
+        dataValues[n] = dataValues[n] + dataValues[n-1];
+      }
+    }
+    break;
+
+    case 2:
+    {
+      for (uint n=2; n<numOfValues; n++)
+      {
+        dataValues[n] = dataValues[n] + bias;
+        dataValues[n] = dataValues[n] + (2 * dataValues[n-1]) - dataValues[n-2];
+      }
+    }
+    break;
+
+    case 3:
+    {
+      double y = dataValues[2] - dataValues[1];
+      double z = y-(dataValues[1]-dataValues[0]);
+      double w = dataValues[2];
+      for (uint n=3; n<numOfValues; n++)
+      {
+        z += dataValues[n] + bias;
+        y += z;
+        w += y;
+        dataValues[n] = w;
+      }
+    }
+    break;
+    default:
+      break;
+  }
+}
+
+
+
+
+
+/*! \brief Reverses every second complete row of nx values, starting from the second row. */
+
+void reverseBoustrophedonicRows(double *dataValues,std::size_t numOfValues,uint nx)
+{
+  uint count = nx;
+
+  // Only complete rows can be reversed
+  while (nx > 0 && count + nx <= numOfValues)
+  {
+    uint left = 0;
+    uint right = nx-1;
+    for (uint i=0; i<nx/2; i++)
+    {
+      double tmp = dataValues[count+left];
+      dataValues[count+left] = dataValues[count+right];
+      dataValues[count+right] = tmp;
+
+      right--;
+      left++;
+    }
+    count += nx*2;
+  }
+}
+
+}  // namespace
+
+
+
+
+
 /*! \brief The method decodes the second-order packed values from the message data. */
 
 void SecondOrderPacking::decodeValues(Message *message,T::ParamValue_vec& decodedValues) const
@@ -185,95 +299,52 @@ void SecondOrderPacking::decodeValues(Message *message,T::ParamValue_vec& decode
     // without setting the "additional flags" bit 4 of octet 4 and also decodes them regardless
     // of it, so the bit is not required here either. With no extended flags set none of the
     // supported variants below matches and the field is rejected as before.
-    if ((flags & AdditionalFlags) || mExtendedFlags != 0)
-    {
-      bool secondOrderOfDifferentWidth = false;
-      bool matrixOfValues = false;
-      bool secondaryBitmapPresent = false;
-      bool generalExtended2ordr = false;
-      // bool boustrophedonic = false;
-      bool plusOneinOrdersOfSPD = false;
-      bool twoOrdersOfSPD = false;
-
-      if (mExtendedFlags & DifferentValueWidths)
-          secondOrderOfDifferentWidth = true;
-
-      if (mExtendedFlags & MatrixOfValues)
-          matrixOfValues = true;
-
-      if (mExtendedFlags & SecondaryBitmapsPresent)
-        secondaryBitmapPresent = true;
-
-      if (mExtendedFlags & GeneralExtendedPacking)
-        generalExtended2ordr = true;
-
-      // if (mExtendedFlags & BoustrophedonicOrdering)
-      //   boustrophedonic = true;
-
-      if (mExtendedFlags & SpatialDifferencingPlus1)
-        plusOneinOrdersOfSPD = true;
-
-      if (mExtendedFlags & SpatialDifferencingPlus2)
-        twoOrdersOfSPD = true;
-
-
-      if (!matrixOfValues)
-      {
-        if (secondOrderOfDifferentWidth  &&  !secondaryBitmapPresent  && !generalExtended2ordr)
-        {
-          decodeValues_rowByRow(numOfValues,dimensions,data,dataSize,bitmap,bitmapSizeInBytes,
-              binaryScaleFactor,decimalScaleFactor,referenceValue,bitsPerValue,flags,decodedValues);
-        }
-
-        if (!secondOrderOfDifferentWidth  &&  secondaryBitmapPresent  &&  !generalExtended2ordr)
-        {
-          decodeValues_constantWidth(numOfValues,dimensions,data,dataSize,bitmap,bitmapSizeInBytes,
-              binaryScaleFactor,decimalScaleFactor,referenceValue,bitsPerValue,flags,decodedValues);
-        }
-
-
-        if (secondOrderOfDifferentWidth  &&  secondaryBitmapPresent  &&  !generalExtended2ordr)
-        {
-          decodeValues_differentWidth(numOfValues,dimensions,data,dataSize,bitmap,bitmapSizeInBytes,
-              binaryScaleFactor,decimalScaleFactor,referenceValue,bitsPerValue,flags,decodedValues);
-        }
-
-        if (secondOrderOfDifferentWidth  &&  !secondaryBitmapPresent  &&  generalExtended2ordr  &&  !plusOneinOrdersOfSPD  &&  !twoOrdersOfSPD)
-        {
-          decodeValues_SPD(numOfValues,dimensions,data,dataSize,bitmap,bitmapSizeInBytes,
-              binaryScaleFactor,decimalScaleFactor,referenceValue,bitsPerValue,flags,decodedValues,0);
-          return;
-        }
-
-        if (secondOrderOfDifferentWidth  &&  !secondaryBitmapPresent  &&   generalExtended2ordr  &&  plusOneinOrdersOfSPD  &&  !twoOrdersOfSPD)
-        {
-          decodeValues_SPD(numOfValues,dimensions,data,dataSize,bitmap,bitmapSizeInBytes,
-              binaryScaleFactor,decimalScaleFactor,referenceValue,bitsPerValue,flags,decodedValues,1);
-          return;
-        }
-
-        if (secondOrderOfDifferentWidth  &&  !secondaryBitmapPresent  &&   generalExtended2ordr  &&  !plusOneinOrdersOfSPD  &&  twoOrdersOfSPD)
-        {
-          decodeValues_SPD(numOfValues,dimensions,data,dataSize,bitmap,bitmapSizeInBytes,
-              binaryScaleFactor,decimalScaleFactor,referenceValue,bitsPerValue,flags,decodedValues,2);
-          return;
-        }
-
-        if (secondOrderOfDifferentWidth  &&  !secondaryBitmapPresent  &&   generalExtended2ordr  &&  plusOneinOrdersOfSPD  &&  twoOrdersOfSPD)
-        {
-          decodeValues_SPD(numOfValues,dimensions,data,dataSize,bitmap,bitmapSizeInBytes,
-              binaryScaleFactor,decimalScaleFactor,referenceValue,bitsPerValue,flags,decodedValues,3);
-          return;
-        }
-      }
-      else
-      {
-        throw Fmi::Exception(BCP,"Matrix of values not supported!");
-      }
-    }
-    else
-    {
+    if (!(flags & AdditionalFlags) && mExtendedFlags == 0)
       throw Fmi::Exception(BCP,"Second order packing without extended flags is not supported!");
+
+    bool secondOrderOfDifferentWidth = (mExtendedFlags & DifferentValueWidths) != 0;
+    bool matrixOfValues = (mExtendedFlags & MatrixOfValues) != 0;
+    bool secondaryBitmapPresent = (mExtendedFlags & SecondaryBitmapsPresent) != 0;
+    bool generalExtended2ordr = (mExtendedFlags & GeneralExtendedPacking) != 0;
+    // bool boustrophedonic = (mExtendedFlags & BoustrophedonicOrdering) != 0;
+    bool plusOneinOrdersOfSPD = (mExtendedFlags & SpatialDifferencingPlus1) != 0;
+    bool twoOrdersOfSPD = (mExtendedFlags & SpatialDifferencingPlus2) != 0;
+
+    if (matrixOfValues)
+      throw Fmi::Exception(BCP,"Matrix of values not supported!");
+
+    if (secondOrderOfDifferentWidth  &&  !secondaryBitmapPresent  && !generalExtended2ordr)
+    {
+      decodeValues_rowByRow(numOfValues,dimensions,data,dataSize,bitmap,bitmapSizeInBytes,
+          binaryScaleFactor,decimalScaleFactor,referenceValue,bitsPerValue,flags,decodedValues);
+    }
+
+    if (!secondOrderOfDifferentWidth  &&  secondaryBitmapPresent  &&  !generalExtended2ordr)
+    {
+      decodeValues_constantWidth(numOfValues,dimensions,data,dataSize,bitmap,bitmapSizeInBytes,
+          binaryScaleFactor,decimalScaleFactor,referenceValue,bitsPerValue,flags,decodedValues);
+    }
+
+
+    if (secondOrderOfDifferentWidth  &&  secondaryBitmapPresent  &&  !generalExtended2ordr)
+    {
+      decodeValues_differentWidth(numOfValues,dimensions,data,dataSize,bitmap,bitmapSizeInBytes,
+          binaryScaleFactor,decimalScaleFactor,referenceValue,bitsPerValue,flags,decodedValues);
+    }
+
+    if (secondOrderOfDifferentWidth  &&  !secondaryBitmapPresent  &&  generalExtended2ordr)
+    {
+      // The order of the spatial differencing is 0..3 according to the "plus one" and
+      // "plus two" flags.
+      uint orderOfSPD = 0;
+      if (plusOneinOrdersOfSPD)
+        orderOfSPD += 1;
+      if (twoOrdersOfSPD)
+        orderOfSPD += 2;
+
+      decodeValues_SPD(numOfValues,dimensions,data,dataSize,bitmap,bitmapSizeInBytes,
+          binaryScaleFactor,decimalScaleFactor,referenceValue,bitsPerValue,flags,decodedValues,orderOfSPD);
+      return;
     }
 
     throw Fmi::Exception(BCP,"Not supported!");
@@ -522,28 +593,7 @@ void SecondOrderPacking::decodeValues_SPD(
       uint c = orderOfSPD;
       bitArrayReader.setReadPosition((N2-22)*8);
 
-      for (uint g=0; g<numberOfGroups; g++)
-      {
-        if (valueSize[g] > 0)
-        {
-          for (uint t=0; t<groupLength[g]; t++)
-          {
-            uint val = 0;
-            bitArrayReader.readBits(valueSize[g],val);
-            val += groupValue[g];
-            dataValues[c] = val;
-            c++;
-          }
-        }
-        else
-        {
-          for (uint t=0; t<groupLength[g]; t++)
-          {
-            dataValues[c] = groupValue[g];
-            c++;
-          }
-        }
-      }
+      unpackGroupValues(bitArrayReader,numberOfGroups,valueSize,groupLength,groupValue,dataValues,c);
     }
     catch (...)
     {
@@ -556,45 +606,7 @@ void SecondOrderPacking::decodeValues_SPD(
       dataValues[i] = SPD[i];
     }
 
-    switch (orderOfSPD)
-    {
-      case 1:
-      {
-        for (uint n=1; n<numOfValues; n++)
-        {
-          dataValues[n] = dataValues[n] + bias;
-          dataValues[n] = dataValues[n] + dataValues[n-1];
-        }
-      }
-      break;
-
-      case 2:
-      {
-        for (uint n=2; n<numOfValues; n++)
-        {
-          dataValues[n] = dataValues[n] + bias;
-          dataValues[n] = dataValues[n] + (2 * dataValues[n-1]) - dataValues[n-2];
-        }
-      }
-      break;
-
-      case 3:
-      {
-        double y = dataValues[2] - dataValues[1];
-        double z = y-(dataValues[1]-dataValues[0]);
-        double w = dataValues[2];
-        for (uint n=3; n<numOfValues; n++)
-        {
-          z += dataValues[n] + bias;
-          y += z;
-          w += y;
-          dataValues[n] = w;
-        }
-      }
-      break;
-      default:
-        break;
-    }
+    undoSpatialDifferencing(dataValues,numOfValues,orderOfSPD,bias);
 
     double s = grib_power(binaryScaleFactor,2);
     double d = grib_power(-decimalScaleFactor,10);
@@ -605,27 +617,7 @@ void SecondOrderPacking::decodeValues_SPD(
     }
 
     if (mExtendedFlags & BoustrophedonicOrdering)
-    {
-      uint nx = dimensions.nx();
-      uint count = nx;
-
-      // Only complete rows can be reversed
-      while (nx > 0 && count + nx <= numOfValues)
-      {
-        uint left = 0;
-        uint right = nx-1;
-        for (uint i=0; i<nx/2; i++)
-        {
-          double tmp = dataValues[count+left];
-          dataValues[count+left] = dataValues[count+right];
-          dataValues[count+right] = tmp;
-
-          right--;
-          left++;
-        }
-        count += nx*2;
-      }
-    }
+      reverseBoustrophedonicRows(dataValues,numOfValues,dimensions.nx());
 
     for (uint t=0; t<numOfValues; t++)
     {
