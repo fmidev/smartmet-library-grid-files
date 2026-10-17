@@ -51,16 +51,9 @@ std::vector<float> downsample2(const std::vector<float> &src, int w, int h, int 
   return dst;
 }
 
-/************** Horn–Schunck optical flow at one resolution **************/
-void horn_schunck_level(const std::vector<float> &A, const std::vector<float> &B, int w, int h, std::vector<float> &u, std::vector<float> &v, float alpha = 15.F, int iterations =
-    100)
+/************** Image gradients (central differences) **************/
+inline void compute_gradients(const std::vector<float> &A, const std::vector<float> &B, int w, int h, std::vector<float> &Ix, std::vector<float> &Iy, std::vector<float> &It)
 {
-  int N = w * h;
-  std::vector<float> Ix(N);
-  std::vector<float> Iy(N);
-  std::vector<float> It(N);
-
-  // Gradients (central differences)
   for (int y = 0; y < h; y++) {
     for (int x = 0; x < w; x++) {
       int i = y * w + x;
@@ -73,6 +66,50 @@ void horn_schunck_level(const std::vector<float> &A, const std::vector<float> &B
       It[i] = B[i] - A[i];
     }
   }
+}
+
+/************** Average flow of the 4-neighbourhood of (x,y) **************/
+inline void neighbour_average(const std::vector<float> &u, const std::vector<float> &v, int w, int h, int x, int y, float &u_avg, float &v_avg)
+{
+  int i = y * w + x;
+  int count = 0;
+  if (x > 0) {
+    u_avg += u[i - 1];
+    v_avg += v[i - 1];
+    count++;
+  }
+  if (x < w - 1) {
+    u_avg += u[i + 1];
+    v_avg += v[i + 1];
+    count++;
+  }
+  if (y > 0) {
+    u_avg += u[i - w];
+    v_avg += v[i - w];
+    count++;
+  }
+  if (y < h - 1) {
+    u_avg += u[i + w];
+    v_avg += v[i + w];
+    count++;
+  }
+  if (count > 0) {
+    u_avg /= count;
+    v_avg /= count;
+  }
+}
+
+/************** Horn–Schunck optical flow at one resolution **************/
+void horn_schunck_level(const std::vector<float> &A, const std::vector<float> &B, int w, int h, std::vector<float> &u, std::vector<float> &v, float alpha = 15.F, int iterations =
+    100)
+{
+  int N = w * h;
+  std::vector<float> Ix(N);
+  std::vector<float> Iy(N);
+  std::vector<float> It(N);
+
+  // Gradients (central differences)
+  compute_gradients(A, B, w, h, Ix, Iy, It);
 
   std::vector<float> u_new = u;
   std::vector<float> v_new = v;
@@ -84,31 +121,7 @@ void horn_schunck_level(const std::vector<float> &A, const std::vector<float> &B
         int i = y * w + x;
         float u_avg = 0.F;
         float v_avg = 0.F;
-        int count = 0;
-        if (x > 0) {
-          u_avg += u[i - 1];
-          v_avg += v[i - 1];
-          count++;
-        }
-        if (x < w - 1) {
-          u_avg += u[i + 1];
-          v_avg += v[i + 1];
-          count++;
-        }
-        if (y > 0) {
-          u_avg += u[i - w];
-          v_avg += v[i - w];
-          count++;
-        }
-        if (y < h - 1) {
-          u_avg += u[i + w];
-          v_avg += v[i + w];
-          count++;
-        }
-        if (count > 0) {
-          u_avg /= count;
-          v_avg /= count;
-        }
+        neighbour_average(u, v, w, h, x, y, u_avg, v_avg);
         float P = Ix[i] * u_avg + Iy[i] * v_avg + It[i];
         float D = alpha2 + Ix[i] * Ix[i] + Iy[i] * Iy[i];
         u_new[i] = u_avg - Ix[i] * P / D;
