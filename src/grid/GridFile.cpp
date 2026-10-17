@@ -1197,6 +1197,40 @@ std::string GridFile::getFileTypeString() const
 
 
 
+namespace
+{
+/*! \brief Creates the message objects of a file containing several messages. */
+
+template <class MessageClass,class FileClass,class InfoVec>
+void createFileMessages(GridFile *gridFile,FileClass *file,InfoVec& messageInfoList,Message_ptr_map& messages)
+{
+  uint idx = 0;
+  for (auto& it : messageInfoList)
+  {
+    auto *message = new MessageClass(gridFile,file,idx,it);
+    messages.insert(std::pair<uint,Message*>(idx,message));
+    idx++;
+  }
+}
+
+
+
+/*! \brief Finds the message by its index, returns nullptr if not found. */
+
+GRID::Message* findMessage(Message_ptr_map& messages,T::MessageIndex messageIndex)
+{
+  auto msg = messages.find(messageIndex);
+  if (msg != messages.end())
+    return msg->second;
+
+  return nullptr;
+}
+}  // namespace
+
+
+
+
+
 /*! \brief Creates a format-specific message object based on the supplied message information. */
 
 GRID::Message* GridFile::createMessage(T::MessageIndex messageIndex,const GRID::MessageInfo& messageInfo)
@@ -1251,19 +1285,9 @@ GRID::Message* GridFile::createMessage(T::MessageIndex messageIndex,const GRID::
         NetCDF::MessageInfoVec messageInfoList;
         mNetCdfFile->read(memoryReader,messageInfoList);
 
-        uint idx = 0;
-        for (auto& it : messageInfoList)
-        {
-          auto *message = new NetCDF::Message(this,mNetCdfFile,idx,it);
-          mMessages.insert(std::pair<uint,Message*>(idx,message));
-          idx++;
-        }
+        createFileMessages<NetCDF::Message>(this,mNetCdfFile,messageInfoList,mMessages);
       }
-      auto msg = mMessages.find(messageIndex);
-      if (msg != mMessages.end())
-        return msg->second;
-
-      return nullptr;
+      return findMessage(mMessages,messageIndex);
     }
 
     if (messageInfo.mMessageType == T::FileTypeValue::QueryData)
@@ -1280,19 +1304,9 @@ GRID::Message* GridFile::createMessage(T::MessageIndex messageIndex,const GRID::
         QueryData::MessageInfoVec messageInfoList;
         mQueryDataFile->read(messageInfoList);
 
-        uint idx = 0;
-        for (auto& it : messageInfoList)
-        {
-          auto *message = new QueryData::Message(this,mQueryDataFile,idx,it);
-          mMessages.insert(std::pair<uint,Message*>(idx,message));
-          idx++;
-        }
+        createFileMessages<QueryData::Message>(this,mQueryDataFile,messageInfoList,mMessages);
       }
-      auto msg = mMessages.find(messageIndex);
-      if (msg != mMessages.end())
-        return msg->second;
-
-      return nullptr;
+      return findMessage(mMessages,messageIndex);
     }
 
     if (messageInfo.mMessageType == T::FileTypeValue::GeoTiff)
@@ -1309,19 +1323,9 @@ GRID::Message* GridFile::createMessage(T::MessageIndex messageIndex,const GRID::
         GeoTiff::MessageInfoVec messageInfoList;
         mGeoTiffFile->read(memoryReader,messageInfoList);
 
-        uint idx = 0;
-        for (auto& it : messageInfoList)
-        {
-          auto *message = new GeoTiff::Message(this,mGeoTiffFile,idx,it);
-          mMessages.insert(std::pair<uint,Message*>(idx,message));
-          idx++;
-        }
+        createFileMessages<GeoTiff::Message>(this,mGeoTiffFile,messageInfoList,mMessages);
       }
-      auto msg = mMessages.find(messageIndex);
-      if (msg != mMessages.end())
-        return msg->second;
-
-      return nullptr;
+      return findMessage(mMessages,messageIndex);
     }
 
     MemoryReader memoryReader(reinterpret_cast<unsigned char*>(startAddr),reinterpret_cast<unsigned char*>(endAddr));
