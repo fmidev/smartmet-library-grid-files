@@ -140,6 +140,56 @@ int XmlElement::getTagNameAndType(const char *data,char *name,const ParameterLis
 
 
 
+namespace
+{
+
+/*! \brief Adds a start or empty element tag under the current element, or closes the current element on an end tag. Returns the new current element. */
+
+XmlElement *applyTag(XmlElement *xe,int type,const char *tag,int tagStart,const ParameterList& parameterList)
+{
+  if (type == 1)
+  {
+    auto *e = new XmlElement;
+    e->parent = xe;
+    e->filePosition = tagStart;
+    xe->elementList.push_back(e);
+    e->tag = tag;
+    e->parameters = parameterList;
+    xe = e;
+  }
+
+  if (type == 3)
+  {
+    auto *e = new XmlElement;
+    e->parent = xe;
+    e->filePosition = tagStart;
+    xe->elementList.push_back(e);
+    e->tag = tag;
+  }
+
+  if (type == 2)
+  {
+    if (xe->tag != tag)
+    {
+      printf("XML-ERROR: Wrong end tag (%s:%d), expected (%s:%d)!\n",tag,tagStart,xe->tag.c_str(),xe->filePosition);
+
+      if (xe->parent && xe->parent->tag == tag)
+        xe = xe->parent;
+    }
+
+    if (xe->parent)
+      xe = xe->parent;
+  }
+
+  return xe;
+}
+
+}  // namespace
+
+
+
+
+
 /*! \brief Parses an XML buffer and populates the given root element. */
 
 void XmlElement::parseXml(const char *data,int size,XmlElement& xmlRoot)
@@ -180,39 +230,7 @@ void XmlElement::parseXml(const char *data,int size,XmlElement& xmlRoot)
         ParameterList parameterList;
         int type = getTagNameAndType(buf,tag,parameterList);
 
-        if (type == 1)
-        {
-          auto *e = new XmlElement;
-          e->parent = xe;
-          e->filePosition = tagStart;
-          xe->elementList.push_back(e);
-          e->tag = tag;
-          e->parameters = parameterList;
-          xe = e;
-        }
-
-        if (type == 3)
-        {
-          auto *e = new XmlElement;
-          e->parent = xe;
-          e->filePosition = tagStart;
-          xe->elementList.push_back(e);
-          e->tag = tag;
-        }
-
-        if (type == 2)
-        {
-          if (xe->tag != tag)
-          {
-            printf("XML-ERROR: Wrong end tag (%s:%d), expected (%s:%d)!\n",tag,tagStart,xe->tag.c_str(),xe->filePosition);
-
-            if (xe->parent && xe->parent->tag == tag)
-              xe = xe->parent;
-          }
-
-          if (xe->parent)
-            xe = xe->parent;
-        }
+        xe = applyTag(xe,type,tag,tagStart,parameterList);
 
         if (data[tagStart+1] != '/'  &&  data[c-1] != '/')
         {
