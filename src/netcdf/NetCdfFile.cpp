@@ -1066,6 +1066,762 @@ void NetCdfFile::readPropertyList(MemoryReader& memoryReader)
 
 
 
+namespace
+{
+/*! \brief The dimensions of a grid variable. */
+
+struct VariableDimensions
+{
+  int timeCount = 0;
+  int levelCount = 0;
+  int xIndex = 0;
+  int yIndex = 0;
+  int yCount = 0;
+  int xCount = 0;
+
+  std::string timeName;
+  std::string levelName;
+  std::string xName;
+  std::string yName;
+  std::string xStandardName;
+  std::string yStandardName;
+  int paramLevelId = 1;
+};
+
+
+
+/*! \brief The descriptive attributes of a dimension. */
+
+struct DimensionAttributes
+{
+  std::string standardName;
+  std::string longName;
+  std::string units;
+  std::string axis;
+  std::string positive;
+};
+
+
+
+/*! \brief Checks if the dimension is the time dimension. */
+
+bool isTimeDimension(const std::string& n,const DimensionAttributes& attr)
+{
+  return (strcasecmp(attr.standardName.c_str(),"time") == 0 || strcasecmp(attr.longName.c_str(),"time") == 0 || strcasecmp(attr.axis.c_str(),"T") == 0 || strcasecmp(n.c_str(),"time") == 0 || strcasecmp(n.c_str(),"time_counter") == 0);
+}
+
+
+
+/*! \brief Checks if the dimension is the level dimension. */
+
+bool isLevelDimension(const std::string& n,const DimensionAttributes& attr)
+{
+  return (strcasecmp(attr.axis.c_str(),"Z") == 0 ||
+      strcasecmp(attr.standardName.c_str(),"depth") == 0 || strcasecmp(attr.standardName.c_str(),"height") == 0  || strcasecmp(attr.standardName.c_str(),"level") == 0 ||
+      strcasecmp(attr.longName.c_str(),"depth") == 0 || strcasecmp(attr.longName.c_str(),"height") == 0 || strcasecmp(attr.longName.c_str(),"level") == 0  ||
+      strcasecmp(n.c_str(),"depth") == 0 || strcasecmp(n.c_str(),"height") == 0 || strcasecmp(n.c_str(),"level") == 0);
+}
+
+
+
+/*! \brief Checks if the dimension is the y-dimension. */
+
+bool isYDimension(const std::string& n,const DimensionAttributes& attr)
+{
+  return (strcasecmp(attr.axis.c_str(),"Y") == 0 || strcasecmp(attr.standardName.c_str(),"projection_y_coordinate") == 0 ||
+      strcasecmp(attr.standardName.c_str(),"latitude") == 0 || strcasecmp(attr.longName.c_str(),"latitude") == 0 ||
+      strcasecmp(n.c_str(),"lat") == 0 || strcasecmp(n.c_str(),"latitude") == 0);
+}
+
+
+
+/*! \brief Checks if the dimension is the x-dimension. */
+
+bool isXDimension(const std::string& n,const DimensionAttributes& attr)
+{
+  return (strcasecmp(attr.axis.c_str(),"X") == 0 || strcasecmp(attr.standardName.c_str(),"projection_x_coordinate") == 0 ||
+      strcasecmp(attr.standardName.c_str(),"longitude") == 0 || strcasecmp(attr.longName.c_str(),"longitude") == 0 ||
+      strcasecmp(n.c_str(),"lon") == 0 || strcasecmp(n.c_str(),"longitude") == 0);
+}
+
+
+
+/*! \brief The parameter level id of the level dimension. */
+
+int levelDimensionLevelId(const DimensionAttributes& attr,int paramLevelId)
+{
+  if (strcasecmp(attr.units.c_str(),"m") == 0 || strcasecmp(attr.units.c_str(),"metre") == 0)
+  {
+    if (strcasecmp(attr.positive.c_str(),"down") == 0)
+      return 10;
+
+    return 1;
+  }
+
+  if (strcasecmp(attr.units.c_str(),"Pa") == 0 || strcasecmp(attr.units.c_str(),"hPa") == 0)
+    return 2;
+
+  return paramLevelId;
+}
+
+
+
+/*! \brief Classifies the dimension of the variable. */
+
+void addVariableDimension(const std::string& n,const DimensionAttributes& attr,const std::string& dimName,int ii,int iii,VariableDimensions& vd)
+{
+  if (isTimeDimension(n,attr))
+  {
+    vd.timeCount = ii;
+    vd.timeName = dimName;
+  }
+  else if (isLevelDimension(n,attr))
+  {
+    vd.levelCount = ii;
+    vd.levelName = dimName;
+    vd.paramLevelId = levelDimensionLevelId(attr,vd.paramLevelId);
+  }
+  else if (isYDimension(n,attr))
+  {
+    vd.yIndex = iii;
+    vd.yCount = ii;
+    vd.yName = n;
+    vd.yStandardName = attr.standardName;
+  }
+  else if (isXDimension(n,attr))
+  {
+    vd.xIndex = iii;
+    vd.xCount = ii;
+    vd.xName = n;
+    vd.xStandardName = attr.standardName;
+  }
+}
+
+
+
+/*! \brief Reads the dimensions of a grid variable. */
+
+void readVariableDimensions(NetCdfFile& file,const std::string& variable,const std::vector<std::string>& indexes,const std::vector<std::string>& dimNames,const std::vector<std::string>& dimLengths,VariableDimensions& vd)
+{
+  std::string coordStr;
+  std::string tmp = variable + ".coordinates";
+  if (file.getProperty(tmp,0,coordStr))
+  {
+    std::vector<std::string> coords;
+    splitString(coordStr,' ',coords);
+    //printf("--- coordinates size (%s) %lld\n",tmp,coords.size());
+    if (coords.size() == 2)
+    {
+      vd.yName = coords[0];
+      vd.xName = coords[1];
+      //printf("XNAME [%s] YNAME[%s] [%s]\n",xName.c_str(),yName.c_str(),coordStr.c_str());
+    }
+  }
+
+  uint iii = 0;
+  for (auto itm = indexes.begin(); itm != indexes.end(); ++itm)
+  {
+    int i = toInt32(itm->c_str());
+    // The dimension index comes from the file
+    if (i < 0 || C_UINT64(i) >= dimLengths.size() || C_UINT64(i) >= dimNames.size())
+      throw Fmi::Exception(BCP,"Invalid NetCDF dimension index!");
+    int ii = toInt32(dimLengths[i].c_str());
+    // the values may be NUL padded: keep the part before the first NUL
+    std::string n = dimNames[i].substr(0, dimNames[i].find('\0'));
+    //printf("DIM [%s][%s][%s]\n",itm->c_str(),dimLengths[i].c_str(),dimNames[i].c_str());
+
+    if (strcasecmp(n.c_str(),"x") == 0  &&  !vd.xName.empty())
+      n = vd.xName;
+
+    if (strcasecmp(n.c_str(),"y") == 0  &&  !vd.yName.empty())
+      n = vd.yName;
+
+    DimensionAttributes attr;
+    file.getProperty(n + ".standard_name", 0, attr.standardName);
+    file.getProperty(n + ".long_name", 0, attr.longName);
+    file.getProperty(n + ".units", 0, attr.units);
+    file.getProperty(n + ".axis", 0, attr.axis);
+    file.getProperty(n + ".positive", 0, attr.positive);
+
+    addVariableDimension(n,attr,dimNames[i],ii,iii,vd);
+
+    //printf("  %s (%s,%d)\n",itm->c_str(),dimNames[i].c_str(),ii);
+    iii++;
+  }
+}
+
+
+
+/*! \brief The scale of the coordinates in the given units (kilometres are converted into metres). */
+
+double coordinateScale(const std::string& unitsStr)
+{
+  double scale = 1.0;
+  if (!unitsStr.empty())
+  {
+    double value = 0.0;
+    std::string units;
+    parseUnits(unitsStr.c_str(),value,units);
+    // printf("X-UNIT [%f][%s]\n",value,units.c_str());
+    if (value == 0.0)
+      value = 1.0;
+
+    if (strcasecmp(units.c_str(),"km") == 0)
+      scale = value * 1000;
+  }
+  return scale;
+}
+
+
+
+/*! \brief The data storage properties of a variable. */
+
+struct VariableData
+{
+  uint type = 0;
+  uint size = 0;
+  Int64 offset = 0;
+  uint itemCount = 0;
+  double scaleFactor = 1;
+  double baseValue = 0;
+};
+
+
+
+/*! \brief Reads the data storage properties of the variable. */
+
+void readVariableData(NetCdfFile& file,const std::string& name,VariableData& data)
+{
+  file.getProperty(name + ".type", 0, data.type);
+  file.getProperty(name + ".size", 0, data.size);
+  file.getProperty(name + ".add_offset", 0, data.baseValue);
+  file.getProperty(name + ".scale_factor", 0, data.scaleFactor);
+  file.getProperty(name + ".offset", 0, data.offset);
+  file.getProperty(name + ".items", 0, data.itemCount);
+}
+
+
+
+/*! \brief Reads the forecast times of the variable. */
+
+void readTimeList(NetCdfFile& file,MemoryReader& memoryReader,const std::string& timeName,int timeCount,std::vector<time_t>& timeList)
+{
+  int year = 0;
+  int month = 0;
+  int day = 0;
+  int hour = 0;
+  int minute = 0;
+  int second = 0;
+  time_t unitSize = 0;
+
+  std::string time_units;
+  if (file.getProperty(timeName + ".units", 0, time_units))
+  {
+    parseNetCdfTime(time_units,year,month,day,hour,minute,second,unitSize);
+    // printf("TIME %04d%02d%02dT%02d%02d%02d  %ld\n",year,month,day,hour,minute,second,unitSize);
+  }
+  else
+  {
+    printf("*** TIME UNITS MISSING\n");
+    // Time units missing
+  }
+
+  VariableData data;
+  readVariableData(file,timeName,data);
+
+  std::vector<double> timeValues;
+  //printf("READ TIME %f %f\n",baseValue,scaleFactor);
+  file.readValues(memoryReader,data.type,data.itemCount,data.offset,data.baseValue,data.scaleFactor,timeValues);
+
+  uint tc = timeCount;
+  if (data.itemCount > 1)
+    tc = 1;
+
+  // Every time step needs data, so the step count cannot exceed the file size
+  if (timeCount < 0 || C_UINT64(tc) * std::max<UInt64>(1, timeValues.size()) > memoryReader.getDataSize())
+    throw Fmi::Exception(BCP,"Invalid NetCDF time dimension!");
+
+  for (uint t=0; t<tc; t++)
+  {
+    for (double & timeValue : timeValues)
+    {
+      // The values come from the file, they must be convertible to time_t
+      if (!std::isfinite(timeValue) || std::fabs(timeValue) > 1e12)
+        throw Fmi::Exception(BCP,"Invalid NetCDF time value!");
+      time_t ttt = (time_t)timeValue*unitSize+(time_t)t*unitSize;
+      //printf("TimeT %ld %f %ld\n",ttt,*v,unitSize);
+      time_t tt = getGregorianTimeT(year,month,day,hour,minute,second,ttt);
+      timeList.push_back(tt);
+
+      //std::string tm = utcTimeFromTimeT(tt);
+      //printf("  Time %f => %ld => %s\n",*v,tt,tm.c_str());
+    }
+  }
+}
+
+
+
+/*! \brief Reads the levels of the variable. */
+
+void readLevelList(NetCdfFile& file,MemoryReader& memoryReader,const std::string& levelName,int levelCount,std::vector<double>& levelList)
+{
+  if (levelCount <= 0)
+  {
+    levelList.push_back(0.0);
+    return;
+  }
+
+  VariableData data;
+  readVariableData(file,levelName,data);
+
+  file.readValues(memoryReader,data.type,data.itemCount,data.offset,data.baseValue,data.scaleFactor,levelList);
+
+  // The level values are stored as integers
+  for (auto lv : levelList)
+    if (!std::isfinite(lv) || std::fabs(lv) > 2e9)
+      throw Fmi::Exception(BCP,"Invalid NetCDF level value!");
+}
+
+
+
+/*! \brief Reads the y-coordinates. The coordinates may be stored as a 2-dimensional array,
+    in which case the values of the first column are used. */
+
+void readYCoordinates(NetCdfFile& file,MemoryReader& memoryReader,const std::string& yName,int xCount,int yCount,double yScale,FloatVec& yCoordinates)
+{
+  VariableData data;
+  readVariableData(file,yName,data);
+
+  if ((int)data.itemCount == yCount)
+  {
+    file.readValues(memoryReader,data.type,data.itemCount,data.offset,data.baseValue,data.scaleFactor*yScale,yCoordinates);
+  }
+  else if (xCount > 0 && ((int)data.itemCount/xCount) == yCount)
+  {
+    FloatVec coordinates;
+    file.readValues(memoryReader,data.type,data.itemCount,data.offset,data.baseValue,data.scaleFactor*yScale,coordinates);
+    for (uint t=0; t<data.itemCount; t=t+xCount)
+    {
+      yCoordinates.push_back(coordinates[t]);
+    }
+  }
+}
+
+
+
+/*! \brief The coordinate step from the first and last coordinate, or from the first pair of
+    non-missing coordinates. */
+
+double coordinateStep(const FloatVec& coordinates,float missingValue)
+{
+  uint sz = coordinates.size() - 1;
+
+  if (coordinates[sz] != missingValue  &&  coordinates[0] != missingValue)
+    return (coordinates[sz] - coordinates[0]) / (double)sz;
+
+  for (uint t=0; t<sz; t++)
+  {
+    if (coordinates[t] != missingValue  &&  coordinates[t+1] != missingValue)
+      return (coordinates[t+1] - coordinates[t]);
+  }
+  return 0;
+}
+
+
+
+/*! \brief Transforms the start point from the projection into latlon. */
+
+void transformToLatLon(OGRSpatialReference& sp,OGRSpatialReference& latlonSp,double& startx,double& starty)
+{
+  sp.SetTargetLinearUnits("PROJCS", SRS_UL_METER, 1.0);
+  sp.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
+
+  OGRCoordinateTransformation *transformation = OGRCreateCoordinateTransformation(&sp,&latlonSp);
+  transformation->Transform(1,&startx,&starty);
+  OCTDestroyCoordinateTransformation(transformation);
+}
+
+
+
+/*! \brief Finds the geometry id by the geometry string. If the geometry is not configured, the
+    line to be added to the geometry definition file is printed. */
+
+int findGeometryId(const char *projectionString,const char *configurationLine)
+{
+  auto def = Identification::gridDef.getGrib2DefinitionByGeometryString(projectionString);
+  if (def)
+    return def->getGridGeometryId();
+
+  std::cout << "#### Geometry not found ####\n";
+  std::cout << "** Add the following line into the geometry definition file (=> fill id,name and description fields) :\n\n";
+  std::cout << configurationLine << "\n";
+  return 0;
+}
+
+
+
+/*! \brief The grid geometry of the variable. */
+
+struct GridGeometry
+{
+  NetCdfFile& file;
+  const std::string& gridMapping;
+  OGRSpatialReference& latlonSp;
+  const FloatVec& xCoordinates;
+  const FloatVec& yCoordinates;
+  double startx;
+  double starty;
+  double dx;
+  double dy;
+  const char *sm;
+
+  double property(const char *name,double defaultValue) const
+  {
+    double value = defaultValue;
+    file.getProperty(gridMapping + name, 0, value);
+    return value;
+  }
+};
+
+
+
+/*! \brief PROJECTION: Polar stereograpic */
+
+int polarStereographicGeometryId(GridGeometry g)
+{
+  double longitude_of_projection_origin = g.property(".longitude_of_projection_origin",0.0);
+  double latitude_of_projection_origin = g.property(".latitude_of_projection_origin",0.0);
+  double scale_factor_at_projection_origin = g.property(".scale_factor_at_projection_origin",0.0);
+  double straight_vertical_longitude_from_pole = g.property(".straight_vertical_longitude_from_pole",0.0);
+  double false_easting = g.property(".false_easting",0.0);
+  double false_northing = g.property(".false_northing",0.0);
+
+  OGRSpatialReference sp;
+  sp.SetPS(latitude_of_projection_origin,longitude_of_projection_origin,scale_factor_at_projection_origin,false_easting,false_northing);
+  transformToLatLon(sp,g.latlonSp,g.startx,g.starty);
+
+  char projectionString[4000];
+  snprintf(projectionString,sizeof(projectionString),"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;description",
+      T::GridProjectionValue::PolarStereographic,(int)g.xCoordinates.size(),(int)g.yCoordinates.size(),
+      g.startx,g.starty,fabs(g.dx),fabs(g.dy),g.sm,straight_vertical_longitude_from_pole,latitude_of_projection_origin);
+
+  return findGeometryId(projectionString,projectionString);
+}
+
+
+
+/*! \brief PROJECTION: Lambert Azimuthal Equal Area */
+
+int lambertAzimuthalEqualAreaGeometryId(GridGeometry g)
+{
+  g.dx = g.xCoordinates[1] - g.xCoordinates[0];
+  g.dy = g.yCoordinates[1] - g.yCoordinates[0];
+
+  double longitude_of_projection_origin = g.property(".longitude_of_projection_origin",0.0);
+  double latitude_of_projection_origin = g.property(".latitude_of_projection_origin",0.0);
+  double false_easting = g.property(".false_easting",0.0);
+  double false_northing = g.property(".false_northing",0.0);
+
+  OGRSpatialReference sp;
+  sp.SetLAEA(latitude_of_projection_origin,longitude_of_projection_origin,false_easting,false_northing);
+  transformToLatLon(sp,g.latlonSp,g.startx,g.starty);
+
+  char projectionString[4000];
+  snprintf(projectionString,sizeof(projectionString),"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;description",
+      T::GridProjectionValue::LambertAzimuthalEqualArea,(int)g.xCoordinates.size(),(int)g.yCoordinates.size(),
+      g.startx,g.starty,fabs(g.dx),fabs(g.dy),g.sm,latitude_of_projection_origin,longitude_of_projection_origin);
+
+  char tmp[4000];
+  snprintf(tmp,sizeof(tmp),"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;0.000000;0.000000;description",
+      T::GridProjectionValue::LambertAzimuthalEqualArea,(int)g.xCoordinates.size(),(int)g.yCoordinates.size(),
+      g.startx,g.starty,fabs(g.dx),fabs(g.dy),g.sm,latitude_of_projection_origin,longitude_of_projection_origin);
+
+  return findGeometryId(projectionString,tmp);
+}
+
+
+
+/*! \brief PROJECTION: Lambert Conformal */
+
+int lambertConformalGeometryId(GridGeometry g)
+{
+  g.dx = (g.xCoordinates[1] - g.xCoordinates[0])*1000;
+  g.dy = (g.yCoordinates[1] - g.yCoordinates[0])*1000;
+
+  double standard_parallel = g.property(".standard_parallel",0.0);
+  double longitude_of_central_meridian = g.property(".longitude_of_central_meridian",0.0);
+  double longitude_of_projection_origin = g.property(".longitude_of_projection_origin",0.0);
+  double latitude_of_projection_origin = g.property(".latitude_of_projection_origin",0.0);
+  double false_easting = g.property(".false_easting",0.0);
+  double false_northing = g.property(".false_northing",0.0);
+  double earth_radius = g.property(".earth_radius",6371229.0);
+  (void)earth_radius;
+
+  OGRSpatialReference sp;
+  sp.SetLCC(standard_parallel,longitude_of_central_meridian,latitude_of_projection_origin,longitude_of_projection_origin,false_easting,false_northing);
+  transformToLatLon(sp,g.latlonSp,g.startx,g.starty);
+
+  double sx = 0.0;
+  double sy = -90.0;
+
+  //# LAMBERT CONFORMAL : projection,id,name,ni,nj,first_lon,first_lat,di,dj,scanning_mode,orientation,latin1,latin2,south_pole_lon,south_pole_lat,LaD,earthSemiMajor,earthSemiMinor,description
+  char projectionString[4000];
+  snprintf(projectionString,sizeof(projectionString),"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;%.6f;%.6f;%.6f;%.6f;description",
+    T::GridProjectionValue::LambertConformal,(int)g.xCoordinates.size(),(int)g.yCoordinates.size(),g.startx,g.starty,fabs(g.dx),fabs(g.dy),
+    g.sm,longitude_of_central_meridian,latitude_of_projection_origin,latitude_of_projection_origin,sx,sy,latitude_of_projection_origin);
+
+  return findGeometryId(projectionString,projectionString);
+}
+
+
+
+/*! \brief PROJECTION: Latlon */
+
+int latLonGeometryId(GridGeometry g)
+{
+  char projectionString[4000];
+  snprintf(projectionString,sizeof(projectionString),"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;description",
+    T::GridProjectionValue::LatLon,(int)g.xCoordinates.size(),(int)g.yCoordinates.size(),
+    g.startx,g.starty,fabs(g.dx),fabs(g.dy),g.sm);
+
+  char tmp[4000];
+  snprintf(tmp,sizeof(tmp),"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;0.000000;0.000000;description",
+    T::GridProjectionValue::LatLon,(int)g.xCoordinates.size(),(int)g.yCoordinates.size(),
+    g.startx,g.starty,fabs(g.dx),fabs(g.dy),g.sm);
+
+  return findGeometryId(projectionString,tmp);
+}
+
+
+
+/*! \brief Resolves the projection and the geometry of the variable. */
+
+void resolveProjection(GridGeometry g,const VariableDimensions& vd,int& projectionId,int& geometryId)
+{
+  std::string mappingName;
+  g.file.getProperty(g.gridMapping + ".grid_mapping_name", 0, mappingName);
+
+  if (strcasecmp(mappingName.c_str(),"polar_stereographic") == 0 || strcasecmp(mappingName.c_str(),"stereographic") == 0)
+  {
+    projectionId = T::GridProjectionValue::PolarStereographic;
+    geometryId = polarStereographicGeometryId(g);
+  }
+  else if (strcasecmp(mappingName.c_str(),"lambert_azimuthal_equal_area") == 0)
+  {
+    projectionId = T::GridProjectionValue::LambertAzimuthalEqualArea;
+    geometryId = lambertAzimuthalEqualAreaGeometryId(g);
+  }
+  else if (strcasecmp(mappingName.c_str(),"lambert_conformal_conic") == 0)
+  {
+    projectionId = T::GridProjectionValue::LambertConformal;
+    geometryId = lambertConformalGeometryId(g);
+  }
+  else if (strcasecmp(mappingName.c_str(),"latitude_longitude") == 0 ||
+      (mappingName.empty() &&  strcasecmp(vd.xStandardName.c_str(),"longitude") == 0   &&  strcasecmp(vd.yStandardName.c_str(),"latitude") == 0))
+  {
+    projectionId = T::GridProjectionValue::LatLon;
+    geometryId = latLonGeometryId(g);
+  }
+}
+
+
+
+/*! \brief The scanning mode string of the coordinate steps. */
+
+std::string scanningMode(double dx,double dy)
+{
+  char sm[100];
+  char *p = sm;
+
+  if (dx < 0)
+    p += sprintf(p,"-x");
+  else
+    p += sprintf(p,"+x");
+
+  if (dy < 0)
+    sprintf(p,"-y");
+  else
+    sprintf(p,"+y");
+
+  return sm;
+}
+
+
+
+/*! \brief Creates the message infos of the variable for each time and level. */
+
+void addMessageInfos(MemoryReader& memoryReader,const MessageInfo& info,Int64 dataStartOffset,uint dataSize,int levelCount,const std::vector<time_t>& timeList,const std::vector<double>& levelList,MessageInfoVec& messageInfoList)
+{
+  for (auto tIt : timeList)
+  {
+    for (auto lIt : levelList)
+    {
+      if (C_UINT64(dataStartOffset) + dataSize > memoryReader.getDataSize())
+        throw Fmi::Exception(BCP,"NetCDF data is outside of the file!");
+
+      MessageInfo msg(info);
+      msg.mFilePosition = dataStartOffset;
+      msg.mParameterLevel = lIt;
+      msg.mForecastTimeT = tIt;
+      messageInfoList.push_back(msg);
+      dataStartOffset += dataSize;
+    }
+    dataStartOffset += levelCount;
+  }
+}
+
+
+
+/*! \brief Creates the message infos of a grid variable. */
+
+void createVariableMessageInfos(NetCdfFile& file,MemoryReader& memoryReader,const std::string& variable,const std::vector<std::string>& indexes,const std::vector<std::string>& dimNames,const std::vector<std::string>& dimLengths,OGRSpatialReference& latlonSp,FloatVec& xCoordinates,FloatVec& yCoordinates,MessageInfoVec& messageInfoList)
+{
+  int typeSize[] = {0,1,1,2,4,4,8};
+
+  VariableDimensions vd;
+  readVariableDimensions(file,variable,indexes,dimNames,dimLengths,vd);
+
+  //printf("%s %s:%d,%s:%d,%s:%d,%s:%d\n",it->c_str(),timeName.c_str(),timeCount,levelName.c_str(),levelCount,yName.c_str(),yCount,xName.c_str(),xCount);
+
+  float xMissingValue = ParamValueMissing;
+  float yMissingValue = ParamValueMissing;
+
+  Int64 dataStartOffset = 0;
+  file.getProperty(variable + ".offset", 0, dataStartOffset);
+
+  uint dataType = 0;
+  file.getProperty(variable + ".type", 0, dataType);
+
+  double dataBaseValue = 0;
+  file.getProperty(variable + ".add_offset", 0, dataBaseValue);
+
+  double dataScaleFactor = 1;
+  file.getProperty(variable + ".scale_factor", 0, dataScaleFactor);
+
+  float missingValue = ParamValueMissing;
+  if (!file.getProperty(variable + ".missing_value", 0, missingValue))
+    file.getProperty(variable + "._FillValue", 0, missingValue);
+
+  if (!file.getProperty(vd.xName + ".missing_value", 0, xMissingValue))
+    file.getProperty(vd.xName + "._FillValue", 0, xMissingValue);
+
+  if (!file.getProperty(vd.yName + ".missing_value", 0, yMissingValue))
+    file.getProperty(vd.yName + "._FillValue", 0, yMissingValue);
+
+  std::string xUnits;
+  file.getProperty(vd.xName + ".units", 0, xUnits);
+
+  std::string yUnits;
+  file.getProperty(vd.yName + ".units", 0, yUnits);
+
+  std::string dataUnits;
+  file.getProperty(variable + ".units", 0, dataUnits);
+
+  std::string parameterStandardName;
+  file.getProperty(variable + ".standard_name", 0, parameterStandardName);
+
+  std::string gridMapping;
+  file.getProperty(variable + ".grid_mapping", 0, gridMapping);
+
+  // The dimensions come from the file
+  if (vd.xCount <= 0 || vd.yCount <= 0)
+    throw Fmi::Exception(BCP,"Invalid NetCDF grid dimensions!");
+  const UInt64 dataSize64 = C_UINT64(vd.xCount) * C_UINT64(vd.yCount) * C_UINT64(typeSize[dataType]);
+  if (dataSize64 > 0xFFFFFFFFULL)
+    throw Fmi::Exception(BCP,"NetCDF grid is too large!");
+  uint dataSize = C_UINT(dataSize64);
+
+  double xScale = coordinateScale(xUnits);
+  double yScale = coordinateScale(yUnits);
+
+  // ##### Time information ##############################################
+
+  std::vector<time_t> timeList;
+  readTimeList(file,memoryReader,vd.timeName,vd.timeCount,timeList);
+
+  // ##### Level information #############################################
+
+  Identification::NetCdfParameterDef ncParamDef;
+  if (Identification::gridDef.getNetCdfParameterDefByName(parameterStandardName,ncParamDef)  &&  !ncParamDef.mFmiLevelId.empty())
+    vd.paramLevelId = toInt32(ncParamDef.mFmiLevelId.c_str());
+
+  std::vector<double> levelList;
+  readLevelList(file,memoryReader,vd.levelName,vd.levelCount,levelList);
+
+  // ##### X-coordinates #################################################
+
+  if (xCoordinates.empty())
+  {
+    VariableData data;
+    readVariableData(file,vd.xName,data);
+    file.readValues(memoryReader,data.type,vd.xCount,data.offset,data.baseValue,data.scaleFactor*xScale,xCoordinates);
+  }
+
+  // ##### Y-coordinates #################################################
+
+  if (yCoordinates.empty())
+    readYCoordinates(file,memoryReader,vd.yName,vd.xCount,vd.yCount,yScale,yCoordinates);
+
+  if (xCoordinates.empty() || yCoordinates.empty())
+  {
+    Fmi::Exception exception(BCP,"X- or Y-coordinates missing!");
+    exception.addParameter("Number of X-coordinates",std::to_string(xCoordinates.size()));
+    exception.addParameter("Number of Y-coordinates",std::to_string(yCoordinates.size()));
+    throw exception;
+  }
+
+  // ##### Projection ####################################################
+
+  double dx = coordinateStep(xCoordinates,xMissingValue);
+  double dy = coordinateStep(yCoordinates,yMissingValue);
+  std::string sm = scanningMode(dx,dy);
+
+  int projectionId = 0;
+  int geometryId = 0;
+
+  GridGeometry geometry{file,gridMapping,latlonSp,xCoordinates,yCoordinates,xCoordinates[0],yCoordinates[0],dx,dy,sm.c_str()};
+  resolveProjection(geometry,vd,projectionId,geometryId);
+
+  // ##### Creating message infos ########################################
+
+  MessageInfo info;
+  info.mProjectionId = projectionId;
+  info.mMessageType = T::FileTypeValue::NetCdf3;
+  info.mGeometryId = geometryId;
+  info.mMessageSize = dataSize;
+  info.mColumns = vd.xCount;
+  info.mRows = vd.yCount;
+  if (vd.xIndex > vd.yIndex)
+  {
+    info.mColumnMultiplier = vd.xCount;
+    info.mRowMultiplier = 1;
+  }
+  else
+  {
+    info.mColumnMultiplier = 1;
+    info.mRowMultiplier = vd.yCount;
+  }
+  info.mDataType = dataType;
+  info.mBaseValue = dataBaseValue;
+  info.mScaleFactor = dataScaleFactor;
+  info.mParameterName = variable;
+
+  info.mParameterStandardName = parameterStandardName;
+
+  info.mParameterUnits = dataUnits;
+  info.mParameterLevelId = vd.paramLevelId;
+  info.mForecastType = 1;
+  info.mForecastNumber = 0;
+  info.mMissingValue = missingValue;
+
+  addMessageInfos(memoryReader,info,dataStartOffset,dataSize,vd.levelCount,timeList,levelList,messageInfoList);
+}
+}  // namespace
+
+
+
+
+
 /*! \brief Builds MessageInfo entries for each grid variable, time step and level in the file. */
 
 void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec& messageInfoList)
@@ -1073,7 +1829,6 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
   FUNCTION_TRACE
   try
   {
-    int typeSize[] = {0,1,1,2,4,4,8};
     std::string tmp;
 
     OGRSpatialReference latlonSp;
@@ -1084,717 +1839,18 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
     auto dn = mPropertyList.find("netcdf.dimension.names");
     auto dl = mPropertyList.find("netcdf.dimension.lengths");
 
-    if (d != mPropertyList.end() && dn != mPropertyList.end() && dl != mPropertyList.end())
+    if (d == mPropertyList.end() || dn == mPropertyList.end() || dl == mPropertyList.end())
+      return;
+
+    for (auto it = d->second.begin(); it != d->second.end(); ++it)
     {
-      for (auto it = d->second.begin(); it != d->second.end(); ++it)
-      {
-        tmp = *it + ".dimension.indexes";
-        auto dd = mPropertyList.find(tmp);
-        if (dd != mPropertyList.end())
-        {
-          //printf("INDEXES [%s] %ld\n",tmp,dd->second.size());
-          int timeCount = 0;
-          int levelCount = 0;
-          int xIndex = 0;
-          int yIndex = 0;
-          int yCount = 0;
-          int xCount = 0;
-          double xScale = 1.0;
-          double yScale = 1.0;
-
-          std::string timeName;
-          std::string levelName;
-          std::string xName;
-          std::string yName;
-          std::string xStandardName;
-          std::string yStandardName;
-          float xMissingValue = ParamValueMissing;
-          float yMissingValue = ParamValueMissing;
-          int projectionId = 0;
-          int geometryId = 0;
-
-
-           //printf("(%s[%ld])\n",it->c_str(),dd->second.size());
-          if (dd->second.size() == 3 || dd->second.size() == 4)
-          {
-            // This is a grid variable
-
-            std::string coordStr;
-            tmp = *it + ".coordinates";
-            if (getProperty(tmp,0,coordStr))
-            {
-              std::vector<std::string> coords;
-              splitString(coordStr,' ',coords);
-              //printf("--- coordinates size (%s) %lld\n",tmp,coords.size());
-              if (coords.size() == 2)
-              {
-                yName = coords[0];
-                xName = coords[1];
-                //printf("XNAME [%s] YNAME[%s] [%s]\n",xName.c_str(),yName.c_str(),coordStr.c_str());
-              }
-            }
-
-            int paramLevelId = 1;
-            uint iii = 0;
-            for (auto itm = dd->second.begin(); itm != dd->second.end(); ++itm)
-            {
-              int i = toInt32(itm->c_str());
-              // The dimension index comes from the file
-              if (i < 0 || C_UINT64(i) >= dl->second.size() || C_UINT64(i) >= dn->second.size())
-                throw Fmi::Exception(BCP,"Invalid NetCDF dimension index!");
-              int ii = toInt32(dl->second[i].c_str());
-              // the values may be NUL padded: keep the part before the first NUL
-              std::string n = dn->second[i].substr(0, dn->second[i].find('\0'));
-              //printf("DIM [%s][%s][%s]\n",itm->c_str(),dl->second[i].c_str(),dn->second[i].c_str());
-
-              if (strcasecmp(n.c_str(),"x") == 0  &&  !xName.empty())
-                n = xName;
-
-              if (strcasecmp(n.c_str(),"y") == 0  &&  !yName.empty())
-                n = yName;
-
-              std::string standardName;
-              getProperty(n + ".standard_name", 0, standardName);
-
-              std::string longName;
-              getProperty(n + ".long_name", 0, longName);
-
-              std::string units;
-              getProperty(n + ".units", 0, units);
-
-              std::string axis;
-              getProperty(n + ".axis", 0, axis);
-
-              std::string positive;
-              getProperty(n + ".positive", 0, positive);
-
-              if (strcasecmp(standardName.c_str(),"time") == 0 || strcasecmp(longName.c_str(),"time") == 0 || strcasecmp(axis.c_str(),"T") == 0 || strcasecmp(n.c_str(),"time") == 0 || strcasecmp(n.c_str(),"time_counter") == 0)
-              {
-                timeCount = ii;
-                timeName = dn->second[i];
-              }
-              else if (strcasecmp(axis.c_str(),"Z") == 0 ||
-                  strcasecmp(standardName.c_str(),"depth") == 0 || strcasecmp(standardName.c_str(),"height") == 0  || strcasecmp(standardName.c_str(),"level") == 0 ||
-                  strcasecmp(longName.c_str(),"depth") == 0 || strcasecmp(longName.c_str(),"height") == 0 || strcasecmp(longName.c_str(),"level") == 0  ||
-                  strcasecmp(n.c_str(),"depth") == 0 || strcasecmp(n.c_str(),"height") == 0 || strcasecmp(n.c_str(),"level") == 0)
-              {
-                levelCount = ii;
-                levelName = dn->second[i];
-
-                if (strcasecmp(units.c_str(),"m") == 0 || strcasecmp(units.c_str(),"metre") == 0)
-                {
-                  if (strcasecmp(positive.c_str(),"down") == 0)
-                    paramLevelId = 10;
-                  else
-                    paramLevelId = 1;
-                }
-                else
-                if (strcasecmp(units.c_str(),"Pa") == 0 || strcasecmp(units.c_str(),"hPa") == 0)
-                  paramLevelId = 2;
-              }
-              else if (strcasecmp(axis.c_str(),"Y") == 0 || strcasecmp(standardName.c_str(),"projection_y_coordinate") == 0 ||
-                  strcasecmp(standardName.c_str(),"latitude") == 0 || strcasecmp(longName.c_str(),"latitude") == 0 ||
-                  strcasecmp(n.c_str(),"lat") == 0 || strcasecmp(n.c_str(),"latitude") == 0)
-              {
-                yIndex = iii;
-                yCount = ii;
-                yName = n;
-                yStandardName = standardName;
-              }
-              else if (strcasecmp(axis.c_str(),"X") == 0 || strcasecmp(standardName.c_str(),"projection_x_coordinate") == 0 ||
-                  strcasecmp(standardName.c_str(),"longitude") == 0 || strcasecmp(longName.c_str(),"longitude") == 0 ||
-                  strcasecmp(n.c_str(),"lon") == 0 || strcasecmp(n.c_str(),"longitude") == 0)
-              {
-                xIndex = iii;
-                xCount = ii;
-                xName = n;
-                xStandardName = standardName;
-              }
-
-              //printf("  %s (%s,%d)\n",itm->c_str(),dn->second[i].c_str(),ii);
-              iii++;
-            }
-
-            //printf("%s %s:%d,%s:%d,%s:%d,%s:%d\n",it->c_str(),timeName.c_str(),timeCount,levelName.c_str(),levelCount,yName.c_str(),yCount,xName.c_str(),xCount);
-
-
-            Int64 dataStartOffset = 0;
-            getProperty(*it + ".offset", 0, dataStartOffset);
-
-            uint dataType = 0;
-            getProperty(*it + ".type", 0, dataType);
-
-            double dataBaseValue = 0;
-            getProperty(*it + ".add_offset", 0, dataBaseValue);
-
-            double dataScaleFactor = 1;
-            getProperty(*it + ".scale_factor", 0, dataScaleFactor);
-
-            float missingValue = ParamValueMissing;
-            if (!getProperty(*it + ".missing_value", 0, missingValue))
-              getProperty(*it + "._FillValue", 0, missingValue);
-
-            if (!getProperty(xName + ".missing_value", 0, xMissingValue))
-              getProperty(xName + "._FillValue", 0, xMissingValue);
-
-            if (!getProperty(yName + ".missing_value", 0, yMissingValue))
-              getProperty(yName + "._FillValue", 0, yMissingValue);
-
-            std::string xUnits;
-            getProperty(xName + ".units", 0, xUnits);
-
-            std::string yUnits;
-            getProperty(yName + ".units", 0, yUnits);
-
-            std::string dataUnits;
-            getProperty(*it + ".units", 0, dataUnits);
-
-            std::string parameterStandardName;
-            getProperty(*it + ".standard_name", 0, parameterStandardName);
-
-            std::string gridMapping;
-            getProperty(*it + ".grid_mapping", 0, gridMapping);
-
-            // The dimensions come from the file
-            if (xCount <= 0 || yCount <= 0)
-              throw Fmi::Exception(BCP,"Invalid NetCDF grid dimensions!");
-            const UInt64 dataSize64 = C_UINT64(xCount) * C_UINT64(yCount) * C_UINT64(typeSize[dataType]);
-            if (dataSize64 > 0xFFFFFFFFULL)
-              throw Fmi::Exception(BCP,"NetCDF grid is too large!");
-            uint dataSize = C_UINT(dataSize64);
-
-
-            if (!xUnits.empty())
-            {
-              double value = 0.0;
-              std::string units;
-              parseUnits(xUnits.c_str(),value,units);
-              // printf("X-UNIT [%f][%s]\n",value,units.c_str());
-              if (value == 0.0)
-                value = 1.0;
-
-              if (strcasecmp(units.c_str(),"km") == 0)
-                xScale = value * 1000;
-            }
-
-            if (!yUnits.empty())
-            {
-              double value = 0.0;
-              std::string units;
-              parseUnits(yUnits.c_str(),value,units);
-              // printf("Y-UNIT [%f][%s]\n",value,units.c_str());
-              if (value == 0.0)
-                value = 1.0;
-
-              if (strcasecmp(units.c_str(),"km") == 0)
-                yScale = value * 1000;
-            }
-
-
-            // ##### Time information ##############################################
-
-            std::vector<time_t> timeList;
-            int year = 0;
-            int month = 0;
-            int day = 0;
-            int hour = 0;
-            int minute = 0;
-            int second = 0;
-            time_t unitSize = 0;
-
-            std::string time_units;
-            if (getProperty(timeName + ".units", 0, time_units))
-            {
-              parseNetCdfTime(time_units,year,month,day,hour,minute,second,unitSize);
-              // printf("TIME %04d%02d%02dT%02d%02d%02d  %ld\n",year,month,day,hour,minute,second,unitSize);
-            }
-            else
-            {
-              printf("*** TIME UNITS MISSING\n");
-              // Time units missing
-            }
-
-            uint type = 0;
-            uint size = 0;
-            Int64 offset = 0;
-            uint itemCount = 0;
-            double scaleFactor = 1;
-            double baseValue = 0;
-
-            getProperty(timeName + ".type", 0, type);
-            getProperty(timeName + ".size", 0, size);
-            getProperty(timeName + ".add_offset", 0, baseValue);
-            getProperty(timeName + ".scale_factor", 0, scaleFactor);
-            getProperty(timeName + ".offset", 0, offset);
-            getProperty(timeName + ".items", 0, itemCount);
-
-            std::vector<double> timeValues;
-            //printf("READ TIME %f %f\n",baseValue,scaleFactor);
-            readValues(memoryReader,type,itemCount,offset,baseValue,scaleFactor,timeValues);
-
-            uint tc = timeCount;
-            if (itemCount > 1)
-              tc = 1;
-
-            // Every time step needs data, so the step count cannot exceed the file size
-            if (timeCount < 0 || C_UINT64(tc) * std::max<UInt64>(1, timeValues.size()) > memoryReader.getDataSize())
-              throw Fmi::Exception(BCP,"Invalid NetCDF time dimension!");
-
-            for (uint t=0; t<tc; t++)
-            {
-              for (double & timeValue : timeValues)
-              {
-                // The values come from the file, they must be convertible to time_t
-                if (!std::isfinite(timeValue) || std::fabs(timeValue) > 1e12)
-                  throw Fmi::Exception(BCP,"Invalid NetCDF time value!");
-                time_t ttt = (time_t)timeValue*unitSize+(time_t)t*unitSize;
-                //printf("TimeT %ld %f %ld\n",ttt,*v,unitSize);
-                time_t tt = getGregorianTimeT(year,month,day,hour,minute,second,ttt);
-                timeList.push_back(tt);
-
-                //std::string tm = utcTimeFromTimeT(tt);
-                //printf("  Time %f => %ld => %s\n",*v,tt,tm.c_str());
-              }
-            }
-
-            // ##### Level information #############################################
-
-            Identification::NetCdfParameterDef ncParamDef;
-            if (Identification::gridDef.getNetCdfParameterDefByName(parameterStandardName,ncParamDef))
-            {
-              if (!ncParamDef.mFmiLevelId.empty())
-                paramLevelId = toInt32(ncParamDef.mFmiLevelId.c_str());
-            }
-
-            std::vector<double> levelList;
-            if (levelCount > 0)
-            {
-              type = 0;
-              size = 0;
-              offset = 0;
-              itemCount = 0;
-              scaleFactor = 1;
-              baseValue = 0;
-
-              getProperty(levelName + ".type", 0, type);
-              getProperty(levelName + ".size", 0, size);
-              getProperty(levelName + ".add_offset", 0, baseValue);
-              getProperty(levelName + ".scale_factor", 0, scaleFactor);
-              getProperty(levelName + ".offset", 0, offset);
-              getProperty(levelName + ".items", 0, itemCount);
-
-              readValues(memoryReader,type,itemCount,offset,baseValue,scaleFactor,levelList);
-
-              // The level values are stored as integers
-              for (auto lv : levelList)
-                if (!std::isfinite(lv) || std::fabs(lv) > 2e9)
-                  throw Fmi::Exception(BCP,"Invalid NetCDF level value!");
-            }
-            else
-            {
-              levelList.push_back(0.0);
-            }
-
-            /*
-            for (auto v = levelList.begin(); v != levelList.end(); ++v)
-            {
-              printf("  Level  %f\n",*v);
-            }
-            */
-
-
-            // ##### X-coordinates #################################################
-
-            if (mXCoordinates.empty())
-            {
-              type = 0;
-              size = 0;
-              offset = 0;
-              itemCount = 0;
-              scaleFactor = 1;
-              baseValue = 0;
-
-              getProperty(xName + ".type", 0, type);
-              getProperty(xName + ".size", 0, size);
-              getProperty(xName + ".offset", 0, offset);
-              getProperty(xName + ".add_offset", 0, baseValue);
-              getProperty(xName + ".scale_factor", 0, scaleFactor);
-              getProperty(xName + ".items", 0, itemCount);
-
-              readValues(memoryReader,type,xCount,offset,baseValue,scaleFactor*xScale,mXCoordinates);
-
-              /*
-              for (auto v = mXCoordinates.begin(); v != mXCoordinates.end(); ++v)
-              {
-                printf("  X-Coord  %f\n",*v);
-              }
-              */
-            }
-
-            // ##### Y-coordinates #################################################
-
-            if (mYCoordinates.empty())
-            {
-              type = 0;
-              size = 0;
-              offset = 0;
-              itemCount = 0;
-              scaleFactor = 1;
-              baseValue = 0;
-
-              getProperty(yName + ".type", 0, type);
-              getProperty(yName + ".size", 0, size);
-              getProperty(yName + ".offset", 0, offset);
-              getProperty(yName + ".add_offset", 0, baseValue);
-              getProperty(yName + ".scale_factor", 0, scaleFactor);
-              getProperty(yName + ".items", 0, itemCount);
-
-              if ((int)itemCount == yCount)
-              {
-                readValues(memoryReader,type,itemCount,offset,baseValue,scaleFactor*yScale,mYCoordinates);
-              }
-              else
-              {
-                if (xCount > 0 && ((int)itemCount/xCount) == yCount)
-                {
-                  FloatVec coordinates;
-                  readValues(memoryReader,type,itemCount,offset,baseValue,scaleFactor*yScale,coordinates);
-                  for (uint t=0; t<itemCount; t=t+xCount)
-                  {
-                    mYCoordinates.push_back(coordinates[t]);
-                  }
-                }
-              }
-
-              /*
-              for (auto v = mYCoordinates.begin(); v != mYCoordinates.end(); ++v)
-              {
-                printf("  Y-Coord  %f\n",*v);
-              }
-              */
-
-            }
-
-            if (mXCoordinates.empty() || mYCoordinates.empty())
-            {
-              Fmi::Exception exception(BCP,"X- or Y-coordinates missing!");
-              exception.addParameter("Number of X-coordinates",std::to_string(mXCoordinates.size()));
-              exception.addParameter("Number of Y-coordinates",std::to_string(mYCoordinates.size()));
-              throw exception;
-            }
-
-
-            // ##### Projection ####################################################
-
-            std::string mappingName;
-            getProperty(gridMapping + ".grid_mapping_name", 0, mappingName);
-
-            double startx = mXCoordinates[0];
-            double starty = mYCoordinates[0];
-
-            uint xsz = mXCoordinates.size() - 1;
-            uint ysz = mYCoordinates.size() - 1;
-
-
-            double dx = 0;
-
-            if (mXCoordinates[xsz] != xMissingValue  &&  mXCoordinates[0] != xMissingValue)
-            {
-              dx = (mXCoordinates[xsz] - mXCoordinates[0]) / (double)xsz;
-            }
-            else
-            {
-              for (uint t=0; t<xsz; t++)
-              {
-                if (mXCoordinates[t] != xMissingValue  &&  mXCoordinates[t+1] != xMissingValue)
-                {
-                  dx = (mXCoordinates[t+1] - mXCoordinates[t]);
-                  t = xsz;
-                }
-              }
-            }
-
-            double dy = 0;
-            if (mYCoordinates[ysz] != yMissingValue  &&  mYCoordinates[0] != yMissingValue)
-            {
-              dy = (mYCoordinates[ysz] - mYCoordinates[0]) / (double)ysz;
-            }
-            else
-            {
-              for (uint t=0; t<ysz; t++)
-              {
-                if (mYCoordinates[t] != yMissingValue  &&  mYCoordinates[t+1] != yMissingValue)
-                {
-                  dy = (mYCoordinates[t+1] - mYCoordinates[t]);
-                  //printf("### DY %f - %f = %f  %f\n",mYCoordinates[t+1],mYCoordinates[t],dy,yMissingValue);
-                  t = ysz;
-                }
-              }
-            }
-
-            char projectionString[4000];
-            projectionString[0] = '\0';
-            char sm[100];
-            char *p = sm;
-
-            if (dx < 0)
-              p += sprintf(p,"-x");
-            else
-              p += sprintf(p,"+x");
-
-            if (dy < 0)
-              sprintf(p,"-y");
-            else
-              sprintf(p,"+y");
-
-
-            if (strcasecmp(mappingName.c_str(),"polar_stereographic") == 0 || strcasecmp(mappingName.c_str(),"stereographic") == 0)
-            {
-              // ***** PROJECTION: Polar stereograpic ***********************************************
-
-              projectionId = T::GridProjectionValue::PolarStereographic;
-
-              double longitude_of_projection_origin = 0.0;
-              getProperty(gridMapping + ".longitude_of_projection_origin", 0, longitude_of_projection_origin);
-
-              double latitude_of_projection_origin = 0.0;
-              getProperty(gridMapping + ".latitude_of_projection_origin", 0, latitude_of_projection_origin);
-
-              double scale_factor_at_projection_origin = 0.0;
-              getProperty(gridMapping + ".scale_factor_at_projection_origin", 0, scale_factor_at_projection_origin);
-
-              double straight_vertical_longitude_from_pole = 0.0;
-              getProperty(gridMapping + ".straight_vertical_longitude_from_pole", 0, straight_vertical_longitude_from_pole);
-
-              double false_easting = 0.0;
-              getProperty(gridMapping + ".false_easting", 0, false_easting);
-
-              double false_northing = 0.0;
-              getProperty(gridMapping + ".false_northing", 0, false_northing);
-
-              OGRSpatialReference sp;
-              sp.SetPS(latitude_of_projection_origin,longitude_of_projection_origin,scale_factor_at_projection_origin,false_easting,false_northing);
-
-              sp.SetTargetLinearUnits("PROJCS", SRS_UL_METER, 1.0);
-              sp.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
-
-              OGRCoordinateTransformation *transformation = OGRCreateCoordinateTransformation(&sp,&latlonSp);
-              transformation->Transform(1,&startx,&starty);
-              OCTDestroyCoordinateTransformation(transformation);
-
-              snprintf(projectionString,sizeof(projectionString),"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;description",
-                  T::GridProjectionValue::PolarStereographic,(int)mXCoordinates.size(),(int)mYCoordinates.size(),
-                  startx,starty,fabs(dx),fabs(dy),sm,straight_vertical_longitude_from_pole,latitude_of_projection_origin);
-
-              auto def = Identification::gridDef.getGrib2DefinitionByGeometryString(projectionString);
-              if (def)
-              {
-                geometryId = def->getGridGeometryId();
-              }
-              else
-              {
-                std::cout << "#### Geometry not found ####\n";
-                std::cout << "** Add the following line into the geometry definition file (=> fill id,name and description fields) :\n\n";
-                std::cout << projectionString << "\n";
-              }
-            }
-            else if (strcasecmp(mappingName.c_str(),"lambert_azimuthal_equal_area") == 0)
-            {
-              // ***** PROJECTION: Lambert Azimuthal Equal Area *************************************
-
-              projectionId = T::GridProjectionValue::LambertAzimuthalEqualArea;
-
-              dx = mXCoordinates[1] - mXCoordinates[0];
-              dy = mYCoordinates[1] - mYCoordinates[0];
-
-              double longitude_of_projection_origin = 0.0;
-              getProperty(gridMapping + ".longitude_of_projection_origin", 0, longitude_of_projection_origin);
-
-              double latitude_of_projection_origin = 0.0;
-              getProperty(gridMapping + ".latitude_of_projection_origin", 0, latitude_of_projection_origin);
-
-              double false_easting = 0.0;
-              getProperty(gridMapping + ".false_easting", 0, false_easting);
-
-              double false_northing = 0.0;
-              getProperty(gridMapping + ".false_northing", 0, false_northing);
-
-              OGRSpatialReference sp;
-              sp.SetLAEA(latitude_of_projection_origin,longitude_of_projection_origin,false_easting,false_northing);
-              sp.SetTargetLinearUnits("PROJCS", SRS_UL_METER, 1.0);
-              sp.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
-
-              OGRCoordinateTransformation *transformation = OGRCreateCoordinateTransformation(&sp,&latlonSp);
-              transformation->Transform(1,&startx,&starty);
-              OCTDestroyCoordinateTransformation(transformation);
-
-              snprintf(projectionString,sizeof(projectionString),"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;description",
-                  T::GridProjectionValue::LambertAzimuthalEqualArea,(int)mXCoordinates.size(),(int)mYCoordinates.size(),
-                  startx,starty,fabs(dx),fabs(dy),sm,latitude_of_projection_origin,longitude_of_projection_origin);
-
-              auto def = Identification::gridDef.getGrib2DefinitionByGeometryString(projectionString);
-              if (def)
-              {
-                geometryId = def->getGridGeometryId();
-              }
-              else
-              {
-                char tmp[4000];
-                snprintf(tmp,sizeof(tmp),"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;0.000000;0.000000;description",
-                    T::GridProjectionValue::LambertAzimuthalEqualArea,(int)mXCoordinates.size(),(int)mYCoordinates.size(),
-                    startx,starty,fabs(dx),fabs(dy),sm,latitude_of_projection_origin,longitude_of_projection_origin);
-                std::cout << "#### Geometry not found ####\n";
-                std::cout << "** Add the following line into the geometry definition file (=> fill id,name and description fields) :\n\n";
-                std::cout << tmp << "\n";
-              }
-            }
-            else if (strcasecmp(mappingName.c_str(),"lambert_conformal_conic") == 0)
-            {
-              // ***** PROJECTION: Lambert Conformal *************************************
-
-              projectionId = T::GridProjectionValue::LambertConformal;
-
-              dx = (mXCoordinates[1] - mXCoordinates[0])*1000;
-              dy = (mYCoordinates[1] - mYCoordinates[0])*1000;
-
-              double standard_parallel = 0.0;
-              getProperty(gridMapping + ".standard_parallel", 0, standard_parallel);
-
-              double longitude_of_central_meridian = 0.0;
-              getProperty(gridMapping + ".longitude_of_central_meridian", 0, longitude_of_central_meridian);
-
-
-              double longitude_of_projection_origin = 0.0;
-              getProperty(gridMapping + ".longitude_of_projection_origin", 0, longitude_of_projection_origin);
-
-              double latitude_of_projection_origin = 0.0;
-              getProperty(gridMapping + ".latitude_of_projection_origin", 0, latitude_of_projection_origin);
-
-              double false_easting = 0.0;
-              getProperty(gridMapping + ".false_easting", 0, false_easting);
-
-              double false_northing = 0.0;
-              getProperty(gridMapping + ".false_northing", 0, false_northing);
-
-              double earth_radius = 6371229.0;
-              getProperty(gridMapping + ".earth_radius", 0, earth_radius);
-
-              OGRSpatialReference sp;
-              sp.SetLCC(standard_parallel,longitude_of_central_meridian,latitude_of_projection_origin,longitude_of_projection_origin,false_easting,false_northing);
-              sp.SetTargetLinearUnits("PROJCS", SRS_UL_METER, 1.0);
-              sp.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
-
-              OGRCoordinateTransformation *transformation = OGRCreateCoordinateTransformation(&sp,&latlonSp);
-              transformation->Transform(1,&startx,&starty);
-              OCTDestroyCoordinateTransformation(transformation);
-
-              double sx = 0.0;
-              double sy = -90.0;
-
-              //# LAMBERT CONFORMAL : projection,id,name,ni,nj,first_lon,first_lat,di,dj,scanning_mode,orientation,latin1,latin2,south_pole_lon,south_pole_lat,LaD,earthSemiMajor,earthSemiMinor,description
-              snprintf(projectionString,sizeof(projectionString),"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;%.6f;%.6f;%.6f;%.6f;description",
-                T::GridProjectionValue::LambertConformal,(int)mXCoordinates.size(),(int)mYCoordinates.size(),startx,starty,fabs(dx),fabs(dy),
-                sm,longitude_of_central_meridian,latitude_of_projection_origin,latitude_of_projection_origin,sx,sy,latitude_of_projection_origin);
-
-              //auto def = Identification::gridDef.getGrib2DefinitionByGeometryId(1093);
-              auto def = Identification::gridDef.getGrib2DefinitionByGeometryString(projectionString);
-              if (def)
-              {
-                geometryId = def->getGridGeometryId();
-              }
-              else
-              {
-                char tmp[4000];
-                snprintf(tmp,sizeof(tmp),"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;%.6f;%.6f;%.6f;%.6f;description",
-                  T::GridProjectionValue::LambertConformal,(int)mXCoordinates.size(),(int)mYCoordinates.size(),startx,starty,fabs(dx),fabs(dy),
-                  sm,longitude_of_central_meridian,latitude_of_projection_origin,latitude_of_projection_origin,sx,sy,latitude_of_projection_origin);
-                std::cout << "#### Geometry not found ####\n";
-                std::cout << "** Add the following line into the geometry definition file (=> fill id,name and description fields) :\n\n";
-                std::cout << tmp << "\n";
-              }
-
-            }
-            else if (strcasecmp(mappingName.c_str(),"latitude_longitude") == 0 ||
-                (mappingName.empty() &&  strcasecmp(xStandardName.c_str(),"longitude") == 0   &&  strcasecmp(yStandardName.c_str(),"latitude") == 0))
-            {
-              // ***** PROJECTION: Latlon ***********************************************************
-
-              projectionId = T::GridProjectionValue::LatLon;
-
-              snprintf(projectionString,sizeof(projectionString),"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;description",
-                T::GridProjectionValue::LatLon,(int)mXCoordinates.size(),(int)mYCoordinates.size(),
-                startx,starty,fabs(dx),fabs(dy),sm);
-
-              auto def = Identification::gridDef.getGrib2DefinitionByGeometryString(projectionString);
-              if (def)
-              {
-                geometryId = def->getGridGeometryId();
-              }
-              else
-              {
-                char tmp[4000];
-                snprintf(tmp,sizeof(tmp),"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;0.000000;0.000000;description",
-                  T::GridProjectionValue::LatLon,(int)mXCoordinates.size(),(int)mYCoordinates.size(),
-                  startx,starty,fabs(dx),fabs(dy),sm);
-                std::cout << "#### Geometry not found ####\n";
-                std::cout << "** Add the following line into the geometry definition file (=> fill id,name and description fields) :\n\n";
-                std::cout << tmp << "\n";
-              }
-            }
-
-
-
-            // ##### Creating message infos ########################################
-
-            for (long & tIt : timeList)
-            {
-              for (double & lIt : levelList)
-              {
-                if (C_UINT64(dataStartOffset) + dataSize > memoryReader.getDataSize())
-                  throw Fmi::Exception(BCP,"NetCDF data is outside of the file!");
-
-                MessageInfo msg;
-                msg.mProjectionId = projectionId;
-                msg.mMessageType = T::FileTypeValue::NetCdf3;
-                msg.mGeometryId = geometryId;
-                msg.mFilePosition = dataStartOffset;
-                msg.mMessageSize = dataSize;
-                msg.mColumns = xCount;
-                msg.mRows = yCount;
-                if (xIndex > yIndex)
-                {
-                  msg.mColumnMultiplier = xCount;
-                  msg.mRowMultiplier = 1;
-                }
-                else
-                {
-                  msg.mColumnMultiplier = 1;
-                  msg.mRowMultiplier = yCount;
-                }
-                msg.mDataType = dataType;
-                msg.mBaseValue = dataBaseValue;
-                msg.mScaleFactor = dataScaleFactor;
-                msg.mParameterName = *it;
-
-                msg.mParameterStandardName = parameterStandardName;
-
-                msg.mParameterUnits = dataUnits;
-                msg.mParameterLevelId = paramLevelId;
-                msg.mParameterLevel = lIt;
-                msg.mForecastType = 1;
-                msg.mForecastNumber = 0;
-                msg.mForecastTimeT = tIt;
-                msg.mMissingValue = missingValue;
-                messageInfoList.push_back(msg);
-                dataStartOffset += dataSize;
-              }
-              dataStartOffset += levelCount;
-            }
-          }
-        }
-      }
+      tmp = *it + ".dimension.indexes";
+      auto dd = mPropertyList.find(tmp);
+      //printf("INDEXES [%s] %ld\n",tmp,dd->second.size());
+      // A grid variable has 3 or 4 dimensions
+      if (dd != mPropertyList.end()  &&  (dd->second.size() == 3 || dd->second.size() == 4))
+        createVariableMessageInfos(*this,memoryReader,*it,dd->second,dn->second,dl->second,latlonSp,mXCoordinates,mYCoordinates,messageInfoList);
     }
-
   }
   catch (...)
   {
