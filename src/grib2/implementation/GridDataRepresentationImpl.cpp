@@ -231,6 +231,72 @@ bool GridDataRepresentationImpl::getValueByIndex(Message *message,uint index,T::
 
 
 
+namespace
+{
+
+/*! \brief Sets all values to the reference value, or to ParamValueMissing where the bitmap bit is not set. */
+
+void fillReferenceValues(std::size_t numOfValues,T::Data_ptr bitmap,double R,T::ParamValue_vec& decodedValues)
+{
+  for (std::uint32_t i = 0; i < numOfValues; i++)
+  {
+    if (bitmap != nullptr && (bitmap[i / 8] & bitmask[i % 8]) == 0)
+    {
+      decodedValues.emplace_back(ParamValueMissing);
+    }
+    else
+    {
+      decodedValues.emplace_back(R);
+    }
+  }
+}
+
+
+
+
+
+/*! \brief Decodes numOfValues packed values using the given packed value reader, inserting
+    ParamValueMissing where the bitmap bit is not set. */
+
+template <class ReadValue>
+void decodeScaledValues(std::size_t numOfValues,T::Data_ptr bitmap,double RDfac,double EDfac,T::ParamValue_vec& decodedValues,ReadValue readValue)
+{
+  if (bitmap == nullptr)
+  {
+    for (std::uint32_t i = 0; i < numOfValues; i++)
+    {
+      UInt64 X = readValue();
+
+      // Output the caclulated value
+      double Y = RDfac + X * EDfac;
+      decodedValues.emplace_back(Y);
+    }
+    return;
+  }
+
+  for (std::uint32_t i = 0; i < numOfValues; i++)
+  {
+    if ((bitmap[i / 8] & bitmask[i % 8]) == 0)
+    {
+      decodedValues.emplace_back(ParamValueMissing);
+    }
+    else
+    {
+      UInt64 X = readValue();
+
+      // Output the caclulated value
+      double Y = RDfac + X * EDfac;
+      decodedValues.emplace_back(Y);
+    }
+  }
+}
+
+}  // namespace
+
+
+
+
+
 /*! \brief Decodes all grid values of the message and writes them into the output vector. */
 
 void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec& decodedValues) const
@@ -265,17 +331,7 @@ void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec
     if (!bits_per_value  ||  *bits_per_value == 0 ||  data == nullptr || dataSize == 0)
     {
       // If 'bitsPerValue' is zero then all values are same as the reference value
-      for (std::uint32_t i = 0; i < numOfValues; i++)
-      {
-        if (bitmap != nullptr && (bitmap[i / 8] & bitmask[i % 8]) == 0)
-        {
-          decodedValues.emplace_back(ParamValueMissing);
-        }
-        else
-        {
-          decodedValues.emplace_back(R);
-        }
-      }
+      fillReferenceValues(numOfValues,bitmap,R,decodedValues);
       return;
     }
 
@@ -306,42 +362,27 @@ void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec
 
       if (bitmap == nullptr)
       {
-        for (std::uint32_t i = 0; i < numOfValues; i++)
-        {
+        decodeScaledValues(numOfValues,bitmap,RDfac,EDfac,decodedValues,[&bitArrayReader,nbits]() {
           UInt64 X = 0;
           bitArrayReader.readBits(nbits,X);
-
-          // Output the caclulated value
-          double Y = RDfac + X * EDfac;
-          decodedValues.emplace_back(Y);
-        }
+          return X;
+        });
       }
       else
       {
-        for (std::uint32_t i = 0; i < numOfValues; i++)
-        {
-          if ((bitmap[i / 8] & bitmask[i % 8]) == 0)
+        decodeScaledValues(numOfValues,bitmap,RDfac,EDfac,decodedValues,[&bitArrayReader,nbits]() {
+          UInt64 X = 0;
+          try
           {
-            decodedValues.emplace_back(ParamValueMissing);
+            bitArrayReader.readBits(nbits,X);
           }
-          else
+          catch (...)
           {
-            UInt64 X = 0;
-            try
-            {
-              bitArrayReader.readBits(nbits,X);
-            }
-            catch (...)
-            {
-              //printf("READ VALUE %u/%u\n",i,numOfValues);
-              throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-            }
-
-            // Output the caclulated value
-            double Y = RDfac + X * EDfac;
-            decodedValues.emplace_back(Y);
+            //printf("READ VALUE %u/%u\n",i,numOfValues);
+            throw Fmi::Exception(BCP,"Operation failed!",nullptr);
           }
-        }
+          return X;
+        });
       }
     }
     else
@@ -352,115 +393,19 @@ void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec
       switch (b)
       {
         case 1:
-          if (bitmap == nullptr)
-          {
-            for (std::uint32_t i = 0; i < numOfValues; i++)
-            {
-              UInt64 X = memoryReader.read_uint8();
-              double Y = RDfac + X * EDfac;
-              decodedValues.emplace_back(Y);
-            }
-          }
-          else
-          {
-            for (std::uint32_t i = 0; i < numOfValues; i++)
-            {
-              if ((bitmap[i / 8] & bitmask[i % 8]) == 0)
-              {
-                decodedValues.emplace_back(ParamValueMissing);
-              }
-              else
-              {
-                UInt64 X = memoryReader.read_uint8();
-                double Y = RDfac + X * EDfac;
-                decodedValues.emplace_back(Y);
-              }
-            }
-          }
+          decodeScaledValues(numOfValues,bitmap,RDfac,EDfac,decodedValues,[&memoryReader]() -> UInt64 { return memoryReader.read_uint8(); });
           break;
 
         case 2:
-          if (bitmap == nullptr)
-          {
-            for (std::uint32_t i = 0; i < numOfValues; i++)
-            {
-              UInt64 X = memoryReader.read_uint16();
-              double Y = RDfac + X * EDfac;
-              decodedValues.emplace_back(Y);
-            }
-          }
-          else
-          {
-            for (std::uint32_t i = 0; i < numOfValues; i++)
-            {
-              if ((bitmap[i / 8] & bitmask[i % 8]) == 0)
-              {
-                decodedValues.emplace_back(ParamValueMissing);
-              }
-              else
-              {
-                UInt64 X = memoryReader.read_uint16();
-                double Y = RDfac + X * EDfac;
-                decodedValues.emplace_back(Y);
-              }
-            }
-          }
+          decodeScaledValues(numOfValues,bitmap,RDfac,EDfac,decodedValues,[&memoryReader]() -> UInt64 { return memoryReader.read_uint16(); });
           break;
 
         case 3:
-          if (bitmap == nullptr)
-          {
-            for (std::uint32_t i = 0; i < numOfValues; i++)
-            {
-              UInt64 X = memoryReader.read_uint24();
-              double Y = RDfac + X * EDfac;
-              decodedValues.emplace_back(Y);
-            }
-          }
-          else
-          {
-            for (std::uint32_t i = 0; i < numOfValues; i++)
-            {
-              if ((bitmap[i / 8] & bitmask[i % 8]) == 0)
-              {
-                decodedValues.emplace_back(ParamValueMissing);
-              }
-              else
-              {
-                UInt64 X = memoryReader.read_uint24();
-                double Y = RDfac + X * EDfac;
-                decodedValues.emplace_back(Y);
-              }
-            }
-          }
+          decodeScaledValues(numOfValues,bitmap,RDfac,EDfac,decodedValues,[&memoryReader]() -> UInt64 { return memoryReader.read_uint24(); });
           break;
 
         case 4:
-          if (bitmap == nullptr)
-          {
-            for (std::uint32_t i = 0; i < numOfValues; i++)
-            {
-              UInt64 X = memoryReader.read_uint32();
-              double Y = RDfac + X * EDfac;
-              decodedValues.emplace_back(Y);
-            }
-          }
-          else
-          {
-            for (std::uint32_t i = 0; i < numOfValues; i++)
-            {
-              if ((bitmap[i / 8] & bitmask[i % 8]) == 0)
-              {
-                decodedValues.emplace_back(ParamValueMissing);
-              }
-              else
-              {
-                UInt64 X = memoryReader.read_uint32();
-                double Y = RDfac + X * EDfac;
-                decodedValues.emplace_back(Y);
-              }
-            }
-          }
+          decodeScaledValues(numOfValues,bitmap,RDfac,EDfac,decodedValues,[&memoryReader]() -> UInt64 { return memoryReader.read_uint32(); });
           break;
         default:
           break;
