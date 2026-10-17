@@ -2411,6 +2411,44 @@ float Message::getGridPointAngle(T::CoordinateType coordinateType,double x,doubl
 
 
 
+namespace
+{
+/*! \brief Counts the angle of the grid north direction from the grid point difference of a northward step. */
+
+float gridNorthAngle(double di,double dj)
+{
+  double PI = 3.1415926536;
+  double angle = 0;
+  double a = atan(fabs(dj)/fabs(di));
+
+  if (dj >= 0  &&  di >= 0)
+  {
+    angle = -(PI/2 - a);
+  }
+
+  if (dj >= 0  &&  di < 0)
+  {
+    angle = PI/2 - a;
+  }
+
+  if (dj < 0  &&  di >= 0)
+  {
+    angle = -(PI/2 - a) + PI;
+  }
+
+  if (dj < 0  &&  di < 0)
+  {
+    angle = PI/2 - a + PI;
+  }
+
+  return C_FLOAT(angle);
+}
+}  // namespace
+
+
+
+
+
 /*! \brief Returns the rotation angle of the grid at the given latlon coordinate. */
 
 float Message::getGridPointAngleByLatLonCoordinates(double lat,double lon)  const
@@ -2418,7 +2456,6 @@ float Message::getGridPointAngleByLatLonCoordinates(double lat,double lon)  cons
   FUNCTION_TRACE
   try
   {
-    double PI = 3.1415926536;
     T::Dimensions d = getGridDimensions();
     if (d.getDimensions() != 2)
       return 0;
@@ -2430,10 +2467,6 @@ float Message::getGridPointAngleByLatLonCoordinates(double lat,double lon)  cons
 
     if (getGridPointByLatLonCoordinates(lat,lon,grid_i1,grid_j1)  &&  getGridPointByLatLonCoordinates(lat+0.0001,lon,grid_i2,grid_j2))
     {
-      double di = grid_i2-grid_i1;
-      double dj = grid_j2-grid_j1;
-      double angle = 0;
-      double a = atan(fabs(dj)/fabs(di));
 /*
       if (reverseYDirection())
         dj = -dj;
@@ -2441,58 +2474,11 @@ float Message::getGridPointAngleByLatLonCoordinates(double lat,double lon)  cons
       if (reverseXDirection())
         di = -di;
 */
-      if (dj >= 0  &&  di >= 0)
-      {
-        angle = -(PI/2 - a);
-      }
-
-      if (dj >= 0  &&  di < 0)
-      {
-        angle = PI/2 - a;
-      }
-
-      if (dj < 0  &&  di >= 0)
-      {
-        angle = -(PI/2 - a) + PI;
-      }
-
-      if (dj < 0  &&  di < 0)
-      {
-        angle = PI/2 - a + PI;
-      }
-
-      return C_FLOAT(angle);
+      return gridNorthAngle(grid_i2-grid_i1,grid_j2-grid_j1);
     }
 
     if (getGridPointByLatLonCoordinates(lat-0.0001,lon,grid_i1,grid_j1)  &&  getGridPointByLatLonCoordinates(lat,lon,grid_i2,grid_j2))
-    {
-      double di = grid_i2-grid_i1;
-      double dj = grid_j2-grid_j1;
-      double angle = 0;
-      double a = atan(fabs(dj)/fabs(di));
-
-      if (dj >= 0  &&  di >= 0)
-      {
-        angle = -(PI/2 - a);
-      }
-
-      if (dj >= 0  &&  di < 0)
-      {
-        angle = PI/2 - a;
-      }
-
-      if (dj < 0  &&  di >= 0)
-      {
-        angle = -(PI/2 - a) + PI;
-      }
-
-      if (dj < 0  &&  di < 0)
-      {
-        angle = PI/2 - a + PI;
-      }
-
-      return C_FLOAT(angle);
-    }
+      return gridNorthAngle(grid_i2-grid_i1,grid_j2-grid_j1);
 
     return 0;
   }
