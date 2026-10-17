@@ -120,6 +120,12 @@ class ConfigurationFile
     void          getWords(char *st,UInt64 *positions,std::vector<std::string>& words,std::vector<UInt64>& wordPositions);
     int           readValue(std::vector<std::string>& words,std::vector<UInt64>& wordPositions,int len,int pos,const std::string& path);
     int           readAttribute(std::vector<std::string>& words,std::vector<UInt64>& wordPositions,int len,int pos,const std::string& path,int index);
+    int           readStructure(std::vector<std::string>& words,std::vector<UInt64>& wordPositions,int len,int pos,const std::string& path);
+    int           readList(std::vector<std::string>& words,std::vector<UInt64>& wordPositions,int len,int pos,const std::string& path);
+    int           readArray(std::vector<std::string>& words,std::vector<UInt64>& wordPositions,int len,int pos,const std::string& path);
+    uint          firstFreeArrayIndex(const std::string& path);
+    void          includeConfigurationFile(std::vector<std::string>& words,std::vector<UInt64>& wordPositions,int pos);
+    int           readConditional(std::vector<std::string>& words,std::vector<UInt64>& wordPositions,int len,int pos,bool ifndef);
 
   public:
 
