@@ -187,6 +187,54 @@ void getGridValuesFromVector(const Message& message,const T::ParamValue_vec& gri
       values.push_back(ParamValueMissing);
   }
 }
+
+
+
+/*! \brief Prints the GRIB parameter definition. */
+
+void printGribParameterDef(std::ostream& stream,uint level,T::GribParamId gribParameterId)
+{
+  Identification::GribParameterDef def;
+  if (Identification::gridDef.getGribParameterDefById(gribParameterId,def))
+  {
+    stream << space(level) << "- gribParameterName        = " << def.mParameterName << "\n";
+    stream << space(level) << "- gribParameterUnits       = " << def.mParameterUnits << "\n";
+    stream << space(level) << "- gribParameterDescription = " << def.mParameterDescription << "\n";
+  }
+}
+
+
+
+/*! \brief Prints the values of the grid corners. */
+
+void printCornerValues(std::ostream& stream,uint level,const T::ParamValue_vec& values,uint ny,uint nx)
+{
+  stream << space(level+1) << "- data (from the grid corners):\n";
+
+  char st[1000];
+  uint c = 0;
+  std::size_t sz = values.size();
+
+  for (uint y=0; y < ny; y++)
+  {
+    for (uint x=0; x < nx; x++)
+    {
+      if ((y < 3  ||  y >= ny-3)  &&  (x < 3  ||  x >= nx-3))
+      {
+        if (c < sz)
+        {
+          auto val = values[c];
+          if (val != ParamValueMissing)
+            sprintf(st,"[%u,%u] %f",y+1,x+1,val);
+          else
+            sprintf(st,"[%u,%u] NA",y+1,x+1);
+          stream << space(level+3) << st << "\n";
+        }
+      }
+      c++;
+    }
+  }
+}
 }  // namespace
 
 
@@ -3588,15 +3636,7 @@ void Message::print(std::ostream& stream,uint level,uint optionFlags) const
 
     stream << space(level) << "- gribParameterId          = " << toString(mGribParameterId) << "\n";
     if (mGribParameterId != 0)
-    {
-      Identification::GribParameterDef def;
-      if (Identification::gridDef.getGribParameterDefById(mGribParameterId,def))
-      {
-        stream << space(level) << "- gribParameterName        = " << def.mParameterName << "\n";
-        stream << space(level) << "- gribParameterUnits       = " << def.mParameterUnits << "\n";
-        stream << space(level) << "- gribParameterDescription = " << def.mParameterDescription << "\n";
-      }
-    }
+      printGribParameterDef(stream,level,mGribParameterId);
 
     stream << space(level) << "- newbaseParameterId       = " << mNewbaseParameterId << "\n";
     stream << space(level) << "- newbaseParameterName     = " << getNewbaseParameterName() << "\n";
@@ -3627,33 +3667,7 @@ void Message::print(std::ostream& stream,uint level,uint optionFlags) const
         T::ParamValue_vec values;
         getGridValueVector(values);
 
-        stream << space(level+1) << "- data (from the grid corners):\n";
-
-        char st[1000];
-        uint ny = mGridSection->getGridRowCount();
-        uint nx = mGridSection->getGridColumnCount();
-        uint c = 0;
-        std::size_t sz = values.size();
-
-        for (uint y=0; y < ny; y++)
-        {
-          for (uint x=0; x < nx; x++)
-          {
-            if ((y < 3  ||  y >= ny-3)  &&  (x < 3  ||  x >= nx-3))
-            {
-              if (c < sz)
-              {
-                auto val = values[c];
-                if (val != ParamValueMissing)
-                  sprintf(st,"[%u,%u] %f",y+1,x+1,val);
-                else
-                  sprintf(st,"[%u,%u] NA",y+1,x+1);
-                stream << space(level+3) << st << "\n";
-              }
-            }
-            c++;
-          }
-        }
+        printCornerValues(stream,level,values,mGridSection->getGridRowCount(),mGridSection->getGridColumnCount());
       }
     }
 
