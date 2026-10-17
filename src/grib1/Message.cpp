@@ -45,6 +45,70 @@ namespace SmartMet
 namespace GRIB1
 {
 
+namespace
+{
+/*! \brief Creates the section, attaches it to the message and reads it. */
+
+template <class SectionType,class SectionPtr>
+void readSection(Message *message,MemoryReader& memoryReader,SectionPtr& sectionPtr,const char *errorMessage)
+{
+  auto rPos = memoryReader.getGlobalReadPosition();
+  try
+  {
+    auto *section = new SectionType();
+    section->setMessagePtr(message);
+    sectionPtr.reset(section);
+    section->read(memoryReader);
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,errorMessage,nullptr);
+    exception.addParameter("Section start position",uint64_toHex(rPos));
+    throw exception;
+  }
+}
+
+
+
+
+
+/*! \brief Reads the sections of the message. The grid and the bitmap sections are optional. */
+
+template <class IndicatorPtr,class ProductPtr,class GridPtr,class BitmapPtr,class DataPtr>
+void readSections(Message *message,MemoryReader& memoryReader,IndicatorPtr& indicatorSection,ProductPtr& productSection,GridPtr& gridSection,BitmapPtr& bitmapSection,DataPtr& dataSection)
+{
+  readSection<IndicatorSection>(message,memoryReader,indicatorSection,"Indicator section creation failed!");
+
+  readSection<ProductSection>(message,memoryReader,productSection,"Product section creation failed!");
+
+  if (productSection->getSectionFlags() & 0x80)
+  {
+    readSection<GridSection>(message,memoryReader,gridSection,"Grid section creation failed!");
+  }
+
+  if (productSection->getSectionFlags() & 0x40)
+  {
+    readSection<BitmapSection>(message,memoryReader,bitmapSection,"Bitmap section creation failed!");
+  }
+
+  readSection<DataSection>(message,memoryReader,dataSection,"Data section creation failed!");
+}
+
+
+
+
+
+/*! \brief Prints the geometry definition line of a geometry which is not configured. */
+
+void printMissingGeometry(const std::string& fileName,const Message& message)
+{
+  std::cout << "\n** GRIB1 Geometry not configured : " << fileName << "\n";
+  std::cout << "** Add the following line into the geometry definition file (=> fill id,name and description fields) :\n\n";
+  std::cout << message.getGridGeometryLine() << "\n\n";
+}
+}  // namespace
+
+
 
 
 /*! \brief The constructor of the class. */
@@ -542,86 +606,7 @@ void Message::read(MemoryReader& memoryReader)
 
     mFilePosition = memoryReader.getGlobalReadPosition();
 
-    auto rPos = memoryReader.getGlobalReadPosition();
-    try
-    {
-      auto *section = new IndicatorSection();
-      section->setMessagePtr(this);
-      mIndicatorSection.reset(section);
-      section->read(memoryReader);
-    }
-    catch (...)
-    {
-      Fmi::Exception exception(BCP,"Indicator section creation failed!",nullptr);
-      exception.addParameter("Section start position",uint64_toHex(rPos));
-      throw exception;
-    }
-
-    rPos = memoryReader.getGlobalReadPosition();
-    try
-    {
-      auto *section = new ProductSection();
-      section->setMessagePtr(this);
-      mProductSection.reset(section);
-      section->read(memoryReader);
-    }
-    catch (...)
-    {
-      Fmi::Exception exception(BCP,"Product section creation failed!",nullptr);
-      exception.addParameter("Section start position",uint64_toHex(rPos));
-      throw exception;
-    }
-
-    if (mProductSection->getSectionFlags() & 0x80)
-    {
-      rPos = memoryReader.getGlobalReadPosition();
-      try
-      {
-        auto *section = new GridSection();
-        section->setMessagePtr(this);
-        mGridSection.reset(section);
-        section->read(memoryReader);
-      }
-      catch (...)
-      {
-        Fmi::Exception exception(BCP,"Grid section creation failed!",nullptr);
-        exception.addParameter("Section start position",uint64_toHex(rPos));
-        throw exception;
-      }
-    }
-
-    if (mProductSection->getSectionFlags() & 0x40)
-    {
-      rPos = memoryReader.getGlobalReadPosition();
-      try
-      {
-        auto *section = new BitmapSection();
-        section->setMessagePtr(this);
-        mBitmapSection.reset(section);
-        section->read(memoryReader);
-      }
-      catch (...)
-      {
-        Fmi::Exception exception(BCP,"Bitmap section creation failed!",nullptr);
-        exception.addParameter("Section start position",uint64_toHex(rPos));
-        throw exception;
-      }
-    }
-
-    rPos = memoryReader.getGlobalReadPosition();
-    try
-    {
-      auto *section = new DataSection();
-      section->setMessagePtr(this);
-      mDataSection.reset(section);
-      section->read(memoryReader);
-    }
-    catch (...)
-    {
-      Fmi::Exception exception(BCP,"Data section creation failed!",nullptr);
-      exception.addParameter("Section start position",uint64_toHex(rPos));
-      throw exception;
-    }
+    readSections(this,memoryReader,mIndicatorSection,mProductSection,mGridSection,mBitmapSection,mDataSection);
 
     if (mFmiParameterId != 0)
     {
@@ -644,13 +629,14 @@ void Message::read(MemoryReader& memoryReader)
         mGribParameterUnits  = stringFactory.create(def.mParameterUnits);
       }
 
-      if (mFmiParameterId == 0)
+    }
+
+    if (mGribParameterId != 0  &&  mFmiParameterId == 0)
+    {
+      Identification::FmiParameterDef def;
+      if (Identification::gridDef.getFmiParameterDefByGribId(mGribParameterId,def))
       {
-        Identification::FmiParameterDef def;
-        if (Identification::gridDef.getFmiParameterDefByGribId(mGribParameterId,def))
-        {
-          mFmiParameterId = def.mFmiParameterId;
-        }
+        mFmiParameterId = def.mFmiParameterId;
       }
     }
 
@@ -681,15 +667,12 @@ void Message::read(MemoryReader& memoryReader)
       }
       else
       {
-        std::cout << "\n** GRIB1 Geometry not configured : " << mGridFilePtr->getFileName() << "\n";
-        std::cout << "** Add the following line into the geometry definition file (=> fill id,name and description fields) :\n\n";
-        std::cout << getGridGeometryLine() << "\n\n";
+        printMissingGeometry(mGridFilePtr->getFileName(),*this);
       }
     }
-    else
+    else if (mGeometryId == 0)
     {
-      if (mGeometryId == 0)
-        setGridGeometryId(gi);
+      setGridGeometryId(gi);
     }
 
     if (mGeometryId != 0)
