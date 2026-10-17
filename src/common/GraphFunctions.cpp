@@ -2009,6 +2009,10 @@ void getStreamlineImage(float *direction, const float *value, uint *image, int w
 {
   try
   {
+    // A step below one would never advance
+    xStep = std::max(xStep,1);
+    yStep = std::max(yStep,1);
+
     float valueStep = 255.0 / (valueRangeEnd - valueRangeStart);
     int colorStep = (endColor - startColor) / maxLength;
 
@@ -2048,6 +2052,10 @@ void getStreamlineImage(float *direction, float * /*value*/, uint *image, int wi
 {
   try
   {
+    // A step below one would never advance
+    xStep = std::max(xStep,1);
+    yStep = std::max(yStep,1);
+
     int size = width * height;
     for (int t = 0; t < size; t++)
     {
@@ -2098,6 +2106,10 @@ void getStreamlineImage(std::vector<float>& direction, float * /*value*/, uint *
 {
   try
   {
+    // A step below one would never advance
+    xStep = std::max(xStep,1);
+    yStep = std::max(yStep,1);
+
     int size = width * height;
     for (int t = 0; t < size; t++)
     {
@@ -2149,6 +2161,10 @@ void getStreamlines(T::ParamValue_vec &gridValues, std::vector<T::Coordinate> *c
 {
   try
   {
+    // A step below one would never advance
+    xStep = std::max(xStep,1);
+    yStep = std::max(yStep,1);
+
     int sz = width * height;
     auto *direction = new float[sz];
     uint *image = new uint[sz];
@@ -2167,12 +2183,22 @@ void getStreamlines(T::ParamValue_vec &gridValues, std::vector<T::Coordinate> *c
         image[t] = 0;
 
       if (y >= height)
+      {
+        // The last row was already processed with step one
+        if (y - yStep == height - 1)
+          break;
         y = height - 1;
+      }
 
       for (int x = 0; x <= width; x = x + xStep)
       {
         if (x >= width)
+        {
+          // The last column was already processed with step one
+          if (x - xStep == width - 1)
+            break;
           x = width - 1;
+        }
 
         std::vector<T::Coordinate> lineCoordinates;
         int cellCount = findPath(direction, image, width, height, maxStreamLen, 0, (double) x + 0.5, (double) y + 0.5, 0, 0, lineCoordinates);
