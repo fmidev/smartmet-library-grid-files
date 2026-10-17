@@ -5119,7 +5119,10 @@ void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double o
           T::GridValue rec;
           rec.mX = circle->coordinates[t].x();
           rec.mY = circle->coordinates[t].y();
-          rec.mValue = values[t];
+          if (modificationOperation == 0)
+            rec.mValue = values[t];
+          else
+            rec.mValue = getGridValueByGridPoint(circle->points[t].x(),circle->points[t].y(),modificationOperation,modificationParameters);
           valueList.addGridValue(rec);
         }
       }
