@@ -359,6 +359,52 @@ void openjpeg_info_callback(const char *msg, void* /*unused*/)
 {
   //std::cout << "OpenJPEG info: " << msg << std::endl;
 }
+
+
+/*! \brief Scales the decoded image values into the output vector, inserting ParamValueMissing where the bitmap bit is not set. */
+
+void storeValues(const OPJ_INT32 *imageData,std::size_t imageSize,T::Data_ptr bitmap,std::size_t bitmapSizeInBytes,std::size_t numOfValues,double RDfac,double EDfac,T::ParamValue_vec& decodedValues)
+{
+  if (bitmapSizeInBytes > 0)
+  {
+    T::Data_ptr bmap = bitmap;
+    unsigned char tmp = 0;
+    if (bmap == nullptr)
+      bmap = &tmp;
+
+    BitArrayReader bitmapReader(bmap, bitmapSizeInBytes * 8);
+
+    uint pos = 0;
+    for (int t = 0; t < static_cast<int>(numOfValues); t++)
+    {
+      if (bitmapReader.readBit())
+      {
+        if (pos >= imageSize)
+          throw Fmi::Exception(BCP, "JPEG-2000 image contains fewer values than the bitmap!");
+        int X = imageData[pos];
+        double Y = RDfac + X * EDfac;
+        decodedValues.emplace_back(Y);
+        pos++;
+      }
+      else
+      {
+        decodedValues.emplace_back(ParamValueMissing);
+      }
+    }
+  }
+  else
+  {
+    if (imageSize < numOfValues)
+      throw Fmi::Exception(BCP, "JPEG-2000 image contains fewer values than the grid!");
+
+    for (int t = 0; t < static_cast<int>(numOfValues); t++)
+    {
+      int X = imageData[t];
+      double Y = RDfac + X * EDfac;
+      decodedValues.emplace_back(Y);
+    }
+  }
+}
 }  // namespace
 
 
@@ -464,45 +510,7 @@ void JpegGridDataRepresentationImpl::decodeValues(Message *message, T::ParamValu
       const double EDfac = Efac * Dfac;
 
       // Decode and store values based on the presence of a bitmap
-      if (bitmapSizeInBytes > 0)
-      {
-        T::Data_ptr bmap = bitmap;
-        unsigned char tmp = 0;
-        if (bmap == nullptr)
-          bmap = &tmp;
-
-        BitArrayReader bitmapReader(bmap, bitmapSizeInBytes * 8);
-
-        uint pos = 0;
-        for (int t = 0; t < static_cast<int>(numOfValues); t++)
-        {
-          if (bitmapReader.readBit())
-          {
-            if (pos >= imageSize)
-              throw Fmi::Exception(BCP, "JPEG-2000 image contains fewer values than the bitmap!");
-            int X = image->comps->data[pos];
-            double Y = RDfac + X * EDfac;
-            decodedValues.emplace_back(Y);
-            pos++;
-          }
-          else
-          {
-            decodedValues.emplace_back(ParamValueMissing);
-          }
-        }
-      }
-      else
-      {
-        if (imageSize < numOfValues)
-          throw Fmi::Exception(BCP, "JPEG-2000 image contains fewer values than the grid!");
-
-        for (int t = 0; t < static_cast<int>(numOfValues); t++)
-        {
-          int X = image->comps->data[t];
-          double Y = RDfac + X * EDfac;
-          decodedValues.emplace_back(Y);
-        }
-      }
+      storeValues(image->comps->data,imageSize,bitmap,bitmapSizeInBytes,numOfValues,RDfac,EDfac,decodedValues);
 
       opj_stream_destroy(stream);
       opj_destroy_codec(codec);
