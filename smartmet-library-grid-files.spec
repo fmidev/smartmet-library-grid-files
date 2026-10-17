@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 26.10.16
+Version: 26.10.17
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -127,6 +127,10 @@ libraries, the grid engine and the plugins using it
 %attr(0755,root,root) %{_bindir}/smartmet-grid-test-config-creator
 
 %changelog
+* Sat Oct 17 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.17-1.fmi
+- Isolines and isobands are computed again when no coordinate vector is given (grid
+  coordinates, contour.coordinateType = GRID_COORDINATES); since 2024-10 they were always empty
+
 * Fri Oct 16 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.16-1.fmi
 - PRINT_DATA, PRINT_EVENT_LINE and PRINT_EVENT expand to expressions calling new Log members with
   printf format checking; the unused PRINT_FILE macro is removed
