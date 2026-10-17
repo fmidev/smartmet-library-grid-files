@@ -2650,6 +2650,136 @@ T::ParamLevelId Message::getGridParameterLevelId() const
         \return         The parameter value of the given grid point.
 */
 
+namespace
+{
+/*! \brief Modifies the value by the grid point specific modification parameter. */
+
+T::ParamValue modifyValueByGridParameter(T::ParamValue value,uint modificationOperation,const double_vec& modificationParameters,uint idx,uint s)
+{
+  uint sz = modificationParameters.size();
+  if (sz != s || idx >= sz)
+    return value;
+
+  auto val = modificationParameters[idx];
+  if (val == ParamValueMissing)
+    return value;
+
+  switch (modificationOperation)
+  {
+    case Operation::GRID_ADD:
+      value = value + val;
+      break;
+
+    case Operation::GRID_DEC:
+      value = value - val;
+      break;
+
+    case Operation::GRID_MUL:
+      value = value * val;
+      break;
+
+    case Operation::GRID_DIV:
+      value = value / val;
+      break;
+
+    case Operation::GRID_HYPOT:
+      value = sqrt(value*value + val*val);
+      break;
+
+    default:
+      break;
+  }
+  return value;
+}
+
+
+
+
+
+/*! \brief Modifies the value by the modification operation. */
+
+T::ParamValue modifyValue(T::ParamValue value,uint modificationOperation,const double_vec& modificationParameters)
+{
+  uint sz = modificationParameters.size();
+
+  switch (modificationOperation)
+  {
+    case Operation::ADD:
+      if (sz > 0 && modificationParameters[0] != ParamValueMissing)
+        return (value + modificationParameters[0]);
+      else
+        return value;
+
+    case Operation::DEC:
+      if (sz > 0 && modificationParameters[0] != ParamValueMissing)
+        return (value - modificationParameters[0]);
+      else
+        return value;
+
+    case Operation::MUL:
+      if (sz > 0 && modificationParameters[0] != ParamValueMissing)
+        return (value * modificationParameters[0]);
+      else
+        return value;
+
+    case Operation::DIV:
+      if (sz > 0 && modificationParameters[0] != ParamValueMissing)
+        return (value / modificationParameters[0]);
+      else
+        return value;
+
+    case Operation::ABS:
+      if (value < 0)
+        return -value;
+      else
+        return value;
+
+    case Operation::NEG:
+      return -value;
+
+    case Operation::ROUND:
+      return round(value);
+
+    case Operation::FLOOR:
+      return Fmi::floor(value);
+
+    case Operation::CEIL:
+      return (Fmi::floor(value) + 1.0);
+
+    case Operation::K2C:
+      return (value - 273.15);
+
+    case Operation::C2K:
+      return (value + 273.15);
+
+    case Operation::F2C:
+      return (5*(value - 32.0)/9.0);
+
+    case Operation::C2F:
+      return (value*1.8 + 32.0);
+
+    case Operation::F2K:
+      return ((5.0*(value - 32.0)/9.0) + 273.15);
+
+    case Operation::K2F:
+      return ((value - 273.15)*1.8 + 32.0);
+
+    case Operation::RAD2DEG:
+      return (360.0*value/(2*3.1415926535898));
+
+    case Operation::DEG2RAD:
+      return (2*3.1415926535898*value/360.0);
+    default:
+      break;
+  }
+  return value;
+}
+}  // namespace
+
+
+
+
+
 T::ParamValue Message::getGridValueByGridPoint(uint /*grid_i*/,uint /*grid_j*/) const
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
@@ -2689,69 +2819,9 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j,uint modi
         return value;
 
       case Operation::GRID_ADD:
-      {
-        auto w = getGridWidth();
-        auto h = getGridHeight();
-        auto s = w*h;
-        auto idx = grid_j * h + grid_i;
-
-        if (sz == s && idx < sz)
-        {
-          auto val = modificationParameters[idx];
-          if (val != ParamValueMissing)
-            value = value + val;
-        }
-      }
-      return value;
-
       case Operation::GRID_DEC:
-      {
-        auto w = getGridWidth();
-        auto h = getGridHeight();
-        auto s = w*h;
-        auto idx = grid_j * h + grid_i;
-
-        if (sz == s && idx < sz)
-        {
-          auto val = modificationParameters[idx];
-          if (val != ParamValueMissing)
-            value = value - val;
-        }
-      }
-      return value;
-
       case Operation::GRID_MUL:
-      {
-        auto w = getGridWidth();
-        auto h = getGridHeight();
-        auto s = w*h;
-        auto idx = grid_j * h + grid_i;
-
-        if (sz == s && idx < sz)
-        {
-          auto val = modificationParameters[idx];
-          if (val != ParamValueMissing)
-            value = value * val;
-        }
-      }
-      return value;
-
       case Operation::GRID_DIV:
-      {
-        auto w = getGridWidth();
-        auto h = getGridHeight();
-        auto s = w*h;
-        auto idx = grid_j * h + grid_i;
-
-        if (sz == s && idx < sz)
-        {
-          auto val = modificationParameters[idx];
-          if (val != ParamValueMissing)
-            value = value / val;
-        }
-      }
-      return value;
-
       case Operation::GRID_HYPOT:
       {
         auto w = getGridWidth();
@@ -2759,84 +2829,12 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j,uint modi
         auto s = w*h;
         auto idx = grid_j * h + grid_i;
 
-        if (sz == s && idx < sz)
-        {
-          auto val = modificationParameters[idx];
-          if (val != ParamValueMissing)
-            value = sqrt(value*value + val*val);
-        }
+        return modifyValueByGridParameter(value,modificationOperation,modificationParameters,idx,s);
       }
-      return value;
 
-      case Operation::ADD:
-        if (sz > 0 && modificationParameters[0] != ParamValueMissing)
-          return (value + modificationParameters[0]);
-        else
-          return value;
-
-      case Operation::DEC:
-        if (sz > 0 && modificationParameters[0] != ParamValueMissing)
-          return (value - modificationParameters[0]);
-        else
-          return value;
-
-      case Operation::MUL:
-        if (sz > 0 && modificationParameters[0] != ParamValueMissing)
-          return (value * modificationParameters[0]);
-        else
-          return value;
-
-      case Operation::DIV:
-        if (sz > 0 && modificationParameters[0] != ParamValueMissing)
-          return (value / modificationParameters[0]);
-        else
-          return value;
-
-      case Operation::ABS:
-        if (value < 0)
-          return -value;
-        else
-          return value;
-
-      case Operation::NEG:
-        return -value;
-
-      case Operation::ROUND:
-        return round(value);
-
-      case Operation::FLOOR:
-        return Fmi::floor(value);
-
-      case Operation::CEIL:
-        return (Fmi::floor(value) + 1.0);
-
-      case Operation::K2C:
-        return (value - 273.15);
-
-      case Operation::C2K:
-        return (value + 273.15);
-
-      case Operation::F2C:
-        return (5*(value - 32.0)/9.0);
-
-      case Operation::C2F:
-        return (value*1.8 + 32.0);
-
-      case Operation::F2K:
-        return ((5.0*(value - 32.0)/9.0) + 273.15);
-
-      case Operation::K2F:
-        return ((value - 273.15)*1.8 + 32.0);
-
-      case Operation::RAD2DEG:
-        return (360.0*value/(2*3.1415926535898));
-
-      case Operation::DEG2RAD:
-        return (2*3.1415926535898*value/360.0);
       default:
-        break;
+        return modifyValue(value,modificationOperation,modificationParameters);
     }
-    return value;
   }
   catch (...)
   {
