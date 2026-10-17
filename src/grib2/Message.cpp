@@ -1380,6 +1380,136 @@ void readSectionAt(Message *message,MemoryReader& memoryReader,unsigned char* pt
   sectionPtr.reset(section);
   section->read(memoryReader);
 }
+
+
+
+/*! \brief Creates the section, attaches it to the message and reads it at the current position. */
+
+template <class SectionType,class SectionPtr>
+void readSectionHere(Message *message,MemoryReader& memoryReader,SectionPtr& sectionPtr)
+{
+  auto *section = new SectionType();
+  section->setMessagePtr(message);
+  sectionPtr.reset(section);
+  section->read(memoryReader);
+}
+
+
+
+/*! \brief Reads the section at the current position and moves the read position to the end of
+    the section as defined by the section length. */
+
+template <class SectionType,class SectionPtr>
+void readSectionWithLength(Message *message,MemoryReader& memoryReader,SectionPtr& sectionPtr)
+{
+  auto *section = new SectionType();
+  section->setMessagePtr(message);
+  sectionPtr.reset(section);
+  auto p1 = memoryReader.getReadPosition();
+  section->read(memoryReader);
+  auto p2 = memoryReader.getReadPosition();
+  auto len = section->getSectionLength();
+
+  if (len > 0  &&  (p1+len) != p2)
+    memoryReader.setReadPosition(p1+len);
+}
+
+
+
+/*! \brief Searches the start of the message and reads its indicator section. Returns false if
+    the message start is not found. */
+
+template <class SectionPtr>
+bool readMessageStart(Message *message,MemoryReader& memoryReader,SectionPtr& indicatorSection)
+{
+  int spos = memoryReader.search_string("GRIB");
+  if (spos < 0)
+    return false;
+
+  memoryReader.setReadPosition(memoryReader.getReadPosition()+spos);
+  readSectionHere<IndicatorSection>(message,memoryReader,indicatorSection);
+  return true;
+}
+
+
+
+/*! \brief Checks that the message defines the sections 4-7. */
+
+template <class ProductPtr,class RepresentationPtr,class BitmapPtr,class DataPtr>
+void checkRequiredSections(const ProductPtr& productSection,const RepresentationPtr& representationSection,const BitmapPtr& bitmapSection,const DataPtr& dataSection)
+{
+  if (!productSection)
+    throw Fmi::Exception(BCP,"The product section is missing!");
+
+  if (!representationSection)
+    throw Fmi::Exception(BCP,"The representation section is missing!");
+
+  if (!bitmapSection)
+    throw Fmi::Exception(BCP,"The bitmap section is missing!");
+
+  if (!dataSection)
+    throw Fmi::Exception(BCP,"The data section is missing!");
+}
+
+
+
+/*! \brief Creates the section of the given section number and reads it. */
+
+template <class IdentificationPtr,class LocalPtr,class GridPtr,class ProductPtr,class RepresentationPtr,class BitmapPtr,class DataPtr>
+void readNumberedSection(Message *message,MemoryReader& memoryReader,std::uint8_t idx,IdentificationPtr& identificationSection,LocalPtr& localSection,GridPtr& gridSection,ProductPtr& productSection,RepresentationPtr& representationSection,BitmapPtr& bitmapSection,DataPtr& dataSection)
+{
+  UInt64 rPos = memoryReader.getGlobalReadPosition();
+
+  try
+  {
+    // Create the corresponding section from the pointer & advance the pointer to next section
+
+    switch (idx)
+    {
+      case Message::SectionNumber::identification_section:
+        readSectionWithLength<IdentificationSection>(message,memoryReader,identificationSection);
+        break;
+
+      case Message::SectionNumber::local_section:
+        readSectionWithLength<LocalSection>(message,memoryReader,localSection);
+        break;
+
+      case Message::SectionNumber::grid_section:
+        readSectionWithLength<GridSection>(message,memoryReader,gridSection);
+        break;
+
+      case Message::SectionNumber::product_section:
+        readSectionWithLength<ProductSection>(message,memoryReader,productSection);
+        break;
+
+      case Message::SectionNumber::representation_section:
+        readSectionHere<RepresentationSection>(message,memoryReader,representationSection);
+        break;
+
+      case Message::SectionNumber::bitmap_section:
+        readSectionWithLength<BitmapSection>(message,memoryReader,bitmapSection);
+        break;
+
+      case Message::SectionNumber::data_section:
+        readSectionWithLength<DataSection>(message,memoryReader,dataSection);
+        break;
+
+      default:
+      {
+        Fmi::Exception exception(BCP,"Invalid GRIB section number '" + Fmi::to_string(static_cast<int>(idx)) + "'!");
+        exception.addParameter("Read position",uint64_toHex(memoryReader.getGlobalReadPosition()+4));
+        throw exception;
+       }
+    }
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Section creation failed!",nullptr);
+    exception.addParameter("Section number",Fmi::to_string(static_cast<int>(idx)));
+    exception.addParameter("Section start position",uint64_toHex(rPos));
+    throw exception;
+  }
+}
 }  // namespace
 
 
@@ -1504,16 +1634,7 @@ void Message::read(MemoryReader& memoryReader)
 
       if (!begin)
       {
-        int spos = memoryReader.search_string("GRIB");
-        if (spos >= 0)
-        {
-          memoryReader.setReadPosition(memoryReader.getReadPosition()+spos);
-          auto *section = new IndicatorSection();
-          section->setMessagePtr(this);
-          mIndicatorSection.reset(section);
-          section->read(memoryReader);
-          begin = true;
-        }
+        begin = readMessageStart(this,memoryReader,mIndicatorSection);
       }
       else if (memoryReader.peek_string("7777"))
       {
@@ -1533,145 +1654,7 @@ void Message::read(MemoryReader& memoryReader)
         // Update for the next iteration
         last_idx = idx;
 
-        UInt64 rPos = memoryReader.getGlobalReadPosition();
-
-        try
-        {
-          // Create the corresponding section from the pointer & advance the pointer to next section
-
-          switch (idx)
-          {
-            case SectionNumber::identification_section:
-            {
-              auto *section = new IdentificationSection();
-              section->setMessagePtr(this);
-              mIdentificationSection.reset(section);
-              auto p1 = memoryReader.getReadPosition();
-              section->read(memoryReader);
-              auto p2 = memoryReader.getReadPosition();
-              auto len = section->getSectionLength();
-
-              if (len > 0  &&  (p1+len) != p2)
-                memoryReader.setReadPosition(p1+len);
-            }
-            break;
-
-            case SectionNumber::local_section:
-            {
-              auto *section = new LocalSection();
-              section->setMessagePtr(this);
-              mLocalSection.reset(section);
-              auto p1 = memoryReader.getReadPosition();
-              section->read(memoryReader);
-              auto p2 = memoryReader.getReadPosition();
-              auto len = section->getSectionLength();
-
-              if (len > 0  &&  (p1+len) != p2)
-                memoryReader.setReadPosition(p1+len);
-            }
-            break;
-
-            case SectionNumber::grid_section:
-            {
-              auto *section = new GridSection();
-              section->setMessagePtr(this);
-              mGridSection.reset(section);
-              auto p1 = memoryReader.getReadPosition();
-              section->read(memoryReader);
-              auto p2 = memoryReader.getReadPosition();
-              auto len = section->getSectionLength();
-
-              if (len > 0  &&  (p1+len) != p2)
-                memoryReader.setReadPosition(p1+len);
-            }
-            break;
-
-            case SectionNumber::product_section:
-            {
-              auto *section = new ProductSection();
-              section->setMessagePtr(this);
-              mProductSection.reset(section);
-              auto p1 = memoryReader.getReadPosition();
-              section->read(memoryReader);
-              auto p2 = memoryReader.getReadPosition();
-              auto len = section->getSectionLength();
-
-              if (len > 0  &&  (p1+len) != p2)
-                memoryReader.setReadPosition(p1+len);
-            }
-            break;
-
-            case SectionNumber::representation_section:
-            {
-              auto *section = new RepresentationSection();
-              section->setMessagePtr(this);
-              mRepresentationSection.reset(section);
-              //auto p1 = memoryReader.getReadPosition();
-              section->read(memoryReader);
-              //auto p2 = memoryReader.getReadPosition();
-              //auto len = section->getSectionLength();
-            }
-            break;
-
-            case SectionNumber::bitmap_section:
-            {
-              auto *section = new BitmapSection();
-              section->setMessagePtr(this);
-              mBitmapSection.reset(section);
-              auto p1 = memoryReader.getReadPosition();
-              section->read(memoryReader);
-              /*
-              if (section->getBitmapDataSizeInBytes() > 0)
-              {
-                auto numOfValues = getGridOriginalValueCount();
-                auto hash = section->getHash();
-                T::IndexVector indexVector;
-                if (!GRID::indexCache.findIndexVector(hash))
-                {
-                  section->getIndexVector(numOfValues,indexVector);
-                  GRID::indexCache.addIndexVector(hash,indexVector);
-                }
-              }
-              */
-
-              auto p2 = memoryReader.getReadPosition();
-              auto len = section->getSectionLength();
-
-              if (len > 0  &&  (p1+len) != p2)
-                memoryReader.setReadPosition(p1+len);
-            }
-            break;
-
-            case SectionNumber::data_section:
-            {
-              auto *section = new DataSection();
-              section->setMessagePtr(this);
-              mDataSection.reset(section);
-              auto p1 = memoryReader.getReadPosition();
-              section->read(memoryReader);
-              auto p2 = memoryReader.getReadPosition();
-              auto len = section->getSectionLength();
-
-              if (len > 0  &&  (p1+len) != p2)
-                memoryReader.setReadPosition(p1+len);
-            }
-            break;
-
-            default:
-            {
-              Fmi::Exception exception(BCP,"Invalid GRIB section number '" + Fmi::to_string(static_cast<int>(idx)) + "'!");
-              exception.addParameter("Read position",uint64_toHex(memoryReader.getGlobalReadPosition()+4));
-              throw exception;
-             }
-          }
-        }
-        catch (...)
-        {
-          Fmi::Exception exception(BCP,"Section creation failed!",nullptr);
-          exception.addParameter("Section number",Fmi::to_string(static_cast<int>(idx)));
-          exception.addParameter("Section start position",uint64_toHex(rPos));
-          throw exception;
-        }
+        readNumberedSection(this,memoryReader,idx,mIdentificationSection,mLocalSection,mGridSection,mProductSection,mRepresentationSection,mBitmapSection,mDataSection);
       }
 
       if (prevPos == memoryReader.getReadPosition())
@@ -1684,17 +1667,7 @@ void Message::read(MemoryReader& memoryReader)
 
     // All messages must define sections 4-7
 
-    if (!mProductSection)
-      throw Fmi::Exception(BCP,"The product section is missing!");
-
-    if (!mRepresentationSection)
-      throw Fmi::Exception(BCP,"The representation section is missing!");
-
-    if (!mBitmapSection)
-      throw Fmi::Exception(BCP,"The bitmap section is missing!");
-
-    if (!mDataSection)
-      throw Fmi::Exception(BCP,"The data section is missing!");
+    checkRequiredSections(mProductSection,mRepresentationSection,mBitmapSection,mDataSection);
 
     if (mMessageSize == 0)
       mMessageSize = (memoryReader.getGlobalReadPosition() - mFilePosition);
