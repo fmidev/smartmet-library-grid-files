@@ -830,6 +830,53 @@ void NetCdfFile::insertProperty(const std::string& propertyName,double propertyV
 
 
 
+namespace
+{
+/*! \brief Reads a name padded to a multiple of 4 bytes. */
+
+std::string readPaddedName(MemoryReader& memoryReader)
+{
+  uint nameLen = 0;
+  memoryReader >> nameLen;
+  // The length comes from the file, it must fit in the remaining data
+  if (C_UINT64(nameLen) > C_UINT64(memoryReader.getEndPtr() - memoryReader.getReadPtr()))
+    throw Fmi::Exception(BCP,"Invalid NetCDF name length!");
+
+  uint paddedLen = nameLen;
+  if (nameLen > 0)
+    paddedLen = ((nameLen-1)/4 + 1) * 4;
+
+  std::string name(nameLen, '\0');
+  for (uint n = 0; n<paddedLen; n++)
+  {
+    auto val = memoryReader.read_int8();
+    if (n < nameLen)
+      name[n] = val;
+  }
+  return name;
+}
+
+
+
+/*! \brief Reads the dimension indexes of a variable and the corresponding dimension names. */
+
+void readDimensionIndexes(MemoryReader& memoryReader,uint dimIndexCount,const std::vector<std::string>& dimNames,std::vector<std::string>& dimList,std::vector<std::string>& dimList2)
+{
+  for (uint d=0; d<dimIndexCount; d++)
+  {
+    uint dim = 0;
+    memoryReader >> dim;
+    dimList.push_back(std::to_string(dim));
+    if (dim < dimNames.size() )
+      dimList2.push_back(dimNames[dim]);
+  }
+}
+}  // namespace
+
+
+
+
+
 /*! \brief Parses the NetCDF header (dimensions, attributes, variables) into the property list. */
 
 void NetCdfFile::readPropertyList(MemoryReader& memoryReader)
@@ -888,23 +935,7 @@ void NetCdfFile::readPropertyList(MemoryReader& memoryReader)
     //printf("dimensions:\n");
     for (uint t=0; t<dimensionCount; t++)
     {
-      uint nameLen = 0;
-      memoryReader >> nameLen;
-      // The length comes from the file, it must fit in the remaining data
-      if (C_UINT64(nameLen) > C_UINT64(memoryReader.getEndPtr() - memoryReader.getReadPtr()))
-        throw Fmi::Exception(BCP,"Invalid NetCDF name length!");
-
-      uint paddedLen = nameLen;
-      if (nameLen > 0)
-        paddedLen = ((nameLen-1)/4 + 1) * 4;
-
-      std::string name(nameLen, '\0');
-      for (uint n = 0; n<paddedLen; n++)
-      {
-        auto val = memoryReader.read_int8();
-        if (n < nameLen)
-          name[n] = val;
-      }
+      std::string name = readPaddedName(memoryReader);
 
       uint dimLen = 0;
       memoryReader >> dimLen;
@@ -963,23 +994,7 @@ void NetCdfFile::readPropertyList(MemoryReader& memoryReader)
     for (uint t=0; t<variableCount; t++)
     {
       // Variable name
-      uint nameLen = 0;
-      memoryReader >> nameLen;
-      // The length comes from the file, it must fit in the remaining data
-      if (C_UINT64(nameLen) > C_UINT64(memoryReader.getEndPtr() - memoryReader.getReadPtr()))
-        throw Fmi::Exception(BCP,"Invalid NetCDF name length!");
-
-      uint paddedLen = nameLen;
-      if (nameLen > 0)
-        paddedLen = ((nameLen-1)/4 + 1) * 4;
-
-      std::string varName(nameLen, '\0');
-      for (uint n = 0; n<paddedLen; n++)
-      {
-        auto val = memoryReader.read_int8();
-        if (n < nameLen)
-          varName[n] = val;
-      }
+      std::string varName = readPaddedName(memoryReader);
 
       variables.push_back(varName);
 
@@ -990,14 +1005,7 @@ void NetCdfFile::readPropertyList(MemoryReader& memoryReader)
 
       std::vector<std::string> dimList;
       std::vector<std::string> dimList2;
-      for (uint d=0; d<dimIndexCount; d++)
-      {
-        uint dim = 0;
-        memoryReader >> dim;
-        dimList.push_back(std::to_string(dim));
-        if (dim < dimNames.size() )
-          dimList2.push_back(dimNames[dim]);
-      }
+      readDimensionIndexes(memoryReader,dimIndexCount,dimNames,dimList,dimList2);
       insertProperty(varName + ".dimension.indexes", dimList);
       insertProperty(varName + ".dimension.names", dimList2);
 
@@ -1032,12 +1040,7 @@ void NetCdfFile::readPropertyList(MemoryReader& memoryReader)
       uint vSize = 0;
       memoryReader >> vSize;
 
-      Int64 offset = 0;
-
-      if (version == 1)
-        offset = memoryReader.read_uint32();
-      else
-        offset = memoryReader.read_uint64();
+      Int64 offset = (version == 1 ? memoryReader.read_uint32() : memoryReader.read_uint64());
 
       if (ncType < 1 || ncType > 6)
         throw Fmi::Exception(BCP,"Invalid NetCDF variable type!");
