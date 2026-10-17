@@ -3471,6 +3471,415 @@ void GridDef::loadGeometryDefinitions(const char *filename)
 
 
 
+namespace
+{
+/*! \brief Creates the GRIB1 LatLon grid definition from the CSV fields. */
+
+GRIB1::GridDefinition* createGrib1LatLon(char *field[],uint c,GeometryNames& geometryNames)
+{
+  if (c < 10)
+    return nullptr;
+
+  uint geometryId = toInt32(field[1]);
+  char *geometryName = field[2];
+  int ni = toInt32(field[3]);
+  int nj = toInt32(field[4]);
+  int longitude = C_INT(round(toDouble(field[5])*1000));
+  int latitude = C_INT(round(toDouble(field[6])*1000));
+  int lastLongitude = 0;
+  int lastLatitude = 0;
+  int iInc = C_INT(round(toDouble(field[7]) * 1000));
+  int jInc = C_INT(round(toDouble(field[8]) * 1000));
+  // The last grid point from the exact increments: GRIB1 increments are whole
+  // millidegrees, and n times a rounded increment can overshoot a whole cell
+  int iSpan = C_INT(round((ni-1) * toDouble(field[7]) * 1000));
+  int jSpan = C_INT(round((nj-1) * toDouble(field[8]) * 1000));
+  char *scanningMode = field[9];
+  double earthSemiMajor = toDouble(field[10]);
+  double earthSemiMinor = toDouble(field[11]);
+
+  auto *def1 = new GRIB1::LatLonImpl();
+  GRIB1::GridAreaSettings gridArea;
+  GRIB1::ScanningModeSettings scanningMode1;
+  if (strcasecmp(scanningMode,"+x+y") == 0)
+  {
+    lastLongitude = longitude + iSpan;
+    lastLatitude = latitude + jSpan;
+    scanningMode1.setScanningMode(0x40);
+  }
+  else if (strcasecmp(scanningMode,"-x+y") == 0)
+  {
+    lastLongitude = longitude - iSpan;
+    lastLatitude = latitude + jSpan;
+    scanningMode1.setScanningMode(0x80+0x40);
+  }
+  else if (strcasecmp(scanningMode,"+x-y") == 0)
+  {
+    lastLongitude = longitude + iSpan;
+    lastLatitude = latitude - jSpan;
+    scanningMode1.setScanningMode(0);
+  }
+  else if (strcasecmp(scanningMode,"-x-y") == 0)
+  {
+    lastLongitude = longitude - iSpan;
+    lastLatitude = latitude - jSpan;
+    scanningMode1.setScanningMode(0x80);
+  }
+
+  if (lastLongitude > 360000)
+    lastLongitude -= 360000;
+
+  if (lastLatitude > 90000)
+    lastLatitude = 180000 - lastLatitude;
+
+  def1->setScanningMode(scanningMode1);
+
+  GRIB1::ResolutionFlagsSettings resolutionFlags;
+  resolutionFlags.setResolutionAndComponentFlags(128);
+  gridArea.setResolutionFlags(resolutionFlags);
+
+  gridArea.setLatitudeOfFirstGridPoint(latitude);
+  gridArea.setLongitudeOfFirstGridPoint(longitude);
+  gridArea.setLatitudeOfLastGridPoint(lastLatitude);
+  gridArea.setLongitudeOfLastGridPoint(lastLongitude);
+  def1->setGridArea(gridArea);
+
+  def1->setNi(ni);
+  def1->setNj(nj);
+  def1->setIDirectionIncrement(iInc);
+  def1->setJDirectionIncrement(jInc);
+
+  def1->setGridGeometryId(geometryId);
+  geometryNames.insert(std::pair<uint,std::string>(geometryId,geometryName));
+  def1->setEarthSemiMajor(earthSemiMajor);
+  def1->setEarthSemiMinor(earthSemiMinor);
+  def1->initSpatialReference();
+  def1->countHash();
+
+  return def1;
+}
+
+
+
+
+
+/*! \brief Creates the GRIB1 RotatedLatLon grid definition from the CSV fields. */
+
+GRIB1::GridDefinition* createGrib1RotatedLatLon(char *field[],uint c,GeometryNames& geometryNames)
+{
+  if (c < 13)
+    return nullptr;
+
+  uint geometryId = toInt32(field[1]);
+  char *geometryName = field[2];
+  int ni = toInt32(field[3]);
+  int nj = toInt32(field[4]);
+  int longitude = C_INT(round(toDouble(field[5])*1000));
+  int latitude = C_INT(round(toDouble(field[6])*1000));
+  int lastLongitude = 0;
+  int lastLatitude = 0;
+  int iInc = C_INT(round(toDouble(field[7]) * 1000));
+  int jInc = C_INT(round(toDouble(field[8]) * 1000));
+  // The last grid point from the exact increments: GRIB1 increments are whole
+  // millidegrees, and n times a rounded increment can overshoot a whole cell
+  int iSpan = C_INT(round((ni-1) * toDouble(field[7]) * 1000));
+  int jSpan = C_INT(round((nj-1) * toDouble(field[8]) * 1000));
+  char *scanningMode = field[9];
+  int longitudeOfSouthernPole = C_INT(round(toDouble(field[10])*1000));
+  int latitudeOfSouthernPole = C_INT(round(toDouble(field[11])*1000));
+  int angle = round(toDouble(field[12]));
+  double earthSemiMajor = toDouble(field[13]);
+  double earthSemiMinor = toDouble(field[14]);
+  //std::uint8_t resolutionAndComponentFlags = 48;
+
+  auto *def1 = new GRIB1::RotatedLatLonImpl();
+  GRIB1::GridAreaSettings gridArea;
+  GRIB1::RotationSettings rotation1;
+  GRIB1::ScanningModeSettings scanningMode1;
+
+  if (strcasecmp(scanningMode,"+x+y") == 0)
+  {
+    lastLongitude = longitude + iSpan;
+    lastLatitude = latitude + jSpan;
+    scanningMode1.setScanningMode(0x40);
+  }
+  else if (strcasecmp(scanningMode,"-x+y") == 0)
+  {
+    lastLongitude = longitude - iSpan;
+    lastLatitude = latitude + jSpan;
+    scanningMode1.setScanningMode(0x80+0x40);
+  }
+  else if (strcasecmp(scanningMode,"+x-y") == 0)
+  {
+    lastLongitude = longitude + iSpan;
+    lastLatitude = latitude - jSpan;
+    scanningMode1.setScanningMode(0);
+  }
+  else if (strcasecmp(scanningMode,"-x-y") == 0)
+  {
+    lastLongitude = longitude - iSpan;
+    lastLatitude = latitude - jSpan;
+    scanningMode1.setScanningMode(0x80);
+  }
+
+  if (lastLongitude > 360000)
+    lastLongitude -= 360000;
+
+  if (lastLatitude > 90000)
+    lastLatitude = 180000 - lastLatitude;
+
+  def1->setScanningMode(scanningMode1);
+
+  gridArea.setLatitudeOfFirstGridPoint(latitude);
+  gridArea.setLongitudeOfFirstGridPoint(longitude);
+  gridArea.setLatitudeOfLastGridPoint(lastLatitude);
+  gridArea.setLongitudeOfLastGridPoint(lastLongitude);
+
+  rotation1.setLatitudeOfSouthernPole(latitudeOfSouthernPole);
+  rotation1.setLongitudeOfSouthernPole(longitudeOfSouthernPole);
+  rotation1.setGeography_angleOfRotationInDegrees(angle);
+  def1->setRotation(rotation1);
+
+  def1->setNi(ni);
+  def1->setNj(nj);
+  def1->setGridArea(gridArea);
+  def1->setIDirectionIncrement(iInc);
+  def1->setJDirectionIncrement(jInc);
+
+  def1->setGridGeometryId(geometryId);
+  geometryNames.insert(std::pair<uint,std::string>(geometryId,geometryName));
+  def1->setEarthSemiMajor(earthSemiMajor);
+  def1->setEarthSemiMinor(earthSemiMinor);
+  def1->initSpatialReference();
+  def1->countHash();
+
+  return def1;
+}
+
+
+
+
+
+/*! \brief Creates the GRIB1 Mercator grid definition from the CSV fields. */
+
+[[maybe_unused]] GRIB1::GridDefinition* createGrib1Mercator(char *field[],uint c,GeometryNames& geometryNames)
+{
+  if (c < 12)
+    return nullptr;
+
+  uint geometryId = toInt32(field[1]);
+  char *geometryName = field[2];
+  int ni = toInt32(field[3]);
+  int nj = toInt32(field[4]);
+  int longitude = C_INT(round(toDouble(field[5])*1000));
+  int latitude = C_INT(round(toDouble(field[6])*1000));
+  int lastLongitude = 0;
+  int lastLatitude = 0;
+  int iInc = C_INT(round(toDouble(field[7])));
+  int jInc = C_INT(round(toDouble(field[8])));
+  char *scanningMode = field[9];
+  int latin = C_INT(round(toDouble(field[10])*1000));
+
+  auto *def1 = new GRIB1::MercatorImpl();
+  GRIB1::ScanningModeSettings scanningMode1;
+
+  if (strcasecmp(scanningMode,"+x+y") == 0)
+  {
+    lastLongitude = longitude + ni*iInc - iInc;
+    lastLatitude = latitude + nj*jInc - jInc;
+    scanningMode1.setScanningMode(0x40);
+  }
+  else if (strcasecmp(scanningMode,"-x+y") == 0)
+  {
+    lastLongitude = longitude - ni*iInc + iInc;
+    lastLatitude = latitude + nj*jInc - jInc;
+    scanningMode1.setScanningMode(0x80+0x40);
+  }
+  else if (strcasecmp(scanningMode,"+x-y") == 0)
+  {
+    lastLongitude = longitude + ni*iInc - iInc;
+    lastLatitude = latitude - nj*jInc + jInc;
+    scanningMode1.setScanningMode(0);
+  }
+  else if (strcasecmp(scanningMode,"-x-y") == 0)
+  {
+    lastLongitude = longitude - ni*iInc + iInc;
+    lastLatitude = latitude - nj*jInc + jInc;
+    scanningMode1.setScanningMode(0x80);
+  }
+
+  if (lastLongitude > 360000)
+    lastLongitude -= 360000;
+
+  if (lastLatitude > 90000)
+    lastLatitude = 180000 - lastLatitude;
+
+  def1->setScanningMode(scanningMode1);
+
+  def1->setNi(std::uint16_t(ni));
+  def1->setNj(std::uint16_t(nj));
+
+  GRIB1::GridAreaSettings gridArea;
+  gridArea.setLatitudeOfFirstGridPoint(latitude);
+  gridArea.setLongitudeOfFirstGridPoint(longitude);
+  gridArea.setLatitudeOfLastGridPoint(lastLatitude);
+  gridArea.setLongitudeOfLastGridPoint(lastLongitude);
+  def1->setGridArea(gridArea);
+  def1->setDiInMetres(iInc);
+  def1->setDjInMetres(jInc);
+  def1->setLatin((SmartMet::int24_t)latin);
+
+  def1->setGridGeometryId(geometryId);
+  geometryNames.insert(std::pair<uint,std::string>(geometryId,geometryName));
+  //def1->setEarthSemiMajor(earthSemiMajor);
+  //def1->setEarthSemiMinor(earthSemiMinor);
+  def1->initSpatialReference();
+  def1->countHash();
+
+  return def1;
+}
+
+
+
+
+
+/*! \brief Creates the GRIB1 PolarStereographic grid definition from the CSV fields. */
+
+GRIB1::GridDefinition* createGrib1PolarStereographic(char *field[],uint c,GeometryNames& geometryNames)
+{
+  if (c < 12)
+    return nullptr;
+
+  uint geometryId = toInt32(field[1]);
+  char *geometryName = field[2];
+  int ni = toInt32(field[3]);
+  int nj = toInt32(field[4]);
+  int longitude = C_INT(round(toDouble(field[5])*1000));
+  int latitude = C_INT(round(toDouble(field[6])*1000));
+  int iInc = C_INT(round(toDouble(field[7])));
+  int jInc = C_INT(round(toDouble(field[8])));
+  char *scanningMode = field[9];
+  int orientation = C_INT(round(toDouble(field[10])*1000));
+  //int laD = C_INT(round(toDouble(field[11]) * 1000000));
+  double earthSemiMajor = toDouble(field[12]);
+  double earthSemiMinor = toDouble(field[13]);
+
+  auto *def1 = new GRIB1::PolarStereographicImpl();
+  GRIB1::ScanningModeSettings scanningMode1;
+
+  if (strcasecmp(scanningMode,"+x+y") == 0)
+    scanningMode1.setScanningMode(0x40);
+  else if (strcasecmp(scanningMode,"-x+y") == 0)
+    scanningMode1.setScanningMode(0x80+0x40);
+  else if (strcasecmp(scanningMode,"+x-y") == 0)
+    scanningMode1.setScanningMode(0);
+  else if (strcasecmp(scanningMode,"-x-y") == 0)
+    scanningMode1.setScanningMode(0x80);
+
+  def1->setScanningMode(scanningMode1);
+
+  def1->setNx(std::uint16_t(ni));
+  def1->setNy(std::uint16_t(nj));
+  def1->setLatitudeOfFirstGridPoint(latitude);
+  def1->setLongitudeOfFirstGridPoint(longitude);
+  //def1->setResolutionFlags(ResolutionFlagsSettings resolutionFlags);
+  //def1->setLoV(orientation/1000);
+  def1->setOrientationOfTheGrid(orientation);
+  def1->setDxInMetres(iInc);
+  def1->setDyInMetres(jInc);
+  //def1->setProjectionCentreFlag(std::uint8_t projectionCentreFlag);
+  //def1->setLatin1((SmartMet::int24_t)latin1/1000);
+  //def1->setLatin2((SmartMet::int24_t)latin2/1000);
+  //def1->setLatitudeOfSouthernPole((SmartMet::int24_t)latitudeOfSouthernPole/1000);
+  //def1->setLongitudeOfSouthernPole((SmartMet::int24_t)longitudeOfSouthernPole/1000);
+
+  def1->setGridGeometryId(geometryId);
+  geometryNames.insert(std::pair<uint,std::string>(geometryId,geometryName));
+  def1->setEarthSemiMajor(earthSemiMajor);
+  def1->setEarthSemiMinor(earthSemiMinor);
+  def1->initSpatialReference();
+  def1->countHash();
+
+  return def1;
+}
+
+
+
+
+
+/*! \brief Creates the GRIB1 LambertConformal grid definition from the CSV fields. */
+
+GRIB1::GridDefinition* createGrib1LambertConformal(char *field[],uint c,GeometryNames& geometryNames)
+{
+  if (c < 15)
+    return nullptr;
+
+  uint geometryId = toInt32(field[1]);
+  char *geometryName = field[2];
+  int ni = toInt32(field[3]);
+  int nj = toInt32(field[4]);
+  int longitude = C_INT(round(toDouble(field[5])*1000));
+  int latitude = C_INT(round(toDouble(field[6])*1000));
+  int iInc = toInt32(field[7]);
+  int jInc = toInt32(field[8]);
+  char *scanningMode = field[9];
+  int orientation = C_INT(round(toDouble(field[10])*1000));
+  int latin1 = C_INT(round(toDouble(field[11])*1000));
+  int latin2 = C_INT(round(toDouble(field[12])*1000));
+  int longitudeOfSouthernPole = C_INT(round(toDouble(field[13])*1000));
+  int latitudeOfSouthernPole = C_INT(round(toDouble(field[14])*1000));
+  //double laD = toDouble(field[15]);
+  double earthSemiMajor = toDouble(field[16]);
+  double earthSemiMinor = toDouble(field[17]);
+
+  auto *def1 = new GRIB1::LambertConformalImpl();
+  GRIB1::ScanningModeSettings scanningMode1;
+
+  if (strcasecmp(scanningMode,"+x+y") == 0)
+     scanningMode1.setScanningMode(0x40);
+  else if (strcasecmp(scanningMode,"-x+y") == 0)
+    scanningMode1.setScanningMode(0x80+0x40);
+  else if (strcasecmp(scanningMode,"+x-y") == 0)
+    scanningMode1.setScanningMode(0);
+  else if (strcasecmp(scanningMode,"-x-y") == 0)
+    scanningMode1.setScanningMode(0x80);
+
+  def1->setScanningMode(scanningMode1);
+
+  def1->setNx(std::uint16_t(ni));
+  def1->setNy(std::uint16_t(nj));
+  def1->setLatitudeOfFirstGridPoint(latitude);
+  def1->setLongitudeOfFirstGridPoint(longitude);
+  //def1->setResolutionFlags(ResolutionFlagsSettings resolutionFlags);
+  def1->setLoV(orientation);
+  def1->setDxInMetres(iInc);
+  def1->setDyInMetres(jInc);
+  //def1->setProjectionCentreFlag(std::uint8_t projectionCentreFlag);
+  def1->setLatin1(latin1);
+  def1->setLatin2(latin2);
+  def1->setLatitudeOfSouthernPole(latitudeOfSouthernPole);
+  def1->setLongitudeOfSouthernPole(longitudeOfSouthernPole);
+
+  def1->setGridGeometryId(geometryId);
+  geometryNames.insert(std::pair<uint,std::string>(geometryId,geometryName));
+  def1->setEarthSemiMajor(earthSemiMajor);
+  def1->setEarthSemiMinor(earthSemiMinor);
+  def1->initSpatialReference();
+  def1->countHash();
+
+  return def1;
+}
+
+
+
+
+
+}  // namespace
+
+
+
+
+
 /*! \brief Parses a GRIB1 grid definition from the given configuration line. */
 
 GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
@@ -3497,179 +3906,10 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
           break;
 
         case T::GridProjectionValue::LatLon:
-        {
-          if (c < 10)
-            return nullptr;
-
-          uint geometryId = toInt32(field[1]);
-          char *geometryName = field[2];
-          int ni = toInt32(field[3]);
-          int nj = toInt32(field[4]);
-          int longitude = C_INT(round(toDouble(field[5])*1000));
-          int latitude = C_INT(round(toDouble(field[6])*1000));
-          int lastLongitude = 0;
-          int lastLatitude = 0;
-          int iInc = C_INT(round(toDouble(field[7]) * 1000));
-          int jInc = C_INT(round(toDouble(field[8]) * 1000));
-          // The last grid point from the exact increments: GRIB1 increments are whole
-          // millidegrees, and n times a rounded increment can overshoot a whole cell
-          int iSpan = C_INT(round((ni-1) * toDouble(field[7]) * 1000));
-          int jSpan = C_INT(round((nj-1) * toDouble(field[8]) * 1000));
-          char *scanningMode = field[9];
-          double earthSemiMajor = toDouble(field[10]);
-          double earthSemiMinor = toDouble(field[11]);
-
-          auto *def1 = new GRIB1::LatLonImpl();
-          GRIB1::GridAreaSettings gridArea;
-          GRIB1::ScanningModeSettings scanningMode1;
-          if (strcasecmp(scanningMode,"+x+y") == 0)
-          {
-            lastLongitude = longitude + iSpan;
-            lastLatitude = latitude + jSpan;
-            scanningMode1.setScanningMode(0x40);
-          }
-          else if (strcasecmp(scanningMode,"-x+y") == 0)
-          {
-            lastLongitude = longitude - iSpan;
-            lastLatitude = latitude + jSpan;
-            scanningMode1.setScanningMode(0x80+0x40);
-          }
-          else if (strcasecmp(scanningMode,"+x-y") == 0)
-          {
-            lastLongitude = longitude + iSpan;
-            lastLatitude = latitude - jSpan;
-            scanningMode1.setScanningMode(0);
-          }
-          else if (strcasecmp(scanningMode,"-x-y") == 0)
-          {
-            lastLongitude = longitude - iSpan;
-            lastLatitude = latitude - jSpan;
-            scanningMode1.setScanningMode(0x80);
-          }
-
-          if (lastLongitude > 360000)
-            lastLongitude -= 360000;
-
-          if (lastLatitude > 90000)
-            lastLatitude = 180000 - lastLatitude;
-
-          def1->setScanningMode(scanningMode1);
-
-          GRIB1::ResolutionFlagsSettings resolutionFlags;
-          resolutionFlags.setResolutionAndComponentFlags(128);
-          gridArea.setResolutionFlags(resolutionFlags);
-
-          gridArea.setLatitudeOfFirstGridPoint(latitude);
-          gridArea.setLongitudeOfFirstGridPoint(longitude);
-          gridArea.setLatitudeOfLastGridPoint(lastLatitude);
-          gridArea.setLongitudeOfLastGridPoint(lastLongitude);
-          def1->setGridArea(gridArea);
-
-          def1->setNi(ni);
-          def1->setNj(nj);
-          def1->setIDirectionIncrement(iInc);
-          def1->setJDirectionIncrement(jInc);
-
-          def1->setGridGeometryId(geometryId);
-          mGeometryNames.insert(std::pair<uint,std::string>(geometryId,geometryName));
-          def1->setEarthSemiMajor(earthSemiMajor);
-          def1->setEarthSemiMinor(earthSemiMinor);
-          def1->initSpatialReference();
-          def1->countHash();
-
-          return def1;
-        }
+          return createGrib1LatLon(field,c,mGeometryNames);
 
         case T::GridProjectionValue::RotatedLatLon:
-        {
-          if (c < 13)
-            return nullptr;
-
-          uint geometryId = toInt32(field[1]);
-          char *geometryName = field[2];
-          int ni = toInt32(field[3]);
-          int nj = toInt32(field[4]);
-          int longitude = C_INT(round(toDouble(field[5])*1000));
-          int latitude = C_INT(round(toDouble(field[6])*1000));
-          int lastLongitude = 0;
-          int lastLatitude = 0;
-          int iInc = C_INT(round(toDouble(field[7]) * 1000));
-          int jInc = C_INT(round(toDouble(field[8]) * 1000));
-          // The last grid point from the exact increments: GRIB1 increments are whole
-          // millidegrees, and n times a rounded increment can overshoot a whole cell
-          int iSpan = C_INT(round((ni-1) * toDouble(field[7]) * 1000));
-          int jSpan = C_INT(round((nj-1) * toDouble(field[8]) * 1000));
-          char *scanningMode = field[9];
-          int longitudeOfSouthernPole = C_INT(round(toDouble(field[10])*1000));
-          int latitudeOfSouthernPole = C_INT(round(toDouble(field[11])*1000));
-          int angle = round(toDouble(field[12]));
-          double earthSemiMajor = toDouble(field[13]);
-          double earthSemiMinor = toDouble(field[14]);
-          //std::uint8_t resolutionAndComponentFlags = 48;
-
-          auto *def1 = new GRIB1::RotatedLatLonImpl();
-          GRIB1::GridAreaSettings gridArea;
-          GRIB1::RotationSettings rotation1;
-          GRIB1::ScanningModeSettings scanningMode1;
-
-          if (strcasecmp(scanningMode,"+x+y") == 0)
-          {
-            lastLongitude = longitude + iSpan;
-            lastLatitude = latitude + jSpan;
-            scanningMode1.setScanningMode(0x40);
-          }
-          else if (strcasecmp(scanningMode,"-x+y") == 0)
-          {
-            lastLongitude = longitude - iSpan;
-            lastLatitude = latitude + jSpan;
-            scanningMode1.setScanningMode(0x80+0x40);
-          }
-          else if (strcasecmp(scanningMode,"+x-y") == 0)
-          {
-            lastLongitude = longitude + iSpan;
-            lastLatitude = latitude - jSpan;
-            scanningMode1.setScanningMode(0);
-          }
-          else if (strcasecmp(scanningMode,"-x-y") == 0)
-          {
-            lastLongitude = longitude - iSpan;
-            lastLatitude = latitude - jSpan;
-            scanningMode1.setScanningMode(0x80);
-          }
-
-          if (lastLongitude > 360000)
-            lastLongitude -= 360000;
-
-          if (lastLatitude > 90000)
-            lastLatitude = 180000 - lastLatitude;
-
-          def1->setScanningMode(scanningMode1);
-
-          gridArea.setLatitudeOfFirstGridPoint(latitude);
-          gridArea.setLongitudeOfFirstGridPoint(longitude);
-          gridArea.setLatitudeOfLastGridPoint(lastLatitude);
-          gridArea.setLongitudeOfLastGridPoint(lastLongitude);
-
-          rotation1.setLatitudeOfSouthernPole(latitudeOfSouthernPole);
-          rotation1.setLongitudeOfSouthernPole(longitudeOfSouthernPole);
-          rotation1.setGeography_angleOfRotationInDegrees(angle);
-          def1->setRotation(rotation1);
-
-          def1->setNi(ni);
-          def1->setNj(nj);
-          def1->setGridArea(gridArea);
-          def1->setIDirectionIncrement(iInc);
-          def1->setJDirectionIncrement(jInc);
-
-          def1->setGridGeometryId(geometryId);
-          mGeometryNames.insert(std::pair<uint,std::string>(geometryId,geometryName));
-          def1->setEarthSemiMajor(earthSemiMajor);
-          def1->setEarthSemiMinor(earthSemiMinor);
-          def1->initSpatialReference();
-          def1->countHash();
-
-          return def1;
-        }
+          return createGrib1RotatedLatLon(field,c,mGeometryNames);
 
         case T::GridProjectionValue::StretchedLatLon:
           break;
@@ -3684,206 +3924,18 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
           break;
 
         case T::GridProjectionValue::Mercator:
-        {
           return nullptr;
           // ************* IMPLEMENTATION NOT TESTED *************
-
-          if (c < 12)
-            return nullptr;
-
-          uint geometryId = toInt32(field[1]);
-          char *geometryName = field[2];
-          int ni = toInt32(field[3]);
-          int nj = toInt32(field[4]);
-          int longitude = C_INT(round(toDouble(field[5])*1000));
-          int latitude = C_INT(round(toDouble(field[6])*1000));
-          int lastLongitude = 0;
-          int lastLatitude = 0;
-          int iInc = C_INT(round(toDouble(field[7])));
-          int jInc = C_INT(round(toDouble(field[8])));
-          char *scanningMode = field[9];
-          int latin = C_INT(round(toDouble(field[10])*1000));
-
-          auto *def1 = new GRIB1::MercatorImpl();
-          GRIB1::ScanningModeSettings scanningMode1;
-
-          if (strcasecmp(scanningMode,"+x+y") == 0)
-          {
-            lastLongitude = longitude + ni*iInc - iInc;
-            lastLatitude = latitude + nj*jInc - jInc;
-            scanningMode1.setScanningMode(0x40);
-          }
-          else if (strcasecmp(scanningMode,"-x+y") == 0)
-          {
-            lastLongitude = longitude - ni*iInc + iInc;
-            lastLatitude = latitude + nj*jInc - jInc;
-            scanningMode1.setScanningMode(0x80+0x40);
-          }
-          else if (strcasecmp(scanningMode,"+x-y") == 0)
-          {
-            lastLongitude = longitude + ni*iInc - iInc;
-            lastLatitude = latitude - nj*jInc + jInc;
-            scanningMode1.setScanningMode(0);
-          }
-          else if (strcasecmp(scanningMode,"-x-y") == 0)
-          {
-            lastLongitude = longitude - ni*iInc + iInc;
-            lastLatitude = latitude - nj*jInc + jInc;
-            scanningMode1.setScanningMode(0x80);
-          }
-
-          if (lastLongitude > 360000)
-            lastLongitude -= 360000;
-
-          if (lastLatitude > 90000)
-            lastLatitude = 180000 - lastLatitude;
-
-          def1->setScanningMode(scanningMode1);
-
-          def1->setNi(std::uint16_t(ni));
-          def1->setNj(std::uint16_t(nj));
-
-          GRIB1::GridAreaSettings gridArea;
-          gridArea.setLatitudeOfFirstGridPoint(latitude);
-          gridArea.setLongitudeOfFirstGridPoint(longitude);
-          gridArea.setLatitudeOfLastGridPoint(lastLatitude);
-          gridArea.setLongitudeOfLastGridPoint(lastLongitude);
-          def1->setGridArea(gridArea);
-          def1->setDiInMetres(iInc);
-          def1->setDjInMetres(jInc);
-          def1->setLatin((SmartMet::int24_t)latin);
-
-          def1->setGridGeometryId(geometryId);
-          mGeometryNames.insert(std::pair<uint,std::string>(geometryId,geometryName));
-          //def1->setEarthSemiMajor(earthSemiMajor);
-          //def1->setEarthSemiMinor(earthSemiMinor);
-          def1->initSpatialReference();
-          def1->countHash();
-
-          return def1;
-        }
+          // return createGrib1Mercator(field,c,mGeometryNames);
 
         case T::GridProjectionValue::TransverseMercator:
           break;
 
         case T::GridProjectionValue::PolarStereographic:
-        {
-          if (c < 12)
-            return nullptr;
-
-          uint geometryId = toInt32(field[1]);
-          char *geometryName = field[2];
-          int ni = toInt32(field[3]);
-          int nj = toInt32(field[4]);
-          int longitude = C_INT(round(toDouble(field[5])*1000));
-          int latitude = C_INT(round(toDouble(field[6])*1000));
-          int iInc = C_INT(round(toDouble(field[7])));
-          int jInc = C_INT(round(toDouble(field[8])));
-          char *scanningMode = field[9];
-          int orientation = C_INT(round(toDouble(field[10])*1000));
-          //int laD = C_INT(round(toDouble(field[11]) * 1000000));
-          double earthSemiMajor = toDouble(field[12]);
-          double earthSemiMinor = toDouble(field[13]);
-
-          auto *def1 = new GRIB1::PolarStereographicImpl();
-          GRIB1::ScanningModeSettings scanningMode1;
-
-          if (strcasecmp(scanningMode,"+x+y") == 0)
-            scanningMode1.setScanningMode(0x40);
-          else if (strcasecmp(scanningMode,"-x+y") == 0)
-            scanningMode1.setScanningMode(0x80+0x40);
-          else if (strcasecmp(scanningMode,"+x-y") == 0)
-            scanningMode1.setScanningMode(0);
-          else if (strcasecmp(scanningMode,"-x-y") == 0)
-            scanningMode1.setScanningMode(0x80);
-
-          def1->setScanningMode(scanningMode1);
-
-          def1->setNx(std::uint16_t(ni));
-          def1->setNy(std::uint16_t(nj));
-          def1->setLatitudeOfFirstGridPoint(latitude);
-          def1->setLongitudeOfFirstGridPoint(longitude);
-          //def1->setResolutionFlags(ResolutionFlagsSettings resolutionFlags);
-          //def1->setLoV(orientation/1000);
-          def1->setOrientationOfTheGrid(orientation);
-          def1->setDxInMetres(iInc);
-          def1->setDyInMetres(jInc);
-          //def1->setProjectionCentreFlag(std::uint8_t projectionCentreFlag);
-          //def1->setLatin1((SmartMet::int24_t)latin1/1000);
-          //def1->setLatin2((SmartMet::int24_t)latin2/1000);
-          //def1->setLatitudeOfSouthernPole((SmartMet::int24_t)latitudeOfSouthernPole/1000);
-          //def1->setLongitudeOfSouthernPole((SmartMet::int24_t)longitudeOfSouthernPole/1000);
-
-          def1->setGridGeometryId(geometryId);
-          mGeometryNames.insert(std::pair<uint,std::string>(geometryId,geometryName));
-          def1->setEarthSemiMajor(earthSemiMajor);
-          def1->setEarthSemiMinor(earthSemiMinor);
-          def1->initSpatialReference();
-          def1->countHash();
-
-          return def1;
-        }
+          return createGrib1PolarStereographic(field,c,mGeometryNames);
 
         case T::GridProjectionValue::LambertConformal:
-        {
-          if (c < 15)
-            return nullptr;
-
-          uint geometryId = toInt32(field[1]);
-          char *geometryName = field[2];
-          int ni = toInt32(field[3]);
-          int nj = toInt32(field[4]);
-          int longitude = C_INT(round(toDouble(field[5])*1000));
-          int latitude = C_INT(round(toDouble(field[6])*1000));
-          int iInc = toInt32(field[7]);
-          int jInc = toInt32(field[8]);
-          char *scanningMode = field[9];
-          int orientation = C_INT(round(toDouble(field[10])*1000));
-          int latin1 = C_INT(round(toDouble(field[11])*1000));
-          int latin2 = C_INT(round(toDouble(field[12])*1000));
-          int longitudeOfSouthernPole = C_INT(round(toDouble(field[13])*1000));
-          int latitudeOfSouthernPole = C_INT(round(toDouble(field[14])*1000));
-          //double laD = toDouble(field[15]);
-          double earthSemiMajor = toDouble(field[16]);
-          double earthSemiMinor = toDouble(field[17]);
-
-          auto *def1 = new GRIB1::LambertConformalImpl();
-          GRIB1::ScanningModeSettings scanningMode1;
-
-          if (strcasecmp(scanningMode,"+x+y") == 0)
-             scanningMode1.setScanningMode(0x40);
-          else if (strcasecmp(scanningMode,"-x+y") == 0)
-            scanningMode1.setScanningMode(0x80+0x40);
-          else if (strcasecmp(scanningMode,"+x-y") == 0)
-            scanningMode1.setScanningMode(0);
-          else if (strcasecmp(scanningMode,"-x-y") == 0)
-            scanningMode1.setScanningMode(0x80);
-
-          def1->setScanningMode(scanningMode1);
-
-          def1->setNx(std::uint16_t(ni));
-          def1->setNy(std::uint16_t(nj));
-          def1->setLatitudeOfFirstGridPoint(latitude);
-          def1->setLongitudeOfFirstGridPoint(longitude);
-          //def1->setResolutionFlags(ResolutionFlagsSettings resolutionFlags);
-          def1->setLoV(orientation);
-          def1->setDxInMetres(iInc);
-          def1->setDyInMetres(jInc);
-          //def1->setProjectionCentreFlag(std::uint8_t projectionCentreFlag);
-          def1->setLatin1(latin1);
-          def1->setLatin2(latin2);
-          def1->setLatitudeOfSouthernPole(latitudeOfSouthernPole);
-          def1->setLongitudeOfSouthernPole(longitudeOfSouthernPole);
-
-          def1->setGridGeometryId(geometryId);
-          mGeometryNames.insert(std::pair<uint,std::string>(geometryId,geometryName));
-          def1->setEarthSemiMajor(earthSemiMajor);
-          def1->setEarthSemiMinor(earthSemiMinor);
-          def1->initSpatialReference();
-          def1->countHash();
-
-          return def1;
-        }
+          return createGrib1LambertConformal(field,c,mGeometryNames);
 
         case T::GridProjectionValue::ObliqueLambertConformal:
           break;
@@ -3969,6 +4021,505 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
 
 
 
+namespace
+{
+/*! \brief Creates the GRIB2 LatLon grid definition from the CSV fields. */
+
+GRIB2::GridDefinition* createGrib2LatLon(char *field[],uint c,GeometryNames& geometryNames)
+{
+  if (c < 10)
+    return nullptr;
+
+  uint geometryId = toInt32(field[1]);
+  char *geometryName = field[2];
+  int ni = toInt32(field[3]);
+  int nj = toInt32(field[4]);
+  int longitude = C_INT(round(toDouble(field[5])*1000000));
+  int latitude = C_INT(round(toDouble(field[6])*1000000));
+  int iInc = C_INT(round(toDouble(field[7]) * 1000000));
+  int jInc = C_INT(round(toDouble(field[8]) * 1000000));
+  char *scanningMode = field[9];
+  double earthSemiMajor = toDouble(field[10]);
+  double earthSemiMinor = toDouble(field[11]);
+  int lastLongitude = 0;
+  int lastLatitude = 0;
+
+  auto *def2 = new GRIB2::LatLonImpl();
+  GRIB2::LatLonSettings latLon;
+  GRIB2::ScanningModeSettings scanningMode2;
+  GRIB2::GridSettings grid;
+
+  GRIB2::ResolutionSettings resolution;
+  resolution.setResolutionAndComponentFlags(48);
+  grid.setResolution(resolution);
+
+  if (strcasecmp(scanningMode,"+x+y") == 0)
+  {
+    lastLongitude = longitude + ni*iInc - iInc;
+    lastLatitude = latitude + nj*jInc - jInc;
+    scanningMode2.setScanningMode(0x40);
+  }
+  else if (strcasecmp(scanningMode,"-x+y") == 0)
+  {
+    lastLongitude = longitude - (ni*iInc - iInc);
+    lastLatitude = latitude + nj*jInc - jInc;
+    scanningMode2.setScanningMode(0x80+0x40);
+  }
+  else if (strcasecmp(scanningMode,"+x-y") == 0)
+  {
+    lastLongitude = longitude + ni*iInc - iInc;
+    lastLatitude = latitude - (nj*jInc - jInc);
+    scanningMode2.setScanningMode(0);
+  }
+  else if (strcasecmp(scanningMode,"-x-y") == 0)
+  {
+    lastLongitude = longitude - (ni*iInc - iInc);
+    lastLatitude = latitude - (nj*jInc - jInc);
+    scanningMode2.setScanningMode(0x80);
+  }
+
+  if (lastLongitude > 360000000)
+    lastLongitude -= 360000000;
+
+  if (lastLatitude > 90000000)
+    lastLatitude = 180000000 - lastLatitude;
+
+  latLon.setScanningMode(scanningMode2);
+
+  grid.setNi(T::UInt32_opt(ni));
+  grid.setNj(T::UInt32_opt(nj));
+  grid.setLongitudeOfFirstGridPoint(T::Int32_opt(longitude));
+  grid.setLatitudeOfFirstGridPoint(T::Int32_opt(latitude));
+  grid.setLongitudeOfLastGridPoint(T::Int32_opt(lastLongitude));
+  grid.setLatitudeOfLastGridPoint(T::Int32_opt(lastLatitude));
+  latLon.setGrid(grid);
+
+  latLon.setIDirectionIncrement(T::UInt32_opt(iInc));
+  latLon.setJDirectionIncrement(T::UInt32_opt(jInc));
+
+  def2->setLatLon(latLon);
+
+  def2->setGridGeometryId(geometryId);
+  geometryNames.insert(std::pair<uint,std::string>(geometryId,geometryName));
+  def2->setEarthSemiMajor(earthSemiMajor);
+  def2->setEarthSemiMinor(earthSemiMinor);
+  def2->initSpatialReference();
+  def2->countHash();
+
+  return def2;
+}
+
+
+
+
+
+/*! \brief Creates the GRIB2 RotatedLatLon grid definition from the CSV fields. */
+
+GRIB2::GridDefinition* createGrib2RotatedLatLon(char *field[],uint c,GeometryNames& geometryNames)
+{
+  if (c < 13)
+    return nullptr;
+
+  uint geometryId = toInt32(field[1]);
+  char *geometryName = field[2];
+  int ni = toInt32(field[3]);
+  int nj = toInt32(field[4]);
+  int longitude = C_INT(round(toDouble(field[5])*1000000));
+  int latitude = C_INT(round(toDouble(field[6])*1000000));
+  int iInc = C_INT(round(toDouble(field[7]) * 1000000));
+  int jInc = C_INT(round(toDouble(field[8]) * 1000000));
+  char *scanningMode = field[9];
+  int longitudeOfSouthernPole = C_INT(round(toDouble(field[10])*1000000));
+  int latitudeOfSouthernPole = C_INT(round(toDouble(field[11])*1000000));
+  int lastLongitude = longitude + ni*iInc - iInc;
+  int lastLatitude = latitude + nj*jInc - jInc;
+  //int lastLongitude = 0;
+  //int lastLatitude = 0;
+  int angle = round(toDouble(field[12]));
+  double earthSemiMajor = toDouble(field[13]);
+  double earthSemiMinor = toDouble(field[14]);
+  //std::uint8_t resolutionAndComponentFlags = 48;
+
+  auto *def2 = new GRIB2::RotatedLatLonImpl();
+  GRIB2::LatLonSettings latLon;
+  GRIB2::ScanningModeSettings scanningMode2;
+  GRIB2::GridSettings grid;
+  GRIB2::RotationSettings rotation2;
+
+  if (strcasecmp(scanningMode,"+x+y") == 0)
+  {
+    scanningMode2.setScanningMode(0x40);
+  }
+  else if (strcasecmp(scanningMode,"-x+y") == 0)
+  {
+    scanningMode2.setScanningMode(0x80+0x40);
+  }
+  else if (strcasecmp(scanningMode,"+x-y") == 0)
+  {
+    scanningMode2.setScanningMode(0);
+  }
+  else if (strcasecmp(scanningMode,"-x-y") == 0)
+  {
+    scanningMode2.setScanningMode(0x80);
+  }
+
+  if (lastLongitude > 360000000)
+    lastLongitude -= 360000000;
+
+  if (lastLatitude > 90000000)
+    lastLatitude = 180000000 - lastLatitude;
+
+  latLon.setScanningMode(scanningMode2);
+
+  grid.setNi(T::UInt32_opt(ni));
+  grid.setNj(T::UInt32_opt(nj));
+  grid.setLongitudeOfFirstGridPoint(T::Int32_opt(longitude));
+  grid.setLatitudeOfFirstGridPoint(T::Int32_opt(latitude));
+  grid.setLongitudeOfLastGridPoint(T::Int32_opt(lastLongitude));
+  grid.setLatitudeOfLastGridPoint(T::Int32_opt(lastLatitude));
+  latLon.setGrid(grid);
+
+  latLon.setIDirectionIncrement(T::UInt32_opt(iInc));
+  latLon.setJDirectionIncrement(T::UInt32_opt(jInc));
+
+  def2->setLatLon(latLon);
+
+  if (longitudeOfSouthernPole < 0)
+    longitudeOfSouthernPole = longitudeOfSouthernPole + 360000000;
+
+  rotation2.setLongitudeOfSouthernPole(T::UInt32_opt(longitudeOfSouthernPole));
+
+  rotation2.setLatitudeOfSouthernPole(T::Int32_opt(latitudeOfSouthernPole));
+  rotation2.setAngleOfRotation(angle);
+  def2->setRotation(rotation2);
+
+  def2->setGridGeometryId(geometryId);
+  geometryNames.insert(std::pair<uint,std::string>(geometryId,geometryName));
+  def2->setEarthSemiMajor(earthSemiMajor);
+  def2->setEarthSemiMinor(earthSemiMinor);
+  def2->initSpatialReference();
+  def2->countHash();
+  //printf("%s\n",str);
+  //std::string s = def2->getGridGeometryString();
+  //printf("GEOM [%s]\n",s.c_str());
+
+  return def2;
+}
+
+
+
+
+
+/*! \brief Creates the GRIB2 TransverseMercator grid definition from the CSV fields. */
+
+GRIB2::GridDefinition* createGrib2TransverseMercator(char *field[],uint c,GeometryNames& geometryNames)
+{
+  if (c < 16)
+    return nullptr;
+
+  uint geometryId = toInt32(field[1]);
+  char *geometryName = field[2];
+  int ni = toInt32(field[3]);
+  int nj = toInt32(field[4]);
+  double longitude = toDouble(field[5]);
+  double latitude = toDouble(field[6]);
+  int iInc = C_INT(round(toDouble(field[7]) * 100));
+  int jInc = C_INT(round(toDouble(field[8]) * 100));
+
+  char *scanningMode = field[9];
+  int rx = C_INT(round(toDouble(field[10])*1000000));
+  int ry = C_INT(round(toDouble(field[11])*1000000));
+  int false_eastening = C_INT(round(toDouble(field[12]) * 100));
+  int false_northing = C_INT(round(toDouble(field[13]) * 100));
+  double earthSemiMajor = toDouble(field[14]);
+  double earthSemiMinor = toDouble(field[15]);
+
+
+  auto *def2 = new GRIB2::TransverseMercatorImpl();
+  GRIB2::ScanningModeSettings scanningMode2;
+
+  if (strcasecmp(scanningMode,"+x+y") == 0)
+    scanningMode2.setScanningMode(0x40);
+  else if (strcasecmp(scanningMode,"-x+y") == 0)
+    scanningMode2.setScanningMode(0x80+0x40);
+  else if (strcasecmp(scanningMode,"+x-y") == 0)
+    scanningMode2.setScanningMode(0);
+  else if (strcasecmp(scanningMode,"-x-y") == 0)
+    scanningMode2.setScanningMode(0x80);
+
+  def2->setScanningMode(scanningMode2);
+  def2->setScaleFactorAtReferencePoint(0.9996);
+
+  def2->setNi(T::UInt32_opt(ni));
+  def2->setNj(T::UInt32_opt(nj));
+
+  def2->setLatitudeOfReferencePoint(T::Int32_opt(ry));
+
+  if (rx < 0)
+    rx = rx + 360000000;
+
+  def2->setLongitudeOfReferencePoint(T::UInt32_opt(rx));
+
+  def2->setDi(T::UInt32_opt(iInc));
+  def2->setDj(T::UInt32_opt(jInc));
+  def2->setYR(T::Int32_opt(false_northing));
+  //def2->setXR(T::Int32_opt(50000000));
+  def2->setXR(T::Int32_opt(false_eastening));
+
+  def2->setGridGeometryId(geometryId);
+  geometryNames.insert(std::pair<uint,std::string>(geometryId,geometryName));
+  def2->setEarthSemiMajor(earthSemiMajor);
+  def2->setEarthSemiMinor(earthSemiMinor);
+  def2->initSpatialReference();
+  def2->countHash();
+
+  double xx = 0;
+  double yy = 0;
+  def2->getGridOriginalCoordinatesByLatLonCoordinates(latitude,longitude,xx,yy);
+
+  int x1 = C_INT(round(xx))*100;
+  int y1 = C_INT(round(yy))*100;
+
+  def2->setX1(T::Int32_opt(x1));
+  def2->setY1(T::Int32_opt(y1));
+  def2->setX2(T::Int32_opt(x1 + (ni-1)*iInc));
+  def2->setY2(T::Int32_opt(y1 + (nj-1)*jInc));
+
+  def2->mLongitude = longitude;
+  def2->mLatitude = latitude;
+
+  // def2->print(std::cout,0,0);
+  // std::string gs = def2->getGridGeometryString();
+  // printf("GS [%s]\n",gs.c_str());
+
+  return def2;
+}
+
+
+
+
+
+/*! \brief Creates the GRIB2 PolarStereographic grid definition from the CSV fields. */
+
+GRIB2::GridDefinition* createGrib2PolarStereographic(char *field[],uint c,GeometryNames& geometryNames)
+{
+  if (c < 12)
+    return nullptr;
+
+  uint geometryId = toInt32(field[1]);
+  char *geometryName = field[2];
+  int ni = toInt32(field[3]);
+  int nj = toInt32(field[4]);
+  int longitude = C_INT(round(toDouble(field[5])*1000000));
+  int latitude = C_INT(round(toDouble(field[6])*1000000));
+  int iInc = C_INT(round(toDouble(field[7]) * 1000));
+  int jInc = C_INT(round(toDouble(field[8]) * 1000));
+  char *scanningMode = field[9];
+  int orientation = C_INT(round(toDouble(field[10])*1000000));
+  int laD = C_INT(round(toDouble(field[11]) * 1000000));
+  double earthSemiMajor = toDouble(field[12]);
+  double earthSemiMinor = toDouble(field[13]);
+
+  auto *def2 = new GRIB2::PolarStereographicImpl();
+  GRIB2::ScanningModeSettings scanningMode2;
+
+  if (strcasecmp(scanningMode,"+x+y") == 0)
+    scanningMode2.setScanningMode(0x40);
+  else if (strcasecmp(scanningMode,"-x+y") == 0)
+    scanningMode2.setScanningMode(0x80+0x40);
+  else if (strcasecmp(scanningMode,"+x-y") == 0)
+    scanningMode2.setScanningMode(0);
+  else if (strcasecmp(scanningMode,"-x-y") == 0)
+    scanningMode2.setScanningMode(0x80);
+
+  def2->setScanningMode(scanningMode2);
+
+  def2->setNx(T::UInt32_opt(ni));
+  def2->setNy(T::UInt32_opt(nj));
+  def2->setLatitudeOfFirstGridPoint(T::Int32_opt(latitude));
+
+  if (longitude < 0)
+    longitude = longitude + 360000000;
+
+  def2->setLongitudeOfFirstGridPoint(T::UInt32_opt(longitude));
+
+  def2->setLaD(laD);
+  def2->setOrientationOfTheGrid(orientation);
+  def2->setDx(T::UInt32_opt(iInc));
+  def2->setDy(T::UInt32_opt(jInc));
+  //def2->setProjectionCentreFlag(std::uint8_t projectionCentreFlag);
+  //def2->setLatin1(T::Int32_opt(latin1));
+  //def2->setLatin2(T::Int32_opt(latin2));
+  ////def2->setLatitudeOfSouthernPole(T::Int32_opt(latitudeOfSouthernPole));
+  //def2->setLongitudeOfSouthernPole(T::UInt32_opt(longitudeOfSouthernPole));
+
+  def2->setResolutionAndComponentFlags(0x30);
+
+  def2->setGridGeometryId(geometryId);
+  geometryNames.insert(std::pair<uint,std::string>(geometryId,geometryName));
+  def2->setEarthSemiMajor(earthSemiMajor);
+  def2->setEarthSemiMinor(earthSemiMinor);
+  def2->initSpatialReference();
+  def2->countHash();
+  return def2;
+}
+
+
+
+
+
+/*! \brief Creates the GRIB2 LambertConformal grid definition from the CSV fields. */
+
+GRIB2::GridDefinition* createGrib2LambertConformal(char *field[],uint c,GeometryNames& geometryNames)
+{
+  if (c < 15)
+    return nullptr;
+
+  uint geometryId = toInt32(field[1]);
+  char *geometryName = field[2];
+  int ni = toInt32(field[3]);
+  int nj = toInt32(field[4]);
+  int longitude = C_INT(round(toDouble(field[5])*1000000));
+  int latitude = C_INT(round(toDouble(field[6])*1000000));
+  int iInc = toInt32(field[7]);
+  int jInc = toInt32(field[8]);
+  char *scanningMode = field[9];
+  int orientation = C_INT(round(toDouble(field[10])*1000000));
+  int latin1 = C_INT(round(toDouble(field[11])*1000000));
+  int latin2 = C_INT(round(toDouble(field[12])*1000000));
+  int longitudeOfSouthernPole = C_INT(round(toDouble(field[13])*1000000));
+  int latitudeOfSouthernPole = C_INT(round(toDouble(field[14])*1000000));
+  int laD = 60000000;
+  if (c >= 15)
+    laD = C_INT(round(toDouble(field[15])*1000000));
+
+  double earthSemiMajor = toDouble(field[16]);
+  double earthSemiMinor = toDouble(field[17]);
+
+  auto *def2 = new GRIB2::LambertConformalImpl();
+  GRIB2::ScanningModeSettings scanningMode2;
+
+  if (strcasecmp(scanningMode,"+x+y") == 0)
+    scanningMode2.setScanningMode(0x40);
+  else if (strcasecmp(scanningMode,"-x+y") == 0)
+    scanningMode2.setScanningMode(0x80+0x40);
+  else if (strcasecmp(scanningMode,"+x-y") == 0)
+    scanningMode2.setScanningMode(0);
+  else if (strcasecmp(scanningMode,"-x-y") == 0)
+    scanningMode2.setScanningMode(0x80);
+
+  def2->setScanningMode(scanningMode2);
+
+  def2->setNx(T::UInt32_opt(ni));
+  def2->setNy(T::UInt32_opt(nj));
+  def2->setLatitudeOfFirstGridPoint(T::Int32_opt(latitude));
+
+  if (longitude < 0)
+    longitude = longitude + 360000000;
+
+  def2->setLongitudeOfFirstGridPoint(T::UInt32_opt(longitude));
+
+  def2->setLaD(laD);
+  def2->setLoV(orientation);
+  def2->setDx(T::UInt32_opt(iInc*1000));
+  def2->setDy(T::UInt32_opt(jInc*1000));
+  //def2->setProjectionCentreFlag(std::uint8_t projectionCentreFlag);
+  def2->setLatin1(T::Int32_opt(latin1));
+  def2->setLatin2(T::Int32_opt(latin2));
+  def2->setLatitudeOfSouthernPole(T::Int32_opt(latitudeOfSouthernPole));
+
+  if (longitudeOfSouthernPole < 0)
+    longitudeOfSouthernPole = longitudeOfSouthernPole + 360000000;
+
+  def2->setLongitudeOfSouthernPole(T::UInt32_opt(longitudeOfSouthernPole));
+
+  GRIB2::ResolutionSettings resolution;
+  resolution.setResolutionAndComponentFlags(0x30);
+  def2->setResolution(resolution);
+
+  def2->setGridGeometryId(geometryId);
+  geometryNames.insert(std::pair<uint,std::string>(geometryId,geometryName));
+  def2->setEarthSemiMajor(earthSemiMajor);
+  def2->setEarthSemiMinor(earthSemiMinor);
+  def2->initSpatialReference();
+  def2->countHash();
+
+  return def2;
+}
+
+
+
+
+
+/*! \brief Creates the GRIB2 LambertAzimuthalEqualArea grid definition from the CSV fields. */
+
+GRIB2::GridDefinition* createGrib2LambertAzimuthalEqualArea(char *field[],uint c,GeometryNames& geometryNames)
+{
+  if (c < 12)
+    return nullptr;
+
+  uint geometryId = toInt32(field[1]);
+  char *geometryName = field[2];
+  int ni = toInt32(field[3]);
+  int nj = toInt32(field[4]);
+  int longitude = C_INT(round(toDouble(field[5])*1000000));
+  int latitude = C_INT(round(toDouble(field[6])*1000000));
+  int iInc = toInt32(field[7]);
+  int jInc = toInt32(field[8]);
+  char *scanningMode = field[9];
+  int standardParallel = C_INT(round(toDouble(field[10])*1000000));
+  int centralLongitude = C_INT(round(toDouble(field[11])*1000000));
+  double earthSemiMajor = toDouble(field[12]);
+  double earthSemiMinor = toDouble(field[13]);
+
+  auto *def2 = new GRIB2::LambertAzimuthalEqualAreaImpl();
+  GRIB2::ScanningModeSettings scanningMode2;
+
+  if (strcasecmp(scanningMode,"+x+y") == 0)
+    scanningMode2.setScanningMode(0x40);
+  else if (strcasecmp(scanningMode,"-x+y") == 0)
+    scanningMode2.setScanningMode(0x80+0x40);
+  else if (strcasecmp(scanningMode,"+x-y") == 0)
+    scanningMode2.setScanningMode(0);
+  else if (strcasecmp(scanningMode,"-x-y") == 0)
+    scanningMode2.setScanningMode(0x80);
+
+  def2->setScanningMode(scanningMode2);
+
+  def2->setNumberOfPointsAlongXAxis(T::UInt32_opt(ni));
+  def2->setNumberOfPointsAlongYAxis(T::UInt32_opt(nj));
+  def2->setLatitudeOfFirstGridPoint(T::Int32_opt(latitude));
+  def2->setLongitudeOfFirstGridPoint(T::Int32_opt(longitude));
+
+  def2->setStandardParallelInMicrodegrees(T::Int32_opt(standardParallel));
+  def2->setCentralLongitudeInMicrodegrees(T::Int32_opt(centralLongitude));
+  def2->setXDirectionGridLengthInMillimetres(T::UInt32_opt(iInc*1000));
+  def2->setYDirectionGridLengthInMillimetres(T::UInt32_opt(jInc*1000));
+
+  def2->setResolutionAndComponentFlags(0x30);
+  def2->setGridGeometryId(geometryId);
+  geometryNames.insert(std::pair<uint,std::string>(geometryId,geometryName));
+  def2->setEarthSemiMajor(earthSemiMajor);
+  def2->setEarthSemiMinor(earthSemiMinor);
+  def2->initSpatialReference();
+  def2->countHash();
+
+  //std::string s = def2->getGridGeometryString();
+  //printf("GEOM [%s]\n",s.c_str());
+
+  return def2;
+}
+
+
+
+
+
+}  // namespace
+
+
+
+
+
 /*! \brief Parses a GRIB2 grid definition from the given configuration line. */
 
 GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
@@ -3995,179 +4546,10 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           break;
 
         case T::GridProjectionValue::LatLon:
-        {
-          if (c < 10)
-            return nullptr;
-
-          uint geometryId = toInt32(field[1]);
-          char *geometryName = field[2];
-          int ni = toInt32(field[3]);
-          int nj = toInt32(field[4]);
-          int longitude = C_INT(round(toDouble(field[5])*1000000));
-          int latitude = C_INT(round(toDouble(field[6])*1000000));
-          int iInc = C_INT(round(toDouble(field[7]) * 1000000));
-          int jInc = C_INT(round(toDouble(field[8]) * 1000000));
-          char *scanningMode = field[9];
-          double earthSemiMajor = toDouble(field[10]);
-          double earthSemiMinor = toDouble(field[11]);
-          int lastLongitude = 0;
-          int lastLatitude = 0;
-
-          auto *def2 = new GRIB2::LatLonImpl();
-          GRIB2::LatLonSettings latLon;
-          GRIB2::ScanningModeSettings scanningMode2;
-          GRIB2::GridSettings grid;
-
-          GRIB2::ResolutionSettings resolution;
-          resolution.setResolutionAndComponentFlags(48);
-          grid.setResolution(resolution);
-
-          if (strcasecmp(scanningMode,"+x+y") == 0)
-          {
-            lastLongitude = longitude + ni*iInc - iInc;
-            lastLatitude = latitude + nj*jInc - jInc;
-            scanningMode2.setScanningMode(0x40);
-          }
-          else if (strcasecmp(scanningMode,"-x+y") == 0)
-          {
-            lastLongitude = longitude - (ni*iInc - iInc);
-            lastLatitude = latitude + nj*jInc - jInc;
-            scanningMode2.setScanningMode(0x80+0x40);
-          }
-          else if (strcasecmp(scanningMode,"+x-y") == 0)
-          {
-            lastLongitude = longitude + ni*iInc - iInc;
-            lastLatitude = latitude - (nj*jInc - jInc);
-            scanningMode2.setScanningMode(0);
-          }
-          else if (strcasecmp(scanningMode,"-x-y") == 0)
-          {
-            lastLongitude = longitude - (ni*iInc - iInc);
-            lastLatitude = latitude - (nj*jInc - jInc);
-            scanningMode2.setScanningMode(0x80);
-          }
-
-          if (lastLongitude > 360000000)
-            lastLongitude -= 360000000;
-
-          if (lastLatitude > 90000000)
-            lastLatitude = 180000000 - lastLatitude;
-
-          latLon.setScanningMode(scanningMode2);
-
-          grid.setNi(T::UInt32_opt(ni));
-          grid.setNj(T::UInt32_opt(nj));
-          grid.setLongitudeOfFirstGridPoint(T::Int32_opt(longitude));
-          grid.setLatitudeOfFirstGridPoint(T::Int32_opt(latitude));
-          grid.setLongitudeOfLastGridPoint(T::Int32_opt(lastLongitude));
-          grid.setLatitudeOfLastGridPoint(T::Int32_opt(lastLatitude));
-          latLon.setGrid(grid);
-
-          latLon.setIDirectionIncrement(T::UInt32_opt(iInc));
-          latLon.setJDirectionIncrement(T::UInt32_opt(jInc));
-
-          def2->setLatLon(latLon);
-
-          def2->setGridGeometryId(geometryId);
-          mGeometryNames.insert(std::pair<uint,std::string>(geometryId,geometryName));
-          def2->setEarthSemiMajor(earthSemiMajor);
-          def2->setEarthSemiMinor(earthSemiMinor);
-          def2->initSpatialReference();
-          def2->countHash();
-
-          return def2;
-        }
+          return createGrib2LatLon(field,c,mGeometryNames);
 
         case T::GridProjectionValue::RotatedLatLon:
-        {
-          if (c < 13)
-            return nullptr;
-
-          uint geometryId = toInt32(field[1]);
-          char *geometryName = field[2];
-          int ni = toInt32(field[3]);
-          int nj = toInt32(field[4]);
-          int longitude = C_INT(round(toDouble(field[5])*1000000));
-          int latitude = C_INT(round(toDouble(field[6])*1000000));
-          int iInc = C_INT(round(toDouble(field[7]) * 1000000));
-          int jInc = C_INT(round(toDouble(field[8]) * 1000000));
-          char *scanningMode = field[9];
-          int longitudeOfSouthernPole = C_INT(round(toDouble(field[10])*1000000));
-          int latitudeOfSouthernPole = C_INT(round(toDouble(field[11])*1000000));
-          int lastLongitude = longitude + ni*iInc - iInc;
-          int lastLatitude = latitude + nj*jInc - jInc;
-          //int lastLongitude = 0;
-          //int lastLatitude = 0;
-          int angle = round(toDouble(field[12]));
-          double earthSemiMajor = toDouble(field[13]);
-          double earthSemiMinor = toDouble(field[14]);
-          //std::uint8_t resolutionAndComponentFlags = 48;
-
-          auto *def2 = new GRIB2::RotatedLatLonImpl();
-          GRIB2::LatLonSettings latLon;
-          GRIB2::ScanningModeSettings scanningMode2;
-          GRIB2::GridSettings grid;
-          GRIB2::RotationSettings rotation2;
-
-          if (strcasecmp(scanningMode,"+x+y") == 0)
-          {
-            scanningMode2.setScanningMode(0x40);
-          }
-          else if (strcasecmp(scanningMode,"-x+y") == 0)
-          {
-            scanningMode2.setScanningMode(0x80+0x40);
-          }
-          else if (strcasecmp(scanningMode,"+x-y") == 0)
-          {
-            scanningMode2.setScanningMode(0);
-          }
-          else if (strcasecmp(scanningMode,"-x-y") == 0)
-          {
-            scanningMode2.setScanningMode(0x80);
-          }
-
-          if (lastLongitude > 360000000)
-            lastLongitude -= 360000000;
-
-          if (lastLatitude > 90000000)
-            lastLatitude = 180000000 - lastLatitude;
-
-          latLon.setScanningMode(scanningMode2);
-
-          grid.setNi(T::UInt32_opt(ni));
-          grid.setNj(T::UInt32_opt(nj));
-          grid.setLongitudeOfFirstGridPoint(T::Int32_opt(longitude));
-          grid.setLatitudeOfFirstGridPoint(T::Int32_opt(latitude));
-          grid.setLongitudeOfLastGridPoint(T::Int32_opt(lastLongitude));
-          grid.setLatitudeOfLastGridPoint(T::Int32_opt(lastLatitude));
-          latLon.setGrid(grid);
-
-          latLon.setIDirectionIncrement(T::UInt32_opt(iInc));
-          latLon.setJDirectionIncrement(T::UInt32_opt(jInc));
-
-          def2->setLatLon(latLon);
-
-          if (longitudeOfSouthernPole < 0)
-            longitudeOfSouthernPole = longitudeOfSouthernPole + 360000000;
-
-          rotation2.setLongitudeOfSouthernPole(T::UInt32_opt(longitudeOfSouthernPole));
-
-          rotation2.setLatitudeOfSouthernPole(T::Int32_opt(latitudeOfSouthernPole));
-          rotation2.setAngleOfRotation(angle);
-          def2->setRotation(rotation2);
-
-          def2->setGridGeometryId(geometryId);
-          mGeometryNames.insert(std::pair<uint,std::string>(geometryId,geometryName));
-          def2->setEarthSemiMajor(earthSemiMajor);
-          def2->setEarthSemiMinor(earthSemiMinor);
-          def2->initSpatialReference();
-          def2->countHash();
-          //printf("%s\n",str);
-          //std::string s = def2->getGridGeometryString();
-          //printf("GEOM [%s]\n",s.c_str());
-
-          return def2;
-        }
+          return createGrib2RotatedLatLon(field,c,mGeometryNames);
 
         case T::GridProjectionValue::StretchedLatLon:
           break;
@@ -4185,227 +4567,13 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           break;
 
         case T::GridProjectionValue::TransverseMercator:
-        {
-          if (c < 16)
-            return nullptr;
-
-          uint geometryId = toInt32(field[1]);
-          char *geometryName = field[2];
-          int ni = toInt32(field[3]);
-          int nj = toInt32(field[4]);
-          double longitude = toDouble(field[5]);
-          double latitude = toDouble(field[6]);
-          int iInc = C_INT(round(toDouble(field[7]) * 100));
-          int jInc = C_INT(round(toDouble(field[8]) * 100));
-
-          char *scanningMode = field[9];
-          int rx = C_INT(round(toDouble(field[10])*1000000));
-          int ry = C_INT(round(toDouble(field[11])*1000000));
-          int false_eastening = C_INT(round(toDouble(field[12]) * 100));
-          int false_northing = C_INT(round(toDouble(field[13]) * 100));
-          double earthSemiMajor = toDouble(field[14]);
-          double earthSemiMinor = toDouble(field[15]);
-
-
-          auto *def2 = new GRIB2::TransverseMercatorImpl();
-          GRIB2::ScanningModeSettings scanningMode2;
-
-          if (strcasecmp(scanningMode,"+x+y") == 0)
-            scanningMode2.setScanningMode(0x40);
-          else if (strcasecmp(scanningMode,"-x+y") == 0)
-            scanningMode2.setScanningMode(0x80+0x40);
-          else if (strcasecmp(scanningMode,"+x-y") == 0)
-            scanningMode2.setScanningMode(0);
-          else if (strcasecmp(scanningMode,"-x-y") == 0)
-            scanningMode2.setScanningMode(0x80);
-
-          def2->setScanningMode(scanningMode2);
-          def2->setScaleFactorAtReferencePoint(0.9996);
-
-          def2->setNi(T::UInt32_opt(ni));
-          def2->setNj(T::UInt32_opt(nj));
-
-          def2->setLatitudeOfReferencePoint(T::Int32_opt(ry));
-
-          if (rx < 0)
-            rx = rx + 360000000;
-
-          def2->setLongitudeOfReferencePoint(T::UInt32_opt(rx));
-
-          def2->setDi(T::UInt32_opt(iInc));
-          def2->setDj(T::UInt32_opt(jInc));
-          def2->setYR(T::Int32_opt(false_northing));
-          //def2->setXR(T::Int32_opt(50000000));
-          def2->setXR(T::Int32_opt(false_eastening));
-
-          def2->setGridGeometryId(geometryId);
-          mGeometryNames.insert(std::pair<uint,std::string>(geometryId,geometryName));
-          def2->setEarthSemiMajor(earthSemiMajor);
-          def2->setEarthSemiMinor(earthSemiMinor);
-          def2->initSpatialReference();
-          def2->countHash();
-
-          double xx = 0;
-          double yy = 0;
-          def2->getGridOriginalCoordinatesByLatLonCoordinates(latitude,longitude,xx,yy);
-
-          int x1 = C_INT(round(xx))*100;
-          int y1 = C_INT(round(yy))*100;
-
-          def2->setX1(T::Int32_opt(x1));
-          def2->setY1(T::Int32_opt(y1));
-          def2->setX2(T::Int32_opt(x1 + (ni-1)*iInc));
-          def2->setY2(T::Int32_opt(y1 + (nj-1)*jInc));
-
-          def2->mLongitude = longitude;
-          def2->mLatitude = latitude;
-
-          // def2->print(std::cout,0,0);
-          // std::string gs = def2->getGridGeometryString();
-          // printf("GS [%s]\n",gs.c_str());
-
-          return def2;
-        }
+          return createGrib2TransverseMercator(field,c,mGeometryNames);
 
         case T::GridProjectionValue::PolarStereographic:
-        {
-          if (c < 12)
-            return nullptr;
-
-          uint geometryId = toInt32(field[1]);
-          char *geometryName = field[2];
-          int ni = toInt32(field[3]);
-          int nj = toInt32(field[4]);
-          int longitude = C_INT(round(toDouble(field[5])*1000000));
-          int latitude = C_INT(round(toDouble(field[6])*1000000));
-          int iInc = C_INT(round(toDouble(field[7]) * 1000));
-          int jInc = C_INT(round(toDouble(field[8]) * 1000));
-          char *scanningMode = field[9];
-          int orientation = C_INT(round(toDouble(field[10])*1000000));
-          int laD = C_INT(round(toDouble(field[11]) * 1000000));
-          double earthSemiMajor = toDouble(field[12]);
-          double earthSemiMinor = toDouble(field[13]);
-
-          auto *def2 = new GRIB2::PolarStereographicImpl();
-          GRIB2::ScanningModeSettings scanningMode2;
-
-          if (strcasecmp(scanningMode,"+x+y") == 0)
-            scanningMode2.setScanningMode(0x40);
-          else if (strcasecmp(scanningMode,"-x+y") == 0)
-            scanningMode2.setScanningMode(0x80+0x40);
-          else if (strcasecmp(scanningMode,"+x-y") == 0)
-            scanningMode2.setScanningMode(0);
-          else if (strcasecmp(scanningMode,"-x-y") == 0)
-            scanningMode2.setScanningMode(0x80);
-
-          def2->setScanningMode(scanningMode2);
-
-          def2->setNx(T::UInt32_opt(ni));
-          def2->setNy(T::UInt32_opt(nj));
-          def2->setLatitudeOfFirstGridPoint(T::Int32_opt(latitude));
-
-          if (longitude < 0)
-            longitude = longitude + 360000000;
-
-          def2->setLongitudeOfFirstGridPoint(T::UInt32_opt(longitude));
-
-          def2->setLaD(laD);
-          def2->setOrientationOfTheGrid(orientation);
-          def2->setDx(T::UInt32_opt(iInc));
-          def2->setDy(T::UInt32_opt(jInc));
-          //def2->setProjectionCentreFlag(std::uint8_t projectionCentreFlag);
-          //def2->setLatin1(T::Int32_opt(latin1));
-          //def2->setLatin2(T::Int32_opt(latin2));
-          ////def2->setLatitudeOfSouthernPole(T::Int32_opt(latitudeOfSouthernPole));
-          //def2->setLongitudeOfSouthernPole(T::UInt32_opt(longitudeOfSouthernPole));
-
-          def2->setResolutionAndComponentFlags(0x30);
-
-          def2->setGridGeometryId(geometryId);
-          mGeometryNames.insert(std::pair<uint,std::string>(geometryId,geometryName));
-          def2->setEarthSemiMajor(earthSemiMajor);
-          def2->setEarthSemiMinor(earthSemiMinor);
-          def2->initSpatialReference();
-          def2->countHash();
-          return def2;
-        }
+          return createGrib2PolarStereographic(field,c,mGeometryNames);
 
         case T::GridProjectionValue::LambertConformal:
-        {
-          if (c < 15)
-            return nullptr;
-
-          uint geometryId = toInt32(field[1]);
-          char *geometryName = field[2];
-          int ni = toInt32(field[3]);
-          int nj = toInt32(field[4]);
-          int longitude = C_INT(round(toDouble(field[5])*1000000));
-          int latitude = C_INT(round(toDouble(field[6])*1000000));
-          int iInc = toInt32(field[7]);
-          int jInc = toInt32(field[8]);
-          char *scanningMode = field[9];
-          int orientation = C_INT(round(toDouble(field[10])*1000000));
-          int latin1 = C_INT(round(toDouble(field[11])*1000000));
-          int latin2 = C_INT(round(toDouble(field[12])*1000000));
-          int longitudeOfSouthernPole = C_INT(round(toDouble(field[13])*1000000));
-          int latitudeOfSouthernPole = C_INT(round(toDouble(field[14])*1000000));
-          int laD = 60000000;
-          if (c >= 15)
-            laD = C_INT(round(toDouble(field[15])*1000000));
-
-          double earthSemiMajor = toDouble(field[16]);
-          double earthSemiMinor = toDouble(field[17]);
-
-          auto *def2 = new GRIB2::LambertConformalImpl();
-          GRIB2::ScanningModeSettings scanningMode2;
-
-          if (strcasecmp(scanningMode,"+x+y") == 0)
-            scanningMode2.setScanningMode(0x40);
-          else if (strcasecmp(scanningMode,"-x+y") == 0)
-            scanningMode2.setScanningMode(0x80+0x40);
-          else if (strcasecmp(scanningMode,"+x-y") == 0)
-            scanningMode2.setScanningMode(0);
-          else if (strcasecmp(scanningMode,"-x-y") == 0)
-            scanningMode2.setScanningMode(0x80);
-
-          def2->setScanningMode(scanningMode2);
-
-          def2->setNx(T::UInt32_opt(ni));
-          def2->setNy(T::UInt32_opt(nj));
-          def2->setLatitudeOfFirstGridPoint(T::Int32_opt(latitude));
-
-          if (longitude < 0)
-            longitude = longitude + 360000000;
-
-          def2->setLongitudeOfFirstGridPoint(T::UInt32_opt(longitude));
-
-          def2->setLaD(laD);
-          def2->setLoV(orientation);
-          def2->setDx(T::UInt32_opt(iInc*1000));
-          def2->setDy(T::UInt32_opt(jInc*1000));
-          //def2->setProjectionCentreFlag(std::uint8_t projectionCentreFlag);
-          def2->setLatin1(T::Int32_opt(latin1));
-          def2->setLatin2(T::Int32_opt(latin2));
-          def2->setLatitudeOfSouthernPole(T::Int32_opt(latitudeOfSouthernPole));
-
-          if (longitudeOfSouthernPole < 0)
-            longitudeOfSouthernPole = longitudeOfSouthernPole + 360000000;
-
-          def2->setLongitudeOfSouthernPole(T::UInt32_opt(longitudeOfSouthernPole));
-
-          GRIB2::ResolutionSettings resolution;
-          resolution.setResolutionAndComponentFlags(0x30);
-          def2->setResolution(resolution);
-
-          def2->setGridGeometryId(geometryId);
-          mGeometryNames.insert(std::pair<uint,std::string>(geometryId,geometryName));
-          def2->setEarthSemiMajor(earthSemiMajor);
-          def2->setEarthSemiMinor(earthSemiMinor);
-          def2->initSpatialReference();
-          def2->countHash();
-
-          return def2;
-        }
+          return createGrib2LambertConformal(field,c,mGeometryNames);
 
         case T::GridProjectionValue::ObliqueLambertConformal:
           break;
@@ -4456,61 +4624,7 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           break;
 
         case T::GridProjectionValue::LambertAzimuthalEqualArea:
-        {
-          if (c < 12)
-            return nullptr;
-
-          uint geometryId = toInt32(field[1]);
-          char *geometryName = field[2];
-          int ni = toInt32(field[3]);
-          int nj = toInt32(field[4]);
-          int longitude = C_INT(round(toDouble(field[5])*1000000));
-          int latitude = C_INT(round(toDouble(field[6])*1000000));
-          int iInc = toInt32(field[7]);
-          int jInc = toInt32(field[8]);
-          char *scanningMode = field[9];
-          int standardParallel = C_INT(round(toDouble(field[10])*1000000));
-          int centralLongitude = C_INT(round(toDouble(field[11])*1000000));
-          double earthSemiMajor = toDouble(field[12]);
-          double earthSemiMinor = toDouble(field[13]);
-
-          auto *def2 = new GRIB2::LambertAzimuthalEqualAreaImpl();
-          GRIB2::ScanningModeSettings scanningMode2;
-
-          if (strcasecmp(scanningMode,"+x+y") == 0)
-            scanningMode2.setScanningMode(0x40);
-          else if (strcasecmp(scanningMode,"-x+y") == 0)
-            scanningMode2.setScanningMode(0x80+0x40);
-          else if (strcasecmp(scanningMode,"+x-y") == 0)
-            scanningMode2.setScanningMode(0);
-          else if (strcasecmp(scanningMode,"-x-y") == 0)
-            scanningMode2.setScanningMode(0x80);
-
-          def2->setScanningMode(scanningMode2);
-
-          def2->setNumberOfPointsAlongXAxis(T::UInt32_opt(ni));
-          def2->setNumberOfPointsAlongYAxis(T::UInt32_opt(nj));
-          def2->setLatitudeOfFirstGridPoint(T::Int32_opt(latitude));
-          def2->setLongitudeOfFirstGridPoint(T::Int32_opt(longitude));
-
-          def2->setStandardParallelInMicrodegrees(T::Int32_opt(standardParallel));
-          def2->setCentralLongitudeInMicrodegrees(T::Int32_opt(centralLongitude));
-          def2->setXDirectionGridLengthInMillimetres(T::UInt32_opt(iInc*1000));
-          def2->setYDirectionGridLengthInMillimetres(T::UInt32_opt(jInc*1000));
-
-          def2->setResolutionAndComponentFlags(0x30);
-          def2->setGridGeometryId(geometryId);
-          mGeometryNames.insert(std::pair<uint,std::string>(geometryId,geometryName));
-          def2->setEarthSemiMajor(earthSemiMajor);
-          def2->setEarthSemiMinor(earthSemiMinor);
-          def2->initSpatialReference();
-          def2->countHash();
-
-          //std::string s = def2->getGridGeometryString();
-          //printf("GEOM [%s]\n",s.c_str());
-
-          return def2;
-        }
+          return createGrib2LambertAzimuthalEqualArea(field,c,mGeometryNames);
 
         case T::GridProjectionValue::CrossSection:
           break;
