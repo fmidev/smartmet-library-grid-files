@@ -330,58 +330,43 @@ bool ProductSection::getAttributeValue(const char *attributeName, std::string& a
 
 
 
+namespace
+{
+
+/*! \brief Returns true if the attribute name is the given name and the attribute value matches the given value. */
+
+template <class Value>
+bool attributeMatches(const char *attributeName,const char *attributeValue,const char *name,const Value& value)
+{
+  return strcasecmp(attributeName,name) == 0  &&  strcasecmp(attributeValue,toString(value).c_str()) == 0;
+}
+
+}  // namespace
+
+
+
+
 /*! \brief The method returns true if the named attribute matches the given value. */
 
 bool ProductSection::hasAttributeValue(const char *attributeName, const char *attributeValue) const
 {
   try
   {
-    if (strcasecmp(attributeName,"table2Version") == 0  &&  strcasecmp(attributeValue,toString(mTableVersion).c_str()) == 0)
-      return true;
-
-    if (strcasecmp(attributeName,"centre") == 0  &&  strcasecmp(attributeValue,toString(mCentre).c_str()) == 0)
-      return true;
-
-    if (strcasecmp(attributeName,"generatingProcessIdentifier") == 0  &&  strcasecmp(attributeValue,toString(mGeneratingProcessIdentifier).c_str()) == 0)
-      return true;
-
-    if (strcasecmp(attributeName,"subCentre") == 0  &&  strcasecmp(attributeValue,toString(mSubCentre).c_str()) == 0)
-      return true;
-
-    if (strcasecmp(attributeName,"indicatorOfParameter") == 0  &&  strcasecmp(attributeValue,toString(mIndicatorOfParameter).c_str()) == 0)
-      return true;
-
-    if (strcasecmp(attributeName,"indicatorOfTypeOfLevel") == 0  &&  strcasecmp(attributeValue,toString(mIndicatorOfTypeOfLevel).c_str()) == 0)
-      return true;
-
-    if (strcasecmp(attributeName,"level") == 0  &&  strcasecmp(attributeValue,toString(mLevel).c_str()) == 0)
-      return true;
-
-    if (strcasecmp(attributeName,"gridDefinitionNumber") == 0  &&  strcasecmp(attributeValue,toString(mGridDefinitionNumber).c_str()) == 0)
-      return true;
-
-    if (strcasecmp(attributeName,"sectionFlags") == 0  &&  strcasecmp(attributeValue,toString(mSectionFlags).c_str()) == 0)
-      return true;
-
-    if (strcasecmp(attributeName,"unitOfTimeRange") == 0  &&  strcasecmp(attributeValue,toString(mUnitOfTimeRange).c_str()) == 0)
-      return true;
-
-    if (strcasecmp(attributeName,"timeRangeIndicator") == 0  &&  strcasecmp(attributeValue,toString(mTimeRangeIndicator).c_str()) == 0)
-      return true;
-
-    if (strcasecmp(attributeName,"numberIncludedInAverage") == 0  &&  strcasecmp(attributeValue,toString(mNumberIncludedInAverage).c_str()) == 0)
-      return true;
-
-    if (strcasecmp(attributeName,"numberMissingFromAveragesOrAccumulations") == 0  &&  strcasecmp(attributeValue,toString(mNumberMissingFromAveragesOrAccumulations).c_str()) == 0)
-      return true;
-
-    if (strcasecmp(attributeName,"centuryOfReferenceTimeOfData") == 0  &&  strcasecmp(attributeValue,toString(mCenturyOfReferenceTimeOfData).c_str()) == 0)
-      return true;
-
-    if (strcasecmp(attributeName,"decimalScaleFactor") == 0  &&  strcasecmp(attributeValue,toString(mDecimalScaleFactor).c_str()) == 0)
-      return true;
-
-    return false;
+    return attributeMatches(attributeName,attributeValue,"table2Version",mTableVersion)  ||
+           attributeMatches(attributeName,attributeValue,"centre",mCentre)  ||
+           attributeMatches(attributeName,attributeValue,"generatingProcessIdentifier",mGeneratingProcessIdentifier)  ||
+           attributeMatches(attributeName,attributeValue,"subCentre",mSubCentre)  ||
+           attributeMatches(attributeName,attributeValue,"indicatorOfParameter",mIndicatorOfParameter)  ||
+           attributeMatches(attributeName,attributeValue,"indicatorOfTypeOfLevel",mIndicatorOfTypeOfLevel)  ||
+           attributeMatches(attributeName,attributeValue,"level",mLevel)  ||
+           attributeMatches(attributeName,attributeValue,"gridDefinitionNumber",mGridDefinitionNumber)  ||
+           attributeMatches(attributeName,attributeValue,"sectionFlags",mSectionFlags)  ||
+           attributeMatches(attributeName,attributeValue,"unitOfTimeRange",mUnitOfTimeRange)  ||
+           attributeMatches(attributeName,attributeValue,"timeRangeIndicator",mTimeRangeIndicator)  ||
+           attributeMatches(attributeName,attributeValue,"numberIncludedInAverage",mNumberIncludedInAverage)  ||
+           attributeMatches(attributeName,attributeValue,"numberMissingFromAveragesOrAccumulations",mNumberMissingFromAveragesOrAccumulations)  ||
+           attributeMatches(attributeName,attributeValue,"centuryOfReferenceTimeOfData",mCenturyOfReferenceTimeOfData)  ||
+           attributeMatches(attributeName,attributeValue,"decimalScaleFactor",mDecimalScaleFactor);
   }
   catch (...)
   {
