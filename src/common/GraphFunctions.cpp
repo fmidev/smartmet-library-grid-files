@@ -1784,6 +1784,224 @@ int findPath(std::vector<float>& direction, uint *image, int width, int height, 
 
 
 
+namespace
+{
+/*! \brief The average of the non-missing values along the streamline. */
+
+float averagePathValue(const std::vector<T::Coordinate>& coordinates, int width, const float *value, float valueRangeStart)
+{
+  float avg = valueRangeStart;
+  float total = 0;
+  uint c = 0;
+  for (auto it = coordinates.rbegin(); it != coordinates.rend(); ++it)
+  {
+    int xx = (int) it->x();
+    int yy = (int) it->y();
+    int idx = yy * width + xx;
+
+    float val = value[idx];
+    if (val != ParamValueMissing)
+    {
+      total = total + val;
+      c++;
+    }
+  }
+
+  if (c > 0)
+    avg = total / c;
+
+  return avg;
+}
+
+
+
+/*! \brief The color of the streamline at the given position. */
+
+uint streamlineColor(float val, float valueStep, float valueRangeStart, int startColor, uint c, int colorStep)
+{
+  // val = avg;
+  if (val == ParamValueMissing || val < valueRangeStart)
+    val = valueRangeStart;
+
+  double hh = valueStep * (val - valueRangeStart);
+  hh = std::min<double>(hh, 0xFF);
+
+  auto hue = (unsigned char) hh;
+  unsigned char saturation = hue;
+
+  // uint pos = c % maxLength;
+  auto v = (uchar) (startColor + (c * colorStep));
+  return hsv_to_rgb(hue, saturation, v);
+}
+
+
+
+/*! \brief Paints the streamline into the image, or clears it with the background color. */
+
+void paintStreamline(const std::vector<T::Coordinate>& coordinates, uint *image, int width, int size, const float *value, bool clear, uint backColor,
+    float valueStep, float valueRangeStart, int startColor, int colorStep)
+{
+  uint c = 0;
+  for (auto it = coordinates.rbegin(); it != coordinates.rend(); ++it)
+  {
+    int xx = (int) it->x();
+    int yy = (int) it->y();
+
+    int idx = yy * width + xx;
+    if (idx < size)
+    {
+      if (clear)
+      {
+        image[idx] = backColor;
+      }
+      else
+      {
+        float val = valueRangeStart;
+        if (value)
+          val = value[idx];
+
+        image[idx] = streamlineColor(val, valueStep, valueRangeStart, startColor, c, colorStep);
+      }
+    }
+    c++;
+  }
+}
+
+
+
+/*! \brief Copies the grid values into the direction array in the reversed row order. */
+
+void flipDirections(T::ParamValue_vec &gridValues, int width, int height, float *direction)
+{
+  uint idx = 0;
+  for (int y = 0; y < height; y++)
+  {
+    uint idx2 = (height - y - 1) * width;
+    for (int x = 0; x < width; x++)
+    {
+      // codechecker_false_positive [security.ArrayBound] idx < width * height, the size of the array
+      direction[idx] = gridValues[idx2];
+      idx++;
+      idx2++;
+    }
+  }
+}
+
+
+
+/*! \brief Interpolates the coordinates of the streamline point. */
+
+void interpolateStreamlinePoint(const T::Coordinate& point, int width, int height, std::vector<T::Coordinate>& coordinates, double& cx, double& cy)
+{
+  double ax = point.x();
+  double ay = point.y();
+
+  if (ay >= height)
+    ay = height - 1;
+
+  if (ax >= width)
+    ax = width - 1;
+
+  int xx = (int) ax;
+  int yy = (int) ay;
+
+  double dx = ax - (double) xx;
+  double dy = ay - (double) yy;
+
+  int i[4];
+  i[0] = (height - yy - 1) * width + xx;
+  i[1] = i[0];
+  i[2] = i[0];
+  i[3] = i[0];
+
+  if ((xx + 1) < width)
+  {
+    i[1] = i[0] + 1;
+    i[2] = i[1];
+    if ((yy + 1) < height)
+    {
+      i[3] = i[0] - width;
+      i[2] = i[1] - width;
+    }
+  }
+
+  cx = linearInterpolation(dx, dy, 0, 0, 1, 1, coordinates[i[0]].x(), coordinates[i[1]].x(), coordinates[i[2]].x(), coordinates[i[3]].x());
+  cy = linearInterpolation(dx, dy, 0, 0, 1, 1, coordinates[i[0]].y(), coordinates[i[1]].y(), coordinates[i[2]].y(), coordinates[i[3]].y());
+}
+
+
+
+/*! \brief Writes the streamline as WKB lines of the given length. */
+
+void writeStreamline(std::vector<T::Coordinate>& lineCoordinates, int lineLen, int width, int height, std::vector<T::Coordinate>& coordinates, uchar *data, uint dataSize, T::ByteData_vec &streamlines)
+{
+  MemoryWriter memoryWrite(data, dataSize, false);
+
+  int cnt = lineCoordinates.size();
+  for (int t = 0; t < cnt; t = t + lineLen)
+  {
+    int points = lineLen - 4;
+    if ((t + points) > cnt)
+      points = cnt - t;
+
+    memoryWrite.write_uint8(0);       // Byte order
+    memoryWrite.write_uint32(2);      // WkbLine
+    memoryWrite.write_uint32(points); // Number of points
+
+    for (int a = 0; a < points; a++)
+    {
+      int idx = (t + a);
+      double cx = 0;
+      double cy = 0;
+      interpolateStreamlinePoint(lineCoordinates[idx], width, height, coordinates, cx, cy);
+      memoryWrite.write_double(cx);
+      memoryWrite.write_double(cy);
+    }
+    uint bytes = memoryWrite.getWritePosition();
+    if (bytes > 0)
+    {
+      std::vector<uchar> wkb;
+
+      wkb.reserve(bytes);
+      for (uint t = 0; t < bytes; t++)
+        wkb.emplace_back(data[t]);
+
+      streamlines.emplace_back(wkb);
+      memoryWrite.setWritePosition(0);
+    }
+  }
+
+  uint bytes = memoryWrite.getWritePosition();
+  if (bytes > 0)
+  {
+    std::vector<uchar> wkb;
+    wkb.reserve(bytes);
+    for (uint t = 0; t < bytes; t++)
+      wkb.emplace_back(data[t]);
+
+    streamlines.emplace_back(wkb);
+  }
+}
+
+
+
+/*! \brief Clears the streamline path from the image. */
+
+void clearPath(const std::vector<T::Coordinate>& lineCoordinates, uint *image, int width, int sz)
+{
+  for (const auto& lineCoordinate : lineCoordinates)
+  {
+    int idx = ((int) lineCoordinate.y()) * width + (int) lineCoordinate.x();
+    if (idx >= 0 && idx < sz)
+      image[idx] = 0;
+  }
+}
+}  // namespace
+
+
+
+
+
 /*! \brief Renders a colored streamline image from direction and value grids using the given color range. */
 
 void getStreamlineImage(float *direction, const float *value, uint *image, int width, int height, int xStep, int yStep, int minLength, int maxLength, float valueRangeStart,
@@ -1808,66 +2026,10 @@ void getStreamlineImage(float *direction, const float *value, uint *image, int w
         int cellCount = findPath(direction, image, width, height, maxLength, backColor, (double) x + 0.5, (double) y + 0.5, 0, 0, coordinates);
 
         float avg = valueRangeStart;
-        float total = 0;
-        uint c = 0;
         if (cellCount >= minLength && value)
-        {
-          for (auto it = coordinates.rbegin(); it != coordinates.rend(); ++it)
-          {
-            int xx = (int) it->x();
-            int yy = (int) it->y();
-            int idx = yy * width + xx;
+          avg = averagePathValue(coordinates, width, value, valueRangeStart);
 
-            float val = value[idx];
-            if (val != ParamValueMissing)
-            {
-              total = total + val;
-              c++;
-            }
-          }
-
-          if (c > 0)
-            avg = total / c;
-        }
-
-        c = 0;
-        for (auto it = coordinates.rbegin(); it != coordinates.rend(); ++it)
-        {
-          int xx = (int) it->x();
-          int yy = (int) it->y();
-
-          int idx = yy * width + xx;
-          if (idx < size)
-          {
-            if (cellCount < minLength || avg < valueRangeStart)
-            {
-              image[idx] = backColor;
-            }
-            else
-            {
-              float val = valueRangeStart;
-              if (value)
-                val = value[idx];
-
-              // val = avg;
-              if (val == ParamValueMissing || val < valueRangeStart)
-                val = valueRangeStart;
-
-              double hh = valueStep * (val - valueRangeStart);
-              hh = std::min<double>(hh, 0xFF);
-
-              auto hue = (unsigned char) hh;
-              unsigned char saturation = hue;
-
-              // uint pos = c % maxLength;
-              auto v = (uchar) (startColor + (c * colorStep));
-              uint col = hsv_to_rgb(hue, saturation, v);
-
-              image[idx] = col;
-            }
-          }
-          c++;
-        }
+        paintStreamline(coordinates, image, width, size, value, cellCount < minLength || avg < valueRangeStart, backColor, valueStep, valueRangeStart, startColor, colorStep);
       }
     }
 
@@ -1994,18 +2156,7 @@ void getStreamlines(T::ParamValue_vec &gridValues, std::vector<T::Coordinate> *c
     for (int t = 0; t < sz; t++)
       image[t] = 0;
 
-    uint idx = 0;
-    for (int y = 0; y < height; y++)
-    {
-      uint idx2 = (height - y - 1) * width;
-      for (int x = 0; x < width; x++)
-      {
-        // codechecker_false_positive [security.ArrayBound] idx < width * height, the size of the array
-        direction[idx] = gridValues[idx2];
-        idx++;
-        idx2++;
-      }
-    }
+    flipDirections(gridValues, width, height, direction);
 
     uint dataSize = 100000;
     uchar data[dataSize];
@@ -2027,92 +2178,11 @@ void getStreamlines(T::ParamValue_vec &gridValues, std::vector<T::Coordinate> *c
         int cellCount = findPath(direction, image, width, height, maxStreamLen, 0, (double) x + 0.5, (double) y + 0.5, 0, 0, lineCoordinates);
         if ((int) lineCoordinates.size() >= minStreamLen && cellCount >= minStreamLen)
         {
-          MemoryWriter memoryWrite(data, dataSize, false);
-
-          int cnt = lineCoordinates.size();
-          for (int t = 0; t < cnt; t = t + lineLen)
-          {
-            int points = lineLen - 4;
-            if ((t + points) > cnt)
-              points = cnt - t;
-
-            memoryWrite.write_uint8(0);       // Byte order
-            memoryWrite.write_uint32(2);      // WkbLine
-            memoryWrite.write_uint32(points); // Number of points
-
-            for (int a = 0; a < points; a++)
-            {
-              int idx = (t + a);
-              double ax = lineCoordinates[idx].x();
-              double ay = lineCoordinates[idx].y();
-
-              if (ay >= height)
-                ay = height - 1;
-
-              if (ax >= width)
-                ax = width - 1;
-
-              int xx = (int) ax;
-              int yy = (int) ay;
-
-              double dx = ax - (double) xx;
-              double dy = ay - (double) yy;
-
-              int i[4];
-              i[0] = (height - yy - 1) * width + xx;
-              i[1] = i[0];
-              i[2] = i[0];
-              i[3] = i[0];
-
-              if ((xx + 1) < width)
-              {
-                i[1] = i[0] + 1;
-                i[2] = i[1];
-                if ((yy + 1) < height)
-                {
-                  i[3] = i[0] - width;
-                  i[2] = i[1] - width;
-                }
-              }
-
-              double cx = linearInterpolation(dx, dy, 0, 0, 1, 1, (*coordinates)[i[0]].x(), (*coordinates)[i[1]].x(), (*coordinates)[i[2]].x(), (*coordinates)[i[3]].x());
-              double cy = linearInterpolation(dx, dy, 0, 0, 1, 1, (*coordinates)[i[0]].y(), (*coordinates)[i[1]].y(), (*coordinates)[i[2]].y(), (*coordinates)[i[3]].y());
-              memoryWrite.write_double(cx);
-              memoryWrite.write_double(cy);
-            }
-            uint bytes = memoryWrite.getWritePosition();
-            if (bytes > 0)
-            {
-              std::vector<uchar> wkb;
-
-              wkb.reserve(bytes);
-              for (uint t = 0; t < bytes; t++)
-                wkb.emplace_back(data[t]);
-
-              streamlines.emplace_back(wkb);
-              memoryWrite.setWritePosition(0);
-            }
-          }
-
-          uint bytes = memoryWrite.getWritePosition();
-          if (bytes > 0)
-          {
-            std::vector<uchar> wkb;
-            wkb.reserve(bytes);
-            for (uint t = 0; t < bytes; t++)
-              wkb.emplace_back(data[t]);
-
-            streamlines.emplace_back(wkb);
-          }
+          writeStreamline(lineCoordinates, lineLen, width, height, *coordinates, data, dataSize, streamlines);
         }
         else
         {
-          for (auto& lineCoordinate : lineCoordinates)
-          {
-            int idx = ((int) lineCoordinate.y()) * width + (int) lineCoordinate.x();
-            if (idx >= 0 && idx < sz)
-              image[idx] = 0;
-          }
+          clearPath(lineCoordinates, image, width, sz);
         }
       }
     }
