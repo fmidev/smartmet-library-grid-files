@@ -4736,6 +4736,89 @@ std::size_t Message::getDataSize() const
 
 
 
+namespace
+{
+/*! \brief Prints the GRIB parameter definition. */
+
+void printGribParameterDef(std::ostream& stream,uint level,T::GribParamId gribParameterId)
+{
+  Identification::GribParameterDef def;
+  if (Identification::gridDef.getGribParameterDefById(gribParameterId,def))
+  {
+    stream << space(level) << "- gribParameterName        = " << def.mParameterName << "\n";
+    stream << space(level) << "- gribParameterUnits       = " << def.mParameterUnits << "\n";
+    stream << space(level) << "- gribParameterDescription = " << def.mParameterDescription << "\n";
+  }
+}
+
+
+
+/*! \brief Prints the bitmap of a 2-dimensional grid. */
+
+void printBitmap(std::ostream& stream,T::Data_ptr bitmap,const T::Dimensions& d)
+{
+  if (d.getDimensions() != 2)
+    return;
+
+  uint ny = d.ny();
+  uint nx = d.nx();
+
+  const int bitmask[] = {128, 64, 32, 16, 8, 4, 2, 1};
+  uint c = 0;
+
+  for (uint y=0; y < ny; y++)
+  {
+    for (uint x=0; x < nx; x++)
+    {
+
+      if ((bitmap[c / 8] & bitmask[c % 8]) == 0)
+        stream << "0";
+      else
+        stream << "1";
+      c++;
+    }
+    stream << "\n";
+  }
+}
+
+
+
+/*! \brief Prints the values of the grid corners. */
+
+void printCornerValues(std::ostream& stream,uint level,const T::ParamValue_vec& values,const T::Dimensions& d)
+{
+  stream << space(level+1) << "- data (from the grid corners):\n";
+
+  char st[1000];
+  uint c = 0;
+  uint ny = d.ny();
+  uint nx = d.nx();
+  std::size_t sz = values.size();
+
+  for (uint y=0; y < ny; y++)
+  {
+    for (uint x=0; x < nx; x++)
+    {
+      if (c < sz  &&  (y < 3  ||  y >= ny-3)  &&  (x < 3  ||  x >= nx-3))
+      {
+        auto val = values[c];
+        if (val != ParamValueMissing)
+          sprintf(st,"[%u,%u] %f",y+1,x+1,val);
+        else
+          sprintf(st,"[%u,%u] NA",y+1,x+1);
+
+        stream << space(level+3) << st << "\n";
+      }
+      c++;
+    }
+  }
+}
+}  // namespace
+
+
+
+
+
 /*! \brief The method prints the content of the current object into the given stream.
 
         \param stream      The output stream.
@@ -4766,15 +4849,7 @@ void Message::print(std::ostream& stream,uint level,uint optionFlags) const
 
     stream << space(level) << "- gribParameterId          = " << toString(mGribParameterId) << "\n";
     if (mGribParameterId != 0)
-    {
-      Identification::GribParameterDef def;
-      if (Identification::gridDef.getGribParameterDefById(mGribParameterId,def))
-      {
-        stream << space(level) << "- gribParameterName        = " << def.mParameterName << "\n";
-        stream << space(level) << "- gribParameterUnits       = " << def.mParameterUnits << "\n";
-        stream << space(level) << "- gribParameterDescription = " << def.mParameterDescription << "\n";
-      }
-    }
+      printGribParameterDef(stream,level,mGribParameterId);
 
     stream << space(level) << "- newbaseParameterId       = " << mNewbaseParameterId << "\n";
     stream << space(level) << "- newbaseParameterName     = " << getNewbaseParameterName() << "\n";
@@ -4818,29 +4893,7 @@ void Message::print(std::ostream& stream,uint level,uint optionFlags) const
 
       if ((optionFlags &  GRID::PrintFlag::bitmap) != 0  &&  mGridSection  &&  bitmap)
       {
-        auto d = mGridSection->getGridDimensions();
-        if (d.getDimensions() == 2)
-        {
-          uint ny = d.ny();
-          uint nx = d.nx();
-
-          const int bitmask[] = {128, 64, 32, 16, 8, 4, 2, 1};
-          uint c = 0;
-
-          for (uint y=0; y < ny; y++)
-          {
-            for (uint x=0; x < nx; x++)
-            {
-
-              if ((bitmap[c / 8] & bitmask[c % 8]) == 0)
-                stream << "0";
-              else
-                stream << "1";
-              c++;
-            }
-            stream << "\n";
-          }
-        }
+        printBitmap(stream,bitmap,mGridSection->getGridDimensions());
       }
     }
 
@@ -4856,32 +4909,7 @@ void Message::print(std::ostream& stream,uint level,uint optionFlags) const
         {
           T::ParamValue_vec values;
           mRepresentationSection->decodeValues(values);
-
-          stream << space(level+1) << "- data (from the grid corners):\n";
-
-          char st[1000];
-          uint c = 0;
-          uint ny = d.ny();
-          uint nx = d.nx();
-          std::size_t sz = values.size();
-
-          for (uint y=0; y < ny; y++)
-          {
-            for (uint x=0; x < nx; x++)
-            {
-              if (c < sz  &&  (y < 3  ||  y >= ny-3)  &&  (x < 3  ||  x >= nx-3))
-              {
-                auto val = values[c];
-                if (val != ParamValueMissing)
-                  sprintf(st,"[%u,%u] %f",y+1,x+1,val);
-                else
-                  sprintf(st,"[%u,%u] NA",y+1,x+1);
-
-                stream << space(level+3) << st << "\n";
-              }
-              c++;
-            }
-          }
+          printCornerValues(stream,level,values,d);
         }
       }
     }
