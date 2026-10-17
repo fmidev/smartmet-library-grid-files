@@ -46,6 +46,103 @@ double linearInterpolation(double wantedPosition, double position1, double posit
 
 
 
+namespace
+{
+
+/*! \brief Triangular interpolation when exactly one of the four corner values is missing. */
+
+double triangularInterpolation(uint missingFlags,double dist_x1,double dist_x2,double dist_y1,double dist_y2,double val_q11,double val_q21,double val_q22,double val_q12)
+{
+  // Three corners have a value (triangular interpolation).
+
+  if (missingFlags == 1)
+  {
+    double wsum = (dist_x2 * dist_y1 + dist_x1 * dist_y1 + dist_x1 * dist_y2);
+    return ((dist_x1 * dist_y2 * val_q21 + dist_x2 * dist_y1 * val_q12 +
+        dist_x1 * dist_y1 * val_q22) / wsum);
+  }
+
+  if (missingFlags == 2)
+  {
+    double wsum = (dist_x2 * dist_y2 + dist_x2 * dist_y1 + dist_x1 * dist_y1);
+    return ((dist_x2 * dist_y2 * val_q11 + dist_x2 * dist_y1 * val_q12 +
+        dist_x1 * dist_y1 * val_q22) / wsum);
+  }
+
+  if (missingFlags == 4)
+  {
+    double wsum = (dist_x1 * dist_y1 + dist_x2 * dist_y2 + dist_x1 * dist_y2);
+    return ((dist_x2 * dist_y2 * val_q11 + dist_x1 * dist_y2 * val_q21 +
+      dist_x1 * dist_y1 * val_q22) / wsum);
+  }
+
+  if (missingFlags == 8)
+  {
+    double wsum = (dist_x2 * dist_y1 + dist_x2 * dist_y2 + dist_x1 * dist_y2);
+    return ((dist_x2 * dist_y2 * val_q11 + dist_x1 * dist_y2 * val_q21 +
+      dist_x2 * dist_y1 * val_q12) / wsum);
+  }
+
+  return ParamValueMissing;
+}
+
+
+
+
+
+/*! \brief Linear interpolation along the border when exactly two of the four corner values are missing. */
+
+double borderInterpolation(uint missingFlags,double dist,double dist_x1,double dist_x2,double dist_y1,double dist_y2,double val_q11,double val_q21,double val_q22,double val_q12)
+{
+  // If the given point is on the border then we can do simple
+  // linear interpolation.
+
+  //printf("DIST %.20f,%.20f,%.20f,%.20f  %u\n",dist_x1,dist_y1,dist_x2,dist_y2,missingFlags);
+  if (dist_x1 < dist)
+  {
+    // Linear interpolation x1,y1 - x1,y2
+    if (missingFlags == 10)
+      return (dist_y1*val_q11 + dist_y2*val_q12);
+
+    return ParamValueMissing;
+  }
+
+  if (dist_x2 < dist)
+  {
+    // Linear interpolation x2,y1 - x2,y2
+    if (missingFlags == 5)
+      return (dist_y1*val_q21 + dist_y2*val_q22);
+
+    return ParamValueMissing;
+  }
+
+  if (dist_y1 < dist)
+  {
+    // Linear interpolation x1,y1 - x2,y1
+    if (missingFlags == 12)
+      return (dist_x1*val_q11 + dist_x2*val_q21);
+
+    return ParamValueMissing;
+  }
+
+  if (dist_y2 < dist)
+  {
+    // Linear interpolation x1,y2 - x2,y2
+    if (missingFlags == 3)
+      return (dist_x1*val_q12 + dist_x2*val_q22);
+
+    return ParamValueMissing;
+  }
+
+  return ParamValueMissing;
+}
+
+}  // namespace
+
+
+
+
+
 /*! \brief Performs bilinear interpolation on a quadrilateral, handling missing corner values. */
 
 double linearInterpolation(double x,double y,double x1,double y1,double x2,double y2,double val_q11,double val_q21,double val_q22,double val_q12)
@@ -114,80 +211,10 @@ double linearInterpolation(double x,double y,double x1,double y1,double x2,doubl
     }
 
     if (missingCount == 1)
-    {
-      // Three corners have a value (triangular interpolation).
-
-      if (missingFlags == 1)
-      {
-        double wsum = (dist_x2 * dist_y1 + dist_x1 * dist_y1 + dist_x1 * dist_y2);
-        return ((dist_x1 * dist_y2 * val_q21 + dist_x2 * dist_y1 * val_q12 +
-            dist_x1 * dist_y1 * val_q22) / wsum);
-      }
-
-      if (missingFlags == 2)
-      {
-        double wsum = (dist_x2 * dist_y2 + dist_x2 * dist_y1 + dist_x1 * dist_y1);
-        return ((dist_x2 * dist_y2 * val_q11 + dist_x2 * dist_y1 * val_q12 +
-            dist_x1 * dist_y1 * val_q22) / wsum);
-      }
-
-      if (missingFlags == 4)
-      {
-        double wsum = (dist_x1 * dist_y1 + dist_x2 * dist_y2 + dist_x1 * dist_y2);
-        return ((dist_x2 * dist_y2 * val_q11 + dist_x1 * dist_y2 * val_q21 +
-          dist_x1 * dist_y1 * val_q22) / wsum);
-      }
-
-      if (missingFlags == 8)
-      {
-        double wsum = (dist_x2 * dist_y1 + dist_x2 * dist_y2 + dist_x1 * dist_y2);
-        return ((dist_x2 * dist_y2 * val_q11 + dist_x1 * dist_y2 * val_q21 +
-          dist_x2 * dist_y1 * val_q12) / wsum);
-      }
-    }
+      return triangularInterpolation(missingFlags,dist_x1,dist_x2,dist_y1,dist_y2,val_q11,val_q21,val_q22,val_q12);
 
     if (missingCount == 2)
-    {
-      // If the given point is on the border then we can do simple
-      // linear interpolation.
-
-      //printf("DIST %.20f,%.20f,%.20f,%.20f  %u\n",dist_x1,dist_y1,dist_x2,dist_y2,missingFlags);
-      if (dist_x1 < dist)
-      {
-        // Linear interpolation x1,y1 - x1,y2
-        if (missingFlags == 10)
-          return (dist_y1*val_q11 + dist_y2*val_q12);
-
-        return ParamValueMissing;
-      }
-
-      if (dist_x2 < dist)
-      {
-        // Linear interpolation x2,y1 - x2,y2
-        if (missingFlags == 5)
-          return (dist_y1*val_q21 + dist_y2*val_q22);
-
-        return ParamValueMissing;
-      }
-
-      if (dist_y1 < dist)
-      {
-        // Linear interpolation x1,y1 - x2,y1
-        if (missingFlags == 12)
-          return (dist_x1*val_q11 + dist_x2*val_q21);
-
-        return ParamValueMissing;
-      }
-
-      if (dist_y2 < dist)
-      {
-        // Linear interpolation x1,y2 - x2,y2
-        if (missingFlags == 3)
-          return (dist_x1*val_q12 + dist_x2*val_q22);
-
-        return ParamValueMissing;
-      }
-    }
+      return borderInterpolation(missingFlags,dist,dist_x1,dist_x2,dist_y1,dist_y2,val_q11,val_q21,val_q22,val_q12);
 
     return ParamValueMissing;
   }
