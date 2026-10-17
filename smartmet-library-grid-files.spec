@@ -50,10 +50,10 @@ Requires: libaec
 Requires: libcurl
 Requires: openjpeg2
 Requires: libwebp13 >= 1.3.2
-Requires: smartmet-library-newbase >= 26.10.16
-Requires: smartmet-library-macgyver >= 26.10.16
-Requires: smartmet-library-spine >= 26.10.16
-Requires: smartmet-library-trax >= 26.10.16
+Requires: smartmet-library-newbase >= 26.10.17
+Requires: smartmet-library-macgyver >= 26.10.17
+Requires: smartmet-library-spine >= 26.10.17
+Requires: smartmet-library-trax >= 26.10.17
 Requires: smartmet-topography-data >= 1.0.0
 #TestRequires: %{smartmet_boost}-devel
 #TestRequires: gcc-c++
@@ -128,6 +128,18 @@ libraries, the grid engine and the plugins using it
 
 %changelog
 * Sat Oct 17 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.17-1.fmi
+- Remove the unused Int64 linearInterpolation overload
+- GridDef: extract the CSV field splitting shared by the definition file loaders
+- GRID::Message::getGridValueByGridPoint: index the grid modification parameters by the grid width
+- linearInterpolation: fix mirrored weights in the border interpolation
+- MemoryMapper: guard the mapping index, do not mark an unrelated mapping as failed
+- Streamlines: never loop forever with small steps
+- getFileList: identify visited directories by their real path and free it
+- ConfigurationFile: add the missing separator to relative @include paths
+- NetCdfFile: do not add padding bytes to byte attributes, report the right indicator
+- getGridValueListByCircle: apply the value modification for lat/lon circles
+- Split functions with a cognitive complexity above 25 into smaller helpers, no functional changes
+- ABI change: new or changed members in installed headers, dependent packages must be rebuilt
 - Isolines and isobands are computed again when no coordinate vector is given (grid
   coordinates, contour.coordinateType = GRID_COORDINATES); since 2024-10 they were always empty
 
