@@ -95,6 +95,179 @@ Fmi::Cache::CacheStats circlePointCache_stats(Fmi::SecondClock::universal_time()
 namespace
 {
 Fmi::Cache::Cache<std::size_t,CirclePoints_sptr> circlePointCache(CIRCLE_POINT_CACHE_SIZE);
+
+
+
+
+
+/*! \brief The cache key of the circle points, zero if the geometry is not identified. The circle
+    points depend only on the grid geometry. They are cached only when the geometry is identified,
+    since the grid hash alone does not cover all projection details. */
+
+std::size_t circlePointCacheKey(const Message& message,uint cols,uint rows,double origoX,double origoY,double radius)
+{
+  std::size_t hash = 0;
+  T::GeometryId geometryId = message.getGridGeometryId();
+  if (geometryId != 0)
+  {
+    Fmi::hash_merge(hash,geometryId);
+    Fmi::hash_merge(hash,message.getGridHash());
+    Fmi::hash_merge(hash,cols);
+    Fmi::hash_merge(hash,rows);
+    Fmi::hash_merge(hash,origoX);
+    Fmi::hash_merge(hash,origoY);
+    Fmi::hash_merge(hash,radius);
+  }
+
+  return hash;
+}
+
+
+
+
+
+/*! \brief Finds the circle points from the cache. */
+
+CirclePoints_sptr findCirclePoints(std::size_t hash)
+{
+  CirclePoints_sptr circle;
+  if (hash != 0)
+  {
+    auto it = circlePointCache.find(hash);
+    if (it)
+    {
+      circlePointCache_stats.hits++;
+      circle = *it;
+    }
+    else
+    {
+      circlePointCache_stats.misses++;
+    }
+  }
+
+  return circle;
+}
+
+
+
+
+
+/*! \brief Finds the grid points inside the circle and their latlon coordinates. */
+
+CirclePoints_sptr createCirclePoints(const Message& message,uint cols,uint rows,double origoX,double origoY,double radius,double dd)
+{
+  double lon1 = NAN;
+  double lat1 = NAN;
+  double lon2 = NAN;
+  double lat2 = NAN;
+  latLon_bboxByCenter(origoX,origoY,dd,dd,lon1,lat1,lon2,lat2);
+
+  std::vector<T::Coordinate> polygonPoints;
+  polygonPoints.emplace_back(lon1,lat1);
+  polygonPoints.emplace_back(lon2,lat1);
+  polygonPoints.emplace_back(lon2,lat2);
+  polygonPoints.emplace_back(lon1,lat2);
+
+  // Same grid points as in message.getGridValueListByPolygon()
+
+  std::vector<T::Coordinate> newPolygonPoints;
+  for (auto& polygonPoint : polygonPoints)
+  {
+    double grid_i = 0;
+    double grid_j = 0;
+    if (message.getGridPointByLatLonCoordinates(polygonPoint.y(),polygonPoint.x(),grid_i,grid_j))
+      newPolygonPoints.emplace_back(grid_i,grid_j);
+  }
+
+  std::vector<T::Point> gridPoints;
+  getPointsInsidePolygon(cols,rows,newPolygonPoints,gridPoints);
+
+  T::Coordinate_vec coordinates;
+  std::vector<bool> found;
+  message.getGridLatLonCoordinatesByGridPointList(gridPoints,coordinates,found);
+
+  auto newCircle = std::make_shared<CirclePoints>();
+  std::size_t sz = gridPoints.size();
+  for (std::size_t t=0; t<sz; t++)
+  {
+    // Points without coordinates are at (0,0) as in message.getGridValueListByPolygon()
+    T::Coordinate c = found[t] ? coordinates[t] : T::Coordinate(0,0);
+    if (latlon_distance(origoY,origoX,c.y(),c.x()) <= radius)
+    {
+      newCircle->points.push_back(gridPoints[t]);
+      newCircle->coordinates.push_back(c);
+    }
+  }
+
+  return newCircle;
+}
+
+
+
+
+
+/*! \brief Stores the circle points into the cache. */
+
+void storeCirclePoints(std::size_t hash,const CirclePoints_sptr& circle)
+{
+  if (hash != 0)
+  {
+    circlePointCache.insert(hash,circle);
+    circlePointCache_stats.inserts++;
+    circlePointCache_stats.size = circlePointCache.size();
+  }
+}
+
+
+
+
+
+/*! \brief Adds the values of the grid points inside the circle defined in the original coordinates. */
+
+void getOriginalCircleValues(const Message& message,T::CoordinateType coordinateType,double origoX,double origoY,double radius,double dd,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList)
+{
+  double newOrigoX = 0;
+  double newOrigoY = 0;
+
+  message.getGridLatLonCoordinatesByOriginalCoordinates(origoX,origoY,newOrigoY,newOrigoX);
+
+  double lon1 = NAN;
+  double lat1 = NAN;
+  double lon2 = NAN;
+  double lat2 = NAN;
+  latLon_bboxByCenter(newOrigoX,newOrigoY,dd,dd,lon1,lat1,lon2,lat2);
+
+  double xx1 = 0;
+  double yy1 = 0;
+  double xx2 = 0;
+  double yy2 = 0;
+
+  message.getGridOriginalCoordinatesByLatLonCoordinates(lat1,lon1,xx1,yy1);
+  message.getGridOriginalCoordinatesByLatLonCoordinates(lat2,lon2,xx2,yy2);
+
+  std::vector<T::Coordinate> polygonPoints;
+  polygonPoints.emplace_back(xx1,yy1);
+  polygonPoints.emplace_back(xx2,yy1);
+  polygonPoints.emplace_back(xx2,yy2);
+  polygonPoints.emplace_back(xx1,yy2);
+
+  T::GridValueList tmpValueList;
+  message.getGridValueListByPolygon(coordinateType,polygonPoints,modificationOperation,modificationParameters,tmpValueList);
+
+  uint len = tmpValueList.getLength();
+  for (uint t=0; t<len; t++)
+  {
+    T::GridValue rec;
+    tmpValueList.getGridValueByIndex(t,rec);
+
+    double lat = 0;
+    double lon = 0;
+    message.getGridLatLonCoordinatesByOriginalCoordinates(rec.mY,rec.mX,lat,lon);
+
+    if (latlon_distance(origoY,origoX,lat,lon) <= radius)
+      valueList.addGridValue(rec);
+  }
+}
 }  // namespace
 
 
@@ -4937,87 +5110,14 @@ void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double o
         // The circle points depend only on the grid geometry. They are cached only when the
         // geometry is identified, since the grid hash alone does not cover all projection details.
 
-        std::size_t hash = 0;
-        T::GeometryId geometryId = getGridGeometryId();
-        if (geometryId != 0)
-        {
-          Fmi::hash_merge(hash,geometryId);
-          Fmi::hash_merge(hash,getGridHash());
-          Fmi::hash_merge(hash,cols);
-          Fmi::hash_merge(hash,rows);
-          Fmi::hash_merge(hash,origoX);
-          Fmi::hash_merge(hash,origoY);
-          Fmi::hash_merge(hash,radius);
-        }
+        std::size_t hash = circlePointCacheKey(*this,cols,rows,origoX,origoY,radius);
 
-        CirclePoints_sptr circle;
-        if (hash != 0)
-        {
-          auto it = circlePointCache.find(hash);
-          if (it)
-          {
-            circlePointCache_stats.hits++;
-            circle = *it;
-          }
-          else
-          {
-            circlePointCache_stats.misses++;
-          }
-        }
+        CirclePoints_sptr circle = findCirclePoints(hash);
 
         if (!circle)
         {
-          double lon1 = NAN;
-          double lat1 = NAN;
-          double lon2 = NAN;
-          double lat2 = NAN;
-          latLon_bboxByCenter(origoX,origoY,dd,dd,lon1,lat1,lon2,lat2);
-
-          std::vector<T::Coordinate> polygonPoints;
-          polygonPoints.emplace_back(lon1,lat1);
-          polygonPoints.emplace_back(lon2,lat1);
-          polygonPoints.emplace_back(lon2,lat2);
-          polygonPoints.emplace_back(lon1,lat2);
-
-          // Same grid points as in getGridValueListByPolygon()
-
-          std::vector<T::Coordinate> newPolygonPoints;
-          for (auto& polygonPoint : polygonPoints)
-          {
-            double grid_i = 0;
-            double grid_j = 0;
-            if (getGridPointByLatLonCoordinates(polygonPoint.y(),polygonPoint.x(),grid_i,grid_j))
-              newPolygonPoints.emplace_back(grid_i,grid_j);
-          }
-
-          std::vector<T::Point> gridPoints;
-          getPointsInsidePolygon(cols,rows,newPolygonPoints,gridPoints);
-
-          T::Coordinate_vec coordinates;
-          std::vector<bool> found;
-          getGridLatLonCoordinatesByGridPointList(gridPoints,coordinates,found);
-
-          auto newCircle = std::make_shared<CirclePoints>();
-          std::size_t sz = gridPoints.size();
-          for (std::size_t t=0; t<sz; t++)
-          {
-            // Points without coordinates are at (0,0) as in getGridValueListByPolygon()
-            T::Coordinate c = found[t] ? coordinates[t] : T::Coordinate(0,0);
-            if (latlon_distance(origoY,origoX,c.y(),c.x()) <= radius)
-            {
-              newCircle->points.push_back(gridPoints[t]);
-              newCircle->coordinates.push_back(c);
-            }
-          }
-
-          circle = newCircle;
-
-          if (hash != 0)
-          {
-            circlePointCache.insert(hash,circle);
-            circlePointCache_stats.inserts++;
-            circlePointCache_stats.size = circlePointCache.size();
-          }
+          circle = createCirclePoints(*this,cols,rows,origoX,origoY,radius,dd);
+          storeCirclePoints(hash,circle);
         }
 
         std::vector<T::Point> gridPoints = circle->points;
@@ -5059,50 +5159,8 @@ void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double o
 
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
-      {
-        double newOrigoX = 0;
-        double newOrigoY = 0;
-
-        getGridLatLonCoordinatesByOriginalCoordinates(origoX,origoY,newOrigoY,newOrigoX);
-
-        double lon1 = NAN;
-        double lat1 = NAN;
-        double lon2 = NAN;
-        double lat2 = NAN;
-        latLon_bboxByCenter(newOrigoX,newOrigoY,dd,dd,lon1,lat1,lon2,lat2);
-
-        double xx1 = 0;
-        double yy1 = 0;
-        double xx2 = 0;
-        double yy2 = 0;
-
-        getGridOriginalCoordinatesByLatLonCoordinates(lat1,lon1,xx1,yy1);
-        getGridOriginalCoordinatesByLatLonCoordinates(lat2,lon2,xx2,yy2);
-
-        std::vector<T::Coordinate> polygonPoints;
-        polygonPoints.emplace_back(xx1,yy1);
-        polygonPoints.emplace_back(xx2,yy1);
-        polygonPoints.emplace_back(xx2,yy2);
-        polygonPoints.emplace_back(xx1,yy2);
-
-        T::GridValueList tmpValueList;
-        getGridValueListByPolygon(coordinateType,polygonPoints,modificationOperation,modificationParameters,tmpValueList);
-
-        uint len = tmpValueList.getLength();
-        for (uint t=0; t<len; t++)
-        {
-          T::GridValue rec;
-          tmpValueList.getGridValueByIndex(t,rec);
-
-          double lat = 0;
-          double lon = 0;
-          getGridLatLonCoordinatesByOriginalCoordinates(rec.mY,rec.mX,lat,lon);
-
-          if (latlon_distance(origoY,origoX,lat,lon) <= radius)
-            valueList.addGridValue(rec);
-        }
-      }
-      break;
+        getOriginalCircleValues(*this,coordinateType,origoX,origoY,radius,dd,modificationOperation,modificationParameters,valueList);
+        break;
       default:
         break;
     }
