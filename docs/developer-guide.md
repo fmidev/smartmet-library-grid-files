@@ -105,7 +105,14 @@ Things to know:
     `redis-server`.
 
   The dump is the content registry the tests see. Grid files added to the test data
-  are invisible to the tests until they are registered in it.
+  are invisible to the tests until they are registered in it. Among them is
+  `grib/meps_ml/MEPSML_20261015T000000_helsinki.grib2` of `smartmet-test-data` (MEPS on 65
+  hybrid levels around Helsinki, producer `meps_ml`, geometry 5910 in
+  `grid/library/fmi_geometries.csv`), the data of the sounding and model-level tests. It was
+  registered with `filesys2smartmet` (source id 300) under the ids 50 for its producer,
+  generation and file, so that the ids the download tests add their own data under stay
+  free; register new files the same way, with ids that do not clash, and keep the file names
+  relative to the data directory like the other files.
 
 ## 3. Source tree
 
