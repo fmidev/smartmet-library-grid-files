@@ -194,6 +194,73 @@ int DataFetcher_network::getData(uint serverType,uint protocol,const char *serve
 
 
 
+namespace
+{
+/*! \brief Reads the file record from the S3 Contents element. */
+
+void readS3Contents(const XmlElement& contents,uint protocol,const char *server,const std::string& name,bool truncated,std::string& lastKey,DataFetcher::FileRec& rec)
+{
+  rec.serverType = DataFetcher::ServerType::S3;
+  rec.protocol = protocol;
+  rec.server = server;
+  for (auto& c : contents.elementList)
+  {
+    if (strcasecmp(c->tag.c_str(), "Key") == 0)
+    {
+      if (truncated)
+        lastKey = c->value;
+
+      rec.filename = "/" + name + "/" + c->value;
+    }
+    else
+    if (strcasecmp(c->tag.c_str(), "LastModified") == 0)
+    {
+      auto tt = Fmi::TimeParser::parse(c->value);
+      rec.lastModified = toTimeT(tt);
+    }
+    else
+    if (strcasecmp(c->tag.c_str(), "Size") == 0)
+    {
+      rec.size = toInt64(c->value.c_str());
+    }
+  }
+}
+
+
+
+/*! \brief Reads the file records from the S3 ListBucketResult element. */
+
+void readS3ListBucketResult(const XmlElement& result,uint protocol,const char *server,const std::vector<std::string> &filePatterns,std::vector<DataFetcher::FileRec>& fileList,std::string& lastKey,bool& truncated)
+{
+  std::string name;
+  for (auto b = result.elementList.begin(); b != result.elementList.end(); ++b)
+  {
+    if (strcasecmp((*b)->tag.c_str(), "IsTruncated") == 0)
+    {
+      if (strcasecmp((*b)->value.c_str(),"true") == 0)
+        truncated = true;
+    }
+    if (strcasecmp((*b)->tag.c_str(), "Name") == 0)
+    {
+      name = (*b)->value;
+    }
+    else
+    if (strcasecmp((*b)->tag.c_str(), "Contents") == 0)
+    {
+      DataFetcher::FileRec rec;
+      readS3Contents(**b,protocol,server,name,truncated,lastKey,rec);
+
+      if (filePatterns.empty() || patternMatch(rec.filename.c_str(),filePatterns))
+        fileList.push_back(rec);
+    }
+  }
+}
+}  // namespace
+
+
+
+
+
 /*! \brief Parses an S3 ListBucketResult XML element into a list of file records. */
 
 bool DataFetcher_network::getFileList(uint protocol,const char *server,const XmlElement& rootElement,const std::vector<std::string> &filePatterns,std::vector<FileRec>& fileList,std::string& lastKey)
@@ -206,51 +273,7 @@ bool DataFetcher_network::getFileList(uint protocol,const char *server,const Xml
     {
       if (strcasecmp(a->tag.c_str(), "ListBucketResult") == 0)
       {
-        std::string name;
-        for (auto b = a->elementList.begin(); b != a->elementList.end(); ++b)
-        {
-          if (strcasecmp((*b)->tag.c_str(), "IsTruncated") == 0)
-          {
-            if (strcasecmp((*b)->value.c_str(),"true") == 0)
-              truncated = true;
-          }
-          if (strcasecmp((*b)->tag.c_str(), "Name") == 0)
-          {
-            name = (*b)->value;
-          }
-          else
-          if (strcasecmp((*b)->tag.c_str(), "Contents") == 0)
-          {
-            FileRec rec;
-            rec.serverType = ServerType::S3;
-            rec.protocol = protocol;
-            rec.server = server;
-            for (auto& c : (*b)->elementList)
-            {
-              if (strcasecmp(c->tag.c_str(), "Key") == 0)
-              {
-                if (truncated)
-                  lastKey = c->value;
-
-                rec.filename = "/" + name + "/" + c->value;
-              }
-              else
-              if (strcasecmp(c->tag.c_str(), "LastModified") == 0)
-              {
-                auto tt = Fmi::TimeParser::parse(c->value);
-                rec.lastModified = toTimeT(tt);
-              }
-              else
-              if (strcasecmp(c->tag.c_str(), "Size") == 0)
-              {
-                rec.size = toInt64(c->value.c_str());
-              }
-            }
-
-            if (filePatterns.empty() || patternMatch(rec.filename.c_str(),filePatterns))
-              fileList.push_back(rec);
-          }
-        }
+        readS3ListBucketResult(*a,protocol,server,filePatterns,fileList,lastKey,truncated);
       }
     }
     return truncated;
