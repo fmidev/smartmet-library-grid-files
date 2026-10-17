@@ -151,6 +151,28 @@ void reloadIfModified(const string_vec& files,time_t tt,time_t& modificationTime
 
   modificationTime = tt;
 }
+
+
+
+
+
+/*! \brief Counts the parameter definition attributes matching the message, stopping at the first mismatch. */
+
+template <class MessageType,class DefType>
+uint countMatchingAttributes(const MessageType& message,const DefType& def)
+{
+  uint points = 0;
+  bool failed = false;
+
+  for (auto pm = def.mParameterList.begin(); pm != def.mParameterList.end() && !failed; ++pm)
+  {
+    if (message.hasAttributeValue(stringFactory[pm->first],pm->second.c_str()))
+      points++;
+    else
+      failed = true;
+  }
+  return points;
+}
 }  // namespace
 
 
@@ -4755,16 +4777,7 @@ T::GribParamId GridDef::getGribParameterId(const GRIB1::Message& message)
     for (auto& p : mGrib1_parameterDef_cache)
     {
       uint requiredPoints = p.mParameterList.size();
-      uint points = 0;
-      bool failed = false;
-
-      for (auto pm = p.mParameterList.begin(); pm != p.mParameterList.end() && !failed; ++pm)
-      {
-        if (message.hasAttributeValue(stringFactory[pm->first],pm->second.c_str()))
-          points++;
-        else
-          failed = true;
-      }
+      uint points = countMatchingAttributes(message,p);
 
       if (points == requiredPoints)
         return p.mGribParameterId;
@@ -4776,15 +4789,7 @@ T::GribParamId GridDef::getGribParameterId(const GRIB1::Message& message)
       uint requiredPoints = mGrib1_parameterDef_record.mParameterList.size();
       if (maxPoints < requiredPoints)
       {
-        uint points = 0;
-        bool failed = false;
-        for (auto pm = mGrib1_parameterDef_record.mParameterList.begin(); pm != mGrib1_parameterDef_record.mParameterList.end() && !failed; ++pm)
-        {
-          if (message.hasAttributeValue(stringFactory[pm->first],pm->second.c_str()))
-            points++;
-          else
-            failed = true;
-        }
+        uint points = countMatchingAttributes(message,mGrib1_parameterDef_record);
 
         if (points == requiredPoints && points > maxPoints)
         {
@@ -4825,16 +4830,7 @@ T::GribParamId GridDef::getGribParameterId(const GRIB2::Message& message)
     for (auto& p : mGrib2_parameterDef_cache)
     {
       uint requiredPoints = p.mParameterList.size();
-      uint points = 0;
-      bool failed = false;
-
-      for (auto pm = p.mParameterList.begin(); pm != p.mParameterList.end() && !failed; ++pm)
-      {
-        if (message.hasAttributeValue(stringFactory[pm->first],pm->second.c_str()))
-          points++;
-        else
-          failed = true;
-      }
+      uint points = countMatchingAttributes(message,p);
 
       if (points == requiredPoints)
         return p.mGribParameterId;
@@ -4845,15 +4841,7 @@ T::GribParamId GridDef::getGribParameterId(const GRIB2::Message& message)
       uint requiredPoints = mGrib2_parameterDef_record.mParameterList.size();
       if (maxPoints < requiredPoints)
       {
-        uint points = 0;
-        bool failed = false;
-        for (auto pm = mGrib2_parameterDef_record.mParameterList.begin(); pm != mGrib2_parameterDef_record.mParameterList.end() && !failed; ++pm)
-        {
-          if (message.hasAttributeValue(stringFactory[pm->first],pm->second.c_str()))
-            points++;
-          else
-            failed = true;
-        }
+        uint points = countMatchingAttributes(message,mGrib2_parameterDef_record);
 
         if (points == requiredPoints && points > maxPoints)
         {
