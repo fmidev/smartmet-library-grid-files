@@ -46,6 +46,85 @@ NetCdfFile::~NetCdfFile() = default;
 
 
 
+namespace
+{
+/*! \brief Reads the values of a byte attribute. */
+
+void readByteAttribute(MemoryReader& memoryReader,uint attrCount,std::vector<std::string>& attrValues)
+{
+  uchar val = 0;
+  uint rCount = attrCount;
+  if (rCount > 0)
+    rCount = ((rCount-1)/4 + 1) * 4;
+
+  for (uint a=0; a<rCount; a++)
+  {
+    memoryReader >> val;
+    if (a < rCount)
+      attrValues.push_back(std::to_string((uint)val));
+  }
+}
+
+
+
+/*! \brief Reads the value of a char attribute. */
+
+void readCharAttribute(MemoryReader& memoryReader,uint attrCount,std::vector<std::string>& attrValues)
+{
+  std::int8_t val = 0;
+  uint rCount = attrCount;
+  if (rCount > 0)
+    rCount = ((rCount-1)/4 + 1) * 4;
+
+  std::string str(attrCount, '\0');
+  for (uint a=0; a<rCount; a++)
+  {
+    memoryReader >> val;
+    if (a < attrCount)
+      str[a] = val;
+  }
+  attrValues.push_back(str);
+}
+
+
+
+/*! \brief Reads the values of a short attribute. */
+
+void readShortAttribute(MemoryReader& memoryReader,uint attrCount,std::vector<std::string>& attrValues)
+{
+  short val = 0;
+  uint rCount = attrCount;
+  if (rCount > 0)
+    rCount = ((rCount-1)/2 + 1) * 2;
+
+  for (uint a=0; a<rCount; a++)
+  {
+    memoryReader >> val;
+    if (a < attrCount)
+      attrValues.push_back(std::to_string(val));
+  }
+}
+
+
+
+/*! \brief Reads the values of an int, float or double attribute. */
+
+template <class ValueType>
+void readNumericAttribute(MemoryReader& memoryReader,uint attrCount,std::vector<std::string>& attrValues)
+{
+  ValueType val = 0;
+  for (uint a=0; a<attrCount; a++)
+  {
+    memoryReader >> val;
+    attrValues.push_back(std::to_string(val));
+  }
+}
+}  // namespace
+
+
+
+
+
 /*! \brief Reads a single NetCDF attribute (name and typed values) from the memory reader. */
 
 void NetCdfFile::readAttribute(MemoryReader& memoryReader,std::string& attrName,std::vector<std::string>& attrValues)
@@ -88,87 +167,28 @@ void NetCdfFile::readAttribute(MemoryReader& memoryReader,std::string& attrName,
     switch (attrType)
     {
       case 1:  // byte
-      {
-        uchar val = 0;
-        uint rCount = attrCount;
-        if (rCount > 0)
-          rCount = ((rCount-1)/4 + 1) * 4;
-
-        for (uint a=0; a<rCount; a++)
-        {
-          memoryReader >> val;
-          if (a < rCount)
-            attrValues.push_back(std::to_string((uint)val));
-        }
-      }
-      break;
+        readByteAttribute(memoryReader,attrCount,attrValues);
+        break;
 
       case 2:  // char
-      {
-        std::int8_t val = 0;
-        uint rCount = attrCount;
-        if (rCount > 0)
-          rCount = ((rCount-1)/4 + 1) * 4;
-
-        std::string str(attrCount, '\0');
-        for (uint a=0; a<rCount; a++)
-        {
-          memoryReader >> val;
-          if (a < attrCount)
-            str[a] = val;
-        }
-        attrValues.push_back(str);
-      }
-      break;
+        readCharAttribute(memoryReader,attrCount,attrValues);
+        break;
 
       case 3:  // short
-      {
-        short val = 0;
-        uint rCount = attrCount;
-        if (rCount > 0)
-          rCount = ((rCount-1)/2 + 1) * 2;
-
-        for (uint a=0; a<rCount; a++)
-        {
-          memoryReader >> val;
-          if (a < attrCount)
-            attrValues.push_back(std::to_string(val));
-        }
-      }
-      break;
+        readShortAttribute(memoryReader,attrCount,attrValues);
+        break;
 
       case 4:  // int
-      {
-        int val = 0;
-        for (uint a=0; a<attrCount; a++)
-        {
-          memoryReader >> val;
-          attrValues.push_back(std::to_string(val));
-        }
-      }
-      break;
+        readNumericAttribute<int>(memoryReader,attrCount,attrValues);
+        break;
 
       case 5:  // float
-      {
-        float val = 0;
-        for (uint a=0; a<attrCount; a++)
-        {
-          memoryReader >> val;
-          attrValues.push_back(std::to_string(val));
-        }
-      }
-      break;
+        readNumericAttribute<float>(memoryReader,attrCount,attrValues);
+        break;
 
       case 6:  // double
-      {
-        double val = 0;
-        for (uint a=0; a<attrCount; a++)
-        {
-          memoryReader >> val;
-          attrValues.push_back(std::to_string(val));
-        }
-      }
-      break;
+        readNumericAttribute<double>(memoryReader,attrCount,attrValues);
+        break;
       default:
         break;
     }
