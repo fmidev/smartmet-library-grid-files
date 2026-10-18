@@ -128,6 +128,8 @@ libraries, the grid engine and the plugins using it
 
 %changelog
 * Sat Oct 17 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.17-1.fmi
+- GRIB2 complex packing with spatial differencing: the non-missing value count read from the
+  message is bounded by the number of values
 - Grid test fixture: MEPS on 65 hybrid levels around Helsinki (producer meps_ml, geometry
   5910) with pressure, temperature, dewpoint, humidity and wind on each level, for soundings
 - Remove the unused Int64 linearInterpolation overload
