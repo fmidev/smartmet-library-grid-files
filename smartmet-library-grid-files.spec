@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 26.10.17
+Version: 26.10.18
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -127,6 +127,9 @@ libraries, the grid engine and the plugins using it
 %attr(0755,root,root) %{_bindir}/smartmet-grid-test-config-creator
 
 %changelog
+* Sun Oct 18 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.18-1.fmi
+- png_load: close the file when the PNG cannot be decoded
+
 * Sat Oct 17 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.17-1.fmi
 - GRIB2 complex packing with spatial differencing: the non-missing value count read from the
   message is bounded by the number of values

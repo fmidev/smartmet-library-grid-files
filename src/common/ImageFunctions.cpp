@@ -644,14 +644,20 @@ int png_load(const char *_filename,CImage& _image)
       return -1;
 
     if (readpng_init(infile, &width, &height) != 0)
+    {
+      (void)fclose(infile);
       return -2;
+    }
 
     _image.width = width;
     _image.height = height;
 
     uchar *pixel = readpng_get_image(display_exponent, &image_channels,&image_rowbytes);
     if (pixel == nullptr)
+    {
+      (void)fclose(infile);
       return -3;
+    }
 
     int size = width * height;
     _image.pixel = (uint*)pixel;
@@ -729,11 +735,17 @@ int png_load(const char *_filename,std::vector<uint>& _image,uint& _width,uint& 
       return -1;
 
     if (readpng_init(infile, &_width, &_height) != 0)
+    {
+      (void)fclose(infile);
       return -2;
+    }
 
     uchar *pixel = readpng_get_image(display_exponent, &image_channels,&image_rowbytes);
     if (pixel == nullptr)
+    {
+      (void)fclose(infile);
       return -3;
+    }
 
     int size = _width * _height;
     _image.reserve(size);
