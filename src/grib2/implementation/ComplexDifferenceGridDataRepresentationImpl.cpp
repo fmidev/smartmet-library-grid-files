@@ -404,7 +404,7 @@ void undoSpatialDifferencing(int orderOfSpatialDifferencing,int missingValueMana
     if (missingValueManagementUsed == 0)
       itemp = numberOfValues;        // no missing values
     else
-      itemp = non;
+      itemp = (non > 0 ? std::min(C_UINT64(non),C_UINT64(numberOfValues)) : 0);  // the count comes from the file
 
     for (std::size_t n=1; n<itemp; n++)
     {
@@ -422,7 +422,7 @@ void undoSpatialDifferencing(int orderOfSpatialDifferencing,int missingValueMana
     if (missingValueManagementUsed == 0)
       itemp = numberOfValues;        // no missing values
     else
-      itemp = non;
+      itemp = (non > 0 ? std::min(C_UINT64(non),C_UINT64(numberOfValues)) : 0);  // the count comes from the file
 
     for (std::size_t n=2; n<itemp; n++)
     {
