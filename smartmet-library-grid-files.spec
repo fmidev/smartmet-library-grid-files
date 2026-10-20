@@ -4,7 +4,7 @@
 Summary: grid file handling library
 Name: %{SPECNAME}
 Version: 26.10.20
-Release: 1%{?dist}.fmi
+Release: 2%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
 URL: https://github.com/fmidev/smartmet-library-grid-files
@@ -128,6 +128,9 @@ libraries, the grid engine and the plugins using it
 %attr(0755,root,root) %{_bindir}/smartmet-grid-test-redis
 
 %changelog
+* Tue Oct 20 2026 Andris Pavēnis <andris.pavenis@fmi.fi> 26.10.20-2.fmi
+- Test configuration generator fix
+
 * Tue Oct 20 2026 Andris Pavēnis <andris.pavenis@fmi.fi> 26.10.20-1.fmi
 - Use UNIX socket with Valkey/Redis databse for tests
 
