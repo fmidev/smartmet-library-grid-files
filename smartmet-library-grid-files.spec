@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 26.10.18
+Version: 26.10.20
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -128,6 +128,9 @@ libraries, the grid engine and the plugins using it
 %attr(0755,root,root) %{_bindir}/smartmet-grid-test-redis
 
 %changelog
+* Tue Oct 20 2026 Andris Pavēnis <andris.pavenis@fmi.fi> 26.10.20-1.fmi
+- Use UNIX socket with Valkey/Redis databse for tests
+
 * Sun Oct 18 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.18-1.fmi
 - png_load: close the file when the PNG cannot be decoded
 
