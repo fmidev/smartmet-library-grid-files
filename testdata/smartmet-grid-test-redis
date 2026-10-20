@@ -1,0 +1,146 @@
+#!/bin/bash
+#
+# Starts and stops the Redis (Valkey) content database used by the grid tests of the
+# SmartMet libraries, engines and plugins.
+#
+# The server listens only on a Unix domain socket in a private temporary directory below
+# /tmp. Test runs of several users, or of several plugins, on the same host therefore
+# cannot collide on a TCP port, and a server left running by an interrupted run can never
+# be mistaken for a new one. /tmp keeps the socket path well below the 108 byte limit.
+#
+# Usage, in the test directory containing cnf/environment.conf:
+#
+#   smartmet-grid-test-redis start       copy the grid test configuration to cnf/grid and
+#                                        start the server, stopping an old one first
+#   smartmet-grid-test-redis stop        stop the server and remove its temporary directory
+#   smartmet-grid-test-redis cli ARGS    run redis-cli ARGS against the server
+#   smartmet-grid-test-redis socket      print the socket path
+#
+# The socket path is written to cnf/grid/redis/socket.conf as REDIS_CONTENT_SERVER_SOCKET,
+# which cnf/grid/engine/grid-engine.conf includes.
+#
+# Environment:
+#   SMARTMET_GRID_TEST_ENV   environment file (default cnf/environment.conf)
+#   SMARTMET_GRID_TEST_DIR   copied configuration directory (default cnf/grid)
+#   SMARTMET_GRID_TEST_DATA  installed grid test configuration
+#                            (default <prefix>/share/smartmet/test/grid)
+
+set -eu
+
+PREFIX_DIR=$(dirname "$(dirname "$(readlink -f "$0")")")
+
+ENV_FILE=${SMARTMET_GRID_TEST_ENV:-cnf/environment.conf}
+GRID_DIR=${SMARTMET_GRID_TEST_DIR:-cnf/grid}
+DATA_DIR=${SMARTMET_GRID_TEST_DATA:-$PREFIX_DIR/share/smartmet/test/grid}
+
+SOCKET_CONF=$GRID_DIR/redis/socket.conf
+PID_FILE=$GRID_DIR/redis/redis-server.pid
+LOG_FILE=$GRID_DIR/redis/redis-server.log
+SOCKET_DIR_PREFIX=/tmp/smartmet-grid-test-redis.
+
+SERVER=$(command -v valkey-server || command -v redis-server || true)
+CLI=$(command -v valkey-cli || command -v redis-cli || true)
+
+die()
+{
+    echo "smartmet-grid-test-redis: $*" >&2
+    exit 1
+}
+
+socket_path()
+{
+    [ -f "$SOCKET_CONF" ] || return 0
+    sed -n 's/^REDIS_CONTENT_SERVER_SOCKET *= *"\(.*\)"$/\1/p' "$SOCKET_CONF"
+}
+
+stop()
+{
+    local sock dir pid
+    sock=$(socket_path)
+    [ -n "$sock" ] || return 0
+
+    if [ -S "$sock" ] && [ -n "$CLI" ]; then
+        "$CLI" -s "$sock" shutdown nosave >/dev/null 2>&1 || true
+        for _ in $(seq 50); do
+            [ -S "$sock" ] || break
+            sleep 0.1
+        done
+    fi
+
+    # The server did not shut down cleanly: kill it, but only if the pid is still a Redis server
+    if [ -S "$sock" ] && [ -f "$PID_FILE" ]; then
+        pid=$(cat "$PID_FILE")
+        if ps -p "$pid" -o comm= 2>/dev/null | grep -q -E 'redis|valkey'; then
+            kill -9 "$pid" || true
+        fi
+    fi
+    rm -f "$PID_FILE"
+
+    dir=$(dirname "$sock")
+    case "$dir" in
+        "$SOCKET_DIR_PREFIX"??????) rm -rf "$dir" ;;
+    esac
+    rm -f "$SOCKET_CONF"
+}
+
+start()
+{
+    local dir sock
+
+    [ -n "$SERVER" ] || die "neither valkey-server nor redis-server found"
+    [ -n "$CLI" ] || die "neither valkey-cli nor redis-cli found"
+    [ -f "$ENV_FILE" ] || die "$ENV_FILE not found"
+    [ -d "$DATA_DIR" ] || die "$DATA_DIR not found"
+
+    stop
+
+    rm -rf "$GRID_DIR"
+    mkdir -p "$(dirname "$GRID_DIR")"
+    cp -pr "$DATA_DIR" "$GRID_DIR"
+
+    dir=$(mktemp -d "${SOCKET_DIR_PREFIX}XXXXXX")
+    sock=$dir/redis.sock
+    printf 'REDIS_CONTENT_SERVER_SOCKET = "%s"\n' "$sock" > "$SOCKET_CONF"
+
+    echo "*** Creating the Redis configuration file."
+    smartmet-grid-test-config-creator "$ENV_FILE" \
+        "$GRID_DIR/redis/redis-template.conf" "$GRID_DIR/redis/redis.conf" \
+        -D REDIS_CONTENT_SERVER_SOCKET "$sock"
+
+    echo "*** Starting the Redis database at $sock"
+    "$SERVER" "$GRID_DIR/redis/redis.conf"
+
+    for _ in $(seq 100); do
+        if [ "$("$CLI" -s "$sock" ping 2>/dev/null)" = "PONG" ]; then
+            return 0
+        fi
+        sleep 0.1
+    done
+
+    echo "*** The Redis database did not start, see $LOG_FILE:" >&2
+    tail -5 "$LOG_FILE" >&2 || true
+    stop
+    exit 1
+}
+
+case "${1:-}" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    cli)
+        shift
+        sock=$(socket_path)
+        [ -n "$sock" ] || die "the Redis database has not been started"
+        exec "$CLI" -s "$sock" "$@"
+        ;;
+    socket)
+        socket_path
+        ;;
+    *)
+        echo "Usage: $0 start|stop|cli ARGS|socket" >&2
+        exit 2
+        ;;
+esac
