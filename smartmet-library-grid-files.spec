@@ -125,6 +125,7 @@ libraries, the grid engine and the plugins using it
 %defattr(0664,root,root,0775)
 %{_datadir}/smartmet/test/grid
 %attr(0755,root,root) %{_bindir}/smartmet-grid-test-config-creator
+%attr(0755,root,root) %{_bindir}/smartmet-grid-test-redis
 
 %changelog
 * Sun Oct 18 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.18-1.fmi

@@ -100,9 +100,18 @@ Things to know:
   * `grid/redis/`: a Redis dump (`redis-server.rdb`) with the content registry of the
     GRIB files in `smartmet-test-data`, and a config template;
   * `smartmet-grid-test-config-creator`: fills a template with values from a
-    configuration file and `-D name value` overrides. Plugin test Makefiles use it to
-    write a `redis.conf` with a free port and a private directory, then start their own
-    `redis-server`.
+    configuration file and `-D name value` overrides.
+  * `smartmet-grid-test-redis start|stop|cli ARGS|socket`: run in a test directory
+    containing `cnf/environment.conf` (which defines `REDIS_CONTENT_SERVER_TABLE_PREFIX`
+    and `REDIS_CONTENT_SERVER_DATA_DIR`). `start` stops a server left by an interrupted
+    run, copies the fixture to `cnf/grid`, writes `redis.conf` with the config creator and
+    starts the server listening only on a Unix socket in a private `mktemp -d` directory
+    below `/tmp` (no TCP port, so test runs of several users or plugins on one host cannot
+    collide). It writes the socket path to `cnf/grid/redis/socket.conf` as
+    `REDIS_CONTENT_SERVER_SOCKET`, which `grid/engine/grid-engine.conf` includes. `stop`
+    shuts the server down through the socket and removes the directory; `cli` runs
+    `redis-cli` against it. The grid-content Redis client treats an address starting with
+    `/` as a Unix socket path.
 
   The dump is the content registry the tests see. Grid files added to the test data
   are invisible to the tests until they are registered in it. Among them is

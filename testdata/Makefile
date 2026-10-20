@@ -31,7 +31,7 @@ install:
 		$(datadir)/smartmet/test/grid/library/test/
 	$(INSTALL_DATA) grid/redis/redis-server.rdb grid/redis/redis-template.conf \
 		$(datadir)/smartmet/test/grid/redis/
-	$(INSTALL_PROG) smartmet-grid-test-config-creator $(bindir)/
+	$(INSTALL_PROG) smartmet-grid-test-config-creator smartmet-grid-test-redis $(bindir)/
 
 $(PROG) : % : %.cpp Makefile ../libsmartmet-grid-files.so
 	$(CXX) $(CFLAGS) -o $@ $@.cpp $(INCLUDES) $(LIBS)
