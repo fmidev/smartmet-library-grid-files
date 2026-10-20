@@ -16,8 +16,8 @@
 #   smartmet-grid-test-redis cli ARGS    run redis-cli ARGS against the server
 #   smartmet-grid-test-redis socket      print the socket path
 #
-# The socket path is written to cnf/grid/redis/socket.conf as REDIS_CONTENT_SERVER_SOCKET,
-# which cnf/grid/engine/grid-engine.conf includes.
+# The socket path is set as REDIS_CONTENT_SERVER_SOCKET in cnf/grid/engine/grid-engine.conf
+# and written to cnf/grid/redis/socket.conf, which other configuration files may include.
 #
 # Environment:
 #   SMARTMET_GRID_TEST_ENV   environment file (default cnf/environment.conf)
@@ -101,6 +101,8 @@ start()
     dir=$(mktemp -d "${SOCKET_DIR_PREFIX}XXXXXX")
     sock=$dir/redis.sock
     printf 'REDIS_CONTENT_SERVER_SOCKET = "%s"\n' "$sock" > "$SOCKET_CONF"
+    sed -i "s|^REDIS_CONTENT_SERVER_SOCKET *=.*|REDIS_CONTENT_SERVER_SOCKET = \"$sock\"|" \
+        "$GRID_DIR/engine/grid-engine.conf"
 
     echo "*** Creating the Redis configuration file."
     smartmet-grid-test-config-creator "$ENV_FILE" \

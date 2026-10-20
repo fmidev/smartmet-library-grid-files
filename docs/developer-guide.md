@@ -108,7 +108,9 @@ Things to know:
     starts the server listening only on a Unix socket in a private `mktemp -d` directory
     below `/tmp` (no TCP port, so test runs of several users or plugins on one host cannot
     collide). It writes the socket path to `cnf/grid/redis/socket.conf` as
-    `REDIS_CONTENT_SERVER_SOCKET`, which `grid/engine/grid-engine.conf` includes. `stop`
+    `REDIS_CONTENT_SERVER_SOCKET` and sets it in its copy of `grid/engine/grid-engine.conf`
+    (the installed file has a placeholder, so it still parses as such, e.g. in the grid
+    engine tests). `stop`
     shuts the server down through the socket and removes the directory; `cli` runs
     `redis-cli` against it. The grid-content Redis client treats an address starting with
     `/` as a Unix socket path.
