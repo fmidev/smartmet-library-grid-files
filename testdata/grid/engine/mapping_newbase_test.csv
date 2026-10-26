@@ -279,4 +279,4 @@ ecmwf_maailma_pinta.grib;DewPoint;2;TD-C;5100;1;0;00000;1;1;1;0;E;;;1;
 ecmwf_maailma_pinta.grib;GeopHeight;2;ZH-GPM;5100;1;0;00000;1;1;1;0;E;;;;
 ecmwf_maailma_pinta.grib;LandSeaMask;2;LC-0TO1;5100;1;0;00000;1;1;1;0;E;;;;
 ecmwf_maailma_pinta.grib;Temperature;2;T-K;5100;1;0;00000;1;1;1;0;E;;;1;
-
+pal_ensemble;Temperature;2;Temperature;5900;1;1;00000;1;1;1;0;E;;;1;

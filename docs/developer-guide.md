@@ -123,7 +123,11 @@ Things to know:
   registered with `filesys2smartmet` (source id 300) under the ids 50 for its producer,
   generation and file, so that the ids the download tests add their own data under stay
   free; register new files the same way, with ids that do not clash, and keep the file names
-  relative to the data directory like the other files.
+  relative to the data directory like the other files. Likewise `grib/pal_ensemble/` (producer
+  `pal_ensemble`, geometry 5900, source id 301, ids 51 for the producer and the generation and
+  51-53 for the files) holds the PAL temperature as one ensemble generation: a control forecast
+  without the 06 UTC step (value 4) and perturbed members 1 and 2 (values 1 and 2), the data of
+  the forecast selection tests of queries without a forecast type. The test grid-files configuration names its parameter `Temperature`.
 
 ## 3. Source tree
 
