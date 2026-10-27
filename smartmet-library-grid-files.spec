@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 26.10.26
+Version: 26.10.27
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -128,6 +128,10 @@ libraries, the grid engine and the plugins using it
 %attr(0755,root,root) %{_bindir}/smartmet-grid-test-redis
 
 %changelog
+* Tue Oct 27 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.27-1.fmi
+- Grid test fixture: the pal_ensemble control forecast has all steps 05-07 UTC
+  (grib/pal_ensemble of smartmet-test-data 26.10.27)
+
 * Mon Oct 26 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.26-1.fmi
 - Grid test fixture: producer pal_ensemble (grib/pal_ensemble of smartmet-test-data 26.10.26), an
   ensemble control forecast and two perturbed members in one generation
