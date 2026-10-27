@@ -50,7 +50,7 @@ NewbaseParameterDef::~NewbaseParameterDef()
         \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void NewbaseParameterDef::print(std::ostream& stream,uint level,uint optionFlags) const
+void NewbaseParameterDef::print(std::ostream& stream,uint level,uint /*optionFlags*/) const
 {
   try
   {

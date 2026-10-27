@@ -15,19 +15,21 @@ class HttpClient : public Client
 {
   public:
               HttpClient();
-    virtual   ~HttpClient();
+    ~HttpClient() override;
+    HttpClient(const HttpClient&) = delete;
+    HttpClient& operator=(const HttpClient&) = delete;
 
     //! \overload Client::getData()
-    int       getData(const char *server,const char *filename,std::size_t filePosition,int dataSize,char *dataPtr);
+    int       getData(const char *server,const char *filename,std::size_t filePosition,int dataSize,char *dataPtr) override;
     //! \overload Client::getHeaderData()
-    int       getHeaderData(const char *server,const char *filename,int dataSize,char *dataPtr);
+    int       getHeaderData(const char *server,const char *filename,int dataSize,char *dataPtr) override;
 
   protected:
 
     CURL*     curl; //!< libcurl easy handle
 };
 
-typedef HttpClient* HttpClient_ptr;
-typedef std::vector<HttpClient_ptr> HttpClient_ptr_vec;
+using HttpClient_ptr = HttpClient*;
+using HttpClient_ptr_vec = std::vector<HttpClient_ptr>;
 
 }

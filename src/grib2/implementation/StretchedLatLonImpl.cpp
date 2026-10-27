@@ -1,5 +1,7 @@
 #include "StretchedLatLonImpl.h"
 #include <macgyver/Exception.h>
+
+#include <memory>
 #include "../../common/Dimensions.h"
 #include "../../common/CoordinateConversions.h"
 
@@ -22,10 +24,7 @@ StretchedLatLonImpl::StretchedLatLonImpl()
 
 /*! \brief The copy constructor of the class. */
 
-StretchedLatLonImpl::StretchedLatLonImpl(const StretchedLatLonImpl& other)
-:StretchedLatLon(other)
-{
-}
+StretchedLatLonImpl::StretchedLatLonImpl(const StretchedLatLonImpl& other) = default;
 
 
 
@@ -33,9 +32,7 @@ StretchedLatLonImpl::StretchedLatLonImpl(const StretchedLatLonImpl& other)
 
 /*! \brief The destructor of the class. */
 
-StretchedLatLonImpl::~StretchedLatLonImpl()
-{
-}
+StretchedLatLonImpl::~StretchedLatLonImpl() = default;
 
 
 
@@ -105,10 +102,10 @@ T::Coordinate_svec StretchedLatLonImpl::getGridOriginalCoordinatesNoCache() cons
     uint ni = (*mLatLon.getGrid()->getNi());
     uint nj = (*mLatLon.getGrid()->getNj());
 
-    double latitudeOfFirstGridPoint = C_DOUBLE(*mLatLon.getGrid()->getLatitudeOfFirstGridPoint());
-    double longitudeOfFirstGridPoint = C_DOUBLE(*mLatLon.getGrid()->getLongitudeOfFirstGridPoint());
-    double iDirectionIncrement = C_DOUBLE(*mLatLon.getIDirectionIncrement());
-    double jDirectionIncrement = C_DOUBLE(*mLatLon.getJDirectionIncrement());
+    auto latitudeOfFirstGridPoint = C_DOUBLE(*mLatLon.getGrid()->getLatitudeOfFirstGridPoint());
+    auto longitudeOfFirstGridPoint = C_DOUBLE(*mLatLon.getGrid()->getLongitudeOfFirstGridPoint());
+    auto iDirectionIncrement = C_DOUBLE(*mLatLon.getIDirectionIncrement());
+    auto jDirectionIncrement = C_DOUBLE(*mLatLon.getJDirectionIncrement());
 
     unsigned char scanningMode = mLatLon.getScanningMode()->getScanningMode();
 
@@ -162,7 +159,7 @@ T::Dimensions StretchedLatLonImpl::getGridDimensions() const
   try
   {
     if (!mLatLon.getGrid()->getNi() || !mLatLon.getGrid()->getNj())
-      return T::Dimensions();
+      return {};
 
     return T::Dimensions(*mLatLon.getGrid()->getNi(), *mLatLon.getGrid()->getNj());
   }
@@ -255,13 +252,16 @@ bool StretchedLatLonImpl::getGridPointByOriginalCoordinates(double x,double y,do
     double i = lonDiff / iDirectionIncrement;
     double j = latDiff / jDirectionIncrement;
 
+    // Projection round-off puts points on the first row or column slightly outside the grid
+    if (i < 0 && i > -1e-4)
+      i = 0;
+    if (j < 0 && j > -1e-4)
+      j = 0;
+
     grid_i = i;
     grid_j = j;
 
-    if (i < 0 ||  j < 0  ||  i >= C_DOUBLE(ni) ||  j > C_DOUBLE(nj))
-      return false;
-
-    return true;
+    return !(i < 0 ||  j < 0  ||  i >= C_DOUBLE(ni) ||  j > C_DOUBLE(nj));
   }
   catch (...)
   {
@@ -282,7 +282,7 @@ void StretchedLatLonImpl::initSpatialReference()
     mSpatialReference = getSpatialReference();
     if (!mSpatialReference)
     {
-      mSpatialReference.reset(new T::SpatialRef());
+      mSpatialReference = std::make_shared<T::SpatialRef>();
       addSpatialReference(mSpatialReference);
 
       // TODO: This is probably not correct. It is directly copied from LatLonImpl

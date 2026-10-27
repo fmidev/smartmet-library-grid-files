@@ -107,9 +107,7 @@ GridSection::GridSection(const GridSection& other)
 
 /*! \brief The destructor of the class. */
 
-GridSection::~GridSection()
-{
-}
+GridSection::~GridSection() = default;
 
 
 
@@ -210,6 +208,8 @@ bool GridSection::getProperty(uint propertyId,Int64& value)
       case Property::GridSection::GridDefinitionTemplateNumber:
         value = *mGridDefinitionTemplateNumber;
         return true;
+      default:
+        break;
     }
 
     if (mGridDefinition)
@@ -296,12 +296,77 @@ bool GridSection::setProperty(uint propertyId,Int64 value)
       case Property::GridSection::GridDefinitionTemplateNumber:
         setGridDefinition((std::uint16_t)value);
         return true;
+      default:
+        break;
     }
 
     if (mGridDefinition)
       return mGridDefinition->setProperty(propertyId,value);
 
     return false;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+/*! \brief The method reads the optional list of numbers of points per row (or column).
+
+        \param memoryReader  This object controls the access to the memory mapped file.
+*/
+
+void GridSection::readNumbersOfPoints(MemoryReader& memoryReader)
+{
+  FUNCTION_TRACE
+  try
+  {
+    const auto octets = *mNumberOfOctetsForNumberOfPoints;
+    if (octets != 1 && octets != 2 && octets != 4)
+    {
+      Fmi::Exception exception(BCP,"Unsupported size for the optional list of numbers of points");
+      exception.addParameter("Octets",std::to_string(octets));
+      throw exception;
+    }
+
+    const auto sectionEnd = mFilePosition + *mSectionLength;
+    const auto pos = memoryReader.getGlobalReadPosition();
+    if (pos > sectionEnd)
+      throw Fmi::Exception(BCP,"The grid definition extends beyond the end of the grid section");
+
+    // The section length comes from the file: never read (or allocate) beyond the data
+    const auto available = static_cast<std::uint64_t>(memoryReader.getEndPtr() - memoryReader.getReadPtr());
+    if (sectionEnd - pos > available)
+      throw Fmi::Exception(BCP,"The grid section extends beyond the end of the data");
+
+    const auto count = (sectionEnd - pos) / octets;
+    mDataPoints.clear();
+    mDataPoints.reserve(count);
+    for (std::size_t t = 0; t < count; t++)
+    {
+      if (octets == 1)
+      {
+        std::uint8_t v = 0;
+        memoryReader >> v;
+        mDataPoints.push_back(v);
+      }
+      else if (octets == 2)
+      {
+        std::uint16_t v = 0;
+        memoryReader >> v;
+        mDataPoints.push_back(v);
+      }
+      else
+      {
+        std::uint32_t v = 0;
+        memoryReader >> v;
+        mDataPoints.push_back(v);
+      }
+    }
   }
   catch (...)
   {
@@ -370,7 +435,7 @@ void GridSection::read(MemoryReader& memoryReader)
     {
       if (mGridDefinitionTemplateNumber)
       {
-        auto gridDefinition = createGridDefinition(*mGridDefinitionTemplateNumber);
+        auto *gridDefinition = createGridDefinition(*mGridDefinitionTemplateNumber);
         mGridDefinition.reset(gridDefinition);
         gridDefinition->read(memoryReader);
       }
@@ -382,14 +447,12 @@ void GridSection::read(MemoryReader& memoryReader)
       throw exception;
     }
 
+    // Optional list of numbers of points per row (or column), used by reduced grids such as
+    // reduced Gaussian grids. It fills the rest of the section. The total number of points is
+    // in mNumberOfGridPoints, so the list is only stored. Rejecting it made the whole file
+    // unreadable when it contained a single reduced message.
     if (*mNumberOfOctetsForNumberOfPoints != 0)
-    {
-      Fmi::Exception exception(BCP,"GridSection does not support reading optional numbers yet!");
-      throw exception;
-      //      exception.printError();;
-
-      // TODO: Read the datapoints
-    }
+      readNumbersOfPoints(memoryReader);
 
     if (mGridDefinition)
     {
@@ -1001,6 +1064,33 @@ bool GridSection::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,do
 
 
 
+/*! \brief The method returns the grid latlon coordinates of the given grid points (= integer coordinates).
+
+        \param gridPoints   The grid points (i,j).
+        \param coordinates  The latlon coordinates (x = longitude, y = latitude) are returned in this parameter.
+        \param found        The method sets 'true' for each point whose coordinates were returned.
+*/
+
+void GridSection::getGridLatLonCoordinatesByGridPointList(std::vector<T::Point>& gridPoints,T::Coordinate_vec& coordinates,std::vector<bool>& found) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mGridDefinition == nullptr)
+      throw Fmi::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
+
+    mGridDefinition->getGridLatLonCoordinatesByGridPointList(gridPoints,coordinates,found);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
 /*! \brief The method returns the grid latlon coordinates in the given grid position (= double coordinates).
 
         \param grid_i  The grid i-coordinate.
@@ -1360,9 +1450,26 @@ std::size_t GridSection::getGridOriginalValueCount() const
   FUNCTION_TRACE
   try
   {
+    // Reduced grids list the number of points of each row, as in GRIB1
+    if (!mDataPoints.empty())
+    {
+      std::size_t count = 0;
+      for (auto n : mDataPoints)
+        count += n;
+      return count;
+    }
+
     auto d = getGridDimensions();
     if (d.getDimensions() == 2)
-      return d.ny() * d.nx();
+    {
+      // Overflow-safe nx*ny: this value count drives buffer allocations and decode-loop
+      // bounds throughout the library, so a wrap-around here could desynchronise them.
+      std::size_t nx = d.nx();
+      std::size_t ny = d.ny();
+      if (nx != 0 && ny > (SIZE_MAX / nx))
+        throw Fmi::Exception(BCP,"GRIB2 grid dimensions nx*ny overflow!");
+      return ny * nx;
+    }
 
     return 0;
   }

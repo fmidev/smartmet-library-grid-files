@@ -27,8 +27,7 @@ TimeIntervalAerosolEnsembleProduct::TimeIntervalAerosolEnsembleProduct() {
 
 /*! \brief The destructor of the class. */
 
-TimeIntervalAerosolEnsembleProduct::~TimeIntervalAerosolEnsembleProduct() {
-}
+TimeIntervalAerosolEnsembleProduct::~TimeIntervalAerosolEnsembleProduct() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -70,15 +69,10 @@ void TimeIntervalAerosolEnsembleProduct::write(DataWriter &dataWriter) {
 
 void TimeIntervalAerosolEnsembleProduct::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sTimeIntervalAerosolEnsembleProduct.", prefix.c_str());
-    mParameterAerosol.getAttributeList(name, attributeList);
-    sprintf(name, "%sTimeIntervalAerosolEnsembleProduct.", prefix.c_str());
-    mHorizontal.getAttributeList(name, attributeList);
-    sprintf(name, "%sTimeIntervalAerosolEnsembleProduct.", prefix.c_str());
-    mEps.getAttributeList(name, attributeList);
-    sprintf(name, "%sTimeIntervalAerosolEnsembleProduct.", prefix.c_str());
-    mStatistical.getAttributeList(name, attributeList);
+        mParameterAerosol.getAttributeList(prefix + "TimeIntervalAerosolEnsembleProduct.", attributeList);
+        mHorizontal.getAttributeList(prefix + "TimeIntervalAerosolEnsembleProduct.", attributeList);
+        mEps.getAttributeList(prefix + "TimeIntervalAerosolEnsembleProduct.", attributeList);
+        mStatistical.getAttributeList(prefix + "TimeIntervalAerosolEnsembleProduct.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -180,7 +174,7 @@ ProductDefinition *TimeIntervalAerosolEnsembleProduct::createProductDefinition()
 
 ParameterAerosolSettings *TimeIntervalAerosolEnsembleProduct::getParameterAerosol() const {
   try {
-    return static_cast<ParameterAerosolSettings *>(&mParameterAerosol);
+    return &mParameterAerosol;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -190,7 +184,7 @@ ParameterAerosolSettings *TimeIntervalAerosolEnsembleProduct::getParameterAeroso
 
 HorizontalSettings *TimeIntervalAerosolEnsembleProduct::getHorizontal() const {
   try {
-    return static_cast<HorizontalSettings *>(&mHorizontal);
+    return &mHorizontal;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -200,7 +194,7 @@ HorizontalSettings *TimeIntervalAerosolEnsembleProduct::getHorizontal() const {
 
 EpsSettings *TimeIntervalAerosolEnsembleProduct::getEps() const {
   try {
-    return static_cast<EpsSettings *>(&mEps);
+    return &mEps;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -210,13 +204,13 @@ EpsSettings *TimeIntervalAerosolEnsembleProduct::getEps() const {
 
 StatisticalSettings *TimeIntervalAerosolEnsembleProduct::getStatistical() const {
   try {
-    return static_cast<StatisticalSettings *>(&mStatistical);
+    return &mStatistical;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
-void TimeIntervalAerosolEnsembleProduct::setParameterAerosol(ParameterAerosolSettings &parameterAerosol) {
+void TimeIntervalAerosolEnsembleProduct::setParameterAerosol(const ParameterAerosolSettings &parameterAerosol) {
   try {
     mParameterAerosol = parameterAerosol;
   } catch (...) {
@@ -224,7 +218,7 @@ void TimeIntervalAerosolEnsembleProduct::setParameterAerosol(ParameterAerosolSet
   }
 }
 
-void TimeIntervalAerosolEnsembleProduct::setHorizontal(HorizontalSettings &horizontal) {
+void TimeIntervalAerosolEnsembleProduct::setHorizontal(const HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
@@ -232,7 +226,7 @@ void TimeIntervalAerosolEnsembleProduct::setHorizontal(HorizontalSettings &horiz
   }
 }
 
-void TimeIntervalAerosolEnsembleProduct::setEps(EpsSettings &eps) {
+void TimeIntervalAerosolEnsembleProduct::setEps(const EpsSettings &eps) {
   try {
     mEps = eps;
   } catch (...) {
@@ -240,7 +234,7 @@ void TimeIntervalAerosolEnsembleProduct::setEps(EpsSettings &eps) {
   }
 }
 
-void TimeIntervalAerosolEnsembleProduct::setStatistical(StatisticalSettings &statistical) {
+void TimeIntervalAerosolEnsembleProduct::setStatistical(const StatisticalSettings &statistical) {
   try {
     mStatistical = statistical;
   } catch (...) {

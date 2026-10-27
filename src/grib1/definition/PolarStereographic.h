@@ -22,38 +22,42 @@ namespace GRIB1 {
 class PolarStereographic : public GridDefinition {
 public:
   PolarStereographic();
-  virtual ~PolarStereographic();
+  PolarStereographic(const PolarStereographic &) = default;
+  PolarStereographic(PolarStereographic &&) = default;
+  PolarStereographic &operator=(const PolarStereographic &) = default;
+  PolarStereographic &operator=(PolarStereographic &&) = default;
+  ~PolarStereographic() override;
 
-  virtual void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const;
-  virtual void read(MemoryReader &memoryReader);
-  virtual void write(DataWriter &dataWriter);
-  virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
+  void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const override;
+  void read(MemoryReader &memoryReader) override;
+  void write(DataWriter &dataWriter) override;
+  void print(std::ostream &stream, uint level, uint optionFlags) const override;
   virtual bool getAttributeValue(const char *attributeName, std::string &attributeValue) const;
   virtual bool hasAttributeValue(const char *attributeName, const char *attributeValue) const;
-  virtual T::Hash countHash() const;
+  T::Hash countHash() const override;
 
-  virtual uint getTemplateNumber() const;
-  virtual GridDefinition *createGridDefinition() const;
+  uint getTemplateNumber() const override;
+  GridDefinition *createGridDefinition() const override;
   std::uint16_t getNx() const;
   void setNx(std::uint16_t nx);
   std::uint16_t getNy() const;
   void setNy(std::uint16_t ny);
-  std::int24_t getLatitudeOfFirstGridPoint() const;
-  void setLatitudeOfFirstGridPoint(std::int24_t latitudeOfFirstGridPoint);
-  std::int24_t getLongitudeOfFirstGridPoint() const;
-  void setLongitudeOfFirstGridPoint(std::int24_t longitudeOfFirstGridPoint);
-  ResolutionFlagsSettings *getResolutionFlags() const;
-  void setResolutionFlags(ResolutionFlagsSettings &resolutionFlags);
-  std::int24_t getOrientationOfTheGrid() const;
-  void setOrientationOfTheGrid(std::int24_t orientationOfTheGrid);
-  std::uint24_t getDxInMetres() const;
-  void setDxInMetres(std::uint24_t dxInMetres);
-  std::uint24_t getDyInMetres() const;
-  void setDyInMetres(std::uint24_t dyInMetres);
+  SmartMet::int24_t getLatitudeOfFirstGridPoint() const;
+  void setLatitudeOfFirstGridPoint(SmartMet::int24_t latitudeOfFirstGridPoint);
+  SmartMet::int24_t getLongitudeOfFirstGridPoint() const;
+  void setLongitudeOfFirstGridPoint(SmartMet::int24_t longitudeOfFirstGridPoint);
+  ResolutionFlagsSettings *getResolutionFlags() const override;
+  void setResolutionFlags(const ResolutionFlagsSettings &resolutionFlags);
+  SmartMet::int24_t getOrientationOfTheGrid() const;
+  void setOrientationOfTheGrid(SmartMet::int24_t orientationOfTheGrid);
+  SmartMet::uint24_t getDxInMetres() const;
+  void setDxInMetres(SmartMet::uint24_t dxInMetres);
+  SmartMet::uint24_t getDyInMetres() const;
+  void setDyInMetres(SmartMet::uint24_t dyInMetres);
   std::uint8_t getProjectionCentreFlag() const;
   void setProjectionCentreFlag(std::uint8_t projectionCentreFlag);
-  ScanningModeSettings *getScanningMode() const;
-  void setScanningMode(ScanningModeSettings &scanningMode);
+  ScanningModeSettings *getScanningMode() const override;
+  void setScanningMode(const ScanningModeSettings &scanningMode);
 
 protected:
   // # GRID DEFINITION Polar stereographic
@@ -78,14 +82,14 @@ protected:
   //
   // signed[3] latitudeOfFirstGridPoint : edition_specific ;
 
-  std::int24_t mLatitudeOfFirstGridPoint;
+  SmartMet::int24_t mLatitudeOfFirstGridPoint;
 
   // meta geography.latitudeOfFirstGridPointInDegrees scale(latitudeOfFirstGridPoint,oneConstant,grib1divider,truncateDegrees) : dump;
   // alias La1 = latitudeOfFirstGridPoint;
   //
   // signed[3] longitudeOfFirstGridPoint : edition_specific;
 
-  std::int24_t mLongitudeOfFirstGridPoint;
+  SmartMet::int24_t mLongitudeOfFirstGridPoint;
 
   // meta geography.longitudeOfFirstGridPointInDegrees scale(longitudeOfFirstGridPoint,oneConstant,grib1divider,truncateDegrees) : dump;
   // alias Lo1 = longitudeOfFirstGridPoint;
@@ -98,7 +102,7 @@ protected:
   // #  LoV - orientation of the grid; i.e.  the longitude value of the meridian which is parallel to the Y-axis
   // signed[3] orientationOfTheGrid  ;
 
-  std::int24_t mOrientationOfTheGrid;
+  SmartMet::int24_t mOrientationOfTheGrid;
 
   // meta geography.orientationOfTheGridInDegrees scale(orientationOfTheGrid,oneConstant,grib1divider,truncateDegrees) : dump;
   // alias LoV = orientationOfTheGrid ;
@@ -106,7 +110,7 @@ protected:
   // #  Dx - X-direction grid length
   // unsigned[3] DxInMetres  : dump;
 
-  std::uint24_t mDxInMetres;
+  SmartMet::uint24_t mDxInMetres;
 
   // alias xDirectionGridLengthInMetres=DxInMetres;
   // alias Dx=DxInMetres;
@@ -116,7 +120,7 @@ protected:
   // #  Dy - Y-direction grid length
   // unsigned[3] DyInMetres  : dump;
 
-  std::uint24_t mDyInMetres;
+  SmartMet::uint24_t mDyInMetres;
 
   // alias yDirectionGridLengthInMetres=DyInMetres;
   // alias Dy = DyInMetres;

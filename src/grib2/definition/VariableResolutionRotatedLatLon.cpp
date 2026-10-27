@@ -27,8 +27,7 @@ VariableResolutionRotatedLatLon::VariableResolutionRotatedLatLon() {
 
 /*! \brief The destructor of the class. */
 
-VariableResolutionRotatedLatLon::~VariableResolutionRotatedLatLon() {
-}
+VariableResolutionRotatedLatLon::~VariableResolutionRotatedLatLon() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -68,13 +67,9 @@ void VariableResolutionRotatedLatLon::write(DataWriter &dataWriter) {
 
 void VariableResolutionRotatedLatLon::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sVariableResolutionRotatedLatLon.", prefix.c_str());
-    mEarthShape.getAttributeList(name, attributeList);
-    sprintf(name, "%sVariableResolutionRotatedLatLon.", prefix.c_str());
-    mVariableLatLon.getAttributeList(name, attributeList);
-    sprintf(name, "%sVariableResolutionRotatedLatLon.", prefix.c_str());
-    mRotation.getAttributeList(name, attributeList);
+        mEarthShape.getAttributeList(prefix + "VariableResolutionRotatedLatLon.", attributeList);
+        mVariableLatLon.getAttributeList(prefix + "VariableResolutionRotatedLatLon.", attributeList);
+        mRotation.getAttributeList(prefix + "VariableResolutionRotatedLatLon.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -171,7 +166,7 @@ GridDefinition *VariableResolutionRotatedLatLon::createGridDefinition() const {
 
 EarthShapeSettings *VariableResolutionRotatedLatLon::getEarthShape() const {
   try {
-    return static_cast<EarthShapeSettings *>(&mEarthShape);
+    return &mEarthShape;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -181,7 +176,7 @@ EarthShapeSettings *VariableResolutionRotatedLatLon::getEarthShape() const {
 
 VariableLatLonSettings *VariableResolutionRotatedLatLon::getVariableLatLon() const {
   try {
-    return static_cast<VariableLatLonSettings *>(&mVariableLatLon);
+    return &mVariableLatLon;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -191,13 +186,13 @@ VariableLatLonSettings *VariableResolutionRotatedLatLon::getVariableLatLon() con
 
 RotationSettings *VariableResolutionRotatedLatLon::getRotation() const {
   try {
-    return static_cast<RotationSettings *>(&mRotation);
+    return &mRotation;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
-void VariableResolutionRotatedLatLon::setEarthShape(EarthShapeSettings &earthShape) {
+void VariableResolutionRotatedLatLon::setEarthShape(const EarthShapeSettings &earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
@@ -205,7 +200,7 @@ void VariableResolutionRotatedLatLon::setEarthShape(EarthShapeSettings &earthSha
   }
 }
 
-void VariableResolutionRotatedLatLon::setVariableLatLon(VariableLatLonSettings &variableLatLon) {
+void VariableResolutionRotatedLatLon::setVariableLatLon(const VariableLatLonSettings &variableLatLon) {
   try {
     mVariableLatLon = variableLatLon;
   } catch (...) {
@@ -213,7 +208,7 @@ void VariableResolutionRotatedLatLon::setVariableLatLon(VariableLatLonSettings &
   }
 }
 
-void VariableResolutionRotatedLatLon::setRotation(RotationSettings &rotation) {
+void VariableResolutionRotatedLatLon::setRotation(const RotationSettings &rotation) {
   try {
     mRotation = rotation;
   } catch (...) {

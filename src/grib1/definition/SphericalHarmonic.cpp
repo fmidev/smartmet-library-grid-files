@@ -32,8 +32,7 @@ SphericalHarmonic::SphericalHarmonic() {
 
 /*! \brief The destructor of the class. */
 
-SphericalHarmonic::~SphericalHarmonic() {
-}
+SphericalHarmonic::~SphericalHarmonic() = default;
 
 /*! \brief The method reads and initializes all data related to the current section object.
 
@@ -81,17 +80,11 @@ void SphericalHarmonic::write(DataWriter &dataWriter) {
 
 void SphericalHarmonic::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sSphericalHarmonic.J", prefix.c_str());
-    attributeList.addAttribute(name, toString(mJ));
-    sprintf(name, "%sSphericalHarmonic.K", prefix.c_str());
-    attributeList.addAttribute(name, toString(mK));
-    sprintf(name, "%sSphericalHarmonic.M", prefix.c_str());
-    attributeList.addAttribute(name, toString(mM));
-    sprintf(name, "%sSphericalHarmonic.RepresentationType", prefix.c_str());
-    attributeList.addAttribute(name, toString(mRepresentationType));
-    sprintf(name, "%sSphericalHarmonic.RepresentationMode", prefix.c_str());
-    attributeList.addAttribute(name, toString(mRepresentationMode));
+        attributeList.addAttribute(prefix + "SphericalHarmonic.J", toString(mJ));
+        attributeList.addAttribute(prefix + "SphericalHarmonic.K", toString(mK));
+        attributeList.addAttribute(prefix + "SphericalHarmonic.M", toString(mM));
+        attributeList.addAttribute(prefix + "SphericalHarmonic.RepresentationType", toString(mRepresentationType));
+        attributeList.addAttribute(prefix + "SphericalHarmonic.RepresentationMode", toString(mRepresentationMode));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -166,7 +159,7 @@ bool SphericalHarmonic::hasAttributeValue(const char *attributeName, const char 
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void SphericalHarmonic::print(std::ostream &stream, uint level, uint optionFlags) const {
+void SphericalHarmonic::print(std::ostream &stream, uint level, uint /*optionFlags*/) const {
   try {
     stream << space(level) << "SphericalHarmonic\n";
     stream << space(level) << "- J = " << toString(mJ) << "\n";

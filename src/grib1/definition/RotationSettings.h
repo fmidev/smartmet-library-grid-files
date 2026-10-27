@@ -19,6 +19,10 @@ namespace GRIB1 {
 class RotationSettings {
 public:
   RotationSettings();
+  RotationSettings(const RotationSettings &) = default;
+  RotationSettings(RotationSettings &&) = default;
+  RotationSettings &operator=(const RotationSettings &) = default;
+  RotationSettings &operator=(RotationSettings &&) = default;
   virtual ~RotationSettings();
 
   virtual void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const;
@@ -29,10 +33,10 @@ public:
   virtual bool hasAttributeValue(const char *attributeName, const char *attributeValue) const;
   virtual T::Hash countHash() const;
 
-  std::int24_t getLatitudeOfSouthernPole() const;
-  void setLatitudeOfSouthernPole(std::int24_t latitudeOfSouthernPole);
-  std::int24_t getLongitudeOfSouthernPole() const;
-  void setLongitudeOfSouthernPole(std::int24_t longitudeOfSouthernPole);
+  SmartMet::int24_t getLatitudeOfSouthernPole() const;
+  void setLatitudeOfSouthernPole(SmartMet::int24_t latitudeOfSouthernPole);
+  SmartMet::int24_t getLongitudeOfSouthernPole() const;
+  void setLongitudeOfSouthernPole(SmartMet::int24_t longitudeOfSouthernPole);
   ibmfloat getGeography_angleOfRotationInDegrees() const;
   void setGeography_angleOfRotationInDegrees(ibmfloat geography_angleOfRotationInDegrees);
 
@@ -41,13 +45,13 @@ protected:
   //
   // signed[3] latitudeOfSouthernPole : edition_specific;
 
-  std::int24_t mLatitudeOfSouthernPole;
+  SmartMet::int24_t mLatitudeOfSouthernPole;
 
   // meta  geography.latitudeOfSouthernPoleInDegrees   scale(latitudeOfSouthernPole ,oneConstant,grib1divider,truncateDegrees) : dump;
   //
   // signed[3] longitudeOfSouthernPole : edition_specific ;
 
-  std::int24_t mLongitudeOfSouthernPole;
+  SmartMet::int24_t mLongitudeOfSouthernPole;
 
   // meta  geography.longitudeOfSouthernPoleInDegrees   scale(longitudeOfSouthernPole ,oneConstant,grib1divider,truncateDegrees) : dump;
   //

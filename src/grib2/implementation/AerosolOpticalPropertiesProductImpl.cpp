@@ -1,5 +1,7 @@
 #include "AerosolOpticalPropertiesProductImpl.h"
 #include <macgyver/Exception.h>
+
+#include <utility>
 #include "../../common/GeneralFunctions.h"
 
 
@@ -11,9 +13,7 @@ namespace GRIB2
 
 /*! \brief The constructor of the class. */
 
-AerosolOpticalPropertiesProductImpl::AerosolOpticalPropertiesProductImpl()
-{
-}
+AerosolOpticalPropertiesProductImpl::AerosolOpticalPropertiesProductImpl() = default;
 
 
 
@@ -21,10 +21,7 @@ AerosolOpticalPropertiesProductImpl::AerosolOpticalPropertiesProductImpl()
 
 /*! \brief The copy constructor of the class. */
 
-AerosolOpticalPropertiesProductImpl::AerosolOpticalPropertiesProductImpl(const AerosolOpticalPropertiesProductImpl& other)
-:AerosolOpticalPropertiesProduct(other)
-{
-}
+AerosolOpticalPropertiesProductImpl::AerosolOpticalPropertiesProductImpl(const AerosolOpticalPropertiesProductImpl& other) = default;
 
 
 
@@ -32,9 +29,7 @@ AerosolOpticalPropertiesProductImpl::AerosolOpticalPropertiesProductImpl(const A
 
 /*! \brief The destructor of the class. */
 
-AerosolOpticalPropertiesProductImpl::~AerosolOpticalPropertiesProductImpl()
-{
-}
+AerosolOpticalPropertiesProductImpl::~AerosolOpticalPropertiesProductImpl() = default;
 
 
 
@@ -131,7 +126,7 @@ T::UInt8_opt AerosolOpticalPropertiesProductImpl::getGeneratingProcessIdentifier
 
 
 
-T::TimeString AerosolOpticalPropertiesProductImpl::countForecastStartTime(T::TimeString referenceTime) const
+T::TimeString AerosolOpticalPropertiesProductImpl::countForecastStartTime(const T::TimeString& referenceTime) const
 {
   try
   {
@@ -190,6 +185,8 @@ T::TimeString AerosolOpticalPropertiesProductImpl::countForecastStartTime(T::Tim
 
       case 13: //  s Second
         dt = Fmi::TimeDuration(0,0,forecastTime);
+        break;
+      default:
         break;
     }
 

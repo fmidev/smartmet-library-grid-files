@@ -12,9 +12,9 @@ namespace SmartMet
 /*! \brief A cached stdio file handle with an associated lock and last-use timestamp. */
 struct FileHandle
 {
-  FILE *fileHandle;                 //!< Open file handle
+  FILE *fileHandle = nullptr;                 //!< Open file handle
   SmartMet::ThreadLock threadLock;  //!< Per-handle mutex (prevents concurrent seeks)
-  time_t lastUsed;                  //!< Unix timestamp of the last access (for LRU eviction)
+  time_t lastUsed = 0;                  //!< Unix timestamp of the last access (for LRU eviction)
 };
 
 
@@ -31,16 +31,18 @@ class DataFetcher_filesys : public DataFetcher
 {
   public:
                       DataFetcher_filesys();
-    virtual           ~DataFetcher_filesys();
+    ~DataFetcher_filesys() override;
+    DataFetcher_filesys(const DataFetcher_filesys&) = delete;
+    DataFetcher_filesys& operator=(const DataFetcher_filesys&) = delete;
 
     //! \overload DataFetcher::getData()
-    int               getData(uint serverType,uint protocol,const char *server,const char *filename,std::size_t filePosition,int dataSize,char *dataPtr);
+    int               getData(uint serverType,uint protocol,const char *server,const char *filename,std::size_t filePosition,int dataSize,char *dataPtr) override;
     //! \overload DataFetcher::getFileList()
-    void              getFileList(uint serverType,uint protocol,const char *server,const char *dir,std::vector<std::string> &filePatterns,std::vector<FileRec>& fileList);
+    void              getFileList(uint serverType,uint protocol,const char *server,const char *dir,std::vector<std::string> &filePatterns,std::vector<FileRec>& fileList) override;
     //! \overload DataFetcher::getFileSize()
-    Int64             getFileSize(uint serverType,uint protocol,const char *server,const char *filename);
+    Int64             getFileSize(uint serverType,uint protocol,const char *server,const char *filename) override;
     //! \overload DataFetcher::getFileHeaders()
-    void              getFileHeaders(uint serverType,uint protocol,const char *server,const char *filename,std::map<std::string,std::string>& headers);
+    void              getFileHeaders(uint serverType,uint protocol,const char *server,const char *filename,std::map<std::string,std::string>& headers) override;
 
     /*! \brief Set the maximum number of simultaneously open file handles.
      *  \param[in] fileHandleLimit  Maximum handle pool size. */

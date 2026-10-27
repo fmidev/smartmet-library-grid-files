@@ -23,24 +23,28 @@ namespace GRIB2 {
 class Product_70 : public ProductDefinition {
 public:
   Product_70();
-  virtual ~Product_70();
+  Product_70(const Product_70 &) = default;
+  Product_70(Product_70 &&) = default;
+  Product_70 &operator=(const Product_70 &) = default;
+  Product_70 &operator=(Product_70 &&) = default;
+  ~Product_70() override;
 
-  virtual uint getTemplateNumber() const;
-  virtual ProductDefinition *createProductDefinition() const;
-  virtual void read(MemoryReader &memoryReader);
-  virtual void write(DataWriter &dataWriter);
-  virtual void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const;
-  virtual bool getAttributeValue(const char *attributeName, std::string &attributeValue) const;
-  virtual bool hasAttributeValue(const char *attributeName, const char *attributeValue) const;
-  virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
+  uint getTemplateNumber() const override;
+  ProductDefinition *createProductDefinition() const override;
+  void read(MemoryReader &memoryReader) override;
+  void write(DataWriter &dataWriter) override;
+  void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const override;
+  bool getAttributeValue(const char *attributeName, std::string &attributeValue) const override;
+  bool hasAttributeValue(const char *attributeName, const char *attributeValue) const override;
+  void print(std::ostream &stream, uint level, uint optionFlags) const override;
   virtual T::Hash countHash() const;
 
-  PostprocSettings *getPostproc() const;
-  void setPostproc(PostprocSettings &postproc);
+  PostprocSettings *getPostproc() const override;
+  void setPostproc(const PostprocSettings &postproc);
   PointInTimeSettings *getPointInTime() const;
-  void setPointInTime(PointInTimeSettings &pointInTime);
-  HorizontalSettings *getHorizontal() const;
-  void setHorizontal(HorizontalSettings &horizontal);
+  void setPointInTime(const PointInTimeSettings &pointInTime);
+  HorizontalSettings *getHorizontal() const override;
+  void setHorizontal(const HorizontalSettings &horizontal);
 
 protected:
   // # Copyright 2005-2019 ECMWF.

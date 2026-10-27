@@ -45,17 +45,18 @@ class IndicatorSection : public GRID::MessageSection
 
                       IndicatorSection();
                       IndicatorSection(const IndicatorSection& other);
-    virtual           ~IndicatorSection();
+    ~IndicatorSection() override;
+    IndicatorSection& operator=(const IndicatorSection&) = default;
 
     // ### Common methods for all message sections
 
-    void              getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const;
+    void              getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const override;
     bool              getAttributeValue(const char *attributeName, std::string& attributeValue) const;
     bool              hasAttributeValue(const char *attributeName, const char *attributeValue) const;
-    T::FilePosition   getFilePosition() const;
-    std::uint32_t     getSectionLength() const;
-    std::string       getSectionName() const;
-    std::uint8_t      getSectionNumber() const;
+    T::FilePosition   getFilePosition() const override;
+    std::uint32_t     getSectionLength() const override;
+    std::string       getSectionName() const override;
+    std::uint8_t      getSectionNumber() const override;
 
     // ### Section specific methods
 
@@ -69,13 +70,13 @@ class IndicatorSection : public GRID::MessageSection
     void              setTotalLength(std::uint64_t totalLength);
     void              setMessagePtr(Message *message);
 
-    bool              getProperty(uint propertyId,Int64& value);
+    bool              getProperty(uint propertyId,Int64& value) const;
     void              getProperties(T::PropertySettingVec& properties);
     bool              setProperty(uint propertyId,Int64 value);
 
     void              read(MemoryReader& memoryReader);
     void              write(DataWriter& dataWriter);
-    void              print(std::ostream& stream,uint level,uint optionFlags) const;
+    void              print(std::ostream& stream,uint level,uint optionFlags) const override;
 
   private:
 
@@ -89,7 +90,7 @@ class IndicatorSection : public GRID::MessageSection
     std::uint64_t     mTotalLength;
 
     /*! \brief The GRIB file identifier ('GRIB'). */
-    uchar             mIdentifier[4];
+    uchar             mIdentifier[4]{};
 
     /*! \brief Reserved bytes. */
     T::UInt16_opt     mReserved;
@@ -102,7 +103,7 @@ class IndicatorSection : public GRID::MessageSection
 
 };
 
-typedef std::shared_ptr<IndicatorSection> IndicatorSect_sptr;  //!< Shared ownership pointer to a GRIB 2 IndicatorSection.
+using IndicatorSect_sptr = std::shared_ptr<IndicatorSection>;  //!< Shared ownership pointer to a GRIB 2 IndicatorSection.
 
 
 }  // namespace GRIB2

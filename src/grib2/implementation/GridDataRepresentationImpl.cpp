@@ -213,6 +213,8 @@ bool GridDataRepresentationImpl::getValueByIndex(Message *message,uint index,T::
         case 4:
           X = read_uint32(mData,mDataSize,index * b);
           break;
+        default:
+          break;
       }
     }
 
@@ -229,6 +231,72 @@ bool GridDataRepresentationImpl::getValueByIndex(Message *message,uint index,T::
 
 
 
+namespace
+{
+
+/*! \brief Sets all values to the reference value, or to ParamValueMissing where the bitmap bit is not set. */
+
+void fillReferenceValues(std::size_t numOfValues,T::Data_ptr bitmap,double R,T::ParamValue_vec& decodedValues)
+{
+  for (std::uint32_t i = 0; i < numOfValues; i++)
+  {
+    if (bitmap != nullptr && (bitmap[i / 8] & bitmask[i % 8]) == 0)
+    {
+      decodedValues.emplace_back(ParamValueMissing);
+    }
+    else
+    {
+      decodedValues.emplace_back(R);
+    }
+  }
+}
+
+
+
+
+
+/*! \brief Decodes numOfValues packed values using the given packed value reader, inserting
+    ParamValueMissing where the bitmap bit is not set. */
+
+template <class ReadValue>
+void decodeScaledValues(std::size_t numOfValues,T::Data_ptr bitmap,double RDfac,double EDfac,T::ParamValue_vec& decodedValues,ReadValue readValue)
+{
+  if (bitmap == nullptr)
+  {
+    for (std::uint32_t i = 0; i < numOfValues; i++)
+    {
+      UInt64 X = readValue();
+
+      // Output the caclulated value
+      double Y = RDfac + X * EDfac;
+      decodedValues.emplace_back(Y);
+    }
+    return;
+  }
+
+  for (std::uint32_t i = 0; i < numOfValues; i++)
+  {
+    if ((bitmap[i / 8] & bitmask[i % 8]) == 0)
+    {
+      decodedValues.emplace_back(ParamValueMissing);
+    }
+    else
+    {
+      UInt64 X = readValue();
+
+      // Output the caclulated value
+      double Y = RDfac + X * EDfac;
+      decodedValues.emplace_back(Y);
+    }
+  }
+}
+
+}  // namespace
+
+
+
+
+
 /*! \brief Decodes all grid values of the message and writes them into the output vector. */
 
 void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec& decodedValues) const
@@ -240,9 +308,17 @@ void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec
     std::size_t dataSize = message->getDataSize();
     T::Data_ptr bitmap = message->getBitmapDataPtr();
 
-
     if (numOfValues == 0)
       return;
+
+    // Guard against a bitmap shorter than the grid implies: every bitmap[i/8] read below
+    // uses i in [0,numOfValues), so the bitmap must hold at least ceil(numOfValues/8) bytes.
+    if (bitmap != nullptr)
+    {
+      std::size_t bitmapSizeInBytes = message->getBitmapDataSizeInBytes();
+      if (bitmapSizeInBytes < (numOfValues + 7) / 8)
+        throw Fmi::Exception(BCP,"GRIB2 bitmap is too short for the declared value count!");
+    }
 
     // Vector to return
     decodedValues.clear();
@@ -255,17 +331,7 @@ void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec
     if (!bits_per_value  ||  *bits_per_value == 0 ||  data == nullptr || dataSize == 0)
     {
       // If 'bitsPerValue' is zero then all values are same as the reference value
-      for (std::uint32_t i = 0; i < numOfValues; i++)
-      {
-        if (bitmap != nullptr && (bitmap[i / 8] & bitmask[i % 8]) == 0)
-        {
-          decodedValues.emplace_back(ParamValueMissing);
-        }
-        else
-        {
-          decodedValues.emplace_back(R);
-        }
-      }
+      fillReferenceValues(numOfValues,bitmap,R,decodedValues);
       return;
     }
 
@@ -296,42 +362,27 @@ void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec
 
       if (bitmap == nullptr)
       {
-        for (std::uint32_t i = 0; i < numOfValues; i++)
-        {
+        decodeScaledValues(numOfValues,bitmap,RDfac,EDfac,decodedValues,[&bitArrayReader,nbits]() {
           UInt64 X = 0;
           bitArrayReader.readBits(nbits,X);
-
-          // Output the caclulated value
-          double Y = RDfac + X * EDfac;
-          decodedValues.emplace_back(Y);
-        }
+          return X;
+        });
       }
       else
       {
-        for (std::uint32_t i = 0; i < numOfValues; i++)
-        {
-          if ((bitmap[i / 8] & bitmask[i % 8]) == 0)
+        decodeScaledValues(numOfValues,bitmap,RDfac,EDfac,decodedValues,[&bitArrayReader,nbits]() {
+          UInt64 X = 0;
+          try
           {
-            decodedValues.emplace_back(ParamValueMissing);
+            bitArrayReader.readBits(nbits,X);
           }
-          else
+          catch (...)
           {
-            UInt64 X = 0;
-            try
-            {
-              bitArrayReader.readBits(nbits,X);
-            }
-            catch (...)
-            {
-              //printf("READ VALUE %u/%u\n",i,numOfValues);
-              throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-            }
-
-            // Output the caclulated value
-            double Y = RDfac + X * EDfac;
-            decodedValues.emplace_back(Y);
+            //printf("READ VALUE %u/%u\n",i,numOfValues);
+            throw Fmi::Exception(BCP,"Operation failed!",nullptr);
           }
-        }
+          return X;
+        });
       }
     }
     else
@@ -342,115 +393,21 @@ void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec
       switch (b)
       {
         case 1:
-          if (bitmap == nullptr)
-          {
-            for (std::uint32_t i = 0; i < numOfValues; i++)
-            {
-              UInt64 X = memoryReader.read_uint8();
-              double Y = RDfac + X * EDfac;
-              decodedValues.emplace_back(Y);
-            }
-          }
-          else
-          {
-            for (std::uint32_t i = 0; i < numOfValues; i++)
-            {
-              if ((bitmap[i / 8] & bitmask[i % 8]) == 0)
-              {
-                decodedValues.emplace_back(ParamValueMissing);
-              }
-              else
-              {
-                UInt64 X = memoryReader.read_uint8();
-                double Y = RDfac + X * EDfac;
-                decodedValues.emplace_back(Y);
-              }
-            }
-          }
+          decodeScaledValues(numOfValues,bitmap,RDfac,EDfac,decodedValues,[&memoryReader]() -> UInt64 { return memoryReader.read_uint8(); });
           break;
 
         case 2:
-          if (bitmap == nullptr)
-          {
-            for (std::uint32_t i = 0; i < numOfValues; i++)
-            {
-              UInt64 X = memoryReader.read_uint16();
-              double Y = RDfac + X * EDfac;
-              decodedValues.emplace_back(Y);
-            }
-          }
-          else
-          {
-            for (std::uint32_t i = 0; i < numOfValues; i++)
-            {
-              if ((bitmap[i / 8] & bitmask[i % 8]) == 0)
-              {
-                decodedValues.emplace_back(ParamValueMissing);
-              }
-              else
-              {
-                UInt64 X = memoryReader.read_uint16();
-                double Y = RDfac + X * EDfac;
-                decodedValues.emplace_back(Y);
-              }
-            }
-          }
+          decodeScaledValues(numOfValues,bitmap,RDfac,EDfac,decodedValues,[&memoryReader]() -> UInt64 { return memoryReader.read_uint16(); });
           break;
 
         case 3:
-          if (bitmap == nullptr)
-          {
-            for (std::uint32_t i = 0; i < numOfValues; i++)
-            {
-              UInt64 X = memoryReader.read_uint24();
-              double Y = RDfac + X * EDfac;
-              decodedValues.emplace_back(Y);
-            }
-          }
-          else
-          {
-            for (std::uint32_t i = 0; i < numOfValues; i++)
-            {
-              if ((bitmap[i / 8] & bitmask[i % 8]) == 0)
-              {
-                decodedValues.emplace_back(ParamValueMissing);
-              }
-              else
-              {
-                UInt64 X = memoryReader.read_uint24();
-                double Y = RDfac + X * EDfac;
-                decodedValues.emplace_back(Y);
-              }
-            }
-          }
+          decodeScaledValues(numOfValues,bitmap,RDfac,EDfac,decodedValues,[&memoryReader]() -> UInt64 { return memoryReader.read_uint24(); });
           break;
 
         case 4:
-          if (bitmap == nullptr)
-          {
-            for (std::uint32_t i = 0; i < numOfValues; i++)
-            {
-              UInt64 X = memoryReader.read_uint32();
-              double Y = RDfac + X * EDfac;
-              decodedValues.emplace_back(Y);
-            }
-          }
-          else
-          {
-            for (std::uint32_t i = 0; i < numOfValues; i++)
-            {
-              if ((bitmap[i / 8] & bitmask[i % 8]) == 0)
-              {
-                decodedValues.emplace_back(ParamValueMissing);
-              }
-              else
-              {
-                UInt64 X = memoryReader.read_uint32();
-                double Y = RDfac + X * EDfac;
-                decodedValues.emplace_back(Y);
-              }
-            }
-          }
+          decodeScaledValues(numOfValues,bitmap,RDfac,EDfac,decodedValues,[&memoryReader]() -> UInt64 { return memoryReader.read_uint32(); });
+          break;
+        default:
           break;
       }
     }
@@ -466,6 +423,39 @@ void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec
 
 
 
+namespace
+{
+
+/*! \brief Counts the valid and missing values and finds the value range of the valid values. */
+
+void scanValueRange(const T::ParamValue_vec& values,uint& valueCount,uint& missingCount,T::ParamValue& minValue,T::ParamValue& maxValue)
+{
+  for (const float & value : values)
+  {
+    if (value != ParamValueMissing)
+    {
+      if (minValue == ParamValueMissing || (value < minValue))
+      {
+        minValue = value;
+      }
+
+      if (maxValue == ParamValueMissing || (value > maxValue))
+      {
+        maxValue = value;
+      }
+      valueCount++;
+    }
+    else
+    {
+      missingCount++;
+    }
+  }
+}
+
+}  // namespace
+
+
+
 /*! \brief Encodes the given grid values into the packed data buffer of the message. */
 
 void GridDataRepresentationImpl::encodeValues(Message *message,T::ParamValue_vec& values)
@@ -476,7 +466,6 @@ void GridDataRepresentationImpl::encodeValues(Message *message,T::ParamValue_vec
     T::Int16_opt decimalScaleFactor = 0;
     binaryScaleFactor = mPacking.getBinaryScaleFactor();
     decimalScaleFactor = mPacking.getDecimalScaleFactor();
-    auto referenceValue = mPacking.getReferenceValue();
     auto bitsPerValue = mPacking.getBitsPerValue();
 
 
@@ -485,26 +474,7 @@ void GridDataRepresentationImpl::encodeValues(Message *message,T::ParamValue_vec
     T::ParamValue minValue = ParamValueMissing;
     T::ParamValue maxValue = ParamValueMissing;
 
-    for (auto it = values.begin(); it != values.end(); ++it)
-    {
-      if ((*it) != ParamValueMissing)
-      {
-        if (minValue == ParamValueMissing || ((*it) < minValue))
-        {
-          minValue = *it;
-        }
-
-        if (maxValue == ParamValueMissing || ((*it) > maxValue))
-        {
-          maxValue = *it;
-        }
-        valueCount++;
-      }
-      else
-      {
-        missingCount++;
-      }
-    }
+    scanValueRange(values,valueCount,missingCount,minValue,maxValue);
 
     std::int16_t E = 0;
     if (binaryScaleFactor)
@@ -514,7 +484,7 @@ void GridDataRepresentationImpl::encodeValues(Message *message,T::ParamValue_vec
     if (decimalScaleFactor)
       D = *decimalScaleFactor;
 
-    referenceValue = minValue;
+    float referenceValue = minValue;
     float R = referenceValue;
 
 
@@ -551,18 +521,18 @@ void GridDataRepresentationImpl::encodeValues(Message *message,T::ParamValue_vec
     if ((totalBits % 8) != 0)
       dataSize++;
 
-    uchar *data = new uchar[dataSize];
+    auto *data = new uchar[dataSize];
     memset(data,0,dataSize);
     BitArrayWriter bitArrayWriter(data,totalBits);
 
-    for (auto it = values.begin(); it != values.end(); ++it)
+    for (float & value : values)
     {
-      if ((*it) != ParamValueMissing)
+      if (value != ParamValueMissing)
       {
-        float Y = *it;
+        float Y = value;
         float X = (Y - RDfac) / EDfac;
 
-        UInt64 v = C_UINT64(round(X));
+        auto v = C_UINT64(round(X));
         bitArrayWriter.writeBits(bits,v);
       }
     }
@@ -571,7 +541,7 @@ void GridDataRepresentationImpl::encodeValues(Message *message,T::ParamValue_vec
 
     if (!dataSection)
     {
-      DataSection *section = new DataSection();
+      auto *section = new DataSection();
       section->setMessagePtr(message);
       section->setData(data,dataSize);
       message->setDataSection(section);

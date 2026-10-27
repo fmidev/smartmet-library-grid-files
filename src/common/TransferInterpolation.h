@@ -9,7 +9,7 @@
 
 struct FlowField
 {
-    int w, h;
+    int w = 0, h = 0;
     std::vector<float> u;
     std::vector<float> v;
 };
@@ -17,8 +17,8 @@ struct FlowField
 /************** Bilinear interpolation with clamping **************/
 inline float bilinear(const std::vector<float> &img, int w, int h, float x, float y)
 {
-  x = std::clamp(x, 0.f, float(w - 1));
-  y = std::clamp(y, 0.f, float(h - 1));
+  x = std::clamp(x, 0.F, float(w - 1));
+  y = std::clamp(y, 0.F, float(h - 1));
 
   int x0 = int(x);
   int y0 = int(y);
@@ -51,60 +51,77 @@ std::vector<float> downsample2(const std::vector<float> &src, int w, int h, int 
   return dst;
 }
 
-/************** Horn–Schunck optical flow at one resolution **************/
-void horn_schunck_level(const std::vector<float> &A, const std::vector<float> &B, int w, int h, std::vector<float> &u, std::vector<float> &v, float alpha = 15.f, int iterations =
-    100)
+/************** Image gradients (central differences) **************/
+inline void compute_gradients(const std::vector<float> &A, const std::vector<float> &B, int w, int h, std::vector<float> &Ix, std::vector<float> &Iy, std::vector<float> &It)
 {
-  int N = w * h;
-  std::vector<float> Ix(N), Iy(N), It(N);
-
-  // Gradients (central differences)
   for (int y = 0; y < h; y++) {
     for (int x = 0; x < w; x++) {
       int i = y * w + x;
-      Ix[i] = 0.f;
-      Iy[i] = 0.f;
+      Ix[i] = 0.F;
+      Iy[i] = 0.F;
       if (x > 0 && x < w - 1)
-        Ix[i] = 0.5f * (A[i + 1] - A[i - 1] + B[i + 1] - B[i - 1]);
+        Ix[i] = 0.5F * (A[i + 1] - A[i - 1] + B[i + 1] - B[i - 1]);
       if (y > 0 && y < h - 1)
-        Iy[i] = 0.5f * (A[i + w] - A[i - w] + B[i + w] - B[i - w]);
+        Iy[i] = 0.5F * (A[i + w] - A[i - w] + B[i + w] - B[i - w]);
       It[i] = B[i] - A[i];
     }
   }
+}
 
-  std::vector<float> u_new = u, v_new = v;
+/************** Average flow of the 4-neighbourhood of (x,y) **************/
+inline void neighbour_average(const std::vector<float> &u, const std::vector<float> &v, int w, int h, int x, int y, float &u_avg, float &v_avg)
+{
+  int i = y * w + x;
+  int count = 0;
+  if (x > 0) {
+    u_avg += u[i - 1];
+    v_avg += v[i - 1];
+    count++;
+  }
+  if (x < w - 1) {
+    u_avg += u[i + 1];
+    v_avg += v[i + 1];
+    count++;
+  }
+  if (y > 0) {
+    u_avg += u[i - w];
+    v_avg += v[i - w];
+    count++;
+  }
+  if (y < h - 1) {
+    u_avg += u[i + w];
+    v_avg += v[i + w];
+    count++;
+  }
+  if (count > 0) {
+    u_avg /= count;
+    v_avg /= count;
+  }
+}
+
+/************** Horn–Schunck optical flow at one resolution **************/
+void horn_schunck_level(const std::vector<float> &A, const std::vector<float> &B, int w, int h, std::vector<float> &u, std::vector<float> &v, float alpha = 15.F, int iterations =
+    100)
+{
+  int N = w * h;
+  std::vector<float> Ix(N);
+  std::vector<float> Iy(N);
+  std::vector<float> It(N);
+
+  // Gradients (central differences)
+  compute_gradients(A, B, w, h, Ix, Iy, It);
+
+  std::vector<float> u_new = u;
+  std::vector<float> v_new = v;
   float alpha2 = alpha * alpha;
 
   for (int it = 0; it < iterations; it++) {
     for (int y = 0; y < h; y++) {
       for (int x = 0; x < w; x++) {
         int i = y * w + x;
-        float u_avg = 0.f, v_avg = 0.f;
-        int count = 0;
-        if (x > 0) {
-          u_avg += u[i - 1];
-          v_avg += v[i - 1];
-          count++;
-        }
-        if (x < w - 1) {
-          u_avg += u[i + 1];
-          v_avg += v[i + 1];
-          count++;
-        }
-        if (y > 0) {
-          u_avg += u[i - w];
-          v_avg += v[i - w];
-          count++;
-        }
-        if (y < h - 1) {
-          u_avg += u[i + w];
-          v_avg += v[i + w];
-          count++;
-        }
-        if (count > 0) {
-          u_avg /= count;
-          v_avg /= count;
-        }
+        float u_avg = 0.F;
+        float v_avg = 0.F;
+        neighbour_average(u, v, w, h, x, y, u_avg, v_avg);
         float P = Ix[i] * u_avg + Iy[i] * v_avg + It[i];
         float D = alpha2 + Ix[i] * Ix[i] + Iy[i] * Iy[i];
         u_new[i] = u_avg - Ix[i] * P / D;
@@ -130,7 +147,8 @@ Pyramid build_pyramid(const std::vector<float> &base, int w, int h, int levels)
   P.W.push_back(w);
   P.H.push_back(h);
   for (int i = 1; i < levels; i++) {
-    int nw, nh;
+    int nw = 0;
+    int nh = 0;
     auto ds = downsample2(P.levels.back(), P.W.back(), P.H.back(), nw, nh);
     P.levels.push_back(std::move(ds));
     P.W.push_back(nw);
@@ -142,11 +160,12 @@ Pyramid build_pyramid(const std::vector<float> &base, int w, int h, int levels)
 /************** Upscale flow by 2 **************/
 void upscale_flow(FlowField &F, int newW, int newH)
 {
-  std::vector<float> u2(newW * newH), v2(newW * newH);
+  std::vector<float> u2(newW * newH);
+  std::vector<float> v2(newW * newH);
   for (int y = 0; y < newH; y++) {
     for (int x = 0; x < newW; x++) {
-      float uf = bilinear(F.u, F.w, F.h, x / 2.f, y / 2.f) * 2.f;
-      float vf = bilinear(F.v, F.w, F.h, x / 2.f, y / 2.f) * 2.f;
+      float uf = bilinear(F.u, F.w, F.h, x / 2.F, y / 2.F) * 2.F;
+      float vf = bilinear(F.v, F.w, F.h, x / 2.F, y / 2.F) * 2.F;
       u2[y * newW + x] = uf;
       v2[y * newW + x] = vf;
     }
@@ -162,11 +181,12 @@ std::vector<float> warp_with_flow(const std::vector<float> &img, const FlowField
 {
   std::vector<float> out(flow.w * flow.h);
   for (int i = 0; i < flow.w * flow.h; i++) {
-    int x = i % flow.w, y = i / flow.w;
+    int x = i % flow.w;
+    int y = i / flow.w;
     float nx = x + flow.u[i] * t;
     float ny = y + flow.v[i] * t;
-    nx = std::clamp(nx, 0.f, float(iw - 1));
-    ny = std::clamp(ny, 0.f, float(ih - 1));
+    nx = std::clamp(nx, 0.F, float(iw - 1));
+    ny = std::clamp(ny, 0.F, float(ih - 1));
     out[i] = bilinear(img, iw, ih, nx, ny);
   }
   return out;
@@ -181,13 +201,13 @@ FlowField pyramid_optical_flow(const std::vector<float> &A, const std::vector<fl
   FlowField flow;
   flow.w = PA.W[L];
   flow.h = PA.H[L];
-  flow.u.assign(flow.w * flow.h, 0.f);
-  flow.v.assign(flow.w * flow.h, 0.f);
+  flow.u.assign(flow.w * flow.h, 0.F);
+  flow.v.assign(flow.w * flow.h, 0.F);
 
   for (int lvl = L; lvl >= 0; lvl--) {
     if (lvl != L)
       upscale_flow(flow, PA.W[lvl], PA.H[lvl]);
-    auto Awarp = warp_with_flow(PA.levels[lvl], flow, 1.f, PA.W[lvl], PA.H[lvl]);
+    auto Awarp = warp_with_flow(PA.levels[lvl], flow, 1.F, PA.W[lvl], PA.H[lvl]);
     horn_schunck_level(Awarp, PB.levels[lvl], PA.W[lvl], PA.H[lvl], flow.u, flow.v);
   }
   return flow;
@@ -201,7 +221,8 @@ std::vector<float> transferInterpolation(const std::vector<float> &A, const std:
 
   std::vector<float> result(w * h);
   for (int i = 0; i < w * h; i++) {
-    int x = i % w, y = i / w;
+    int x = i % w;
+    int y = i / w;
     float nx_f = x + flow_f.u[i] * t;
     float ny_f = y + flow_f.v[i] * t;
     float val_f = bilinear(A, w, h, nx_f, ny_f);

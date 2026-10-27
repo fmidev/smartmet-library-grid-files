@@ -10,9 +10,7 @@ namespace GRIB2
 
 /*! \brief The constructor of the class. */
 
-TimeIntervalEnsembleForecastImpl::TimeIntervalEnsembleForecastImpl()
-{
-}
+TimeIntervalEnsembleForecastImpl::TimeIntervalEnsembleForecastImpl() = default;
 
 
 
@@ -20,10 +18,7 @@ TimeIntervalEnsembleForecastImpl::TimeIntervalEnsembleForecastImpl()
 
 /*! \brief The copy constructor of the class. */
 
-TimeIntervalEnsembleForecastImpl::TimeIntervalEnsembleForecastImpl(const TimeIntervalEnsembleForecastImpl& other)
-:TimeIntervalEnsembleForecast(other)
-{
-}
+TimeIntervalEnsembleForecastImpl::TimeIntervalEnsembleForecastImpl(const TimeIntervalEnsembleForecastImpl& other) = default;
 
 
 
@@ -31,9 +26,7 @@ TimeIntervalEnsembleForecastImpl::TimeIntervalEnsembleForecastImpl(const TimeInt
 
 /*! \brief The destructor of the class. */
 
-TimeIntervalEnsembleForecastImpl::~TimeIntervalEnsembleForecastImpl()
-{
-}
+TimeIntervalEnsembleForecastImpl::~TimeIntervalEnsembleForecastImpl() = default;
 
 
 

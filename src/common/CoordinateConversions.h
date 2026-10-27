@@ -13,7 +13,7 @@
  *  \param[in,out] x        X (longitude/easting) values in degrees or metres; overwritten.
  *  \param[in,out] y        Y (latitude/northing) values; overwritten.
  *  \return True on success. */
-bool convert(const std::shared_ptr<OGRSpatialReference> sr_from,const std::shared_ptr<OGRSpatialReference> sr_to,int nCount,double *x,double *y);
+bool convert(const std::shared_ptr<OGRSpatialReference>& sr_from,const std::shared_ptr<OGRSpatialReference>& sr_to,int nCount,double *x,double *y);
 
 
 /*! \brief Convert geographic (lat/lon) coordinates to rotated latitude/longitude.

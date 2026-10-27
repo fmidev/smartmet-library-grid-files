@@ -19,19 +19,21 @@ class MemoryWriter : public DataWriter
      *  \param[in] _dataSize     Size of the buffer in bytes.
      *  \param[in] _dataRelease  If true, `delete[]` the buffer on destruction. */
                 MemoryWriter(uchar *_data,UInt64 _dataSize,bool _dataRelease);
-    virtual     ~MemoryWriter();
+    ~MemoryWriter() override;
+    MemoryWriter(const MemoryWriter&) = delete;
+    MemoryWriter& operator=(const MemoryWriter&) = delete;
 
     /*! \brief Return a pointer to the start of the buffer. */
     uchar*      getDataPtr();
 
     //! \overload DataWriter::getWritePosition()
-    UInt64      getWritePosition();
+    UInt64      getWritePosition() override;
     //! \overload DataWriter::getMaxWritePosition()
-    UInt64      getMaxWritePosition();
+    UInt64      getMaxWritePosition() override;
     //! \overload DataWriter::setWritePosition()
-    void        setWritePosition(UInt64 _pos);
+    void        setWritePosition(UInt64 _pos) override;
     //! \overload DataWriter::write_data()
-    void        write_data(void *_data,UInt64 _size);
+    void        write_data(void *_data,UInt64 _size) override;
 
   protected:
 

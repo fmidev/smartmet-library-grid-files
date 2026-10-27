@@ -19,6 +19,10 @@ namespace GRIB2 {
 class CategoricalSettings {
 public:
   CategoricalSettings();
+  CategoricalSettings(const CategoricalSettings &) = default;
+  CategoricalSettings(CategoricalSettings &&) = default;
+  CategoricalSettings &operator=(const CategoricalSettings &) = default;
+  CategoricalSettings &operator=(CategoricalSettings &&) = default;
   virtual ~CategoricalSettings();
 
   virtual void read(MemoryReader &memoryReader);

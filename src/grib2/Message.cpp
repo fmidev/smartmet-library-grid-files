@@ -1,4 +1,6 @@
 #include "Message.h"
+#include <algorithm>
+#include <ctime>
 #include "BitmapSection.h"
 #include "DataSection.h"
 #include "GridSection.h"
@@ -22,7 +24,9 @@
 #include "../identification/GridDef.h"
 #include "../common/ShowFunction.h"
 #include <iostream>
+#include <memory>
 #include <set>
+#include <utility>
 #include <sys/mman.h>
 #include <macgyver/FastMath.h>
 #include <macgyver/StringConversion.h>
@@ -30,6 +34,19 @@
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
 
+
+namespace
+{
+// Decoding is not retried for this many seconds after it has failed. The
+// failure may be transient, for example if the file was still being written,
+// so the message must not stay empty for the rest of its lifetime.
+constexpr time_t kDecodingRetryDelay = 60;
+
+bool decodingFailedRecently(time_t theFailureTime)
+{
+  return theFailureTime != 0 && time(nullptr) < theFailureTime + kDecodingRetryDelay;
+}
+}  // namespace
 
 namespace SmartMet
 {
@@ -50,7 +67,7 @@ Message::Message()
     mCacheKey = 0;
     mOrigCacheKey = 0;
     mOriginalFilePosition = 0;
-    mValueDecodingFailed = false;
+    mValueDecodingFailedTime = 0;
     mIsRead = false;
     mMessageSize = 0;
     mDataLocked = false;
@@ -70,7 +87,7 @@ Message::Message()
 
 /*! \brief The constructor that initializes the message from grid file metadata. */
 
-Message::Message(GRID::GridFile *gridFile,T::MessageIndex messageIndex,GRID::MessageInfo& messageInfo)
+Message::Message(GRID::GridFile *gridFile,T::MessageIndex messageIndex,const GRID::MessageInfo& messageInfo)
 {
   FUNCTION_TRACE
   try
@@ -88,7 +105,7 @@ Message::Message(GRID::GridFile *gridFile,T::MessageIndex messageIndex,GRID::Mes
     mCacheKey = 0;
     mOrigCacheKey = 0;
     mOriginalFilePosition = 0;
-    mValueDecodingFailed = false;
+    mValueDecodingFailedTime = 0;
     mIsRead = false;
     mDataLocked = false;
     mFileType = T::FileTypeValue::Grib2;
@@ -121,62 +138,62 @@ Message::Message(const Message& other)
 
     if (other.mIndicatorSection)
     {
-      mIndicatorSection.reset(new IndicatorSection(*(other.mIndicatorSection.get())));
+      mIndicatorSection = std::make_shared<IndicatorSection>(*(other.mIndicatorSection.get()));
       mIndicatorSection->setMessagePtr(this);
     }
 
     if (other.mIdentificationSection)
     {
-      mIdentificationSection.reset(new IdentificationSection(*(other.mIdentificationSection.get())));
+      mIdentificationSection = std::make_shared<IdentificationSection>(*(other.mIdentificationSection.get()));
       mIdentificationSection->setMessagePtr(this);
     }
 
     if (other.mLocalSection)
     {
-      mLocalSection.reset(new LocalSection(*(other.mLocalSection.get())));
+      mLocalSection = std::make_shared<LocalSection>(*(other.mLocalSection.get()));
       mLocalSection->setMessagePtr(this);
     }
 
     if (other.mGridSection)
     {
-      mGridSection.reset(new GridSection(*(other.mGridSection.get())));
+      mGridSection = std::make_shared<GridSection>(*(other.mGridSection.get()));
       mGridSection->setMessagePtr(this);
     }
 
     if (other.mProductSection)
     {
-      mProductSection.reset(new ProductSection(*(other.mProductSection.get())));
+      mProductSection = std::make_shared<ProductSection>(*(other.mProductSection.get()));
       mProductSection->setMessagePtr(this);
     }
 
     if (other.mRepresentationSection)
     {
-      mRepresentationSection.reset(new RepresentationSection(*(other.mRepresentationSection.get())));
+      mRepresentationSection = std::make_shared<RepresentationSection>(*(other.mRepresentationSection.get()));
       mRepresentationSection->setMessagePtr(this);
     }
 
     if (other.mBitmapSection)
     {
-      mBitmapSection.reset(new BitmapSection(*(other.mBitmapSection.get())));
+      mBitmapSection = std::make_shared<BitmapSection>(*(other.mBitmapSection.get()));
       mBitmapSection->setMessagePtr(this);
     }
 
     if (other.mDataSection)
     {
-      mDataSection.reset(new DataSection(*(other.mDataSection.get())));
+      mDataSection = std::make_shared<DataSection>(*(other.mDataSection.get()));
       mDataSection->setMessagePtr(this);
     }
 
     if (other.mPreviousBitmapSection)
     {
-      mPreviousBitmapSection.reset(new BitmapSection(*(other.mPreviousBitmapSection.get())));
+      mPreviousBitmapSection = std::make_shared<BitmapSection>(*(other.mPreviousBitmapSection.get()));
       mPreviousBitmapSection->setMessagePtr(this);
     }
 
     mCacheKey = 0;
     mOrigCacheKey = 0;
     mOriginalFilePosition = other.mOriginalFilePosition;
-    mValueDecodingFailed = other.mValueDecodingFailed;
+    mValueDecodingFailedTime = other.mValueDecodingFailedTime;
     mDataLocked = false;
   }
   catch (...)
@@ -204,7 +221,7 @@ Message::~Message()
 
     if (mDataLocked)
     {
-      auto addr = getDataPtr();
+      auto *addr = getDataPtr();
       auto len = getDataSize();
 
       if (addr != nullptr &&  len > 0)
@@ -246,7 +263,7 @@ void Message::premap() const
 
     if (mDataSection)
     {
-      auto addr = mDataSection->getDataPtr();
+      auto *addr = mDataSection->getDataPtr();
       auto sz = mDataSection->getDataSize();
 
       if (addr && sz > 0)
@@ -257,7 +274,7 @@ void Message::premap() const
 
     if (mBitmapSection)
     {
-      auto bitmap = mBitmapSection->getBitmapDataPtr();
+      auto *bitmap = mBitmapSection->getBitmapDataPtr();
       auto sz = mBitmapSection->getBitmapDataSizeInBytes();
 
       if (bitmap && sz > 0)
@@ -451,6 +468,26 @@ bool Message::setProperty(const char *propertyName,double value)
 
 
 
+namespace
+{
+/*! \brief Fetches the property from the section if the property belongs to the section and the
+    section exists. Returns false if the section cannot provide the property. */
+
+template <class SectionPtr>
+bool propertyOfSection(const SectionPtr& section,uint propertyId,uint firstProperty,uint lastProperty,Int64& value,bool& result)
+{
+  if (propertyId < firstProperty  ||  propertyId > lastProperty  ||  !section)
+    return false;
+
+  result = section->getProperty(propertyId,value);
+  return true;
+}
+}  // namespace
+
+
+
+
+
 /*! \brief The method is used for fetching a (Int64 ) value for the property according to the property id.
 
         \param propertyId  The (numeric) identifier of the requested property.
@@ -463,53 +500,16 @@ bool Message::getProperty(uint propertyId,Int64& value)
   FUNCTION_TRACE
   try
   {
-    if (propertyId >= Property::IndicatorSection::FirstProperty  &&  propertyId <= Property::IndicatorSection::LastProperty)
-    {
-      if (mIndicatorSection)
-        return mIndicatorSection->getProperty(propertyId,value);
-    }
-
-    if (propertyId >= Property::IdentificationSection::FirstProperty  &&  propertyId <= Property::IdentificationSection::LastProperty)
-    {
-      if (mIdentificationSection)
-        return mIdentificationSection->getProperty(propertyId,value);
-    }
-
-    if (propertyId >= Property::LocalSection::FirstProperty  &&  propertyId <= Property::LocalSection::LastProperty)
-    {
-      if (mLocalSection)
-        return mLocalSection->getProperty(propertyId,value);
-    }
-
-    if (propertyId >= Property::GridSection::FirstProperty  &&  propertyId <= Property::GridSection::LastProperty)
-    {
-      if (mGridSection)
-        return mGridSection->getProperty(propertyId,value);
-    }
-
-    if (propertyId >= Property::ProductSection::FirstProperty  &&  propertyId <= Property::ProductSection::LastProperty)
-    {
-      if (mProductSection)
-        return mProductSection->getProperty(propertyId,value);
-    }
-
-    if (propertyId >= Property::RepresentationSection::FirstProperty  &&  propertyId <= Property::RepresentationSection::LastProperty)
-    {
-      if (mRepresentationSection)
-        return mRepresentationSection->getProperty(propertyId,value);
-    }
-
-    if (propertyId >= Property::BitmapSection::FirstProperty  &&  propertyId <= Property::BitmapSection::LastProperty)
-    {
-      if (mBitmapSection)
-        return mBitmapSection->getProperty(propertyId,value);
-    }
-
-    if (propertyId >= Property::DataSection::FirstProperty  &&  propertyId <= Property::DataSection::LastProperty)
-    {
-      if (mDataSection)
-        return mDataSection->getProperty(propertyId,value);
-    }
+    bool result = false;
+    if (propertyOfSection(mIndicatorSection,propertyId,Property::IndicatorSection::FirstProperty,Property::IndicatorSection::LastProperty,value,result) ||
+        propertyOfSection(mIdentificationSection,propertyId,Property::IdentificationSection::FirstProperty,Property::IdentificationSection::LastProperty,value,result) ||
+        propertyOfSection(mLocalSection,propertyId,Property::LocalSection::FirstProperty,Property::LocalSection::LastProperty,value,result) ||
+        propertyOfSection(mGridSection,propertyId,Property::GridSection::FirstProperty,Property::GridSection::LastProperty,value,result) ||
+        propertyOfSection(mProductSection,propertyId,Property::ProductSection::FirstProperty,Property::ProductSection::LastProperty,value,result) ||
+        propertyOfSection(mRepresentationSection,propertyId,Property::RepresentationSection::FirstProperty,Property::RepresentationSection::LastProperty,value,result) ||
+        propertyOfSection(mBitmapSection,propertyId,Property::BitmapSection::FirstProperty,Property::BitmapSection::LastProperty,value,result) ||
+        propertyOfSection(mDataSection,propertyId,Property::DataSection::FirstProperty,Property::DataSection::LastProperty,value,result))
+      return result;
 
     return false;
   }
@@ -831,7 +831,7 @@ void Message::initIndicatorSection()
   {
     if (mIndicatorSection == nullptr)
     {
-      IndicatorSection *section = new IndicatorSection();
+      auto *section = new IndicatorSection();
       section->setMessagePtr(this);
       mIndicatorSection.reset(section);
     }
@@ -855,7 +855,7 @@ void Message::initIdentificationSection()
   {
     if (mIdentificationSection == nullptr)
     {
-      IdentificationSection *section = new IdentificationSection();
+      auto *section = new IdentificationSection();
       section->setMessagePtr(this);
       mIdentificationSection.reset(section);
     }
@@ -879,7 +879,7 @@ void Message::initLocalSection()
   {
     if (mLocalSection == nullptr)
     {
-      LocalSection *section = new LocalSection();
+      auto *section = new LocalSection();
       section->setMessagePtr(this);
       mLocalSection.reset(section);
     }
@@ -903,7 +903,7 @@ void Message::initGridSection()
   {
     if (mGridSection == nullptr)
     {
-      GridSection *section = new GridSection();
+      auto *section = new GridSection();
       section->setMessagePtr(this);
       mGridSection.reset(section);
     }
@@ -927,7 +927,7 @@ void Message::initProductSection()
   {
     if (mProductSection == nullptr)
     {
-      ProductSection *section = new ProductSection();
+      auto *section = new ProductSection();
       section->setMessagePtr(this);
       mProductSection.reset(section);
     }
@@ -951,7 +951,7 @@ void Message::initRepresentationSection()
   {
     if (mRepresentationSection == nullptr)
     {
-      RepresentationSection *section = new RepresentationSection();
+      auto *section = new RepresentationSection();
       section->setMessagePtr(this);
       mRepresentationSection.reset(section);
     }
@@ -975,7 +975,7 @@ void Message::initBitmapSection()
   {
     if (mBitmapSection == nullptr)
     {
-      BitmapSection *section = new BitmapSection();
+      auto *section = new BitmapSection();
       section->setMessagePtr(this);
       mBitmapSection.reset(section);
     }
@@ -999,7 +999,7 @@ void Message::initDataSection()
   {
     if (mDataSection == nullptr)
     {
-      DataSection *section = new DataSection();
+      auto *section = new DataSection();
       section->setMessagePtr(this);
       mDataSection.reset(section);
     }
@@ -1024,7 +1024,7 @@ void Message::lockData()
     if (mDataLocked)
       return;
 
-    auto addr = getDataPtr();
+    auto *addr = getDataPtr();
     auto len = getDataSize();
 
     if (addr != nullptr &&  len > 0)
@@ -1052,7 +1052,7 @@ void Message::unlockData()
     if (!mDataLocked)
       return;
 
-    auto addr = getDataPtr();
+    auto *addr = getDataPtr();
     auto len = getDataSize();
 
     if (addr != nullptr &&  len > 0)
@@ -1127,7 +1127,7 @@ void Message::setGridValues(T::ParamValue_vec& values)
         initBitmapSection();
 
         uint bmSize = size /  8 + 1;
-        uchar *bm = new uchar[bmSize];
+        auto *bm = new uchar[bmSize];
 
         BitArrayWriter bmWriter(bm,size);
         for (uint a=0; a<size; a++)
@@ -1180,8 +1180,7 @@ char* Message::getMemoryPtr() const
 
     if (mFileMemoryPtr)
       return mFileMemoryPtr + mFilePosition;
-    else
-      return mGridFilePtr->getMemoryPtr() + mFilePosition;
+    return mGridFilePtr->getMemoryPtr() + mFilePosition;
   }
   catch (...)
   {
@@ -1232,7 +1231,7 @@ void Message::read()
     }
 
     long s = mGridFilePtr->getSize();
-    uchar *d = (uchar*)mGridFilePtr->getMemoryPtr();
+    auto *d = (uchar*)mGridFilePtr->getMemoryPtr();
     uchar *e = d + s;
 
     if (mFileMemoryPtr)
@@ -1267,6 +1266,399 @@ void Message::read()
 
 
 
+namespace
+{
+/*! \brief Reads a 32-bit big endian unsigned integer. */
+
+std::uint64_t be32(const unsigned char* p)
+{
+  return (std::uint64_t(p[0]) << 24) | (std::uint64_t(p[1]) << 16) | (std::uint64_t(p[2]) << 8) | p[3];
+}
+
+
+
+/*! \brief Finds the enclosing GRIB2 message: the nearest indicator section before the
+    read position whose total length covers it. Returns nullptr if not found. */
+
+unsigned char* findEnclosingMessage(unsigned char* startPtr,unsigned char* readPtr)
+{
+  unsigned char* msgPtr = nullptr;
+  for (unsigned char* p = readPtr - 16; p >= startPtr; --p)
+  {
+    if (p[0] == 'G' && p[1] == 'R' && p[2] == 'I' && p[3] == 'B' && p[7] == 2)
+    {
+      std::uint64_t totalLength = 0;
+      for (int i = 8; i < 16; i++)
+        totalLength = (totalLength << 8) | p[i];
+      // Compare lengths, not pointers: a crafted length would overflow the pointer
+      if (totalLength > static_cast<std::uint64_t>(readPtr - p))
+        msgPtr = p;
+      break;
+    }
+    if (p == startPtr)
+      break;
+  }
+
+  return msgPtr;
+}
+
+
+
+/*! \brief The sections inherited by a repeated field. */
+
+struct InheritedSectionPointers
+{
+  unsigned char* identificationPtr = nullptr;
+  unsigned char* localPtr = nullptr;
+  unsigned char* gridPtr = nullptr;
+  unsigned char* bitmapPtr = nullptr;
+};
+
+
+
+/*! \brief Walks the section headers of the message up to the read position. Returns false if
+    the read position is not at a section boundary of the message. */
+
+bool findSectionPointers(unsigned char* msgPtr,unsigned char* readPtr,unsigned char* endPtr,InheritedSectionPointers& ptrs)
+{
+  unsigned char* p = msgPtr + 16;
+  while (p < readPtr)
+  {
+    if (p + 6 > endPtr)
+      return false;
+    const auto len = be32(p);
+    const auto num = p[4];
+    if (len < 5)
+      return false;
+    if (num == Message::SectionNumber::identification_section)
+      ptrs.identificationPtr = p;
+    else if (num == Message::SectionNumber::local_section)
+      ptrs.localPtr = p;
+    else if (num == Message::SectionNumber::grid_section)
+      ptrs.gridPtr = p;
+    else if (num == Message::SectionNumber::bitmap_section && p[5] == 0)
+      ptrs.bitmapPtr = p;  // bitmap indicator 0 = a bitmap follows
+    if (len > static_cast<std::uint64_t>(endPtr - p))
+      return false;
+    p += len;
+  }
+
+  // The read position must be at a section boundary of the message
+  if (p != readPtr || ptrs.gridPtr == nullptr || ptrs.identificationPtr == nullptr)
+    return false;
+
+  return true;
+}
+
+
+
+/*! \brief Creates the section, attaches it to the message and reads it from the given position. */
+
+template <class SectionType,class SectionPtr>
+void readSectionAt(Message *message,MemoryReader& memoryReader,unsigned char* ptr,SectionPtr& sectionPtr)
+{
+  memoryReader.setReadPtr(ptr);
+  auto* section = new SectionType();
+  section->setMessagePtr(message);
+  sectionPtr.reset(section);
+  section->read(memoryReader);
+}
+
+
+
+/*! \brief Creates the section, attaches it to the message and reads it at the current position. */
+
+template <class SectionType,class SectionPtr>
+void readSectionHere(Message *message,MemoryReader& memoryReader,SectionPtr& sectionPtr)
+{
+  auto *section = new SectionType();
+  section->setMessagePtr(message);
+  sectionPtr.reset(section);
+  section->read(memoryReader);
+}
+
+
+
+/*! \brief Reads the section at the current position and moves the read position to the end of
+    the section as defined by the section length. */
+
+template <class SectionType,class SectionPtr>
+void readSectionWithLength(Message *message,MemoryReader& memoryReader,SectionPtr& sectionPtr)
+{
+  auto *section = new SectionType();
+  section->setMessagePtr(message);
+  sectionPtr.reset(section);
+  auto p1 = memoryReader.getReadPosition();
+  section->read(memoryReader);
+  auto p2 = memoryReader.getReadPosition();
+  auto len = section->getSectionLength();
+
+  if (len > 0  &&  (p1+len) != p2)
+    memoryReader.setReadPosition(p1+len);
+}
+
+
+
+/*! \brief Searches the start of the message and reads its indicator section. Returns false if
+    the message start is not found. */
+
+template <class SectionPtr>
+bool readMessageStart(Message *message,MemoryReader& memoryReader,SectionPtr& indicatorSection)
+{
+  int spos = memoryReader.search_string("GRIB");
+  if (spos < 0)
+    return false;
+
+  memoryReader.setReadPosition(memoryReader.getReadPosition()+spos);
+  readSectionHere<IndicatorSection>(message,memoryReader,indicatorSection);
+  return true;
+}
+
+
+
+/*! \brief Checks that the message defines the sections 4-7. */
+
+template <class ProductPtr,class RepresentationPtr,class BitmapPtr,class DataPtr>
+void checkRequiredSections(const ProductPtr& productSection,const RepresentationPtr& representationSection,const BitmapPtr& bitmapSection,const DataPtr& dataSection)
+{
+  if (!productSection)
+    throw Fmi::Exception(BCP,"The product section is missing!");
+
+  if (!representationSection)
+    throw Fmi::Exception(BCP,"The representation section is missing!");
+
+  if (!bitmapSection)
+    throw Fmi::Exception(BCP,"The bitmap section is missing!");
+
+  if (!dataSection)
+    throw Fmi::Exception(BCP,"The data section is missing!");
+}
+
+
+
+/*! \brief Creates the section of the given section number and reads it. */
+
+template <class IdentificationPtr,class LocalPtr,class GridPtr,class ProductPtr,class RepresentationPtr,class BitmapPtr,class DataPtr>
+void readNumberedSection(Message *message,MemoryReader& memoryReader,std::uint8_t idx,IdentificationPtr& identificationSection,LocalPtr& localSection,GridPtr& gridSection,ProductPtr& productSection,RepresentationPtr& representationSection,BitmapPtr& bitmapSection,DataPtr& dataSection)
+{
+  UInt64 rPos = memoryReader.getGlobalReadPosition();
+
+  try
+  {
+    // Create the corresponding section from the pointer & advance the pointer to next section
+
+    switch (idx)
+    {
+      case Message::SectionNumber::identification_section:
+        readSectionWithLength<IdentificationSection>(message,memoryReader,identificationSection);
+        break;
+
+      case Message::SectionNumber::local_section:
+        readSectionWithLength<LocalSection>(message,memoryReader,localSection);
+        break;
+
+      case Message::SectionNumber::grid_section:
+        readSectionWithLength<GridSection>(message,memoryReader,gridSection);
+        break;
+
+      case Message::SectionNumber::product_section:
+        readSectionWithLength<ProductSection>(message,memoryReader,productSection);
+        break;
+
+      case Message::SectionNumber::representation_section:
+        readSectionHere<RepresentationSection>(message,memoryReader,representationSection);
+        break;
+
+      case Message::SectionNumber::bitmap_section:
+        readSectionWithLength<BitmapSection>(message,memoryReader,bitmapSection);
+        break;
+
+      case Message::SectionNumber::data_section:
+        readSectionWithLength<DataSection>(message,memoryReader,dataSection);
+        break;
+
+      default:
+      {
+        Fmi::Exception exception(BCP,"Invalid GRIB section number '" + Fmi::to_string(static_cast<int>(idx)) + "'!");
+        exception.addParameter("Read position",uint64_toHex(memoryReader.getGlobalReadPosition()+4));
+        throw exception;
+       }
+    }
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Section creation failed!",nullptr);
+    exception.addParameter("Section number",Fmi::to_string(static_cast<int>(idx)));
+    exception.addParameter("Section start position",uint64_toHex(rPos));
+    throw exception;
+  }
+}
+
+
+
+/*! \brief Reads the values of the grid points directly from the section by their value indexes. */
+
+template <class SectionType>
+void getGridValuesByIndex(const Message& message,const SectionType& section,GRID::GridFile *gridFile,std::vector<T::Point>& gridPoints,uint rowCount,uint columnCount,T::ParamValue_vec& values)
+{
+  T::ParamValue value = 0;
+  uint sz = gridPoints.size();
+  for (uint t=0; t<sz; t++)
+  {
+    if (gridPoints[t].y() >= (int)rowCount || (gridPoints[t].x() >= (int)columnCount &&  !message.isGridGlobal()))
+    {
+      values.push_back(ParamValueMissing);
+      continue;
+    }
+
+    uint idx = gridPoints[t].y() * columnCount + (gridPoints[t].x() % columnCount);
+
+    if (section.getValueByIndex(idx,value))
+    {
+      values.push_back(value);
+
+      if (gridFile->hasMemoryMapperError())
+      {
+        Fmi::Exception exception(BCP,"Memory mapper has set fail flag for the current file!",nullptr);
+        exception.addParameter("Filename",gridFile->getFileName());
+        throw exception;
+      }
+    }
+    else
+    {
+      values.push_back(message.getGridValueByGridPoint(gridPoints[t].x(),gridPoints[t].y()));
+    }
+  }
+}
+
+
+
+/*! \brief Tries to find the values of the grid points from the decompression cache. */
+
+bool getCachedGridValues(uint cacheKey,std::vector<T::Point>& gridPoints,uint columnCount,T::ParamValue_vec& values)
+{
+  std::vector<uint> indexList;
+  indexList.reserve(gridPoints.size());
+
+  uint sz = gridPoints.size();
+  for (uint t=0; t<sz; t++)
+  {
+    uint idx = gridPoints[t].y() * columnCount + (gridPoints[t].x() % columnCount);
+    indexList.push_back(idx);
+  }
+
+  return GRID::valueCache.getValuesByIndexList(cacheKey,indexList,values);
+}
+
+
+
+/*! \brief Picks the values of the grid points from the grid value vector. */
+
+void getGridValuesFromVector(const Message& message,const T::ParamValue_vec& gridValues,std::vector<T::Point>& gridPoints,uint rowCount,uint columnCount,T::ParamValue_vec& values)
+{
+  uint vsz = gridValues.size();
+  uint sz = gridPoints.size();
+
+  for (uint t=0; t<sz; t++)
+  {
+    if (gridPoints[t].y() >= (int)rowCount || (gridPoints[t].x() >= (int)columnCount &&  !message.isGridGlobal()))
+    {
+      values.push_back(ParamValueMissing);
+      continue;
+    }
+
+    uint idx = gridPoints[t].y() * columnCount + (gridPoints[t].x() % columnCount);
+    if (idx < vsz)
+      values.push_back(gridValues[idx]);
+    else
+      values.push_back(ParamValueMissing);
+  }
+}
+}  // namespace
+
+
+
+
+
+/*! \brief Read the sections a repeated field inherits from the earlier fields of its message.
+
+    The read position must be at the first section of a field which repeats
+    sections 2-7, 3-7 or 4-7 of a GRIB2 message. The method finds the start of
+    the enclosing message, walks the section headers of the earlier fields and
+    reads the latest indicator, identification, local and grid sections, and the
+    latest bitmap section which defines a bitmap (a repeated field may refer to
+    it with bitmap indicator 254). The read position is restored.
+
+        \param memoryReader  This object controls the access to the memory mapped file.
+        \return              True if the position is inside a GRIB2 message at a section
+                             boundary, false otherwise (nothing is read).
+*/
+
+bool Message::readInheritedSections(MemoryReader& memoryReader)
+{
+  FUNCTION_TRACE
+  try
+  {
+    unsigned char* startPtr = memoryReader.getStartPtr();
+    unsigned char* readPtr = memoryReader.getReadPtr();
+    unsigned char* endPtr = memoryReader.getEndPtr();
+
+    if (readPtr + 5 > endPtr || readPtr < startPtr + 16)
+      return false;
+
+    // Only sections 2-4 can start a repeated field
+    const auto first = readPtr[4];
+    if (first < SectionNumber::local_section || first > SectionNumber::product_section)
+      return false;
+
+    // Find the enclosing GRIB2 message: the nearest indicator section before the
+    // read position whose total length covers it.
+    unsigned char* msgPtr = findEnclosingMessage(startPtr,readPtr);
+
+    if (msgPtr == nullptr)
+      return false;
+
+    // Walk the section headers up to the read position
+    InheritedSectionPointers ptrs;
+    if (!findSectionPointers(msgPtr,readPtr,endPtr,ptrs))
+      return false;
+
+    const auto readPos = memoryReader.getReadPosition();
+
+    readSectionAt<IndicatorSection>(this,memoryReader,msgPtr,mIndicatorSection);
+
+    readSectionAt<IdentificationSection>(this,memoryReader,ptrs.identificationPtr,mIdentificationSection);
+
+    // A repeated field starting with section 2 or 3 has its own local and grid sections
+    if (ptrs.localPtr != nullptr && first > SectionNumber::local_section)
+      readSectionAt<LocalSection>(this,memoryReader,ptrs.localPtr,mLocalSection);
+
+    if (first > SectionNumber::grid_section)
+      readSectionAt<GridSection>(this,memoryReader,ptrs.gridPtr,mGridSection);
+
+    if (ptrs.bitmapPtr != nullptr)
+    {
+      memoryReader.setReadPtr(ptrs.bitmapPtr);
+      auto* section = new BitmapSection();
+      section->setMessagePtr(this);
+      BitmapSect_sptr bitmap(section);
+      section->read(memoryReader);
+      setPreviousBitmapSection(bitmap);
+    }
+
+    memoryReader.setReadPosition(readPos);
+    return true;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
 /*! \brief The method reads and initializes all data related to the current message object.
 
         \param memoryReader  This object controls the access to the memory mapped file.
@@ -1285,8 +1677,15 @@ void Message::read(MemoryReader& memoryReader)
     mFilePosition = memoryReader.getGlobalReadPosition();
 
     // Index of the section processed last (=none)
-    std::uint8_t last_idx = 0u;
+    std::uint8_t last_idx = 0U;
     bool begin = false;
+
+    // A GRIB2 message may contain several fields, each repeating sections 2-7,
+    // 3-7 or 4-7 of the message. A field which does not start with the
+    // indicator section is such a repetition: it inherits the missing sections
+    // from the fields before it, and its own sections are read from here on.
+    if (!memoryReader.peek_string("GRIB") && readInheritedSections(memoryReader))
+      begin = true;
 
     while (true)
     {
@@ -1299,19 +1698,9 @@ void Message::read(MemoryReader& memoryReader)
 
       if (!begin)
       {
-        int spos = memoryReader.search_string("GRIB");
-        if (spos >= 0)
-        {
-          memoryReader.setReadPosition(memoryReader.getReadPosition()+spos);
-          IndicatorSection *section = new IndicatorSection();
-          section->setMessagePtr(this);
-          mIndicatorSection.reset(section);
-          section->read(memoryReader);
-          begin = true;
-        }
+        begin = readMessageStart(this,memoryReader,mIndicatorSection);
       }
-      else
-      if (memoryReader.peek_string("7777"))
+      else if (memoryReader.peek_string("7777"))
       {
         break;
       }
@@ -1329,145 +1718,7 @@ void Message::read(MemoryReader& memoryReader)
         // Update for the next iteration
         last_idx = idx;
 
-        UInt64 rPos = memoryReader.getGlobalReadPosition();
-
-        try
-        {
-          // Create the corresponding section from the pointer & advance the pointer to next section
-
-          switch (idx)
-          {
-            case SectionNumber::identification_section:
-            {
-              IdentificationSection *section = new IdentificationSection();
-              section->setMessagePtr(this);
-              mIdentificationSection.reset(section);
-              auto p1 = memoryReader.getReadPosition();
-              section->read(memoryReader);
-              auto p2 = memoryReader.getReadPosition();
-              auto len = section->getSectionLength();
-
-              if (len > 0  &&  (p1+len) != p2)
-                memoryReader.setReadPosition(p1+len);
-            }
-            break;
-
-            case SectionNumber::local_section:
-            {
-              LocalSection *section = new LocalSection();
-              section->setMessagePtr(this);
-              mLocalSection.reset(section);
-              auto p1 = memoryReader.getReadPosition();
-              section->read(memoryReader);
-              auto p2 = memoryReader.getReadPosition();
-              auto len = section->getSectionLength();
-
-              if (len > 0  &&  (p1+len) != p2)
-                memoryReader.setReadPosition(p1+len);
-            }
-            break;
-
-            case SectionNumber::grid_section:
-            {
-              GridSection *section = new GridSection();
-              section->setMessagePtr(this);
-              mGridSection.reset(section);
-              auto p1 = memoryReader.getReadPosition();
-              section->read(memoryReader);
-              auto p2 = memoryReader.getReadPosition();
-              auto len = section->getSectionLength();
-
-              if (len > 0  &&  (p1+len) != p2)
-                memoryReader.setReadPosition(p1+len);
-            }
-            break;
-
-            case SectionNumber::product_section:
-            {
-              ProductSection *section = new ProductSection();
-              section->setMessagePtr(this);
-              mProductSection.reset(section);
-              auto p1 = memoryReader.getReadPosition();
-              section->read(memoryReader);
-              auto p2 = memoryReader.getReadPosition();
-              auto len = section->getSectionLength();
-
-              if (len > 0  &&  (p1+len) != p2)
-                memoryReader.setReadPosition(p1+len);
-            }
-            break;
-
-            case SectionNumber::representation_section:
-            {
-              RepresentationSection *section = new RepresentationSection();
-              section->setMessagePtr(this);
-              mRepresentationSection.reset(section);
-              //auto p1 = memoryReader.getReadPosition();
-              section->read(memoryReader);
-              //auto p2 = memoryReader.getReadPosition();
-              //auto len = section->getSectionLength();
-            }
-            break;
-
-            case SectionNumber::bitmap_section:
-            {
-              BitmapSection *section = new BitmapSection();
-              section->setMessagePtr(this);
-              mBitmapSection.reset(section);
-              auto p1 = memoryReader.getReadPosition();
-              section->read(memoryReader);
-              /*
-              if (section->getBitmapDataSizeInBytes() > 0)
-              {
-                auto numOfValues = getGridOriginalValueCount();
-                auto hash = section->getHash();
-                T::IndexVector indexVector;
-                if (!GRID::indexCache.findIndexVector(hash))
-                {
-                  section->getIndexVector(numOfValues,indexVector);
-                  GRID::indexCache.addIndexVector(hash,indexVector);
-                }
-              }
-              */
-
-              auto p2 = memoryReader.getReadPosition();
-              auto len = section->getSectionLength();
-
-              if (len > 0  &&  (p1+len) != p2)
-                memoryReader.setReadPosition(p1+len);
-            }
-            break;
-
-            case SectionNumber::data_section:
-            {
-              DataSection *section = new DataSection();
-              section->setMessagePtr(this);
-              mDataSection.reset(section);
-              auto p1 = memoryReader.getReadPosition();
-              section->read(memoryReader);
-              auto p2 = memoryReader.getReadPosition();
-              auto len = section->getSectionLength();
-
-              if (len > 0  &&  (p1+len) != p2)
-                memoryReader.setReadPosition(p1+len);
-            }
-            break;
-
-            default:
-            {
-              Fmi::Exception exception(BCP,"Invalid GRIB section number '" + Fmi::to_string(static_cast<int>(idx)) + "'!");
-              exception.addParameter("Read position",uint64_toHex(memoryReader.getGlobalReadPosition()+4));
-              throw exception;
-             }
-          }
-        }
-        catch (...)
-        {
-          Fmi::Exception exception(BCP,"Section creation failed!",nullptr);
-          exception.addParameter("Section number",Fmi::to_string(static_cast<int>(idx)));
-          exception.addParameter("Section start position",uint64_toHex(rPos));
-          throw exception;
-        }
+        readNumberedSection(this,memoryReader,idx,mIdentificationSection,mLocalSection,mGridSection,mProductSection,mRepresentationSection,mBitmapSection,mDataSection);
       }
 
       if (prevPos == memoryReader.getReadPosition())
@@ -1480,17 +1731,7 @@ void Message::read(MemoryReader& memoryReader)
 
     // All messages must define sections 4-7
 
-    if (!mProductSection)
-      throw Fmi::Exception(BCP,"The product section is missing!");
-
-    if (!mRepresentationSection)
-      throw Fmi::Exception(BCP,"The representation section is missing!");
-
-    if (!mBitmapSection)
-      throw Fmi::Exception(BCP,"The bitmap section is missing!");
-
-    if (!mDataSection)
-      throw Fmi::Exception(BCP,"The data section is missing!");
+    checkRequiredSections(mProductSection,mRepresentationSection,mBitmapSection,mDataSection);
 
     if (mMessageSize == 0)
       mMessageSize = (memoryReader.getGlobalReadPosition() - mFilePosition);
@@ -1858,7 +2099,7 @@ void Message::setBitmapSection(BitmapSect_sptr bitmapSection)
   FUNCTION_TRACE
   try
   {
-    mBitmapSection = bitmapSection;
+    mBitmapSection = std::move(bitmapSection);
   }
   catch (...)
   {
@@ -1906,7 +2147,7 @@ void Message::setIdentificationSection(IdentifSect_sptr identificationSection)
   FUNCTION_TRACE
   try
   {
-    mIdentificationSection = identificationSection;
+    mIdentificationSection = std::move(identificationSection);
   }
   catch (...)
   {
@@ -1954,7 +2195,7 @@ void Message::setGridSection(GridSect_sptr gridSection)
   FUNCTION_TRACE
   try
   {
-    mGridSection = gridSection;
+    mGridSection = std::move(gridSection);
   }
   catch (...)
   {
@@ -2002,7 +2243,7 @@ void Message::setRepresentationSection(RepresentSect_sptr representationSection)
   FUNCTION_TRACE
   try
   {
-    mRepresentationSection = representationSection;
+    mRepresentationSection = std::move(representationSection);
   }
   catch (...)
   {
@@ -2050,7 +2291,7 @@ void Message::setIndicatorSection(IndicatorSect_sptr indicatorSection)
   FUNCTION_TRACE
   try
   {
-    mIndicatorSection = indicatorSection;
+    mIndicatorSection = std::move(indicatorSection);
   }
   catch (...)
   {
@@ -2098,7 +2339,7 @@ void Message::setLocalSection(LocalSect_sptr localSection)
   FUNCTION_TRACE
   try
   {
-    mLocalSection = localSection;
+    mLocalSection = std::move(localSection);
   }
   catch (...)
   {
@@ -2146,7 +2387,7 @@ void Message::setProductSection(ProductSect_sptr productSection)
   FUNCTION_TRACE
   try
   {
-    mProductSection = productSection;
+    mProductSection = std::move(productSection);
   }
   catch (...)
   {
@@ -2194,7 +2435,7 @@ void Message::setDataSection(DataSect_sptr dataSection)
   FUNCTION_TRACE
   try
   {
-    mDataSection = dataSection;
+    mDataSection = std::move(dataSection);
   }
   catch (...)
   {
@@ -2251,7 +2492,7 @@ void Message::setPreviousBitmapSection(BitmapSect_sptr previousBitmapSection)
       {
         if (*indicator == refers_to_earlier_bitmap)
         {
-          mPreviousBitmapSection = previousBitmapSection;
+          mPreviousBitmapSection = std::move(previousBitmapSection);
         }
       }
     }
@@ -2546,6 +2787,35 @@ bool Message::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double
       throw Fmi::Exception(BCP,"The 'mGridSection' attribute points to nullptr!");
 
     return mGridSection->getGridLatLonCoordinatesByGridPoint(grid_i,grid_j,lat,lon);
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
+}
+
+
+
+
+
+/*! \brief The method returns the grid latlon coordinates of the given grid points (= integer coordinates).
+
+        \param gridPoints   The grid points (i,j).
+        \param coordinates  The latlon coordinates (x = longitude, y = latitude) are returned in this parameter.
+        \param found        The method sets 'true' for each point whose coordinates were returned.
+*/
+
+void Message::getGridLatLonCoordinatesByGridPointList(std::vector<T::Point>& gridPoints,T::Coordinate_vec& coordinates,std::vector<bool>& found) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mGridSection == nullptr)
+      throw Fmi::Exception(BCP,"The 'mGridSection' attribute points to nullptr!");
+
+    mGridSection->getGridLatLonCoordinatesByGridPointList(gridPoints,coordinates,found);
   }
   catch (...)
   {
@@ -3094,15 +3364,13 @@ void Message::getGridMinAndMaxValues(T::ParamValue& minValue,T::ParamValue& maxV
     minValue = 1000000000;
     maxValue = -1000000000;
 
-    for (auto it = values.begin(); it != values.end(); ++it)
+    for (float & value : values)
     {
-      if (*it != ParamValueMissing)
+      if (value != ParamValueMissing)
       {
-        if (*it < minValue)
-          minValue = *it;
+        minValue = std::min(value, minValue);
 
-        if (*it > maxValue)
-          maxValue = *it;
+        maxValue = std::max(value, maxValue);
       }
     }
   }
@@ -3137,10 +3405,9 @@ void Message::getGridValueVector(T::ParamValue_vec& values) const
 
     values.clear();
 
-    if (mValueDecodingFailed)
+    if (decodingFailedRecently(mValueDecodingFailedTime))
     {
-      // We have tried earlier to decode parameter values and failed. So, it
-      // does not make sense to try again.
+      // Decoding the values failed a moment ago. Do not retry yet.
       return;
     }
 
@@ -3173,12 +3440,11 @@ void Message::getGridValueVector(T::ParamValue_vec& values) const
       exception.addParameter("Filename",mGridFilePtr->getFileName());
       exception.addParameter("File position",Fmi::to_string(getFilePosition()));
       exception.addParameter("File size",Fmi::to_string((long)mGridFilePtr->getSize()));
-      mValueDecodingFailed = true;
+      mValueDecodingFailedTime = time(nullptr);
 
       if (mGridFilePtr->hasMemoryMapperError())
         throw exception;
-      else
-        exception.printError();
+      exception.printError();
     }
   }
   catch (...)
@@ -3216,10 +3482,9 @@ void Message::getGridOriginalValueVector(T::ParamValue_vec& values) const
 
     values.clear();
 
-    if (mValueDecodingFailed)
+    if (decodingFailedRecently(mValueDecodingFailedTime))
     {
-      // We have tried earlier to decode parameter values and failed. So, it
-      // does not make sense to try again.
+      // Decoding the values failed a moment ago. Do not retry yet.
       return;
     }
 
@@ -3248,12 +3513,11 @@ void Message::getGridOriginalValueVector(T::ParamValue_vec& values) const
     {
       Fmi::Exception exception(BCP,"Operation failed!",nullptr);
       exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
-      mValueDecodingFailed = true;
+      mValueDecodingFailedTime = time(nullptr);
 
       if (mGridFilePtr->hasMemoryMapperError())
         throw exception;
-      else
-        exception.printError();
+      exception.printError();
     }
   }
   catch (...)
@@ -3435,6 +3699,8 @@ T::ForecastType Message::getForecastType() const
       //case 6: // Processed satellite observations
       //case 7: // Processed radar observations
       //case 8: // Event probability
+      default:
+        break;
     }
 
     return 0;
@@ -3565,7 +3831,7 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
   FUNCTION_TRACE
   try
   {
-    if (mValueDecodingFailed)
+    if (decodingFailedRecently(mValueDecodingFailedTime))
     {
       // We have failed to decode parameter values
       return ParamValueMissing;
@@ -3644,7 +3910,7 @@ void Message::getGridValuesByPointList(std::vector<T::Point>& gridPoints,T::Para
     if (!sz)
       return;
 
-    if (mValueDecodingFailed)
+    if (decodingFailedRecently(mValueDecodingFailedTime))
     {
       // We have failed to decode parameter values
       return;
@@ -3654,85 +3920,194 @@ void Message::getGridValuesByPointList(std::vector<T::Point>& gridPoints,T::Para
 
     // Trying to find values from the original grid.
 
-    T::ParamValue value = 0;
-    if (mBitmapSection == nullptr  ||  mBitmapSection->getBitmapDataSizeInBytes() == 0)
+    if ((mBitmapSection == nullptr  ||  mBitmapSection->getBitmapDataSizeInBytes() == 0)  &&  mRepresentationSection->getDataRepresentationTemplateNumber() == RepresentationSection::Template::GridDataRepresentation)
     {
-      if (mRepresentationSection->getDataRepresentationTemplateNumber() == RepresentationSection::Template::GridDataRepresentation)
-      {
-        if (!mPremapped  &&  memoryMapper.isPremapEnabled())
-          premap();
+      if (!mPremapped  &&  memoryMapper.isPremapEnabled())
+        premap();
 
-        for (uint t=0; t<sz; t++)
-        {
-          if (gridPoints[t].y() >= (int)mRowCount)
-            values.push_back(ParamValueMissing);
-
-          if (gridPoints[t].x() >= (int)mColumnCount &&  !isGridGlobal())
-            values.push_back(ParamValueMissing);
-
-          uint idx = gridPoints[t].y() * mColumnCount + (gridPoints[t].x() % mColumnCount);
-
-          if (mRepresentationSection->getValueByIndex(idx,value))
-          {
-            values.push_back(value);
-
-            if (mGridFilePtr->hasMemoryMapperError())
-            {
-              Fmi::Exception exception(BCP,"Memory mapper has set fail flag for the current file!",nullptr);
-              exception.addParameter("Filename",mGridFilePtr->getFileName());
-              throw exception;
-            }
-          }
-        }
-        return;
-      }
+      getGridValuesByIndex(*this,*mRepresentationSection,mGridFilePtr,gridPoints,mRowCount,mColumnCount,values);
+      return;
     }
 
+    // Trying to find values from the decompression cache
 
-
-    if (mCacheKey > 0)
-    {
-      // Trying to find values from the decompression cache
-
-      std::vector<uint> indexList;
-      indexList.reserve(gridPoints.size());
-
-      for (uint t=0; t<sz; t++)
-      {
-        uint idx = gridPoints[t].y() * mColumnCount + (gridPoints[t].x() % mColumnCount);
-        indexList.push_back(idx);
-      }
-
-      if (GRID::valueCache.getValuesByIndexList(mCacheKey,indexList,values))
-        return;
-    }
+    if (mCacheKey > 0  &&  getCachedGridValues(mCacheKey,gridPoints,mColumnCount,values))
+      return;
 
     // Fetching the whole grid and using its values
 
     T::ParamValue_vec gridValues;
     getGridValueVector(gridValues);
-    uint vsz = gridValues.size();
 
-    for (uint t=0; t<sz; t++)
-    {
-      if (gridPoints[t].y() >= (int)mRowCount)
-        values.push_back(ParamValueMissing);
-
-      if (gridPoints[t].x() >= (int)mColumnCount &&  !isGridGlobal())
-        values.push_back(ParamValueMissing);
-
-      uint idx = gridPoints[t].y() * mColumnCount + (gridPoints[t].x() % mColumnCount);
-      if (idx < vsz)
-        values.push_back(gridValues[idx]);
-      else
-        values.push_back(ParamValueMissing);
-    }
+    getGridValuesFromVector(*this,gridValues,gridPoints,mRowCount,mColumnCount,values);
   }
   catch (...)
   {
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
+
+
+
+
+namespace
+{
+/*! \brief Flat grid indexes of integer grid points, mirroring getGridValueByGridPoint(). */
+
+struct GridIndexer
+{
+  uint w;
+  uint h;
+  bool global;
+
+  // INVALID marks an out-of-range point, which resolves to ParamValueMissing.
+  static constexpr uint INVALID = 0xFFFFFFFFU;
+
+  uint flatIndex(uint gi,uint gj) const
+  {
+    if (gj >= h)
+      return INVALID;
+    if (gi >= w  &&  !global)
+      return INVALID;
+    return gj * w + (gi % w);
+  }
+};
+
+
+
+/*! \brief Nearest / External / default: mirror getGridValueByGridPoint_nearest() corner
+    selection, then return the flat index of the chosen corner. */
+
+uint nearestFlatIndex(const GridIndexer& indexer,double x,double y,uint x1,uint y1,uint x2,uint y2)
+{
+  double dist_x1 = x - C_DOUBLE(x1);
+  double dist_x2 = C_DOUBLE(x2) - x;
+  double dist_y1 = y - C_DOUBLE(y1);
+  double dist_y2 = C_DOUBLE(y2) - y;
+
+  uint gi = x2;
+  uint gj = y2;
+  if (dist_x1 == 0  &&  dist_y1 == 0)
+  {
+    gi = C_UINT(round(x));
+    gj = C_UINT(round(y));
+  }
+  else
+  {
+    double q11 = dist_x1*dist_x1 + dist_y1*dist_y1;
+    double q21 = dist_x2*dist_x2 + dist_y1*dist_y1;
+    double q12 = dist_x1*dist_x1 + dist_y2*dist_y2;
+    double q22 = dist_x2*dist_x2 + dist_y2*dist_y2;
+
+    if (q11 < q21  &&  q11 <= q12  &&  q11 <= q22)      { gi = x1; gj = y1; }
+    else if (q21 < q11  &&  q21 <= q12  &&  q21 <= q22) { gi = x2; gj = y1; }
+    else if (q12 < q11  &&  q12 <= q21  &&  q12 <= q22) { gi = x1; gj = y2; }
+  }
+  return indexer.flatIndex(gi,gj);
+}
+
+
+
+/*! \brief Adds the flat indexes of the stencil points needed for the point. */
+
+void addStencilIndexes(const GridIndexer& indexer,const T::Coordinate& point,short areaInterpolationMethod,bool fourCorners,std::vector<uint>& indexList)
+{
+  double x = point.x();
+  double y = point.y();
+  uint x1 = C_UINT(Fmi::floor(x));
+  uint y1 = C_UINT(Fmi::floor(y));
+  uint x2 = x1 + 1;
+  uint y2 = y1 + 1;
+
+  if (fourCorners)
+  {
+    indexList.push_back(indexer.flatIndex(x1,y1));
+    indexList.push_back(indexer.flatIndex(x2,y1));
+    indexList.push_back(indexer.flatIndex(x1,y2));
+    indexList.push_back(indexer.flatIndex(x2,y2));
+  }
+  else if (areaInterpolationMethod == T::AreaInterpolationMethod::None)
+  {
+    indexList.push_back(indexer.flatIndex(x1,y1));
+  }
+  else
+  {
+    indexList.push_back(nearestFlatIndex(indexer,x,y,x1,y1,x2,y2));
+  }
+}
+
+
+
+/*! \brief Resolves every stencil value in a single pass, mirroring the source precedence of
+    getGridValueByGridPoint() (decompression cache, then whole-grid fallback). */
+
+void fetchStencilValues(const Message& message,uint cacheKey,std::vector<uint>& indexList,T::ParamValue_vec& fetched)
+{
+  uint n = indexList.size();
+  bool resolved = false;
+  if (cacheKey > 0)
+  {
+    if (GRID::valueCache.getValuesByIndexList(cacheKey,indexList,fetched))
+      resolved = true;
+    else
+      fetched.clear();
+  }
+
+  if (!resolved)
+  {
+    // Not in the cache yet: decode the whole grid once (this also populates the cache
+    // for subsequent calls) and index into it locally.
+    T::ParamValue_vec grid;
+    message.getGridValueVector(grid);
+    uint gsz = grid.size();
+    for (uint k=0; k<n; k++)
+    {
+      uint i = indexList[k];
+      fetched.push_back(i < gsz ? grid[i] : ParamValueMissing);
+    }
+  }
+}
+
+
+
+/*! \brief Linear / Min / Max: combines the four bilinear corners per output point. */
+
+void combineStencilCorners(const T::Coordinate_vec& points,const T::ParamValue_vec& fetched,short areaInterpolationMethod,T::ParamValue_vec& values)
+{
+  uint pn = points.size();
+  for (uint t=0; t<pn; t++)
+  {
+    T::ParamValue val_q11 = fetched[t*4 + 0];  // (x1,y1)
+    T::ParamValue val_q21 = fetched[t*4 + 1];  // (x2,y1)
+    T::ParamValue val_q12 = fetched[t*4 + 2];  // (x1,y2)
+    T::ParamValue val_q22 = fetched[t*4 + 3];  // (x2,y2)
+
+    if (areaInterpolationMethod == T::AreaInterpolationMethod::Linear)
+    {
+      double x = points[t].x();
+      double y = points[t].y();
+      uint x1 = C_UINT(Fmi::floor(x));
+      uint y1 = C_UINT(Fmi::floor(y));
+      uint x2 = x1 + 1;
+      uint y2 = y1 + 1;
+      values.emplace_back(linearInterpolation(x,y,x1,y1,x2,y2,val_q11,val_q21,val_q22,val_q12));
+    }
+    else
+    {
+      std::set<T::ParamValue> vals;
+      vals.insert(val_q11);
+      vals.insert(val_q21);
+      vals.insert(val_q12);
+      vals.insert(val_q22);
+      if (areaInterpolationMethod == T::AreaInterpolationMethod::Min)
+        values.emplace_back(*vals.begin());
+      else
+        values.emplace_back(*vals.rbegin());
+    }
+  }
+}
+}  // namespace
+
 
 
 
@@ -3759,7 +4134,7 @@ void Message::getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate
   try
   {
     // Value modifications and undecodable messages stay on the generic per-point path.
-    if (!modificationParameters.empty()  ||  mValueDecodingFailed)
+    if (!modificationParameters.empty()  ||  decodingFailedRecently(mValueDecodingFailedTime))
     {
       GRID::Message::getGridValueVectorByLatLonCoordinateList(coordinates,areaInterpolationMethod,modificationOperation,modificationParameters,values);
       return;
@@ -3782,21 +4157,7 @@ void Message::getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate
     if (pn == 0)
       return;
 
-    const uint w = mColumnCount;
-    const uint h = mRowCount;
-    const bool global = isGridGlobal();
-    const uint INVALID = 0xFFFFFFFFu;
-
-    // Flat grid index for an integer grid point, mirroring getGridValueByGridPoint().
-    // INVALID marks an out-of-range point, which resolves to ParamValueMissing.
-    auto flatIndex = [&](uint gi,uint gj) -> uint
-    {
-      if (gj >= h)
-        return INVALID;
-      if (gi >= w  &&  !global)
-        return INVALID;
-      return gj * w + (gi % w);
-    };
+    const GridIndexer indexer{mColumnCount,mRowCount,isGridGlobal()};
 
     const bool fourCorners = (areaInterpolationMethod == T::AreaInterpolationMethod::Linear  ||
                               areaInterpolationMethod == T::AreaInterpolationMethod::Min  ||
@@ -3806,56 +4167,8 @@ void Message::getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate
     std::vector<uint> indexList;
     indexList.reserve(fourCorners ? pn * 4 : pn);
 
-    for (auto it = points.begin(); it != points.end(); ++it)
-    {
-      double x = it->x();
-      double y = it->y();
-      uint x1 = C_UINT(Fmi::floor(x));
-      uint y1 = C_UINT(Fmi::floor(y));
-      uint x2 = x1 + 1;
-      uint y2 = y1 + 1;
-
-      if (fourCorners)
-      {
-        indexList.push_back(flatIndex(x1,y1));
-        indexList.push_back(flatIndex(x2,y1));
-        indexList.push_back(flatIndex(x1,y2));
-        indexList.push_back(flatIndex(x2,y2));
-      }
-      else if (areaInterpolationMethod == T::AreaInterpolationMethod::None)
-      {
-        indexList.push_back(flatIndex(x1,y1));
-      }
-      else
-      {
-        // Nearest / External / default: mirror getGridValueByGridPoint_nearest() corner
-        // selection, then fetch only the chosen corner.
-        double dist_x1 = x - C_DOUBLE(x1);
-        double dist_x2 = C_DOUBLE(x2) - x;
-        double dist_y1 = y - C_DOUBLE(y1);
-        double dist_y2 = C_DOUBLE(y2) - y;
-
-        uint gi = x2;
-        uint gj = y2;
-        if (dist_x1 == 0  &&  dist_y1 == 0)
-        {
-          gi = C_UINT(round(x));
-          gj = C_UINT(round(y));
-        }
-        else
-        {
-          double q11 = dist_x1*dist_x1 + dist_y1*dist_y1;
-          double q21 = dist_x2*dist_x2 + dist_y1*dist_y1;
-          double q12 = dist_x1*dist_x1 + dist_y2*dist_y2;
-          double q22 = dist_x2*dist_x2 + dist_y2*dist_y2;
-
-          if (q11 < q21  &&  q11 <= q12  &&  q11 <= q22)      { gi = x1; gj = y1; }
-          else if (q21 < q11  &&  q21 <= q12  &&  q21 <= q22) { gi = x2; gj = y1; }
-          else if (q12 < q11  &&  q12 <= q21  &&  q12 <= q22) { gi = x1; gj = y2; }
-        }
-        indexList.push_back(flatIndex(gi,gj));
-      }
-    }
+    for (auto& point : points)
+      addStencilIndexes(indexer,point,areaInterpolationMethod,fourCorners,indexList);
 
     // Resolve every stencil value in a single pass, mirroring the source precedence of
     // getGridValueByGridPoint() (decompression cache, then whole-grid fallback).
@@ -3863,28 +4176,7 @@ void Message::getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate
     uint n = indexList.size();
     fetched.reserve(n);
 
-    bool resolved = false;
-    if (mCacheKey > 0)
-    {
-      if (GRID::valueCache.getValuesByIndexList(mCacheKey,indexList,fetched))
-        resolved = true;
-      else
-        fetched.clear();
-    }
-
-    if (!resolved)
-    {
-      // Not in the cache yet: decode the whole grid once (this also populates the cache
-      // for subsequent calls) and index into it locally.
-      T::ParamValue_vec grid;
-      getGridValueVector(grid);
-      uint gsz = grid.size();
-      for (uint k=0; k<n; k++)
-      {
-        uint i = indexList[k];
-        fetched.push_back(i < gsz ? grid[i] : ParamValueMissing);
-      }
-    }
+    fetchStencilValues(*this,mCacheKey,indexList,fetched);
 
     if (fetched.size() != n)
     {
@@ -3904,36 +4196,7 @@ void Message::getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate
     }
 
     // Linear / Min / Max: combine the four bilinear corners per output point.
-    for (uint t=0; t<pn; t++)
-    {
-      T::ParamValue val_q11 = fetched[t*4 + 0];  // (x1,y1)
-      T::ParamValue val_q21 = fetched[t*4 + 1];  // (x2,y1)
-      T::ParamValue val_q12 = fetched[t*4 + 2];  // (x1,y2)
-      T::ParamValue val_q22 = fetched[t*4 + 3];  // (x2,y2)
-
-      if (areaInterpolationMethod == T::AreaInterpolationMethod::Linear)
-      {
-        double x = points[t].x();
-        double y = points[t].y();
-        uint x1 = C_UINT(Fmi::floor(x));
-        uint y1 = C_UINT(Fmi::floor(y));
-        uint x2 = x1 + 1;
-        uint y2 = y1 + 1;
-        values.emplace_back(linearInterpolation(x,y,x1,y1,x2,y2,val_q11,val_q21,val_q22,val_q12));
-      }
-      else
-      {
-        std::set<T::ParamValue> vals;
-        vals.insert(val_q11);
-        vals.insert(val_q21);
-        vals.insert(val_q12);
-        vals.insert(val_q22);
-        if (areaInterpolationMethod == T::AreaInterpolationMethod::Min)
-          values.emplace_back(*vals.begin());
-        else
-          values.emplace_back(*vals.rbegin());
-      }
-    }
+    combineStencilCorners(points,fetched,areaInterpolationMethod,values);
   }
   catch (...)
   {
@@ -4456,6 +4719,89 @@ std::size_t Message::getDataSize() const
 
 
 
+namespace
+{
+/*! \brief Prints the GRIB parameter definition. */
+
+void printGribParameterDef(std::ostream& stream,uint level,T::GribParamId gribParameterId)
+{
+  Identification::GribParameterDef def;
+  if (Identification::gridDef.getGribParameterDefById(gribParameterId,def))
+  {
+    stream << space(level) << "- gribParameterName        = " << def.mParameterName << "\n";
+    stream << space(level) << "- gribParameterUnits       = " << def.mParameterUnits << "\n";
+    stream << space(level) << "- gribParameterDescription = " << def.mParameterDescription << "\n";
+  }
+}
+
+
+
+/*! \brief Prints the bitmap of a 2-dimensional grid. */
+
+void printBitmap(std::ostream& stream,T::Data_ptr bitmap,const T::Dimensions& d)
+{
+  if (d.getDimensions() != 2)
+    return;
+
+  uint ny = d.ny();
+  uint nx = d.nx();
+
+  const int bitmask[] = {128, 64, 32, 16, 8, 4, 2, 1};
+  uint c = 0;
+
+  for (uint y=0; y < ny; y++)
+  {
+    for (uint x=0; x < nx; x++)
+    {
+
+      if ((bitmap[c / 8] & bitmask[c % 8]) == 0)
+        stream << "0";
+      else
+        stream << "1";
+      c++;
+    }
+    stream << "\n";
+  }
+}
+
+
+
+/*! \brief Prints the values of the grid corners. */
+
+void printCornerValues(std::ostream& stream,uint level,const T::ParamValue_vec& values,const T::Dimensions& d)
+{
+  stream << space(level+1) << "- data (from the grid corners):\n";
+
+  char st[1000];
+  uint c = 0;
+  uint ny = d.ny();
+  uint nx = d.nx();
+  std::size_t sz = values.size();
+
+  for (uint y=0; y < ny; y++)
+  {
+    for (uint x=0; x < nx; x++)
+    {
+      if (c < sz  &&  (y < 3  ||  y >= ny-3)  &&  (x < 3  ||  x >= nx-3))
+      {
+        auto val = values[c];
+        if (val != ParamValueMissing)
+          sprintf(st,"[%u,%u] %f",y+1,x+1,val);
+        else
+          sprintf(st,"[%u,%u] NA",y+1,x+1);
+
+        stream << space(level+3) << st << "\n";
+      }
+      c++;
+    }
+  }
+}
+}  // namespace
+
+
+
+
+
 /*! \brief The method prints the content of the current object into the given stream.
 
         \param stream      The output stream.
@@ -4486,15 +4832,7 @@ void Message::print(std::ostream& stream,uint level,uint optionFlags) const
 
     stream << space(level) << "- gribParameterId          = " << toString(mGribParameterId) << "\n";
     if (mGribParameterId != 0)
-    {
-      Identification::GribParameterDef def;
-      if (Identification::gridDef.getGribParameterDefById(mGribParameterId,def))
-      {
-        stream << space(level) << "- gribParameterName        = " << def.mParameterName << "\n";
-        stream << space(level) << "- gribParameterUnits       = " << def.mParameterUnits << "\n";
-        stream << space(level) << "- gribParameterDescription = " << def.mParameterDescription << "\n";
-      }
-    }
+      printGribParameterDef(stream,level,mGribParameterId);
 
     stream << space(level) << "- newbaseParameterId       = " << mNewbaseParameterId << "\n";
     stream << space(level) << "- newbaseParameterName     = " << getNewbaseParameterName() << "\n";
@@ -4538,29 +4876,7 @@ void Message::print(std::ostream& stream,uint level,uint optionFlags) const
 
       if ((optionFlags &  GRID::PrintFlag::bitmap) != 0  &&  mGridSection  &&  bitmap)
       {
-        auto d = mGridSection->getGridDimensions();
-        if (d.getDimensions() == 2)
-        {
-          uint ny = d.ny();
-          uint nx = d.nx();
-
-          const int bitmask[] = {128, 64, 32, 16, 8, 4, 2, 1};
-          uint c = 0;
-
-          for (uint y=0; y < ny; y++)
-          {
-            for (uint x=0; x < nx; x++)
-            {
-
-              if ((bitmap[c / 8] & bitmask[c % 8]) == 0)
-                stream << "0";
-              else
-                stream << "1";
-              c++;
-            }
-            stream << "\n";
-          }
-        }
+        printBitmap(stream,bitmap,mGridSection->getGridDimensions());
       }
     }
 
@@ -4576,32 +4892,7 @@ void Message::print(std::ostream& stream,uint level,uint optionFlags) const
         {
           T::ParamValue_vec values;
           mRepresentationSection->decodeValues(values);
-
-          stream << space(level+1) << "- data (from the grid corners):\n";
-
-          char st[1000];
-          uint c = 0;
-          uint ny = d.ny();
-          uint nx = d.nx();
-          std::size_t sz = values.size();
-
-          for (uint y=0; y < ny; y++)
-          {
-            for (uint x=0; x < nx; x++)
-            {
-              if (c < sz  &&  (y < 3  ||  y >= ny-3)  &&  (x < 3  ||  x >= nx-3))
-              {
-                auto val = values[c];
-                if (val != ParamValueMissing)
-                  sprintf(st,"[%u,%u] %f",y+1,x+1,val);
-                else
-                  sprintf(st,"[%u,%u] NA",y+1,x+1);
-
-                stream << space(level+3) << st << "\n";
-              }
-              c++;
-            }
-          }
+          printCornerValues(stream,level,values,d);
         }
       }
     }

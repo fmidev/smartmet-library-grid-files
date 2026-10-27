@@ -21,6 +21,8 @@ class GribParameterDef
   public:
                     GribParameterDef();
     virtual         ~GribParameterDef();
+    GribParameterDef(const GribParameterDef&) = default;
+    GribParameterDef& operator=(const GribParameterDef&) = default;
 
     /*! \brief Write a human-readable dump to \p stream (for debugging). */
     virtual void    print(std::ostream& stream,uint level,uint optionFlags) const;
@@ -31,8 +33,8 @@ class GribParameterDef
     std::string     mParameterUnits;        //!< Physical units (e.g. "K", "m s**-1")
 };
 
-typedef std::vector<GribParameterDef> GribParamDef_vec;  //!< Ordered list of GRIB parameter definitions
-typedef const GribParameterDef* GribParamDef_cptr;       //!< Non-owning const pointer
+using GribParamDef_vec = std::vector<GribParameterDef>;  //!< Ordered list of GRIB parameter definitions
+using GribParamDef_cptr = const GribParameterDef*;       //!< Non-owning const pointer
 
 }
 }

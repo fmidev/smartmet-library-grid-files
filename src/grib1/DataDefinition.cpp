@@ -13,9 +13,7 @@ namespace GRIB1
 
 /*! \brief The constructor of the class. */
 
-DataDefinition::DataDefinition()
-{
-}
+DataDefinition::DataDefinition() = default;
 
 
 
@@ -23,9 +21,7 @@ DataDefinition::DataDefinition()
 
 /*! \brief The copy constructor of the class. */
 
-DataDefinition::DataDefinition(const DataDefinition& other)
-{
-}
+DataDefinition::DataDefinition(const DataDefinition& other) = default;
 
 
 
@@ -33,9 +29,7 @@ DataDefinition::DataDefinition(const DataDefinition& other)
 
 /*! \brief The destructor of the class. */
 
-DataDefinition::~DataDefinition()
-{
-}
+DataDefinition::~DataDefinition() = default;
 
 
 
@@ -70,7 +64,7 @@ PackingMethod DataDefinition::getPackingMethod() const
 
 /*! \brief The method returns a value by its index from the encoded data. */
 
-bool DataDefinition::getValueByIndex(Message *message,uint index,T::ParamValue& value) const
+bool DataDefinition::getValueByIndex(Message * /*message*/,uint /*index*/,T::ParamValue& /*value*/) const
 {
   try
   {
@@ -124,7 +118,7 @@ DataDefinition* DataDefinition::createDataDefinition() const
 
 /*! \brief The method decodes the packed values from the message into a value vector. */
 
-void DataDefinition::decodeValues(Message *message,T::ParamValue_vec& decodedValues) const
+void DataDefinition::decodeValues(Message * /*message*/,T::ParamValue_vec& /*decodedValues*/) const
 {
   throw Fmi::Exception(BCP,"Not implemented!");
 }
@@ -135,7 +129,7 @@ void DataDefinition::decodeValues(Message *message,T::ParamValue_vec& decodedVal
 
 /*! \brief The method encodes the given values into the message data. */
 
-void DataDefinition::encodeValues(Message *message,T::ParamValue_vec& values)
+void DataDefinition::encodeValues(Message * /*message*/,T::ParamValue_vec& /*values*/)
 {
   throw Fmi::Exception(BCP,"Not implemented!");
 }
@@ -145,7 +139,7 @@ void DataDefinition::encodeValues(Message *message,T::ParamValue_vec& values)
 
 /*! \brief The method collects the properties associated with this data definition. */
 
-void DataDefinition::getProperties(T::PropertySettingVec& properties)
+void DataDefinition::getProperties(T::PropertySettingVec& /*properties*/)
 {
   throw Fmi::Exception(BCP,"Not implemented!");
 }
@@ -160,7 +154,7 @@ void DataDefinition::getProperties(T::PropertySettingVec& properties)
         \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void DataDefinition::print(std::ostream& stream,uint level,uint optionFlags) const
+void DataDefinition::print(std::ostream& stream,uint level,uint /*optionFlags*/) const
 {
   try
   {

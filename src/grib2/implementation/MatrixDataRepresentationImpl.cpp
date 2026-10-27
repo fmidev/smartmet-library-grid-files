@@ -11,9 +11,7 @@ namespace GRIB2
 
 /*! \brief The constructor of the class. */
 
-MatrixDataRepresentationImpl::MatrixDataRepresentationImpl()
-{
-}
+MatrixDataRepresentationImpl::MatrixDataRepresentationImpl() = default;
 
 
 
@@ -21,10 +19,7 @@ MatrixDataRepresentationImpl::MatrixDataRepresentationImpl()
 
 /*! \brief The copy constructor of the class. */
 
-MatrixDataRepresentationImpl::MatrixDataRepresentationImpl(const MatrixDataRepresentationImpl& other)
-:MatrixDataRepresentation(other)
-{
-}
+MatrixDataRepresentationImpl::MatrixDataRepresentationImpl(const MatrixDataRepresentationImpl& other) = default;
 
 
 
@@ -32,9 +27,7 @@ MatrixDataRepresentationImpl::MatrixDataRepresentationImpl(const MatrixDataRepre
 
 /*! \brief The destructor of the class. */
 
-MatrixDataRepresentationImpl::~MatrixDataRepresentationImpl()
-{
-}
+MatrixDataRepresentationImpl::~MatrixDataRepresentationImpl() = default;
 
 
 
@@ -86,7 +79,7 @@ void MatrixDataRepresentationImpl::read(MemoryReader& memoryReader)
 
 /*! \brief Decodes the matrix-packed grid values (not implemented). */
 
-void MatrixDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec& decodedValues) const
+void MatrixDataRepresentationImpl::decodeValues(Message * /*message*/,T::ParamValue_vec& /*decodedValues*/) const
 {
   throw Fmi::Exception(BCP,"The method not implemented!");
 }

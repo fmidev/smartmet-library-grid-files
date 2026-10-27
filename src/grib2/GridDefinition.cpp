@@ -10,9 +10,9 @@
 
 #include <iostream>
 #include <map>
+#include <memory>
 #include <unordered_map>
-#include <iostream>
-#include <math.h>
+#include <cmath>
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
 
@@ -26,22 +26,37 @@ namespace GRIB2
 #define TRANSFORM_VEC_CACHE_SIZE 400
 
 Fmi::Cache::CacheStats latlonCoordinateCache_stats;
+namespace
+{
 Fmi::Cache::Cache<uint,T::Coordinate_svec> latlonCoordinateCache(COORDINATE_VEC_CACHE_SIZE);
+}  // namespace
 
 Fmi::Cache::CacheStats originalCoordinateCache_stats;
+namespace
+{
 Fmi::Cache::Cache<uint,T::Coordinate_svec> originalCoordinateCache(COORDINATE_VEC_CACHE_SIZE);
+}  // namespace
 
 
 Fmi::Cache::CacheStats transformCache1_stats;
+namespace
+{
 Fmi::Cache::Cache<std::size_t,T::Coordinate> transformCache1(1000000);
+}  // namespace
 
 Fmi::Cache::CacheStats transformCache2_stats;
+namespace
+{
 Fmi::Cache::Cache<std::size_t,T::Coordinate> transformCache2(1000000);
+}  // namespace
 
 Fmi::Cache::CacheStats transformCache3_stats;
+namespace
+{
 Fmi::Cache::Cache<std::size_t,T::Coordinate_svec> transformCache3(TRANSFORM_VEC_CACHE_SIZE);
 
 Fmi::Cache::Cache<std::size_t,T::SpatialRef_sptr> spatialReferenceCache(1000);
+}  // namespace
 
 T::SpatialRef_sptr latlonSpatialReference;
 
@@ -60,7 +75,7 @@ GridDefinition::GridDefinition()
 
     if (!latlonSpatialReference)
     {
-      latlonSpatialReference.reset(new T::SpatialRef());
+      latlonSpatialReference = std::make_shared<T::SpatialRef>();
       latlonSpatialReference->importFromEPSG(4326);
       latlonSpatialReference->SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
     }
@@ -110,7 +125,7 @@ GridDefinition::GridDefinition(const GridDefinition& other)
 
     if (!latlonSpatialReference)
     {
-      latlonSpatialReference.reset(new T::SpatialRef());
+      latlonSpatialReference = std::make_shared<T::SpatialRef>();
       latlonSpatialReference->importFromEPSG(4326);
       latlonSpatialReference->SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
     }
@@ -158,7 +173,7 @@ GridDefinition* GridDefinition::createGridDefinition() const
 
 /*! \brief The method collects attributeList details related to the grid definition. */
 
-void GridDefinition::getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const
+void GridDefinition::getAttributeList(const std::string& /*prefix*/,T::AttributeList& /*attributeList*/) const
 {
   FUNCTION_TRACE
 }
@@ -377,7 +392,7 @@ bool GridDefinition::getGridLatLonArea(T::Coordinate& topLeft,T::Coordinate& top
         \return   The type of the grid projection (expressed as an enum value).
 */
 
-T::GridProjection GridDefinition::getGridProjection()
+T::GridProjection GridDefinition::getGridProjection() const
 {
   FUNCTION_TRACE
   try
@@ -668,6 +683,8 @@ bool GridDefinition::getProperty_EarthShape(uint propertyId,Int64& value)
       case Property::GridSection::EarthShape::ScaledValueOfEarthMinorAxis:
         value = *earthShape->getScaledValueOfEarthMinorAxis();
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -741,6 +758,8 @@ bool GridDefinition::getProperty_Grid(uint propertyId,Int64& value)
         }
         return false;
       }
+      default:
+        break;
     }
 
     return false;
@@ -779,6 +798,8 @@ bool GridDefinition::getProperty_Rotation(uint propertyId,Int64& value)
       case Property::GridSection::Rotation::AngleOfRotation:
         value = rotation->getAngleOfRotation();
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -824,6 +845,8 @@ bool GridDefinition::getProperty_LatLon(uint propertyId,Int64& value)
         }
         return false;
       }
+      default:
+        break;
     }
 
     return false;
@@ -915,6 +938,8 @@ bool GridDefinition::setProperty_EarthShape(uint propertyId,Int64 value)
       case Property::GridSection::EarthShape::ScaledValueOfEarthMinorAxis:
         earthShape->setScaledValueOfEarthMinorAxis(value);
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -989,6 +1014,8 @@ bool GridDefinition::setProperty_Grid(uint propertyId,Int64 value)
         }
         return false;
       }
+      default:
+        break;
     }
 
     return false;
@@ -1027,6 +1054,8 @@ bool GridDefinition::setProperty_Rotation(uint propertyId,Int64 value)
       case Property::GridSection::Rotation::AngleOfRotation:
         rotation->setAngleOfRotation(value);
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -1072,6 +1101,8 @@ bool GridDefinition::setProperty_LatLon(uint propertyId,Int64 value)
         }
         return false;
       }
+      default:
+        break;
     }
 
     return false;
@@ -1186,8 +1217,8 @@ T::Coordinate_svec GridDefinition::getGridLatLonCoordinates() const
     int sz = originalCoordinates->size();
     latLonCoordinates->reserve(sz);
 
-    double *lat = new double[sz+1];
-    double *lon = new double[sz+1];
+    auto *lat = new double[sz+1];
+    auto *lon = new double[sz+1];
 
     std::unique_ptr<double[]> rlat(lat);
     std::unique_ptr<double[]> rlon(lon);
@@ -1266,6 +1297,61 @@ bool GridDefinition::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid
 
 
 
+/*! \brief The method returns the grid original (projection) coordinates of the given grid points (= integer coordinates).
+    The result is the same as calling getGridOriginalCoordinatesByGridPoint() for each point, but
+    the coordinate vector is fetched only once.
+
+        \param gridPoints  The grid points (i,j).
+        \param x           The x-coordinates in the original projection are returned in this parameter.
+        \param y           The y-coordinates in the original projection are returned in this parameter.
+        \param found       The method sets 'true' for each point whose coordinates were returned.
+*/
+
+void GridDefinition::getGridOriginalCoordinatesByGridPointList(std::vector<T::Point>& gridPoints,std::vector<double>& x,std::vector<double>& y,std::vector<bool>& found) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    std::size_t sz = gridPoints.size();
+    x.assign(sz,0);
+    y.assign(sz,0);
+    found.assign(sz,false);
+    if (sz == 0)
+      return;
+
+    auto rows = getGridRowCount();
+    auto cols = getGridColumnCount();
+
+    T::Coordinate_svec originalCoordinates = getGridOriginalCoordinates();
+    std::size_t csz = originalCoordinates->size();
+
+    for (std::size_t t=0; t<sz; t++)
+    {
+      uint grid_i = gridPoints[t].x();
+      uint grid_j = gridPoints[t].y();
+
+      if (grid_i >= cols || grid_j >= rows)
+        continue;
+
+      std::size_t c = C_UINT64(grid_j) * cols + grid_i;
+      if (c >= csz)
+        continue;
+
+      x[t] = (*originalCoordinates)[c].x();
+      y[t] = (*originalCoordinates)[c].y();
+      found[t] = true;
+    }
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
 /*! \brief The method returns the grid original (projection) coordinates in the given grid position (= double coordinates).
 
         \param grid_i  The grid i-coordinate.
@@ -1275,7 +1361,7 @@ bool GridDefinition::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid
         \return        The method return true if the original coordinates were succesfully returned.
 */
 
-bool GridDefinition::getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const
+bool GridDefinition::getGridOriginalCoordinatesByGridPosition(double /*grid_i*/,double /*grid_j*/,double& /*x*/,double& /*y*/) const
 {
   FUNCTION_TRACE
   throw Fmi::Exception(BCP,"This method should be implemented in a child class!");
@@ -1299,7 +1385,8 @@ bool GridDefinition::getGridLatLonCoordinatesByGridPosition(double grid_i,double
   FUNCTION_TRACE
   try
   {
-    double x = 0, y = 0;
+    double x = 0;
+    double y = 0;
 
     if (getGridOriginalCoordinatesByGridPosition(grid_i,grid_j,x,y))
     {
@@ -1487,7 +1574,9 @@ bool GridDefinition::isRelativeUV() const
         \return        Returns 'true' if the position was clamped onto the grid.
 */
 
-static bool clampGridPointToBorder(const T::Dimensions& d,double& grid_i,double& grid_j)
+namespace
+{
+bool clampGridPointToBorder(const T::Dimensions& d,double& grid_i,double& grid_j)
 {
   const double eps = 0.000001;
 
@@ -1508,6 +1597,7 @@ static bool clampGridPointToBorder(const T::Dimensions& d,double& grid_i,double&
 
   return true;
 }
+}  // namespace
 
 
 
@@ -1548,8 +1638,8 @@ void GridDefinition:: getGridPointListByLatLonCoordinates(T::Coordinate_vec& lat
 
     points.reserve(sz);
 
-    double *x = new double[sz+1];
-    double *y = new double[sz+1];
+    auto *x = new double[sz+1];
+    auto *y = new double[sz+1];
 
     std::unique_ptr<double[]> rx(x);
     std::unique_ptr<double[]> ry(y);
@@ -1570,7 +1660,8 @@ void GridDefinition:: getGridPointListByLatLonCoordinates(T::Coordinate_vec& lat
 
     for (uint t=0; t<sz; t++)
     {
-      double i = -1000,j = -1000;
+      double i = -1000;
+      double j = -1000;
       if (getGridPointByOriginalCoordinates(x[t],y[t],i,j) || clampGridPointToBorder(d,i,j))
         vec->emplace_back(i,j);
       else
@@ -1630,7 +1721,8 @@ bool GridDefinition::getGridPointByLatLonCoordinates(double lat,double lon,doubl
       transformCache2_stats.misses++;
     }
 
-    double x = 0, y = 0;
+    double x = 0;
+    double y = 0;
 
     getGridOriginalCoordinatesByLatLonCoordinates(lat,lon,x,y);
 
@@ -1667,7 +1759,8 @@ bool GridDefinition::getGridPointByLatLonCoordinatesNoCache(double lat,double lo
   FUNCTION_TRACE
   try
   {
-    double x = 0, y = 0;
+    double x = 0;
+    double y = 0;
 
     getGridOriginalCoordinatesByLatLonCoordinatesNoCache(lat,lon,x,y);
 
@@ -1735,6 +1828,92 @@ bool GridDefinition::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j
 
 
 
+/*! \brief The method returns the grid latlon coordinates of the given grid points (= integer coordinates).
+    The result is the same as calling getGridLatLonCoordinatesByGridPoint() for each point, but
+    the original coordinates are fetched once and transformed to latlon with a single call. Points
+    that cannot be handled this way are passed to getGridLatLonCoordinatesByGridPoint().
+
+        \param gridPoints   The grid points (i,j).
+        \param coordinates  The latlon coordinates (x = longitude, y = latitude) are returned in this parameter.
+        \param found        The method sets 'true' for each point whose coordinates were returned.
+*/
+
+void GridDefinition::getGridLatLonCoordinatesByGridPointList(std::vector<T::Point>& gridPoints,T::Coordinate_vec& coordinates,std::vector<bool>& found) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    std::size_t sz = gridPoints.size();
+    coordinates.assign(sz,T::Coordinate(0,0));
+    found.assign(sz,false);
+    if (sz == 0)
+      return;
+
+    std::vector<double> x;
+    std::vector<double> y;
+    std::vector<bool> original;
+    getGridOriginalCoordinatesByGridPointList(gridPoints,x,y,original);
+
+    // Collecting the points with known original coordinates into one transformation
+
+    std::vector<std::size_t> pos;
+    std::vector<double> lon;
+    std::vector<double> lat;
+    pos.reserve(sz);
+    lon.reserve(sz);
+    lat.reserve(sz);
+
+    for (std::size_t t=0; t<sz; t++)
+    {
+      if (original[t])
+      {
+        pos.push_back(t);
+        lon.push_back(x[t]);
+        lat.push_back(y[t]);
+      }
+    }
+
+    if (!pos.empty())
+    {
+      // OGR marks the points that failed to transform with HUGE_VAL, the others are valid
+      convert(mSpatialReference,latlonSpatialReference,pos.size(),lon.data(),lat.data());
+
+      for (std::size_t k=0; k<pos.size(); k++)
+      {
+        if (std::isfinite(lon[k]) && std::isfinite(lat[k]))
+        {
+          coordinates[pos[k]] = T::Coordinate(lon[k],lat[k]);
+          found[pos[k]] = true;
+        }
+      }
+    }
+
+    // The remaining points (if any) are processed one by one
+
+    for (std::size_t t=0; t<sz; t++)
+    {
+      if (!found[t])
+      {
+        double pLat = 0;
+        double pLon = 0;
+        if (getGridLatLonCoordinatesByGridPoint(gridPoints[t].x(),gridPoints[t].y(),pLat,pLon))
+        {
+          coordinates[t] = T::Coordinate(pLon,pLat);
+          found[t] = true;
+        }
+      }
+    }
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
 /*! \brief This method calculates the estimated grid position by using the original coordinates.
     The estimated grid position is returned in the 'grid_i' and 'grid_j' parameters.
     This method should be overridden in the child classes.
@@ -1746,7 +1925,7 @@ bool GridDefinition::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j
       \return        Returns 'false' if the given coordinates are outside of the grid.
 */
 
-bool GridDefinition::getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const
+bool GridDefinition::getGridPointByOriginalCoordinates(double /*x*/,double /*y*/,double& /*grid_i*/,double& /*grid_j*/) const
 {
   FUNCTION_TRACE
   throw Fmi::Exception(BCP,"Not implemented!");
@@ -2100,7 +2279,10 @@ void GridDefinition::getGridCellAverageSize(double& width,double& height) const
       int x = d.nx()/2;
       int y = d.ny()/2;
 
-      double lat1 = 0,lon1 = 0,lat2 = 0,lon2 = 0;;
+      double lat1 = 0;
+      double lon1 = 0;
+      double lat2 = 0;
+      double lon2 = 0;
       if (getGridLatLonCoordinatesByGridPoint(x,y,lat1,lon1)  &&  getGridLatLonCoordinatesByGridPoint(x+1,y+1,lat2,lon2))
       {
         width = latlon_distance(lat1,lon1,lat1,lon2);
@@ -2528,7 +2710,7 @@ double GridDefinition::getFlattening(EarthShapeSettings& earthSettings)
         \param memoryReader  This object controls the access to the memory mapped file.
 */
 
-void GridDefinition::read(MemoryReader& memoryReader)
+void GridDefinition::read(MemoryReader& /*memoryReader*/)
 {
   FUNCTION_TRACE
   throw Fmi::Exception(BCP,"Not implemented!");
@@ -2543,7 +2725,7 @@ void GridDefinition::read(MemoryReader& memoryReader)
         \param dataWriter  The data stream object.
 */
 
-void GridDefinition::write(DataWriter& dataWriter)
+void GridDefinition::write(DataWriter& /*dataWriter*/)
 {
   FUNCTION_TRACE
   throw Fmi::Exception(BCP,"Not implemented!");
@@ -2559,7 +2741,7 @@ void GridDefinition::write(DataWriter& dataWriter)
         \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void GridDefinition::print(std::ostream& stream,uint level,uint optionFlags) const
+void GridDefinition::print(std::ostream& /*stream*/,uint /*level*/,uint /*optionFlags*/) const
 {
   FUNCTION_TRACE
   throw Fmi::Exception(BCP,"Not implemented!");

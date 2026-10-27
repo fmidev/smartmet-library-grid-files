@@ -3,6 +3,7 @@
 #include "../common/Coordinate.h"
 #include "../common/CoordinateConversions.h"
 #include "../common/Dimensions.h"
+#include "../common/Point.h"
 #include "../grid/Typedefs.h"
 #include "../common/DataWriter.h"
 #include "../common/MemoryReader.h"
@@ -39,6 +40,7 @@ class GridDefinition
                                 GridDefinition();
                                 GridDefinition(const GridDefinition& other);
     virtual                     ~GridDefinition();
+    GridDefinition& operator=(const GridDefinition&) = default;
 
     virtual T::Hash             countHash() const; // Do not call this, call getGridHash() instead.
     virtual GridDefinition*     createGridDefinition() const;
@@ -51,6 +53,7 @@ class GridDefinition
     virtual bool                getGridLatLonArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight);
     virtual T::Coordinate_svec  getGridLatLonCoordinates() const;
     virtual bool                getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const;
+    virtual void                getGridLatLonCoordinatesByGridPointList(std::vector<T::Point>& gridPoints,T::Coordinate_vec& coordinates,std::vector<bool>& found) const;
     virtual bool                getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j,double& lat,double& lon) const;
     virtual bool                getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,double& lat,double& lon) const;
     virtual bool                getGridMetricArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight);
@@ -59,6 +62,7 @@ class GridDefinition
     virtual T::Coordinate_svec  getGridOriginalCoordinates() const;
     virtual T::Coordinate_svec  getGridOriginalCoordinatesNoCache() const;
     virtual bool                getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,double& x,double& y) const;
+    virtual void                getGridOriginalCoordinatesByGridPointList(std::vector<T::Point>& gridPoints,std::vector<double>& x,std::vector<double>& y,std::vector<bool>& found) const;
     virtual bool                getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const;
     virtual bool                getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lon,double& x,double& y) const;
     virtual bool                getGridOriginalCoordinatesByLatLonCoordinatesNoCache(double lat,double lon,double& x,double& y) const;
@@ -66,7 +70,7 @@ class GridDefinition
     virtual bool                getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const;
     virtual bool                getGridPointByLatLonCoordinatesNoCache(double lat,double lon,double& grid_i,double& grid_j) const;
     virtual bool                getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;
-    T::GridProjection           getGridProjection();
+    T::GridProjection           getGridProjection() const;
     virtual std::size_t         getGridColumnCount() const;
     virtual std::size_t         getGridRowCount() const;
     virtual uint                getTemplateNumber() const;
@@ -148,14 +152,14 @@ class GridDefinition
 };
 
 
-typedef GridDefinition* GridDef_ptr;                            //!< Non-owning pointer to a GridDefinition.
-typedef std::vector<GridDefinition*> GridDef_pvec;              //!< Vector of non-owning GridDefinition pointers.
-typedef std::map<std::string,GridDefinition*> GridDef_map;      //!< Map from string key to non-owning GridDefinition pointer.
-typedef std::map<uint,GridDefinition*> GridDefinition_pmap;     //!< Map from uint key to non-owning GridDefinition pointer.
-typedef std::shared_ptr<GridDefinition> GridDefinition_sptr;    //!< Shared ownership pointer to a GridDefinition.
-typedef std::shared_ptr<GridDefinition> GridDef_sptr;           //!< Alias for GridDefinition_sptr.
-typedef std::map<std::string,GridDef_sptr> GridDef_spmap;       //!< Map from string key to shared GridDefinition pointer.
-typedef std::vector<GridDefinition_sptr> GridDefinition_spvec;  //!< Vector of shared GridDefinition pointers.
+using GridDef_ptr = GridDefinition*;                            //!< Non-owning pointer to a GridDefinition.
+using GridDef_pvec = std::vector<GridDefinition*>;              //!< Vector of non-owning GridDefinition pointers.
+using GridDef_map = std::map<std::string,GridDefinition*>;      //!< Map from string key to non-owning GridDefinition pointer.
+using GridDefinition_pmap = std::map<uint,GridDefinition*>;     //!< Map from uint key to non-owning GridDefinition pointer.
+using GridDefinition_sptr = std::shared_ptr<GridDefinition>;    //!< Shared ownership pointer to a GridDefinition.
+using GridDef_sptr = std::shared_ptr<GridDefinition>;           //!< Alias for GridDefinition_sptr.
+using GridDef_spmap = std::map<std::string,GridDef_sptr>;       //!< Map from string key to shared GridDefinition pointer.
+using GridDefinition_spvec = std::vector<GridDefinition_sptr>;  //!< Vector of shared GridDefinition pointers.
 
 extern Fmi::Cache::CacheStats latlonCoordinateCache_stats;
 extern Fmi::Cache::CacheStats originalCoordinateCache_stats;

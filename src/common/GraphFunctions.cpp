@@ -4,6 +4,8 @@
 #include "MemoryReader.h"
 #include "MemoryWriter.h"
 #include "GeneralFunctions.h"
+#include <algorithm>
+#include <cmath>
 #include "AutoThreadLock.h"
 #include "ShowFunction.h"
 #include "InterpolationFunctions.h"
@@ -14,12 +16,9 @@
 #include <trax/IsobandLimits.h>
 #include <trax/Smoother.h>
 #include <fmt/format.h>
-#include <cmath>
 #include <memory>
 #include <vector>
 
-#include <algorithm>
-#include <math.h>
 #include <sstream>
 #include <stack>
 #include <thread>
@@ -37,29 +36,32 @@
 namespace SmartMet
 {
 
-typedef std::shared_ptr<geos::geom::Geometry> GeometryPtr;
+using GeometryPtr = std::shared_ptr<geos::geom::Geometry>;
 
+namespace
+{
 Fmi::Cache::Cache<std::size_t, std::vector<T::Point>> gridPointsCache(300);
 
 // Number of row-bands for parallel contouring, clamped to [1, number of cores] so contouring
 // never uses more threads than there are cores. 0/1 means single-threaded.
-static int clampContourThreads(int threads)
+int clampContourThreads(int threads)
 {
   if (threads <= 1)
     return 1;
   unsigned int cores = std::max(1U, std::thread::hardware_concurrency());
   return std::min(threads, static_cast<int>(cores));
 }
+}  // namespace
 
 class TraxGrid: public Trax::Grid
 {
   public:
-    TraxGrid(std::vector<float> *gridData, std::vector<T::Coordinate> *coordinates, long width, long height)
+    TraxGrid(std::vector<float> *gridData, std::vector<T::Coordinate> *coordinates, long width, long height) : mGridData(gridData), mCoordinates(coordinates), mWidth(width), mHeight(height)
     {
-      mGridData = gridData;
-      mCoordinates = coordinates;
-      mWidth = width;
-      mHeight = height;
+
+
+
+
     }
 
     std::size_t width() const override
@@ -152,10 +154,12 @@ extern void convertWkbCoordinates(MemoryReader &_memoryReader, MemoryWriter &_me
 
 /*! \brief Comparator for sorting doubles in ascending order via qsort. */
 
-static int compare_points(const void *p1, const void *p2)
+namespace
 {
-  const double *v1 = (const double*) p1;
-  const double *v2 = (const double*) p2;
+int compare_points(const void *p1, const void *p2)
+{
+  const auto *v1 = (const double*) p1;
+  const auto *v2 = (const double*) p2;
 
   if (*v1 < *v2)
     return -1;
@@ -186,7 +190,7 @@ void addLine(double x1, double y1, double x2, double y2, std::set<UInt64> &cList
 
     if (x1 == x2 && (x1 - round(x1)) == 0)
     {
-      int yStart = C_INT(y1 + 0.5);
+      int yStart = C_INT(std::lround(y1));
       if ((y1 - yStart) > 0)
         yStart++;
 
@@ -211,7 +215,7 @@ void addLine(double x1, double y1, double x2, double y2, std::set<UInt64> &cList
         x2 = tx;
       }
 
-      int xStart = C_INT(x1 + 0.5);
+      int xStart = C_INT(std::lround(x1));
       if ((x1 - xStart) > 0)
         xStart++;
 
@@ -232,7 +236,7 @@ void addLine(double x1, double y1, double x2, double y2, std::set<UInt64> &cList
 
     double dd = dx / dy;
 
-    int yStart = C_INT(y1 + 0.5);
+    int yStart = C_INT(std::lround(y1));
     if ((y1 - yStart) > 0)
       yStart++;
 
@@ -259,6 +263,142 @@ void addLine(double x1, double y1, double x2, double y2, std::set<UInt64> &cList
 
 
 
+/*! \brief Adds the polygon point coordinates into the hash. */
+
+void hashPolygonPoints(std::size_t& hash, const T::Coordinate_vec &polygonPoints)
+{
+  uint numOfPoints = polygonPoints.size();
+  for (uint t = 0; t < numOfPoints; t++)
+  {
+    Fmi::hash_merge(hash, polygonPoints[t].x());
+    Fmi::hash_merge(hash, polygonPoints[t].y());
+  }
+}
+
+
+
+/*! \brief Closes the polygon (if the last point is not the first point) and adds the points
+    below the polygon edges. Returns the number of polygon points. */
+
+uint closePolygonAndAddEdges(T::Coordinate_vec &polygonPoints, std::set<UInt64> &cList)
+{
+  uint numOfPoints = polygonPoints.size();
+
+  // It the last polygon point is not same than the first point, then we should add it to the list.
+
+  if (polygonPoints[0].x() != polygonPoints[numOfPoints - 1].x() || polygonPoints[0].y() != polygonPoints[numOfPoints - 1].y())
+  {
+    polygonPoints.emplace_back(polygonPoints[0]);
+    numOfPoints++;
+  }
+
+  for (uint t = 1; t < numOfPoints; t++)
+  {
+    addLine(polygonPoints[t - 1].x(), polygonPoints[t - 1].y(), polygonPoints[t].x(), polygonPoints[t].y(), cList);
+  }
+  return numOfPoints;
+}
+
+
+
+/*! \brief Updates the row range of the polygon. */
+
+void updateYRange(const T::Coordinate_vec &polygonPoints, int &minY, int &maxY)
+{
+  for (const auto& polygonPoint : polygonPoints)
+  {
+    double yp = round(polygonPoint.y());
+
+    if (yp < minY)
+      minY = C_INT(yp);
+
+    if (yp > maxY)
+      maxY = C_INT(yp);
+  }
+}
+
+
+
+/*! \brief Adds the x-coordinates where the polygon edges cross the row. */
+
+void addScanlineNodes(const T::Coordinate_vec &polygonPoints, int cnt, int y, std::vector<double> &nodeX, int &nodes)
+{
+  int j = cnt - 1;
+  for (int i = 0; i < cnt; i++)
+  {
+    double xi = polygonPoints[i].x();
+    double yi = polygonPoints[i].y();
+
+    double xj = polygonPoints[j].x();
+    double yj = polygonPoints[j].y();
+
+    auto dy = C_DOUBLE(y);
+
+    if ((yi < dy && yj >= dy) || (yj < dy && yi >= dy))
+    {
+      auto xx = C_DOUBLE(xi + (y - yi) / (yj - yi) * (xj - xi));
+      if (nodes >= C_INT(nodeX.size()))
+        nodeX.resize(2 * nodeX.size());
+      nodeX[nodes++] = C_DOUBLE(xx);
+    }
+    j = i;
+  }
+}
+
+
+
+/*! \brief Adds the grid points between the node pairs of the row. */
+
+void addScanlineSpans(std::vector<double> &nodeX, int nodes, int minX, int maxX, int y, std::set<UInt64> &cList)
+{
+  for (int i = 0; i < nodes; i += 2)
+  {
+    if (nodeX[i] >= maxX || (i + 1) >= nodes)
+      break;
+
+    if (nodeX[i + 1] > minX)
+    {
+      nodeX[i] = std::max<__gnu_cxx::__alloc_traits<class std::allocator<double> >::value_type>(nodeX[i], minX);
+
+      nodeX[i + 1] = std::min<__gnu_cxx::__alloc_traits<class std::allocator<double> >::value_type>(nodeX[i + 1], maxX);
+
+      int xStart = C_INT(nodeX[i]);
+      int xEnd = C_INT(nodeX[i + 1]);
+
+      if ((nodeX[i] - xStart) > 0)
+        xStart++;
+
+      if ((xEnd - nodeX[i + 1]) > 0)
+        xEnd--;
+
+      for (int x = xStart; x <= xEnd; x++)
+      {
+        UInt64 p = (C_UINT64(y)<< 32) + (UInt64)x;
+        //if (cList.find(p) == cList.end())
+        cList.insert(p);
+      }
+    }
+  }
+}
+
+
+
+/*! \brief Converts the point keys into grid points. */
+
+void convertToGridPoints(const std::set<UInt64> &cList, std::vector<T::Point> &gridPoints)
+{
+  for (unsigned long it : cList)
+  {
+    int y = C_INT(it >> 32);
+    int x = C_INT(it & 0xFFFFFFFF);
+
+    gridPoints.emplace_back(x, y);
+  }
+}
+}  // namespace
+
+
+
 /*! \brief Returns all grid points that lie inside or on the given polygon. */
 
 void getPointsInsidePolygon(int gridWidth, int gridHeight, T::Coordinate_vec &polygonPoints, std::vector<T::Point> &gridPoints)
@@ -273,11 +413,7 @@ void getPointsInsidePolygon(int gridWidth, int gridHeight, T::Coordinate_vec &po
     Fmi::hash_merge(hash, gridWidth);
     Fmi::hash_merge(hash, gridHeight);
 
-    for (uint t = 0; t < numOfPoints; t++)
-    {
-      Fmi::hash_merge(hash, polygonPoints[t].x());
-      Fmi::hash_merge(hash, polygonPoints[t].y());
-    }
+    hashPolygonPoints(hash, polygonPoints);
 
     auto it = gridPointsCache.find(hash);
     if (it)
@@ -290,18 +426,9 @@ void getPointsInsidePolygon(int gridWidth, int gridHeight, T::Coordinate_vec &po
 
     // It the last polygon point is not same than the first point, then we should add it to the list.
 
-    if (polygonPoints[0].x() != polygonPoints[numOfPoints - 1].x() || polygonPoints[0].y() != polygonPoints[numOfPoints - 1].y())
-    {
-      polygonPoints.emplace_back(polygonPoints[0]);
-      numOfPoints++;
-    }
-
     // Adding points that are below the polygon line.
 
-    for (uint t = 1; t < numOfPoints; t++)
-    {
-      addLine(polygonPoints[t - 1].x(), polygonPoints[t - 1].y(), polygonPoints[t].x(), polygonPoints[t].y(), cList);
-    }
+    numOfPoints = closePolygonAndAddEdges(polygonPoints, cList);
 
     // Adding points that are inside the polygon line.
 
@@ -310,92 +437,28 @@ void getPointsInsidePolygon(int gridWidth, int gridHeight, T::Coordinate_vec &po
     int minX = 0;
     int maxX = gridWidth - 1;
 
-    for (auto it = polygonPoints.begin(); it != polygonPoints.end(); ++it)
-    {
-      double yp = round(it->y());
+    updateYRange(polygonPoints, minY, maxY);
 
-      if (yp < minY)
-        minY = C_INT(yp);
-
-      if (yp > maxY)
-        maxY = C_INT(yp);
-    }
-
-    if (minY < 0)
-      minY = 0;
+    minY = std::max(minY, 0);
 
     if (maxY >= gridHeight)
       maxY = gridHeight - 1;
 
-    double nodeX[10000] =
-      { 0 };
+    std::vector<double> nodeX(10000, 0.0);
 
     for (int y = minY; y <= maxY; y++)
     {
       int nodes = 0;
-      int cnt = numOfPoints;
-      int j = cnt - 1;
-      for (int i = 0; i < cnt; i++)
-      {
-        double xi = polygonPoints[i].x();
-        double yi = polygonPoints[i].y();
+      addScanlineNodes(polygonPoints, numOfPoints, y, nodeX, nodes);
 
-        double xj = polygonPoints[j].x();
-        double yj = polygonPoints[j].y();
+      qsort(nodeX.data(), nodes, sizeof(double), compare_points);
 
-        double dy = C_DOUBLE(y);
-
-        if ((yi < dy && yj >= dy) || (yj < dy && yi >= dy))
-        {
-          double xx = C_DOUBLE(xi + (y - yi) / (yj - yi) * (xj - xi));
-          nodeX[nodes++] = C_DOUBLE(xx);
-        }
-        j = i;
-      }
-
-      qsort(&nodeX, nodes, sizeof(double), compare_points);
-
-      for (int i = 0; i < nodes; i += 2)
-      {
-        if (nodeX[i] >= maxX || (i + 1) > nodes)
-          break;
-
-        if (nodeX[i + 1] > minX)
-        {
-          if (nodeX[i] < minX)
-            nodeX[i] = minX;
-
-          if (nodeX[i + 1] > maxX)
-            nodeX[i + 1] = maxX;
-
-          int xStart = C_INT(nodeX[i]);
-          int xEnd = C_INT(nodeX[i + 1]);
-
-          if ((nodeX[i] - xStart) > 0)
-            xStart++;
-
-          if ((xEnd - nodeX[i + 1]) > 0)
-            xEnd--;
-
-          for (int x = xStart; x <= xEnd; x++)
-          {
-            UInt64 p = (C_UINT64(y)<< 32) + (UInt64)x;
-            //if (cList.find(p) == cList.end())
-            cList.insert(p);
-          }
-        }
-      }
+      addScanlineSpans(nodeX, nodes, minX, maxX, y, cList);
     }
 
     // Converting the list to the actual PointList.
 
-    for (auto it = cList.begin(); it != cList.end(); ++it)
-    {
-      int y = C_INT((*it) >> 32);
-      int x = C_INT((*it) & 0xFFFFFFFF);
-
-      gridPoints.emplace_back(x, y);
-    }
+    convertToGridPoints(cList, gridPoints);
 
     gridPointsCache.insert(hash, gridPoints);
   }
@@ -413,21 +476,14 @@ void getPointsInsidePolygonPath(int gridWidth, int gridHeight, T::Polygon_vec &p
 {
   try
   {
-    if (polygonPath.size() == 0)
+    if (polygonPath.empty())
       return;
 
     std::size_t hash = 0;
     Fmi::hash_merge(hash, gridWidth);
     Fmi::hash_merge(hash, gridHeight);
-    for (auto polygonPoints = polygonPath.begin(); polygonPoints != polygonPath.end(); ++polygonPoints)
-    {
-      uint numOfPoints = polygonPoints->size();
-      for (uint t = 0; t < numOfPoints; t++)
-      {
-        Fmi::hash_merge(hash, (*polygonPoints)[t].x());
-        Fmi::hash_merge(hash, (*polygonPoints)[t].y());
-      }
-    }
+    for (auto& polygonPoints : polygonPath)
+      hashPolygonPoints(hash, polygonPoints);
 
     auto it = gridPointsCache.find(hash);
     if (it)
@@ -442,49 +498,23 @@ void getPointsInsidePolygonPath(int gridWidth, int gridHeight, T::Polygon_vec &p
     int maxY = 0;
     int minX = 0;
     int maxX = gridWidth - 1;
-    double nodeX[10000] =
-      { 0 };
-    double pointsX[200000];
-    double pointsY[200000];
+    std::vector<double> nodeX(10000, 0.0);
 
-    for (auto polygonPoints = polygonPath.begin(); polygonPoints != polygonPath.end(); ++polygonPoints)
+    for (auto& polygonPoints : polygonPath)
     {
-      uint numOfPoints = polygonPoints->size();
-
-      if (numOfPoints > 0)
+      if (!polygonPoints.empty())
       {
-        // It the last polygon point is not same than the first point, then we should add it to the list.
-
-        if ((*polygonPoints)[0].x() != (*polygonPoints)[numOfPoints - 1].x() || (*polygonPoints)[0].y() != (*polygonPoints)[numOfPoints - 1].y())
-        {
-          (*polygonPoints).emplace_back((*polygonPoints)[0]);
-          numOfPoints++;
-        }
-
         // Adding points that are below the polygon line.
 
-        for (uint t = 1; t < numOfPoints; t++)
-        {
-          addLine((*polygonPoints)[t - 1].x(), (*polygonPoints)[t - 1].y(), (*polygonPoints)[t].x(), (*polygonPoints)[t].y(), cList);
-        }
+        closePolygonAndAddEdges(polygonPoints, cList);
 
         // Adding points that are inside the polygon line.
 
-        for (auto it = polygonPoints->begin(); it != polygonPoints->end(); ++it)
-        {
-          double yp = round(it->y());
-
-          if (yp < minY)
-            minY = C_INT(yp);
-
-          if (yp > maxY)
-            maxY = C_INT(yp);
-        }
+        updateYRange(polygonPoints, minY, maxY);
       }
     }
 
-    if (minY < 0)
-      minY = 0;
+    minY = std::max(minY, 0);
 
     if (maxY >= gridHeight)
       maxY = gridHeight - 1;
@@ -494,88 +524,23 @@ void getPointsInsidePolygonPath(int gridWidth, int gridHeight, T::Polygon_vec &p
     {
       //  Build a list of nodes.
       int nodes = 0;
-      for (auto polygonPoints = polygonPath.begin(); polygonPoints != polygonPath.end(); ++polygonPoints)
+      for (auto& polygonPoints : polygonPath)
       {
-        uint numOfPoints = polygonPoints->size();
+        if (polygonPoints.size() >= 200000)
+          throw Fmi::Exception(BCP, "Not enough space for the point list!", nullptr);
 
-        uint c = 0;
-        for (auto it = polygonPoints->begin(); it != polygonPoints->end(); ++it)
-        {
-          pointsX[c] = it->x();
-          pointsY[c] = it->y();
-          c++;
-
-          if (c >= 200000)
-          {
-            throw Fmi::Exception(BCP, "Not enough space for the point list!", nullptr);
-          }
-        }
-
-        int cnt = numOfPoints;
-        int j = cnt - 1;
-        for (int i = 0; i < cnt; i++)
-        {
-          double xi = pointsX[i];
-          double yi = pointsY[i];
-
-          double xj = pointsX[j];
-          double yj = pointsY[j];
-
-          double dy = C_DOUBLE(y);
-
-          if ((yi < dy && yj >= dy) || (yj < dy && yi >= dy))
-          {
-            double xx = C_DOUBLE(xi + (y - yi) / (yj - yi) * (xj - xi));
-            nodeX[nodes++] = C_DOUBLE(xx);
-          }
-          j = i;
-        }
+        addScanlineNodes(polygonPoints, polygonPoints.size(), y, nodeX, nodes);
       }
-      qsort(&nodeX, nodes, sizeof(double), compare_points);
+      qsort(nodeX.data(), nodes, sizeof(double), compare_points);
 
       //  Fill the pixels between node pairs.
 
-      for (int i = 0; i < nodes; i += 2)
-      {
-        if (nodeX[i] >= maxX || (i + 1) > nodes)
-          break;
-
-        if (nodeX[i + 1] > minX)
-        {
-          if (nodeX[i] < minX)
-            nodeX[i] = minX;
-
-          if (nodeX[i + 1] > maxX)
-            nodeX[i + 1] = maxX;
-
-          int xStart = C_INT(nodeX[i]);
-          int xEnd = C_INT(nodeX[i + 1]);
-
-          if ((nodeX[i] - xStart) > 0)
-            xStart++;
-
-          if ((xEnd - nodeX[i + 1]) > 0)
-            xEnd--;
-
-          for (int x = xStart; x <= xEnd; x++)
-          {
-            UInt64 p = (C_UINT64(y)<< 32) + x;
-            //if (cList.find(p) == cList.end())
-            cList.insert(p);
-          }
-        }
-      }
+      addScanlineSpans(nodeX, nodes, minX, maxX, y, cList);
     }
 
     // Converting the list to the actual PointList.
 
-    for (auto it = cList.begin(); it != cList.end(); ++it)
-    {
-      int y = C_INT((*it) >> 32);
-      int x = C_INT((*it) & 0xFFFFFFFF);
-
-      gridPoints.emplace_back(x, y);
-    }
+    convertToGridPoints(cList, gridPoints);
 
     gridPointsCache.insert(hash, gridPoints);
   }
@@ -600,11 +565,9 @@ void getPointsInsideCircle(int gridWidth, int gridHeight, double origoX, double 
 
     double rr = radius * radius;
 
-    if (x1 < 0)
-      x1 = 0;
+    x1 = std::max<double>(x1, 0);
 
-    if (y1 < 0)
-      y1 = 0;
+    y1 = std::max<double>(y1, 0);
 
     if (x2 >= gridWidth)
       x2 = gridWidth - 1;
@@ -643,14 +606,14 @@ void getPointsInsideCircle(int gridWidth, int gridHeight, double origoX, double 
 
 /*! \brief Returns the total number of points across all polygons in the path. */
 
-std::size_t getPolygonPathLength(T::Polygon_vec &polygonPath)
+std::size_t getPolygonPathLength(const T::Polygon_vec &polygonPath)
 {
   try
   {
     std::size_t s = 0;
-    for (auto coordinates = polygonPath.begin(); coordinates != polygonPath.end(); ++coordinates)
+    for (const auto& coordinates : polygonPath)
     {
-      s = s + coordinates->size();
+      s = s + coordinates.size();
     }
     return s;
   }
@@ -668,9 +631,9 @@ void convertToPointVector(T::Polygon_vec &polygonPath, T::Coordinate_vec &polygo
 {
   try
   {
-    for (auto coordinates = polygonPath.begin(); coordinates != polygonPath.end(); ++coordinates)
+    for (auto& coordinates : polygonPath)
     {
-      for (auto cc = coordinates->begin(); cc != coordinates->end(); ++cc)
+      for (auto cc = coordinates.begin(); cc != coordinates.end(); ++cc)
         polygonPoints.emplace_back(*cc);
     }
   }
@@ -684,31 +647,31 @@ void convertToPointVector(T::Polygon_vec &polygonPath, T::Coordinate_vec &polygo
 
 /*! \brief Converts an SVG path into a polygon path of coordinate rings. */
 
-void convertSvgPathToPolygonPath(NFmiSvgPath &svgPath, T::Polygon_vec &polygonPath)
+void convertSvgPathToPolygonPath(const NFmiSvgPath &svgPath, T::Polygon_vec &polygonPath)
 {
   try
   {
     T::Coordinate_vec polygonPoints;
 
-    for (auto it = svgPath.begin(); it != svgPath.end(); ++it)
+    for (const auto& it : svgPath)
     {
-      switch (it->itsType)
+      switch (it.itsType)
       {
         case NFmiSvgPath::kElementMoveto:
-          if (polygonPoints.size() > 0)
+          if (!polygonPoints.empty())
           {
             polygonPath.emplace_back(polygonPoints);
             polygonPoints.clear();
           }
-          polygonPoints.emplace_back(it->itsX, it->itsY);
+          polygonPoints.emplace_back(it.itsX, it.itsY);
           break;
 
         case NFmiSvgPath::kElementClosePath:
-          if (polygonPoints.size() > 0)
+          if (!polygonPoints.empty())
           {
             int t = C_INT(polygonPoints.size())-1;
             if (t > 0 && (polygonPoints[0].x() != polygonPoints[t].x() || polygonPoints[0].y() != polygonPoints[t].y()))
-            polygonPoints.emplace_back(polygonPoints[0]);
+              polygonPoints.emplace_back(polygonPoints[0]);
 
             polygonPath.emplace_back(polygonPoints);
             polygonPoints.clear();
@@ -718,14 +681,14 @@ void convertSvgPathToPolygonPath(NFmiSvgPath &svgPath, T::Polygon_vec &polygonPa
           break;
 
           case NFmiSvgPath::kElementLineto:
-          polygonPoints.emplace_back(it->itsX,it->itsY);
+          polygonPoints.emplace_back(it.itsX,it.itsY);
           break;
 
           case NFmiSvgPath::kElementNotValid:
           return;
         }
       }
-    if (polygonPoints.size() > 0)
+    if (!polygonPoints.empty())
       polygonPath.emplace_back(polygonPoints);
   }
   catch (...)
@@ -804,6 +767,8 @@ void convertWktMultipolygonToPolygonPath(const std::string &wktString, T::Polygo
 
 /*! \brief Computes the intersection point of two infinite lines defined by their endpoints. */
 
+namespace
+{
 bool getLineIntersection(double ax1, double ay1, double ax2, double ay2, double bx1, double by1, double bx2, double by2, double &x, double &y)
 {
   try
@@ -900,12 +865,9 @@ void getPointMovement(double x1, double y1, double x2, double y2, double areaExt
         my = 0;
         return;
       }
-      else
-      {
-        mx = -areaExtensionX;
-        my = 0;
-        return;
-      }
+      mx = -areaExtensionX;
+      my = 0;
+      return;
     }
 
     if (y1 == y2)
@@ -916,12 +878,9 @@ void getPointMovement(double x1, double y1, double x2, double y2, double areaExt
         my = -areaExtensionY;
         return;
       }
-      else
-      {
-        mx = 0;
-        my = areaExtensionY;
-        return;
-      }
+      mx = 0;
+      my = areaExtensionY;
+      return;
     }
 
     if (x1 < x2)
@@ -932,12 +891,9 @@ void getPointMovement(double x1, double y1, double x2, double y2, double areaExt
         my = areaExtension_y;
         return;
       }
-      else
-      {
-        mx = -areaExtension_x;
-        my = areaExtension_y;
-        return;
-      }
+      mx = -areaExtension_x;
+      my = areaExtension_y;
+      return;
     }
 
     if (x1 > x2)
@@ -948,12 +904,9 @@ void getPointMovement(double x1, double y1, double x2, double y2, double areaExt
         my = -areaExtension_y;
         return;
       }
-      else
-      {
-        mx = -areaExtension_x;
-        my = -areaExtension_y;
-        return;
-      }
+      mx = -areaExtension_x;
+      my = -areaExtension_y;
+      return;
     }
   }
   catch (...)
@@ -989,12 +942,9 @@ void getPointMovementRev(double x1, double y1, double x2, double y2, double area
         my = 0;
         return;
       }
-      else
-      {
-        mx = areaExtensionX;
-        my = 0;
-        return;
-      }
+      mx = areaExtensionX;
+      my = 0;
+      return;
     }
 
     if (y1 == y2)
@@ -1005,12 +955,9 @@ void getPointMovementRev(double x1, double y1, double x2, double y2, double area
         my = areaExtensionY;
         return;
       }
-      else
-      {
-        mx = 0;
-        my = -areaExtensionY;
-        return;
-      }
+      mx = 0;
+      my = -areaExtensionY;
+      return;
     }
 
     if (x1 < x2)
@@ -1021,12 +968,9 @@ void getPointMovementRev(double x1, double y1, double x2, double y2, double area
         my = -areaExtension_y;
         return;
       }
-      else
-      {
-        mx = areaExtension_x;
-        my = -areaExtension_y;
-        return;
-      }
+      mx = areaExtension_x;
+      my = -areaExtension_y;
+      return;
     }
 
     if (x1 > x2)
@@ -1037,12 +981,9 @@ void getPointMovementRev(double x1, double y1, double x2, double y2, double area
         my = areaExtension_y;
         return;
       }
-      else
-      {
-        mx = areaExtension_x;
-        my = areaExtension_y;
-        return;
-      }
+      mx = areaExtension_x;
+      my = areaExtension_y;
+      return;
     }
   }
   catch (...)
@@ -1050,6 +991,7 @@ void getPointMovementRev(double x1, double y1, double x2, double y2, double area
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+}  // namespace
 
 
 
@@ -1113,6 +1055,8 @@ T::Coordinate_vec getEnlargedPolygon(T::Coordinate_vec &oldCoordinates, double a
 
 /*! \brief Returns the total perimeter length of the polygon defined by the given coordinates. */
 
+namespace
+{
 double getPolygonLen(T::Coordinate_vec &coordinates)
 {
   try
@@ -1136,6 +1080,7 @@ double getPolygonLen(T::Coordinate_vec &coordinates)
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+}  // namespace
 
 
 
@@ -1175,9 +1120,9 @@ T::Polygon_vec getEnlargedPolygonPath(T::Polygon_vec &oldPath, double areaExtens
   {
     T::Polygon_vec newPath;
 
-    for (auto coordinates = oldPath.begin(); coordinates != oldPath.end(); ++coordinates)
+    for (auto& coordinates : oldPath)
     {
-      T::Coordinate_vec newCoordinates = getEnlargedPolygon(*coordinates, areaExtensionX, areaExtensionY);
+      T::Coordinate_vec newCoordinates = getEnlargedPolygon(coordinates, areaExtensionX, areaExtensionY);
       newPath.emplace_back(newCoordinates);
     }
     return newPath;
@@ -1193,7 +1138,7 @@ T::Polygon_vec getEnlargedPolygonPath(T::Polygon_vec &oldPath, double areaExtens
 /*! \brief Computes isolines for the given grid values and returns them as WKB-encoded contours. */
 
 void getIsolines(std::vector<float> &gridData, T::Coordinate_vec *coordinates, int width, int height, std::vector<float> &contourValues, short interpolationMethod,
-    size_t smooth_size, size_t smooth_degree, T::ByteData_vec &contours, int subdivide, int threads, const Trax::SmoothOptions &smoothOptions)
+    size_t /*smooth_size*/, size_t /*smooth_degree*/, T::ByteData_vec &contours, int subdivide, int threads, const Trax::SmoothOptions &smoothOptions)
 {
   try
   {
@@ -1203,7 +1148,8 @@ void getIsolines(std::vector<float> &gridData, T::Coordinate_vec *coordinates, i
     if (coordinates)
       csz = coordinates->size();
 
-    if (sz == 0 || sz != requiredSize || sz != csz)
+    // Without coordinates the grid coordinates are used
+    if (sz == 0 || sz != requiredSize || (coordinates != nullptr && sz != csz))
       return;
 
     Trax::Contour contourer;
@@ -1220,18 +1166,18 @@ void getIsolines(std::vector<float> &gridData, T::Coordinate_vec *coordinates, i
       input = Trax::smooth(grid, smoothOptions);
 
     Trax::IsolineValues isolineValues;
-    for (auto v = contourValues.begin(); v != contourValues.end(); v++)
-      isolineValues.add(*v);
+    for (float & contourValue : contourValues)
+      isolineValues.add(contourValue);
 
     auto result = contourer.isolines(*input, isolineValues);
 
     //ImagePaint paint(3600,1800,0xFFFFFF,0xFF0000,0x0000FF,false,false);
-    if (result.size() > 0)
+    if (!result.empty())
     {
-      for (auto g = result.begin(); g != result.end(); ++g)
+      for (auto& g : result)
       {
         std::ostringstream out;
-        g->wkb(out);
+        g.wkb(out);
         const auto &wkb = out.str();
         size_t size = wkb.length();
 
@@ -1239,7 +1185,7 @@ void getIsolines(std::vector<float> &gridData, T::Coordinate_vec *coordinates, i
         if (size > 0)
         {
           const auto &wkb = out.str();
-          unsigned char *data = reinterpret_cast<unsigned char*>(const_cast<char*>(wkb.c_str()));
+          auto *data = reinterpret_cast<unsigned char*>(const_cast<char*>(wkb.c_str()));
 
           //paint.paintWkb(1,1,0,0,data,size);
 
@@ -1264,7 +1210,7 @@ void getIsolines(std::vector<float> &gridData, T::Coordinate_vec *coordinates, i
 /*! \brief Computes isobands for the given grid values and returns them as WKB-encoded contours. */
 
 void getIsobands(std::vector<float> &gridData, std::vector<T::Coordinate> *coordinates, int width, int height, std::vector<float> &contourLowValues,
-    std::vector<float> &contourHighValues, short interpolationMethod, size_t smooth_size, size_t smooth_degree, T::ByteData_vec &contours, int subdivide, int threads, const Trax::SmoothOptions &smoothOptions)
+    std::vector<float> &contourHighValues, short interpolationMethod, size_t /*smooth_size*/, size_t /*smooth_degree*/, T::ByteData_vec &contours, int subdivide, int threads, const Trax::SmoothOptions &smoothOptions)
 {
   try
   {
@@ -1274,7 +1220,8 @@ void getIsobands(std::vector<float> &gridData, std::vector<T::Coordinate> *coord
     if (coordinates)
       csz = coordinates->size();
 
-    if (sz == 0 || sz != requiredSize || sz != csz)
+    // Without coordinates the grid coordinates are used
+    if (sz == 0 || sz != requiredSize || (coordinates != nullptr && sz != csz))
       return;
 
     Trax::Contour contourer;
@@ -1396,13 +1343,13 @@ void getIsobands(std::vector<float> &gridData, std::vector<T::Coordinate> *coord
 
 #endif
 
-    if (result.size() > 0)
+    if (!result.empty())
     {
-      for (auto g = result.begin(); g != result.end(); ++g)
+      for (auto& g : result)
       {
         std::ostringstream out;
 
-        g->wkb(out);
+        g.wkb(out);
         const auto &wkb = out.str();
         size_t size = wkb.length();
 
@@ -1410,7 +1357,7 @@ void getIsobands(std::vector<float> &gridData, std::vector<T::Coordinate> *coord
         if (size > 0)
         {
           const auto &wkb = out.str();
-          unsigned char *data = reinterpret_cast<unsigned char*>(const_cast<char*>(wkb.c_str()));
+          auto *data = reinterpret_cast<unsigned char*>(const_cast<char*>(wkb.c_str()));
 
           wkbData.reserve(size);
           for (size_t t = 0; t < size; t++)
@@ -1457,6 +1404,112 @@ bool getLineIntersectionPoint(double x1, double y1, double x2, double y2, double
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
+
+
+namespace
+{
+/*! \brief Finds the point where the direction line leaves the current grid cell. The crossing
+    must stay on the same row (left/right) or on the same column (up/down). */
+
+bool nextCellCrossing(double a, double x1, double y1, double x2, double y2, double xo, double yo, double &ix, double &iy)
+{
+  bool sec = false;
+  if (a >= 0 && a < 180)
+  {
+    // Right
+    sec = getLineIntersectionPoint(x1, y1, x2, y2, xo + 1.001, 0, xo + 1.001, 10, ix, iy);
+    if (sec && (int) iy == (int) y1)
+      return true;
+
+    if (a >= 0 && a < 90)
+    {
+      // Top
+      sec = getLineIntersectionPoint(x1, y1, x2, y2, 0, yo - 0.001, 10, yo - 0.001, ix, iy);
+      return (sec && (int) ix == (int) x1);
+    }
+
+    // Down
+    sec = getLineIntersectionPoint(x1, y1, x2, y2, 0, yo + 1.001, 10, yo + 1.001, ix, iy);
+    return (sec && (int) ix == (int) x1);
+  }
+
+  // Left
+  sec = getLineIntersectionPoint(x1, y1, x2, y2, xo - 0.001, 0, xo - 0.001, 10, ix, iy);
+  if (sec && (int) iy == (int) y1)
+    return true;
+
+  if (a >= 270 && a < 360)
+  {
+    // Up
+    sec = getLineIntersectionPoint(x1, y1, x2, y2, 0, yo - 0.001, 10, yo - 0.001, ix, iy);
+    return (sec && (int) ix == (int) x1);
+  }
+
+  // Down
+  sec = getLineIntersectionPoint(x1, y1, x2, y2, 0, yo + 1.001, 10, yo + 1.001, ix, iy);
+  return (sec && (int) ix == (int) x1);
+}
+
+
+
+/*! \brief Returns the absolute difference between two doubles, or zero if their integer parts match. */
+
+double diff(double a, double b)
+{
+  if ((int) a == (int) b)
+    return 0;
+
+  if (a < b)
+    return b - a;
+
+  return a - b;
+}
+
+
+
+/*! \brief Finds the point where the direction line leaves the current grid cell. The crossing
+    must stay (almost) on the same row (left/right) or on the same column (up/down). */
+
+bool nextCellCrossingByDiff(double a, double x1, double y1, double x2, double y2, double xo, double yo, double &ix, double &iy)
+{
+  double d0 = 0.000001;
+  double d1 = 1.000001;
+  double aa = 0.001;
+  bool sec = false;
+
+  if (a >= 0 && a < 180)
+  {
+    sec = getLineIntersectionPoint(x1, y1, x2, y2, xo + d1, 0, xo + d1, 10, ix, iy);
+    if (sec && diff(iy, y1) < aa)
+      return true;
+
+    if (a >= 0 && a < 90)
+    {
+      sec = getLineIntersectionPoint(x1, y1, x2, y2, 0, yo - d0, 10, yo - d0, ix, iy);
+      return (sec && diff(ix, x1) < aa);
+    }
+
+    sec = getLineIntersectionPoint(x1, y1, x2, y2, 0, yo + d1, 10, yo + d1, ix, iy);
+    return (sec && diff(ix, x1) < aa);
+  }
+
+  sec = getLineIntersectionPoint(x1, y1, x2, y2, xo - d0, 0, xo - d0, 10, ix, iy);
+  if (sec && diff(iy, y1) < aa)
+    return true;
+
+  if (a >= 270 && a < 360)
+  {
+    sec = getLineIntersectionPoint(x1, y1, x2, y2, 0, yo - d0, 10, yo - d0, ix, iy);
+    return (sec && diff(ix, x1) < aa);
+  }
+
+  sec = getLineIntersectionPoint(x1, y1, x2, y2, 0, yo + d1, 10, yo + d1, ix, iy);
+  return (sec && diff(ix, x1) < aa);
+}
+}  // namespace
+
+
 
 
 
@@ -1512,7 +1565,7 @@ int findPath(std::vector<float> &direction, bool *visited, int width, int height
     if (dat == ParamValueMissing)
       return cellCount;
 
-    coordinates.push_back(T::Coordinate(x1, y1));
+    coordinates.emplace_back(x1, y1);
 
     if (!visited[idx])
       cellCount++;
@@ -1530,9 +1583,8 @@ int findPath(std::vector<float> &direction, bool *visited, int width, int height
     double x2 = x1 + sin(angle) * step;
     double y2 = y1 - cos(angle) * step;
 
-    double ix;
-    double iy;
-    bool sec;
+    double ix = NAN;
+    double iy = NAN;
 
     /*
 
@@ -1553,67 +1605,9 @@ int findPath(std::vector<float> &direction, bool *visited, int width, int height
      }
      */
 
-    if (a >= 0 && a < 180)
-    {
-      sec = getLineIntersectionPoint(x1, y1, x2, y2, xo + 1.001, 0, xo + 1.001, 10, ix, iy);
-      if (sec && (int) iy == (int) y1)
-      {
-        // Right
-        //printf("RIGHT %f   %f,%f => %f,%f\n",a,x1,y1,ix,iy);
-        return findPath(direction, visited, width, height, maxLength, ix, iy, level + 1, cellCount, coordinates);
-      }
+    if (nextCellCrossing(a, x1, y1, x2, y2, xo, yo, ix, iy))
+      return findPath(direction, visited, width, height, maxLength, ix, iy, level + 1, cellCount, coordinates);
 
-      if (a >= 0 && a < 90)
-      {
-        // Top
-        sec = getLineIntersectionPoint(x1, y1, x2, y2, 0, yo - 0.001, 10, yo - 0.001, ix, iy);
-        if (sec && (int) ix == (int) x1)
-        {
-          //printf("UP %f   %f,%f => %f,%f\n",a,x1,y1,ix,iy);
-          return findPath(direction, visited, width, height, maxLength, ix, iy, level + 1, cellCount, coordinates);
-        }
-      }
-      else
-      {
-        sec = getLineIntersectionPoint(x1, y1, x2, y2, 0, yo + 1.001, 10, yo + 1.001, ix, iy);
-        if (sec && (int) ix == (int) x1)
-        {
-          //printf("DOWN %f   %f,%f => %f,%f\n",a,x1,y1,ix,iy);
-          return findPath(direction, visited, width, height, maxLength, ix, iy, level + 1, cellCount, coordinates);
-        }
-      }
-    }
-    else
-    {
-      sec = getLineIntersectionPoint(x1, y1, x2, y2, xo - 0.001, 0, xo - 0.001, 10, ix, iy);
-      if (sec && (int) iy == (int) y1)
-      {
-        // Left
-        //printf("LEFT %f   %f,%f => %f,%f\n",a,x1,y1,ix,iy);
-        return findPath(direction, visited, width, height, maxLength, ix, iy, level + 1, cellCount, coordinates);
-      }
-
-      if (a >= 270 && a < 360)
-      {
-        sec = getLineIntersectionPoint(x1, y1, x2, y2, 0, yo - 0.001, 10, yo - 0.001, ix, iy);
-        if (sec && (int) ix == (int) x1)
-        {
-          //printf("XUP %f   %f,%f => %f,%f\n",a,x1,y1,ix,iy);
-          return findPath(direction, visited, width, height, maxLength, ix, iy, level + 1, cellCount, coordinates);
-        }
-      }
-      else
-      {
-        sec = getLineIntersectionPoint(x1, y1, x2, y2, 0, yo + 1.001, 10, yo + 1.001, ix, iy);
-        if (sec && (int) ix == (int) x1)
-        {
-          //printf("XDOWN %f   %f,%f => %f,%f\n",a,x1,y1,ix[3],iy[3]);
-          return findPath(direction, visited, width, height, maxLength, ix, iy, level + 1, cellCount, coordinates);
-        }
-      }
-    }
-
-    //printf("EXIT %u\n\n",level);
     return cellCount;
   }
   catch (...)
@@ -1624,18 +1618,6 @@ int findPath(std::vector<float> &direction, bool *visited, int width, int height
 
 
 
-/*! \brief Returns the absolute difference between two doubles, or zero if their integer parts match. */
-
-double diff(double a, double b)
-{
-  if ((int) a == (int) b)
-    return 0;
-
-  if (a < b)
-    return b - a;
-
-  return a - b;
-}
 
 
 
@@ -1686,7 +1668,7 @@ int findPath(float *direction, uint *image, int width, int height, int maxLength
     if (dat == ParamValueMissing)
       return cellCount;
 
-    coordinates.push_back(T::Coordinate(x1, y1));
+    coordinates.emplace_back(x1, y1);
 
     if (image[idx] != visited)
       cellCount++;
@@ -1704,70 +1686,11 @@ int findPath(float *direction, uint *image, int width, int height, int maxLength
     double x2 = x1 + sin(angle) * step;
     double y2 = y1 - cos(angle) * step;
 
-    double ix;
-    double iy;
-    bool sec;
-    double d0 = 0.000001;
-    double d1 = 1.000001;
-    double aa = 0.001;
+    double ix = NAN;
+    double iy = NAN;
 
-    if (a >= 0 && a < 180)
-    {
-      sec = getLineIntersectionPoint(x1, y1, x2, y2, xo + d1, 0, xo + d1, 10, ix, iy);
-      if (sec && diff(iy, y1) < aa)
-      {
-        // Right
-        return findPath(direction, image, width, height, maxLength, backColor, ix, iy, level + 1, cellCount, coordinates);
-      }
-
-      if (a >= 0 && a < 90)
-      {
-        // Top
-        sec = getLineIntersectionPoint(x1, y1, x2, y2, 0, yo - d0, 10, yo - d0, ix, iy);
-        if (sec && diff(ix, x1) < aa)
-        {
-          // Up
-          return findPath(direction, image, width, height, maxLength, backColor, ix, iy, level + 1, cellCount, coordinates);
-        }
-      }
-      else
-      {
-        sec = getLineIntersectionPoint(x1, y1, x2, y2, 0, yo + d1, 10, yo + d1, ix, iy);
-        if (sec && diff(ix, x1) < aa)
-        {
-          // Down
-          return findPath(direction, image, width, height, maxLength, backColor, ix, iy, level + 1, cellCount, coordinates);
-        }
-      }
-    }
-    else
-    {
-      sec = getLineIntersectionPoint(x1, y1, x2, y2, xo - d0, 0, xo - d0, 10, ix, iy);
-      if (sec && diff(iy, y1) < aa)
-      {
-        // Left
-        return findPath(direction, image, width, height, maxLength, backColor, ix, iy, level + 1, cellCount, coordinates);
-      }
-
-      if (a >= 270 && a < 360)
-      {
-        sec = getLineIntersectionPoint(x1, y1, x2, y2, 0, yo - d0, 10, yo - d0, ix, iy);
-        if (sec && diff(ix, x1) < aa)
-        {
-          // Up
-          return findPath(direction, image, width, height, maxLength, backColor, ix, iy, level + 1, cellCount, coordinates);
-        }
-      }
-      else
-      {
-        sec = getLineIntersectionPoint(x1, y1, x2, y2, 0, yo + d1, 10, yo + d1, ix, iy);
-        if (sec && diff(ix, x1) < aa)
-        {
-          // Down
-          return findPath(direction, image, width, height, maxLength, backColor, ix, iy, level + 1, cellCount, coordinates);
-        }
-      }
-    }
+    if (nextCellCrossingByDiff(a, x1, y1, x2, y2, xo, yo, ix, iy))
+      return findPath(direction, image, width, height, maxLength, backColor, ix, iy, level + 1, cellCount, coordinates);
 
     return cellCount;
   }
@@ -1826,7 +1749,7 @@ int findPath(std::vector<float>& direction, uint *image, int width, int height, 
     if (dat == ParamValueMissing)
       return cellCount;
 
-    coordinates.push_back(T::Coordinate(x1, y1));
+    coordinates.emplace_back(x1, y1);
 
     if (image[idx] != visited)
       cellCount++;
@@ -1844,69 +1767,13 @@ int findPath(std::vector<float>& direction, uint *image, int width, int height, 
     double x2 = x1 + sin(angle) * step;
     double y2 = y1 - cos(angle) * step;
 
-    double ix;
-    double iy;
-    bool sec;
+    double ix = NAN;
+    double iy = NAN;
 
-    double d0 = 0.000001;
-    double d1 = 1.000001;
-    double aa = 0.001;
 
-    if (a >= 0 && a < 180)
-    {
-      sec = getLineIntersectionPoint(x1, y1, x2, y2, xo + d1, 0, xo + d1, 10, ix, iy);
-      if (sec && diff(iy, y1) < aa)
-      {
-        // Right
-        return findPath(direction, image, width, height, maxLength, backColor, ix, iy, level + 1, cellCount, coordinates);
-      }
+    if (nextCellCrossingByDiff(a, x1, y1, x2, y2, xo, yo, ix, iy))
+      return findPath(direction, image, width, height, maxLength, backColor, ix, iy, level + 1, cellCount, coordinates);
 
-      if (a >= 0 && a < 90)
-      {
-        // Top
-        sec = getLineIntersectionPoint(x1, y1, x2, y2, 0, yo - d0, 10, yo - d0, ix, iy);
-        if (sec && diff(ix, x1) < aa)
-        {
-          // Up
-          return findPath(direction, image, width, height, maxLength, backColor, ix, iy, level + 1, cellCount, coordinates);
-        }
-      }
-      else
-      {
-        sec = getLineIntersectionPoint(x1, y1, x2, y2, 0, yo + d1, 10, yo + d1, ix, iy);
-        if (sec && diff(ix, x1) < aa)
-        {
-          // Down
-          return findPath(direction, image, width, height, maxLength, backColor, ix, iy, level + 1, cellCount, coordinates);
-        }
-      }
-    }
-    else
-    {
-      sec = getLineIntersectionPoint(x1, y1, x2, y2, xo - d0, 0, xo - d0, 10, ix, iy);
-      if (sec && diff(iy, y1) < aa)
-      {
-        // Left
-        return findPath(direction, image, width, height, maxLength, backColor, ix, iy, level + 1, cellCount, coordinates);
-      }
-
-      if (a >= 270 && a < 360)
-      {
-        sec = getLineIntersectionPoint(x1, y1, x2, y2, 0, yo - d0, 10, yo - d0, ix, iy);
-        if (sec && diff(ix, x1) < aa)
-        {
-          return findPath(direction, image, width, height, maxLength, backColor, ix, iy, level + 1, cellCount, coordinates);
-        }
-      }
-      else
-      {
-        sec = getLineIntersectionPoint(x1, y1, x2, y2, 0, yo + d1, 10, yo + d1, ix, iy);
-        if (sec && diff(ix, x1) < aa)
-        {
-          return findPath(direction, image, width, height, maxLength, backColor, ix, iy, level + 1, cellCount, coordinates);
-        }
-      }
-    }
     return cellCount;
   }
   catch (...)
@@ -1917,13 +1784,235 @@ int findPath(std::vector<float>& direction, uint *image, int width, int height, 
 
 
 
+namespace
+{
+/*! \brief The average of the non-missing values along the streamline. */
+
+float averagePathValue(const std::vector<T::Coordinate>& coordinates, int width, const float *value, float valueRangeStart)
+{
+  float avg = valueRangeStart;
+  float total = 0;
+  uint c = 0;
+  for (auto it = coordinates.rbegin(); it != coordinates.rend(); ++it)
+  {
+    int xx = (int) it->x();
+    int yy = (int) it->y();
+    int idx = yy * width + xx;
+
+    float val = value[idx];
+    if (val != ParamValueMissing)
+    {
+      total = total + val;
+      c++;
+    }
+  }
+
+  if (c > 0)
+    avg = total / c;
+
+  return avg;
+}
+
+
+
+/*! \brief The color of the streamline at the given position. */
+
+uint streamlineColor(float val, float valueStep, float valueRangeStart, int startColor, uint c, int colorStep)
+{
+  // val = avg;
+  if (val == ParamValueMissing || val < valueRangeStart)
+    val = valueRangeStart;
+
+  double hh = valueStep * (val - valueRangeStart);
+  hh = std::min<double>(hh, 0xFF);
+
+  auto hue = (unsigned char) hh;
+  unsigned char saturation = hue;
+
+  // uint pos = c % maxLength;
+  auto v = (uchar) (startColor + (c * colorStep));
+  return hsv_to_rgb(hue, saturation, v);
+}
+
+
+
+/*! \brief Paints the streamline into the image, or clears it with the background color. */
+
+void paintStreamline(const std::vector<T::Coordinate>& coordinates, uint *image, int width, int size, const float *value, bool clear, uint backColor,
+    float valueStep, float valueRangeStart, int startColor, int colorStep)
+{
+  uint c = 0;
+  for (auto it = coordinates.rbegin(); it != coordinates.rend(); ++it)
+  {
+    int xx = (int) it->x();
+    int yy = (int) it->y();
+
+    int idx = yy * width + xx;
+    if (idx < size)
+    {
+      if (clear)
+      {
+        image[idx] = backColor;
+      }
+      else
+      {
+        float val = valueRangeStart;
+        if (value)
+          val = value[idx];
+
+        image[idx] = streamlineColor(val, valueStep, valueRangeStart, startColor, c, colorStep);
+      }
+    }
+    c++;
+  }
+}
+
+
+
+/*! \brief Copies the grid values into the direction array in the reversed row order. */
+
+void flipDirections(T::ParamValue_vec &gridValues, int width, int height, float *direction)
+{
+  uint idx = 0;
+  for (int y = 0; y < height; y++)
+  {
+    uint idx2 = (height - y - 1) * width;
+    for (int x = 0; x < width; x++)
+    {
+      // codechecker_false_positive [security.ArrayBound] idx < width * height, the size of the array
+      direction[idx] = gridValues[idx2];
+      idx++;
+      idx2++;
+    }
+  }
+}
+
+
+
+/*! \brief Interpolates the coordinates of the streamline point. */
+
+void interpolateStreamlinePoint(const T::Coordinate& point, int width, int height, std::vector<T::Coordinate>& coordinates, double& cx, double& cy)
+{
+  double ax = point.x();
+  double ay = point.y();
+
+  if (ay >= height)
+    ay = height - 1;
+
+  if (ax >= width)
+    ax = width - 1;
+
+  int xx = (int) ax;
+  int yy = (int) ay;
+
+  double dx = ax - (double) xx;
+  double dy = ay - (double) yy;
+
+  int i[4];
+  i[0] = (height - yy - 1) * width + xx;
+  i[1] = i[0];
+  i[2] = i[0];
+  i[3] = i[0];
+
+  if ((xx + 1) < width)
+  {
+    i[1] = i[0] + 1;
+    i[2] = i[1];
+    if ((yy + 1) < height)
+    {
+      i[3] = i[0] - width;
+      i[2] = i[1] - width;
+    }
+  }
+
+  cx = linearInterpolation(dx, dy, 0, 0, 1, 1, coordinates[i[0]].x(), coordinates[i[1]].x(), coordinates[i[2]].x(), coordinates[i[3]].x());
+  cy = linearInterpolation(dx, dy, 0, 0, 1, 1, coordinates[i[0]].y(), coordinates[i[1]].y(), coordinates[i[2]].y(), coordinates[i[3]].y());
+}
+
+
+
+/*! \brief Writes the streamline as WKB lines of the given length. */
+
+void writeStreamline(std::vector<T::Coordinate>& lineCoordinates, int lineLen, int width, int height, std::vector<T::Coordinate>& coordinates, uchar *data, uint dataSize, T::ByteData_vec &streamlines)
+{
+  MemoryWriter memoryWrite(data, dataSize, false);
+
+  int cnt = lineCoordinates.size();
+  for (int t = 0; t < cnt; t = t + lineLen)
+  {
+    int points = lineLen - 4;
+    if ((t + points) > cnt)
+      points = cnt - t;
+
+    memoryWrite.write_uint8(0);       // Byte order
+    memoryWrite.write_uint32(2);      // WkbLine
+    memoryWrite.write_uint32(points); // Number of points
+
+    for (int a = 0; a < points; a++)
+    {
+      int idx = (t + a);
+      double cx = 0;
+      double cy = 0;
+      interpolateStreamlinePoint(lineCoordinates[idx], width, height, coordinates, cx, cy);
+      memoryWrite.write_double(cx);
+      memoryWrite.write_double(cy);
+    }
+    uint bytes = memoryWrite.getWritePosition();
+    if (bytes > 0)
+    {
+      std::vector<uchar> wkb;
+
+      wkb.reserve(bytes);
+      for (uint t = 0; t < bytes; t++)
+        wkb.emplace_back(data[t]);
+
+      streamlines.emplace_back(wkb);
+      memoryWrite.setWritePosition(0);
+    }
+  }
+
+  uint bytes = memoryWrite.getWritePosition();
+  if (bytes > 0)
+  {
+    std::vector<uchar> wkb;
+    wkb.reserve(bytes);
+    for (uint t = 0; t < bytes; t++)
+      wkb.emplace_back(data[t]);
+
+    streamlines.emplace_back(wkb);
+  }
+}
+
+
+
+/*! \brief Clears the streamline path from the image. */
+
+void clearPath(const std::vector<T::Coordinate>& lineCoordinates, uint *image, int width, int sz)
+{
+  for (const auto& lineCoordinate : lineCoordinates)
+  {
+    int idx = ((int) lineCoordinate.y()) * width + (int) lineCoordinate.x();
+    if (idx >= 0 && idx < sz)
+      image[idx] = 0;
+  }
+}
+}  // namespace
+
+
+
+
+
 /*! \brief Renders a colored streamline image from direction and value grids using the given color range. */
 
-void getStreamlineImage(float *direction, float *value, uint *image, int width, int height, int xStep, int yStep, int minLength, int maxLength, float valueRangeStart,
+void getStreamlineImage(float *direction, const float *value, uint *image, int width, int height, int xStep, int yStep, int minLength, int maxLength, float valueRangeStart,
     float valueRangeEnd, int startColor, int endColor, uint backColor)
 {
   try
   {
+    // A step below one would never advance
+    xStep = std::max(xStep,1);
+    yStep = std::max(yStep,1);
+
     float valueStep = 255.0 / (valueRangeEnd - valueRangeStart);
     int colorStep = (endColor - startColor) / maxLength;
 
@@ -1941,67 +2030,10 @@ void getStreamlineImage(float *direction, float *value, uint *image, int width, 
         int cellCount = findPath(direction, image, width, height, maxLength, backColor, (double) x + 0.5, (double) y + 0.5, 0, 0, coordinates);
 
         float avg = valueRangeStart;
-        float total = 0;
-        uint c = 0;
         if (cellCount >= minLength && value)
-        {
-          for (auto it = coordinates.rbegin(); it != coordinates.rend(); ++it)
-          {
-            int xx = (int) it->x();
-            int yy = (int) it->y();
-            int idx = yy * width + xx;
+          avg = averagePathValue(coordinates, width, value, valueRangeStart);
 
-            float val = value[idx];
-            if (val != ParamValueMissing)
-            {
-              total = total + val;
-              c++;
-            }
-          }
-
-          if (c > 0)
-            avg = total / c;
-        }
-
-        c = 0;
-        for (auto it = coordinates.rbegin(); it != coordinates.rend(); ++it)
-        {
-          int xx = (int) it->x();
-          int yy = (int) it->y();
-
-          int idx = yy * width + xx;
-          if (idx < size)
-          {
-            if (cellCount < minLength || avg < valueRangeStart)
-            {
-              image[idx] = backColor;
-            }
-            else
-            {
-              float val = valueRangeStart;
-              if (value)
-                val = value[idx];
-
-              // val = avg;
-              if (val == ParamValueMissing || val < valueRangeStart)
-                val = valueRangeStart;
-
-              double hh = valueStep * (val - valueRangeStart);
-              if (hh > 0xFF)
-                hh = 0xFF;
-
-              unsigned char hue = (unsigned char) hh;
-              unsigned char saturation = hue;
-
-              // uint pos = c % maxLength;
-              uchar v = (uchar) (startColor + (c * colorStep));
-              uint col = hsv_to_rgb(hue, saturation, v);
-
-              image[idx] = col;
-            }
-          }
-          c++;
-        }
+        paintStreamline(coordinates, image, width, size, value, cellCount < minLength || avg < valueRangeStart, backColor, valueStep, valueRangeStart, startColor, colorStep);
       }
     }
 
@@ -2016,10 +2048,14 @@ void getStreamlineImage(float *direction, float *value, uint *image, int width, 
 
 /*! \brief Renders a streamline image from a direction grid, marking pixels by their sequence index. */
 
-void getStreamlineImage(float *direction, float *value, uint *image, int width, int height, int xStep, int yStep, int minLength, int maxLength)
+void getStreamlineImage(float *direction, float * /*value*/, uint *image, int width, int height, int xStep, int yStep, int minLength, int maxLength)
 {
   try
   {
+    // A step below one would never advance
+    xStep = std::max(xStep,1);
+    yStep = std::max(yStep,1);
+
     int size = width * height;
     for (int t = 0; t < size; t++)
     {
@@ -2066,10 +2102,14 @@ void getStreamlineImage(float *direction, float *value, uint *image, int width, 
 
 /*! \brief Renders a streamline image from a direction vector, marking pixels by their sequence index. */
 
-void getStreamlineImage(std::vector<float>& direction, float *value, uint *image, int width, int height, int xStep, int yStep, int minLength, int maxLength)
+void getStreamlineImage(std::vector<float>& direction, float * /*value*/, uint *image, int width, int height, int xStep, int yStep, int minLength, int maxLength)
 {
   try
   {
+    // A step below one would never advance
+    xStep = std::max(xStep,1);
+    yStep = std::max(yStep,1);
+
     int size = width * height;
     for (int t = 0; t < size; t++)
     {
@@ -2121,24 +2161,18 @@ void getStreamlines(T::ParamValue_vec &gridValues, std::vector<T::Coordinate> *c
 {
   try
   {
+    // A step below one would never advance
+    xStep = std::max(xStep,1);
+    yStep = std::max(yStep,1);
+
     int sz = width * height;
-    float *direction = new float[sz];
+    auto *direction = new float[sz];
     uint *image = new uint[sz];
 
     for (int t = 0; t < sz; t++)
       image[t] = 0;
 
-    uint idx = 0;
-    for (int y = 0; y < height; y++)
-    {
-      uint idx2 = (height - y - 1) * width;
-      for (int x = 0; x < width; x++)
-      {
-        direction[idx] = gridValues[idx2];
-        idx++;
-        idx2++;
-      }
-    }
+    flipDirections(gridValues, width, height, direction);
 
     uint dataSize = 100000;
     uchar data[dataSize];
@@ -2149,103 +2183,32 @@ void getStreamlines(T::ParamValue_vec &gridValues, std::vector<T::Coordinate> *c
         image[t] = 0;
 
       if (y >= height)
+      {
+        // The last row was already processed with step one
+        if (y - yStep == height - 1)
+          break;
         y = height - 1;
+      }
 
       for (int x = 0; x <= width; x = x + xStep)
       {
         if (x >= width)
+        {
+          // The last column was already processed with step one
+          if (x - xStep == width - 1)
+            break;
           x = width - 1;
+        }
 
         std::vector<T::Coordinate> lineCoordinates;
         int cellCount = findPath(direction, image, width, height, maxStreamLen, 0, (double) x + 0.5, (double) y + 0.5, 0, 0, lineCoordinates);
         if ((int) lineCoordinates.size() >= minStreamLen && cellCount >= minStreamLen)
         {
-          MemoryWriter memoryWrite(data, dataSize, false);
-
-          int cnt = lineCoordinates.size();
-          for (int t = 0; t < cnt; t = t + lineLen)
-          {
-            int points = lineLen - 4;
-            if ((t + points) > cnt)
-              points = cnt - t;
-
-            memoryWrite.write_uint8(0);       // Byte order
-            memoryWrite.write_uint32(2);      // WkbLine
-            memoryWrite.write_uint32(points); // Number of points
-
-            for (int a = 0; a < points; a++)
-            {
-              int idx = (t + a);
-              double ax = lineCoordinates[idx].x();
-              double ay = lineCoordinates[idx].y();
-
-              if (ay >= height)
-                ay = height - 1;
-
-              if (ax >= width)
-                ax = width - 1;
-
-              int xx = (int) ax;
-              int yy = (int) ay;
-
-              double dx = ax - (double) xx;
-              double dy = ay - (double) yy;
-
-              int i[4];
-              i[0] = (height - yy - 1) * width + xx;
-              i[1] = i[0];
-              i[2] = i[0];
-              i[3] = i[0];
-
-              if ((xx + 1) < width)
-              {
-                i[1] = i[0] + 1;
-                i[2] = i[1];
-                if ((yy + 1) < height)
-                {
-                  i[3] = i[0] - width;
-                  i[2] = i[1] - width;
-                }
-              }
-
-              double cx = linearInterpolation(dx, dy, 0, 0, 1, 1, (*coordinates)[i[0]].x(), (*coordinates)[i[1]].x(), (*coordinates)[i[2]].x(), (*coordinates)[i[3]].x());
-              double cy = linearInterpolation(dx, dy, 0, 0, 1, 1, (*coordinates)[i[0]].y(), (*coordinates)[i[1]].y(), (*coordinates)[i[2]].y(), (*coordinates)[i[3]].y());
-              memoryWrite.write_double(cx);
-              memoryWrite.write_double(cy);
-            }
-            uint bytes = memoryWrite.getWritePosition();
-            if (bytes > 0)
-            {
-              std::vector<uchar> wkb;
-
-              wkb.reserve(bytes);
-              for (uint t = 0; t < bytes; t++)
-                wkb.emplace_back(data[t]);
-
-              streamlines.emplace_back(wkb);
-              memoryWrite.setWritePosition(0);
-            }
-          }
-
-          uint bytes = memoryWrite.getWritePosition();
-          if (bytes > 0)
-          {
-            std::vector<uchar> wkb;
-            wkb.reserve(bytes);
-            for (uint t = 0; t < bytes; t++)
-              wkb.emplace_back(data[t]);
-
-            streamlines.emplace_back(wkb);
-          }
+          writeStreamline(lineCoordinates, lineLen, width, height, *coordinates, data, dataSize, streamlines);
         }
         else
         {
-          for (auto point = lineCoordinates.begin(); point != lineCoordinates.end(); ++point)
-          {
-            int idx = ((int) point->y()) * width + (int) point->x();
-            if (idx >= 0 && idx < sz)
-              image[idx] = 0;
-          }
+          clearPath(lineCoordinates, image, width, sz);
         }
       }
     }

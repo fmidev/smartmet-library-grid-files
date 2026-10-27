@@ -33,10 +33,15 @@ class ThreadLock
     {
       pthread_mutex_destroy(&threadLock);
     }
+    /*! \brief A copy gets a mutex of its own: a mutex cannot be copied. */
+    ThreadLock(const ThreadLock& /* theOther */) : ThreadLock() {}
+    /*! \brief Assignment keeps this object's own mutex. */
+    // NOLINTNEXTLINE(cert-oop54-cpp): nothing is copied, so self-assignment is harmless
+    ThreadLock& operator=(const ThreadLock& /* theOther */) { return *this; }
 
 
     /*! \brief Acquire the mutex, blocking until it is available. */
-    inline void lock()
+    void lock()
     {
       if (pthread_mutex_lock(&threadLock))
         printf("ERROR ThreadLock.h: Possible re-locking trial from the same thread!\n");
@@ -45,25 +50,22 @@ class ThreadLock
 
     /*! \brief Try to acquire the mutex without blocking.
      *  \return True if the mutex was acquired; false if it was already held. */
-    inline bool tryLock()
+    bool tryLock()
     {
-      if (pthread_mutex_trylock(&threadLock) == 0)
-        return true;
-      else
-        return false;
+      return pthread_mutex_trylock(&threadLock) == 0;
     }
 
 
     /*! \brief Release the mutex. */
-    inline void unlock()
+    void unlock()
     {
       pthread_mutex_unlock(&threadLock);
     }
 
   protected:
 
-    pthread_mutexattr_t attr;    //!< Mutex attribute (error-check mode)
-    pthread_mutex_t threadLock;  //!< Underlying POSIX mutex
+    pthread_mutexattr_t attr{};    //!< Mutex attribute (error-check mode)
+    pthread_mutex_t threadLock{};  //!< Underlying POSIX mutex
 };
 
 

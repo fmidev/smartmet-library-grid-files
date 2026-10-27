@@ -32,8 +32,7 @@ StretchedRotatedLatLon::StretchedRotatedLatLon() {
 
 /*! \brief The destructor of the class. */
 
-StretchedRotatedLatLon::~StretchedRotatedLatLon() {
-}
+StretchedRotatedLatLon::~StretchedRotatedLatLon() = default;
 
 /*! \brief The method reads and initializes all data related to the current section object.
 
@@ -85,25 +84,15 @@ void StretchedRotatedLatLon::write(DataWriter &dataWriter) {
 
 void StretchedRotatedLatLon::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sStretchedRotatedLatLon.Ni", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNi));
-    sprintf(name, "%sStretchedRotatedLatLon.Nj", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNj));
-    sprintf(name, "%sStretchedRotatedLatLon.", prefix.c_str());
-    mGridArea.getAttributeList(name, attributeList);
-    sprintf(name, "%sStretchedRotatedLatLon.IDirectionIncrement", prefix.c_str());
-    attributeList.addAttribute(name, toString(mIDirectionIncrement));
-    sprintf(name, "%sStretchedRotatedLatLon.JDirectionIncrement", prefix.c_str());
-    attributeList.addAttribute(name, toString(mJDirectionIncrement));
-    sprintf(name, "%sStretchedRotatedLatLon.", prefix.c_str());
-    mScanningMode.getAttributeList(name, attributeList);
-    sprintf(name, "%sStretchedRotatedLatLon.Zero", prefix.c_str());
-    attributeList.addAttribute(name, toString(mZero));
-    sprintf(name, "%sStretchedRotatedLatLon.", prefix.c_str());
-    mRotation.getAttributeList(name, attributeList);
-    sprintf(name, "%sStretchedRotatedLatLon.", prefix.c_str());
-    mGridStretching.getAttributeList(name, attributeList);
+        attributeList.addAttribute(prefix + "StretchedRotatedLatLon.Ni", toString(mNi));
+        attributeList.addAttribute(prefix + "StretchedRotatedLatLon.Nj", toString(mNj));
+        mGridArea.getAttributeList(prefix + "StretchedRotatedLatLon.", attributeList);
+        attributeList.addAttribute(prefix + "StretchedRotatedLatLon.IDirectionIncrement", toString(mIDirectionIncrement));
+        attributeList.addAttribute(prefix + "StretchedRotatedLatLon.JDirectionIncrement", toString(mJDirectionIncrement));
+        mScanningMode.getAttributeList(prefix + "StretchedRotatedLatLon.", attributeList);
+        attributeList.addAttribute(prefix + "StretchedRotatedLatLon.Zero", toString(mZero));
+        mRotation.getAttributeList(prefix + "StretchedRotatedLatLon.", attributeList);
+        mGridStretching.getAttributeList(prefix + "StretchedRotatedLatLon.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -265,7 +254,7 @@ std::uint16_t StretchedRotatedLatLon::getNj() const {
 
 GridAreaSettings *StretchedRotatedLatLon::getGridArea() const {
   try {
-    return static_cast<GridAreaSettings *>(&mGridArea);
+    return &mGridArea;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -295,7 +284,7 @@ std::uint16_t StretchedRotatedLatLon::getJDirectionIncrement() const {
 
 ScanningModeSettings *StretchedRotatedLatLon::getScanningMode() const {
   try {
-    return static_cast<ScanningModeSettings *>(&mScanningMode);
+    return &mScanningMode;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -315,7 +304,7 @@ std::uint32_t StretchedRotatedLatLon::getZero() const {
 
 RotationSettings *StretchedRotatedLatLon::getRotation() const {
   try {
-    return static_cast<RotationSettings *>(&mRotation);
+    return &mRotation;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -325,7 +314,7 @@ RotationSettings *StretchedRotatedLatLon::getRotation() const {
 
 GridStretchingSettings *StretchedRotatedLatLon::getGridStretching() const {
   try {
-    return static_cast<GridStretchingSettings *>(&mGridStretching);
+    return &mGridStretching;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -347,7 +336,7 @@ void StretchedRotatedLatLon::setNj(std::uint16_t nj) {
   }
 }
 
-void StretchedRotatedLatLon::setGridArea(GridAreaSettings &gridArea) {
+void StretchedRotatedLatLon::setGridArea(const GridAreaSettings &gridArea) {
   try {
     mGridArea = gridArea;
   } catch (...) {
@@ -371,7 +360,7 @@ void StretchedRotatedLatLon::setJDirectionIncrement(std::uint16_t jDirectionIncr
   }
 }
 
-void StretchedRotatedLatLon::setScanningMode(ScanningModeSettings &scanningMode) {
+void StretchedRotatedLatLon::setScanningMode(const ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {
@@ -387,7 +376,7 @@ void StretchedRotatedLatLon::setZero(std::uint32_t zero) {
   }
 }
 
-void StretchedRotatedLatLon::setRotation(RotationSettings &rotation) {
+void StretchedRotatedLatLon::setRotation(const RotationSettings &rotation) {
   try {
     mRotation = rotation;
   } catch (...) {
@@ -395,7 +384,7 @@ void StretchedRotatedLatLon::setRotation(RotationSettings &rotation) {
   }
 }
 
-void StretchedRotatedLatLon::setGridStretching(GridStretchingSettings &gridStretching) {
+void StretchedRotatedLatLon::setGridStretching(const GridStretchingSettings &gridStretching) {
   try {
     mGridStretching = gridStretching;
   } catch (...) {

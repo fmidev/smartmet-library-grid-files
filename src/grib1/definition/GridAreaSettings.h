@@ -20,6 +20,10 @@ namespace GRIB1 {
 class GridAreaSettings {
 public:
   GridAreaSettings();
+  GridAreaSettings(const GridAreaSettings &) = default;
+  GridAreaSettings(GridAreaSettings &&) = default;
+  GridAreaSettings &operator=(const GridAreaSettings &) = default;
+  GridAreaSettings &operator=(GridAreaSettings &&) = default;
   virtual ~GridAreaSettings();
 
   virtual void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const;
@@ -30,16 +34,16 @@ public:
   virtual bool hasAttributeValue(const char *attributeName, const char *attributeValue) const;
   virtual T::Hash countHash() const;
 
-  std::int24_t getLatitudeOfFirstGridPoint() const;
-  void setLatitudeOfFirstGridPoint(std::int24_t latitudeOfFirstGridPoint);
-  std::int24_t getLongitudeOfFirstGridPoint() const;
-  void setLongitudeOfFirstGridPoint(std::int24_t longitudeOfFirstGridPoint);
+  SmartMet::int24_t getLatitudeOfFirstGridPoint() const;
+  void setLatitudeOfFirstGridPoint(SmartMet::int24_t latitudeOfFirstGridPoint);
+  SmartMet::int24_t getLongitudeOfFirstGridPoint() const;
+  void setLongitudeOfFirstGridPoint(SmartMet::int24_t longitudeOfFirstGridPoint);
   ResolutionFlagsSettings *getResolutionFlags() const;
-  void setResolutionFlags(ResolutionFlagsSettings &resolutionFlags);
-  std::int24_t getLatitudeOfLastGridPoint() const;
-  void setLatitudeOfLastGridPoint(std::int24_t latitudeOfLastGridPoint);
-  std::int24_t getLongitudeOfLastGridPoint() const;
-  void setLongitudeOfLastGridPoint(std::int24_t longitudeOfLastGridPoint);
+  void setResolutionFlags(const ResolutionFlagsSettings &resolutionFlags);
+  SmartMet::int24_t getLatitudeOfLastGridPoint() const;
+  void setLatitudeOfLastGridPoint(SmartMet::int24_t latitudeOfLastGridPoint);
+  SmartMet::int24_t getLongitudeOfLastGridPoint() const;
+  void setLongitudeOfLastGridPoint(SmartMet::int24_t longitudeOfLastGridPoint);
 
 protected:
   // # Copyright 2005-2019 ECMWF.
@@ -47,7 +51,7 @@ protected:
   // #  La1 - latitude of first grid point
   // signed[3] latitudeOfFirstGridPoint :  edition_specific;
 
-  std::int24_t mLatitudeOfFirstGridPoint;
+  SmartMet::int24_t mLatitudeOfFirstGridPoint;
 
   // meta geography.latitudeOfFirstGridPointInDegrees scale(latitudeOfFirstGridPoint,oneConstant,grib1divider,truncateDegrees) :dump;
   // alias La1 = latitudeOfFirstGridPoint;
@@ -55,7 +59,7 @@ protected:
   // #  Lo1 - longitude of first grid point
   // signed[3] longitudeOfFirstGridPoint  : edition_specific;
 
-  std::int24_t mLongitudeOfFirstGridPoint;
+  SmartMet::int24_t mLongitudeOfFirstGridPoint;
 
   // meta geography.longitudeOfFirstGridPointInDegrees scale(longitudeOfFirstGridPoint,oneConstant,grib1divider,truncateDegrees) : dump;
   // alias Lo1 = longitudeOfFirstGridPoint;
@@ -68,7 +72,7 @@ protected:
   // #  La2 - latitude of last grid point
   // signed[3] latitudeOfLastGridPoint :  edition_specific;
 
-  std::int24_t mLatitudeOfLastGridPoint;
+  SmartMet::int24_t mLatitudeOfLastGridPoint;
 
   // meta geography.latitudeOfLastGridPointInDegrees scale(latitudeOfLastGridPoint,oneConstant,grib1divider,truncateDegrees) : dump;
   // alias La2 = latitudeOfLastGridPoint;
@@ -76,7 +80,7 @@ protected:
   // #  Lo2 - longitude of last grid point
   // signed[3] longitudeOfLastGridPoint :  edition_specific;
 
-  std::int24_t mLongitudeOfLastGridPoint;
+  SmartMet::int24_t mLongitudeOfLastGridPoint;
 
   // meta geography.longitudeOfLastGridPointInDegrees scale(longitudeOfLastGridPoint,oneConstant,grib1divider,truncateDegrees) : dump;
   // alias Lo2 = longitudeOfLastGridPoint;

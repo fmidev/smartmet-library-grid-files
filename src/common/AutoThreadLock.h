@@ -17,9 +17,9 @@ class AutoThreadLock
   public:
     /*! \brief Acquire \p threadLock.
      *  \param[in] threadLock  Mutex to lock; must not be nullptr. */
-    AutoThreadLock(ThreadLock *threadLock)
+    AutoThreadLock(ThreadLock *threadLock) : mThreadLock(threadLock)
     {
-      mThreadLock = threadLock;
+
       mThreadLock->lock();
     }
 
@@ -28,6 +28,8 @@ class AutoThreadLock
     {
       mThreadLock->unlock();
     }
+    AutoThreadLock(const AutoThreadLock&) = delete;
+    AutoThreadLock& operator=(const AutoThreadLock&) = delete;
 
   protected:
 

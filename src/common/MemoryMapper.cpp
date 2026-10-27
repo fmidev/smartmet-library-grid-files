@@ -17,7 +17,7 @@
 #include <sys/syscall.h>
 #include <sys/ioctl.h>
 #include <fcntl.h>
-#include <signal.h>
+#include <csignal>
 #include <poll.h>
 #include <curl/curl.h>
 #include <sys/utsname.h>
@@ -36,13 +36,14 @@ MemoryMapper memoryMapper;
 
 /*! \brief Thread entry point that runs the MemoryMapper fault handler loop. */
 
+namespace
+{
 void* fault_handler_thread(void *arg)
 {
   Fmi::set_thread_name("mmap-fault");
-  MemoryMapper *mapper = (MemoryMapper*)arg;
+  auto *mapper = (MemoryMapper*)arg;
   mapper->faultHandlerThread();
   pthread_exit(nullptr);
-  return nullptr;
 }
 
 
@@ -53,10 +54,9 @@ void* fault_processing_thread(void *arg)
 {
   static std::atomic<unsigned> counter{0};
   Fmi::set_thread_name(fmt::format("mmap-flt-{}", ++counter));
-  MemoryMapper *mapper = (MemoryMapper*)arg;
+  auto *mapper = (MemoryMapper*)arg;
   mapper->faultProcessingThread();
   pthread_exit(nullptr);
-  return nullptr;
 }
 
 /*! \brief Converts a Unix file mode bitmask into a human-readable rwx permission string. */
@@ -75,6 +75,7 @@ std::string permission_string(mode_t mode)
   permissions += ((mode & S_IXOTH) ? "x" : "-");
   return permissions;
 }
+}  // namespace
   
 
 /*! \brief Constructs the MemoryMapper with default configuration values. */
@@ -124,10 +125,9 @@ MemoryMapper::~MemoryMapper()
   while (mEnabled  &&  mThreadsRunning)
     time_usleep(0,100);
 
-  if (mMessage)
-    delete [] mMessage;
+  delete [] mMessage;
 
-  if (mFaultProcessingThread)
+  
     delete [] mFaultProcessingThread;
 
   curl_global_cleanup();
@@ -138,7 +138,7 @@ MemoryMapper::~MemoryMapper()
 
 /*! \brief Inserts a new memory-mapping descriptor into the sorted mapping list. */
 
-void MemoryMapper::addMapInfo(MapInfo_sptr mapInfo)
+void MemoryMapper::addMapInfo(const MapInfo_sptr& mapInfo)
 {
   FUNCTION_TRACE
   try
@@ -223,13 +223,10 @@ int MemoryMapper::getClosestIndex(char *address)
 
         return mid-1;
       }
-      else
-      {
-        while (mid > 0  &&  ptr_compare(mMemoryMappings[mid]->memoryPtr,address) > 0)
-          mid--;
+      while (mid > 0  &&  ptr_compare(mMemoryMappings[mid]->memoryPtr,address) > 0)
+        mid--;
 
-        return mid;
-      }
+      return mid;
     }
     return 0;
   }
@@ -244,7 +241,7 @@ int MemoryMapper::getClosestIndex(char *address)
 
 /*! \brief Returns true when the userfaultfd-based memory mapper is enabled. */
 
-bool MemoryMapper::isEnabled()
+bool MemoryMapper::isEnabled() const
 {
   return mEnabled;
 }
@@ -254,7 +251,7 @@ bool MemoryMapper::isEnabled()
 
 /*! \brief Returns true when page prefetching/premapping is enabled. */
 
-bool MemoryMapper::isPremapEnabled()
+bool MemoryMapper::isPremapEnabled() const
 {
   if (mEnabled)
     return mPremapEnabled;
@@ -323,9 +320,9 @@ void MemoryMapper::addAccessInfo(const char *server,uint authenticationMethod,co
   FUNCTION_TRACE
   try
   {
-    for (auto it = mDataFetchers.begin(); it != mDataFetchers.end(); ++it)
+    for (auto& mDataFetcher : mDataFetchers)
     {
-      (it->second)->addAccessInfo(server,authenticationMethod,username,password);
+      (mDataFetcher.second)->addAccessInfo(server,authenticationMethod,username,password);
     }
   }
   catch (...)
@@ -366,7 +363,7 @@ void MemoryMapper::setEnabled(bool enabled)
   {
     if (enabled)
     {
-      struct utsname systemInfo;
+      struct utsname systemInfo{};
       if (uname(&systemInfo) != 0)
       {
         std::cout << "### WARNING: MemoryMapper::setEnabled(): Error getting system information\n";
@@ -393,7 +390,7 @@ void MemoryMapper::setEnabled(bool enabled)
 
       mFaultProcessingThread = new pthread_t[mMaxProcessingThreads];
 
-      DataFetcher_filesys *fs = new DataFetcher_filesys();
+      auto *fs = new DataFetcher_filesys();
       fs->setFileHandleLimit(mFileHandleLimit);
       DataFetcher_sptr df_filesys(fs);
       DataFetcher_sptr df_network(new DataFetcher_network());
@@ -418,7 +415,7 @@ void MemoryMapper::setEnabled(bool enabled)
         return;
       }
 
-      struct uffdio_api uffdio_api;
+      struct uffdio_api uffdio_api{};
       uffdio_api.api = UFFD_API;
       uffdio_api.features = 0;
 
@@ -453,20 +450,20 @@ void MemoryMapper::setEnabled(bool enabled)
 
 /*! \brief Memory-maps the file described by the given MapInfo, using userfaultfd when enabled. */
 
-void MemoryMapper::map(MapInfo_sptr info)
+void MemoryMapper::map(const MapInfo_sptr& info)
 {
   FUNCTION_TRACE
   try
   {
     AutoWriteLock lock(&mModificationLock);
 
-    info->mappingTime = time(0);
+    info->mappingTime = time(nullptr);
 
     if (!mEnabled)
     {
       // We should use the old memory mapper
 
-      struct stat buf;
+      struct stat buf{};
       if (stat(info->filename.c_str(), &buf) == 0)
       {
         info->fileSize = (std::size_t)buf.st_size;
@@ -495,13 +492,8 @@ void MemoryMapper::map(MapInfo_sptr info)
         //mFileModificationTime = getFileModificationTime(mFileName.c_str());
         info->memoryPtr = const_cast<char*>(info->mappedFile->const_data());
 
-        if (madvise(info->memoryPtr, info->allocatedSize, MADV_DONTDUMP) != 0)
-        {
-          munmap(info->memoryPtr, info->allocatedSize);
-          info->memoryPtr = NULL;
-          info->allocatedSize = 0;
-          throw Fmi::Exception(BCP,"Core dump limitation (madvise) failed!");
-        }
+        // Fmi::MappedFile already applies MADV_DONTDUMP to the whole mapping, so the mapped
+        // grid file is kept out of core dumps without a separate madvise() call here.
 
         return;
       }
@@ -516,11 +508,11 @@ void MemoryMapper::map(MapInfo_sptr info)
     }
 
     info->allocatedSize = (((info->fileSize + 100)/ mPageSize) + 1) * mPageSize;
-    info->memoryPtr = (char*)mmap(NULL, info->allocatedSize, PROT_READ, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+    info->memoryPtr = (char*)mmap(nullptr, info->allocatedSize, PROT_READ, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
 
     if (info->memoryPtr == MAP_FAILED)
     {
-      info->memoryPtr = 0;
+      info->memoryPtr = nullptr;
       Fmi::Exception exception(BCP,"mmap failed");
       exception.addParameter("allocatedSize",std::to_string(info->allocatedSize));
       exception.addParameter("filename",info->filename);
@@ -534,7 +526,7 @@ void MemoryMapper::map(MapInfo_sptr info)
     addMapInfo(info);
     //mMemoryMappings.insert(std::pair<char*,MapInfo>(info.memoryPtr,info));
 
-    struct uffdio_register uffdio_register;
+    struct uffdio_register uffdio_register{};
     uffdio_register.range.start = (unsigned long)info->memoryPtr;
     uffdio_register.range.len = info->allocatedSize;
     uffdio_register.mode = UFFDIO_REGISTER_MODE_MISSING;
@@ -555,7 +547,7 @@ void MemoryMapper::map(MapInfo_sptr info)
 
 /*! \brief Releases the memory mapping described by the given MapInfo. */
 
-void MemoryMapper::unmap(MapInfo_sptr info)
+void MemoryMapper::unmap(const MapInfo_sptr& info)
 {
   FUNCTION_TRACE
   try
@@ -581,7 +573,7 @@ void MemoryMapper::unmap(MapInfo_sptr info)
         }
       }
 
-      struct uffdio_register uffdio_register;
+      struct uffdio_register uffdio_register{};
       uffdio_register.range.start = (unsigned long)info->memoryPtr;
       uffdio_register.range.len = info->allocatedSize;
       uffdio_register.mode = UFFDIO_REGISTER_MODE_MISSING;
@@ -609,7 +601,10 @@ MapInfo_sptr MemoryMapper::getMapInfo(char *address)
   {
     AutoReadLock lock(&mModificationLock);
 
-    int index = getClosestIndex(address);
+    std::size_t index = getClosestIndex(address);
+    if (index >= mMemoryMappings.size())
+      return nullptr;
+
     MapInfo_sptr info = mMemoryMappings[index];
     if (!info || info->memoryPtr != address)
       return nullptr;
@@ -625,7 +620,10 @@ MapInfo_sptr MemoryMapper::getMapInfo(char *address)
 
 
 
+namespace
+{
 Int64 premapCnt = 0;
+}  // namespace
 
 
 /*! \brief Prefetches and caches the pages covering the given address range. */
@@ -665,7 +663,7 @@ void MemoryMapper::premap(char *startAddress,char *endAddress)
 
     Int64 address = pageIndex * mPageSize;
 
-    Int64 fp = (Int64)address - (Int64)info->memoryPtr;
+    Int64 fp = address - (Int64)info->memoryPtr;
 
     Int64 pages = endPageIndex - pageIndex + 1;
 
@@ -690,7 +688,7 @@ void MemoryMapper::premap(char *startAddress,char *endAddress)
         pageIndex++;
       }
 
-      if (data)
+      
         delete [] data;
     }
 
@@ -799,7 +797,7 @@ Int64 MemoryMapper::getFileSize(uint serverType,uint protocol,const char *server
     {
       // We should use the old memory mapper
 
-      struct stat buf;
+      struct stat buf{};
       if (stat(filename, &buf) == 0)
         return (Int64)buf.st_size;
 
@@ -824,7 +822,7 @@ Int64 MemoryMapper::getFileSize(uint serverType,uint protocol,const char *server
 
 /*! \brief Fetches a block of data from the page cache or the underlying data fetcher. */
 
-int MemoryMapper::getData(MapInfo_sptr info,std::size_t filePosition,int dataSize,char *dataPtr)
+int MemoryMapper::getData(const MapInfo_sptr& info,std::size_t filePosition,int dataSize,char *dataPtr)
 {
   try
   {
@@ -881,6 +879,208 @@ int MemoryMapper::getData(MapInfo_sptr info,std::size_t filePosition,int dataSiz
 
 
 
+/*! \brief Takes the next unprocessed fault message for the current thread and returns its index, or -1 if there is none. */
+
+int MemoryMapper::takeNextMessage(Int64& currentCounter,int ownerId)
+{
+  try
+  {
+    int idx = -1;
+    Int64 len = 0;
+    {
+      AutoThreadLock tlock(&mThreadLock);
+      len = mMessageReadCount.load() - mMessageProcessCount.load();
+      if (len > 0  &&  currentCounter < mMessageProcessCount)
+      {
+        idx = mMessageProcessCount % mMaxMessages;
+        currentCounter = mMessageProcessCount;
+        if (idx >= 0  &&  mMessage[idx].event == UFFD_EVENT_PAGEFAULT)
+          mMessage[idx].event = ownerId;  // This indicates that the current thread has taken
+                                          // this message for processing.
+        mMessageProcessCount++;
+      }
+    }
+    return idx;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+/*! \brief Fetches the data page of the given fault message and copies it into the faulting region. */
+
+void MemoryMapper::processFaultMessage(int idx,char *page,uint& errorCounter)
+{
+  try
+  {
+    struct uffdio_copy uffdio_copy{};
+
+    AutoReadLock lock(&mModificationLock);
+
+    auto *address = (char*)mMessage[idx].arg.pagefault.address;  // NOLINT(cppcoreguidelines-pro-type-union-access): kernel uffd_msg API
+
+    std::size_t index = getClosestIndex(address);
+
+    MapInfo_sptr info;
+    if (index < mMemoryMappings.size())
+      info = mMemoryMappings[index];
+
+    if (info  &&  info->memoryPtr <= address  &&  (info->memoryPtr + info->allocatedSize) > address)
+    {
+      //printf("FOUND %lld => %lld (%s)\n",(Int64)address,(Int64)info->memoryPtr,info->filename.c_str());
+
+      UInt64 fp = (Int64)address - (Int64)info->memoryPtr;
+      try
+      {
+        int n = 0;
+
+        if (!info->mappingError)
+          n = getData(info,fp,mPageSize,page);
+
+        if (n == 0)
+        {
+          //printf("***** ZERO DATA RETURNED\n");
+          memset(page,0,mPageSize);
+          info->mappingError = true;
+          errorCounter++;
+          if (errorCounter == 1)
+            printf("#### WARNING: Memory mapper got no data!\n");
+        }
+        //else
+        //  info->mappingError = false;
+      }
+      catch (...)
+      {
+        Fmi::Exception exception(BCP,"Cannot fetch memory page!",nullptr);
+        exception.printError();
+        memset(page,0,mPageSize);
+        info->mappingError = true;
+      }
+    }
+    else
+    {
+      // The closest mapping does not contain the address, so it must not be marked as failed
+      memset(page,0,mPageSize);
+      errorCounter++;
+      if (errorCounter == 1)
+        printf("#### WARNING: Memory mapping not found %ld\n",(Int64)mMessageProcessCount);
+    }
+
+    uffdio_copy.src = (unsigned long)page;
+    uffdio_copy.dst = (unsigned long)address & ~(mPageSize - 1);
+    uffdio_copy.len = mPageSize;
+    uffdio_copy.mode = 0;
+    uffdio_copy.copy = 0;
+
+    if (ioctl(mUffd, UFFDIO_COPY, &uffdio_copy) == -1  &&  errno != 17)
+    {
+      Fmi::Exception exception(BCP,"ioctl-UFFDIO_COPY!");
+      exception.addParameter("errno",std::to_string(errno));
+      throw exception;
+    }
+
+    mMessage[idx].event = 0;  // This indicates that the message slot is now free to re-use.
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+/*! \brief Sleeps while waiting for new fault messages. */
+
+void MemoryMapper::waitForFaultMessages(uint sleepCount,uint threadId)
+{
+  try
+  {
+    if (sleepCount < 100  &&  mMessageReadCount.load() > 0)
+    {
+      time_usleep(0,500000);
+    }
+    else
+    {
+      if (threadId < 5)
+        time_usleep(0,10000000);
+      else
+        time_usleep(0,50000000);
+    }
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+/*! \brief Polls userfaultfd and reads the next page-fault message into the given message slot. */
+
+void MemoryMapper::readFaultMessage(Int64 idx)
+{
+  try
+  {
+    struct pollfd pollfd{};
+    pollfd.fd = mUffd;
+    pollfd.events = POLLIN;
+    int nready = poll(&pollfd, 1, 1000);
+    if (nready == -1)
+      throw Fmi::Exception(BCP,"Poll error!");
+
+    if (nready > 0)
+    {
+      ssize_t nread = read(mUffd, &mMessage[idx], sizeof(uffd_msg));
+      if (nread == 0)
+        throw Fmi::Exception(BCP,"EOF on userfaultfd!");
+
+      if (nread == -1)
+        throw Fmi::Exception(BCP,"Read error!");
+
+      if (mMessage[idx].event != UFFD_EVENT_PAGEFAULT)
+        throw Fmi::Exception(BCP,"Unexpected event on userfaultfd!");
+
+      AutoThreadLock tlock(&mThreadLock);
+
+      // Several threads might request the same memory page at the same time. So
+      // we should check that we are not ready handling the same page request.
+
+      /*
+      bool found = false;
+      auto address = mMessage[idx].arg.pagefault.address;  // NOLINT(cppcoreguidelines-pro-type-union-access): kernel uffd_msg API
+      for (auto t = (Int64)mMessageProcessCount; t<(Int64)mMessageReadCount.load()  &&  !found; t++)
+      {
+        auto i = t % mMaxMessages;
+        if (mMessage[i].arg.pagefault.address == address)  // NOLINT(cppcoreguidelines-pro-type-union-access): kernel uffd_msg API
+          found = true;
+      }
+      if (!found)
+      */
+        mMessageReadCount++;
+      //else
+      //  printf("-------------- PAGE ALREADY IN THE MAPPING LIST\n");
+      //printf("READ %lld  %lld\n",(Int64)mMessageReadCount,(Int64)mMessageProcessCount);
+    }
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
 /*! \brief Worker thread loop that resolves userfaultfd page faults by copying data pages. */
 
 void MemoryMapper::faultProcessingThread()
@@ -894,11 +1094,10 @@ void MemoryMapper::faultProcessingThread()
 
     uint threadId = mThreadsRunning;
     mThreadsRunning++;
-    struct uffdio_copy uffdio_copy;
 
     /* Create a page that will be copied into the faulting region. */
 
-    char *page = (char*)mmap(NULL, mPageSize, PROT_READ | PROT_WRITE,MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+    char *page = (char*)mmap(nullptr, mPageSize, PROT_READ | PROT_WRITE,MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
     if (page == MAP_FAILED)
       throw Fmi::Exception(BCP,"Memory map creation failed!");
 
@@ -911,21 +1110,7 @@ void MemoryMapper::faultProcessingThread()
     {
       try
       {
-        int idx = -1;
-        Int64 len = 0;
-        {
-          AutoThreadLock tlock(&mThreadLock);
-          len = mMessageReadCount.load() - mMessageProcessCount.load();
-          if (len > 0  &&  currentCounter < mMessageProcessCount)
-          {
-            idx = mMessageProcessCount % mMaxMessages;
-            currentCounter = mMessageProcessCount;
-            if (idx >= 0  &&  mMessage[idx].event == UFFD_EVENT_PAGEFAULT)
-              mMessage[idx].event = ownerId;  // This indicates that the current thread has taken
-                                              // this message for processing.
-            mMessageProcessCount++;
-          }
-        }
+        int idx = takeNextMessage(currentCounter,ownerId);
 
         // Reseting error counter after 10000 processed messages.
         if ((mMessageProcessCount % 10000) == 0)
@@ -933,88 +1118,13 @@ void MemoryMapper::faultProcessingThread()
 
         if (idx >= 0  &&  mMessage[idx].event == ownerId)
         {
-          AutoReadLock lock(&mModificationLock);
-
-          auto address = (char*)mMessage[idx].arg.pagefault.address;
-
-          int index = getClosestIndex(address);
-
-          MapInfo_sptr info = mMemoryMappings[index];
-
-          //printf("SEARCH %d  %lld  %lld - %lld\n",index,(Int64)address,(Int64)info->memoryPtr,(Int64)(info->memoryPtr + info->allocatedSize));
-          if (mMemoryMappings.size() > (std::size_t)index  &&  info->memoryPtr <= address &&
-              (info->memoryPtr + info->allocatedSize) > address)
-          {
-            //printf("FOUND %lld => %lld (%s)\n",(Int64)address,(Int64)info->memoryPtr,info->filename.c_str());
-
-            UInt64 fp = (Int64)address - (Int64)info->memoryPtr;
-            try
-            {
-              int n = 0;
-
-              if (!info->mappingError)
-                n = getData(info,fp,mPageSize,page);
-
-              if (n == 0)
-              {
-                //printf("***** ZERO DATA RETURNED\n");
-                memset(page,0,mPageSize);
-                info->mappingError = true;
-                errorCounter++;
-                if (errorCounter == 1)
-                  printf("#### WARNING: Memory mapper got no data!\n");
-              }
-              //else
-              //  info->mappingError = false;
-            }
-            catch (...)
-            {
-              Fmi::Exception exception(BCP,"Cannot fetch memory page!",nullptr);
-              exception.printError();
-              memset(page,0,mPageSize);
-              info->mappingError = true;
-            }
-          }
-          else
-          {
-            //printf("***** MAPPING NOT FOUND\n");
-            memset(page,0,mPageSize);
-            info->mappingError = true;
-            errorCounter++;
-            if (errorCounter == 1)
-              printf("#### WARNING: Memory mapping not found %ld\n",(Int64)mMessageProcessCount);
-          }
-
-          uffdio_copy.src = (unsigned long)page;
-          uffdio_copy.dst = (unsigned long)address & ~(mPageSize - 1);
-          uffdio_copy.len = mPageSize;
-          uffdio_copy.mode = 0;
-          uffdio_copy.copy = 0;
-
-          if (ioctl(mUffd, UFFDIO_COPY, &uffdio_copy) == -1  &&  errno != 17)
-          {
-            Fmi::Exception exception(BCP,"ioctl-UFFDIO_COPY!");
-            exception.addParameter("errno",std::to_string(errno));
-            throw exception;
-          }
-
-          mMessage[idx].event = 0;  // This indicates that the message slot is now free to re-use.
+          processFaultMessage(idx,page,errorCounter);
           sleepCount = 0;
         }
         else
         {
           sleepCount++;
-          if (sleepCount < 100  &&  mMessageReadCount.load() > 0)
-          {
-            time_usleep(0,500000);
-          }
-          else
-          {
-            if (threadId < 5)
-              time_usleep(0,10000000);
-            else
-              time_usleep(0,50000000);
-          }
+          waitForFaultMessages(sleepCount,threadId);
         }
       }
       catch (...)
@@ -1048,7 +1158,7 @@ void MemoryMapper::faultHandlerThread()
 
     /* Create a page that will be copied into the faulting region. */
 
-    char *page = (char*)mmap(NULL, mPageSize, PROT_READ | PROT_WRITE,MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+    char *page = (char*)mmap(nullptr, mPageSize, PROT_READ | PROT_WRITE,MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
     if (page == MAP_FAILED)
       throw Fmi::Exception(BCP,"Memory map creation failed!");
 
@@ -1066,46 +1176,7 @@ void MemoryMapper::faultHandlerThread()
 
           if (mMessage[idx].event == 0)
           {
-            struct pollfd pollfd;
-            pollfd.fd = mUffd;
-            pollfd.events = POLLIN;
-            int nready = poll(&pollfd, 1, 1000);
-            if (nready == -1)
-              throw Fmi::Exception(BCP,"Poll error!");
-
-            if (nready > 0)
-            {
-              ssize_t nread = read(mUffd, &mMessage[idx], sizeof(uffd_msg));
-              if (nread == 0)
-                throw Fmi::Exception(BCP,"EOF on userfaultfd!");
-
-              if (nread == -1)
-                throw Fmi::Exception(BCP,"Read error!");
-
-              if (mMessage[idx].event != UFFD_EVENT_PAGEFAULT)
-                throw Fmi::Exception(BCP,"Unexpected event on userfaultfd!");
-
-              AutoThreadLock tlock(&mThreadLock);
-
-              // Several threads might request the same memory page at the same time. So
-              // we should check that we are not ready handling the same page request.
-
-              /*
-              bool found = false;
-              auto address = mMessage[idx].arg.pagefault.address;
-              for (auto t = (Int64)mMessageProcessCount; t<(Int64)mMessageReadCount.load()  &&  !found; t++)
-              {
-                auto i = t % mMaxMessages;
-                if (mMessage[i].arg.pagefault.address == address)
-                  found = true;
-              }
-              if (!found)
-              */
-                mMessageReadCount++;
-              //else
-              //  printf("-------------- PAGE ALREADY IN THE MAPPING LIST\n");
-              //printf("READ %lld  %lld\n",(Int64)mMessageReadCount,(Int64)mMessageProcessCount);
-            }
+            readFaultMessage(idx);
           }
           else
           {
@@ -1138,7 +1209,7 @@ void MemoryMapper::faultHandlerThread()
 
 /*! \brief Adds the mapper's current runtime state as attributes under the given parent node. */
 
-void MemoryMapper::getStateAttributes(std::shared_ptr<T::AttributeNode> parent)
+void MemoryMapper::getStateAttributes(const std::shared_ptr<T::AttributeNode>& parent)
 {
   FUNCTION_TRACE
   try

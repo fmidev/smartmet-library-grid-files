@@ -36,6 +36,8 @@ class ProductDefinition
                                         ProductDefinition();
                                         //ProductDefinition(const ProductDefinition& other);
     virtual                             ~ProductDefinition();
+    ProductDefinition(const ProductDefinition&) = default;
+    ProductDefinition& operator=(const ProductDefinition&) = default;
 
     virtual ProductDefinition*          createProductDefinition() const;
 
@@ -74,8 +76,8 @@ class ProductDefinition
     // These are helper methods used in child classes. The point is that there are
     // several child classes that need to do the same calculations.
 
-    T::TimeString                       countForecastStartTime(T::TimeString referenceTime,const ParameterSettings& parameter) const;
-    T::TimeString                       countForecastStartTime(T::TimeString referenceTime,const PostprocSettings& parameter) const;
+    T::TimeString                       countForecastStartTime(const T::TimeString& referenceTime,const ParameterSettings& parameter) const;
+    T::TimeString                       countForecastStartTime(const T::TimeString& referenceTime,const PostprocSettings& parameter) const;
     T::TimeString                       countForecastEndTime(const StatisticalSettings& stat) const;
 
     virtual void                        getProperties_ParameterSettings(T::PropertySettingVec& properties);
@@ -111,7 +113,7 @@ class ProductDefinition
 };
 
 
-typedef std::shared_ptr<ProductDefinition> ProductDefinition_sptr;  //!< Shared ownership pointer to a ProductDefinition.
+using ProductDefinition_sptr = std::shared_ptr<ProductDefinition>;  //!< Shared ownership pointer to a ProductDefinition.
 
 
 

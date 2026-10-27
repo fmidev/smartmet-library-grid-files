@@ -1,6 +1,8 @@
 #include "PolarStereographicImpl.h"
 #include "../Properties.h"
 #include <macgyver/Exception.h>
+
+#include <memory>
 #include "../../common/GeneralFunctions.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../grid/PrintOptions.h"
@@ -208,8 +210,8 @@ std::string PolarStereographicImpl::getGridGeometryString() const
 
     double y = C_DOUBLE(mLatitudeOfFirstGridPoint) / 1000;
     double x = getLongitude(C_DOUBLE(mLongitudeOfFirstGridPoint) / 1000);
-    double dx = C_DOUBLE(mDxInMetres);
-    double dy = C_DOUBLE(mDyInMetres);
+    auto dx = C_DOUBLE(mDxInMetres);
+    auto dy = C_DOUBLE(mDyInMetres);
     double orientation = C_DOUBLE(mOrientationOfTheGrid)/1000;
 
     unsigned char scanningMode = mScanningMode.getScanningMode();
@@ -229,11 +231,11 @@ std::string PolarStereographicImpl::getGridGeometryString() const
     if ((scanningMode & 0x40) == 0)
     {
       dy = -dy;
-      p += sprintf(p,"-y");
+      sprintf(p,"-y");
     }
     else
     {
-      p += sprintf(p,"+y");
+      sprintf(p,"+y");
     }
 
     sprintf(buf,"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;description",
@@ -341,8 +343,8 @@ void PolarStereographicImpl::init() const
     if (mInitialized)
       return;
 
-    double dxx = C_DOUBLE(mDxInMetres);
-    double dyy = C_DOUBLE(mDyInMetres);
+    auto dxx = C_DOUBLE(mDxInMetres);
+    auto dyy = C_DOUBLE(mDyInMetres);
 
     unsigned char scanningMode = mScanningMode.getScanningMode();
 
@@ -398,13 +400,16 @@ bool PolarStereographicImpl::getGridPointByOriginalCoordinates(double x,double y
     double i = xDiff / mDxx;
     double j = yDiff / mDyy;
 
+    // Projection round-off puts points on the first row or column slightly outside the grid
+    if (i < 0 && i > -1e-4)
+      i = 0;
+    if (j < 0 && j > -1e-4)
+      j = 0;
+
     grid_i = i;
     grid_j = j;
 
-    if (i < 0 ||  j < 0  ||  i >= C_DOUBLE(mNx) ||  j > C_DOUBLE(mNy))
-      return false;
-
-    return true;
+    return !(i < 0 ||  j < 0  ||  i >= C_DOUBLE(mNx) ||  j > C_DOUBLE(mNy));
   }
   catch (...)
   {
@@ -429,10 +434,7 @@ bool PolarStereographicImpl::reverseXDirection() const
   {
     unsigned char scanMode = mScanningMode.getScanningMode();
 
-    if ((scanMode & 0x80) != 0)
-      return true;
-
-    return false;
+    return (scanMode & 0x80) != 0;
   }
   catch (...)
   {
@@ -456,10 +458,7 @@ bool PolarStereographicImpl::reverseYDirection() const
   {
     unsigned char scanMode = mScanningMode.getScanningMode();
 
-    if ((scanMode & 0x40) == 0)
-      return true;
-
-    return false;
+    return (scanMode & 0x40) == 0;
   }
   catch (...)
   {
@@ -541,6 +540,8 @@ bool PolarStereographicImpl::getProperty(uint propertyId,Int64& value)
       case Property::GridSection::PolarStereographic::ProjectionCentreFlag:
         value = getProjectionCentreFlag();
         return true;
+      default:
+        break;
     }
 
     return GridDefinition::getProperty(propertyId,value);
@@ -603,6 +604,8 @@ bool PolarStereographicImpl::setProperty(uint propertyId,Int64 value)
       case Property::GridSection::PolarStereographic::ProjectionCentreFlag:
         setProjectionCentreFlag(value);
         return true;
+      default:
+        break;
     }
 
     return GridDefinition::setProperty(propertyId,value);
@@ -627,7 +630,7 @@ void PolarStereographicImpl::initSpatialReference()
     mSpatialReference = getSpatialReference();
     if (!mSpatialReference)
     {
-      mSpatialReference.reset(new T::SpatialRef());
+      mSpatialReference = std::make_shared<T::SpatialRef>();
       addSpatialReference(mSpatialReference);
 
       // ### Check that we have all necessary values needed by this method.

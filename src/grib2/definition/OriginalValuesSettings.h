@@ -19,6 +19,10 @@ namespace GRIB2 {
 class OriginalValuesSettings {
 public:
   OriginalValuesSettings();
+  OriginalValuesSettings(const OriginalValuesSettings &) = default;
+  OriginalValuesSettings(OriginalValuesSettings &&) = default;
+  OriginalValuesSettings &operator=(const OriginalValuesSettings &) = default;
+  OriginalValuesSettings &operator=(OriginalValuesSettings &&) = default;
   virtual ~OriginalValuesSettings();
 
   virtual void read(MemoryReader &memoryReader);

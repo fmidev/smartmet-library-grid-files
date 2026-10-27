@@ -22,20 +22,22 @@ class FmiParameterId_grib
   public:
                     FmiParameterId_grib();
     virtual         ~FmiParameterId_grib();
+    FmiParameterId_grib(const FmiParameterId_grib&) = default;
+    FmiParameterId_grib& operator=(const FmiParameterId_grib&) = default;
 
     /*! \brief Write a human-readable dump to \p stream (for debugging). */
     void            print(std::ostream& stream,uint level,uint optionFlags) const;
 
     T::FmiParamId   mFmiParameterId;              //!< FMI parameter identifier
-    T::GribParamId  mGribParameterId;             //!< Corresponding GRIB parameter identifier
+    T::GribParamId  mGribParameterId = 0;             //!< Corresponding GRIB parameter identifier
     std::string     mConversionFunction;          //!< Expression to convert GRIB value → FMI value (empty = no-op)
     std::string     mReverseConversionFunction;   //!< Expression to convert FMI value → GRIB value (empty = no-op)
 };
 
 
-typedef std::vector<FmiParameterId_grib> FmiParamId_grib_vec;             //!< Ordered list of FMI↔GRIB mappings
-typedef std::unordered_map<uint,FmiParameterId_grib> FmiParamId_grib_umap; //!< Hash map keyed by FMI parameter ID
-typedef const FmiParameterId_grib* FmiParamId_grib_cptr;                  //!< Non-owning const pointer
+using FmiParamId_grib_vec = std::vector<FmiParameterId_grib>;             //!< Ordered list of FMI↔GRIB mappings
+using FmiParamId_grib_umap = std::unordered_map<uint,FmiParameterId_grib>; //!< Hash map keyed by FMI parameter ID
+using FmiParamId_grib_cptr = const FmiParameterId_grib*;                  //!< Non-owning const pointer
 
 
 }

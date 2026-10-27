@@ -30,22 +30,24 @@ class GridValue
                    *  \param[in] valueString  String representation of the value. */
                   GridValue(double x,double y, const char *valueString);
                   //! \overload
-                  GridValue(double x,double y, std::string& valueString);
+                  GridValue(double x,double y, const std::string& valueString);
                   /*! \brief Construct with both numeric and string value.
                    *  \param[in] x            Grid x-coordinate.
                    *  \param[in] y            Grid y-coordinate.
                    *  \param[in] value        Numeric parameter value.
                    *  \param[in] valueString  String representation. */
-                  GridValue(double x,double y, T::ParamValue value, std::string& valueString);
+                  GridValue(double x,double y, T::ParamValue value, const std::string& valueString);
                   //! \overload
                   GridValue(double x,double y, T::ParamValue value, const char *valueString);
     virtual       ~GridValue();
+    GridValue(const GridValue&) = default;
+    GridValue& operator=(const GridValue&) = default;
 
     /*! \brief Print the grid value to a stream (for debugging).
      *  \param[in] stream      Output stream.
      *  \param[in] level       Indentation level.
      *  \param[in] optionFlags Print option flags. */
-    void          print(std::ostream& stream,uint level,uint optionFlags);
+    void          print(std::ostream& stream,uint level,uint optionFlags) const;
 
     double        mX;           //!< Grid x-coordinate or longitude
     double        mY;           //!< Grid y-coordinate or latitude

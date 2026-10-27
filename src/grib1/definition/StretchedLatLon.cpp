@@ -32,8 +32,7 @@ StretchedLatLon::StretchedLatLon() {
 
 /*! \brief The destructor of the class. */
 
-StretchedLatLon::~StretchedLatLon() {
-}
+StretchedLatLon::~StretchedLatLon() = default;
 
 /*! \brief The method reads and initializes all data related to the current section object.
 
@@ -83,23 +82,14 @@ void StretchedLatLon::write(DataWriter &dataWriter) {
 
 void StretchedLatLon::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sStretchedLatLon.Ni", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNi));
-    sprintf(name, "%sStretchedLatLon.Nj", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNj));
-    sprintf(name, "%sStretchedLatLon.", prefix.c_str());
-    mGridArea.getAttributeList(name, attributeList);
-    sprintf(name, "%sStretchedLatLon.IDirectionIncrement", prefix.c_str());
-    attributeList.addAttribute(name, toString(mIDirectionIncrement));
-    sprintf(name, "%sStretchedLatLon.JDirectionIncrement", prefix.c_str());
-    attributeList.addAttribute(name, toString(mJDirectionIncrement));
-    sprintf(name, "%sStretchedLatLon.", prefix.c_str());
-    mScanningMode.getAttributeList(name, attributeList);
-    sprintf(name, "%sStretchedLatLon.Zero", prefix.c_str());
-    attributeList.addAttribute(name, toString(mZero));
-    sprintf(name, "%sStretchedLatLon.", prefix.c_str());
-    mGridStretching.getAttributeList(name, attributeList);
+        attributeList.addAttribute(prefix + "StretchedLatLon.Ni", toString(mNi));
+        attributeList.addAttribute(prefix + "StretchedLatLon.Nj", toString(mNj));
+        mGridArea.getAttributeList(prefix + "StretchedLatLon.", attributeList);
+        attributeList.addAttribute(prefix + "StretchedLatLon.IDirectionIncrement", toString(mIDirectionIncrement));
+        attributeList.addAttribute(prefix + "StretchedLatLon.JDirectionIncrement", toString(mJDirectionIncrement));
+        mScanningMode.getAttributeList(prefix + "StretchedLatLon.", attributeList);
+        attributeList.addAttribute(prefix + "StretchedLatLon.Zero", toString(mZero));
+        mGridStretching.getAttributeList(prefix + "StretchedLatLon.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -256,7 +246,7 @@ std::uint16_t StretchedLatLon::getNj() const {
 
 GridAreaSettings *StretchedLatLon::getGridArea() const {
   try {
-    return static_cast<GridAreaSettings *>(&mGridArea);
+    return &mGridArea;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -286,7 +276,7 @@ std::uint16_t StretchedLatLon::getJDirectionIncrement() const {
 
 ScanningModeSettings *StretchedLatLon::getScanningMode() const {
   try {
-    return static_cast<ScanningModeSettings *>(&mScanningMode);
+    return &mScanningMode;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -306,7 +296,7 @@ std::uint32_t StretchedLatLon::getZero() const {
 
 GridStretchingSettings *StretchedLatLon::getGridStretching() const {
   try {
-    return static_cast<GridStretchingSettings *>(&mGridStretching);
+    return &mGridStretching;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -328,7 +318,7 @@ void StretchedLatLon::setNj(std::uint16_t nj) {
   }
 }
 
-void StretchedLatLon::setGridArea(GridAreaSettings &gridArea) {
+void StretchedLatLon::setGridArea(const GridAreaSettings &gridArea) {
   try {
     mGridArea = gridArea;
   } catch (...) {
@@ -352,7 +342,7 @@ void StretchedLatLon::setJDirectionIncrement(std::uint16_t jDirectionIncrement) 
   }
 }
 
-void StretchedLatLon::setScanningMode(ScanningModeSettings &scanningMode) {
+void StretchedLatLon::setScanningMode(const ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {
@@ -368,7 +358,7 @@ void StretchedLatLon::setZero(std::uint32_t zero) {
   }
 }
 
-void StretchedLatLon::setGridStretching(GridStretchingSettings &gridStretching) {
+void StretchedLatLon::setGridStretching(const GridStretchingSettings &gridStretching) {
   try {
     mGridStretching = gridStretching;
   } catch (...) {

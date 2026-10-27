@@ -85,11 +85,11 @@ class Client
 
 
 /*! \brief libcurl write callback that appends received bytes to a Response buffer. */
-size_t curl_responseProcessing(char *ptr, size_t size, size_t nmemb, void *userdata);
+size_t curl_responseProcessing(const char *ptr, size_t size, size_t nmemb, void *userdata);
 /*! \brief libcurl debug callback that prints protocol trace to stderr. */
 int    curl_trace(CURL *handle, curl_infotype type,char *data, size_t size,void *userp);
 
-typedef Client* Client_ptr;
-typedef std::vector<Client_ptr> Client_ptr_vec;
+using Client_ptr = Client*;
+using Client_ptr_vec = std::vector<Client_ptr>;
 
 }

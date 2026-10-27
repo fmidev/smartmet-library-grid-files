@@ -21,6 +21,8 @@ class FmiParameterId_netCdf
   public:
                       FmiParameterId_netCdf();
     virtual           ~FmiParameterId_netCdf();
+    FmiParameterId_netCdf(const FmiParameterId_netCdf&) = default;
+    FmiParameterId_netCdf& operator=(const FmiParameterId_netCdf&) = default;
 
     /*! \brief Write a human-readable dump to \p stream (for debugging). */
     void              print(std::ostream& stream,uint level,uint optionFlags) const;
@@ -32,9 +34,9 @@ class FmiParameterId_netCdf
 };
 
 
-typedef std::vector<FmiParameterId_netCdf> FmiParamId_netCdf_vec;              //!< Ordered list of FMI↔NetCDF mappings
-typedef std::unordered_map<uint,FmiParameterId_netCdf> FmiParamId_netCdf_umap; //!< Hash map keyed by FMI parameter ID
-typedef const FmiParameterId_netCdf* FmiParamId_netCdf_cptr;                  //!< Non-owning const pointer
+using FmiParamId_netCdf_vec = std::vector<FmiParameterId_netCdf>;              //!< Ordered list of FMI↔NetCDF mappings
+using FmiParamId_netCdf_umap = std::unordered_map<uint,FmiParameterId_netCdf>; //!< Hash map keyed by FMI parameter ID
+using FmiParamId_netCdf_cptr = const FmiParameterId_netCdf*;                  //!< Non-owning const pointer
 
 
 }

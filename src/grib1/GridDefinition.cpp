@@ -9,6 +9,7 @@
 #include "../common/ShowFunction.h"
 #include <macgyver/Hash.h>
 #include <iostream>
+#include <memory>
 #include <unordered_map>
 
 
@@ -24,25 +25,43 @@ namespace GRIB1
 #define TRANSFORM_VEC_CACHE_SIZE 400
 
 Fmi::Cache::CacheStats latlonCoordinateCache_stats;
+namespace
+{
 Fmi::Cache::Cache<uint,T::Coordinate_svec> latlonCoordinateCache(COORDINATE_VEC_CACHE_SIZE);
+}  // namespace
 
 Fmi::Cache::CacheStats originalCoordinateCache_stats;
+namespace
+{
 Fmi::Cache::Cache<uint,T::Coordinate_svec> originalCoordinateCache(COORDINATE_VEC_CACHE_SIZE);
+}  // namespace
 
 
 Fmi::Cache::CacheStats transformCache1_stats;
+namespace
+{
 Fmi::Cache::Cache<std::size_t,T::Coordinate> transformCache1(1000000);
+}  // namespace
 
 Fmi::Cache::CacheStats transformCache2_stats;
+namespace
+{
 Fmi::Cache::Cache<std::size_t,T::Coordinate> transformCache2(1000000);
+}  // namespace
 
 Fmi::Cache::CacheStats transformCache3_stats;
+namespace
+{
 Fmi::Cache::Cache<std::size_t,T::Coordinate_svec> transformCache3(TRANSFORM_VEC_CACHE_SIZE);
 
 Fmi::Cache::Cache<std::size_t,T::SpatialRef_sptr> spatialReferenceCache(1000);
+}  // namespace
 
 T::SpatialRef_sptr latlonSpatialReference;
+namespace
+{
 T::SpatialRef_sptr sr_wgs84_world_mercator;
+}  // namespace
 
 
 
@@ -80,14 +99,14 @@ GridDefinition::GridDefinition()
 
     if (!latlonSpatialReference)
     {
-      latlonSpatialReference.reset(new T::SpatialRef());
+      latlonSpatialReference = std::make_shared<T::SpatialRef>();
       latlonSpatialReference->importFromEPSG(4326);
       latlonSpatialReference->SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
     }
 
     if (sr_wgs84_world_mercator)
     {
-      sr_wgs84_world_mercator.reset(new T::SpatialRef());
+      sr_wgs84_world_mercator = std::make_shared<T::SpatialRef>();
       sr_wgs84_world_mercator->importFromEPSG(3395);
       sr_wgs84_world_mercator->SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
     }
@@ -119,13 +138,13 @@ GridDefinition::GridDefinition(const GridDefinition& other)
 
     if (!latlonSpatialReference)
     {
-      latlonSpatialReference.reset(new T::SpatialRef());
+      latlonSpatialReference = std::make_shared<T::SpatialRef>();
       latlonSpatialReference->importFromEPSG(4326);
       latlonSpatialReference->SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
     }
     if (sr_wgs84_world_mercator)
     {
-      sr_wgs84_world_mercator.reset(new T::SpatialRef());
+      sr_wgs84_world_mercator = std::make_shared<T::SpatialRef>();
       sr_wgs84_world_mercator->importFromEPSG(3395);
       sr_wgs84_world_mercator->SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
     }
@@ -172,7 +191,7 @@ GridDefinition* GridDefinition::createGridDefinition() const
 
 /*! \brief The method collects attributeList details related to the grid definition. */
 
-void GridDefinition::getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const
+void GridDefinition::getAttributeList(const std::string& /*prefix*/,T::AttributeList& /*attributeList*/) const
 {
   FUNCTION_TRACE
 }
@@ -368,7 +387,9 @@ bool GridDefinition::getGridLatLonArea(T::Coordinate& topLeft,T::Coordinate& top
         \return        Returns 'true' if the position was clamped onto the grid.
 */
 
-static bool clampGridPointToBorder(const T::Dimensions& d,double& grid_i,double& grid_j)
+namespace
+{
+bool clampGridPointToBorder(const T::Dimensions& d,double& grid_i,double& grid_j)
 {
   const double eps = 0.000001;
 
@@ -389,6 +410,7 @@ static bool clampGridPointToBorder(const T::Dimensions& d,double& grid_i,double&
 
   return true;
 }
+}  // namespace
 
 
 
@@ -427,8 +449,8 @@ void GridDefinition:: getGridPointListByLatLonCoordinates(T::Coordinate_vec& lat
 
     points.reserve(sz);
 
-    double *x = new double[sz+1];
-    double *y = new double[sz+1];
+    auto *x = new double[sz+1];
+    auto *y = new double[sz+1];
 
     std::unique_ptr<double[]> rx(x);
     std::unique_ptr<double[]> ry(y);
@@ -449,7 +471,8 @@ void GridDefinition:: getGridPointListByLatLonCoordinates(T::Coordinate_vec& lat
 
     for (uint t=0; t<sz; t++)
     {
-      double i = -1000,j = -1000;
+      double i = -1000;
+      double j = -1000;
       if (getGridPointByOriginalCoordinates(x[t],y[t],i,j) || clampGridPointToBorder(d,i,j))
         vec->emplace_back(i,j);
       else
@@ -536,7 +559,8 @@ bool GridDefinition::getGridLatLonCoordinatesByGridPosition(double grid_i,double
   FUNCTION_TRACE
   try
   {
-    double x = 0, y = 0;
+    double x = 0;
+    double y = 0;
 
     if (getGridOriginalCoordinatesByGridPosition(grid_i,grid_j,x,y))
     {
@@ -603,10 +627,12 @@ bool GridDefinition::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid
         \return        The method return true if the original coordinates were succesfully returned.
 */
 
-bool GridDefinition::getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const
+bool GridDefinition::getGridOriginalCoordinatesByGridPosition(double /*grid_i*/,double /*grid_j*/,double& /*x*/,double& /*y*/) const
 {
   FUNCTION_TRACE
-  throw Fmi::Exception(BCP,"Not implemented!");
+  // Not implemented for all grids (for example Gaussian grids). Returning false lets the
+  // callers fall back to the grid coordinate list instead of failing the whole request.
+  return false;
 }
 
 
@@ -699,8 +725,8 @@ T::Coordinate_svec GridDefinition::getGridLatLonCoordinates() const
 
     int sz = originalCoordinates->size();
 
-    double *lat = new double[sz+1];
-    double *lon = new double[sz+1];
+    auto *lat = new double[sz+1];
+    auto *lon = new double[sz+1];
 
     std::unique_ptr<double[]> rlat(lat);
     std::unique_ptr<double[]> rlon(lon);
@@ -1278,7 +1304,7 @@ void GridDefinition::getProperties_gridArea(T::PropertySettingVec& properties)
     properties.emplace_back((uint)Property::GridSection::GridArea::LatitudeOfLastGridPoint,gridArea->getLatitudeOfLastGridPoint());
     properties.emplace_back((uint)Property::GridSection::GridArea::LongitudeOfLastGridPoint,gridArea->getLongitudeOfLastGridPoint());
 
-    auto resolutionFlags = gridArea->getResolutionFlags();
+    auto *resolutionFlags = gridArea->getResolutionFlags();
     if (resolutionFlags)
       properties.emplace_back((uint)Property::GridSection::ResolutionFlags::ResolutionAndComponentFlags,resolutionFlags->getResolutionAndComponentFlags());
   }
@@ -1391,11 +1417,13 @@ bool GridDefinition::getProperty_gridArea(uint propertyId,Int64& value)
 
       case Property::GridSection::ResolutionFlags::ResolutionAndComponentFlags:
       {
-        auto resolutionFlags = gridArea->getResolutionFlags();
+        auto *resolutionFlags = gridArea->getResolutionFlags();
         if (resolutionFlags)
           value = resolutionFlags->getResolutionAndComponentFlags();
         return true;
       }
+      default:
+        break;
     }
 
     return false;
@@ -1431,6 +1459,8 @@ bool GridDefinition::getProperty_scanningMode(uint propertyId,Int64& value)
       case Property::GridSection::ScanningMode::ScanMode:
         value = scanningMode->getScanningMode();
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -1466,6 +1496,8 @@ bool GridDefinition::getProperty_resolutionFlags(uint propertyId,Int64& value)
       case Property::GridSection::ResolutionFlags::ResolutionAndComponentFlags:
         value = resolutionFlags->getResolutionAndComponentFlags();
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -1509,6 +1541,8 @@ bool GridDefinition::getProperty_rotation(uint propertyId,Int64& value)
       case Property::GridSection::Rotation::AngleOfRotationInDegrees:
         value = rotation->getGeography_angleOfRotationInDegrees()*1000;
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -1552,6 +1586,8 @@ bool GridDefinition::getProperty_rotation(uint propertyId,double& value)
       case Property::GridSection::Rotation::AngleOfRotationInDegrees:
         value = rotation->getGeography_angleOfRotationInDegrees();
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -1675,11 +1711,13 @@ bool GridDefinition::setProperty_gridArea(uint propertyId,Int64 value)
 
       case Property::GridSection::ResolutionFlags::ResolutionAndComponentFlags:
       {
-        auto resolutionFlags = gridArea->getResolutionFlags();
+        auto *resolutionFlags = gridArea->getResolutionFlags();
         if (resolutionFlags)
           resolutionFlags->setResolutionAndComponentFlags(value);
         return true;
       }
+      default:
+        break;
     }
 
     return false;
@@ -1715,6 +1753,8 @@ bool GridDefinition::setProperty_scanningMode(uint propertyId,Int64 value)
       case Property::GridSection::ScanningMode::ScanMode:
         scanningMode->setScanningMode(value);
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -1750,6 +1790,8 @@ bool GridDefinition::setProperty_resolutionFlags(uint propertyId,Int64 value)
       case Property::GridSection::ResolutionFlags::ResolutionAndComponentFlags:
         resolutionFlags->setResolutionAndComponentFlags(value);
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -1793,6 +1835,8 @@ bool GridDefinition::setProperty_rotation(uint propertyId,Int64 value)
       case Property::GridSection::Rotation::AngleOfRotationInDegrees:
         rotation->setGeography_angleOfRotationInDegrees((double)value/1000);
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -1836,6 +1880,8 @@ bool GridDefinition::setProperty_rotation(uint propertyId,double value)
       case Property::GridSection::Rotation::AngleOfRotationInDegrees:
         rotation->setGeography_angleOfRotationInDegrees(value);
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -2069,7 +2115,10 @@ void GridDefinition::getGridCellAverageSize(double& width,double& height) const
       uint x = d.nx()/2;
       uint y = d.ny()/2;
 
-      double lat1 = 0,lon1 = 0,lat2 = 0,lon2 = 0;;
+      double lat1 = 0;
+      double lon1 = 0;
+      double lat2 = 0;
+      double lon2 = 0;
       if (getGridLatLonCoordinatesByGridPoint(x,y,lat1,lon1)  &&  getGridLatLonCoordinatesByGridPoint(x+1,y+1,lat2,lon2))
       {
         width = latlon_distance(lat1,lon1,lat1,lon2);
@@ -2248,7 +2297,8 @@ bool GridDefinition::getGridPointByLatLonCoordinates(double lat,double lon,doubl
       transformCache2_stats.misses++;
     }
 
-    double x = 0, y = 0;
+    double x = 0;
+    double y = 0;
     getGridOriginalCoordinatesByLatLonCoordinates(lat,lon,x,y);
 
     grid_i = -1000;
@@ -2294,7 +2344,8 @@ bool GridDefinition::getGridPointByLatLonCoordinatesNoCache(double lat,double lo
   FUNCTION_TRACE
   try
   {
-    double x = 0, y = 0;
+    double x = 0;
+    double y = 0;
     getGridOriginalCoordinatesByLatLonCoordinatesNoCache(lat,lon,x,y);
 
     grid_i = -1000;
@@ -2323,7 +2374,7 @@ bool GridDefinition::getGridPointByLatLonCoordinatesNoCache(double lat,double lo
       \return        Returns 'false' if the given coordinates are outside of the grid.
 */
 
-bool GridDefinition::getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const
+bool GridDefinition::getGridPointByOriginalCoordinates(double /*x*/,double /*y*/,double& /*grid_i*/,double& /*grid_j*/) const
 {
   FUNCTION_TRACE
   throw Fmi::Exception(BCP,"Not implemented!");
@@ -2495,7 +2546,7 @@ uint GridDefinition::getTemplateNumber() const
         \param memoryReader  This object controls the access to the memory mapped file.
 */
 
-void GridDefinition::read(MemoryReader& memoryReader)
+void GridDefinition::read(MemoryReader& /*memoryReader*/)
 {
   FUNCTION_TRACE
   throw Fmi::Exception(BCP,"Not implemented!");
@@ -2510,7 +2561,7 @@ void GridDefinition::read(MemoryReader& memoryReader)
         \param dataWriter  The data stream object.
 */
 
-void GridDefinition::write(DataWriter& dataWriter)
+void GridDefinition::write(DataWriter& /*dataWriter*/)
 {
   FUNCTION_TRACE
   throw Fmi::Exception(BCP,"Not implemented!");
@@ -2527,7 +2578,7 @@ void GridDefinition::write(DataWriter& dataWriter)
         \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void GridDefinition::print(std::ostream& stream,uint level,uint optionFlags) const
+void GridDefinition::print(std::ostream& stream,uint level,uint /*optionFlags*/) const
 {
   FUNCTION_TRACE
   try

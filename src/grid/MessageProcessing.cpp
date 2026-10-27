@@ -13,29 +13,215 @@ namespace SmartMet
 namespace GRID
 {
 
+namespace
+{
 // Per-request number of row-bands for parallel contouring, taken from the request attributes
 // (default 1 = single-threaded). The value is clamped to the number of cores downstream.
-static int getContourThreads(T::AttributeList &attributeList)
+int getContourThreads(const T::AttributeList &attributeList)
 {
   const char *str = attributeList.getAttributeValue("contour.threads");
   return (str != nullptr) ? toInt32(str) : 1;
 }
+}  // namespace
+
+
+namespace
+{
+/*! \brief Sets the llbox (and the bbox of latlon grids) attribute from the corner points of the data grid. */
+
+void setDataLLBoxAttribute(const GRID::Message& message1,T::AttributeList& attributeList,T::Dimensions& d)
+{
+  double x1 = 0.0;
+  double y1 = 0.0;
+  double x2 = 0.0;
+  double y2 = 0.0;
+  uint px1 = 0;
+  uint py1 = 0;
+  uint px2 = d.nx()-1;
+  uint py2 = d.ny()-1;
+
+  if (message1.reverseYDirection())
+  {
+    px1 = 0;
+    py1 = d.ny()-1;
+    px2 = d.nx()-1;
+    py2 = 0;
+  }
+
+  char tmp[1400];  // four %.15f values of any magnitude
+  if (message1.getGridLatLonCoordinatesByGridPoint(px1,py1,y1,x1)  &&  message1.getGridLatLonCoordinatesByGridPoint(px2,py2,y2,x2))
+  {
+    if (x2 < x1  &&  x2 < 0)
+      x2 += 360;
+
+    if (x2 < x1  && x1 >= 180)
+      x1 -= 360;
+
+    sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
+    attributeList.setAttribute("grid.llbox",tmp);
+    if (message1.getGridProjection() == T::GridProjectionValue::LatLon)
+      attributeList.setAttribute("grid.bbox",tmp);
+  }
+}
+
+
+
+
+
+/*! \brief Sets the bbox attribute of non-latlon grids from the original corner coordinates of the data grid. */
+
+void setDataOriginalBBoxAttribute(const GRID::Message& message1,T::AttributeList& attributeList,T::Dimensions& d)
+{
+  double x1 = 0.0;
+  double y1 = 0.0;
+  double x2 = 0.0;
+  double y2 = 0.0;
+
+  char tmp[1400];  // four %.15f values of any magnitude
+  if (message1.getGridOriginalCoordinatesByGridPoint(0,0,x1,y1)  &&  message1.getGridOriginalCoordinatesByGridPoint(d.nx()-1,d.ny()-1,x2,y2))
+  {
+    if (message1.getGridProjection() == T::GridProjectionValue::LatLon)
+    {
+      if (x2 < x1  &&  x2 < 0)
+        x2 += 360;
+
+      if (x2 < x1  && x1 >= 180)
+        x1 -= 360;
+    }
+
+    if (message1.reverseYDirection())
+    {
+      double tmp = y1;
+      y1 = y2;
+      y2 = tmp;
+    }
+
+    sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
+    if (message1.getGridProjection() != T::GridProjectionValue::LatLon)
+      attributeList.setAttribute("grid.bbox",tmp);
+  }
+}
+
+
+
+
+
+/*! \brief Sets the llbox and bbox attributes from the corner points of the data grid. */
+
+void setDataBBoxAttributes(const GRID::Message& message1,T::AttributeList& attributeList)
+{
+  T::Dimensions  d = message1.getGridDimensions();
+
+  setDataLLBoxAttribute(message1,attributeList,d);
+  setDataOriginalBBoxAttribute(message1,attributeList,d);
+}
+
+
+
+
+
+/*! \brief Sets the llbox attribute of the crop area defined by a rectangle and its latlon center
+    coordinates. Returns false if the center coordinates are invalid. */
+
+bool setCenterLLBox(T::AttributeList& attributeList,const char *centerStr)
+{
+  // The crop area is defined by a rectangle and its latlon center coordinates.
+
+  std::vector<double> a;
+  splitString(centerStr,',',a);
+  if (a.size() != 2)
+    return false;
+
+  const char *metricWidthStr = attributeList.getAttributeValue("grid.metricWidth");
+  const char *metricHeightStr = attributeList.getAttributeValue("grid.metricHeight");
+
+  if (metricWidthStr != nullptr &&  metricHeightStr != nullptr)
+  {
+    double centerX = a[0];
+    double centerY = a[1];
+
+    double mWidth = toDouble(metricWidthStr) * 1000;   // km => m
+    double mHeight = toDouble(metricHeightStr) * 1000; // km => m
+
+    double lon1 = 0;
+    double lat1 = 0;
+    double lon2 = 0;
+    double lat2 =0;
+
+    latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
+
+    char tmp[1400];  // four %.15f values of any magnitude
+    sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",lon1,lat1,lon2,lat2);
+    attributeList.setAttribute("grid.llbox",tmp);
+  }
+
+  return true;
+}
+
+
+
+
+
+/*! \brief Sets the geometry attributes of the data geometry when the "data" CRS is requested.
+    Returns false if the requested crop area is invalid. */
+
+bool setDataGeometryAttributes(const GRID::Message& message1,T::AttributeList& attributeList)
+{
+  const char *crsStr = attributeList.getAttributeValue("grid.crs");
+  const char *llboxStr = attributeList.getAttributeValue("grid.llbox");
+  const char *centerStr = attributeList.getAttributeValue("grid.center");
+  const char *gridSizeStr = attributeList.getAttributeValue("grid.size");
+
+  if (gridSizeStr != nullptr)
+  {
+    double m = toDouble(gridSizeStr);
+    if (m > 0)
+    {
+      attributeList.setAttribute("grid.width",Fmi::to_string(C_INT(C_DOUBLE(message1.getGridWidth())*m)));
+      attributeList.setAttribute("grid.height",Fmi::to_string(C_INT(C_DOUBLE(message1.getGridHeight())*m)));
+    }
+  }
+
+  if (crsStr != nullptr &&  strcasecmp(crsStr,"data") == 0)
+  {
+    const char *gridWidthStr = attributeList.getAttributeValue("grid.width");
+    const char *gridHeightStr = attributeList.getAttributeValue("grid.height");
+    if ((gridWidthStr == nullptr || gridHeightStr == nullptr) &&  centerStr == nullptr)
+    {
+      attributeList.setAttribute("grid.width",Fmi::to_string(message1.getGridWidth()));
+      attributeList.setAttribute("grid.height",Fmi::to_string(message1.getGridHeight()));
+    }
+
+    attributeList.setAttribute("grid.crs",message1.getWKT());
+    attributeList.setAttribute("grid.proj4",message1.getProj4());
+
+    if (llboxStr == nullptr)
+      setDataBBoxAttributes(message1,attributeList);
+
+    if (llboxStr == nullptr &&  centerStr != nullptr  &&  !setCenterLLBox(attributeList,centerStr))
+      return false;
+
+    attributeList.setAttribute("grid.projectionType",Fmi::to_string(message1.getGridProjection()));
+  }
+
+  return true;
+}
+}  // namespace
+
+
+
 
 
 /*! \brief The constructor of the class. */
 
-MessageProcessing::MessageProcessing()
-{
-}
+MessageProcessing::MessageProcessing() = default;
 
 
 
 
 /*! \brief The destructor of the class. */
 
-MessageProcessing::~MessageProcessing()
-{
-}
+MessageProcessing::~MessageProcessing() = default;
 
 
 
@@ -118,6 +304,8 @@ void MessageProcessing::getGridIsobandsByLevel(const GRID::Message& message1,con
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
         coordinates = message1.getGridOriginalCoordinates();
         coordinatePtr = coordinates.get();
+        break;
+      default:
         break;
     }
 
@@ -243,6 +431,8 @@ void MessageProcessing::getGridIsobandsByTime(const GRID::Message& message1,cons
         coordinates = message1.getGridOriginalCoordinates();
         coordinatePtr = coordinates.get();
         break;
+      default:
+        break;
     }
 
     getIsobands(gridValues,coordinatePtr,d.nx(),d.ny(),contourLowValues,contourHighValues,interpolationType,smoothSize,smoothDegree,contours,0,getContourThreads(attributeList));
@@ -293,114 +483,8 @@ void MessageProcessing::getGridIsobandsByLevelAndGeometry(const GRID::Message& m
   FUNCTION_TRACE
   try
   {
-    const char *crsStr = attributeList.getAttributeValue("grid.crs");
-    const char *llboxStr = attributeList.getAttributeValue("grid.llbox");
-    const char *centerStr = attributeList.getAttributeValue("grid.center");
-    const char *gridSizeStr = attributeList.getAttributeValue("grid.size");
-
-    if (gridSizeStr != nullptr)
-    {
-      double m = toDouble(gridSizeStr);
-      if (m > 0)
-      {
-        attributeList.setAttribute("grid.width",Fmi::to_string(C_INT(C_DOUBLE(message1.getGridWidth())*m)));
-        attributeList.setAttribute("grid.height",Fmi::to_string(C_INT(C_DOUBLE(message1.getGridHeight())*m)));
-      }
-    }
-
-    if (crsStr != nullptr &&  strcasecmp(crsStr,"data") == 0)
-    {
-      const char *gridWidthStr = attributeList.getAttributeValue("grid.width");
-      const char *gridHeightStr = attributeList.getAttributeValue("grid.height");
-      if ((gridWidthStr == nullptr || gridHeightStr == nullptr) &&  centerStr == nullptr)
-      {
-        attributeList.setAttribute("grid.width",Fmi::to_string(message1.getGridWidth()));
-        attributeList.setAttribute("grid.height",Fmi::to_string(message1.getGridHeight()));
-      }
-
-      attributeList.setAttribute("grid.crs",message1.getWKT());
-      attributeList.setAttribute("grid.proj4",message1.getProj4());
-      T::Dimensions  d = message1.getGridDimensions();
-
-      if (llboxStr == nullptr)
-      {
-        double x1 = 0.0, y1 = 0.0, x2 = 0.0, y2 = 0.0;
-        uint px1 = 0,py1 = 0,px2 = d.nx()-1,py2 = d.ny()-1;
-
-        if (message1.reverseYDirection())
-          px1 = 0,py1 = d.ny()-1,px2 = d.nx()-1,py2 = 0;
-
-        char tmp[100];
-        if (message1.getGridLatLonCoordinatesByGridPoint(px1,py1,y1,x1)  &&  message1.getGridLatLonCoordinatesByGridPoint(px2,py2,y2,x2))
-        {
-          if (x2 < x1  &&  x2 < 0)
-            x2 += 360;
-
-          if (x2 < x1  && x1 >= 180)
-            x1 -= 360;
-
-          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
-          attributeList.setAttribute("grid.llbox",tmp);
-          if (message1.getGridProjection() == T::GridProjectionValue::LatLon)
-            attributeList.setAttribute("grid.bbox",tmp);
-        }
-
-        if (message1.getGridOriginalCoordinatesByGridPoint(0,0,x1,y1)  &&  message1.getGridOriginalCoordinatesByGridPoint(d.nx()-1,d.ny()-1,x2,y2))
-        {
-          if (message1.getGridProjection() == T::GridProjectionValue::LatLon)
-          {
-            if (x2 < x1  &&  x2 < 0)
-              x2 += 360;
-
-            if (x2 < x1  && x1 >= 180)
-              x1 -= 360;
-          }
-
-          if (message1.reverseYDirection())
-          {
-            double tmp = y1;
-            y1 = y2;
-            y2 = tmp;
-          }
-
-          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
-          if (message1.getGridProjection() != T::GridProjectionValue::LatLon)
-            attributeList.setAttribute("grid.bbox",tmp);
-        }
-      }
-
-      if (llboxStr == nullptr &&  centerStr != nullptr)
-      {
-        // The crop area is defined by a rectangle and its latlon center coordinates.
-
-        std::vector<double> a;
-        splitString(centerStr,',',a);
-        if (a.size() != 2)
-          return;
-
-        const char *metricWidthStr = attributeList.getAttributeValue("grid.metricWidth");
-        const char *metricHeightStr = attributeList.getAttributeValue("grid.metricHeight");
-
-        if (metricWidthStr != nullptr &&  metricHeightStr != nullptr)
-        {
-          double centerX = a[0];
-          double centerY = a[1];
-
-          double mWidth = toDouble(metricWidthStr) * 1000;   // km => m
-          double mHeight = toDouble(metricHeightStr) * 1000; // km => m
-
-          double lon1 = 0,lat1 = 0,lon2 = 0, lat2 =0;
-
-          latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
-
-          char tmp[200];
-          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",lon1,lat1,lon2,lat2);
-          attributeList.setAttribute("grid.llbox",tmp);
-        }
-      }
-
-      attributeList.setAttribute("grid.projectionType",Fmi::to_string(message1.getGridProjection()));
-    }
+    if (!setDataGeometryAttributes(message1,attributeList))
+      return;
 
     const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
     if (geometryIdStr != nullptr  &&  message1.getGridGeometryId() == toInt32(geometryIdStr))
@@ -427,7 +511,7 @@ void MessageProcessing::getGridIsobandsByLevelAndGeometry(const GRID::Message& m
 
     Identification::gridDef.getGridOriginalCoordinatesByGeometry(attributeList,latLonCoordinates,coordinateType,coordinates,width,height);
 
-    if (!latLonCoordinates || latLonCoordinates->size() == 0)
+    if (!latLonCoordinates || latLonCoordinates->empty())
     {
       getGridIsobandsByLevel(message1,message2,newLevel,contourLowValues,contourHighValues,attributeList,modificationOperation,modificationParameters,contours);
       return;
@@ -462,6 +546,8 @@ void MessageProcessing::getGridIsobandsByLevelAndGeometry(const GRID::Message& m
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
         coordinatePtr = coordinates.get();
+        break;
+      default:
         break;
     }
 
@@ -566,6 +652,8 @@ void MessageProcessing::getGridIsobandsByLevelAndGrid(const GRID::Message& messa
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
         break;
+      default:
+        break;
     }
 
     attributeList.setAttribute("grid.levelInterpolationMethod",Fmi::to_string(levelInterpolationMethod));
@@ -669,6 +757,8 @@ void MessageProcessing::getGridIsobandsByTimeAndGrid(const GRID::Message& messag
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
         break;
+      default:
+        break;
     }
 
     attributeList.setAttribute("grid.timeInterpolationMethod",Fmi::to_string(timeInterpolationMethod));
@@ -720,114 +810,8 @@ void MessageProcessing::getGridIsobandsByTimeAndGeometry(const GRID::Message& me
   FUNCTION_TRACE
   try
   {
-    const char *crsStr = attributeList.getAttributeValue("grid.crs");
-    const char *llboxStr = attributeList.getAttributeValue("grid.llbox");
-    const char *centerStr = attributeList.getAttributeValue("grid.center");
-    const char *gridSizeStr = attributeList.getAttributeValue("grid.size");
-
-    if (gridSizeStr != nullptr)
-    {
-      double m = toDouble(gridSizeStr);
-      if (m > 0)
-      {
-        attributeList.setAttribute("grid.width",Fmi::to_string(C_INT(C_DOUBLE(message1.getGridWidth())*m)));
-        attributeList.setAttribute("grid.height",Fmi::to_string(C_INT(C_DOUBLE(message1.getGridHeight())*m)));
-      }
-    }
-
-    if (crsStr != nullptr &&  strcasecmp(crsStr,"data") == 0)
-    {
-      const char *gridWidthStr = attributeList.getAttributeValue("grid.width");
-      const char *gridHeightStr = attributeList.getAttributeValue("grid.height");
-      if ((gridWidthStr == nullptr || gridHeightStr == nullptr) &&  centerStr == nullptr)
-      {
-        attributeList.setAttribute("grid.width",Fmi::to_string(message1.getGridWidth()));
-        attributeList.setAttribute("grid.height",Fmi::to_string(message1.getGridHeight()));
-      }
-
-      attributeList.setAttribute("grid.crs",message1.getWKT());
-      attributeList.setAttribute("grid.proj4",message1.getProj4());
-      T::Dimensions  d = message1.getGridDimensions();
-
-      if (llboxStr == nullptr)
-      {
-        double x1 = 0.0, y1 = 0.0, x2 = 0.0, y2 = 0.0;
-        uint px1 = 0,py1 = 0,px2 = d.nx()-1,py2 = d.ny()-1;
-
-        if (message1.reverseYDirection())
-          px1 = 0,py1 = d.ny()-1,px2 = d.nx()-1,py2 = 0;
-
-        char tmp[100];
-        if (message1.getGridLatLonCoordinatesByGridPoint(px1,py1,y1,x1)  &&  message1.getGridLatLonCoordinatesByGridPoint(px2,py2,y2,x2))
-        {
-          if (x2 < x1  &&  x2 < 0)
-            x2 += 360;
-
-          if (x2 < x1  && x1 >= 180)
-            x1 -= 360;
-
-          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
-          attributeList.setAttribute("grid.llbox",tmp);
-          if (message1.getGridProjection() == T::GridProjectionValue::LatLon)
-            attributeList.setAttribute("grid.bbox",tmp);
-        }
-
-        if (message1.getGridOriginalCoordinatesByGridPoint(0,0,x1,y1)  &&  message1.getGridOriginalCoordinatesByGridPoint(d.nx()-1,d.ny()-1,x2,y2))
-        {
-          if (message1.getGridProjection() == T::GridProjectionValue::LatLon)
-          {
-            if (x2 < x1  &&  x2 < 0)
-              x2 += 360;
-
-            if (x2 < x1  && x1 >= 180)
-              x1 -= 360;
-          }
-
-          if (message1.reverseYDirection())
-          {
-            double tmp = y1;
-            y1 = y2;
-            y2 = tmp;
-          }
-
-          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
-          if (message1.getGridProjection() != T::GridProjectionValue::LatLon)
-            attributeList.setAttribute("grid.bbox",tmp);
-        }
-      }
-
-      if (llboxStr == nullptr &&  centerStr != nullptr)
-      {
-        // The crop area is defined by a rectangle and its latlon center coordinates.
-
-        std::vector<double> a;
-        splitString(centerStr,',',a);
-        if (a.size() != 2)
-          return;
-
-        const char *metricWidthStr = attributeList.getAttributeValue("grid.metricWidth");
-        const char *metricHeightStr = attributeList.getAttributeValue("grid.metricHeight");
-
-        if (metricWidthStr != nullptr &&  metricHeightStr != nullptr)
-        {
-          double centerX = a[0];
-          double centerY = a[1];
-
-          double mWidth = toDouble(metricWidthStr) * 1000;   // km => m
-          double mHeight = toDouble(metricHeightStr) * 1000; // km => m
-
-          double lon1 = 0,lat1 = 0,lon2 = 0, lat2 =0;
-
-          latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
-
-          char tmp[200];
-          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",lon1,lat1,lon2,lat2);
-          attributeList.setAttribute("grid.llbox",tmp);
-        }
-      }
-
-      attributeList.setAttribute("grid.projectionType",Fmi::to_string(message1.getGridProjection()));
-    }
+    if (!setDataGeometryAttributes(message1,attributeList))
+      return;
 
     const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
     if (geometryIdStr != nullptr  &&  message1.getGridGeometryId() == toInt32(geometryIdStr))
@@ -868,7 +852,7 @@ void MessageProcessing::getGridIsobandsByTimeAndGeometry(const GRID::Message& me
 
     Identification::gridDef.getGridOriginalCoordinatesByGeometry(attributeList,latLonCoordinates,coordinateType,coordinates,width,height);
 
-    if (!latLonCoordinates || latLonCoordinates->size() == 0)
+    if (!latLonCoordinates || latLonCoordinates->empty())
     {
       getGridIsobandsByTime(message1,message2,newTime,contourLowValues,contourHighValues,attributeList,modificationOperation,modificationParameters,contours);
       return;
@@ -906,6 +890,8 @@ void MessageProcessing::getGridIsobandsByTimeAndGeometry(const GRID::Message& me
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
         coordinatePtr = coordinates.get();
+        break;
+      default:
         break;
     }
 
@@ -1015,6 +1001,8 @@ void MessageProcessing::getGridIsobandsByTimeAndLevel(const GRID::Message& messa
         coordinates = message1.getGridOriginalCoordinates();
         coordinatePtr = coordinates.get();
         break;
+      default:
+        break;
     }
 
     getIsobands(gridValues,coordinatePtr,d.nx(),d.ny(),contourLowValues,contourHighValues,interpolationType,smoothSize,smoothDegree,contours,0,getContourThreads(attributeList));
@@ -1067,114 +1055,8 @@ void MessageProcessing::getGridIsobandsByTimeLevelAndGeometry(const GRID::Messag
   FUNCTION_TRACE
   try
   {
-    const char *crsStr = attributeList.getAttributeValue("grid.crs");
-    const char *llboxStr = attributeList.getAttributeValue("grid.llbox");
-    const char *centerStr = attributeList.getAttributeValue("grid.center");
-    const char *gridSizeStr = attributeList.getAttributeValue("grid.size");
-
-    if (gridSizeStr != nullptr)
-    {
-      double m = toDouble(gridSizeStr);
-      if (m > 0)
-      {
-        attributeList.setAttribute("grid.width",Fmi::to_string(C_INT(C_DOUBLE(message1.getGridWidth())*m)));
-        attributeList.setAttribute("grid.height",Fmi::to_string(C_INT(C_DOUBLE(message1.getGridHeight())*m)));
-      }
-    }
-
-    if (crsStr != nullptr &&  strcasecmp(crsStr,"data") == 0)
-    {
-      const char *gridWidthStr = attributeList.getAttributeValue("grid.width");
-      const char *gridHeightStr = attributeList.getAttributeValue("grid.height");
-      if ((gridWidthStr == nullptr || gridHeightStr == nullptr) &&  centerStr == nullptr)
-      {
-        attributeList.setAttribute("grid.width",Fmi::to_string(message1.getGridWidth()));
-        attributeList.setAttribute("grid.height",Fmi::to_string(message1.getGridHeight()));
-      }
-
-      attributeList.setAttribute("grid.crs",message1.getWKT());
-      attributeList.setAttribute("grid.proj4",message1.getProj4());
-      T::Dimensions  d = message1.getGridDimensions();
-
-      if (llboxStr == nullptr)
-      {
-        double x1 = 0.0, y1 = 0.0, x2 = 0.0, y2 = 0.0;
-        uint px1 = 0,py1 = 0,px2 = d.nx()-1,py2 = d.ny()-1;
-
-        if (message1.reverseYDirection())
-          px1 = 0,py1 = d.ny()-1,px2 = d.nx()-1,py2 = 0;
-
-        char tmp[100];
-        if (message1.getGridLatLonCoordinatesByGridPoint(px1,py1,y1,x1)  &&  message1.getGridLatLonCoordinatesByGridPoint(px2,py2,y2,x2))
-        {
-          if (x2 < x1  &&  x2 < 0)
-            x2 += 360;
-
-          if (x2 < x1  && x1 >= 180)
-            x1 -= 360;
-
-          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
-          attributeList.setAttribute("grid.llbox",tmp);
-          if (message1.getGridProjection() == T::GridProjectionValue::LatLon)
-            attributeList.setAttribute("grid.bbox",tmp);
-        }
-
-        if (message1.getGridOriginalCoordinatesByGridPoint(0,0,x1,y1)  &&  message1.getGridOriginalCoordinatesByGridPoint(d.nx()-1,d.ny()-1,x2,y2))
-        {
-          if (message1.getGridProjection() == T::GridProjectionValue::LatLon)
-          {
-            if (x2 < x1  &&  x2 < 0)
-              x2 += 360;
-
-            if (x2 < x1  && x1 >= 180)
-              x1 -= 360;
-          }
-
-          if (message1.reverseYDirection())
-          {
-            double tmp = y1;
-            y1 = y2;
-            y2 = tmp;
-          }
-
-          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
-          if (message1.getGridProjection() != T::GridProjectionValue::LatLon)
-            attributeList.setAttribute("grid.bbox",tmp);
-        }
-      }
-
-      if (llboxStr == nullptr &&  centerStr != nullptr)
-      {
-        // The crop area is defined by a rectangle and its latlon center coordinates.
-
-        std::vector<double> a;
-        splitString(centerStr,',',a);
-        if (a.size() != 2)
-          return;
-
-        const char *metricWidthStr = attributeList.getAttributeValue("grid.metricWidth");
-        const char *metricHeightStr = attributeList.getAttributeValue("grid.metricHeight");
-
-        if (metricWidthStr != nullptr &&  metricHeightStr != nullptr)
-        {
-          double centerX = a[0];
-          double centerY = a[1];
-
-          double mWidth = toDouble(metricWidthStr) * 1000;   // km => m
-          double mHeight = toDouble(metricHeightStr) * 1000; // km => m
-
-          double lon1 = 0,lat1 = 0,lon2 = 0, lat2 =0;
-
-          latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
-
-          char tmp[200];
-          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",lon1,lat1,lon2,lat2);
-          attributeList.setAttribute("grid.llbox",tmp);
-        }
-      }
-
-      attributeList.setAttribute("grid.projectionType",Fmi::to_string(message1.getGridProjection()));
-    }
+    if (!setDataGeometryAttributes(message1,attributeList))
+      return;
 
     const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
     if (geometryIdStr != nullptr  &&  message1.getGridGeometryId() == toInt32(geometryIdStr))
@@ -1201,7 +1083,7 @@ void MessageProcessing::getGridIsobandsByTimeLevelAndGeometry(const GRID::Messag
 
     Identification::gridDef.getGridOriginalCoordinatesByGeometry(attributeList,latLonCoordinates,coordinateType,coordinates,width,height);
 
-    if (!latLonCoordinates || latLonCoordinates->size() == 0)
+    if (!latLonCoordinates || latLonCoordinates->empty())
     {
       getGridIsobandsByTimeAndLevel(message1,message2,message3,message4,newTime,newLevel,contourLowValues,contourHighValues,attributeList,modificationOperation,modificationParameters,contours);
       return;
@@ -1237,6 +1119,8 @@ void MessageProcessing::getGridIsobandsByTimeLevelAndGeometry(const GRID::Messag
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
         coordinatePtr = coordinates.get();
         break;
+      default:
+        break;
     }
 
     getIsobands(gridValues,coordinatePtr,width,height,contourLowValues,contourHighValues,interpolationType,smoothSize,smoothDegree,contours,0,getContourThreads(attributeList));
@@ -1245,7 +1129,7 @@ void MessageProcessing::getGridIsobandsByTimeLevelAndGeometry(const GRID::Messag
     attributeList.setAttribute("grid.original.proj4",message1.getProj4());
     attributeList.setAttribute("grid.original.width",Fmi::to_string(message1.getGridWidth()));
     attributeList.setAttribute("grid.original.height",Fmi::to_string(message1.getGridHeight()));
-    attributeList.setAttribute("grid.ogiginal.relativeUV",Fmi::to_string((int)message1.isRelativeUV()));
+    attributeList.setAttribute("grid.original.relativeUV",Fmi::to_string((int)message1.isRelativeUV()));
     attributeList.setAttribute("grid.original.global",Fmi::to_string((int)message1.isGridGlobal()));
     attributeList.setAttribute("grid.width",Fmi::to_string(width));
     attributeList.setAttribute("grid.height",Fmi::to_string(height));
@@ -1405,6 +1289,8 @@ void MessageProcessing::getGridIsolinesByTimeAndLevel(const GRID::Message& messa
         coordinates = message1.getGridOriginalCoordinates();
         coordinatePtr = coordinates.get();
         break;
+      default:
+        break;
     }
 
     getIsolines(gridValues,coordinatePtr,d.nx(),d.ny(),contourValues,interpolationType,smoothSize,smoothDegree,contours,0,getContourThreads(attributeList));
@@ -1457,114 +1343,8 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGeometry(const GRID::Messag
   FUNCTION_TRACE
   try
   {
-    const char *crsStr = attributeList.getAttributeValue("grid.crs");
-    const char *llboxStr = attributeList.getAttributeValue("grid.llbox");
-    const char *centerStr = attributeList.getAttributeValue("grid.center");
-    const char *gridSizeStr = attributeList.getAttributeValue("grid.size");
-
-    if (gridSizeStr != nullptr)
-    {
-      double m = toDouble(gridSizeStr);
-      if (m > 0)
-      {
-        attributeList.setAttribute("grid.width",Fmi::to_string(C_INT(C_DOUBLE(message1.getGridWidth())*m)));
-        attributeList.setAttribute("grid.height",Fmi::to_string(C_INT(C_DOUBLE(message1.getGridHeight())*m)));
-      }
-    }
-
-    if (crsStr != nullptr &&  strcasecmp(crsStr,"data") == 0)
-    {
-      const char *gridWidthStr = attributeList.getAttributeValue("grid.width");
-      const char *gridHeightStr = attributeList.getAttributeValue("grid.height");
-      if ((gridWidthStr == nullptr || gridHeightStr == nullptr) &&  centerStr == nullptr)
-      {
-        attributeList.setAttribute("grid.width",Fmi::to_string(message1.getGridWidth()));
-        attributeList.setAttribute("grid.height",Fmi::to_string(message1.getGridHeight()));
-      }
-
-      attributeList.setAttribute("grid.crs",message1.getWKT());
-      attributeList.setAttribute("grid.proj4",message1.getProj4());
-      T::Dimensions  d = message1.getGridDimensions();
-
-      if (llboxStr == nullptr)
-      {
-        double x1 = 0.0, y1 = 0.0, x2 = 0.0, y2 = 0.0;
-        uint px1 = 0,py1 = 0,px2 = d.nx()-1,py2 = d.ny()-1;
-
-        if (message1.reverseYDirection())
-          px1 = 0,py1 = d.ny()-1,px2 = d.nx()-1,py2 = 0;
-
-        char tmp[100];
-        if (message1.getGridLatLonCoordinatesByGridPoint(px1,py1,y1,x1)  &&  message1.getGridLatLonCoordinatesByGridPoint(px2,py2,y2,x2))
-        {
-          if (x2 < x1  &&  x2 < 0)
-            x2 += 360;
-
-          if (x2 < x1  && x1 >= 180)
-            x1 -= 360;
-
-          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
-          attributeList.setAttribute("grid.llbox",tmp);
-          if (message1.getGridProjection() == T::GridProjectionValue::LatLon)
-            attributeList.setAttribute("grid.bbox",tmp);
-        }
-
-        if (message1.getGridOriginalCoordinatesByGridPoint(0,0,x1,y1)  &&  message1.getGridOriginalCoordinatesByGridPoint(d.nx()-1,d.ny()-1,x2,y2))
-        {
-          if (message1.getGridProjection() == T::GridProjectionValue::LatLon)
-          {
-            if (x2 < x1  &&  x2 < 0)
-              x2 += 360;
-
-            if (x2 < x1  && x1 >= 180)
-              x1 -= 360;
-          }
-
-          if (message1.reverseYDirection())
-          {
-            double tmp = y1;
-            y1 = y2;
-            y2 = tmp;
-          }
-
-          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
-          if (message1.getGridProjection() != T::GridProjectionValue::LatLon)
-            attributeList.setAttribute("grid.bbox",tmp);
-        }
-      }
-
-      if (llboxStr == nullptr &&  centerStr != nullptr)
-      {
-        // The crop area is defined by a rectangle and its latlon center coordinates.
-
-        std::vector<double> a;
-        splitString(centerStr,',',a);
-        if (a.size() != 2)
-          return;
-
-        const char *metricWidthStr = attributeList.getAttributeValue("grid.metricWidth");
-        const char *metricHeightStr = attributeList.getAttributeValue("grid.metricHeight");
-
-        if (metricWidthStr != nullptr &&  metricHeightStr != nullptr)
-        {
-          double centerX = a[0];
-          double centerY = a[1];
-
-          double mWidth = toDouble(metricWidthStr) * 1000;   // km => m
-          double mHeight = toDouble(metricHeightStr) * 1000; // km => m
-
-          double lon1 = 0,lat1 = 0,lon2 = 0, lat2 =0;
-
-          latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
-
-          char tmp[200];
-          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",lon1,lat1,lon2,lat2);
-          attributeList.setAttribute("grid.llbox",tmp);
-        }
-      }
-
-      attributeList.setAttribute("grid.projectionType",Fmi::to_string(message1.getGridProjection()));
-    }
+    if (!setDataGeometryAttributes(message1,attributeList))
+      return;
 
     const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
     if (geometryIdStr != nullptr  &&  message1.getGridGeometryId() == toInt32(geometryIdStr))
@@ -1591,7 +1371,7 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGeometry(const GRID::Messag
 
     Identification::gridDef.getGridOriginalCoordinatesByGeometry(attributeList,latLonCoordinates,coordinateType,coordinates,width,height);
 
-    if (!latLonCoordinates || latLonCoordinates->size() == 0)
+    if (!latLonCoordinates || latLonCoordinates->empty())
     {
       getGridIsolinesByTimeAndLevel(message1,message2,message3,message4,newTime,newLevel,contourValues,attributeList,modificationOperation,modificationParameters,contours);
       return;
@@ -1636,6 +1416,8 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGeometry(const GRID::Messag
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
         coordinatePtr = coordinates.get();
+        break;
+      default:
         break;
     }
 
@@ -1742,6 +1524,8 @@ void MessageProcessing::getGridIsolinesByLevel(const GRID::Message& message1,con
         coordinates = message1.getGridOriginalCoordinates();
         coordinatePtr = coordinates.get();
         break;
+      default:
+        break;
     }
 
     getIsolines(gridValues,coordinatePtr,d.nx(),d.ny(),contourValues,interpolationType,smoothSize,smoothDegree,contours,0,getContourThreads(attributeList));
@@ -1846,6 +1630,8 @@ void MessageProcessing::getGridIsolinesByTime(const GRID::Message& message1,cons
         coordinates = message1.getGridOriginalCoordinates();
         coordinatePtr = coordinates.get();
         break;
+      default:
+        break;
     }
 
     getIsolines(gridValues,coordinatePtr,d.nx(),d.ny(),contourValues,interpolationType,smoothSize,smoothDegree,contours,0,getContourThreads(attributeList));
@@ -1896,114 +1682,8 @@ void MessageProcessing::getGridIsolinesByLevelAndGeometry(const GRID::Message& m
   FUNCTION_TRACE
   try
   {
-    const char *crsStr = attributeList.getAttributeValue("grid.crs");
-    const char *llboxStr = attributeList.getAttributeValue("grid.llbox");
-    const char *centerStr = attributeList.getAttributeValue("grid.center");
-    const char *gridSizeStr = attributeList.getAttributeValue("grid.size");
-
-    if (gridSizeStr != nullptr)
-    {
-      double m = toDouble(gridSizeStr);
-      if (m > 0)
-      {
-        attributeList.setAttribute("grid.width",Fmi::to_string(C_INT(C_DOUBLE(message1.getGridWidth())*m)));
-        attributeList.setAttribute("grid.height",Fmi::to_string(C_INT(C_DOUBLE(message1.getGridHeight())*m)));
-      }
-    }
-
-    if (crsStr != nullptr &&  strcasecmp(crsStr,"data") == 0)
-    {
-      const char *gridWidthStr = attributeList.getAttributeValue("grid.width");
-      const char *gridHeightStr = attributeList.getAttributeValue("grid.height");
-      if ((gridWidthStr == nullptr || gridHeightStr == nullptr) &&  centerStr == nullptr)
-      {
-        attributeList.setAttribute("grid.width",Fmi::to_string(message1.getGridWidth()));
-        attributeList.setAttribute("grid.height",Fmi::to_string(message1.getGridHeight()));
-      }
-
-      attributeList.setAttribute("grid.crs",message1.getWKT());
-      attributeList.setAttribute("grid.proj4",message1.getProj4());
-      T::Dimensions  d = message1.getGridDimensions();
-
-      if (llboxStr == nullptr)
-      {
-        double x1 = 0.0, y1 = 0.0, x2 = 0.0, y2 = 0.0;
-        uint px1 = 0,py1 = 0,px2 = d.nx()-1,py2 = d.ny()-1;
-
-        if (message1.reverseYDirection())
-          px1 = 0,py1 = d.ny()-1,px2 = d.nx()-1,py2 = 0;
-
-        char tmp[100];
-        if (message1.getGridLatLonCoordinatesByGridPoint(px1,py1,y1,x1)  &&  message1.getGridLatLonCoordinatesByGridPoint(px2,py2,y2,x2))
-        {
-          if (x2 < x1  &&  x2 < 0)
-            x2 += 360;
-
-          if (x2 < x1  && x1 >= 180)
-            x1 -= 360;
-
-          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
-          attributeList.setAttribute("grid.llbox",tmp);
-          if (message1.getGridProjection() == T::GridProjectionValue::LatLon)
-            attributeList.setAttribute("grid.bbox",tmp);
-        }
-
-        if (message1.getGridOriginalCoordinatesByGridPoint(0,0,x1,y1)  &&  message1.getGridOriginalCoordinatesByGridPoint(d.nx()-1,d.ny()-1,x2,y2))
-        {
-          if (message1.getGridProjection() == T::GridProjectionValue::LatLon)
-          {
-            if (x2 < x1  &&  x2 < 0)
-              x2 += 360;
-
-            if (x2 < x1  && x1 >= 180)
-              x1 -= 360;
-          }
-
-          if (message1.reverseYDirection())
-          {
-            double tmp = y1;
-            y1 = y2;
-            y2 = tmp;
-          }
-
-          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
-          if (message1.getGridProjection() != T::GridProjectionValue::LatLon)
-            attributeList.setAttribute("grid.bbox",tmp);
-        }
-      }
-
-      if (llboxStr == nullptr &&  centerStr != nullptr)
-      {
-        // The crop area is defined by a rectangle and its latlon center coordinates.
-
-        std::vector<double> a;
-        splitString(centerStr,',',a);
-        if (a.size() != 2)
-          return;
-
-        const char *metricWidthStr = attributeList.getAttributeValue("grid.metricWidth");
-        const char *metricHeightStr = attributeList.getAttributeValue("grid.metricHeight");
-
-        if (metricWidthStr != nullptr &&  metricHeightStr != nullptr)
-        {
-          double centerX = a[0];
-          double centerY = a[1];
-
-          double mWidth = toDouble(metricWidthStr) * 1000;   // km => m
-          double mHeight = toDouble(metricHeightStr) * 1000; // km => m
-
-          double lon1 = 0,lat1 = 0,lon2 = 0, lat2 =0;
-
-          latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
-
-          char tmp[200];
-          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",lon1,lat1,lon2,lat2);
-          attributeList.setAttribute("grid.llbox",tmp);
-        }
-      }
-
-      attributeList.setAttribute("grid.projectionType",Fmi::to_string(message1.getGridProjection()));
-    }
+    if (!setDataGeometryAttributes(message1,attributeList))
+      return;
 
     const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
     if (geometryIdStr != nullptr  &&  message1.getGridGeometryId() == toInt32(geometryIdStr))
@@ -2044,7 +1724,7 @@ void MessageProcessing::getGridIsolinesByLevelAndGeometry(const GRID::Message& m
 
     Identification::gridDef.getGridOriginalCoordinatesByGeometry(attributeList,latLonCoordinates,coordinateType,coordinates,width,height);
 
-    if (!latLonCoordinates || latLonCoordinates->size() == 0)
+    if (!latLonCoordinates || latLonCoordinates->empty())
     {
       getGridIsolinesByLevel(message1,message2,newLevel,contourValues,attributeList,modificationOperation,modificationParameters,contours);
       return;
@@ -2092,6 +1772,8 @@ void MessageProcessing::getGridIsolinesByLevelAndGeometry(const GRID::Message& m
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
         coordinatePtr = coordinates.get();
+        break;
+      default:
         break;
     }
 
@@ -2146,114 +1828,8 @@ void MessageProcessing::getGridIsolinesByTimeAndGeometry(const GRID::Message& me
   FUNCTION_TRACE
   try
   {
-    const char *crsStr = attributeList.getAttributeValue("grid.crs");
-    const char *llboxStr = attributeList.getAttributeValue("grid.llbox");
-    const char *centerStr = attributeList.getAttributeValue("grid.center");
-    const char *gridSizeStr = attributeList.getAttributeValue("grid.size");
-
-    if (gridSizeStr != nullptr)
-    {
-      double m = toDouble(gridSizeStr);
-      if (m > 0)
-      {
-        attributeList.setAttribute("grid.width",Fmi::to_string(C_INT(C_DOUBLE(message1.getGridWidth())*m)));
-        attributeList.setAttribute("grid.height",Fmi::to_string(C_INT(C_DOUBLE(message1.getGridHeight())*m)));
-      }
-    }
-
-    if (crsStr != nullptr &&  strcasecmp(crsStr,"data") == 0)
-    {
-      const char *gridWidthStr = attributeList.getAttributeValue("grid.width");
-      const char *gridHeightStr = attributeList.getAttributeValue("grid.height");
-      if ((gridWidthStr == nullptr || gridHeightStr == nullptr) &&  centerStr == nullptr)
-      {
-        attributeList.setAttribute("grid.width",Fmi::to_string(message1.getGridWidth()));
-        attributeList.setAttribute("grid.height",Fmi::to_string(message1.getGridHeight()));
-      }
-
-      attributeList.setAttribute("grid.crs",message1.getWKT());
-      attributeList.setAttribute("grid.proj4",message1.getProj4());
-      T::Dimensions  d = message1.getGridDimensions();
-
-      if (llboxStr == nullptr)
-      {
-        double x1 = 0.0, y1 = 0.0, x2 = 0.0, y2 = 0.0;
-        uint px1 = 0,py1 = 0,px2 = d.nx()-1,py2 = d.ny()-1;
-
-        if (message1.reverseYDirection())
-          px1 = 0,py1 = d.ny()-1,px2 = d.nx()-1,py2 = 0;
-
-        char tmp[100];
-        if (message1.getGridLatLonCoordinatesByGridPoint(px1,py1,y1,x1)  &&  message1.getGridLatLonCoordinatesByGridPoint(px2,py2,y2,x2))
-        {
-          if (x2 < x1  &&  x2 < 0)
-            x2 += 360;
-
-          if (x2 < x1  && x1 >= 180)
-            x1 -= 360;
-
-          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
-          attributeList.setAttribute("grid.llbox",tmp);
-          if (message1.getGridProjection() == T::GridProjectionValue::LatLon)
-            attributeList.setAttribute("grid.bbox",tmp);
-        }
-
-        if (message1.getGridOriginalCoordinatesByGridPoint(0,0,x1,y1)  &&  message1.getGridOriginalCoordinatesByGridPoint(d.nx()-1,d.ny()-1,x2,y2))
-        {
-          if (message1.getGridProjection() == T::GridProjectionValue::LatLon)
-          {
-            if (x2 < x1  &&  x2 < 0)
-              x2 += 360;
-
-            if (x2 < x1  && x1 >= 180)
-              x1 -= 360;
-          }
-
-          if (message1.reverseYDirection())
-          {
-            double tmp = y1;
-            y1 = y2;
-            y2 = tmp;
-          }
-
-          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
-          if (message1.getGridProjection() != T::GridProjectionValue::LatLon)
-            attributeList.setAttribute("grid.bbox",tmp);
-        }
-      }
-
-      if (llboxStr == nullptr &&  centerStr != nullptr)
-      {
-        // The crop area is defined by a rectangle and its latlon center coordinates.
-
-        std::vector<double> a;
-        splitString(centerStr,',',a);
-        if (a.size() != 2)
-          return;
-
-        const char *metricWidthStr = attributeList.getAttributeValue("grid.metricWidth");
-        const char *metricHeightStr = attributeList.getAttributeValue("grid.metricHeight");
-
-        if (metricWidthStr != nullptr &&  metricHeightStr != nullptr)
-        {
-          double centerX = a[0];
-          double centerY = a[1];
-
-          double mWidth = toDouble(metricWidthStr) * 1000;   // km => m
-          double mHeight = toDouble(metricHeightStr) * 1000; // km => m
-
-          double lon1 = 0,lat1 = 0,lon2 = 0, lat2 =0;
-
-          latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
-
-          char tmp[200];
-          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",lon1,lat1,lon2,lat2);
-          attributeList.setAttribute("grid.llbox",tmp);
-        }
-      }
-
-      attributeList.setAttribute("grid.projectionType",Fmi::to_string(message1.getGridProjection()));
-    }
+    if (!setDataGeometryAttributes(message1,attributeList))
+      return;
 
     const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
     if (geometryIdStr != nullptr  &&  message1.getGridGeometryId() == toInt32(geometryIdStr))
@@ -2295,7 +1871,7 @@ void MessageProcessing::getGridIsolinesByTimeAndGeometry(const GRID::Message& me
 
     Identification::gridDef.getGridOriginalCoordinatesByGeometry(attributeList,latLonCoordinates,coordinateType,coordinates,width,height);
 
-    if (!latLonCoordinates || latLonCoordinates->size() == 0)
+    if (!latLonCoordinates || latLonCoordinates->empty())
     {
       getGridIsolinesByTime(message1,message2,newTime,contourValues,attributeList,modificationOperation,modificationParameters,contours);
       return;
@@ -2344,6 +1920,8 @@ void MessageProcessing::getGridIsolinesByTimeAndGeometry(const GRID::Message& me
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
         coordinatePtr = coordinates.get();
         break;
+      default:
+        break;
     }
 
     getIsolines(gridValues,coordinatePtr,width,height,contourValues,interpolationType,smoothSize,smoothDegree,contours,0,getContourThreads(attributeList));
@@ -2359,7 +1937,7 @@ void MessageProcessing::getGridIsolinesByTimeAndGeometry(const GRID::Message& me
     attributeList.setAttribute("grid.width",Fmi::to_string(width));
     attributeList.setAttribute("grid.height",Fmi::to_string(height));
     attributeList.setAttribute("contour.coordinateType",Fmi::to_string(coordinateType));
-    attributeList.setAttribute("contour.interpolationt.type",Fmi::to_string(interpolationType));
+    attributeList.setAttribute("contour.interpolation.type",Fmi::to_string(interpolationType));
   }
   catch (...)
   {
@@ -2448,6 +2026,8 @@ void MessageProcessing::getGridIsolinesByLevelAndGrid(const GRID::Message& messa
         break;
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
+        break;
+      default:
         break;
     }
 
@@ -2553,6 +2133,8 @@ void MessageProcessing::getGridIsolinesByTimeAndGrid(const GRID::Message& messag
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
         break;
+      default:
+        break;
     }
 
     attributeList.setAttribute("grid.timeInterpolationMethod",Fmi::to_string(timeInterpolationMethod));
@@ -2564,7 +2146,7 @@ void MessageProcessing::getGridIsolinesByTimeAndGrid(const GRID::Message& messag
     attributeList.setAttribute("grid.original.reverseYDirection",Fmi::to_string((int)message1.reverseYDirection()));
     attributeList.setAttribute("grid.original.reverseXDirection",Fmi::to_string((int)message1.reverseXDirection()));
     attributeList.setAttribute("contour.coordinateType",Fmi::to_string(coordinateType));
-    attributeList.setAttribute("contour.interpolationt.type",Fmi::to_string(interpolationType));
+    attributeList.setAttribute("contour.interpolation.type",Fmi::to_string(interpolationType));
 
     getIsolines(gridValues,coordinatePtr,gridWidth,gridHeight,contourValues,interpolationType,smooth_size,smooth_degree,contours,0,getContourThreads(attributeList));
   }
@@ -2631,7 +2213,7 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGrid(const GRID::Message& m
     attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
     attributeList.setAttribute("grid.width",Fmi::to_string(gridWidth));
     attributeList.setAttribute("grid.height",Fmi::to_string(gridHeight));
-    attributeList.setAttribute("contour.interpolationt.type",Fmi::to_string(interpolationType));
+    attributeList.setAttribute("contour.interpolation.type",Fmi::to_string(interpolationType));
   }
   catch (...)
   {
@@ -2736,6 +2318,8 @@ void MessageProcessing::getGridStreamlinesByTimeAndLevel(const GRID::Message& me
         coordinates = message1.getGridOriginalCoordinates();
         coordinatePtr = coordinates.get();
         break;
+      default:
+        break;
     }
 
     getStreamlines(gridValues,coordinatePtr,d.nx(),d.ny(),minStreamLen, maxStreamLen,lineLen,xStep,yStep,streamlines);
@@ -2787,114 +2371,8 @@ void MessageProcessing::getGridStreamlinesByTimeLevelAndGeometry(const GRID::Mes
   FUNCTION_TRACE
   try
   {
-    const char *crsStr = attributeList.getAttributeValue("grid.crs");
-    const char *llboxStr = attributeList.getAttributeValue("grid.llbox");
-    const char *centerStr = attributeList.getAttributeValue("grid.center");
-    const char *gridSizeStr = attributeList.getAttributeValue("grid.size");
-
-    if (gridSizeStr != nullptr)
-    {
-      double m = toDouble(gridSizeStr);
-      if (m > 0)
-      {
-        attributeList.setAttribute("grid.width",Fmi::to_string(C_INT(C_DOUBLE(message1.getGridWidth())*m)));
-        attributeList.setAttribute("grid.height",Fmi::to_string(C_INT(C_DOUBLE(message1.getGridHeight())*m)));
-      }
-    }
-
-    if (crsStr != nullptr &&  strcasecmp(crsStr,"data") == 0)
-    {
-      const char *gridWidthStr = attributeList.getAttributeValue("grid.width");
-      const char *gridHeightStr = attributeList.getAttributeValue("grid.height");
-      if ((gridWidthStr == nullptr || gridHeightStr == nullptr) &&  centerStr == nullptr)
-      {
-        attributeList.setAttribute("grid.width",Fmi::to_string(message1.getGridWidth()));
-        attributeList.setAttribute("grid.height",Fmi::to_string(message1.getGridHeight()));
-      }
-
-      attributeList.setAttribute("grid.crs",message1.getWKT());
-      attributeList.setAttribute("grid.proj4",message1.getProj4());
-      T::Dimensions  d = message1.getGridDimensions();
-
-      if (llboxStr == nullptr)
-      {
-        double x1 = 0.0, y1 = 0.0, x2 = 0.0, y2 = 0.0;
-        uint px1 = 0,py1 = 0,px2 = d.nx()-1,py2 = d.ny()-1;
-
-        if (message1.reverseYDirection())
-          px1 = 0,py1 = d.ny()-1,px2 = d.nx()-1,py2 = 0;
-
-        char tmp[100];
-        if (message1.getGridLatLonCoordinatesByGridPoint(px1,py1,y1,x1)  &&  message1.getGridLatLonCoordinatesByGridPoint(px2,py2,y2,x2))
-        {
-          if (x2 < x1  &&  x2 < 0)
-            x2 += 360;
-
-          if (x2 < x1  && x1 >= 180)
-            x1 -= 360;
-
-          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
-          attributeList.setAttribute("grid.llbox",tmp);
-          if (message1.getGridProjection() == T::GridProjectionValue::LatLon)
-            attributeList.setAttribute("grid.bbox",tmp);
-        }
-
-        if (message1.getGridOriginalCoordinatesByGridPoint(0,0,x1,y1)  &&  message1.getGridOriginalCoordinatesByGridPoint(d.nx()-1,d.ny()-1,x2,y2))
-        {
-          if (message1.getGridProjection() == T::GridProjectionValue::LatLon)
-          {
-            if (x2 < x1  &&  x2 < 0)
-              x2 += 360;
-
-            if (x2 < x1  && x1 >= 180)
-              x1 -= 360;
-          }
-
-          if (message1.reverseYDirection())
-          {
-            double tmp = y1;
-            y1 = y2;
-            y2 = tmp;
-          }
-
-          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
-          if (message1.getGridProjection() != T::GridProjectionValue::LatLon)
-            attributeList.setAttribute("grid.bbox",tmp);
-        }
-      }
-
-      if (llboxStr == nullptr &&  centerStr != nullptr)
-      {
-        // The crop area is defined by a rectangle and its latlon center coordinates.
-
-        std::vector<double> a;
-        splitString(centerStr,',',a);
-        if (a.size() != 2)
-          return;
-
-        const char *metricWidthStr = attributeList.getAttributeValue("grid.metricWidth");
-        const char *metricHeightStr = attributeList.getAttributeValue("grid.metricHeight");
-
-        if (metricWidthStr != nullptr &&  metricHeightStr != nullptr)
-        {
-          double centerX = a[0];
-          double centerY = a[1];
-
-          double mWidth = toDouble(metricWidthStr) * 1000;   // km => m
-          double mHeight = toDouble(metricHeightStr) * 1000; // km => m
-
-          double lon1 = 0,lat1 = 0,lon2 = 0, lat2 =0;
-
-          latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
-
-          char tmp[200];
-          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",lon1,lat1,lon2,lat2);
-          attributeList.setAttribute("grid.llbox",tmp);
-        }
-      }
-
-      attributeList.setAttribute("grid.projectionType",Fmi::to_string(message1.getGridProjection()));
-    }
+    if (!setDataGeometryAttributes(message1,attributeList))
+      return;
 
     const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
     if (geometryIdStr != nullptr  &&  message1.getGridGeometryId() == toInt32(geometryIdStr))
@@ -2943,7 +2421,7 @@ void MessageProcessing::getGridStreamlinesByTimeLevelAndGeometry(const GRID::Mes
 
     Identification::gridDef.getGridOriginalCoordinatesByGeometry(attributeList,latLonCoordinates,coordinateType,coordinates,width,height);
 
-    if (!latLonCoordinates || latLonCoordinates->size() == 0)
+    if (!latLonCoordinates || latLonCoordinates->empty())
     {
       getGridStreamlinesByTimeAndLevel(message1,message2,message3,message4,newTime,newLevel,attributeList,modificationOperation,modificationParameters,streamlines);
       return;
@@ -2976,6 +2454,8 @@ void MessageProcessing::getGridStreamlinesByTimeLevelAndGeometry(const GRID::Mes
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
         coordinatePtr = coordinates.get();
+        break;
+      default:
         break;
     }
 
@@ -3108,6 +2588,8 @@ void MessageProcessing::getGridStreamlinesByLevel(const GRID::Message& message1,
         coordinates = message1.getGridOriginalCoordinates();
         coordinatePtr = coordinates.get();
         break;
+      default:
+        break;
     }
 
     getStreamlines(gridValues,coordinatePtr,d.nx(),d.ny(),minStreamLen, maxStreamLen,lineLen,xStep,yStep,streamlines);
@@ -3221,6 +2703,8 @@ void MessageProcessing::getGridStreamlinesByTime(const GRID::Message& message1,c
         coordinates = message1.getGridOriginalCoordinates();
         coordinatePtr = coordinates.get();
         break;
+      default:
+        break;
     }
 
     getStreamlines(gridValues,coordinatePtr,d.nx(),d.ny(),minStreamLen, maxStreamLen,lineLen,xStep,yStep,streamlines);
@@ -3270,114 +2754,8 @@ void MessageProcessing::getGridStreamlinesByLevelAndGeometry(const GRID::Message
   FUNCTION_TRACE
   try
   {
-    const char *crsStr = attributeList.getAttributeValue("grid.crs");
-    const char *llboxStr = attributeList.getAttributeValue("grid.llbox");
-    const char *centerStr = attributeList.getAttributeValue("grid.center");
-    const char *gridSizeStr = attributeList.getAttributeValue("grid.size");
-
-    if (gridSizeStr != nullptr)
-    {
-      double m = toDouble(gridSizeStr);
-      if (m > 0)
-      {
-        attributeList.setAttribute("grid.width",Fmi::to_string(C_INT(C_DOUBLE(message1.getGridWidth())*m)));
-        attributeList.setAttribute("grid.height",Fmi::to_string(C_INT(C_DOUBLE(message1.getGridHeight())*m)));
-      }
-    }
-
-    if (crsStr != nullptr &&  strcasecmp(crsStr,"data") == 0)
-    {
-      const char *gridWidthStr = attributeList.getAttributeValue("grid.width");
-      const char *gridHeightStr = attributeList.getAttributeValue("grid.height");
-      if ((gridWidthStr == nullptr || gridHeightStr == nullptr) &&  centerStr == nullptr)
-      {
-        attributeList.setAttribute("grid.width",Fmi::to_string(message1.getGridWidth()));
-        attributeList.setAttribute("grid.height",Fmi::to_string(message1.getGridHeight()));
-      }
-
-      attributeList.setAttribute("grid.crs",message1.getWKT());
-      attributeList.setAttribute("grid.proj4",message1.getProj4());
-      T::Dimensions  d = message1.getGridDimensions();
-
-      if (llboxStr == nullptr)
-      {
-        double x1 = 0.0, y1 = 0.0, x2 = 0.0, y2 = 0.0;
-        uint px1 = 0,py1 = 0,px2 = d.nx()-1,py2 = d.ny()-1;
-
-        if (message1.reverseYDirection())
-          px1 = 0,py1 = d.ny()-1,px2 = d.nx()-1,py2 = 0;
-
-        char tmp[100];
-        if (message1.getGridLatLonCoordinatesByGridPoint(px1,py1,y1,x1)  &&  message1.getGridLatLonCoordinatesByGridPoint(px2,py2,y2,x2))
-        {
-          if (x2 < x1  &&  x2 < 0)
-            x2 += 360;
-
-          if (x2 < x1  && x1 >= 180)
-            x1 -= 360;
-
-          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
-          attributeList.setAttribute("grid.llbox",tmp);
-          if (message1.getGridProjection() == T::GridProjectionValue::LatLon)
-            attributeList.setAttribute("grid.bbox",tmp);
-        }
-
-        if (message1.getGridOriginalCoordinatesByGridPoint(0,0,x1,y1)  &&  message1.getGridOriginalCoordinatesByGridPoint(d.nx()-1,d.ny()-1,x2,y2))
-        {
-          if (message1.getGridProjection() == T::GridProjectionValue::LatLon)
-          {
-            if (x2 < x1  &&  x2 < 0)
-              x2 += 360;
-
-            if (x2 < x1  && x1 >= 180)
-              x1 -= 360;
-          }
-
-          if (message1.reverseYDirection())
-          {
-            double tmp = y1;
-            y1 = y2;
-            y2 = tmp;
-          }
-
-          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
-          if (message1.getGridProjection() != T::GridProjectionValue::LatLon)
-            attributeList.setAttribute("grid.bbox",tmp);
-        }
-      }
-
-      if (llboxStr == nullptr &&  centerStr != nullptr)
-      {
-        // The crop area is defined by a rectangle and its latlon center coordinates.
-
-        std::vector<double> a;
-        splitString(centerStr,',',a);
-        if (a.size() != 2)
-          return;
-
-        const char *metricWidthStr = attributeList.getAttributeValue("grid.metricWidth");
-        const char *metricHeightStr = attributeList.getAttributeValue("grid.metricHeight");
-
-        if (metricWidthStr != nullptr &&  metricHeightStr != nullptr)
-        {
-          double centerX = a[0];
-          double centerY = a[1];
-
-          double mWidth = toDouble(metricWidthStr) * 1000;   // km => m
-          double mHeight = toDouble(metricHeightStr) * 1000; // km => m
-
-          double lon1 = 0,lat1 = 0,lon2 = 0, lat2 =0;
-
-          latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
-
-          char tmp[200];
-          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",lon1,lat1,lon2,lat2);
-          attributeList.setAttribute("grid.llbox",tmp);
-        }
-      }
-
-      attributeList.setAttribute("grid.projectionType",Fmi::to_string(message1.getGridProjection()));
-    }
+    if (!setDataGeometryAttributes(message1,attributeList))
+      return;
 
     const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
     if (geometryIdStr != nullptr  &&  message1.getGridGeometryId() == toInt32(geometryIdStr))
@@ -3426,7 +2804,7 @@ void MessageProcessing::getGridStreamlinesByLevelAndGeometry(const GRID::Message
 
     Identification::gridDef.getGridOriginalCoordinatesByGeometry(attributeList,latLonCoordinates,coordinateType,coordinates,width,height);
 
-    if (!latLonCoordinates || latLonCoordinates->size() == 0)
+    if (!latLonCoordinates || latLonCoordinates->empty())
     {
       getGridStreamlinesByLevel(message1,message2,newLevel,attributeList,modificationOperation,modificationParameters,streamlines);
       return;
@@ -3459,6 +2837,8 @@ void MessageProcessing::getGridStreamlinesByLevelAndGeometry(const GRID::Message
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
         coordinatePtr = coordinates.get();
+        break;
+      default:
         break;
     }
 
@@ -3529,114 +2909,8 @@ void MessageProcessing::getGridStreamlinesByTimeAndGeometry(const GRID::Message&
   FUNCTION_TRACE
   try
   {
-    const char *crsStr = attributeList.getAttributeValue("grid.crs");
-    const char *llboxStr = attributeList.getAttributeValue("grid.llbox");
-    const char *centerStr = attributeList.getAttributeValue("grid.center");
-    const char *gridSizeStr = attributeList.getAttributeValue("grid.size");
-
-    if (gridSizeStr != nullptr)
-    {
-      double m = toDouble(gridSizeStr);
-      if (m > 0)
-      {
-        attributeList.setAttribute("grid.width",Fmi::to_string(C_INT(C_DOUBLE(message1.getGridWidth())*m)));
-        attributeList.setAttribute("grid.height",Fmi::to_string(C_INT(C_DOUBLE(message1.getGridHeight())*m)));
-      }
-    }
-
-    if (crsStr != nullptr &&  strcasecmp(crsStr,"data") == 0)
-    {
-      const char *gridWidthStr = attributeList.getAttributeValue("grid.width");
-      const char *gridHeightStr = attributeList.getAttributeValue("grid.height");
-      if ((gridWidthStr == nullptr || gridHeightStr == nullptr) &&  centerStr == nullptr)
-      {
-        attributeList.setAttribute("grid.width",Fmi::to_string(message1.getGridWidth()));
-        attributeList.setAttribute("grid.height",Fmi::to_string(message1.getGridHeight()));
-      }
-
-      attributeList.setAttribute("grid.crs",message1.getWKT());
-      attributeList.setAttribute("grid.proj4",message1.getProj4());
-      T::Dimensions  d = message1.getGridDimensions();
-
-      if (llboxStr == nullptr)
-      {
-        double x1 = 0.0, y1 = 0.0, x2 = 0.0, y2 = 0.0;
-        uint px1 = 0,py1 = 0,px2 = d.nx()-1,py2 = d.ny()-1;
-
-        if (message1.reverseYDirection())
-          px1 = 0,py1 = d.ny()-1,px2 = d.nx()-1,py2 = 0;
-
-        char tmp[100];
-        if (message1.getGridLatLonCoordinatesByGridPoint(px1,py1,y1,x1)  &&  message1.getGridLatLonCoordinatesByGridPoint(px2,py2,y2,x2))
-        {
-          if (x2 < x1  &&  x2 < 0)
-            x2 += 360;
-
-          if (x2 < x1  && x1 >= 180)
-            x1 -= 360;
-
-          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
-          attributeList.setAttribute("grid.llbox",tmp);
-          if (message1.getGridProjection() == T::GridProjectionValue::LatLon)
-            attributeList.setAttribute("grid.bbox",tmp);
-        }
-
-        if (message1.getGridOriginalCoordinatesByGridPoint(0,0,x1,y1)  &&  message1.getGridOriginalCoordinatesByGridPoint(d.nx()-1,d.ny()-1,x2,y2))
-        {
-          if (message1.getGridProjection() == T::GridProjectionValue::LatLon)
-          {
-            if (x2 < x1  &&  x2 < 0)
-              x2 += 360;
-
-            if (x2 < x1  && x1 >= 180)
-              x1 -= 360;
-          }
-
-          if (message1.reverseYDirection())
-          {
-            double tmp = y1;
-            y1 = y2;
-            y2 = tmp;
-          }
-
-          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
-          if (message1.getGridProjection() != T::GridProjectionValue::LatLon)
-            attributeList.setAttribute("grid.bbox",tmp);
-        }
-      }
-
-      if (llboxStr == nullptr &&  centerStr != nullptr)
-      {
-        // The crop area is defined by a rectangle and its latlon center coordinates.
-
-        std::vector<double> a;
-        splitString(centerStr,',',a);
-        if (a.size() != 2)
-          return;
-
-        const char *metricWidthStr = attributeList.getAttributeValue("grid.metricWidth");
-        const char *metricHeightStr = attributeList.getAttributeValue("grid.metricHeight");
-
-        if (metricWidthStr != nullptr &&  metricHeightStr != nullptr)
-        {
-          double centerX = a[0];
-          double centerY = a[1];
-
-          double mWidth = toDouble(metricWidthStr) * 1000;   // km => m
-          double mHeight = toDouble(metricHeightStr) * 1000; // km => m
-
-          double lon1 = 0,lat1 = 0,lon2 = 0, lat2 =0;
-
-          latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
-
-          char tmp[200];
-          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",lon1,lat1,lon2,lat2);
-          attributeList.setAttribute("grid.llbox",tmp);
-        }
-      }
-
-      attributeList.setAttribute("grid.projectionType",Fmi::to_string(message1.getGridProjection()));
-    }
+    if (!setDataGeometryAttributes(message1,attributeList))
+      return;
 
     const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
     if (geometryIdStr != nullptr  &&  message1.getGridGeometryId() == toInt32(geometryIdStr))
@@ -3685,7 +2959,7 @@ void MessageProcessing::getGridStreamlinesByTimeAndGeometry(const GRID::Message&
 
     Identification::gridDef.getGridOriginalCoordinatesByGeometry(attributeList,latLonCoordinates,coordinateType,coordinates,width,height);
 
-    if (!latLonCoordinates || latLonCoordinates->size() == 0)
+    if (!latLonCoordinates || latLonCoordinates->empty())
     {
       getGridStreamlinesByTime(message1,message2,newTime,attributeList,modificationOperation,modificationParameters,streamlines);
       return;
@@ -3718,6 +2992,8 @@ void MessageProcessing::getGridStreamlinesByTimeAndGeometry(const GRID::Message&
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
         coordinatePtr = coordinates.get();
+        break;
+      default:
         break;
     }
 
@@ -3850,6 +3126,8 @@ void MessageProcessing::getGridStreamlinesByLevelAndGrid(const GRID::Message& me
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
         break;
+      default:
+        break;
     }
 
     attributeList.setAttribute("grid.levelInterpolationMethod",Fmi::to_string(levelInterpolationMethod));
@@ -3962,6 +3240,8 @@ void MessageProcessing::getGridStreamlinesByTimeAndGrid(const GRID::Message& mes
         break;
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
+        break;
+      default:
         break;
     }
 
@@ -4946,7 +4226,7 @@ void MessageProcessing::getGridValueVectorByLevelAndCoordinateList(const GRID::M
     attributeList.setAttribute("grid.levelInterpolationMethod",Fmi::to_string(levelInterpolationMethod));
     attributeList.setAttribute("grid.coordinateType",Fmi::to_string(coordinateType));
 
-    if (coordinates.size() == 0)
+    if (coordinates.empty())
       return;
 
     T::ParamValue_vec gridValues1;
@@ -5009,17 +4289,17 @@ void MessageProcessing::getGridValueVectorByTimeAndCoordinateList(const GRID::Me
 
     const char *gridWidthStr = attributeList.getAttributeValue("grid.width");
     if (gridWidthStr != nullptr)
-      gridWidth = atoi(gridWidthStr);
+      gridWidth = toInt32(gridWidthStr);
 
     const char *gridHeightStr = attributeList.getAttributeValue("grid.height");
     if (gridHeightStr != nullptr)
-      gridHeight = atoi(gridHeightStr);
+      gridHeight = toInt32(gridHeightStr);
 
     attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
     attributeList.setAttribute("grid.timeInterpolationMethod",Fmi::to_string(timeInterpolationMethod));
     attributeList.setAttribute("grid.coordinateType",Fmi::to_string(coordinateType));
 
-    if (coordinates.size() == 0)
+    if (coordinates.empty())
       return;
 
     T::ParamValue_vec gridValues1;
@@ -5140,11 +4420,11 @@ void MessageProcessing::getGridValueVectorByTimeAndGeometry(const GRID::Message&
 
     const char *gridWidthStr = attributeList.getAttributeValue("grid.width");
     if (gridWidthStr != nullptr)
-      gridWidth = atoi(gridWidthStr);
+      gridWidth = toInt32(gridWidthStr);
 
     const char *gridHeightStr = attributeList.getAttributeValue("grid.height");
     if (gridHeightStr != nullptr)
-      gridHeight = atoi(gridHeightStr);
+      gridHeight = toInt32(gridHeightStr);
 
     timeInterpolation(values1,values2,gridWidth,gridHeight,message1.getForecastTimeT(),message2.getForecastTimeT(),newTime,timeInterpolationMethod,values);
   }
@@ -5179,7 +4459,7 @@ void MessageProcessing::getGridValueVectorByTimeAndLevel(const GRID::Message& me
 
 /*! \brief Returns the full grid value vector between four messages at a target time and level with value modification. */
 
-void MessageProcessing::getGridValueVectorByTimeAndLevel(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,short areaInterpolationMethod,short timeInterpolationMethod,short levelInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const
+void MessageProcessing::getGridValueVectorByTimeAndLevel(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,short /*areaInterpolationMethod*/,short timeInterpolationMethod,short levelInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const
 {
   FUNCTION_TRACE
   try
@@ -5246,11 +4526,11 @@ void MessageProcessing::getGridValueVectorByTimeLevelAndGeometry(const GRID::Mes
 
     const char *gridWidthStr = attributeList.getAttributeValue("grid.width");
     if (gridWidthStr != nullptr)
-      gridWidth = atoi(gridWidthStr);
+      gridWidth = toInt32(gridWidthStr);
 
     const char *gridHeightStr = attributeList.getAttributeValue("grid.height");
     if (gridHeightStr != nullptr)
-      gridHeight = atoi(gridHeightStr);
+      gridHeight = toInt32(gridHeightStr);
 
     timeInterpolation(values1,values2,gridWidth,gridHeight,message1.getForecastTimeT(),message3.getForecastTimeT(),newTime,timeInterpolationMethod,values);
   }
@@ -5307,11 +4587,11 @@ void MessageProcessing::getGridValueVectorByTimeLevelAndCoordinateList(const GRI
 
     const char *gridWidthStr = attributeList.getAttributeValue("grid.width");
     if (gridWidthStr != nullptr)
-      gridWidth = atoi(gridWidthStr);
+      gridWidth = toInt32(gridWidthStr);
 
     const char *gridHeightStr = attributeList.getAttributeValue("grid.height");
     if (gridHeightStr != nullptr)
-      gridHeight = atoi(gridHeightStr);
+      gridHeight = toInt32(gridHeightStr);
 
     timeInterpolation(values1,values2,gridWidth,gridHeight,message1.getForecastTimeT(),message3.getForecastTimeT(),newTime,timeInterpolationMethod,values);
   }

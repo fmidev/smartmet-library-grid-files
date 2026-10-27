@@ -46,7 +46,7 @@ ProcessingTypeDef::~ProcessingTypeDef()
 
 /*! \brief Prints the content of the object into the given stream. */
 
-void ProcessingTypeDef::print(std::ostream& stream,uint level,uint optionFlags) const
+void ProcessingTypeDef::print(std::ostream& stream,uint level,uint /*optionFlags*/) const
 {
   try
   {

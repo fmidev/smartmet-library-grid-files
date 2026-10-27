@@ -35,16 +35,18 @@ class MemoryMapper
   public:
               MemoryMapper();
               ~MemoryMapper();
+              MemoryMapper(const MemoryMapper&) = delete;
+              MemoryMapper& operator=(const MemoryMapper&) = delete;
 
     /*! \brief Return true if the mapper is enabled (userfaultfd active). */
-    bool      isEnabled();
+    bool      isEnabled() const;
 
     /*! \brief Enable or disable the mapper.
      *  \param[in] enabled  True to activate userfaultfd-based lazy mapping. */
     void      setEnabled(bool enabled);
 
     /*! \brief Return true if eager pre-mapping is enabled. */
-    bool      isPremapEnabled();
+    bool      isPremapEnabled() const;
 
     /*! \brief Enable or disable eager pre-mapping (fetch all pages at map time).
      *  \param[in] enabled  True to pre-fetch pages immediately on map(). */
@@ -97,11 +99,11 @@ class MemoryMapper
 
     /*! \brief Establish a userfaultfd-backed virtual mapping for \p info.
      *  \param[in] info  MapInfo describing the file and its allocation. */
-    void      map(MapInfo_sptr info);
+    void      map(const MapInfo_sptr& info);
 
     /*! \brief Release the virtual mapping for \p info.
      *  \param[in] info  MapInfo to unmap. */
-    void      unmap(MapInfo_sptr info);
+    void      unmap(const MapInfo_sptr& info);
 
     /*! \brief Launch the background fault-handler and processing threads. */
     void      startFaultHandler();
@@ -117,16 +119,20 @@ class MemoryMapper
 
     /*! \brief Populate \p parent with an attribute sub-tree describing internal state.
      *  \param[in,out] parent  Root node to append state attributes to. */
-    void      getStateAttributes(std::shared_ptr<T::AttributeNode> parent);
+    void      getStateAttributes(const std::shared_ptr<T::AttributeNode>& parent);
 
   protected:
 
-    void      addMapInfo(MapInfo_sptr mapInfo);
-    int       getData(MapInfo_sptr info,std::size_t filePosition,int dataSize,char *dataPtr);
+    void      addMapInfo(const MapInfo_sptr& mapInfo);
+    int       getData(const MapInfo_sptr& info,std::size_t filePosition,int dataSize,char *dataPtr);
     int       getClosestIndex(char *address);
+    int       takeNextMessage(Int64& currentCounter,int ownerId);
+    void      processFaultMessage(int idx,char *page,uint& errorCounter);
+    void      waitForFaultMessages(uint sleepCount,uint threadId);
+    void      readFaultMessage(Int64 idx);
 
 
-  protected:
+  
     long                      mUffd;                    //!< userfaultfd file descriptor
     int                       mPageSize;                //!< OS page size in bytes
     std::vector<MapInfo_sptr> mMemoryMappings;          //!< Active mapping descriptors
@@ -135,7 +141,7 @@ class MemoryMapper
     std::atomic<Int64>        mMessageReadCount;        //!< Total fault messages read
     std::atomic<Int64>        mMessageProcessCount;     //!< Total fault messages processed
     std::atomic<uint>         mThreadsRunning;          //!< Number of active processing threads
-    pthread_t                 mFaultHandlerThread;      //!< Reader thread handle
+    pthread_t                 mFaultHandlerThread = 0;      //!< Reader thread handle
     pthread_t*                mFaultProcessingThread;   //!< Pool of processing thread handles
     bool                      mStopRequired;            //!< Set to true to request thread shutdown
     ThreadLock                mThreadLock;              //!< Guards message dispatch

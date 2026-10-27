@@ -7,6 +7,7 @@
 #include "../Properties.h"
 
 #include <iostream>
+#include <memory>
 
 namespace SmartMet
 {
@@ -245,15 +246,15 @@ std::string LambertAzimuthalEqualAreaImpl::getGridGeometryString() const
     if ((scanningMode & 0x40) == 0)
     {
       dy = -dy;
-      p += sprintf(p,"-y");
+      sprintf(p,"-y");
     }
     else
     {
-      p += sprintf(p,"+y");
+      sprintf(p,"+y");
     }
 
 
-    sprintf(buf,"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;description",
+    sprintf(buf,"%d;id;name;%u;%u;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;description",
       T::GridProjectionValue::LambertAzimuthalEqualArea,nx,ny,x,y,fabs(dx),fabs(dy),sm,sp,cl);
 
     return std::string(buf);
@@ -280,7 +281,7 @@ T::Dimensions LambertAzimuthalEqualAreaImpl::getGridDimensions() const
   try
   {
     if (!mNumberOfPointsAlongXAxis || !mNumberOfPointsAlongYAxis)
-      return T::Dimensions();
+      return {};
 
     return T::Dimensions(*mNumberOfPointsAlongXAxis,*mNumberOfPointsAlongYAxis);
   }
@@ -362,8 +363,9 @@ bool LambertAzimuthalEqualAreaImpl::getGridMetricCellSize(double& width,double& 
 {
   try
   {
-    width = C_DOUBLE(*mXDirectionGridLengthInMillimetres) / 1000;
-    height = C_DOUBLE(*mYDirectionGridLengthInMillimetres) / 1000;
+    // Kilometres like the other projections
+    width = C_DOUBLE(*mXDirectionGridLengthInMillimetres) / 1000000;
+    height = C_DOUBLE(*mYDirectionGridLengthInMillimetres) / 1000000;
     return true;
   }
   catch (...)
@@ -433,13 +435,16 @@ bool LambertAzimuthalEqualAreaImpl::getGridPointByOriginalCoordinates(double x,d
     double i = xDiff / mDxx;
     double j = yDiff / mDyy;
 
+    // Projection round-off puts points on the first row or column slightly outside the grid
+    if (i < 0 && i > -1e-4)
+      i = 0;
+    if (j < 0 && j > -1e-4)
+      j = 0;
+
     grid_i = i;
     grid_j = j;
 
-    if (i < 0 ||  j < 0  ||  i >= C_DOUBLE(*mNumberOfPointsAlongXAxis) ||  j > C_DOUBLE(*mNumberOfPointsAlongYAxis))
-      return false;
-
-    return true;
+    return !(i < 0 ||  j < 0  ||  i >= C_DOUBLE(*mNumberOfPointsAlongXAxis) ||  j > C_DOUBLE(*mNumberOfPointsAlongYAxis));
   }
   catch (...)
   {
@@ -464,10 +469,7 @@ bool LambertAzimuthalEqualAreaImpl::reverseXDirection() const
   {
     unsigned char scanMode = mScanningMode.getScanningMode();
 
-    if ((scanMode & 0x80) != 0)
-      return true;
-
-    return false;
+    return (scanMode & 0x80) != 0;
   }
   catch (...)
   {
@@ -491,10 +493,7 @@ bool LambertAzimuthalEqualAreaImpl::reverseYDirection() const
   {
     unsigned char scanMode = mScanningMode.getScanningMode();
 
-    if ((scanMode & 0x40) == 0)
-      return true;
-
-    return false;
+    return (scanMode & 0x40) == 0;
   }
   catch (...)
   {
@@ -514,7 +513,7 @@ void LambertAzimuthalEqualAreaImpl::initSpatialReference()
     mSpatialReference = getSpatialReference();
     if (!mSpatialReference)
     {
-      mSpatialReference.reset(new T::SpatialRef());
+      mSpatialReference = std::make_shared<T::SpatialRef>();
       addSpatialReference(mSpatialReference);
 
       // ### Check that we have all necessary values needed by this method.
@@ -605,7 +604,7 @@ void LambertAzimuthalEqualAreaImpl::print(std::ostream& stream,uint level,uint o
       int nx = C_INT(*mNumberOfPointsAlongXAxis);
       int ny = C_INT(*mNumberOfPointsAlongYAxis);
 
-      if (coordinateList && coordinateList->size() == (std::size_t)(nx*ny))
+      if (coordinateList && coordinateList->size() == (std::size_t)nx*ny)
       {
         char str[200];
         uint c = 0;

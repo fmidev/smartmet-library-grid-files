@@ -16,10 +16,10 @@ namespace SmartMet
 {
 
 
-typedef std::unordered_map<uint,uint> HitCounter;           //!< grid-index → hit count map
-typedef std::map<uint,HitCounter> GeometryHitCounter;       //!< per-geometry hit counter map
-typedef std::unordered_map<UInt64,uint> KeyCounter;         //!< arbitrary-key → hit count map
-typedef std::multimap<uint,UInt64> TopList;                 //!< count → key sorted top-N list
+using HitCounter = std::unordered_map<uint,uint>;           //!< grid-index → hit count map
+using GeometryHitCounter = std::map<uint,HitCounter>;       //!< per-geometry hit counter map
+using KeyCounter = std::unordered_map<UInt64,uint>;         //!< arbitrary-key → hit count map
+using TopList = std::multimap<uint,UInt64>;                 //!< count → key sorted top-N list
 
 // ====================================================================================
 /*! \brief Thread-safe request counter for tracking data-access hot spots.
@@ -42,7 +42,7 @@ class RequestCounter
     /*! \brief Clear the top-N sorted list without resetting per-key counters. */
     void                clearTopIndexes();
     /*! \brief Return the running total of all increment calls. */
-    UInt64              getTotalRequests();
+    UInt64              getTotalRequests() const;
     /*! \brief Reset the total request counter to zero. */
     void                resetTotalRequests();
 
@@ -64,7 +64,7 @@ class RequestCounter
     void                incGeometryHitCounter(uint geometryId,uint index);
 
     /*! \brief Return true if counting is currently enabled. */
-    bool                isCountingEnabled();
+    bool                isCountingEnabled() const;
 
     /*! \brief Return the current hit count for \p key.
      *  \param[in] key  Request key to query.

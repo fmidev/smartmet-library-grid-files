@@ -19,6 +19,10 @@ namespace GRIB2 {
 class SecondOrderSettings {
 public:
   SecondOrderSettings();
+  SecondOrderSettings(const SecondOrderSettings &) = default;
+  SecondOrderSettings(SecondOrderSettings &&) = default;
+  SecondOrderSettings &operator=(const SecondOrderSettings &) = default;
+  SecondOrderSettings &operator=(SecondOrderSettings &&) = default;
   virtual ~SecondOrderSettings();
 
   virtual void read(MemoryReader &memoryReader);

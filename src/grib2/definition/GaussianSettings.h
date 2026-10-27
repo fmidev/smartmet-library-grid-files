@@ -21,6 +21,10 @@ namespace GRIB2 {
 class GaussianSettings {
 public:
   GaussianSettings();
+  GaussianSettings(const GaussianSettings &) = default;
+  GaussianSettings(GaussianSettings &&) = default;
+  GaussianSettings &operator=(const GaussianSettings &) = default;
+  GaussianSettings &operator=(GaussianSettings &&) = default;
   virtual ~GaussianSettings();
 
   virtual void read(MemoryReader &memoryReader);
@@ -32,13 +36,13 @@ public:
   virtual T::Hash countHash() const;
 
   GridSettings *getGrid() const;
-  void setGrid(GridSettings &grid);
+  void setGrid(const GridSettings &grid);
   const T::UInt32_opt &getIDirectionIncrement() const;
   void setIDirectionIncrement(T::UInt32_opt iDirectionIncrement);
   const T::UInt32_opt &getN() const;
   void setN(T::UInt32_opt n);
   ScanningModeSettings *getScanningMode() const;
-  void setScanningMode(ScanningModeSettings &scanningMode);
+  void setScanningMode(const ScanningModeSettings &scanningMode);
 
 protected:
   // # Copyright 2005-2019 ECMWF.

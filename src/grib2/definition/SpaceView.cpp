@@ -27,8 +27,7 @@ SpaceView::SpaceView() {
 
 /*! \brief The destructor of the class. */
 
-SpaceView::~SpaceView() {
-}
+SpaceView::~SpaceView() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -92,37 +91,21 @@ void SpaceView::write(DataWriter &dataWriter) {
 
 void SpaceView::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sSpaceView.", prefix.c_str());
-    mEarthShape.getAttributeList(name, attributeList);
-    sprintf(name, "%sSpaceView.Nx", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNx));
-    sprintf(name, "%sSpaceView.Ny", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNy));
-    sprintf(name, "%sSpaceView.LatitudeOfSubSatellitePoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatitudeOfSubSatellitePoint));
-    sprintf(name, "%sSpaceView.LongitudeOfSubSatellitePoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLongitudeOfSubSatellitePoint));
-    sprintf(name, "%sSpaceView.", prefix.c_str());
-    mResolution.getAttributeList(name, attributeList);
-    sprintf(name, "%sSpaceView.Dx", prefix.c_str());
-    attributeList.addAttribute(name, toString(mDx));
-    sprintf(name, "%sSpaceView.Dy", prefix.c_str());
-    attributeList.addAttribute(name, toString(mDy));
-    sprintf(name, "%sSpaceView.Xp", prefix.c_str());
-    attributeList.addAttribute(name, toString(mXp));
-    sprintf(name, "%sSpaceView.Yp", prefix.c_str());
-    attributeList.addAttribute(name, toString(mYp));
-    sprintf(name, "%sSpaceView.", prefix.c_str());
-    mScanningMode.getAttributeList(name, attributeList);
-    sprintf(name, "%sSpaceView.OrientationOfTheGrid", prefix.c_str());
-    attributeList.addAttribute(name, toString(mOrientationOfTheGrid));
-    sprintf(name, "%sSpaceView.Nr", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNr));
-    sprintf(name, "%sSpaceView.Xo", prefix.c_str());
-    attributeList.addAttribute(name, toString(mXo));
-    sprintf(name, "%sSpaceView.Yo", prefix.c_str());
-    attributeList.addAttribute(name, toString(mYo));
+        mEarthShape.getAttributeList(prefix + "SpaceView.", attributeList);
+        attributeList.addAttribute(prefix + "SpaceView.Nx", toString(mNx));
+        attributeList.addAttribute(prefix + "SpaceView.Ny", toString(mNy));
+        attributeList.addAttribute(prefix + "SpaceView.LatitudeOfSubSatellitePoint", toString(mLatitudeOfSubSatellitePoint));
+        attributeList.addAttribute(prefix + "SpaceView.LongitudeOfSubSatellitePoint", toString(mLongitudeOfSubSatellitePoint));
+        mResolution.getAttributeList(prefix + "SpaceView.", attributeList);
+        attributeList.addAttribute(prefix + "SpaceView.Dx", toString(mDx));
+        attributeList.addAttribute(prefix + "SpaceView.Dy", toString(mDy));
+        attributeList.addAttribute(prefix + "SpaceView.Xp", toString(mXp));
+        attributeList.addAttribute(prefix + "SpaceView.Yp", toString(mYp));
+        mScanningMode.getAttributeList(prefix + "SpaceView.", attributeList);
+        attributeList.addAttribute(prefix + "SpaceView.OrientationOfTheGrid", toString(mOrientationOfTheGrid));
+        attributeList.addAttribute(prefix + "SpaceView.Nr", toString(mNr));
+        attributeList.addAttribute(prefix + "SpaceView.Xo", toString(mXo));
+        attributeList.addAttribute(prefix + "SpaceView.Yo", toString(mYo));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -327,7 +310,7 @@ GridDefinition *SpaceView::createGridDefinition() const {
 
 EarthShapeSettings *SpaceView::getEarthShape() const {
   try {
-    return static_cast<EarthShapeSettings *>(&mEarthShape);
+    return &mEarthShape;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -377,7 +360,7 @@ const T::Int32_opt &SpaceView::getLongitudeOfSubSatellitePoint() const {
 
 ResolutionSettings *SpaceView::getResolution() const {
   try {
-    return static_cast<ResolutionSettings *>(&mResolution);
+    return &mResolution;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -427,7 +410,7 @@ const T::UInt32_opt &SpaceView::getYp() const {
 
 ScanningModeSettings *SpaceView::getScanningMode() const {
   try {
-    return static_cast<ScanningModeSettings *>(&mScanningMode);
+    return &mScanningMode;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -473,7 +456,7 @@ const T::UInt32_opt &SpaceView::getYo() const {
   }
 }
 
-void SpaceView::setEarthShape(EarthShapeSettings &earthShape) {
+void SpaceView::setEarthShape(const EarthShapeSettings &earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
@@ -513,7 +496,7 @@ void SpaceView::setLongitudeOfSubSatellitePoint(T::Int32_opt longitudeOfSubSatel
   }
 }
 
-void SpaceView::setResolution(ResolutionSettings &resolution) {
+void SpaceView::setResolution(const ResolutionSettings &resolution) {
   try {
     mResolution = resolution;
   } catch (...) {
@@ -553,7 +536,7 @@ void SpaceView::setYp(T::UInt32_opt yp) {
   }
 }
 
-void SpaceView::setScanningMode(ScanningModeSettings &scanningMode) {
+void SpaceView::setScanningMode(const ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {

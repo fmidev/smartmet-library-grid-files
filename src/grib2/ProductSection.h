@@ -52,25 +52,26 @@ class ProductSection : public GRID::MessageSection
 
                           ProductSection();
                           ProductSection(const ProductSection& other);
-    virtual               ~ProductSection();
+    ~ProductSection() override;
+    ProductSection& operator=(const ProductSection&) = default;
 
     // ### Common methods for all message sections
 
-    void                  getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const;
+    void                  getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const override;
     bool                  getAttributeValue(const char *attributeName, std::string& attributeValue) const;
     bool                  hasAttributeValue(const char *attributeName, const char *attributeValue) const;
-    T::FilePosition       getFilePosition() const;
-    std::uint32_t         getSectionLength() const;
-    std::string           getSectionName() const;
-    std::uint8_t          getSectionNumber() const;
+    T::FilePosition       getFilePosition() const override;
+    std::uint32_t         getSectionLength() const override;
+    std::string           getSectionName() const override;
+    std::uint8_t          getSectionNumber() const override;
 
     // ### Section specific methods
 
     T::TimeString         getForecastTime(T::TimeString referenceTime) const;
-    const T::UInt8_opt    getGribParameterCategory() const;
+    T::UInt8_opt    getGribParameterCategory() const;
     T::ParamLevel         getGribParameterLevel() const;
     T::ParamLevelId       getGribParameterLevelId() const;
-    const T::UInt8_opt    getGribParameterNumber() const;
+    T::UInt8_opt    getGribParameterNumber() const;
     T::UInt8_opt          getGeneratingProcessIdentifier() const;
     T::ForecastType       getForecastType() const;
     T::ForecastNumber     getForecastNumber() const;
@@ -90,7 +91,7 @@ class ProductSection : public GRID::MessageSection
 
     void                  read(MemoryReader& memoryReader);
     void                  write(DataWriter& dataWriter);
-    void                  print(std::ostream& stream,uint level,uint optionFlags) const;
+    void                  print(std::ostream& stream,uint level,uint optionFlags) const override;
 
   private:
 
@@ -182,7 +183,7 @@ class ProductSection : public GRID::MessageSection
 };
 
 
-typedef std::shared_ptr<ProductSection> ProductSect_sptr;  //!< Shared ownership pointer to a ProductSection.
+using ProductSect_sptr = std::shared_ptr<ProductSection>;  //!< Shared ownership pointer to a ProductSection.
 
 
 }  // namespace GRIB2

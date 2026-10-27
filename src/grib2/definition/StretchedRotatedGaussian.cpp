@@ -27,8 +27,7 @@ StretchedRotatedGaussian::StretchedRotatedGaussian() {
 
 /*! \brief The destructor of the class. */
 
-StretchedRotatedGaussian::~StretchedRotatedGaussian() {
-}
+StretchedRotatedGaussian::~StretchedRotatedGaussian() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -70,15 +69,10 @@ void StretchedRotatedGaussian::write(DataWriter &dataWriter) {
 
 void StretchedRotatedGaussian::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sStretchedRotatedGaussian.", prefix.c_str());
-    mEarthShape.getAttributeList(name, attributeList);
-    sprintf(name, "%sStretchedRotatedGaussian.", prefix.c_str());
-    mGaussian.getAttributeList(name, attributeList);
-    sprintf(name, "%sStretchedRotatedGaussian.", prefix.c_str());
-    mRotation.getAttributeList(name, attributeList);
-    sprintf(name, "%sStretchedRotatedGaussian.", prefix.c_str());
-    mStretching.getAttributeList(name, attributeList);
+        mEarthShape.getAttributeList(prefix + "StretchedRotatedGaussian.", attributeList);
+        mGaussian.getAttributeList(prefix + "StretchedRotatedGaussian.", attributeList);
+        mRotation.getAttributeList(prefix + "StretchedRotatedGaussian.", attributeList);
+        mStretching.getAttributeList(prefix + "StretchedRotatedGaussian.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -180,7 +174,7 @@ GridDefinition *StretchedRotatedGaussian::createGridDefinition() const {
 
 EarthShapeSettings *StretchedRotatedGaussian::getEarthShape() const {
   try {
-    return static_cast<EarthShapeSettings *>(&mEarthShape);
+    return &mEarthShape;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -190,7 +184,7 @@ EarthShapeSettings *StretchedRotatedGaussian::getEarthShape() const {
 
 GaussianSettings *StretchedRotatedGaussian::getGaussian() const {
   try {
-    return static_cast<GaussianSettings *>(&mGaussian);
+    return &mGaussian;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -200,7 +194,7 @@ GaussianSettings *StretchedRotatedGaussian::getGaussian() const {
 
 RotationSettings *StretchedRotatedGaussian::getRotation() const {
   try {
-    return static_cast<RotationSettings *>(&mRotation);
+    return &mRotation;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -210,13 +204,13 @@ RotationSettings *StretchedRotatedGaussian::getRotation() const {
 
 StretchingSettings *StretchedRotatedGaussian::getStretching() const {
   try {
-    return static_cast<StretchingSettings *>(&mStretching);
+    return &mStretching;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
-void StretchedRotatedGaussian::setEarthShape(EarthShapeSettings &earthShape) {
+void StretchedRotatedGaussian::setEarthShape(const EarthShapeSettings &earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
@@ -224,7 +218,7 @@ void StretchedRotatedGaussian::setEarthShape(EarthShapeSettings &earthShape) {
   }
 }
 
-void StretchedRotatedGaussian::setGaussian(GaussianSettings &gaussian) {
+void StretchedRotatedGaussian::setGaussian(const GaussianSettings &gaussian) {
   try {
     mGaussian = gaussian;
   } catch (...) {
@@ -232,7 +226,7 @@ void StretchedRotatedGaussian::setGaussian(GaussianSettings &gaussian) {
   }
 }
 
-void StretchedRotatedGaussian::setRotation(RotationSettings &rotation) {
+void StretchedRotatedGaussian::setRotation(const RotationSettings &rotation) {
   try {
     mRotation = rotation;
   } catch (...) {
@@ -240,7 +234,7 @@ void StretchedRotatedGaussian::setRotation(RotationSettings &rotation) {
   }
 }
 
-void StretchedRotatedGaussian::setStretching(StretchingSettings &stretching) {
+void StretchedRotatedGaussian::setStretching(const StretchingSettings &stretching) {
   try {
     mStretching = stretching;
   } catch (...) {

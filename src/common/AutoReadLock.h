@@ -16,9 +16,9 @@ class AutoReadLock
   public:
     /*! \brief Acquire a read lock on \p modificationLock.
      *  \param[in] modificationLock  Lock to acquire; nullptr disables the guard. */
-    AutoReadLock(ModificationLock *modificationLock)
+    AutoReadLock(ModificationLock *modificationLock) : mModificationLock(modificationLock)
     {
-      mModificationLock = modificationLock;
+
       if (mModificationLock)
         mModificationLock->readLock();
     }
@@ -29,6 +29,8 @@ class AutoReadLock
       if (mModificationLock)
         mModificationLock->readUnlock();
     }
+    AutoReadLock(const AutoReadLock&) = delete;
+    AutoReadLock& operator=(const AutoReadLock&) = delete;
 
   protected:
 

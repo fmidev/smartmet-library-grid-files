@@ -21,10 +21,7 @@ TriangularImpl::TriangularImpl()
 
 /*! \brief The copy constructor of the class. */
 
-TriangularImpl::TriangularImpl(const TriangularImpl& other)
-:Triangular(other)
-{
-}
+TriangularImpl::TriangularImpl(const TriangularImpl& other) = default;
 
 
 
@@ -32,9 +29,7 @@ TriangularImpl::TriangularImpl(const TriangularImpl& other)
 
 /*! \brief The destructor of the class. */
 
-TriangularImpl::~TriangularImpl()
-{
-}
+TriangularImpl::~TriangularImpl() = default;
 
 
 
@@ -113,7 +108,7 @@ T::Dimensions TriangularImpl::getGridDimensions() const
 {
   try
   {
-    return T::Dimensions();
+    return {};
   }
   catch (...)
   {

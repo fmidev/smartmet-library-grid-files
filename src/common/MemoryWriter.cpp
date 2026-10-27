@@ -1,5 +1,7 @@
 #include "MemoryWriter.h"
 
+#include <algorithm>
+
 
 namespace SmartMet
 {
@@ -133,7 +135,7 @@ void MemoryWriter::write_data(void *_data,UInt64 _size)
 {
   try
   {
-    uchar *d = (uchar*)_data;
+    auto *d = (uchar*)_data;
     if ((mWritePosition + _size) >= mDataSize)
       throw Fmi::Exception(BCP,"Trying to write data to outsize of the buffer!");
 
@@ -142,8 +144,7 @@ void MemoryWriter::write_data(void *_data,UInt64 _size)
 
     mWritePosition += _size;
 
-    if (mWritePosition > mMaxWritePosition)
-      mMaxWritePosition = mWritePosition;
+    mMaxWritePosition = std::max(mWritePosition, mMaxWritePosition);
   }
   catch (...)
   {

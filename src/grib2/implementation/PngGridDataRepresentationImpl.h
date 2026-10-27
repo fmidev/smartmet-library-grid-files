@@ -13,12 +13,13 @@ class PngGridDataRepresentationImpl : public PngGridDataRepresentation
   public:
               PngGridDataRepresentationImpl();
               PngGridDataRepresentationImpl(const PngGridDataRepresentationImpl& other);
-    virtual   ~PngGridDataRepresentationImpl();
+    ~PngGridDataRepresentationImpl() override;
+    PngGridDataRepresentationImpl& operator=(const PngGridDataRepresentationImpl&) = default;
 
-    RepresentationDefinition* createRepresentationDefinition() const;
+    RepresentationDefinition* createRepresentationDefinition() const override;
 
-    void      decodeValues(Message *message,T::ParamValue_vec& decodedValues) const;
-    void      read(MemoryReader& memoryReader);
+    void      decodeValues(Message *message,T::ParamValue_vec& decodedValues) const override;
+    void      read(MemoryReader& memoryReader) override;
 };
 
 

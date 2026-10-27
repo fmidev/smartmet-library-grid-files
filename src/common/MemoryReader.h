@@ -36,6 +36,8 @@ class MemoryReader
      *  \param[in] _endPtr    One-past-the-end of the readable region. */
                         MemoryReader(unsigned char *_startPtr,unsigned char *_endPtr);
     virtual             ~MemoryReader();
+    MemoryReader(const MemoryReader&) = delete;
+    MemoryReader& operator=(const MemoryReader&) = delete;
 
     /*! \brief Return the total buffer size in bytes. */
     UInt64              getDataSize();
@@ -81,7 +83,7 @@ class MemoryReader
 
     /*! \brief Return the byte at pointer \p _posPtr without advancing the read pointer.
      *  \param[in] _posPtr  Pointer into the buffer. */
-    unsigned char       getByte(unsigned char *_posPtr);
+    unsigned char       getByte(const unsigned char *_posPtr);
 
     /*! \brief Check whether the next bytes in the buffer match \p _str without advancing.
      *  \param[in] _str  Null-terminated string to compare.

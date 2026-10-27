@@ -32,16 +32,14 @@ Client::Client()
 
 /*! \brief Destructor for Client. */
 
-Client::~Client()
-{
-}
+Client::~Client() = default;
 
 
 
 
 /*! \brief Stub for fetching a range of bytes from a file; must be implemented in a subclass. */
 
-int Client::getData(const char *server,const char *filename,std::size_t filePosition,int dataSize,char *dataPtr)
+int Client::getData(const char * /*server*/,const char * /*filename*/,std::size_t /*filePosition*/,int /*dataSize*/,char * /*dataPtr*/)
 {
   throw Fmi::Exception(BCP,"Should be implemented in the child class!");
 }
@@ -51,7 +49,7 @@ int Client::getData(const char *server,const char *filename,std::size_t filePosi
 
 /*! \brief Stub for fetching file header data; must be implemented in a subclass. */
 
-int Client::getHeaderData(const char *server,const char *filename,int dataSize,char *dataPtr)
+int Client::getHeaderData(const char * /*server*/,const char * /*filename*/,int /*dataSize*/,char * /*dataPtr*/)
 {
   throw Fmi::Exception(BCP,"Should be implemented in the child class!");
 }
@@ -118,7 +116,7 @@ struct curl_slist* Client::addAuthenticationHeaders(const char *server,const cha
   {
     if (mAuthenticationMethod == 1)
     {
-      time_t currentTime = time(0);
+      time_t currentTime = time(nullptr);
 
       std::string timeStamp = utcTimeFromTimeT(currentTime);
       std::string date = timeStamp.substr(0,8);
@@ -138,7 +136,7 @@ struct curl_slist* Client::addAuthenticationHeaders(const char *server,const cha
       r += sprintf(r,"x-amz-date:%sZ\n",timeStamp.c_str());
       r += sprintf(r,"\n");
       r += sprintf(r,"host;x-amz-content-sha256;x-amz-date\n");
-      r += sprintf(r,"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855");
+      sprintf(r,"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855");
 
 
       char hexHash[100];
@@ -151,7 +149,7 @@ struct curl_slist* Client::addAuthenticationHeaders(const char *server,const cha
       p += sprintf(p,"AWS4-HMAC-SHA256\n");
       p += sprintf(p,"%sZ\n",timeStamp.c_str());
       p += sprintf(p,"%s/%s/%s/%s\n",date.c_str(),dateRegion.c_str(),dateRegionService.c_str(),signing.c_str());
-      p += sprintf(p,"%s",hexHash);
+      sprintf(p,"%s",hexHash);
 
       //printf("STRING TO SIGN:\n%s\n",stringToSign);
 
@@ -186,13 +184,13 @@ struct curl_slist* Client::addAuthenticationHeaders(const char *server,const cha
 
 /*! \brief Curl write callback that appends response bytes into the response buffer. */
 
-size_t curl_responseProcessing(char *ptr, size_t size, size_t nmemb, void *userdata)
+size_t curl_responseProcessing(const char *ptr, size_t /*size*/, size_t nmemb, void *userdata)
 {
   FUNCTION_TRACE
   try
   {
     //printf("### RECEIVE %ld\n",nmemb);
-    Client::Response *response = (Client::Response*)userdata;
+    auto *response = (Client::Response*)userdata;
 
     for (size_t t=0; t<nmemb; t++)
     {
@@ -217,18 +215,20 @@ size_t curl_responseProcessing(char *ptr, size_t size, size_t nmemb, void *userd
 
 /*! \brief Dumps a hex/ASCII view of a memory buffer to the given stream. */
 
+namespace
+{
 void curl_dump(const char *text,FILE *stream, unsigned char *ptr, size_t size)
 {
-  size_t i;
-  size_t c;
+  size_t i = 0;
+  size_t c = 0;
   unsigned int width=0x10;
 
   fprintf(stream, "%s, %10.10ld bytes (0x%8.8lx)\n",
-          text, (long)size, (long)size);
+          text, (long)size, (unsigned long)size);
 
   for(i=0; i<size; i+= width)
   {
-    fprintf(stream, "%4.4lx: ", (long)i);
+    fprintf(stream, "%4.4lx: ", (unsigned long)i);
 
     /* show hex to the left */
     for(c = 0; c < width; c++)
@@ -249,6 +249,7 @@ void curl_dump(const char *text,FILE *stream, unsigned char *ptr, size_t size)
     fputc('\n', stream); /* newline */
   }
 }
+}  // namespace
 
 
 
@@ -256,7 +257,7 @@ void curl_dump(const char *text,FILE *stream, unsigned char *ptr, size_t size)
 
 int curl_trace(CURL *handle, curl_infotype type,char *data, size_t size,void *userp)
 {
-  const char *text;
+  const char *text = nullptr;
   (void)handle; /* prevent compiler warning */
   (void)userp;
 

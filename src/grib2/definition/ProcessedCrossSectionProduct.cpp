@@ -27,8 +27,7 @@ ProcessedCrossSectionProduct::ProcessedCrossSectionProduct() {
 
 /*! \brief The destructor of the class. */
 
-ProcessedCrossSectionProduct::~ProcessedCrossSectionProduct() {
-}
+ProcessedCrossSectionProduct::~ProcessedCrossSectionProduct() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -66,11 +65,8 @@ void ProcessedCrossSectionProduct::write(DataWriter &dataWriter) {
 
 void ProcessedCrossSectionProduct::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sProcessedCrossSectionProduct.", prefix.c_str());
-    mParameter.getAttributeList(name, attributeList);
-    sprintf(name, "%sProcessedCrossSectionProduct.", prefix.c_str());
-    mStatistical.getAttributeList(name, attributeList);
+        mParameter.getAttributeList(prefix + "ProcessedCrossSectionProduct.", attributeList);
+        mStatistical.getAttributeList(prefix + "ProcessedCrossSectionProduct.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -162,7 +158,7 @@ ProductDefinition *ProcessedCrossSectionProduct::createProductDefinition() const
 
 ParameterSettings *ProcessedCrossSectionProduct::getParameter() const {
   try {
-    return static_cast<ParameterSettings *>(&mParameter);
+    return &mParameter;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -172,13 +168,13 @@ ParameterSettings *ProcessedCrossSectionProduct::getParameter() const {
 
 StatisticalSettings *ProcessedCrossSectionProduct::getStatistical() const {
   try {
-    return static_cast<StatisticalSettings *>(&mStatistical);
+    return &mStatistical;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
-void ProcessedCrossSectionProduct::setParameter(ParameterSettings &parameter) {
+void ProcessedCrossSectionProduct::setParameter(const ParameterSettings &parameter) {
   try {
     mParameter = parameter;
   } catch (...) {
@@ -186,7 +182,7 @@ void ProcessedCrossSectionProduct::setParameter(ParameterSettings &parameter) {
   }
 }
 
-void ProcessedCrossSectionProduct::setStatistical(StatisticalSettings &statistical) {
+void ProcessedCrossSectionProduct::setStatistical(const StatisticalSettings &statistical) {
   try {
     mStatistical = statistical;
   } catch (...) {

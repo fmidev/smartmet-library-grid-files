@@ -21,6 +21,8 @@ class FmiParameterId_newbase
   public:
                       FmiParameterId_newbase();
     virtual           ~FmiParameterId_newbase();
+    FmiParameterId_newbase(const FmiParameterId_newbase&) = default;
+    FmiParameterId_newbase& operator=(const FmiParameterId_newbase&) = default;
 
     /*! \brief Write a human-readable dump to \p stream (for debugging). */
     void              print(std::ostream& stream,uint level,uint optionFlags) const;
@@ -32,9 +34,9 @@ class FmiParameterId_newbase
 };
 
 
-typedef std::vector<FmiParameterId_newbase> FmiParamId_newbase_vec;              //!< Ordered list of FMI↔Newbase mappings
-typedef std::unordered_map<uint,FmiParameterId_newbase> FmiParamId_newbase_umap; //!< Hash map keyed by FMI parameter ID
-typedef const FmiParameterId_newbase* FmiParamId_newbase_cptr;                  //!< Non-owning const pointer
+using FmiParamId_newbase_vec = std::vector<FmiParameterId_newbase>;              //!< Ordered list of FMI↔Newbase mappings
+using FmiParamId_newbase_umap = std::unordered_map<uint,FmiParameterId_newbase>; //!< Hash map keyed by FMI parameter ID
+using FmiParamId_newbase_cptr = const FmiParameterId_newbase*;                  //!< Non-owning const pointer
 
 
 }

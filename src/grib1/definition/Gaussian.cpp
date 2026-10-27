@@ -31,8 +31,7 @@ Gaussian::Gaussian() {
 
 /*! \brief The destructor of the class. */
 
-Gaussian::~Gaussian() {
-}
+Gaussian::~Gaussian() = default;
 
 /*! \brief The method reads and initializes all data related to the current section object.
 
@@ -82,19 +81,12 @@ void Gaussian::write(DataWriter &dataWriter) {
 
 void Gaussian::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sGaussian.Ni", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNi));
-    sprintf(name, "%sGaussian.Nj", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNj));
-    sprintf(name, "%sGaussian.", prefix.c_str());
-    mGridArea.getAttributeList(name, attributeList);
-    sprintf(name, "%sGaussian.IDirectionIncrement", prefix.c_str());
-    attributeList.addAttribute(name, toString(mIDirectionIncrement));
-    sprintf(name, "%sGaussian.N", prefix.c_str());
-    attributeList.addAttribute(name, toString(mN));
-    sprintf(name, "%sGaussian.", prefix.c_str());
-    mScanningMode.getAttributeList(name, attributeList);
+        attributeList.addAttribute(prefix + "Gaussian.Ni", toString(mNi));
+        attributeList.addAttribute(prefix + "Gaussian.Nj", toString(mNj));
+        mGridArea.getAttributeList(prefix + "Gaussian.", attributeList);
+        attributeList.addAttribute(prefix + "Gaussian.IDirectionIncrement", toString(mIDirectionIncrement));
+        attributeList.addAttribute(prefix + "Gaussian.N", toString(mN));
+        mScanningMode.getAttributeList(prefix + "Gaussian.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -238,7 +230,7 @@ std::int16_t Gaussian::getNj() const {
 
 GridAreaSettings *Gaussian::getGridArea() const {
   try {
-    return static_cast<GridAreaSettings *>(&mGridArea);
+    return &mGridArea;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -268,7 +260,7 @@ std::uint16_t Gaussian::getN() const {
 
 ScanningModeSettings *Gaussian::getScanningMode() const {
   try {
-    return static_cast<ScanningModeSettings *>(&mScanningMode);
+    return &mScanningMode;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -290,7 +282,7 @@ void Gaussian::setNj(std::int16_t nj) {
   }
 }
 
-void Gaussian::setGridArea(GridAreaSettings &gridArea) {
+void Gaussian::setGridArea(const GridAreaSettings &gridArea) {
   try {
     mGridArea = gridArea;
   } catch (...) {
@@ -314,7 +306,7 @@ void Gaussian::setN(std::uint16_t n) {
   }
 }
 
-void Gaussian::setScanningMode(ScanningModeSettings &scanningMode) {
+void Gaussian::setScanningMode(const ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {

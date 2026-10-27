@@ -13,12 +13,13 @@ class ComplexDifferenceGridDataRepresentationImpl : public ComplexDifferenceGrid
   public:
               ComplexDifferenceGridDataRepresentationImpl();
               ComplexDifferenceGridDataRepresentationImpl(const ComplexDifferenceGridDataRepresentationImpl& other);
-    virtual   ~ComplexDifferenceGridDataRepresentationImpl();
+    ~ComplexDifferenceGridDataRepresentationImpl() override;
+    ComplexDifferenceGridDataRepresentationImpl& operator=(const ComplexDifferenceGridDataRepresentationImpl&) = default;
 
-    RepresentationDefinition* createRepresentationDefinition() const;
+    RepresentationDefinition* createRepresentationDefinition() const override;
 
-    void      decodeValues(Message *message,T::ParamValue_vec& decodedValues) const;
-    void      read(MemoryReader& memoryReader);
+    void      decodeValues(Message *message,T::ParamValue_vec& decodedValues) const override;
+    void      read(MemoryReader& memoryReader) override;
 
 };
 

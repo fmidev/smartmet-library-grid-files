@@ -169,7 +169,7 @@ void DataSection::setMessagePtr(Message *message)
         \return            The method returns true if the value of the requested property was found.
 */
 
-bool DataSection::getProperty(uint propertyId,Int64& value)
+bool DataSection::getProperty(uint /*propertyId*/,Int64& /*value*/)
 {
   try
   {
@@ -187,7 +187,7 @@ bool DataSection::getProperty(uint propertyId,Int64& value)
 
 /*! \brief The method collects the data section properties into the given vector. */
 
-void DataSection::getProperties(T::PropertySettingVec& properties)
+void DataSection::getProperties(T::PropertySettingVec& /*properties*/)
 {
   try
   {
@@ -210,7 +210,7 @@ void DataSection::getProperties(T::PropertySettingVec& properties)
         \return            The method returns true if the value of the requested property was set.
 */
 
-bool DataSection::setProperty(uint propertyId,Int64 value)
+bool DataSection::setProperty(uint /*propertyId*/,Int64 /*value*/)
 {
   try
   {
@@ -449,7 +449,7 @@ std::size_t DataSection::getDataSize() const
         \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void DataSection::print(std::ostream& stream,uint level,uint optionFlags) const
+void DataSection::print(std::ostream& stream,uint level,uint /*optionFlags*/) const
 {
   try
   {

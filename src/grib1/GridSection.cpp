@@ -95,9 +95,7 @@ GridSection::GridSection(const GridSection& other)
 
 /*! \brief The destructor of the class. */
 
-GridSection::~GridSection()
-{
-}
+GridSection::~GridSection() = default;
 
 
 
@@ -165,6 +163,8 @@ bool GridSection::getProperty(uint propertyId,Int64& value)
       case Property::GridSection::DataRepresentationType:
         value = mDataRepresentationType;
         return true;
+      default:
+        break;
     }
 
     if (mGridDefinition)
@@ -230,6 +230,8 @@ bool GridSection::setProperty(uint propertyId,Int64 value)
       case Property::GridSection::DataRepresentationType:
         setDataRepresentationType(value);
         return true;
+      default:
+        break;
     }
 
     if (mGridDefinition)
@@ -325,7 +327,7 @@ void GridSection::setDataRepresentationType(Int64 value)
     if (!mGridDefinition)
     {
       mDataRepresentationType = static_cast<std::uint8_t>(value);
-      auto gridDefinition = createGridDefinition(mDataRepresentationType);
+      auto *gridDefinition = createGridDefinition(mDataRepresentationType);
       mGridDefinition.reset(gridDefinition);
     }
   }
@@ -381,7 +383,7 @@ void GridSection::read(MemoryReader& memoryReader)
     memoryReader >> mPvlLocation;
     memoryReader >> mDataRepresentationType;
 
-    auto gridDefinition = createGridDefinition(mDataRepresentationType);
+    auto *gridDefinition = createGridDefinition(mDataRepresentationType);
     mGridDefinition.reset(gridDefinition);
     gridDefinition->read(memoryReader);
 

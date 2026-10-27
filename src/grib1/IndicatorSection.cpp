@@ -61,9 +61,7 @@ IndicatorSection::IndicatorSection(const IndicatorSection& other)
 
 /*! \brief The destructor of the class. */
 
-IndicatorSection::~IndicatorSection()
-{
-}
+IndicatorSection::~IndicatorSection() = default;
 
 
 
@@ -102,7 +100,7 @@ void IndicatorSection::getAttributeList(const std::string& prefix,T::AttributeLi
         \return            The method returns true if the value of the requested property was found.
 */
 
-bool IndicatorSection::getProperty(uint propertyId,Int64& value)
+bool IndicatorSection::getProperty(uint propertyId,Int64& value) const
 {
   try
   {
@@ -111,6 +109,8 @@ bool IndicatorSection::getProperty(uint propertyId,Int64& value)
       case Property::IndicatorSection::EditionNumber:
         value = mEditionNumber;
         return true;
+      default:
+        break;
     }
     return false;
   }
@@ -156,6 +156,8 @@ bool IndicatorSection::setProperty(uint propertyId,Int64 value)
       case Property::IndicatorSection::EditionNumber:
         mEditionNumber = value;
         return true;
+      default:
+        break;
     }
     return false;
   }
@@ -419,7 +421,7 @@ void IndicatorSection::setTotalLength(std::uint32_t length)
         \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void IndicatorSection::print(std::ostream& stream,uint level,uint optionFlags) const
+void IndicatorSection::print(std::ostream& stream,uint level,uint /*optionFlags*/) const
 {
   try
   {

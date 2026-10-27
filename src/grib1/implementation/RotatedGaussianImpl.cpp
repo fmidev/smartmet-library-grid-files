@@ -1,6 +1,8 @@
 #include "RotatedGaussianImpl.h"
 #include <macgyver/Exception.h>
 
+#include <memory>
+
 namespace SmartMet
 {
 namespace GRIB1
@@ -20,10 +22,7 @@ RotatedGaussianImpl::RotatedGaussianImpl()
 
 /*! \brief The copy constructor of the class. */
 
-RotatedGaussianImpl::RotatedGaussianImpl(const RotatedGaussianImpl& other)
-:RotatedGaussian(other)
-{
-}
+RotatedGaussianImpl::RotatedGaussianImpl(const RotatedGaussianImpl& other) = default;
 
 
 
@@ -31,9 +30,7 @@ RotatedGaussianImpl::RotatedGaussianImpl(const RotatedGaussianImpl& other)
 
 /*! \brief The destructor of the class. */
 
-RotatedGaussianImpl::~RotatedGaussianImpl()
-{
-}
+RotatedGaussianImpl::~RotatedGaussianImpl() = default;
 
 
 
@@ -162,7 +159,7 @@ void RotatedGaussianImpl::initSpatialReference()
     mSpatialReference = getSpatialReference();
     if (!mSpatialReference)
     {
-      mSpatialReference.reset(new T::SpatialRef());
+      mSpatialReference = std::make_shared<T::SpatialRef>();
       addSpatialReference(mSpatialReference);
 
       // ### Set geographic coordinate system.

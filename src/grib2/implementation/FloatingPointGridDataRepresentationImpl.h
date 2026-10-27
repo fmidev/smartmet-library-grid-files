@@ -13,12 +13,13 @@ class FloatingPointGridDataRepresentationImpl : public FloatingPointGridDataRepr
   public:
               FloatingPointGridDataRepresentationImpl();
               FloatingPointGridDataRepresentationImpl(const FloatingPointGridDataRepresentationImpl& other);
-    virtual   ~FloatingPointGridDataRepresentationImpl();
+    ~FloatingPointGridDataRepresentationImpl() override;
+    FloatingPointGridDataRepresentationImpl& operator=(const FloatingPointGridDataRepresentationImpl&) = default;
 
-    RepresentationDefinition* createRepresentationDefinition() const;
+    RepresentationDefinition* createRepresentationDefinition() const override;
 
-    void      decodeValues(Message *message,T::ParamValue_vec& decodedValues) const;
-    void      read(MemoryReader& memoryReader);
+    void      decodeValues(Message *message,T::ParamValue_vec& decodedValues) const override;
+    void      read(MemoryReader& memoryReader) override;
 };
 
 }

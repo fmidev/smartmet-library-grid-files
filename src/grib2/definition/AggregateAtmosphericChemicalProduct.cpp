@@ -27,8 +27,7 @@ AggregateAtmosphericChemicalProduct::AggregateAtmosphericChemicalProduct() {
 
 /*! \brief The destructor of the class. */
 
-AggregateAtmosphericChemicalProduct::~AggregateAtmosphericChemicalProduct() {
-}
+AggregateAtmosphericChemicalProduct::~AggregateAtmosphericChemicalProduct() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -68,13 +67,9 @@ void AggregateAtmosphericChemicalProduct::write(DataWriter &dataWriter) {
 
 void AggregateAtmosphericChemicalProduct::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sAggregateAtmosphericChemicalProduct.", prefix.c_str());
-    mParameterChemical.getAttributeList(name, attributeList);
-    sprintf(name, "%sAggregateAtmosphericChemicalProduct.", prefix.c_str());
-    mHorizontal.getAttributeList(name, attributeList);
-    sprintf(name, "%sAggregateAtmosphericChemicalProduct.", prefix.c_str());
-    mStatistical.getAttributeList(name, attributeList);
+        mParameterChemical.getAttributeList(prefix + "AggregateAtmosphericChemicalProduct.", attributeList);
+        mHorizontal.getAttributeList(prefix + "AggregateAtmosphericChemicalProduct.", attributeList);
+        mStatistical.getAttributeList(prefix + "AggregateAtmosphericChemicalProduct.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -171,7 +166,7 @@ ProductDefinition *AggregateAtmosphericChemicalProduct::createProductDefinition(
 
 ParameterChemicalSettings *AggregateAtmosphericChemicalProduct::getParameterChemical() const {
   try {
-    return static_cast<ParameterChemicalSettings *>(&mParameterChemical);
+    return &mParameterChemical;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -181,7 +176,7 @@ ParameterChemicalSettings *AggregateAtmosphericChemicalProduct::getParameterChem
 
 HorizontalSettings *AggregateAtmosphericChemicalProduct::getHorizontal() const {
   try {
-    return static_cast<HorizontalSettings *>(&mHorizontal);
+    return &mHorizontal;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -191,13 +186,13 @@ HorizontalSettings *AggregateAtmosphericChemicalProduct::getHorizontal() const {
 
 StatisticalSettings *AggregateAtmosphericChemicalProduct::getStatistical() const {
   try {
-    return static_cast<StatisticalSettings *>(&mStatistical);
+    return &mStatistical;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
-void AggregateAtmosphericChemicalProduct::setParameterChemical(ParameterChemicalSettings &parameterChemical) {
+void AggregateAtmosphericChemicalProduct::setParameterChemical(const ParameterChemicalSettings &parameterChemical) {
   try {
     mParameterChemical = parameterChemical;
   } catch (...) {
@@ -205,7 +200,7 @@ void AggregateAtmosphericChemicalProduct::setParameterChemical(ParameterChemical
   }
 }
 
-void AggregateAtmosphericChemicalProduct::setHorizontal(HorizontalSettings &horizontal) {
+void AggregateAtmosphericChemicalProduct::setHorizontal(const HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
@@ -213,7 +208,7 @@ void AggregateAtmosphericChemicalProduct::setHorizontal(HorizontalSettings &hori
   }
 }
 
-void AggregateAtmosphericChemicalProduct::setStatistical(StatisticalSettings &statistical) {
+void AggregateAtmosphericChemicalProduct::setStatistical(const StatisticalSettings &statistical) {
   try {
     mStatistical = statistical;
   } catch (...) {

@@ -22,18 +22,22 @@ namespace GRIB1 {
 class StretchedRotatedSphericalHarmonic : public GridDefinition {
 public:
   StretchedRotatedSphericalHarmonic();
-  virtual ~StretchedRotatedSphericalHarmonic();
+  StretchedRotatedSphericalHarmonic(const StretchedRotatedSphericalHarmonic &) = default;
+  StretchedRotatedSphericalHarmonic(StretchedRotatedSphericalHarmonic &&) = default;
+  StretchedRotatedSphericalHarmonic &operator=(const StretchedRotatedSphericalHarmonic &) = default;
+  StretchedRotatedSphericalHarmonic &operator=(StretchedRotatedSphericalHarmonic &&) = default;
+  ~StretchedRotatedSphericalHarmonic() override;
 
-  virtual void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const;
-  virtual void read(MemoryReader &memoryReader);
-  virtual void write(DataWriter &dataWriter);
-  virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
+  void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const override;
+  void read(MemoryReader &memoryReader) override;
+  void write(DataWriter &dataWriter) override;
+  void print(std::ostream &stream, uint level, uint optionFlags) const override;
   virtual bool getAttributeValue(const char *attributeName, std::string &attributeValue) const;
   virtual bool hasAttributeValue(const char *attributeName, const char *attributeValue) const;
-  virtual T::Hash countHash() const;
+  T::Hash countHash() const override;
 
-  virtual uint getTemplateNumber() const;
-  virtual GridDefinition *createGridDefinition() const;
+  uint getTemplateNumber() const override;
+  GridDefinition *createGridDefinition() const override;
   std::uint16_t getJ() const;
   void setJ(std::uint16_t j);
   std::uint16_t getK() const;
@@ -44,10 +48,10 @@ public:
   void setRepresentationType(std::uint8_t representationType);
   std::uint8_t getRepresentationMode() const;
   void setRepresentationMode(std::uint8_t representationMode);
-  RotationSettings *getRotation() const;
-  void setRotation(RotationSettings &rotation);
+  RotationSettings *getRotation() const override;
+  void setRotation(const RotationSettings &rotation);
   GridStretchingSettings *getGridStretching() const;
-  void setGridStretching(GridStretchingSettings &gridStretching);
+  void setGridStretching(const GridStretchingSettings &gridStretching);
 
 protected:
   // # Copyright 2005-2019 ECMWF.

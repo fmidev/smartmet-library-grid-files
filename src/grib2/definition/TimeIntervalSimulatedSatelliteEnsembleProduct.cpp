@@ -27,8 +27,7 @@ TimeIntervalSimulatedSatelliteEnsembleProduct::TimeIntervalSimulatedSatelliteEns
 
 /*! \brief The destructor of the class. */
 
-TimeIntervalSimulatedSatelliteEnsembleProduct::~TimeIntervalSimulatedSatelliteEnsembleProduct() {
-}
+TimeIntervalSimulatedSatelliteEnsembleProduct::~TimeIntervalSimulatedSatelliteEnsembleProduct() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -68,13 +67,9 @@ void TimeIntervalSimulatedSatelliteEnsembleProduct::write(DataWriter &dataWriter
 
 void TimeIntervalSimulatedSatelliteEnsembleProduct::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sTimeIntervalSimulatedSatelliteEnsembleProduct.", prefix.c_str());
-    mSimulatedSatelliteProduct.getAttributeList(name, attributeList);
-    sprintf(name, "%sTimeIntervalSimulatedSatelliteEnsembleProduct.", prefix.c_str());
-    mEps.getAttributeList(name, attributeList);
-    sprintf(name, "%sTimeIntervalSimulatedSatelliteEnsembleProduct.", prefix.c_str());
-    mStatistical.getAttributeList(name, attributeList);
+        mSimulatedSatelliteProduct.getAttributeList(prefix + "TimeIntervalSimulatedSatelliteEnsembleProduct.", attributeList);
+        mEps.getAttributeList(prefix + "TimeIntervalSimulatedSatelliteEnsembleProduct.", attributeList);
+        mStatistical.getAttributeList(prefix + "TimeIntervalSimulatedSatelliteEnsembleProduct.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -171,7 +166,7 @@ ProductDefinition *TimeIntervalSimulatedSatelliteEnsembleProduct::createProductD
 
 SimulatedSatelliteProduct *TimeIntervalSimulatedSatelliteEnsembleProduct::getSimulatedSatelliteProduct() const {
   try {
-    return static_cast<SimulatedSatelliteProduct *>(&mSimulatedSatelliteProduct);
+    return &mSimulatedSatelliteProduct;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -181,7 +176,7 @@ SimulatedSatelliteProduct *TimeIntervalSimulatedSatelliteEnsembleProduct::getSim
 
 EpsSettings *TimeIntervalSimulatedSatelliteEnsembleProduct::getEps() const {
   try {
-    return static_cast<EpsSettings *>(&mEps);
+    return &mEps;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -191,13 +186,13 @@ EpsSettings *TimeIntervalSimulatedSatelliteEnsembleProduct::getEps() const {
 
 StatisticalSettings *TimeIntervalSimulatedSatelliteEnsembleProduct::getStatistical() const {
   try {
-    return static_cast<StatisticalSettings *>(&mStatistical);
+    return &mStatistical;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
-void TimeIntervalSimulatedSatelliteEnsembleProduct::setSimulatedSatelliteProduct(SimulatedSatelliteProduct &simulatedSatelliteProduct) {
+void TimeIntervalSimulatedSatelliteEnsembleProduct::setSimulatedSatelliteProduct(const SimulatedSatelliteProduct &simulatedSatelliteProduct) {
   try {
     mSimulatedSatelliteProduct = simulatedSatelliteProduct;
   } catch (...) {
@@ -205,7 +200,7 @@ void TimeIntervalSimulatedSatelliteEnsembleProduct::setSimulatedSatelliteProduct
   }
 }
 
-void TimeIntervalSimulatedSatelliteEnsembleProduct::setEps(EpsSettings &eps) {
+void TimeIntervalSimulatedSatelliteEnsembleProduct::setEps(const EpsSettings &eps) {
   try {
     mEps = eps;
   } catch (...) {
@@ -213,7 +208,7 @@ void TimeIntervalSimulatedSatelliteEnsembleProduct::setEps(EpsSettings &eps) {
   }
 }
 
-void TimeIntervalSimulatedSatelliteEnsembleProduct::setStatistical(StatisticalSettings &statistical) {
+void TimeIntervalSimulatedSatelliteEnsembleProduct::setStatistical(const StatisticalSettings &statistical) {
   try {
     mStatistical = statistical;
   } catch (...) {

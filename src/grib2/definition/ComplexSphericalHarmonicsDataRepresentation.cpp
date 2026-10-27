@@ -27,8 +27,7 @@ ComplexSphericalHarmonicsDataRepresentation::ComplexSphericalHarmonicsDataRepres
 
 /*! \brief The destructor of the class. */
 
-ComplexSphericalHarmonicsDataRepresentation::~ComplexSphericalHarmonicsDataRepresentation() {
-}
+ComplexSphericalHarmonicsDataRepresentation::~ComplexSphericalHarmonicsDataRepresentation() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -70,15 +69,10 @@ void ComplexSphericalHarmonicsDataRepresentation::write(DataWriter &dataWriter) 
 
 void ComplexSphericalHarmonicsDataRepresentation::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sComplexSphericalHarmonicsDataRepresentation.", prefix.c_str());
-    mPacking.getAttributeList(name, attributeList);
-    sprintf(name, "%sComplexSphericalHarmonicsDataRepresentation.LaplacianScalingFactor", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLaplacianScalingFactor));
-    sprintf(name, "%sComplexSphericalHarmonicsDataRepresentation.TS", prefix.c_str());
-    attributeList.addAttribute(name, toString(mTS));
-    sprintf(name, "%sComplexSphericalHarmonicsDataRepresentation.UnpackedSubsetPrecision", prefix.c_str());
-    attributeList.addAttribute(name, toString(mUnpackedSubsetPrecision));
+        mPacking.getAttributeList(prefix + "ComplexSphericalHarmonicsDataRepresentation.", attributeList);
+        attributeList.addAttribute(prefix + "ComplexSphericalHarmonicsDataRepresentation.LaplacianScalingFactor", toString(mLaplacianScalingFactor));
+        attributeList.addAttribute(prefix + "ComplexSphericalHarmonicsDataRepresentation.TS", toString(mTS));
+        attributeList.addAttribute(prefix + "ComplexSphericalHarmonicsDataRepresentation.UnpackedSubsetPrecision", toString(mUnpackedSubsetPrecision));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -192,7 +186,7 @@ RepresentationDefinition *ComplexSphericalHarmonicsDataRepresentation::createRep
 
 PackingSettings *ComplexSphericalHarmonicsDataRepresentation::getPacking() const {
   try {
-    return static_cast<PackingSettings *>(&mPacking);
+    return &mPacking;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -228,7 +222,7 @@ const T::UInt8_opt &ComplexSphericalHarmonicsDataRepresentation::getUnpackedSubs
   }
 }
 
-void ComplexSphericalHarmonicsDataRepresentation::setPacking(PackingSettings &packing) {
+void ComplexSphericalHarmonicsDataRepresentation::setPacking(const PackingSettings &packing) {
   try {
     mPacking = packing;
   } catch (...) {

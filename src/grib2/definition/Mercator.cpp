@@ -27,8 +27,7 @@ Mercator::Mercator() {
 
 /*! \brief The destructor of the class. */
 
-Mercator::~Mercator() {
-}
+Mercator::~Mercator() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -88,33 +87,19 @@ void Mercator::write(DataWriter &dataWriter) {
 
 void Mercator::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sMercator.", prefix.c_str());
-    mEarthShape.getAttributeList(name, attributeList);
-    sprintf(name, "%sMercator.Ni", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNi));
-    sprintf(name, "%sMercator.Nj", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNj));
-    sprintf(name, "%sMercator.LatitudeOfFirstGridPoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatitudeOfFirstGridPoint));
-    sprintf(name, "%sMercator.LongitudeOfFirstGridPoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLongitudeOfFirstGridPoint));
-    sprintf(name, "%sMercator.", prefix.c_str());
-    mResolution.getAttributeList(name, attributeList);
-    sprintf(name, "%sMercator.LaD", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLaD));
-    sprintf(name, "%sMercator.LatitudeOfLastGridPoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatitudeOfLastGridPoint));
-    sprintf(name, "%sMercator.LongitudeOfLastGridPoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLongitudeOfLastGridPoint));
-    sprintf(name, "%sMercator.", prefix.c_str());
-    mScanningMode.getAttributeList(name, attributeList);
-    sprintf(name, "%sMercator.OrientationOfTheGrid", prefix.c_str());
-    attributeList.addAttribute(name, toString(mOrientationOfTheGrid));
-    sprintf(name, "%sMercator.Di", prefix.c_str());
-    attributeList.addAttribute(name, toString(mDi));
-    sprintf(name, "%sMercator.Dj", prefix.c_str());
-    attributeList.addAttribute(name, toString(mDj));
+        mEarthShape.getAttributeList(prefix + "Mercator.", attributeList);
+        attributeList.addAttribute(prefix + "Mercator.Ni", toString(mNi));
+        attributeList.addAttribute(prefix + "Mercator.Nj", toString(mNj));
+        attributeList.addAttribute(prefix + "Mercator.LatitudeOfFirstGridPoint", toString(mLatitudeOfFirstGridPoint));
+        attributeList.addAttribute(prefix + "Mercator.LongitudeOfFirstGridPoint", toString(mLongitudeOfFirstGridPoint));
+        mResolution.getAttributeList(prefix + "Mercator.", attributeList);
+        attributeList.addAttribute(prefix + "Mercator.LaD", toString(mLaD));
+        attributeList.addAttribute(prefix + "Mercator.LatitudeOfLastGridPoint", toString(mLatitudeOfLastGridPoint));
+        attributeList.addAttribute(prefix + "Mercator.LongitudeOfLastGridPoint", toString(mLongitudeOfLastGridPoint));
+        mScanningMode.getAttributeList(prefix + "Mercator.", attributeList);
+        attributeList.addAttribute(prefix + "Mercator.OrientationOfTheGrid", toString(mOrientationOfTheGrid));
+        attributeList.addAttribute(prefix + "Mercator.Di", toString(mDi));
+        attributeList.addAttribute(prefix + "Mercator.Dj", toString(mDj));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -299,7 +284,7 @@ GridDefinition *Mercator::createGridDefinition() const {
 
 EarthShapeSettings *Mercator::getEarthShape() const {
   try {
-    return static_cast<EarthShapeSettings *>(&mEarthShape);
+    return &mEarthShape;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -349,7 +334,7 @@ const T::Int32_opt &Mercator::getLongitudeOfFirstGridPoint() const {
 
 ResolutionSettings *Mercator::getResolution() const {
   try {
-    return static_cast<ResolutionSettings *>(&mResolution);
+    return &mResolution;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -389,7 +374,7 @@ const T::Int32_opt &Mercator::getLongitudeOfLastGridPoint() const {
 
 ScanningModeSettings *Mercator::getScanningMode() const {
   try {
-    return static_cast<ScanningModeSettings *>(&mScanningMode);
+    return &mScanningMode;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -425,7 +410,7 @@ const T::UInt32_opt &Mercator::getDj() const {
   }
 }
 
-void Mercator::setEarthShape(EarthShapeSettings &earthShape) {
+void Mercator::setEarthShape(const EarthShapeSettings &earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
@@ -465,7 +450,7 @@ void Mercator::setLongitudeOfFirstGridPoint(T::Int32_opt longitudeOfFirstGridPoi
   }
 }
 
-void Mercator::setResolution(ResolutionSettings &resolution) {
+void Mercator::setResolution(const ResolutionSettings &resolution) {
   try {
     mResolution = resolution;
   } catch (...) {
@@ -497,7 +482,7 @@ void Mercator::setLongitudeOfLastGridPoint(T::Int32_opt longitudeOfLastGridPoint
   }
 }
 
-void Mercator::setScanningMode(ScanningModeSettings &scanningMode) {
+void Mercator::setScanningMode(const ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {

@@ -28,8 +28,7 @@ PreprocessedGridDataRepresentation::PreprocessedGridDataRepresentation() {
 
 /*! \brief The destructor of the class. */
 
-PreprocessedGridDataRepresentation::~PreprocessedGridDataRepresentation() {
-}
+PreprocessedGridDataRepresentation::~PreprocessedGridDataRepresentation() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -69,13 +68,9 @@ void PreprocessedGridDataRepresentation::write(DataWriter &dataWriter) {
 
 void PreprocessedGridDataRepresentation::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sPreprocessedGridDataRepresentation.", prefix.c_str());
-    mPacking.getAttributeList(name, attributeList);
-    sprintf(name, "%sPreprocessedGridDataRepresentation.TypeOfPreProcessing", prefix.c_str());
-    attributeList.addAttribute(name, toString(mTypeOfPreProcessing));
-    sprintf(name, "%sPreprocessedGridDataRepresentation.PreProcessingParameter", prefix.c_str());
-    attributeList.addAttribute(name, toString(mPreProcessingParameter));
+        mPacking.getAttributeList(prefix + "PreprocessedGridDataRepresentation.", attributeList);
+        attributeList.addAttribute(prefix + "PreprocessedGridDataRepresentation.TypeOfPreProcessing", toString(mTypeOfPreProcessing));
+        attributeList.addAttribute(prefix + "PreprocessedGridDataRepresentation.PreProcessingParameter", toString(mPreProcessingParameter));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -179,7 +174,7 @@ RepresentationDefinition *PreprocessedGridDataRepresentation::createRepresentati
 
 PackingSettings *PreprocessedGridDataRepresentation::getPacking() const {
   try {
-    return static_cast<PackingSettings *>(&mPacking);
+    return &mPacking;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -205,7 +200,7 @@ float PreprocessedGridDataRepresentation::getPreProcessingParameter() const {
   }
 }
 
-void PreprocessedGridDataRepresentation::setPacking(PackingSettings &packing) {
+void PreprocessedGridDataRepresentation::setPacking(const PackingSettings &packing) {
   try {
     mPacking = packing;
   } catch (...) {

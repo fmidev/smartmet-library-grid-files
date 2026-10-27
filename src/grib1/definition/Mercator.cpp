@@ -32,8 +32,7 @@ Mercator::Mercator() {
 
 /*! \brief The destructor of the class. */
 
-Mercator::~Mercator() {
-}
+Mercator::~Mercator() = default;
 
 /*! \brief The method reads and initializes all data related to the current section object.
 
@@ -89,21 +88,13 @@ void Mercator::write(DataWriter &dataWriter) {
 
 void Mercator::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sMercator.Ni", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNi));
-    sprintf(name, "%sMercator.Nj", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNj));
-    sprintf(name, "%sMercator.", prefix.c_str());
-    mGridArea.getAttributeList(name, attributeList);
-    sprintf(name, "%sMercator.Latin", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatin));
-    sprintf(name, "%sMercator.", prefix.c_str());
-    mScanningMode.getAttributeList(name, attributeList);
-    sprintf(name, "%sMercator.DiInMetres", prefix.c_str());
-    attributeList.addAttribute(name, toString(mDiInMetres));
-    sprintf(name, "%sMercator.DjInMetres", prefix.c_str());
-    attributeList.addAttribute(name, toString(mDjInMetres));
+        attributeList.addAttribute(prefix + "Mercator.Ni", toString(mNi));
+        attributeList.addAttribute(prefix + "Mercator.Nj", toString(mNj));
+        mGridArea.getAttributeList(prefix + "Mercator.", attributeList);
+        attributeList.addAttribute(prefix + "Mercator.Latin", toString(mLatin));
+        mScanningMode.getAttributeList(prefix + "Mercator.", attributeList);
+        attributeList.addAttribute(prefix + "Mercator.DiInMetres", toString(mDiInMetres));
+        attributeList.addAttribute(prefix + "Mercator.DjInMetres", toString(mDjInMetres));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -255,7 +246,7 @@ std::int16_t Mercator::getNj() const {
 
 GridAreaSettings *Mercator::getGridArea() const {
   try {
-    return static_cast<GridAreaSettings *>(&mGridArea);
+    return &mGridArea;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -263,7 +254,7 @@ GridAreaSettings *Mercator::getGridArea() const {
 
 /*! \brief The method returns the value of the {@link mLatin} attribute. */
 
-std::int24_t Mercator::getLatin() const {
+SmartMet::int24_t Mercator::getLatin() const {
   try {
     return mLatin;
   } catch (...) {
@@ -275,7 +266,7 @@ std::int24_t Mercator::getLatin() const {
 
 ScanningModeSettings *Mercator::getScanningMode() const {
   try {
-    return static_cast<ScanningModeSettings *>(&mScanningMode);
+    return &mScanningMode;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -283,7 +274,7 @@ ScanningModeSettings *Mercator::getScanningMode() const {
 
 /*! \brief The method returns the value of the {@link mDiInMetres} attribute. */
 
-std::int24_t Mercator::getDiInMetres() const {
+SmartMet::int24_t Mercator::getDiInMetres() const {
   try {
     return mDiInMetres;
   } catch (...) {
@@ -293,7 +284,7 @@ std::int24_t Mercator::getDiInMetres() const {
 
 /*! \brief The method returns the value of the {@link mDjInMetres} attribute. */
 
-std::int24_t Mercator::getDjInMetres() const {
+SmartMet::int24_t Mercator::getDjInMetres() const {
   try {
     return mDjInMetres;
   } catch (...) {
@@ -317,7 +308,7 @@ void Mercator::setNj(std::int16_t nj) {
   }
 }
 
-void Mercator::setGridArea(GridAreaSettings &gridArea) {
+void Mercator::setGridArea(const GridAreaSettings &gridArea) {
   try {
     mGridArea = gridArea;
   } catch (...) {
@@ -325,7 +316,7 @@ void Mercator::setGridArea(GridAreaSettings &gridArea) {
   }
 }
 
-void Mercator::setLatin(std::int24_t latin) {
+void Mercator::setLatin(SmartMet::int24_t latin) {
   try {
     mLatin = latin;
   } catch (...) {
@@ -333,7 +324,7 @@ void Mercator::setLatin(std::int24_t latin) {
   }
 }
 
-void Mercator::setScanningMode(ScanningModeSettings &scanningMode) {
+void Mercator::setScanningMode(const ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {
@@ -341,7 +332,7 @@ void Mercator::setScanningMode(ScanningModeSettings &scanningMode) {
   }
 }
 
-void Mercator::setDiInMetres(std::int24_t diInMetres) {
+void Mercator::setDiInMetres(SmartMet::int24_t diInMetres) {
   try {
     mDiInMetres = diInMetres;
   } catch (...) {
@@ -349,7 +340,7 @@ void Mercator::setDiInMetres(std::int24_t diInMetres) {
   }
 }
 
-void Mercator::setDjInMetres(std::int24_t djInMetres) {
+void Mercator::setDjInMetres(SmartMet::int24_t djInMetres) {
   try {
     mDjInMetres = djInMetres;
   } catch (...) {

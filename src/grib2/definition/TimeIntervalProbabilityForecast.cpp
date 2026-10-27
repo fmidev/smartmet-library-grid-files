@@ -27,8 +27,7 @@ TimeIntervalProbabilityForecast::TimeIntervalProbabilityForecast() {
 
 /*! \brief The destructor of the class. */
 
-TimeIntervalProbabilityForecast::~TimeIntervalProbabilityForecast() {
-}
+TimeIntervalProbabilityForecast::~TimeIntervalProbabilityForecast() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -70,15 +69,10 @@ void TimeIntervalProbabilityForecast::write(DataWriter &dataWriter) {
 
 void TimeIntervalProbabilityForecast::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sTimeIntervalProbabilityForecast.", prefix.c_str());
-    mParameter.getAttributeList(name, attributeList);
-    sprintf(name, "%sTimeIntervalProbabilityForecast.", prefix.c_str());
-    mHorizontal.getAttributeList(name, attributeList);
-    sprintf(name, "%sTimeIntervalProbabilityForecast.", prefix.c_str());
-    mProbability.getAttributeList(name, attributeList);
-    sprintf(name, "%sTimeIntervalProbabilityForecast.", prefix.c_str());
-    mStatistical.getAttributeList(name, attributeList);
+        mParameter.getAttributeList(prefix + "TimeIntervalProbabilityForecast.", attributeList);
+        mHorizontal.getAttributeList(prefix + "TimeIntervalProbabilityForecast.", attributeList);
+        mProbability.getAttributeList(prefix + "TimeIntervalProbabilityForecast.", attributeList);
+        mStatistical.getAttributeList(prefix + "TimeIntervalProbabilityForecast.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -180,7 +174,7 @@ ProductDefinition *TimeIntervalProbabilityForecast::createProductDefinition() co
 
 ParameterSettings *TimeIntervalProbabilityForecast::getParameter() const {
   try {
-    return static_cast<ParameterSettings *>(&mParameter);
+    return &mParameter;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -190,7 +184,7 @@ ParameterSettings *TimeIntervalProbabilityForecast::getParameter() const {
 
 HorizontalSettings *TimeIntervalProbabilityForecast::getHorizontal() const {
   try {
-    return static_cast<HorizontalSettings *>(&mHorizontal);
+    return &mHorizontal;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -200,7 +194,7 @@ HorizontalSettings *TimeIntervalProbabilityForecast::getHorizontal() const {
 
 ProbabilitySettings *TimeIntervalProbabilityForecast::getProbability() const {
   try {
-    return static_cast<ProbabilitySettings *>(&mProbability);
+    return &mProbability;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -210,13 +204,13 @@ ProbabilitySettings *TimeIntervalProbabilityForecast::getProbability() const {
 
 StatisticalSettings *TimeIntervalProbabilityForecast::getStatistical() const {
   try {
-    return static_cast<StatisticalSettings *>(&mStatistical);
+    return &mStatistical;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
-void TimeIntervalProbabilityForecast::setParameter(ParameterSettings &parameter) {
+void TimeIntervalProbabilityForecast::setParameter(const ParameterSettings &parameter) {
   try {
     mParameter = parameter;
   } catch (...) {
@@ -224,7 +218,7 @@ void TimeIntervalProbabilityForecast::setParameter(ParameterSettings &parameter)
   }
 }
 
-void TimeIntervalProbabilityForecast::setHorizontal(HorizontalSettings &horizontal) {
+void TimeIntervalProbabilityForecast::setHorizontal(const HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
@@ -232,7 +226,7 @@ void TimeIntervalProbabilityForecast::setHorizontal(HorizontalSettings &horizont
   }
 }
 
-void TimeIntervalProbabilityForecast::setProbability(ProbabilitySettings &probability) {
+void TimeIntervalProbabilityForecast::setProbability(const ProbabilitySettings &probability) {
   try {
     mProbability = probability;
   } catch (...) {
@@ -240,7 +234,7 @@ void TimeIntervalProbabilityForecast::setProbability(ProbabilitySettings &probab
   }
 }
 
-void TimeIntervalProbabilityForecast::setStatistical(StatisticalSettings &statistical) {
+void TimeIntervalProbabilityForecast::setStatistical(const StatisticalSettings &statistical) {
   try {
     mStatistical = statistical;
   } catch (...) {

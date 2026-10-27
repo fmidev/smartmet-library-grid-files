@@ -21,10 +21,7 @@ RotatedGaussianImpl::RotatedGaussianImpl()
 
 /*! \brief The copy constructor of the class. */
 
-RotatedGaussianImpl::RotatedGaussianImpl(const RotatedGaussianImpl& other)
-:RotatedGaussian(other)
-{
-}
+RotatedGaussianImpl::RotatedGaussianImpl(const RotatedGaussianImpl& other) = default;
 
 
 
@@ -32,9 +29,7 @@ RotatedGaussianImpl::RotatedGaussianImpl(const RotatedGaussianImpl& other)
 
 /*! \brief The destructor of the class. */
 
-RotatedGaussianImpl::~RotatedGaussianImpl()
-{
-}
+RotatedGaussianImpl::~RotatedGaussianImpl() = default;
 
 
 
@@ -114,7 +109,7 @@ T::Dimensions RotatedGaussianImpl::getGridDimensions() const
   try
   {
     if (!mGaussian.getGrid()->getNi() || !mGaussian.getGrid()->getNj())
-      return T::Dimensions();
+      return {};
 
     return T::Dimensions(*mGaussian.getGrid()->getNi(),*mGaussian.getGrid()->getNi());
   }

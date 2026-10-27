@@ -27,15 +27,14 @@ JpegGridData::JpegGridData() {
 
 /*! \brief The destructor of the class. */
 
-JpegGridData::~JpegGridData() {
-}
+JpegGridData::~JpegGridData() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
         \param memoryReader  This object controls the access to the memory mapped file.
 */
 
-void JpegGridData::read(MemoryReader &memoryReader) {
+void JpegGridData::read(MemoryReader &/*memoryReader*/) {
   try {
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
@@ -47,7 +46,7 @@ void JpegGridData::read(MemoryReader &memoryReader) {
         \param dataWriter  This object is used for writing the object data.
 */
 
-void JpegGridData::write(DataWriter &dataWriter) {
+void JpegGridData::write(DataWriter &/*dataWriter*/) {
   try {
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
@@ -60,7 +59,7 @@ void JpegGridData::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void JpegGridData::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
+void JpegGridData::getAttributeList(const std::string &/*prefix*/, T::AttributeList &/*attributeList*/) const {
   try {
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
@@ -73,7 +72,7 @@ void JpegGridData::getAttributeList(const std::string &prefix, T::AttributeList 
     \param attributeValue The value of the attribute (string).
 */
 
-bool JpegGridData::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+bool JpegGridData::getAttributeValue(const char *attributeName, std::string &/*attributeValue*/) const {
   try {
     if (attributeName == nullptr)
       return false;
@@ -106,7 +105,7 @@ bool JpegGridData::hasAttributeValue(const char *attributeName, const char *attr
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void JpegGridData::print(std::ostream &stream, uint level, uint optionFlags) const {
+void JpegGridData::print(std::ostream &stream, uint level, uint /*optionFlags*/) const {
   try {
     stream << space(level) << "JpegGridData\n";
   } catch (...) {

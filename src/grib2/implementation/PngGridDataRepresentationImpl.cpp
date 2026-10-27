@@ -14,23 +14,33 @@ namespace GRIB2
 
 
 
-typedef struct png_read_callback_data
+using png_read_callback_data = struct png_read_callback_data
 {
     unsigned char* buffer;
     size_t         length;
     size_t         offset;
-} png_read_callback_data;
+};
 
 
 
 
 
-static void png_read_callback(png_structp png,png_bytep data, png_size_t length)
+namespace
 {
-  png_read_callback_data* p = (png_read_callback_data*)png_get_io_ptr(png);
+void png_read_callback(png_structp png,png_bytep data, png_size_t length)
+{
+  auto* p = (png_read_callback_data*)png_get_io_ptr(png);
+  // Bound the read against the input buffer. A crafted PNG can make libpng request more
+  // bytes than the (memory-mapped) GRIB data holds; without this check the memcpy reads
+  // out of bounds. The overflow-safe form avoids wrap-around in offset+length.
+  if (p == nullptr || p->buffer == nullptr || length > p->length || p->offset > p->length - length)
+  {
+    png_error(png, "PNG read past end of input buffer");
+  }
   memcpy(data,p->buffer+p->offset,length);
   p->offset += length;
 }
+}  // namespace
 
 
 
@@ -38,9 +48,7 @@ static void png_read_callback(png_structp png,png_bytep data, png_size_t length)
 
 /*! \brief The constructor of the class. */
 
-PngGridDataRepresentationImpl::PngGridDataRepresentationImpl()
-{
-}
+PngGridDataRepresentationImpl::PngGridDataRepresentationImpl() = default;
 
 
 
@@ -48,10 +56,7 @@ PngGridDataRepresentationImpl::PngGridDataRepresentationImpl()
 
 /*! \brief The copy constructor of the class. */
 
-PngGridDataRepresentationImpl::PngGridDataRepresentationImpl(const PngGridDataRepresentationImpl& other)
-:PngGridDataRepresentation(other)
-{
-}
+PngGridDataRepresentationImpl::PngGridDataRepresentationImpl(const PngGridDataRepresentationImpl& other) = default;
 
 
 
@@ -59,9 +64,7 @@ PngGridDataRepresentationImpl::PngGridDataRepresentationImpl(const PngGridDataRe
 
 /*! \brief The destructor of the class. */
 
-PngGridDataRepresentationImpl::~PngGridDataRepresentationImpl()
-{
-}
+PngGridDataRepresentationImpl::~PngGridDataRepresentationImpl() = default;
 
 
 
@@ -149,15 +152,12 @@ void PngGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_
         }
         return;
       }
-      else
+      // All values are set to "reference_value".
+      for (std::uint32_t i=0; i<numOfValues; i++)
       {
-        // All values are set to "reference_value".
-        for (std::uint32_t i=0; i<numOfValues; i++)
-        {
-          decodedValues.emplace_back(reference_value);
-        }
-        return;
+        decodedValues.emplace_back(reference_value);
       }
+      return;
     }
 
 
@@ -186,6 +186,7 @@ void PngGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_
       throw Fmi::Exception(BCP,"PNG decoding error!");
     }
 
+    // NOLINTNEXTLINE(cert-err52-cpp): libpng/libjpeg report errors with longjmp
     if (setjmp(png_jmpbuf(png)))
     {
       png_destroy_read_struct(&png,&info,&theEnd);

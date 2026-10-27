@@ -8,9 +8,7 @@ namespace GRIB2
 
 /*! \brief The constructor of the class. */
 
-SpectralDataRepresentationImpl::SpectralDataRepresentationImpl()
-{
-}
+SpectralDataRepresentationImpl::SpectralDataRepresentationImpl() = default;
 
 
 
@@ -18,10 +16,7 @@ SpectralDataRepresentationImpl::SpectralDataRepresentationImpl()
 
 /*! \brief The copy constructor of the class. */
 
-SpectralDataRepresentationImpl::SpectralDataRepresentationImpl(const SpectralDataRepresentationImpl& other)
-:SpectralDataRepresentation(other)
-{
-}
+SpectralDataRepresentationImpl::SpectralDataRepresentationImpl(const SpectralDataRepresentationImpl& other) = default;
 
 
 
@@ -29,9 +24,7 @@ SpectralDataRepresentationImpl::SpectralDataRepresentationImpl(const SpectralDat
 
 /*! \brief The destructor of the class. */
 
-SpectralDataRepresentationImpl::~SpectralDataRepresentationImpl()
-{
-}
+SpectralDataRepresentationImpl::~SpectralDataRepresentationImpl() = default;
 
 
 
@@ -83,7 +76,7 @@ void SpectralDataRepresentationImpl::read(MemoryReader& memoryReader)
 
 /*! \brief Decodes the spectrally-packed grid values (not implemented). */
 
-void SpectralDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec& decodedValues) const
+void SpectralDataRepresentationImpl::decodeValues(Message * /*message*/,T::ParamValue_vec& /*decodedValues*/) const
 {
   throw Fmi::Exception(BCP,"The method not implemented!");
 }

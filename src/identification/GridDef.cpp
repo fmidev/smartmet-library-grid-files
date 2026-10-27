@@ -1,6 +1,7 @@
 #include "GridDef.h"
 #include <macgyver/Exception.h>
 #include <macgyver/Cache.h>
+#include <functional>
 #include "../common/GeneralFunctions.h"
 #include "../common/ShowFunction.h"
 #include "../common/CoordinateConversions.h"
@@ -56,6 +57,9 @@
 
 #include <macgyver/StringConversion.h>
 
+#include <algorithm>
+#include <memory>
+
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
 
 
@@ -64,6 +68,113 @@ namespace SmartMet
 {
 namespace Identification
 {
+
+namespace
+{
+/*! \brief Splits the CSV line into fields separated by ';' or '\n' (outside of quotes).
+    The separators are replaced by '\0' characters. Returns the number of fields. */
+
+uint splitCsvFields(char *st,char *field[100])
+{
+  bool ind = false;
+  uint c = 1;
+  field[0] = st;
+  char *p = st;
+  while (*p != '\0'  &&  c < 100)
+  {
+    if (*p == '"')
+      ind = !ind;
+
+    if ((*p == ';'  || *p == '\n') && !ind)
+    {
+      *p = '\0';
+      p++;
+      field[c] = p;
+      c++;
+    }
+    else
+    {
+      p++;
+    }
+  }
+  return c;
+}
+
+
+
+
+
+/*! \brief Reads the CSV file and calls the handler for each non-comment line
+    containing more than minFields fields. */
+
+void readCsvRecords(const char *filename,uint minFields,const std::function<void(char *field[],uint c)>& handler)
+{
+  FILE *file = fopen(filename,"re");
+  if (file == nullptr)
+  {
+    Fmi::Exception exception(BCP,"Cannot open file!");
+    exception.addParameter("Filename",std::string(filename));
+    throw exception;
+  }
+
+  char st[1000];
+
+  while (fgets(st,1000,file) != nullptr)
+  {
+    if (st[0] != '#')
+    {
+      char *field[100];
+      uint c = splitCsvFields(st,field);
+
+      if (c > minFields)
+        handler(field,c);
+    }
+  }
+  (void)fclose(file);
+}
+
+
+
+
+
+/*! \brief Calls the clear function and the load function for each file if the
+    modification time of the files has changed. */
+
+void reloadIfModified(const string_vec& files,time_t tt,time_t& modificationTime,const std::function<void()>& clear,const std::function<void(const char *file)>& load)
+{
+  if (tt == modificationTime)
+    return;
+
+  clear();
+  for (const auto& file : files)
+    load(file.c_str());
+
+  modificationTime = tt;
+}
+
+
+
+
+
+/*! \brief Counts the parameter definition attributes matching the message, stopping at the first mismatch. */
+
+template <class MessageType,class DefType>
+uint countMatchingAttributes(const MessageType& message,const DefType& def)
+{
+  uint points = 0;
+  bool failed = false;
+
+  for (auto pm = def.mParameterList.begin(); pm != def.mParameterList.end() && !failed; ++pm)
+  {
+    if (message.hasAttributeValue(stringFactory[pm->first],pm->second.c_str()))
+      points++;
+    else
+      failed = true;
+  }
+  return points;
+}
+}  // namespace
+
 
 namespace
 {
@@ -251,17 +362,16 @@ void GridDef::updateCheck()
 
 /*! \brief Returns the latest modification time across the given files. */
 
-time_t GridDef::getModificationTime(string_vec& files)
+time_t GridDef::getModificationTime(const string_vec& files)
 {
   FUNCTION_TRACE
   try
   {
     time_t t = 0;
-    for (auto it = files.begin(); it != files.end(); ++it)
+    for (const auto& file : files)
     {
-      time_t tt = getFileModificationTime(it->c_str());
-      if (tt > t)
-        t = tt;
+      time_t tt = getFileModificationTime(file.c_str());
+      t = std::max(tt, t);
     }
 
     return t;
@@ -287,9 +397,9 @@ void GridDef::updateGrib()
     if (tt != mGrib_parameterDef_modificationTime)
     {
       mGrib_parameterDef_records.clear();
-      for (auto it = mGrib_parameterDef_files.begin(); it != mGrib_parameterDef_files.end(); ++it)
+      for (auto& mGrib_parameterDef_file : mGrib_parameterDef_files)
       {
-        loadGribParameterDefinitions(it->c_str());
+        loadGribParameterDefinitions(mGrib_parameterDef_file.c_str());
       }
       mGrib_parameterDef_modificationTime = tt;
     }
@@ -315,9 +425,9 @@ void GridDef::updateGrib1()
     if (tt != mGrib1_parameterDef_modificationTime)
     {
       mGrib1_parameterDef_records.clear();
-      for (auto it = mGrib1_parameterDef_files.begin(); it != mGrib1_parameterDef_files.end(); ++it)
+      for (auto& mGrib1_parameterDef_file : mGrib1_parameterDef_files)
       {
-        loadGrib1ParameterDefs(it->c_str());
+        loadGrib1ParameterDefs(mGrib1_parameterDef_file.c_str());
       }
       mGrib1_parameterDef_modificationTime = tt;
     }
@@ -343,9 +453,9 @@ void GridDef::updateGrib2()
     if (tt != mGrib2_parameterDef_modificationTime)
     {
       mGrib2_parameterDef_records.clear();
-      for (auto it = mGrib2_parameterDef_files.begin(); it != mGrib2_parameterDef_files.end(); ++it)
+      for (auto& mGrib2_parameterDef_file : mGrib2_parameterDef_files)
       {
-        loadGrib2ParameterDefs(it->c_str());
+        loadGrib2ParameterDefs(mGrib2_parameterDef_file.c_str());
       }
       mGrib2_parameterDef_modificationTime = tt;
     }
@@ -367,155 +477,57 @@ void GridDef::updateFmi()
   FUNCTION_TRACE
   try
   {
-    time_t tt = getModificationTime(mFmi_parameterDef_files);
-    if (tt != mFmi_parameterDef_modificationTime)
-    {
-      mFmi_parameterDef_records.clear();
-      mFmiNameToId.clear();
-      for (auto it = mFmi_parameterDef_files.begin(); it != mFmi_parameterDef_files.end(); ++it)
-      {
-        loadFmiParameterDefinitions(it->c_str());
-      }
-      mFmi_parameterDef_modificationTime = tt;
-    }
+    reloadIfModified(mFmi_parameterDef_files,getModificationTime(mFmi_parameterDef_files),mFmi_parameterDef_modificationTime,
+        [&]{ mFmi_parameterDef_records.clear(); mFmiNameToId.clear(); },
+        [&](const char *file){ loadFmiParameterDefinitions(file); });
 
-    tt = getModificationTime(mFmi_geometryGroupDef_files);
-    if (tt != mFmi_geometryGroupDef_modificationTime)
-    {
-      mFmi_geometryGroupDef_records.clear();
-      for (auto it = mFmi_geometryGroupDef_files.begin(); it != mFmi_geometryGroupDef_files.end(); ++it)
-      {
-        loadFmiGeometryGroupDefinitions(it->c_str());
-      }
-      mFmi_geometryGroupDef_modificationTime = tt;
-    }
+    reloadIfModified(mFmi_geometryGroupDef_files,getModificationTime(mFmi_geometryGroupDef_files),mFmi_geometryGroupDef_modificationTime,
+        [&]{ mFmi_geometryGroupDef_records.clear(); },
+        [&](const char *file){ loadFmiGeometryGroupDefinitions(file); });
 
-    tt = getModificationTime(mFmi_levelDef_files);
-    if (tt != mFmi_levelDef_modificationTime)
-    {
-      mFmi_levelDef_records.clear();
-      for (auto it = mFmi_levelDef_files.begin(); it != mFmi_levelDef_files.end(); ++it)
-      {
-        loadFmiLevelDefinitions(it->c_str());
-      }
-      mFmi_levelDef_modificationTime = tt;
-    }
+    reloadIfModified(mFmi_levelDef_files,getModificationTime(mFmi_levelDef_files),mFmi_levelDef_modificationTime,
+        [&]{ mFmi_levelDef_records.clear(); },
+        [&](const char *file){ loadFmiLevelDefinitions(file); });
 
-    tt = getModificationTime(mFmi_forecastTypeDef_files);
-    if (tt != mFmi_forecastTypeDef_modificationTime)
-    {
-      mFmi_forecastTypeDef_records.clear();
-      for (auto it = mFmi_forecastTypeDef_files.begin(); it != mFmi_forecastTypeDef_files.end(); ++it)
-      {
-        loadFmiForecastTypeDefinitions(it->c_str());
-      }
-      mFmi_forecastTypeDef_modificationTime = tt;
-    }
+    reloadIfModified(mFmi_forecastTypeDef_files,getModificationTime(mFmi_forecastTypeDef_files),mFmi_forecastTypeDef_modificationTime,
+        [&]{ mFmi_forecastTypeDef_records.clear(); },
+        [&](const char *file){ loadFmiForecastTypeDefinitions(file); });
 
-    tt = getModificationTime(mFmi_processingTypeDef_files);
-    if (tt != mFmi_processingTypeDef_modificationTime)
-    {
-      mFmi_processingTypeDef_records.clear();
-      for (auto it = mFmi_processingTypeDef_files.begin(); it != mFmi_processingTypeDef_files.end(); ++it)
-      {
-        loadFmiProcessingTypeDefinitions(it->c_str());
-      }
-      mFmi_processingTypeDef_modificationTime = tt;
-    }
+    reloadIfModified(mFmi_processingTypeDef_files,getModificationTime(mFmi_processingTypeDef_files),mFmi_processingTypeDef_modificationTime,
+        [&]{ mFmi_processingTypeDef_records.clear(); },
+        [&](const char *file){ loadFmiProcessingTypeDefinitions(file); });
 
-    tt = getModificationTime(mFmi_aggregationDef_files);
-    if (tt != mFmi_aggregationDef_modificationTime)
-    {
-      mFmi_aggregationDef_records.clear();
-      for (auto it = mFmi_aggregationDef_files.begin(); it != mFmi_aggregationDef_files.end(); ++it)
-      {
-        loadFmiAggregationDefinitions(it->c_str());
-      }
-      mFmi_aggregationDef_modificationTime = tt;
-    }
+    reloadIfModified(mFmi_aggregationDef_files,getModificationTime(mFmi_aggregationDef_files),mFmi_aggregationDef_modificationTime,
+        [&]{ mFmi_aggregationDef_records.clear(); },
+        [&](const char *file){ loadFmiAggregationDefinitions(file); });
 
-    tt = getModificationTime(mFmi_parametersFromGrib_files);
-    if (tt != mFmi_parametersFromGrib_modificationTime)
-    {
-      mFmi_parametersFromGrib_records.clear();
-      mGribIdToFmiId.clear();
-      for (auto it = mFmi_parametersFromGrib_files.begin(); it != mFmi_parametersFromGrib_files.end(); ++it)
-      {
-        loadFmiParameterId_grib(it->c_str());
-      }
-      mFmi_parametersFromGrib_modificationTime = tt;
-    }
+    reloadIfModified(mFmi_parametersFromGrib_files,getModificationTime(mFmi_parametersFromGrib_files),mFmi_parametersFromGrib_modificationTime,
+        [&]{ mFmi_parametersFromGrib_records.clear(); mGribIdToFmiId.clear(); },
+        [&](const char *file){ loadFmiParameterId_grib(file); });
 
-    tt = getModificationTime(mFmi_parametersFromNewbase_files);
-    if (tt != mFmi_parametersFromNewbase_modificationTime)
-    {
-      mFmi_parametersFromNewbase_records.clear();
-      mNewbaseIdToFmiId.clear();
-      mFmiIdToNewbaseId.clear();
-      for (auto it = mFmi_parametersFromNewbase_files.begin(); it != mFmi_parametersFromNewbase_files.end(); ++it)
-      {
-        loadFmiParameterId_newbase(it->c_str());
-      }
-      mFmi_parametersFromNewbase_modificationTime = tt;
-    }
+    reloadIfModified(mFmi_parametersFromNewbase_files,getModificationTime(mFmi_parametersFromNewbase_files),mFmi_parametersFromNewbase_modificationTime,
+        [&]{ mFmi_parametersFromNewbase_records.clear(); mNewbaseIdToFmiId.clear(); mFmiIdToNewbaseId.clear(); },
+        [&](const char *file){ loadFmiParameterId_newbase(file); });
 
-    tt = getModificationTime(mFmi_parametersFromNetCdf_files);
-    if (tt != mFmi_parametersFromNetCdf_modificationTime)
-    {
-      mFmi_parametersFromNetCdf_records.clear();
-      mNetCdfNameToFmiId.clear();
-      for (auto it = mFmi_parametersFromNetCdf_files.begin(); it != mFmi_parametersFromNetCdf_files.end(); ++it)
-      {
-        loadFmiParameterId_netCdf(it->c_str());
-      }
-      mFmi_parametersFromNetCdf_modificationTime = tt;
-    }
+    reloadIfModified(mFmi_parametersFromNetCdf_files,getModificationTime(mFmi_parametersFromNetCdf_files),mFmi_parametersFromNetCdf_modificationTime,
+        [&]{ mFmi_parametersFromNetCdf_records.clear(); mNetCdfNameToFmiId.clear(); },
+        [&](const char *file){ loadFmiParameterId_netCdf(file); });
 
-    tt = getModificationTime(mFmi_levelsFromGrib1_files);
-    if (tt != mFmi_levelsFromGrib1_modificationTime)
-    {
-      mFmi_levelsFromGrib1_records.clear();
-      for (auto it = mFmi_levelsFromGrib1_files.begin(); it != mFmi_levelsFromGrib1_files.end(); ++it)
-      {
-        loadFmiLevelId_grib1(it->c_str());
-      }
-      mFmi_levelsFromGrib1_modificationTime = tt;
-    }
+    reloadIfModified(mFmi_levelsFromGrib1_files,getModificationTime(mFmi_levelsFromGrib1_files),mFmi_levelsFromGrib1_modificationTime,
+        [&]{ mFmi_levelsFromGrib1_records.clear(); },
+        [&](const char *file){ loadFmiLevelId_grib1(file); });
 
-    tt = getModificationTime(mFmi_levelsFromGrib2_files);
-    if (tt != mFmi_levelsFromGrib2_modificationTime)
-    {
-      mFmi_levelsFromGrib2_records.clear();
-      for (auto it = mFmi_levelsFromGrib2_files.begin(); it != mFmi_levelsFromGrib2_files.end(); ++it)
-      {
-        loadFmiLevelId_grib2(it->c_str());
-      }
-      mFmi_levelsFromGrib2_modificationTime = tt;
-    }
+    reloadIfModified(mFmi_levelsFromGrib2_files,getModificationTime(mFmi_levelsFromGrib2_files),mFmi_levelsFromGrib2_modificationTime,
+        [&]{ mFmi_levelsFromGrib2_records.clear(); },
+        [&](const char *file){ loadFmiLevelId_grib2(file); });
 
-    tt = getModificationTime(mFmi_levelsFromNewbase_files);
-    if (tt != mFmi_levelsFromNewbase_modificationTime)
-    {
-      mNewbaseLevelIdToFmiLevelId.clear();
-      for (auto it = mFmi_levelsFromNewbase_files.begin(); it != mFmi_levelsFromNewbase_files.end(); ++it)
-      {
-        loadFmiLevelId_newbase(it->c_str());
-      }
-      mFmi_levelsFromNewbase_modificationTime = tt;
-    }
+    reloadIfModified(mFmi_levelsFromNewbase_files,getModificationTime(mFmi_levelsFromNewbase_files),mFmi_levelsFromNewbase_modificationTime,
+        [&]{ mNewbaseLevelIdToFmiLevelId.clear(); },
+        [&](const char *file){ loadFmiLevelId_newbase(file); });
 
-    tt = getModificationTime(mFmi_geometryDef_files);
-    if (tt != mFmi_geometryDef_modificationTime)
-    {
-      mGridDefinitions1.clear();
-      mGridDefinitions2.clear();
-
-      for (auto it = mFmi_geometryDef_files.begin(); it != mFmi_geometryDef_files.end(); ++it)
-      {
-        loadGeometryDefinitions(it->c_str());
-      }
-      mFmi_geometryDef_modificationTime = tt;
-    }
+    reloadIfModified(mFmi_geometryDef_files,getModificationTime(mFmi_geometryDef_files),mFmi_geometryDef_modificationTime,
+        [&]{ mGridDefinitions1.clear(); mGridDefinitions2.clear(); },
+        [&](const char *file){ loadGeometryDefinitions(file); });
 
   }
   catch (...)
@@ -540,9 +552,9 @@ void GridDef::updateNewbase()
     {
       mNewbase_parameterDef_records.clear();
       mNewbaseNameToId.clear();
-      for (auto it = mNewbase_parameterDef_files.begin(); it != mNewbase_parameterDef_files.end(); ++it)
+      for (auto& mNewbase_parameterDef_file : mNewbase_parameterDef_files)
       {
-        loadNewbaseParameterDefinitions(it->c_str());
+        loadNewbaseParameterDefinitions(mNewbase_parameterDef_file.c_str());
       }
       mNewbase_parameterDef_modificationTime = tt;
     }
@@ -569,9 +581,9 @@ void GridDef::updateNetCdf()
     if (tt != mNetCdf_parameterDef_modificationTime)
     {
       mNetCdf_parameterDef_records.clear();
-      for (auto it = mNetCdf_parameterDef_files.begin(); it != mNetCdf_parameterDef_files.end(); ++it)
+      for (auto& mNetCdf_parameterDef_file : mNetCdf_parameterDef_files)
       {
-        loadNetCdfParameterDefinitions(it->c_str());
+        loadNetCdfParameterDefinitions(mNetCdf_parameterDef_file.c_str());
       }
       mNetCdf_parameterDef_modificationTime = tt;
     }
@@ -619,7 +631,7 @@ bool GridDef::getGrib1ParameterDefById(T::GribParamId gribParamId,Grib1Parameter
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto def = getGrib1ParameterDefById(gribParamId);
+    const auto *def = getGrib1ParameterDefById(gribParamId);
     if (def == nullptr)
       return false;
 
@@ -646,7 +658,7 @@ bool GridDef::getGrib1ParameterDefByFmiId(T::FmiParamId fmiParamId,Grib1Paramete
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto def = getGrib1ParameterDefByFmiId(fmiParamId);
+    const auto *def = getGrib1ParameterDefByFmiId(fmiParamId);
     if (def == nullptr)
       return false;
 
@@ -696,10 +708,10 @@ Grib1ParamDef_cptr GridDef::getGrib1ParameterDefById(T::GribParamId gribParamId)
   FUNCTION_TRACE
   try
   {
-    for (auto it = mGrib1_parameterDef_records.begin(); it != mGrib1_parameterDef_records.end(); ++it)
+    for (auto& mGrib1_parameterDef_record : mGrib1_parameterDef_records)
     {
-      if (it->mGribParameterId == gribParamId)
-        return &(*it);
+      if (mGrib1_parameterDef_record.mGribParameterId == gribParamId)
+        return &mGrib1_parameterDef_record;
     }
     return nullptr;
   }
@@ -768,7 +780,7 @@ bool GridDef::getGrib2ParameterDefById(T::GribParamId gribParamId,Grib2Parameter
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto def = getGrib2ParameterDefById(gribParamId);
+    const auto *def = getGrib2ParameterDefById(gribParamId);
     if (def == nullptr)
       return false;
 
@@ -795,7 +807,7 @@ bool GridDef::getGrib2ParameterDefByFmiId(T::FmiParamId fmiParamId,Grib2Paramete
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto def = getGrib2ParameterDefByFmiId(fmiParamId);
+    const auto *def = getGrib2ParameterDefByFmiId(fmiParamId);
     if (def == nullptr)
       return false;
 
@@ -822,7 +834,7 @@ bool GridDef::getGribParameterMappingByFmiId(T::FmiParamId fmiParamId,FmiParamet
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto pdef =  getGribParameterMappingByFmiId(fmiParamId);
+    const auto *pdef =  getGribParameterMappingByFmiId(fmiParamId);
     if (pdef == nullptr)
       return false;
 
@@ -872,10 +884,10 @@ Grib2ParamDef_cptr GridDef::getGrib2ParameterDefById(T::GribParamId gribParamId)
   FUNCTION_TRACE
   try
   {
-    for (auto it = mGrib2_parameterDef_records.begin(); it != mGrib2_parameterDef_records.end(); ++it)
+    for (auto& mGrib2_parameterDef_record : mGrib2_parameterDef_records)
     {
-      if (it->mGribParameterId == gribParamId)
-        return &(*it);
+      if (mGrib2_parameterDef_record.mGribParameterId == gribParamId)
+        return &mGrib2_parameterDef_record;
     }
     return nullptr;
   }
@@ -919,65 +931,24 @@ void GridDef::loadGribParameterDefinitions(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"re");
-    if (file == nullptr)
+    readCsvRecords(filename,3,[&](char *field[],uint c)
     {
-      Fmi::Exception exception(BCP,"Cannot open file!");
-      exception.addParameter("Filename",std::string(filename));
-      throw exception;
-    }
+      GribParameterDef rec;
 
-    char st[1000];
+      if (field[0][0] != '\0')
+        rec.mGribParameterId = toUInt32(field[0]);
 
-    while (fgets(st,1000,file) != nullptr)
-    {
-      if (st[0] != '#')
-      {
-        bool ind = false;
-        char *field[100];
-        uint c = 1;
-        field[0] = st;
-        char *p = st;
-        while (*p != '\0'  &&  c < 100)
-        {
-          if (*p == '"')
-            ind = !ind;
+      if (field[1][0] != '\0')
+        rec.mParameterName = field[1];
 
-          if ((*p == ';'  || *p == '\n') && !ind)
-          {
-            *p = '\0';
-            p++;
-            field[c] = p;
-            c++;
-          }
-          else
-          {
-            p++;
-          }
-        }
+      if (field[2][0] != '\0')
+        rec.mParameterUnits = field[2];
 
-        if (c > 3)
-        {
-          GribParameterDef rec;
+      if (field[3][0] != '\0')
+        rec.mParameterDescription = field[3];
 
-          if (field[0][0] != '\0')
-            rec.mGribParameterId = toUInt32(field[0]);
-
-          if (field[1][0] != '\0')
-            rec.mParameterName = field[1];
-
-          if (field[2][0] != '\0')
-            rec.mParameterUnits = field[2];
-
-          if (field[3][0] != '\0')
-            rec.mParameterDescription = field[3];
-
-          mGrib_parameterDef_records.emplace_back(rec);
-        }
-      }
-
-    }
-    fclose(file);
+      mGrib_parameterDef_records.emplace_back(rec);
+    });
   }
   catch (...)
   {
@@ -999,7 +970,7 @@ bool GridDef::getGribParameterDefById(T::GribParamId gribParamId,GribParameterDe
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto def = getGribParameterDefById(gribParamId);
+    const auto *def = getGribParameterDefById(gribParamId);
     if (def == nullptr)
       return false;
 
@@ -1026,7 +997,7 @@ bool GridDef::getGribParameterDefByName(const std::string& gribParamName,GribPar
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto def = getGribParameterDefByName(gribParamName);
+    const auto *def = getGribParameterDefByName(gribParamName);
     if (def == nullptr)
       return false;
 
@@ -1050,10 +1021,10 @@ GribParamDef_cptr GridDef::getGribParameterDefById(T::GribParamId gribParamId)
   FUNCTION_TRACE
   try
   {
-    for (auto it = mGrib_parameterDef_records.begin(); it != mGrib_parameterDef_records.end(); ++it)
+    for (auto& mGrib_parameterDef_record : mGrib_parameterDef_records)
     {
-      if (it->mGribParameterId == gribParamId)
-        return &(*it);
+      if (mGrib_parameterDef_record.mGribParameterId == gribParamId)
+        return &mGrib_parameterDef_record;
     }
     return nullptr;
   }
@@ -1074,10 +1045,10 @@ GribParamDef_cptr GridDef::getGribParameterDefByName(const std::string& gribPara
   FUNCTION_TRACE
   try
   {
-    for (auto it = mGrib_parameterDef_records.begin(); it != mGrib_parameterDef_records.end(); ++it)
+    for (auto& mGrib_parameterDef_record : mGrib_parameterDef_records)
     {
-      if (strcasecmp(it->mParameterName.c_str(),gribParamName.c_str()) == 0)
-        return &(*it);
+      if (strcasecmp(mGrib_parameterDef_record.mParameterName.c_str(),gribParamName.c_str()) == 0)
+        return &mGrib_parameterDef_record;
     }
     return nullptr;
   }
@@ -1101,7 +1072,7 @@ bool GridDef::getFmiGeometryGroupDef(const char *producerName,uint groupType,Fmi
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto def = getFmiGeometryGroupDef(producerName,groupType);
+    const auto *def = getFmiGeometryGroupDef(producerName,groupType);
     if (def == nullptr)
       return false;
 
@@ -1128,7 +1099,7 @@ bool GridDef::getFmiGeometryGroupDef(uint geometryGroupId,FmiGeometryGroupDef& g
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto def = getFmiGeometryGroupDef(geometryGroupId);
+    const auto *def = getFmiGeometryGroupDef(geometryGroupId);
     if (def == nullptr)
       return false;
 
@@ -1155,14 +1126,14 @@ void GridDef::getFmiGeometryGroupsByGeometryId(int geometryId,uint groupType,std
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    for (auto it = mFmi_geometryGroupDef_records.begin(); it != mFmi_geometryGroupDef_records.end(); ++it)
+    for (auto& mFmi_geometryGroupDef_record : mFmi_geometryGroupDef_records)
     {
-      if (it->mGroupType == groupType)
+      if (mFmi_geometryGroupDef_record.mGroupType == groupType)
       {
-        for (auto gIt = it->mGeometryIdList.begin(); gIt != it->mGeometryIdList.end(); ++gIt)
+        for (auto gIt = mFmi_geometryGroupDef_record.mGeometryIdList.begin(); gIt != mFmi_geometryGroupDef_record.mGeometryIdList.end(); ++gIt)
         {
           if (*gIt == geometryId)
-            groupIdentifiers.push_back(it->mGeometryGroupId);
+            groupIdentifiers.push_back(mFmi_geometryGroupDef_record.mGeometryGroupId);
         }
       }
     }
@@ -1186,12 +1157,12 @@ void GridDef::getFmiGeometryGroupsByGeometryId(int geometryId,std::vector<uint>&
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    for (auto it = mFmi_geometryGroupDef_records.begin(); it != mFmi_geometryGroupDef_records.end(); ++it)
+    for (auto& mFmi_geometryGroupDef_record : mFmi_geometryGroupDef_records)
     {
-      for (auto gIt = it->mGeometryIdList.begin(); gIt != it->mGeometryIdList.end(); ++gIt)
+      for (auto gIt = mFmi_geometryGroupDef_record.mGeometryIdList.begin(); gIt != mFmi_geometryGroupDef_record.mGeometryIdList.end(); ++gIt)
       {
         if (*gIt == geometryId)
-          groupIdentifiers.push_back(it->mGeometryGroupId);
+          groupIdentifiers.push_back(mFmi_geometryGroupDef_record.mGeometryGroupId);
       }
     }
   }
@@ -1215,12 +1186,12 @@ void GridDef::getFmiGeometryGroupsByGeometryId(int geometryId,std::set<uint>& gr
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    for (auto it = mFmi_geometryGroupDef_records.begin(); it != mFmi_geometryGroupDef_records.end(); ++it)
+    for (auto& mFmi_geometryGroupDef_record : mFmi_geometryGroupDef_records)
     {
-      for (auto gIt = it->mGeometryIdList.begin(); gIt != it->mGeometryIdList.end(); ++gIt)
+      for (auto gIt = mFmi_geometryGroupDef_record.mGeometryIdList.begin(); gIt != mFmi_geometryGroupDef_record.mGeometryIdList.end(); ++gIt)
       {
         if (*gIt == geometryId)
-          groupIdentifiers.insert(it->mGeometryGroupId);
+          groupIdentifiers.insert(mFmi_geometryGroupDef_record.mGeometryGroupId);
       }
     }
   }
@@ -1244,7 +1215,7 @@ bool GridDef::getFmiLevelDef(uint levelId,LevelDef& levelDef)
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto def = getFmiLevelDef(levelId);
+    const auto *def = getFmiLevelDef(levelId);
     if (def == nullptr)
       return false;
 
@@ -1271,7 +1242,7 @@ bool GridDef::getFmiAggregationDef(int aggregationId,AggregationDef& aggregation
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto def = getFmiAggregationDef(aggregationId);
+    const auto *def = getFmiAggregationDef(aggregationId);
     if (def == nullptr)
       return false;
 
@@ -1298,7 +1269,7 @@ bool GridDef::getFmiProcessingTypeDef(int processingTypeId,ProcessingTypeDef& pr
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto def = getFmiProcessingTypeDef(processingTypeId);
+    const auto *def = getFmiProcessingTypeDef(processingTypeId);
     if (def == nullptr)
       return false;
 
@@ -1325,7 +1296,7 @@ bool GridDef::getFmiForecastTypeDef(int forecastTypeId,ForecastTypeDef& forecast
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto def = getFmiForecastTypeDef(forecastTypeId);
+    const auto *def = getFmiForecastTypeDef(forecastTypeId);
     if (def == nullptr)
       return false;
 
@@ -1349,10 +1320,10 @@ FmiGeomGroupDef_cptr GridDef::getFmiGeometryGroupDef(const char *producerName,ui
   FUNCTION_TRACE
   try
   {
-    for (auto it = mFmi_geometryGroupDef_records.begin(); it != mFmi_geometryGroupDef_records.end(); ++it)
+    for (auto& mFmi_geometryGroupDef_record : mFmi_geometryGroupDef_records)
     {
-      if (it->mGroupType == groupType  &&  strcasecmp(producerName,it->mProducerName.c_str())== 0)
-        return &(*it);
+      if (mFmi_geometryGroupDef_record.mGroupType == groupType  &&  strcasecmp(producerName,mFmi_geometryGroupDef_record.mProducerName.c_str())== 0)
+        return &mFmi_geometryGroupDef_record;
     }
     return nullptr;
   }
@@ -1373,10 +1344,10 @@ FmiGeomGroupDef_cptr GridDef::getFmiGeometryGroupDef(uint geometryGroupId)
   FUNCTION_TRACE
   try
   {
-    for (auto it = mFmi_geometryGroupDef_records.begin(); it != mFmi_geometryGroupDef_records.end(); ++it)
+    for (auto& mFmi_geometryGroupDef_record : mFmi_geometryGroupDef_records)
     {
-      if (it->mGeometryGroupId == geometryGroupId)
-        return &(*it);
+      if (mFmi_geometryGroupDef_record.mGeometryGroupId == geometryGroupId)
+        return &mFmi_geometryGroupDef_record;
     }
     return nullptr;
   }
@@ -1397,10 +1368,10 @@ LevelDef_cptr GridDef::getFmiLevelDef(uint levelId)
   FUNCTION_TRACE
   try
   {
-    for (auto it = mFmi_levelDef_records.begin(); it != mFmi_levelDef_records.end(); ++it)
+    for (auto& mFmi_levelDef_record : mFmi_levelDef_records)
     {
-      if (it->mLevelId == levelId)
-        return &(*it);
+      if (mFmi_levelDef_record.mLevelId == levelId)
+        return &mFmi_levelDef_record;
     }
     return nullptr;
   }
@@ -1421,10 +1392,10 @@ ForecastTypeDef_cptr GridDef::getFmiForecastTypeDef(int forecastTypeId)
   FUNCTION_TRACE
   try
   {
-    for (auto it = mFmi_forecastTypeDef_records.begin(); it != mFmi_forecastTypeDef_records.end(); ++it)
+    for (auto& mFmi_forecastTypeDef_record : mFmi_forecastTypeDef_records)
     {
-      if (it->mForecastTypeId == forecastTypeId)
-        return &(*it);
+      if (mFmi_forecastTypeDef_record.mForecastTypeId == forecastTypeId)
+        return &mFmi_forecastTypeDef_record;
     }
     return nullptr;
   }
@@ -1445,10 +1416,10 @@ ProcessingTypeDef_cptr GridDef::getFmiProcessingTypeDef(int processingTypeId)
   FUNCTION_TRACE
   try
   {
-    for (auto it = mFmi_processingTypeDef_records.begin(); it != mFmi_processingTypeDef_records.end(); ++it)
+    for (auto& mFmi_processingTypeDef_record : mFmi_processingTypeDef_records)
     {
-      if (it->mProcessingTypeId == processingTypeId)
-        return &(*it);
+      if (mFmi_processingTypeDef_record.mProcessingTypeId == processingTypeId)
+        return &mFmi_processingTypeDef_record;
     }
     return nullptr;
   }
@@ -1469,70 +1440,30 @@ void GridDef::loadGrib1ParameterDefs(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"re");
-    if (file == nullptr)
+    readCsvRecords(filename,1,[&](char *field[],uint c)
     {
-      Fmi::Exception exception(BCP,"Cannot open file!");
-      exception.addParameter("Filename",std::string(filename));
-      throw exception;
-    }
+      Grib1ParameterDef rec;
 
-    char st[1000];
+      if (field[0][0] != '\0')
+        rec.mGribParameterId = toUInt32(field[0]);
 
-    while (fgets(st,1000,file) != nullptr)
-    {
-      if (st[0] != '#')
+      if (field[1][0] != '\0')
       {
-        bool ind = false;
-        char *field[100];
-        uint c = 1;
-        field[0] = st;
-        char *p = st;
-        while (*p != '\0'  &&  c < 100)
+        std::vector<std::string> partList;
+        splitString(field[1],',',partList);
+
+        for (auto& it : partList)
         {
-          if (*p == '"')
-            ind = !ind;
-
-          if ((*p == ';'  || *p == '\n') && !ind)
+          std::vector<std::string> list;
+          splitString(it,'=',list);
+          if (list.size() == 2)
           {
-            *p = '\0';
-            p++;
-            field[c] = p;
-            c++;
+            rec.mParameterList.emplace_back(stringFactory.create(list[0].c_str()),list[1]);
           }
-          else
-          {
-            p++;
-          }
-        }
-
-        if (c > 1)
-        {
-          Grib1ParameterDef rec;
-
-          if (field[0][0] != '\0')
-            rec.mGribParameterId = toUInt32(field[0]);
-
-          if (field[1][0] != '\0')
-          {
-            std::vector<std::string> partList;
-            splitString(field[1],',',partList);
-
-            for (auto it=partList.begin(); it!=partList.end();++it)
-            {
-              std::vector<std::string> list;
-              splitString(*it,'=',list);
-              if (list.size() == 2)
-              {
-                rec.mParameterList.emplace_back(stringFactory.create(list[0].c_str()),list[1]);
-              }
-            }
-          }
-          mGrib1_parameterDef_records.emplace_back(rec);
         }
       }
-    }
-    fclose(file);
+      mGrib1_parameterDef_records.emplace_back(rec);
+    });
   }
   catch (...)
   {
@@ -1551,71 +1482,31 @@ void GridDef::loadGrib2ParameterDefs(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"re");
-    if (file == nullptr)
+    readCsvRecords(filename,1,[&](char *field[],uint c)
     {
-      Fmi::Exception exception(BCP,"Cannot open file!");
-      exception.addParameter("Filename",std::string(filename));
-      throw exception;
-    }
+      Grib2ParameterDef rec;
 
-    char st[1000];
+      if (field[0][0] != '\0')
+        rec.mGribParameterId = toUInt32(field[0]);
 
-    while (fgets(st,1000,file) != nullptr)
-    {
-      if (st[0] != '#')
+      if (field[1][0] != '\0')
       {
-        bool ind = false;
-        char *field[100];
-        uint c = 1;
-        field[0] = st;
-        char *p = st;
-        while (*p != '\0'  &&  c < 100)
+        std::vector<std::string> partList;
+        splitString(field[1],',',partList);
+
+        for (auto& it : partList)
         {
-          if (*p == '"')
-            ind = !ind;
-
-          if ((*p == ';'  || *p == '\n') && !ind)
+          std::vector<std::string> list;
+          splitString(it,'=',list);
+          if (list.size() == 2)
           {
-            *p = '\0';
-            p++;
-            field[c] = p;
-            c++;
+            rec.mParameterList.emplace_back(stringFactory.create(list[0].c_str()),list[1]);
           }
-          else
-          {
-            p++;
-          }
-        }
-
-        if (c > 1)
-        {
-          Grib2ParameterDef rec;
-
-          if (field[0][0] != '\0')
-            rec.mGribParameterId = toUInt32(field[0]);
-
-          if (field[1][0] != '\0')
-          {
-            std::vector<std::string> partList;
-            splitString(field[1],',',partList);
-
-            for (auto it=partList.begin(); it!=partList.end();++it)
-            {
-              std::vector<std::string> list;
-              splitString(*it,'=',list);
-              if (list.size() == 2)
-              {
-                rec.mParameterList.emplace_back(stringFactory.create(list[0].c_str()),list[1]);
-              }
-            }
-          }
-
-          mGrib2_parameterDef_records.emplace_back(rec);
         }
       }
-    }
-    fclose(file);
+
+      mGrib2_parameterDef_records.emplace_back(rec);
+    });
   }
   catch (...)
   {
@@ -1634,67 +1525,27 @@ void GridDef::loadFmiLevelDefinitions(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"re");
-    if (file == nullptr)
+    readCsvRecords(filename,3,[&](char *field[],uint c)
     {
-      Fmi::Exception exception(BCP,"Cannot open file!");
-      exception.addParameter("Filename",std::string(filename));
-      throw exception;
-    }
+      LevelDef rec;
 
-    char st[1000];
+      if (field[0][0] != '\0')
+        rec.mLevelId = toUInt32(field[0]);
 
-    while (fgets(st,1000,file) != nullptr)
-    {
-      if (st[0] != '#')
-      {
-        bool ind = false;
-        char *field[100];
-        uint c = 1;
-        field[0] = st;
-        char *p = st;
-        while (*p != '\0'  &&  c < 100)
-        {
-          if (*p == '"')
-            ind = !ind;
+      if (field[1][0] != '\0')
+        rec.mName = field[1];
 
-          if ((*p == ';'  || *p == '\n') && !ind)
-          {
-            *p = '\0';
-            p++;
-            field[c] = p;
-            c++;
-          }
-          else
-          {
-            p++;
-          }
-        }
+      if (field[2][0] != '\0')
+        rec.mType = toUInt32(field[2]);
 
-        if (c > 3)
-        {
-          LevelDef rec;
+      if (field[3][0] != '\0')
+        rec.mDescription = field[3];
 
-          if (field[0][0] != '\0')
-            rec.mLevelId = toUInt32(field[0]);
+      if (c > 4  && field[4][0] != '\0')
+        rec.mUnits = field[4];
 
-          if (field[1][0] != '\0')
-            rec.mName = field[1];
-
-          if (field[2][0] != '\0')
-            rec.mType = toUInt32(field[2]);
-
-          if (field[3][0] != '\0')
-            rec.mDescription = field[3];
-
-          if (c > 4  && field[4][0] != '\0')
-            rec.mUnits = field[4];
-
-          mFmi_levelDef_records.emplace_back(rec);
-        }
-      }
-    }
-    fclose(file);
+      mFmi_levelDef_records.emplace_back(rec);
+    });
   }
   catch (...)
   {
@@ -1713,64 +1564,24 @@ void GridDef::loadFmiGeometryGroupDefinitions(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"re");
-    if (file == nullptr)
+    readCsvRecords(filename,4,[&](char *field[],uint c)
     {
-      Fmi::Exception exception(BCP,"Cannot open file!");
-      exception.addParameter("Filename",std::string(filename));
-      throw exception;
-    }
+      FmiGeometryGroupDef rec;
 
-    char st[1000];
+      if (field[0][0] != '\0')
+        rec.mGeometryGroupId = toUInt32(field[0]);
 
-    while (fgets(st,1000,file) != nullptr)
-    {
-      if (st[0] != '#')
-      {
-        bool ind = false;
-        char *field[100];
-        uint c = 1;
-        field[0] = st;
-        char *p = st;
-        while (*p != '\0'  &&  c < 100)
-        {
-          if (*p == '"')
-            ind = !ind;
+      if (field[1][0] != '\0')
+        rec.mGroupType = toUInt32(field[1]);
 
-          if ((*p == ';'  || *p == '\n') && !ind)
-          {
-            *p = '\0';
-            p++;
-            field[c] = p;
-            c++;
-          }
-          else
-          {
-            p++;
-          }
-        }
+      if (field[2][0] != '\0')
+        rec.mProducerName = field[2];
 
-        if (c > 4)
-        {
-          FmiGeometryGroupDef rec;
+      if (field[3][0] != '\0')
+        splitString(field[3],',',rec.mGeometryIdList);
 
-          if (field[0][0] != '\0')
-            rec.mGeometryGroupId = toUInt32(field[0]);
-
-          if (field[1][0] != '\0')
-            rec.mGroupType = toUInt32(field[1]);
-
-          if (field[2][0] != '\0')
-            rec.mProducerName = field[2];
-
-          if (field[3][0] != '\0')
-            splitString(field[3],',',rec.mGeometryIdList);
-
-          mFmi_geometryGroupDef_records.emplace_back(rec);
-        }
-      }
-    }
-    fclose(file);
+      mFmi_geometryGroupDef_records.emplace_back(rec);
+    });
   }
   catch (...)
   {
@@ -1789,61 +1600,21 @@ void GridDef::loadFmiForecastTypeDefinitions(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"re");
-    if (file == nullptr)
+    readCsvRecords(filename,2,[&](char *field[],uint c)
     {
-      Fmi::Exception exception(BCP,"Cannot open file!");
-      exception.addParameter("Filename",std::string(filename));
-      throw exception;
-    }
+      ForecastTypeDef rec;
 
-    char st[1000];
+      if (field[0][0] != '\0')
+        rec.mForecastTypeId = toInt32(field[0]);
 
-    while (fgets(st,1000,file) != nullptr)
-    {
-      if (st[0] != '#')
-      {
-        bool ind = false;
-        char *field[100];
-        uint c = 1;
-        field[0] = st;
-        char *p = st;
-        while (*p != '\0'  &&  c < 100)
-        {
-          if (*p == '"')
-            ind = !ind;
+      if (field[1][0] != '\0')
+        rec.mName = field[1];
 
-          if ((*p == ';'  || *p == '\n') && !ind)
-          {
-            *p = '\0';
-            p++;
-            field[c] = p;
-            c++;
-          }
-          else
-          {
-            p++;
-          }
-        }
+      if (field[2][0] != '\0')
+        rec.mDescription = field[2];
 
-        if (c > 2)
-        {
-          ForecastTypeDef rec;
-
-          if (field[0][0] != '\0')
-            rec.mForecastTypeId = toInt32(field[0]);
-
-          if (field[1][0] != '\0')
-            rec.mName = field[1];
-
-          if (field[2][0] != '\0')
-            rec.mDescription = field[2];
-
-          mFmi_forecastTypeDef_records.emplace_back(rec);
-        }
-      }
-    }
-    fclose(file);
+      mFmi_forecastTypeDef_records.emplace_back(rec);
+    });
   }
   catch (...)
   {
@@ -1862,61 +1633,21 @@ void GridDef::loadFmiProcessingTypeDefinitions(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"re");
-    if (file == nullptr)
+    readCsvRecords(filename,2,[&](char *field[],uint c)
     {
-      Fmi::Exception exception(BCP,"Cannot open file!");
-      exception.addParameter("Filename",std::string(filename));
-      throw exception;
-    }
+      ProcessingTypeDef rec;
 
-    char st[1000];
+      if (field[0][0] != '\0')
+        rec.mProcessingTypeId = toInt32(field[0]);
 
-    while (fgets(st,1000,file) != nullptr)
-    {
-      if (st[0] != '#')
-      {
-        bool ind = false;
-        char *field[100];
-        uint c = 1;
-        field[0] = st;
-        char *p = st;
-        while (*p != '\0'  &&  c < 100)
-        {
-          if (*p == '"')
-            ind = !ind;
+      if (field[1][0] != '\0')
+        rec.mName = field[1];
 
-          if ((*p == ';'  || *p == '\n') && !ind)
-          {
-            *p = '\0';
-            p++;
-            field[c] = p;
-            c++;
-          }
-          else
-          {
-            p++;
-          }
-        }
+      if (field[2][0] != '\0')
+        rec.mDescription = field[2];
 
-        if (c > 2)
-        {
-          ProcessingTypeDef rec;
-
-          if (field[0][0] != '\0')
-            rec.mProcessingTypeId = toInt32(field[0]);
-
-          if (field[1][0] != '\0')
-            rec.mName = field[1];
-
-          if (field[2][0] != '\0')
-            rec.mDescription = field[2];
-
-          mFmi_processingTypeDef_records.emplace_back(rec);
-        }
-      }
-    }
-    fclose(file);
+      mFmi_processingTypeDef_records.emplace_back(rec);
+    });
   }
   catch (...)
   {
@@ -1935,61 +1666,21 @@ void GridDef::loadFmiAggregationDefinitions(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"re");
-    if (file == nullptr)
+    readCsvRecords(filename,2,[&](char *field[],uint c)
     {
-      Fmi::Exception exception(BCP,"Cannot open file!");
-      exception.addParameter("Filename",std::string(filename));
-      throw exception;
-    }
+      AggregationDef rec;
 
-    char st[1000];
+      if (field[0][0] != '\0')
+        rec.mAggregationId = toInt32(field[0]);
 
-    while (fgets(st,1000,file) != nullptr)
-    {
-      if (st[0] != '#')
-      {
-        bool ind = false;
-        char *field[100];
-        uint c = 1;
-        field[0] = st;
-        char *p = st;
-        while (*p != '\0'  &&  c < 100)
-        {
-          if (*p == '"')
-            ind = !ind;
+      if (field[1][0] != '\0')
+        rec.mName = field[1];
 
-          if ((*p == ';'  || *p == '\n') && !ind)
-          {
-            *p = '\0';
-            p++;
-            field[c] = p;
-            c++;
-          }
-          else
-          {
-            p++;
-          }
-        }
+      if (field[2][0] != '\0')
+        rec.mDescription = field[2];
 
-        if (c > 2)
-        {
-          AggregationDef rec;
-
-          if (field[0][0] != '\0')
-            rec.mAggregationId = toInt32(field[0]);
-
-          if (field[1][0] != '\0')
-            rec.mName = field[1];
-
-          if (field[2][0] != '\0')
-            rec.mDescription = field[2];
-
-          mFmi_aggregationDef_records.emplace_back(rec);
-        }
-      }
-    }
-    fclose(file);
+      mFmi_aggregationDef_records.emplace_back(rec);
+    });
   }
   catch (...)
   {
@@ -2008,77 +1699,36 @@ void GridDef::loadFmiParameterId_grib(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"re");
-    if (file == nullptr)
+    readCsvRecords(filename,2,[&](char *field[],uint c)
     {
-      Fmi::Exception exception(BCP,"Cannot open file!");
-      exception.addParameter("Filename",std::string(filename));
-      throw exception;
-    }
+      FmiParameterId_grib rec;
 
-    char st[1000];
-
-    while (fgets(st,1000,file) != nullptr)
-    {
-      if (st[0] != '#')
+      if (field[0][0] != '\0')
       {
-        bool ind = false;
-        char *field[100];
-        uint c = 1;
-        field[0] = st;
-        char *p = st;
-        while (*p != '\0'  &&  c < 100)
+        if (isdigit(field[0][0]))
         {
-          if (*p == '"')
-            ind = !ind;
-
-          if ((*p == ';'  || *p == '\n') && !ind)
-          {
-            *p = '\0';
-            p++;
-            field[c] = p;
-            //printf("[%d][%s]\n",c-1,field[c-1]);
-            c++;
-          }
-          else
-          {
-            p++;
-          }
+          rec.mFmiParameterId = toUInt32(field[0]);
         }
-
-        if (c > 2)
+        else
         {
-          FmiParameterId_grib rec;
-
-          if (field[0][0] != '\0')
-          {
-            if (isdigit(field[0][0]))
-            {
-              rec.mFmiParameterId = toUInt32(field[0]);
-            }
-            else
-            {
-              auto def = getFmiParameterDefByName(field[0]);
-              if (def)
-                rec.mFmiParameterId = def->mFmiParameterId;
-            }
-          }
-
-          if (field[1][0] != '\0')
-            rec.mGribParameterId = toUInt32(field[1]);
-
-          if (field[2][0] != '\0')
-            rec.mConversionFunction = field[2];
-
-          if (c > 3 && field[3][0] != '\0')
-            rec.mReverseConversionFunction = field[3];
-
-          mFmi_parametersFromGrib_records.insert(std::pair<uint,FmiParameterId_grib>(rec.mFmiParameterId,rec));
-          mGribIdToFmiId.insert(std::pair<uint,uint>(rec.mGribParameterId,rec.mFmiParameterId));
+          const auto *def = getFmiParameterDefByName(field[0]);
+          if (def)
+            rec.mFmiParameterId = def->mFmiParameterId;
         }
       }
-    }
-    fclose(file);
+
+      if (field[1][0] != '\0')
+        rec.mGribParameterId = toUInt32(field[1]);
+
+      if (field[2][0] != '\0')
+        rec.mConversionFunction = field[2];
+
+      if (c > 3 && field[3][0] != '\0')
+        rec.mReverseConversionFunction = field[3];
+
+      mFmi_parametersFromGrib_records.insert(std::pair<uint,FmiParameterId_grib>(rec.mFmiParameterId,rec));
+      mGribIdToFmiId.insert(std::pair<uint,uint>(rec.mGribParameterId,rec.mFmiParameterId));
+    });
   }
   catch (...)
   {
@@ -2097,91 +1747,45 @@ void GridDef::loadFmiParameterId_newbase(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"re");
-    if (file == nullptr)
+    readCsvRecords(filename,2,[&](char *field[],uint c)
     {
-      Fmi::Exception exception(BCP,"Cannot open file!");
-      exception.addParameter("Filename",std::string(filename));
-      throw exception;
-    }
+      FmiParameterId_newbase rec;
 
-    char st[1000];
-
-    while (fgets(st,1000,file) != nullptr)
-    {
-      if (st[0] != '#')
+      if (field[0][0] != '\0' && isdigit(field[0][0]))
       {
-        bool ind = false;
-        char *field[100];
-        uint c = 1;
-        field[0] = st;
-        char *p = st;
-        while (*p != '\0'  &&  c < 100)
-        {
-          if (*p == '"')
-            ind = !ind;
-
-          if ((*p == ';'  || *p == '\n') && !ind)
-          {
-            *p = '\0';
-            p++;
-            field[c] = p;
-            c++;
-          }
-          else
-          {
-            p++;
-          }
-        }
-
-        if (c > 2)
-        {
-          FmiParameterId_newbase rec;
-
-          if (field[0][0] != '\0')
-          {
-            if (isdigit(field[0][0]))
-            {
-              rec.mFmiParameterId = toUInt32(field[0]);
-            }
-            else
-            {
-              auto def = getFmiParameterDefByName(field[0]);
-              if (def)
-                rec.mFmiParameterId = def->mFmiParameterId;
-            }
-          }
-
-          if (field[1][0] != '\0')
-          {
-            if (isdigit(field[1][0]))
-            {
-              rec.mNewbaseParameterId = toUInt32(field[1]);
-            }
-            else
-            {
-              auto def = getNewbaseParameterDefByName(field[1]);
-              if (def)
-                rec.mNewbaseParameterId = def->mNewbaseParameterId;
-            }
-          }
-
-          if (field[2][0] != '\0')
-            rec.mConversionFunction = field[2];
-
-          if (c > 3 && field[3][0] != '\0')
-            rec.mReverseConversionFunction = field[3];
-
-          mFmi_parametersFromNewbase_records.insert(std::pair<uint,FmiParameterId_newbase>(rec.mFmiParameterId,rec));
-          if (rec.mConversionFunction.empty())
-            mNewbaseIdToFmiId.insert(std::pair<uint,uint>(rec.mNewbaseParameterId,rec.mFmiParameterId));
-
-          if (rec.mReverseConversionFunction.empty())
-            mFmiIdToNewbaseId.insert(std::pair<uint,uint>(rec.mFmiParameterId,rec.mNewbaseParameterId));
-        }
+        rec.mFmiParameterId = toUInt32(field[0]);
       }
-    }
-    fclose(file);
+      else if (field[0][0] != '\0')
+      {
+        const auto *def = getFmiParameterDefByName(field[0]);
+        if (def)
+          rec.mFmiParameterId = def->mFmiParameterId;
+      }
+
+      if (field[1][0] != '\0' && isdigit(field[1][0]))
+      {
+        rec.mNewbaseParameterId = toUInt32(field[1]);
+      }
+      else if (field[1][0] != '\0')
+      {
+        const auto *def = getNewbaseParameterDefByName(field[1]);
+        if (def)
+          rec.mNewbaseParameterId = def->mNewbaseParameterId;
+      }
+
+      if (field[2][0] != '\0')
+        rec.mConversionFunction = field[2];
+
+      if (c > 3 && field[3][0] != '\0')
+        rec.mReverseConversionFunction = field[3];
+
+      mFmi_parametersFromNewbase_records.insert(std::pair<uint,FmiParameterId_newbase>(rec.mFmiParameterId,rec));
+      if (rec.mConversionFunction.empty())
+        mNewbaseIdToFmiId.insert(std::pair<uint,uint>(rec.mNewbaseParameterId,rec.mFmiParameterId));
+
+      if (rec.mReverseConversionFunction.empty())
+        mFmiIdToNewbaseId.insert(std::pair<uint,uint>(rec.mFmiParameterId,rec.mNewbaseParameterId));
+    });
   }
   catch (...)
   {
@@ -2200,79 +1804,39 @@ void GridDef::loadFmiParameterId_netCdf(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"re");
-    if (file == nullptr)
+    readCsvRecords(filename,2,[&](char *field[],uint c)
     {
-      Fmi::Exception exception(BCP,"Cannot open file!");
-      exception.addParameter("Filename",std::string(filename));
-      throw exception;
-    }
+      FmiParameterId_netCdf rec;
 
-    char st[1000];
-
-    while (fgets(st,1000,file) != nullptr)
-    {
-      if (st[0] != '#')
+      if (field[0][0] != '\0')
       {
-        bool ind = false;
-        char *field[100];
-        uint c = 1;
-        field[0] = st;
-        char *p = st;
-        while (*p != '\0'  &&  c < 100)
+        if (isdigit(field[0][0]))
         {
-          if (*p == '"')
-            ind = !ind;
-
-          if ((*p == ';'  || *p == '\n') && !ind)
-          {
-            *p = '\0';
-            p++;
-            field[c] = p;
-            c++;
-          }
-          else
-          {
-            p++;
-          }
+          rec.mFmiParameterId = toUInt32(field[0]);
         }
-
-        if (c > 2)
+        else
         {
-          FmiParameterId_netCdf rec;
-
-          if (field[0][0] != '\0')
-          {
-            if (isdigit(field[0][0]))
-            {
-              rec.mFmiParameterId = toUInt32(field[0]);
-            }
-            else
-            {
-              auto def = getFmiParameterDefByName(field[0]);
-              if (def)
-                rec.mFmiParameterId = def->mFmiParameterId;
-            }
-          }
-
-          if (field[1][0] != '\0')
-            rec.mNetCdfParameterName = field[1];
-
-          if (field[2][0] != '\0')
-            rec.mConversionFunction = field[2];
-
-          if (c > 3 && field[3][0] != '\0')
-            rec.mReverseConversionFunction = field[3];
-
-          //rec.print(std::cout,0,0);
-
-          mFmi_parametersFromNetCdf_records.insert(std::pair<uint,FmiParameterId_netCdf>(rec.mFmiParameterId,rec));
-          std::string key = toUpperString(rec.mNetCdfParameterName);
-          mNetCdfNameToFmiId.insert(std::pair<std::string,uint>(key,rec.mFmiParameterId));
+          const auto *def = getFmiParameterDefByName(field[0]);
+          if (def)
+            rec.mFmiParameterId = def->mFmiParameterId;
         }
       }
-    }
-    fclose(file);
+
+      if (field[1][0] != '\0')
+        rec.mNetCdfParameterName = field[1];
+
+      if (field[2][0] != '\0')
+        rec.mConversionFunction = field[2];
+
+      if (c > 3 && field[3][0] != '\0')
+        rec.mReverseConversionFunction = field[3];
+
+      //rec.print(std::cout,0,0);
+
+      mFmi_parametersFromNetCdf_records.insert(std::pair<uint,FmiParameterId_netCdf>(rec.mFmiParameterId,rec));
+      std::string key = toUpperString(rec.mNetCdfParameterName);
+      mNetCdfNameToFmiId.insert(std::pair<std::string,uint>(key,rec.mFmiParameterId));
+    });
   }
   catch (...)
   {
@@ -2291,78 +1855,38 @@ void GridDef::loadFmiParameterDefinitions(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"re");
-    if (file == nullptr)
+    readCsvRecords(filename,3,[&](char *field[],uint c)
     {
-      Fmi::Exception exception(BCP,"Cannot open file!");
-      exception.addParameter("Filename",std::string(filename));
-      throw exception;
-    }
+      FmiParameterDef rec;
 
-    char st[1000];
+      if (field[0][0] != '\0')
+        rec.mFmiParameterId = toUInt32(field[0]);
 
-    while (fgets(st,1000,file) != nullptr)
-    {
-      if (st[0] != '#')
-      {
-        bool ind = false;
-        char *field[100];
-        uint c = 1;
-        field[0] = st;
-        char *p = st;
-        while (*p != '\0'  &&  c < 100)
-        {
-          if (*p == '"')
-            ind = !ind;
+      if (field[1][0] != '\0')
+        rec.mParameterName = field[1];
 
-          if ((*p == ';'  || *p == '\n') && !ind)
-          {
-            *p = '\0';
-            p++;
-            field[c] = p;
-            c++;
-          }
-          else
-          {
-            p++;
-          }
-        }
+      if (field[2][0] != '\0')
+        rec.mParameterUnits = field[2];
 
-        if (c > 3)
-        {
-          FmiParameterDef rec;
+      if (field[3][0] != '\0')
+        rec.mParameterDescription = field[3];
 
-          if (field[0][0] != '\0')
-            rec.mFmiParameterId = toUInt32(field[0]);
+      if (c > 4 &&  field[4][0] != '\0')
+        rec.mAreaInterpolationMethod = toInt16(field[4]);
 
-          if (field[1][0] != '\0')
-            rec.mParameterName = field[1];
+      if (c > 5 &&  field[5][0] != '\0')
+        rec.mTimeInterpolationMethod = toInt16(field[5]);
 
-          if (field[2][0] != '\0')
-            rec.mParameterUnits = field[2];
+      if (c > 6 &&  field[6][0] != '\0')
+        rec.mLevelInterpolationMethod = toInt16(field[6]);
 
-          if (field[3][0] != '\0')
-            rec.mParameterDescription = field[3];
+      if (c > 7 &&  field[7][0] != '\0')
+        rec.mDefaultPrecision = toInt16(field[7]);
 
-          if (c > 4 &&  field[4][0] != '\0')
-            rec.mAreaInterpolationMethod = toInt16(field[4]);
-
-          if (c > 5 &&  field[5][0] != '\0')
-            rec.mTimeInterpolationMethod = toInt16(field[5]);
-
-          if (c > 6 &&  field[6][0] != '\0')
-            rec.mLevelInterpolationMethod = toInt16(field[6]);
-
-          if (c > 7 &&  field[7][0] != '\0')
-            rec.mDefaultPrecision = toInt16(field[7]);
-
-          mFmi_parameterDef_records.insert(std::pair<uint,FmiParameterDef>(rec.mFmiParameterId,rec));
-          std::string key = toUpperString(rec.mParameterName);
-          mFmiNameToId.insert(std::pair<std::string,uint>(key,rec.mFmiParameterId));
-        }
-      }
-    }
-    fclose(file);
+      mFmi_parameterDef_records.insert(std::pair<uint,FmiParameterDef>(rec.mFmiParameterId,rec));
+      std::string key = toUpperString(rec.mParameterName);
+      mFmiNameToId.insert(std::pair<std::string,uint>(key,rec.mFmiParameterId));
+    });
   }
   catch (...)
   {
@@ -2381,71 +1905,31 @@ void GridDef::loadFmiLevelId_grib1(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"re");
-    if (file == nullptr)
+    readCsvRecords(filename,2,[&](char *field[],uint c)
     {
-      Fmi::Exception exception(BCP,"Cannot open file!");
-      exception.addParameter("Filename",std::string(filename));
-      throw exception;
-    }
+      FmiLevelId_grib rec;
 
-    char st[1000];
+      if (field[0][0] != '\0')
+        rec.mFmiLevelId = toUInt32(field[0]);
 
-    while (fgets(st,1000,file) != nullptr)
-    {
-      if (st[0] != '#')
+      if (field[1][0] != '\0')
       {
-        bool ind = false;
-        char *field[100];
-        uint c = 1;
-        field[0] = st;
-        char *p = st;
-        while (*p != '\0'  &&  c < 100)
+        std::vector<std::string> partList;
+        splitString(field[1],',',partList);
+
+        for (auto& it : partList)
         {
-          if (*p == '"')
-            ind = !ind;
-
-          if ((*p == ';'  || *p == '\n') && !ind)
+          std::vector<std::string> list;
+          splitString(it,'=',list);
+          if (list.size() == 2)
           {
-            *p = '\0';
-            p++;
-            field[c] = p;
-            c++;
+            rec.mParameterList.emplace_back(stringFactory.create(list[0].c_str()),list[1]);
           }
-          else
-          {
-            p++;
-          }
-        }
-
-        if (c > 2)
-        {
-          FmiLevelId_grib rec;
-
-          if (field[0][0] != '\0')
-            rec.mFmiLevelId = toUInt32(field[0]);
-
-          if (field[1][0] != '\0')
-          {
-            std::vector<std::string> partList;
-            splitString(field[1],',',partList);
-
-            for (auto it=partList.begin(); it!=partList.end();++it)
-            {
-              std::vector<std::string> list;
-              splitString(*it,'=',list);
-              if (list.size() == 2)
-              {
-                rec.mParameterList.emplace_back(stringFactory.create(list[0].c_str()),list[1]);
-              }
-            }
-          }
-
-          mFmi_levelsFromGrib1_records.emplace_back(rec);
         }
       }
-    }
-    fclose(file);
+
+      mFmi_levelsFromGrib1_records.emplace_back(rec);
+    });
   }
   catch (...)
   {
@@ -2464,71 +1948,31 @@ void GridDef::loadFmiLevelId_grib2(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"re");
-    if (file == nullptr)
+    readCsvRecords(filename,2,[&](char *field[],uint c)
     {
-      Fmi::Exception exception(BCP,"Cannot open file!");
-      exception.addParameter("Filename",std::string(filename));
-      throw exception;
-    }
+      FmiLevelId_grib rec;
 
-    char st[1000];
+      if (field[0][0] != '\0')
+        rec.mFmiLevelId = toUInt32(field[0]);
 
-    while (fgets(st,1000,file) != nullptr)
-    {
-      if (st[0] != '#')
+      if (field[1][0] != '\0')
       {
-        bool ind = false;
-        char *field[100];
-        uint c = 1;
-        field[0] = st;
-        char *p = st;
-        while (*p != '\0'  &&  c < 100)
+        std::vector<std::string> partList;
+        splitString(field[1],',',partList);
+
+        for (auto& it : partList)
         {
-          if (*p == '"')
-            ind = !ind;
-
-          if ((*p == ';'  || *p == '\n') && !ind)
+          std::vector<std::string> list;
+          splitString(it,'=',list);
+          if (list.size() == 2)
           {
-            *p = '\0';
-            p++;
-            field[c] = p;
-            c++;
+            rec.mParameterList.emplace_back(stringFactory.create(list[0].c_str()),list[1]);
           }
-          else
-          {
-            p++;
-          }
-        }
-
-        if (c > 2)
-        {
-          FmiLevelId_grib rec;
-
-          if (field[0][0] != '\0')
-            rec.mFmiLevelId = toUInt32(field[0]);
-
-          if (field[1][0] != '\0')
-          {
-            std::vector<std::string> partList;
-            splitString(field[1],',',partList);
-
-            for (auto it=partList.begin(); it!=partList.end();++it)
-            {
-              std::vector<std::string> list;
-              splitString(*it,'=',list);
-              if (list.size() == 2)
-              {
-                rec.mParameterList.emplace_back(stringFactory.create(list[0].c_str()),list[1]);
-              }
-            }
-          }
-
-          mFmi_levelsFromGrib2_records.emplace_back(rec);
         }
       }
-    }
-    fclose(file);
+
+      mFmi_levelsFromGrib2_records.emplace_back(rec);
+    });
   }
   catch (...)
   {
@@ -2561,28 +2005,8 @@ void GridDef::loadFmiLevelId_newbase(const char *filename)
     {
       if (st[0] != '#')
       {
-        bool ind = false;
         char *field[100];
-        uint c = 1;
-        field[0] = st;
-        char *p = st;
-        while (*p != '\0'  &&  c < 100)
-        {
-          if (*p == '"')
-            ind = !ind;
-
-          if ((*p == ';'  || *p == '\n') && !ind)
-          {
-            *p = '\0';
-            p++;
-            field[c] = p;
-            c++;
-          }
-          else
-          {
-            p++;
-          }
-        }
+        uint c = splitCsvFields(st,field);
 
         if (c >= 2)
         {
@@ -2600,7 +2024,7 @@ void GridDef::loadFmiLevelId_newbase(const char *filename)
         }
       }
     }
-    fclose(file);
+    (void)fclose(file);
   }
   catch (...)
   {
@@ -2642,63 +2066,23 @@ void GridDef::loadNewbaseParameterDefinitions(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"re");
-    if (file == nullptr)
+    readCsvRecords(filename,1,[&](char *field[],uint c)
     {
-      Fmi::Exception exception(BCP,"Cannot open file!");
-      exception.addParameter("Filename",std::string(filename));
-      throw exception;
-    }
+      NewbaseParameterDef rec;
 
-    char st[1000];
+      if (field[0][0] != '\0')
+        rec.mNewbaseParameterId = toUInt32(field[0]);
 
-    while (fgets(st,1000,file) != nullptr)
-    {
-      if (st[0] != '#')
-      {
-        bool ind = false;
-        char *field[100];
-        uint c = 1;
-        field[0] = st;
-        char *p = st;
-        while (*p != '\0'  &&  c < 100)
-        {
-          if (*p == '"')
-            ind = !ind;
+      if (field[1][0] != '\0')
+        rec.mParameterName = field[1];
 
-          if ((*p == ';'  || *p == '\n') && !ind)
-          {
-            *p = '\0';
-            p++;
-            field[c] = p;
-            c++;
-          }
-          else
-          {
-            p++;
-          }
-        }
+      if (c > 2  &&  field[2][0] != '\0')
+        rec.mFmiName = field[2];
 
-        if (c > 1)
-        {
-          NewbaseParameterDef rec;
-
-          if (field[0][0] != '\0')
-            rec.mNewbaseParameterId = toUInt32(field[0]);
-
-          if (field[1][0] != '\0')
-            rec.mParameterName = field[1];
-
-          if (c > 2  &&  field[2][0] != '\0')
-            rec.mFmiName = field[2];
-
-          mNewbase_parameterDef_records.insert(std::pair<uint,NewbaseParameterDef>(rec.mNewbaseParameterId,rec));
-          std::string key = toUpperString(rec.mParameterName);
-          mNewbaseNameToId.insert(std::pair<std::string,uint>(key,rec.mNewbaseParameterId));
-        }
-      }
-    }
-    fclose(file);
+      mNewbase_parameterDef_records.insert(std::pair<uint,NewbaseParameterDef>(rec.mNewbaseParameterId,rec));
+      std::string key = toUpperString(rec.mParameterName);
+      mNewbaseNameToId.insert(std::pair<std::string,uint>(key,rec.mNewbaseParameterId));
+    });
   }
   catch (...)
   {
@@ -2717,61 +2101,21 @@ void GridDef::loadNetCdfParameterDefinitions(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"re");
-    if (file == nullptr)
+    readCsvRecords(filename,1,[&](char *field[],uint c)
     {
-      Fmi::Exception exception(BCP,"Cannot open file!");
-      exception.addParameter("Filename",std::string(filename));
-      throw exception;
-    }
+      NetCdfParameterDef rec;
 
-    char st[1000];
+      if (field[0][0] != '\0')
+        rec.mParameterName = field[0];
 
-    while (fgets(st,1000,file) != nullptr)
-    {
-      if (st[0] != '#')
-      {
-        bool ind = false;
-        char *field[100];
-        uint c = 1;
-        field[0] = st;
-        char *p = st;
-        while (*p != '\0'  &&  c < 100)
-        {
-          if (*p == '"')
-            ind = !ind;
+      if (field[1][0] != '\0')
+        rec.mFmiLevelId = field[1];
 
-          if ((*p == ';'  || *p == '\n') && !ind)
-          {
-            *p = '\0';
-            p++;
-            field[c] = p;
-            c++;
-          }
-          else
-          {
-            p++;
-          }
-        }
+      if (c > 2 && field[2][0] != '\0')
+        rec.mParameterUnits = field[2];
 
-        if (c > 1)
-        {
-          NetCdfParameterDef rec;
-
-          if (field[0][0] != '\0')
-            rec.mParameterName = field[0];
-
-          if (field[1][0] != '\0')
-            rec.mFmiLevelId = field[1];
-
-          if (c > 2 && field[2][0] != '\0')
-            rec.mParameterUnits = field[2];
-
-          mNetCdf_parameterDef_records.insert(std::pair<std::string,NetCdfParameterDef>(toUpperString(rec.mParameterName),rec));
-        }
-      }
-    }
-    fclose(file);
+      mNetCdf_parameterDef_records.insert(std::pair<std::string,NetCdfParameterDef>(toUpperString(rec.mParameterName),rec));
+    });
   }
   catch (...)
   {
@@ -2910,9 +2254,512 @@ T::Coordinate_svec GridDef::getGridLatLonCoordinatesByGeometryId(T::GeometryId  
 
 
 
+namespace
+{
+/*! \brief Sets the latlon coordinates of the geometry definition, flipping the rows if requested. */
+
+void setGeometryLatLonCoordinates(GRIB2::GridDef_sptr& def,const char *flipped,T::Coordinate_svec& latLonCoordinates)
+{
+  if (!flipped)
+  {
+    latLonCoordinates = def->getGridLatLonCoordinates();
+    return;
+  }
+
+  auto originalCoords = def->getGridLatLonCoordinates();
+  int sz = originalCoords->size();
+
+  if (sz)
+  {
+    T::Coordinate_svec newCoords(new T::Coordinate_vec());
+    newCoords->reserve(sz);
+
+    T::Dimensions d = def->getGridDimensions();
+    int nx = d.nx();
+    int ny = d.ny();
+
+    for (int y = ny-1; y >= 0; y--)
+    {
+      for (int x = 0; x < nx; x++)
+      {
+        auto cc = (*originalCoords)[y*nx + x];
+        newCoords->emplace_back(cc);
+      }
+    }
+
+    latLonCoordinates = newCoords;
+  }
+}
+
+
+
+
+
+/*! \brief Sets the grid size and the original cell size attributes of the geometry definition. */
+
+void setGeometryAttributes(GRIB2::GridDef_sptr& def,T::AttributeList& attributeList,uint& width,uint& height)
+{
+  // If we have valid geometry definition then we know the grid width and the height.
+
+  T::Dimensions d = def->getGridDimensions();
+  width = d.nx();
+  height = d.ny();
+  attributeList.setAttribute("grid.original.reverseYDirection",Fmi::to_string((int)def->reverseYDirection()));
+  attributeList.setAttribute("grid.original.reverseXDirection",Fmi::to_string((int)def->reverseXDirection()));
+
+  double wm = 0;
+  double hm = 0;
+  if (def->getGridMetricCellSize(wm,hm))
+  {
+    attributeList.setAttribute("grid.cell.width",Fmi::to_string(wm));
+    attributeList.setAttribute("grid.cell.height",Fmi::to_string(hm));
+  }
+  else
+  {
+    attributeList.setAttribute("grid.original.cell.width.degrees",Fmi::to_string(wm));
+    attributeList.setAttribute("grid.original.cell.height.degrees",Fmi::to_string(hm));
+
+    def->getGridCellAverageSize(wm,hm);
+    attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
+    attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
+  }
+}
+
+
+
+
+
+/*! \brief Resolves the geometry definition by the geometry id or by the geometry string. Returns
+    false if the geometry definition is requested but it cannot be resolved. */
+
+bool resolveGeometryDefinition(GridDef& gridDefinitions,T::AttributeList& attributeList,const char *geometryIdStr,const char *geometryStringStr,const char *flipped,T::Coordinate_svec& latLonCoordinates,uint& width,uint& height)
+{
+  // Checking if the geometry is defined by the geometryId
+
+  GRIB2::GridDef_sptr def;
+  if (geometryIdStr)
+  {
+    def = gridDefinitions.getGrib2DefinitionByGeometryId(toInt32(geometryIdStr));
+    if (!def)
+      return false;
+
+    setGeometryLatLonCoordinates(def,flipped,latLonCoordinates);
+  }
+
+
+  // Checking if the geometry is defigned by the geometry string
+
+  if (!def &&  geometryStringStr)
+  {
+    auto *defPtr = Identification::gridDef.createGrib2GridDefinition(geometryStringStr);
+    if (!defPtr)
+      return false;
+
+    def.reset(defPtr);
+    latLonCoordinates = def->getGridLatLonCoordinates();
+  }
+
+  if (def)
+    setGeometryAttributes(def,attributeList,width,height);
+
+  return true;
+}
+
+
+
+
+
+/*! \brief The grid size related attributes. */
+
+struct GridSizeAttributes
+{
+  const char *gridWidthStr = nullptr;
+  const char *gridHeightStr = nullptr;
+  const char *gridCountSizeStr = nullptr;
+  const char *gridCellWidthStr = nullptr;
+  const char *gridCellHeightStr = nullptr;
+  const char *gridCellWidthDegrStr = nullptr;
+  const char *gridCellHeightDegrStr = nullptr;
+  const char *gridOriginalProjectionStr = nullptr;
+
+  explicit GridSizeAttributes(T::AttributeList& attributeList)
+  {
+    gridWidthStr = attributeList.getAttributeValue("grid.width");
+    gridHeightStr = attributeList.getAttributeValue("grid.height");
+    gridCountSizeStr = attributeList.getAttributeValue("grid.countSize");
+    gridCellWidthStr = attributeList.getAttributeValue("grid.original.cell.width");
+    gridCellHeightStr = attributeList.getAttributeValue("grid.original.cell.height");
+    gridCellWidthDegrStr = attributeList.getAttributeValue("grid.original.cell.width.degrees");
+    gridCellHeightDegrStr = attributeList.getAttributeValue("grid.original.cell.height.degrees");
+    gridOriginalProjectionStr = attributeList.getAttributeValue("grid.original.projectionType");
+  }
+};
+
+
+
+
+
+/*! \brief Checks if the grid size should be counted from the original cell size. */
+
+bool isCountSize(const GridSizeAttributes& attr)
+{
+  bool countSize = false;
+
+  if (attr.gridCountSizeStr)
+  {
+    bool res = (bool)toInt32(attr.gridCountSizeStr);
+    if (res  &&  attr.gridCellWidthStr  &&  attr.gridCellHeightStr)
+      countSize = true;
+  }
+
+  if (!attr.gridWidthStr &&  !attr.gridHeightStr)
+    countSize = true;
+
+  return countSize;
+}
+
+
+
+
+
+/*! \brief Initializes the spatial reference from the URN, the proj4 or the CRS definition. */
+
+void setSpatialReference(OGRSpatialReference& sr,const char *urnStr,const char *proj4Str,const char *crsStr,bool proj4BeforeCrs)
+{
+  if (urnStr)
+  {
+    std::string urn = urnStr;
+    if (strncasecmp(urnStr,"urn:ogc:def:crs:",16) != 0)
+      urn = std::string("urn:ogc:def:crs:") + urnStr;
+
+    if (sr.importFromURN(urn.c_str()) != OGRERR_NONE)
+      throw Fmi::Exception(BCP, "Invalid urn '" + std::string(urnStr) + "'!");
+  }
+  else if (proj4Str && (proj4BeforeCrs || !crsStr))
+  {
+    OGRErr err = sr.SetFromUserInput(proj4Str);
+    if (err != OGRERR_NONE)
+      throw Fmi::Exception(BCP, "Invalid proj4 '" + std::string(proj4Str) + "'!");
+  }
+  else if (crsStr)
+  {
+    OGRErr err = sr.SetFromUserInput(crsStr);
+    if (err != OGRERR_NONE)
+      throw Fmi::Exception(BCP, "Invalid crs '" + std::string(crsStr) + "'!");
+  }
+
+  sr.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
+}
+
+
+
+
+
+/*! \brief Transforms the latlon bounding box into the target projection. */
+
+void transformLatLonBox(OGRSpatialReference& sr_latlon,OGRSpatialReference& sr,const std::vector<double>& aa,std::vector<double>& cc,bool& targetIsLatlon)
+{
+  std::shared_ptr<OGRCoordinateTransformation> reverseTransformation = make_ptr(OGRCreateCoordinateTransformation(&sr_latlon,&sr));
+  if (not reverseTransformation)
+  {
+    throw Fmi::Exception(BCP,"Cannot create coordinate transformation!");
+  }
+
+  double lon1 = aa[0];
+  double lat1 = aa[1];
+  double lon2 = aa[2];
+  double lat2 = aa[3];
+
+  int ok1 = 0;
+  int ok2 = 0;
+  int rc1 = reverseTransformation->Transform(1, &lon1, &lat1, nullptr, &ok1);
+  int rc2 = reverseTransformation->Transform(1, &lon2, &lat2, nullptr, &ok2);
+
+  // Do not silently use an unchanged (failed) result as projected coordinates
+  if (!(rc1 && ok1 && rc2 && ok2))
+    throw Fmi::Exception(BCP, "Failed to transform latlon bbox to the requested crs");
+
+  cc.emplace_back(lon1);
+  cc.emplace_back(lat1);
+  cc.emplace_back(lon2);
+  cc.emplace_back(lat2);
+
+  if (lon1 == aa[0]  &&  lat1 == aa[1]  && lon2 == aa[2]  &&  lat2 == aa[3])
+    targetIsLatlon = true;
+}
+
+
+
+
+
+/*! \brief Counts the grid size from the original cell size. */
+
+void countGridSizeByCellSize(const GridSizeAttributes& attr,const std::vector<double>& cc,bool targetIsLatlon,double diffx,double diffy,uint& width,uint& height)
+{
+  // Size of the original grid cell (this might be metric or in degrees)
+  double dxx = toDouble(attr.gridCellWidthStr);
+  double dyy = toDouble(attr.gridCellHeightStr);
+
+  int origProjectionType = 0;
+  if (attr.gridOriginalProjectionStr)
+    origProjectionType = toInt32(attr.gridOriginalProjectionStr);
+
+  if (!targetIsLatlon)
+  {
+    // The target projection is metric
+
+    width = C_UINT(fabs(diffx) / (dxx*1000) + 1);
+    height = C_UINT(fabs(diffy) / (dyy*1000) + 1);
+    return;
+  }
+
+  // The target projection is latlon
+
+  if (origProjectionType == T::GridProjectionValue::LatLon || origProjectionType == T::GridProjectionValue::RotatedLatLon)
+  {
+    // The source projection is also latlon.
+    if (attr.gridCellWidthDegrStr  &&  attr.gridCellHeightDegrStr)
+    {
+      dxx = toDouble(attr.gridCellWidthDegrStr);
+      dyy = toDouble(attr.gridCellHeightDegrStr);
+    }
+
+    width = C_UINT(fabs(diffx) / dxx + 1);
+    height = C_UINT(fabs(diffy) / dyy + 1);
+  }
+  else
+  {
+    // The source is metric
+
+    // Counting metric width and height of the target projection
+
+    double longitudes = (cc[2]-cc[0]);
+    double latitudes = (cc[3]-cc[1]);
+
+    double centerLongitude = cc[0] + longitudes/2;
+    double centerLatitude = cc[1] + latitudes/2;
+
+    double w = latlon_width(centerLatitude,longitudes);
+    double h = latlon_height(centerLongitude,latitudes);
+
+    // Width and height (in pixels) for the new grid
+
+    width =  C_UINT(w/dxx);
+    height = C_UINT(h/dyy);
+  }
+}
+
+
+
+
+
+/*! \brief Counts the grid size and the grid cell size of the new grid. */
+
+void countGridSize(const GridSizeAttributes& attr,const std::vector<double>& cc,bool targetIsLatlon,bool countSize,uint& width,uint& height,double& dx,double& dy)
+{
+  double diffx = cc[2] - cc[0];
+  double diffy = cc[3] - cc[1];
+
+  if (!countSize  &&  attr.gridWidthStr  &&  attr.gridHeightStr)
+  {
+    width = toUInt32(attr.gridWidthStr);
+    height = toUInt32(attr.gridHeightStr);
+
+    dx = diffx / C_DOUBLE(width-1);
+    dy = diffy / C_DOUBLE(height-1);
+  }
+  else if (attr.gridCellWidthStr  &&  attr.gridCellHeightStr)
+  {
+    // Trying to define width and height for the new grid.
+
+    countGridSizeByCellSize(attr,cc,targetIsLatlon,diffx,diffy,width,height);
+
+    if (attr.gridWidthStr  &&  attr.gridHeightStr)
+    {
+      uint w = toUInt32(attr.gridWidthStr);
+      uint h = toUInt32(attr.gridHeightStr);
+
+      if (width >= w  ||  height >= h)
+      {
+        width = w;
+        height = h;
+      }
+    }
+
+    dx = diffx / C_DOUBLE(width-1);
+    dy = diffy / C_DOUBLE(height-1);
+  }
+
+  if (width == 0 || height == 0 || width > 10000 || height > 10000)
+  {
+    Fmi::Exception exception(BCP,"Invalid grid size!");
+    exception.addParameter("width",std::to_string(width));
+    exception.addParameter("height",std::to_string(height));
+    throw exception;
+  }
+}
+
+
+
+
+
+/*! \brief Creates the grid coordinates in the target projection (if requested) and in latlon. */
+
+void createGridCoordinates(OGRCoordinateTransformation& transformation,const std::vector<double>& cc,uint width,uint height,double dx,double dy,T::Coordinate_svec& latLonCoordinates,T::Coordinate_vec *coordinates)
+{
+  uint sz = width*height;
+
+  if (!latLonCoordinates)
+    latLonCoordinates = std::make_shared<T::Coordinate_vec>();
+
+  latLonCoordinates->reserve(sz);
+
+  auto *lon = new double[sz+1];
+  auto *lat = new double[sz+1];
+
+  std::unique_ptr<double[]> rlat(lat);
+  std::unique_ptr<double[]> rlon(lon);
+
+  double yy = cc[1];
+  int c = 0;
+  for (uint y=0; y<height; y++)
+  {
+    double xx = cc[0];
+    for (uint x=0; x<width; x++)
+    {
+      lon[c] = xx;
+      lat[c] = yy;
+
+      if (coordinates != nullptr)
+        coordinates->emplace_back(xx,yy);
+
+      xx = xx + dx;
+      c++;
+    }
+    yy = yy + dy;
+  }
+
+  transformation.Transform(c,lon,lat);
+
+  for (int t=0; t<c; t++)
+  {
+    latLonCoordinates->emplace_back(getLongitude(lon[t]),lat[t]);
+  }
+}
+
+
+
+
+
+/*! \brief Sets the llbox (and the bbox if the target is latlon) attributes from the corner coordinates. */
+
+void setLatLonBoxAttributes(T::AttributeList& attributeList,T::Coordinate_svec& latLonCoordinates,const char *flipped,bool targetIsLatlon)
+{
+  int last = latLonCoordinates->size() - 1;
+  char tmp[1400];  // four %.15f values of any magnitude
+  sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",(*latLonCoordinates)[0].x(),(*latLonCoordinates)[0].y(),(*latLonCoordinates)[last].x(),(*latLonCoordinates)[last].y());
+
+
+  if (!flipped)
+    attributeList.setAttribute("grid.llbox",tmp);
+
+  if (targetIsLatlon &&  !flipped)
+    attributeList.setAttribute("grid.bbox",tmp);
+}
+
+
+
+
+
+/*! \brief Creates the grid defined by the projection and the bounding box. If the coordinates
+    pointer is given then also the projected coordinates are returned. */
+
+void createProjectedGrid(T::AttributeList& attributeList,const GridSizeAttributes& attr,const char *urnStr,const char *proj4Str,const char *crsStr,bool proj4BeforeCrs,const char *bboxStr,const char *llboxStr,bool countSize,bool& targetIsLatlon,uint& width,uint& height,T::Coordinate_svec& latLonCoordinates,T::Coordinate_svec *coordinates)
+{
+  // If the geometry id defined by the URN / CRS then we need to the bounding box coordinates and preferred grid width and height.
+
+  std::vector<double> aa;
+  std::vector<double> bb;
+
+  if (bboxStr)
+    splitString(bboxStr,',',aa);
+
+  if (llboxStr)
+  {
+    splitString(llboxStr,',',bb);
+    if (bboxStr == nullptr)
+      aa = bb;
+  }
+
+  if (aa.size() == 4  &&  bb.size() == 4 && aa[0] == bb[0]  &&  aa[1] == bb[1]  &&  aa[2] == bb[2]  &&  aa[3] == bb[3])
+    targetIsLatlon = true;
+
+  if (aa.size() != 4)
+    return;
+
+  std::vector<double> cc;
+
+  OGRSpatialReference sr_latlon;
+  // Use the well-known WGS84 geographic CRS rather than importFromEPSG(4326);
+  // the latter carries an authority (lat,lon) axis order that older GDAL/PROJ
+  // versions may not fully override with the traditional axis mapping, which
+  // can make the latlon->projected transform fail and leave the coordinates
+  // unchanged (then used as projected metres, producing a degenerate grid).
+  sr_latlon.SetWellKnownGeogCS("WGS84");
+  sr_latlon.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
+
+  OGRSpatialReference sr;
+  setSpatialReference(sr,urnStr,proj4Str,crsStr,proj4BeforeCrs);
+
+  auto transformation = make_ptr(OGRCreateCoordinateTransformation(&sr,&sr_latlon));
+  if (not transformation)
+    throw Fmi::Exception(BCP,"Cannot create coordinate transformation!");
+
+  if (bboxStr)
+    cc = aa;
+  else if (llboxStr)
+    transformLatLonBox(sr_latlon,sr,aa,cc,targetIsLatlon);
+
+  double dx = 0;
+  double dy = 0;
+
+  countGridSize(attr,cc,targetIsLatlon,countSize,width,height,dx,dy);
+
+  if (targetIsLatlon)
+  {
+    attributeList.setAttribute("grid.cell.width",Fmi::to_string(fabs(dx)));
+    attributeList.setAttribute("grid.cell.height",Fmi::to_string(fabs(dy)));
+  }
+  else
+  {
+    attributeList.setAttribute("grid.cell.width",Fmi::to_string(fabs(dx/1000)));
+    attributeList.setAttribute("grid.cell.height",Fmi::to_string(fabs(dy/1000)));
+  }
+
+  if (!latLonCoordinates || latLonCoordinates->empty())
+  {
+    T::Coordinate_vec *projectedCoordinates = nullptr;
+    if (coordinates != nullptr)
+    {
+      if (!(*coordinates))
+        *coordinates = std::make_shared<T::Coordinate_vec>();
+
+      (*coordinates)->reserve(width*height);
+      projectedCoordinates = coordinates->get();
+    }
+
+    createGridCoordinates(*transformation,cc,width,height,dx,dy,latLonCoordinates,projectedCoordinates);
+  }
+}
+}  // namespace
+
+
+
+
+
 /*! \brief Resolves grid coordinates in the original projection from the given geometry attributes. */
 
-void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeList,T::Coordinate_svec& latLonCoordinates,T::CoordinateType coordinateType,T::Coordinate_svec& coordinates,uint& width,uint& height)
+void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeList,T::Coordinate_svec& latLonCoordinates,T::CoordinateType /*coordinateType*/,T::Coordinate_svec& coordinates,uint& width,uint& height)
 {
   FUNCTION_TRACE
   try
@@ -2925,14 +2772,7 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
     const char *llboxStr = attributeList.getAttributeValue("grid.llbox");
     const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
     const char *geometryStringStr = attributeList.getAttributeValue("grid.geometryString");
-    const char *gridWidthStr = attributeList.getAttributeValue("grid.width");
-    const char *gridHeightStr = attributeList.getAttributeValue("grid.height");
-    const char *gridCountSizeStr = attributeList.getAttributeValue("grid.countSize");
-    const char *gridCellWidthStr = attributeList.getAttributeValue("grid.original.cell.width");
-    const char *gridCellHeightStr = attributeList.getAttributeValue("grid.original.cell.height");
-    const char *gridCellWidthDegrStr = attributeList.getAttributeValue("grid.original.cell.width.degrees");
-    const char *gridCellHeightDegrStr = attributeList.getAttributeValue("grid.original.cell.height.degrees");
-    const char *gridOriginalProjectionStr = attributeList.getAttributeValue("grid.original.projectionType");
+    GridSizeAttributes attr(attributeList);
     const char *flipped = attributeList.getAttributeValue("grid.flipped");
 
     if (geometryIdStr == nullptr  &&  geometryStringStr == nullptr  &&  urnStr == nullptr  &&  crsStr == nullptr)
@@ -2947,357 +2787,14 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
       crsStr = originalCrsStr;
     }
 
-    // Checking if the geometry is defined by the geometryId
-
-    GRIB2::GridDef_sptr def;
-    if (geometryIdStr)
-    {
-      def = getGrib2DefinitionByGeometryId(toInt32(geometryIdStr));
-      if (!def)
-        return;
-
-      if (flipped)
-      {
-        auto originalCoords = def->getGridLatLonCoordinates();
-        int sz = originalCoords->size();
-
-        if (sz)
-        {
-          T::Coordinate_svec newCoords(new T::Coordinate_vec());
-          newCoords->reserve(sz);
-
-          T::Dimensions d = def->getGridDimensions();
-          int nx = d.nx();
-          int ny = d.ny();
-
-          for (int y = ny-1; y >= 0; y--)
-          {
-            for (int x = 0; x < nx; x++)
-            {
-              auto cc = (*originalCoords)[y*nx + x];
-              newCoords->emplace_back(cc);
-            }
-          }
-
-          latLonCoordinates = newCoords;
-        }
-      }
-      else
-      {
-        latLonCoordinates = def->getGridLatLonCoordinates();
-      }
-    }
-
-
-    // Checking if the geometry is defigned by the geometry string
-
-    if (!def &&  geometryStringStr)
-    {
-      auto defPtr = Identification::gridDef.createGrib2GridDefinition(geometryStringStr);
-      if (!defPtr)
-        return;
-
-      def.reset(defPtr);
-      latLonCoordinates = def->getGridLatLonCoordinates();
-    }
-
-
-    if (def)
-    {
-      // If we have valid geometry definition then we know the grid width and the height.
-
-      T::Dimensions d = def->getGridDimensions();
-      width = d.nx();
-      height = d.ny();
-      attributeList.setAttribute("grid.original.reverseYDirection",Fmi::to_string((int)def->reverseYDirection()));
-      attributeList.setAttribute("grid.original.reverseXDirection",Fmi::to_string((int)def->reverseXDirection()));
-
-      double wm = 0;
-      double hm = 0;
-      if (def->getGridMetricCellSize(wm,hm))
-      {
-        attributeList.setAttribute("grid.cell.width",Fmi::to_string(wm));
-        attributeList.setAttribute("grid.cell.height",Fmi::to_string(hm));
-      }
-      else
-      {
-        attributeList.setAttribute("grid.original.cell.width.degrees",Fmi::to_string(wm));
-        attributeList.setAttribute("grid.original.cell.height.degrees",Fmi::to_string(hm));
-
-        def->getGridCellAverageSize(wm,hm);
-        attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
-        attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
-      }
-    }
+    if (!resolveGeometryDefinition(*this,attributeList,geometryIdStr,geometryStringStr,flipped,latLonCoordinates,width,height))
+      return;
 
     bool targetIsLatlon = false;
-    bool countSize = false;
+    bool countSize = isCountSize(attr);
 
-    if (gridCountSizeStr)
-    {
-      bool res = (bool)toInt32(gridCountSizeStr);
-      if (res  &&  gridCellWidthStr  &&  gridCellHeightStr)
-        countSize = true;
-    }
-
-    if (!gridWidthStr &&  !gridHeightStr)
-      countSize = true;
-
-    if ((urnStr  || crsStr )  &&  (bboxStr || llboxStr)  &&  ((gridWidthStr &&  gridHeightStr) ||  (gridCellWidthStr  &&  gridCellHeightStr)))
-    {
-      // If the geometry id defined by the URN / CRS then we need to the bounding box coordinates and preferred grid width and height.
-
-      std::vector<double> aa;
-      std::vector<double> bb;
-
-      if (bboxStr)
-        splitString(bboxStr,',',aa);
-
-      if (llboxStr)
-      {
-        splitString(llboxStr,',',bb);
-        if (bboxStr == nullptr)
-          aa = bb;
-      }
-
-      if (aa.size() == 4  &&  bb.size() == 4 && aa[0] == bb[0]  &&  aa[1] == bb[1]  &&  aa[2] == bb[2]  &&  aa[3] == bb[3])
-        targetIsLatlon = true;
-
-      if (aa.size() == 4)
-      {
-        std::vector<double> cc;
-
-        OGRSpatialReference sr_latlon;
-        // Use the well-known WGS84 geographic CRS rather than importFromEPSG(4326);
-        // the latter carries an authority (lat,lon) axis order that older GDAL/PROJ
-        // versions may not fully override with the traditional axis mapping, which
-        // can make the latlon->projected transform fail and leave the coordinates
-        // unchanged (then used as projected metres, producing a degenerate grid).
-        sr_latlon.SetWellKnownGeogCS("WGS84");
-        sr_latlon.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
-
-        OGRSpatialReference sr;
-
-        if (urnStr)
-        {
-          std::string urn = urnStr;
-          if (strncasecmp(urnStr,"urn:ogc:def:crs:",16) != 0)
-            urn = std::string("urn:ogc:def:crs:") + urnStr;
-
-          if (sr.importFromURN(urn.c_str()) != OGRERR_NONE)
-            throw Fmi::Exception(BCP, "Invalid urn '" + std::string(urnStr) + "'!");
-        }
-        else
-        if (proj4Str)
-        {
-          OGRErr err = sr.SetFromUserInput(proj4Str);
-          if (err != OGRERR_NONE)
-            throw Fmi::Exception(BCP, "Invalid proj4 '" + std::string(proj4Str) + "'!");
-        }
-        else
-        if (crsStr)
-        {
-          OGRErr err = sr.SetFromUserInput(crsStr);
-          if (err != OGRERR_NONE)
-            throw Fmi::Exception(BCP, "Invalid crs '" + std::string(crsStr) + "'!");
-        }
-
-        sr.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
-
-        auto transformation = make_ptr(OGRCreateCoordinateTransformation(&sr,&sr_latlon));
-        if (not transformation)
-          throw Fmi::Exception(BCP,"Cannot create coordinate transformation!");
-
-            std::shared_ptr<OGRCoordinateTransformation> reverseTransformation;
-
-        if (bboxStr)
-          cc = aa;
-        else
-        if (llboxStr)
-        {
-          reverseTransformation = make_ptr(OGRCreateCoordinateTransformation(&sr_latlon,&sr));
-          if (not reverseTransformation)
-          {
-            throw Fmi::Exception(BCP,"Cannot create coordinate transformation!");
-          }
-
-          double lon1 = aa[0];
-          double lat1 = aa[1];
-          double lon2 = aa[2];
-          double lat2 = aa[3];
-
-          int ok1 = 0, ok2 = 0;
-          int rc1 = reverseTransformation->Transform(1, &lon1, &lat1, nullptr, &ok1);
-          int rc2 = reverseTransformation->Transform(1, &lon2, &lat2, nullptr, &ok2);
-
-          // Do not silently use an unchanged (failed) result as projected coordinates
-          if (!(rc1 && ok1 && rc2 && ok2))
-            throw Fmi::Exception(BCP, "Failed to transform latlon bbox to the requested crs");
-
-          cc.emplace_back(lon1);
-          cc.emplace_back(lat1);
-          cc.emplace_back(lon2);
-          cc.emplace_back(lat2);
-
-          if (lon1 == aa[0]  &&  lat1 == aa[1]  && lon2 == aa[2]  &&  lat2 == aa[3])
-            targetIsLatlon = true;
-        }
-
-        double diffx = cc[2] - cc[0];
-        double diffy = cc[3] - cc[1];
-
-        double dx = 0;
-        double dy = 0;
-
-        if (!countSize  &&  gridWidthStr  &&  gridHeightStr)
-        {
-          width = toUInt32(gridWidthStr);
-          height = toUInt32(gridHeightStr);
-
-          dx = diffx / C_DOUBLE(width-1);
-          dy = diffy / C_DOUBLE(height-1);
-        }
-        else
-        {
-          if (gridCellWidthStr  &&  gridCellHeightStr)
-          {
-            // Trying to define width and height for the new grid.
-
-            // Size of the original grid cell (this might be metric or in degrees)
-            double dxx = toDouble(gridCellWidthStr);
-            double dyy = toDouble(gridCellHeightStr);
-
-            int origProjectionType = 0;
-            if (gridOriginalProjectionStr)
-              origProjectionType = atoi(gridOriginalProjectionStr);
-
-            if (targetIsLatlon)
-            {
-              // The target projection is latlon
-
-              if (origProjectionType == T::GridProjectionValue::LatLon || origProjectionType == T::GridProjectionValue::RotatedLatLon)
-              {
-                // The source projection is also latlon.
-                if (gridCellWidthDegrStr  &&  gridCellHeightDegrStr)
-                {
-                  dxx = toDouble(gridCellWidthDegrStr);
-                  dyy = toDouble(gridCellHeightDegrStr);
-                }
-
-                width = C_UINT(fabs(diffx) / dxx + 1);
-                height = C_UINT(fabs(diffy) / dyy + 1);
-              }
-              else
-              {
-                // The source is metric
-
-                // Counting metric width and height of the target projection
-
-                double longitudes = (cc[2]-cc[0]);
-                double latitudes = (cc[3]-cc[1]);
-
-                double centerLongitude = cc[0] + longitudes/2;
-                double centerLatitude = cc[1] + latitudes/2;
-
-                double w = latlon_width(centerLatitude,longitudes);
-                double h = latlon_height(centerLongitude,latitudes);
-
-                // Width and height (in pixels) for the new grid
-
-                width =  C_UINT(w/dxx);
-                height = C_UINT(h/dyy);
-              }
-            }
-            else
-            {
-              // The target projection is metric
-
-              width = C_UINT(fabs(diffx) / (dxx*1000) + 1);
-              height = C_UINT(fabs(diffy) / (dyy*1000) + 1);
-            }
-
-            if (gridWidthStr  &&  gridHeightStr)
-            {
-              uint w = toUInt32(gridWidthStr);
-              uint h = toUInt32(gridHeightStr);
-
-              if (width >= w  ||  height >= h)
-              {
-                width = w;
-                height = h;
-              }
-            }
-
-            dx = diffx / C_DOUBLE(width-1);
-            dy = diffy / C_DOUBLE(height-1);
-          }
-        }
-
-        if (width == 0 || height == 0 || width > 10000 || height > 10000)
-        {
-          Fmi::Exception exception(BCP,"Invalid grid size!");
-          exception.addParameter("width",std::to_string(width));
-          exception.addParameter("height",std::to_string(height));
-          throw exception;
-        }
-
-        if (targetIsLatlon)
-        {
-          attributeList.setAttribute("grid.cell.width",Fmi::to_string(fabs(dx)));
-          attributeList.setAttribute("grid.cell.height",Fmi::to_string(fabs(dy)));
-        }
-        else
-        {
-          attributeList.setAttribute("grid.cell.width",Fmi::to_string(fabs(dx/1000)));
-          attributeList.setAttribute("grid.cell.height",Fmi::to_string(fabs(dy/1000)));
-        }
-
-        if (!latLonCoordinates || latLonCoordinates->size() == 0)
-        {
-          uint sz = width*height;
-
-          if (!latLonCoordinates)
-            latLonCoordinates.reset(new T::Coordinate_vec());
-
-          if (!coordinates)
-            coordinates.reset(new T::Coordinate_vec());
-
-          coordinates->reserve(sz);
-          latLonCoordinates->reserve(sz);
-
-          double *lon = new double[sz+1];
-          double *lat = new double[sz+1];
-
-          std::unique_ptr<double[]> rlat(lat);
-          std::unique_ptr<double[]> rlon(lon);
-
-          double yy = cc[1];
-          int c = 0;
-          for (uint y=0; y<height; y++)
-          {
-            double xx = cc[0];
-            for (uint x=0; x<width; x++)
-            {
-              lon[c] = xx;
-              lat[c] = yy;
-
-              coordinates->emplace_back(xx,yy);
-
-              xx = xx + dx;
-              c++;
-            }
-            yy = yy + dy;
-          }
-
-          transformation->Transform(c,lon,lat);
-
-          for (int t=0; t<c; t++)
-          {
-            latLonCoordinates->emplace_back(getLongitude(lon[t]),lat[t]);
-          }
-        }
-      }
-    }
+    if ((urnStr  || crsStr )  &&  (bboxStr || llboxStr)  &&  ((attr.gridWidthStr &&  attr.gridHeightStr) ||  (attr.gridCellWidthStr  &&  attr.gridCellHeightStr)))
+      createProjectedGrid(attributeList,attr,urnStr,proj4Str,crsStr,true,bboxStr,llboxStr,countSize,targetIsLatlon,width,height,latLonCoordinates,&coordinates);
   }
   catch (...)
   {
@@ -3326,14 +2823,7 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
     const char *crop_llboxStr = attributeList.getAttributeValue("grid.crop.llbox");
     const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
     const char *geometryStringStr = attributeList.getAttributeValue("grid.geometryString");
-    const char *gridWidthStr = attributeList.getAttributeValue("grid.width");
-    const char *gridHeightStr = attributeList.getAttributeValue("grid.height");
-    const char *gridCountSizeStr = attributeList.getAttributeValue("grid.countSize");
-    const char *gridCellWidthStr = attributeList.getAttributeValue("grid.original.cell.width");
-    const char *gridCellHeightStr = attributeList.getAttributeValue("grid.original.cell.height");
-    const char *gridCellWidthDegrStr = attributeList.getAttributeValue("grid.original.cell.width.degrees");
-    const char *gridCellHeightDegrStr = attributeList.getAttributeValue("grid.original.cell.height.degrees");
-    const char *gridOriginalProjectionStr = attributeList.getAttributeValue("grid.original.projectionType");
+    GridSizeAttributes attr(attributeList);
     const char *flipped = attributeList.getAttributeValue("grid.flipped");
 
     if (geometryIdStr == nullptr  &&  geometryStringStr == nullptr  &&  urnStr == nullptr  &&  crsStr == nullptr)
@@ -3354,363 +2844,17 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
       crsStr = originalCrsStr;
     }
 
-
-    // Checking if the geometry is defined by the geometryId
-
-    GRIB2::GridDef_sptr def;
-    if (geometryIdStr)
-    {
-      def = getGrib2DefinitionByGeometryId(toInt32(geometryIdStr));
-      if (!def)
-        return;
-
-      if (flipped)
-      {
-        auto originalCoords = def->getGridLatLonCoordinates();
-        int sz = originalCoords->size();
-
-        if (sz)
-        {
-          T::Coordinate_svec newCoords(new T::Coordinate_vec());
-          newCoords->reserve(sz);
-
-          T::Dimensions d = def->getGridDimensions();
-          int nx = d.nx();
-          int ny = d.ny();
-
-          for (int y = ny-1; y >= 0; y--)
-          {
-            for (int x = 0; x < nx; x++)
-            {
-              auto cc = (*originalCoords)[y*nx + x];
-              newCoords->emplace_back(cc);
-            }
-          }
-
-          latLonCoordinates = newCoords;
-        }
-      }
-      else
-      {
-        latLonCoordinates = def->getGridLatLonCoordinates();
-      }
-    }
-
-
-    // Checking if the geometry is defigned by the geometry string
-
-    if (!def &&  geometryStringStr)
-    {
-      auto defPtr =  Identification::gridDef.createGrib2GridDefinition(geometryStringStr);
-      if (!defPtr)
-        return;
-
-      def.reset(defPtr);
-      latLonCoordinates = def->getGridLatLonCoordinates();
-    }
-
-    if (def)
-    {
-      // If we have valid geometry definition then we know the grid width and the height.
-
-      T::Dimensions d = def->getGridDimensions();
-      width = d.nx();
-      height = d.ny();
-      attributeList.setAttribute("grid.original.reverseYDirection",Fmi::to_string((int)def->reverseYDirection()));
-      attributeList.setAttribute("grid.original.reverseXDirection",Fmi::to_string((int)def->reverseXDirection()));
-
-      double wm = 0;
-      double hm = 0;
-      if (def->getGridMetricCellSize(wm,hm))
-      {
-        attributeList.setAttribute("grid.cell.width",Fmi::to_string(wm));
-        attributeList.setAttribute("grid.cell.height",Fmi::to_string(hm));
-      }
-      else
-      {
-        attributeList.setAttribute("grid.original.cell.width.degrees",Fmi::to_string(wm));
-        attributeList.setAttribute("grid.original.cell.height.degrees",Fmi::to_string(hm));
-
-        def->getGridCellAverageSize(wm,hm);
-        attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
-        attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
-      }
-    }
+    if (!resolveGeometryDefinition(*this,attributeList,geometryIdStr,geometryStringStr,flipped,latLonCoordinates,width,height))
+      return;
 
     bool targetIsLatlon = false;
-    bool countSize = false;
+    bool countSize = isCountSize(attr);
 
-    if (gridCountSizeStr)
-    {
-      bool res = (bool)toInt32(gridCountSizeStr);
-      if (res  &&  gridCellWidthStr  &&  gridCellHeightStr)
-        countSize = true;
-    }
+    if ((urnStr || crsStr || proj4Str)  &&  (bboxStr ||  llboxStr) && ((attr.gridWidthStr  &&  attr.gridHeightStr) ||  (attr.gridCellWidthStr  &&  attr.gridCellHeightStr)))
+      createProjectedGrid(attributeList,attr,urnStr,proj4Str,crsStr,false,bboxStr,llboxStr,countSize,targetIsLatlon,width,height,latLonCoordinates,nullptr);
 
-    if (!gridWidthStr &&  !gridHeightStr)
-      countSize = true;
-
-    if ((urnStr || crsStr || proj4Str)  &&  (bboxStr ||  llboxStr) && ((gridWidthStr  &&  gridHeightStr) ||  (gridCellWidthStr  &&  gridCellHeightStr)))
-    {
-      // If the geometry id defined by the URN then we need to the bounding box coordinates and preferred grid width and height.
-
-      std::vector<double> aa;
-      std::vector<double> bb;
-
-      if (bboxStr)
-        splitString(bboxStr,',',aa);
-
-      if (llboxStr)
-      {
-        splitString(llboxStr,',',bb);
-        if (bboxStr == nullptr)
-          aa = bb;
-      }
-
-      if (aa.size() == 4  &&  bb.size() == 4 && aa[0] == bb[0]  &&  aa[1] == bb[1]  &&  aa[2] == bb[2]  &&  aa[3] == bb[3])
-        targetIsLatlon = true;
-
-      if (aa.size() == 4)
-      {
-        std::vector<double> cc;
-
-        OGRSpatialReference sr_latlon;
-        // Use the well-known WGS84 geographic CRS rather than importFromEPSG(4326);
-        // the latter carries an authority (lat,lon) axis order that older GDAL/PROJ
-        // versions may not fully override with the traditional axis mapping, which
-        // can make the latlon->projected transform fail and leave the coordinates
-        // unchanged (then used as projected metres, producing a degenerate grid).
-        sr_latlon.SetWellKnownGeogCS("WGS84");
-        sr_latlon.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
-
-        OGRSpatialReference sr;
-
-        if (urnStr)
-        {
-          std::string urn = urnStr;
-          if (strncasecmp(urnStr,"urn:ogc:def:crs:",16) != 0)
-            urn = std::string("urn:ogc:def:crs:") + urnStr;
-
-          if (sr.importFromURN(urn.c_str()) != OGRERR_NONE)
-            throw Fmi::Exception(BCP, "Invalid urn '" + std::string(urnStr) + "'!");
-        }
-        else
-        if (crsStr)
-        {
-          if (sr.SetFromUserInput(crsStr) != OGRERR_NONE)
-            throw Fmi::Exception(BCP, "Invalid crs '" + std::string(crsStr) + "'!");
-        }
-        else
-        if (proj4Str)
-        {
-          OGRErr err = sr.SetFromUserInput(proj4Str);
-          if (err != OGRERR_NONE)
-            throw Fmi::Exception(BCP, "Invalid proj4 '" + std::string(proj4Str) + "'!");
-        }
-        sr.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
-
-        std::shared_ptr<OGRCoordinateTransformation> transformation =
-            make_ptr(OGRCreateCoordinateTransformation(&sr,&sr_latlon));
-        if (transformation == nullptr)
-          throw Fmi::Exception(BCP,"Cannot create coordinate transformation!");
-
-        std::shared_ptr<OGRCoordinateTransformation> reverseTransformation;
-
-        if (bboxStr)
-          cc = aa;
-        else
-        if (llboxStr)
-        {
-          reverseTransformation = make_ptr(OGRCreateCoordinateTransformation(&sr_latlon,&sr));
-          if (not reverseTransformation)
-          {
-            throw Fmi::Exception(BCP,"Cannot create coordinate transformation!");
-          }
-
-          double lon1 = aa[0];
-          double lat1 = aa[1];
-          double lon2 = aa[2];
-          double lat2 = aa[3];
-
-          int ok1 = 0, ok2 = 0;
-          int rc1 = reverseTransformation->Transform(1, &lon1, &lat1, nullptr, &ok1);
-          int rc2 = reverseTransformation->Transform(1, &lon2, &lat2, nullptr, &ok2);
-
-          // Do not silently use an unchanged (failed) result as projected coordinates
-          if (!(rc1 && ok1 && rc2 && ok2))
-            throw Fmi::Exception(BCP, "Failed to transform latlon bbox to the requested crs");
-
-          cc.emplace_back(lon1);
-          cc.emplace_back(lat1);
-          cc.emplace_back(lon2);
-          cc.emplace_back(lat2);
-
-          if (lon1 == aa[0]  &&  lat1 == aa[1]  && lon2 == aa[2]  &&  lat2 == aa[3])
-            targetIsLatlon = true;
-        }
-
-        double diffx = cc[2] - cc[0];
-        double diffy = cc[3] - cc[1];
-        double dx = 0;
-        double dy = 0;
-
-        if (!countSize  &&  gridWidthStr  &&  gridHeightStr)
-        {
-          width = toUInt32(gridWidthStr);
-          height = toUInt32(gridHeightStr);
-
-          dx = diffx / C_DOUBLE(width-1);
-          dy = diffy / C_DOUBLE(height-1);
-        }
-        else
-        {
-          if (gridCellWidthStr  &&  gridCellHeightStr)
-          {
-            // Trying to define width and height for the new grid.
-
-            // Size of the original grid cell (this might be metric or in degrees)
-            double dxx = toDouble(gridCellWidthStr);
-            double dyy = toDouble(gridCellHeightStr);
-
-            int origProjectionType = 0;
-            if (gridOriginalProjectionStr != NULL)
-              origProjectionType = atoi(gridOriginalProjectionStr);
-
-            if (targetIsLatlon)
-            {
-              // The target projection is latlon
-
-              if (origProjectionType == T::GridProjectionValue::LatLon || origProjectionType == T::GridProjectionValue::RotatedLatLon)
-              {
-                // The source projection is also latlon.
-                if (gridCellWidthDegrStr  &&  gridCellHeightDegrStr)
-                {
-                  dxx = toDouble(gridCellWidthDegrStr);
-                  dyy = toDouble(gridCellHeightDegrStr);
-                }
-
-                width = C_UINT(fabs(diffx) / dxx + 1);
-                height = C_UINT(fabs(diffy) / dyy + 1);
-              }
-              else
-              {
-                // The source is metric
-
-                // Counting metric width and height of the target projection
-
-                double longitudes = (cc[2]-cc[0]);
-                double latitudes = (cc[3]-cc[1]);
-
-                double centerLongitude = cc[0] + longitudes/2;
-                double centerLatitude = cc[1] + latitudes/2;
-
-                double w = latlon_width(centerLatitude,longitudes);
-                double h = latlon_height(centerLongitude,latitudes);
-
-                // Width and height (in pixels) for the new grid
-
-                width =  C_UINT(w/dxx);
-                height = C_UINT(h/dyy);
-              }
-            }
-            else
-            {
-              // The target projection is metric
-
-              width = C_UINT(fabs(diffx) / (dxx*1000) + 1);
-              height = C_UINT(fabs(diffy) / (dyy*1000) + 1);
-            }
-
-            if (gridWidthStr  &&  gridHeightStr)
-            {
-              uint w = toUInt32(gridWidthStr);
-              uint h = toUInt32(gridHeightStr);
-
-              if (width >= w  ||  height >= h)
-              {
-                width = w;
-                height = h;
-              }
-            }
-
-            dx = diffx / C_DOUBLE(width-1);
-            dy = diffy / C_DOUBLE(height-1);
-          }
-        }
-
-        if (width == 0 || height == 0 || width > 10000 || height > 10000)
-        {
-          Fmi::Exception exception(BCP,"Invalid grid size!");
-          exception.addParameter("width",std::to_string(width));
-          exception.addParameter("height",std::to_string(height));
-          throw exception;
-        }
-
-        if (targetIsLatlon)
-        {
-          attributeList.setAttribute("grid.cell.width",Fmi::to_string(fabs(dx)));
-          attributeList.setAttribute("grid.cell.height",Fmi::to_string(fabs(dy)));
-        }
-        else
-        {
-          attributeList.setAttribute("grid.cell.width",Fmi::to_string(fabs(dx/1000)));
-          attributeList.setAttribute("grid.cell.height",Fmi::to_string(fabs(dy/1000)));
-        }
-
-
-        if (!latLonCoordinates || latLonCoordinates->size() == 0)
-        {
-          uint sz = width*height;
-
-          if (!latLonCoordinates)
-            latLonCoordinates.reset(new T::Coordinate_vec());
-
-          latLonCoordinates->reserve(sz);
-
-          double *lon = new double[sz+1];
-          double *lat = new double[sz+1];
-
-          std::unique_ptr<double[]> rlat(lat);
-          std::unique_ptr<double[]> rlon(lon);
-
-          int c = 0;
-          double yy = cc[1];
-          for (uint y=0; y<height; y++)
-          {
-            double xx = cc[0];
-            for (uint x=0; x<width; x++)
-            {
-              lon[c] = xx;
-              lat[c] = yy;
-
-              xx = xx + dx;
-              c++;
-            }
-            yy = yy + dy;
-          }
-
-          transformation->Transform(c,lon,lat);
-          for (int t=0; t<c; t++)
-          {
-            latLonCoordinates->emplace_back(getLongitude(lon[t]),lat[t]);
-          }
-        }
-      }
-    }
-
-    if (latLonCoordinates && latLonCoordinates->size() > 0)
-    {
-      int last = latLonCoordinates->size() - 1;
-      char tmp[100];
-      sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",(*latLonCoordinates)[0].x(),(*latLonCoordinates)[0].y(),(*latLonCoordinates)[last].x(),(*latLonCoordinates)[last].y());
-
-
-      if (!flipped)
-        attributeList.setAttribute("grid.llbox",tmp);
-
-      if (targetIsLatlon &&  !flipped)
-        attributeList.setAttribute("grid.bbox",tmp);
-    }
+    if (latLonCoordinates && !latLonCoordinates->empty())
+      setLatLonBoxAttributes(attributeList,latLonCoordinates,flipped,targetIsLatlon);
   }
   catch (...)
   {
@@ -3729,10 +2873,10 @@ GRIB1::GridDef_sptr GridDef::getGrib1DefinitionByGeometryId(int geometryId)
   FUNCTION_TRACE
   try
   {
-    for (auto it = mGridDefinitions1.begin(); it != mGridDefinitions1.end(); ++it)
+    for (auto& it : mGridDefinitions1)
     {
-      if (it->second->getGridGeometryId() == geometryId)
-        return it->second;
+      if (it.second->getGridGeometryId() == geometryId)
+        return it.second;
     }
 
     return nullptr;
@@ -3749,7 +2893,7 @@ GRIB1::GridDef_sptr GridDef::getGrib1DefinitionByGeometryId(int geometryId)
 
 /*! \brief Returns the GRIB1 grid definition matching the given GRIB1 message. */
 
-GRIB1::GridDef_sptr GridDef::getGrib1Definition(GRIB1::Message& message)
+GRIB1::GridDef_sptr GridDef::getGrib1Definition(const GRIB1::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -3797,7 +2941,7 @@ GRIB1::GridDef_sptr GridDef::getGrib1DefinitionByGeometryString(const char *geom
 
 /*! \brief Returns the GRIB1 grid definition matching the given geometry string. */
 
-GRIB1::GridDef_sptr GridDef::getGrib1DefinitionByGeometryString(std::string& geometryStr)
+GRIB1::GridDef_sptr GridDef::getGrib1DefinitionByGeometryString(const std::string& geometryStr)
 {
   FUNCTION_TRACE
   try
@@ -3843,7 +2987,7 @@ GRIB2::GridDef_sptr GridDef::getGrib2DefinitionByGeometryString(const char *geom
 
 /*! \brief Returns the GRIB2 grid definition matching the given geometry string. */
 
-GRIB2::GridDef_sptr GridDef::getGrib2DefinitionByGeometryString(std::string& geometryStr)
+GRIB2::GridDef_sptr GridDef::getGrib2DefinitionByGeometryString(const std::string& geometryStr)
 {
   FUNCTION_TRACE
   try
@@ -3866,7 +3010,7 @@ GRIB2::GridDef_sptr GridDef::getGrib2DefinitionByGeometryString(std::string& geo
 
 /*! \brief Returns the GRIB2 grid definition matching the given GRIB2 message. */
 
-GRIB2::GridDef_sptr GridDef::getGrib2Definition(GRIB2::Message& message)
+GRIB2::GridDef_sptr GridDef::getGrib2Definition(const GRIB2::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -3896,10 +3040,10 @@ GRIB2::GridDef_sptr GridDef::getGrib2DefinitionByGeometryId(int geometryId)
   FUNCTION_TRACE
   try
   {
-    for (auto it = mGridDefinitions2.begin(); it != mGridDefinitions2.end(); ++it)
+    for (auto& it : mGridDefinitions2)
     {
-      if (it->second->getGridGeometryId() == geometryId)
-        return it->second;
+      if (it.second->getGridGeometryId() == geometryId)
+        return it.second;
     }
     return nullptr;
   }
@@ -3914,7 +3058,7 @@ GRIB2::GridDef_sptr GridDef::getGrib2DefinitionByGeometryId(int geometryId)
 
 /*! \brief Returns the geometry id for the grid in the given GRIB1 message. */
 
-int GridDef::getGrib1GeometryId(GRIB1::Message& message)
+int GridDef::getGrib1GeometryId(const GRIB1::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -3940,7 +3084,7 @@ int GridDef::getGrib1GeometryId(GRIB1::Message& message)
 
 /*! \brief Returns the geometry id for the grid in the given GRIB2 message. */
 
-int GridDef::getGrib2GeometryId(GRIB2::Message& message)
+int GridDef::getGrib2GeometryId(const GRIB2::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -4205,15 +3349,15 @@ void GridDef::getGeometryIdList(std::set<T::GeometryId>& geometryIdList)
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    for (auto it = mGridDefinitions2.begin(); it != mGridDefinitions2.end(); ++it)
+    for (auto& it : mGridDefinitions2)
     {
-      T::GeometryId geometryId = it->second->getGridGeometryId();
+      T::GeometryId geometryId = it.second->getGridGeometryId();
       geometryIdList.insert(geometryId);
     }
 
-    for (auto it = mGridDefinitions1.begin(); it != mGridDefinitions1.end(); ++it)
+    for (auto& it : mGridDefinitions1)
     {
-      T::GeometryId geometryId = it->second->getGridGeometryId();
+      T::GeometryId geometryId = it.second->getGridGeometryId();
       geometryIdList.insert(geometryId);
     }
   }
@@ -4237,26 +3381,26 @@ void GridDef::getGeometryIdListByLatLon(double lat,double lon,std::set<T::Geomet
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    for (auto it = mGridDefinitions2.begin(); it != mGridDefinitions2.end(); ++it)
+    for (auto& it : mGridDefinitions2)
     {
       double grid_i = 0;
       double grid_j = 0;
 
-      if (it->second->getGridPointByLatLonCoordinates(lat,lon,grid_i,grid_j))
+      if (it.second->getGridPointByLatLonCoordinates(lat,lon,grid_i,grid_j))
       {
-        T::GeometryId geometryId = it->second->getGridGeometryId();
+        T::GeometryId geometryId = it.second->getGridGeometryId();
         geometryIdList.insert(geometryId);
       }
     }
 
-    for (auto it=mGridDefinitions1.begin(); it!=mGridDefinitions1.end(); ++it)
+    for (auto& it : mGridDefinitions1)
     {
       double grid_i = 0;
       double grid_j = 0;
 
-      if (it->second->getGridPointByLatLonCoordinates(lat,lon,grid_i,grid_j))
+      if (it.second->getGridPointByLatLonCoordinates(lat,lon,grid_i,grid_j))
       {
-        T::GeometryId geometryId = it->second->getGridGeometryId();
+        T::GeometryId geometryId = it.second->getGridGeometryId();
         geometryIdList.insert(geometryId);
       }
     }
@@ -4315,13 +3459,422 @@ void GridDef::loadGeometryDefinitions(const char *filename)
         }
       }
     }
-    fclose(file);
+    (void)fclose(file);
   }
   catch (...)
   {
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
+
+
+
+
+
+namespace
+{
+/*! \brief Creates the GRIB1 LatLon grid definition from the CSV fields. */
+
+GRIB1::GridDefinition* createGrib1LatLon(char *field[],uint c,GeometryNames& geometryNames)
+{
+  if (c < 10)
+    return nullptr;
+
+  uint geometryId = toInt32(field[1]);
+  char *geometryName = field[2];
+  int ni = toInt32(field[3]);
+  int nj = toInt32(field[4]);
+  int longitude = C_INT(round(toDouble(field[5])*1000));
+  int latitude = C_INT(round(toDouble(field[6])*1000));
+  int lastLongitude = 0;
+  int lastLatitude = 0;
+  int iInc = C_INT(round(toDouble(field[7]) * 1000));
+  int jInc = C_INT(round(toDouble(field[8]) * 1000));
+  // The last grid point from the exact increments: GRIB1 increments are whole
+  // millidegrees, and n times a rounded increment can overshoot a whole cell
+  int iSpan = C_INT(round((ni-1) * toDouble(field[7]) * 1000));
+  int jSpan = C_INT(round((nj-1) * toDouble(field[8]) * 1000));
+  char *scanningMode = field[9];
+  double earthSemiMajor = toDouble(field[10]);
+  double earthSemiMinor = toDouble(field[11]);
+
+  auto *def1 = new GRIB1::LatLonImpl();
+  GRIB1::GridAreaSettings gridArea;
+  GRIB1::ScanningModeSettings scanningMode1;
+  if (strcasecmp(scanningMode,"+x+y") == 0)
+  {
+    lastLongitude = longitude + iSpan;
+    lastLatitude = latitude + jSpan;
+    scanningMode1.setScanningMode(0x40);
+  }
+  else if (strcasecmp(scanningMode,"-x+y") == 0)
+  {
+    lastLongitude = longitude - iSpan;
+    lastLatitude = latitude + jSpan;
+    scanningMode1.setScanningMode(0x80+0x40);
+  }
+  else if (strcasecmp(scanningMode,"+x-y") == 0)
+  {
+    lastLongitude = longitude + iSpan;
+    lastLatitude = latitude - jSpan;
+    scanningMode1.setScanningMode(0);
+  }
+  else if (strcasecmp(scanningMode,"-x-y") == 0)
+  {
+    lastLongitude = longitude - iSpan;
+    lastLatitude = latitude - jSpan;
+    scanningMode1.setScanningMode(0x80);
+  }
+
+  if (lastLongitude > 360000)
+    lastLongitude -= 360000;
+
+  if (lastLatitude > 90000)
+    lastLatitude = 180000 - lastLatitude;
+
+  def1->setScanningMode(scanningMode1);
+
+  GRIB1::ResolutionFlagsSettings resolutionFlags;
+  resolutionFlags.setResolutionAndComponentFlags(128);
+  gridArea.setResolutionFlags(resolutionFlags);
+
+  gridArea.setLatitudeOfFirstGridPoint(latitude);
+  gridArea.setLongitudeOfFirstGridPoint(longitude);
+  gridArea.setLatitudeOfLastGridPoint(lastLatitude);
+  gridArea.setLongitudeOfLastGridPoint(lastLongitude);
+  def1->setGridArea(gridArea);
+
+  def1->setNi(ni);
+  def1->setNj(nj);
+  def1->setIDirectionIncrement(iInc);
+  def1->setJDirectionIncrement(jInc);
+
+  def1->setGridGeometryId(geometryId);
+  geometryNames.insert(std::pair<uint,std::string>(geometryId,geometryName));
+  def1->setEarthSemiMajor(earthSemiMajor);
+  def1->setEarthSemiMinor(earthSemiMinor);
+  def1->initSpatialReference();
+  def1->countHash();
+
+  return def1;
+}
+
+
+
+
+
+/*! \brief Creates the GRIB1 RotatedLatLon grid definition from the CSV fields. */
+
+GRIB1::GridDefinition* createGrib1RotatedLatLon(char *field[],uint c,GeometryNames& geometryNames)
+{
+  if (c < 13)
+    return nullptr;
+
+  uint geometryId = toInt32(field[1]);
+  char *geometryName = field[2];
+  int ni = toInt32(field[3]);
+  int nj = toInt32(field[4]);
+  int longitude = C_INT(round(toDouble(field[5])*1000));
+  int latitude = C_INT(round(toDouble(field[6])*1000));
+  int lastLongitude = 0;
+  int lastLatitude = 0;
+  int iInc = C_INT(round(toDouble(field[7]) * 1000));
+  int jInc = C_INT(round(toDouble(field[8]) * 1000));
+  // The last grid point from the exact increments: GRIB1 increments are whole
+  // millidegrees, and n times a rounded increment can overshoot a whole cell
+  int iSpan = C_INT(round((ni-1) * toDouble(field[7]) * 1000));
+  int jSpan = C_INT(round((nj-1) * toDouble(field[8]) * 1000));
+  char *scanningMode = field[9];
+  int longitudeOfSouthernPole = C_INT(round(toDouble(field[10])*1000));
+  int latitudeOfSouthernPole = C_INT(round(toDouble(field[11])*1000));
+  int angle = round(toDouble(field[12]));
+  double earthSemiMajor = toDouble(field[13]);
+  double earthSemiMinor = toDouble(field[14]);
+  //std::uint8_t resolutionAndComponentFlags = 48;
+
+  auto *def1 = new GRIB1::RotatedLatLonImpl();
+  GRIB1::GridAreaSettings gridArea;
+  GRIB1::RotationSettings rotation1;
+  GRIB1::ScanningModeSettings scanningMode1;
+
+  if (strcasecmp(scanningMode,"+x+y") == 0)
+  {
+    lastLongitude = longitude + iSpan;
+    lastLatitude = latitude + jSpan;
+    scanningMode1.setScanningMode(0x40);
+  }
+  else if (strcasecmp(scanningMode,"-x+y") == 0)
+  {
+    lastLongitude = longitude - iSpan;
+    lastLatitude = latitude + jSpan;
+    scanningMode1.setScanningMode(0x80+0x40);
+  }
+  else if (strcasecmp(scanningMode,"+x-y") == 0)
+  {
+    lastLongitude = longitude + iSpan;
+    lastLatitude = latitude - jSpan;
+    scanningMode1.setScanningMode(0);
+  }
+  else if (strcasecmp(scanningMode,"-x-y") == 0)
+  {
+    lastLongitude = longitude - iSpan;
+    lastLatitude = latitude - jSpan;
+    scanningMode1.setScanningMode(0x80);
+  }
+
+  if (lastLongitude > 360000)
+    lastLongitude -= 360000;
+
+  if (lastLatitude > 90000)
+    lastLatitude = 180000 - lastLatitude;
+
+  def1->setScanningMode(scanningMode1);
+
+  gridArea.setLatitudeOfFirstGridPoint(latitude);
+  gridArea.setLongitudeOfFirstGridPoint(longitude);
+  gridArea.setLatitudeOfLastGridPoint(lastLatitude);
+  gridArea.setLongitudeOfLastGridPoint(lastLongitude);
+
+  rotation1.setLatitudeOfSouthernPole(latitudeOfSouthernPole);
+  rotation1.setLongitudeOfSouthernPole(longitudeOfSouthernPole);
+  rotation1.setGeography_angleOfRotationInDegrees(angle);
+  def1->setRotation(rotation1);
+
+  def1->setNi(ni);
+  def1->setNj(nj);
+  def1->setGridArea(gridArea);
+  def1->setIDirectionIncrement(iInc);
+  def1->setJDirectionIncrement(jInc);
+
+  def1->setGridGeometryId(geometryId);
+  geometryNames.insert(std::pair<uint,std::string>(geometryId,geometryName));
+  def1->setEarthSemiMajor(earthSemiMajor);
+  def1->setEarthSemiMinor(earthSemiMinor);
+  def1->initSpatialReference();
+  def1->countHash();
+
+  return def1;
+}
+
+
+
+
+
+/*! \brief Creates the GRIB1 Mercator grid definition from the CSV fields. */
+
+[[maybe_unused]] GRIB1::GridDefinition* createGrib1Mercator(char *field[],uint c,GeometryNames& geometryNames)
+{
+  if (c < 12)
+    return nullptr;
+
+  uint geometryId = toInt32(field[1]);
+  char *geometryName = field[2];
+  int ni = toInt32(field[3]);
+  int nj = toInt32(field[4]);
+  int longitude = C_INT(round(toDouble(field[5])*1000));
+  int latitude = C_INT(round(toDouble(field[6])*1000));
+  int lastLongitude = 0;
+  int lastLatitude = 0;
+  int iInc = C_INT(round(toDouble(field[7])));
+  int jInc = C_INT(round(toDouble(field[8])));
+  char *scanningMode = field[9];
+  int latin = C_INT(round(toDouble(field[10])*1000));
+
+  auto *def1 = new GRIB1::MercatorImpl();
+  GRIB1::ScanningModeSettings scanningMode1;
+
+  if (strcasecmp(scanningMode,"+x+y") == 0)
+  {
+    lastLongitude = longitude + ni*iInc - iInc;
+    lastLatitude = latitude + nj*jInc - jInc;
+    scanningMode1.setScanningMode(0x40);
+  }
+  else if (strcasecmp(scanningMode,"-x+y") == 0)
+  {
+    lastLongitude = longitude - ni*iInc + iInc;
+    lastLatitude = latitude + nj*jInc - jInc;
+    scanningMode1.setScanningMode(0x80+0x40);
+  }
+  else if (strcasecmp(scanningMode,"+x-y") == 0)
+  {
+    lastLongitude = longitude + ni*iInc - iInc;
+    lastLatitude = latitude - nj*jInc + jInc;
+    scanningMode1.setScanningMode(0);
+  }
+  else if (strcasecmp(scanningMode,"-x-y") == 0)
+  {
+    lastLongitude = longitude - ni*iInc + iInc;
+    lastLatitude = latitude - nj*jInc + jInc;
+    scanningMode1.setScanningMode(0x80);
+  }
+
+  if (lastLongitude > 360000)
+    lastLongitude -= 360000;
+
+  if (lastLatitude > 90000)
+    lastLatitude = 180000 - lastLatitude;
+
+  def1->setScanningMode(scanningMode1);
+
+  def1->setNi(std::uint16_t(ni));
+  def1->setNj(std::uint16_t(nj));
+
+  GRIB1::GridAreaSettings gridArea;
+  gridArea.setLatitudeOfFirstGridPoint(latitude);
+  gridArea.setLongitudeOfFirstGridPoint(longitude);
+  gridArea.setLatitudeOfLastGridPoint(lastLatitude);
+  gridArea.setLongitudeOfLastGridPoint(lastLongitude);
+  def1->setGridArea(gridArea);
+  def1->setDiInMetres(iInc);
+  def1->setDjInMetres(jInc);
+  def1->setLatin((SmartMet::int24_t)latin);
+
+  def1->setGridGeometryId(geometryId);
+  geometryNames.insert(std::pair<uint,std::string>(geometryId,geometryName));
+  //def1->setEarthSemiMajor(earthSemiMajor);
+  //def1->setEarthSemiMinor(earthSemiMinor);
+  def1->initSpatialReference();
+  def1->countHash();
+
+  return def1;
+}
+
+
+
+
+
+/*! \brief Creates the GRIB1 PolarStereographic grid definition from the CSV fields. */
+
+GRIB1::GridDefinition* createGrib1PolarStereographic(char *field[],uint c,GeometryNames& geometryNames)
+{
+  if (c < 12)
+    return nullptr;
+
+  uint geometryId = toInt32(field[1]);
+  char *geometryName = field[2];
+  int ni = toInt32(field[3]);
+  int nj = toInt32(field[4]);
+  int longitude = C_INT(round(toDouble(field[5])*1000));
+  int latitude = C_INT(round(toDouble(field[6])*1000));
+  int iInc = C_INT(round(toDouble(field[7])));
+  int jInc = C_INT(round(toDouble(field[8])));
+  char *scanningMode = field[9];
+  int orientation = C_INT(round(toDouble(field[10])*1000));
+  //int laD = C_INT(round(toDouble(field[11]) * 1000000));
+  double earthSemiMajor = toDouble(field[12]);
+  double earthSemiMinor = toDouble(field[13]);
+
+  auto *def1 = new GRIB1::PolarStereographicImpl();
+  GRIB1::ScanningModeSettings scanningMode1;
+
+  if (strcasecmp(scanningMode,"+x+y") == 0)
+    scanningMode1.setScanningMode(0x40);
+  else if (strcasecmp(scanningMode,"-x+y") == 0)
+    scanningMode1.setScanningMode(0x80+0x40);
+  else if (strcasecmp(scanningMode,"+x-y") == 0)
+    scanningMode1.setScanningMode(0);
+  else if (strcasecmp(scanningMode,"-x-y") == 0)
+    scanningMode1.setScanningMode(0x80);
+
+  def1->setScanningMode(scanningMode1);
+
+  def1->setNx(std::uint16_t(ni));
+  def1->setNy(std::uint16_t(nj));
+  def1->setLatitudeOfFirstGridPoint(latitude);
+  def1->setLongitudeOfFirstGridPoint(longitude);
+  //def1->setResolutionFlags(ResolutionFlagsSettings resolutionFlags);
+  //def1->setLoV(orientation/1000);
+  def1->setOrientationOfTheGrid(orientation);
+  def1->setDxInMetres(iInc);
+  def1->setDyInMetres(jInc);
+  //def1->setProjectionCentreFlag(std::uint8_t projectionCentreFlag);
+  //def1->setLatin1((SmartMet::int24_t)latin1/1000);
+  //def1->setLatin2((SmartMet::int24_t)latin2/1000);
+  //def1->setLatitudeOfSouthernPole((SmartMet::int24_t)latitudeOfSouthernPole/1000);
+  //def1->setLongitudeOfSouthernPole((SmartMet::int24_t)longitudeOfSouthernPole/1000);
+
+  def1->setGridGeometryId(geometryId);
+  geometryNames.insert(std::pair<uint,std::string>(geometryId,geometryName));
+  def1->setEarthSemiMajor(earthSemiMajor);
+  def1->setEarthSemiMinor(earthSemiMinor);
+  def1->initSpatialReference();
+  def1->countHash();
+
+  return def1;
+}
+
+
+
+
+
+/*! \brief Creates the GRIB1 LambertConformal grid definition from the CSV fields. */
+
+GRIB1::GridDefinition* createGrib1LambertConformal(char *field[],uint c,GeometryNames& geometryNames)
+{
+  if (c < 15)
+    return nullptr;
+
+  uint geometryId = toInt32(field[1]);
+  char *geometryName = field[2];
+  int ni = toInt32(field[3]);
+  int nj = toInt32(field[4]);
+  int longitude = C_INT(round(toDouble(field[5])*1000));
+  int latitude = C_INT(round(toDouble(field[6])*1000));
+  int iInc = toInt32(field[7]);
+  int jInc = toInt32(field[8]);
+  char *scanningMode = field[9];
+  int orientation = C_INT(round(toDouble(field[10])*1000));
+  int latin1 = C_INT(round(toDouble(field[11])*1000));
+  int latin2 = C_INT(round(toDouble(field[12])*1000));
+  int longitudeOfSouthernPole = C_INT(round(toDouble(field[13])*1000));
+  int latitudeOfSouthernPole = C_INT(round(toDouble(field[14])*1000));
+  //double laD = toDouble(field[15]);
+  double earthSemiMajor = toDouble(field[16]);
+  double earthSemiMinor = toDouble(field[17]);
+
+  auto *def1 = new GRIB1::LambertConformalImpl();
+  GRIB1::ScanningModeSettings scanningMode1;
+
+  if (strcasecmp(scanningMode,"+x+y") == 0)
+     scanningMode1.setScanningMode(0x40);
+  else if (strcasecmp(scanningMode,"-x+y") == 0)
+    scanningMode1.setScanningMode(0x80+0x40);
+  else if (strcasecmp(scanningMode,"+x-y") == 0)
+    scanningMode1.setScanningMode(0);
+  else if (strcasecmp(scanningMode,"-x-y") == 0)
+    scanningMode1.setScanningMode(0x80);
+
+  def1->setScanningMode(scanningMode1);
+
+  def1->setNx(std::uint16_t(ni));
+  def1->setNy(std::uint16_t(nj));
+  def1->setLatitudeOfFirstGridPoint(latitude);
+  def1->setLongitudeOfFirstGridPoint(longitude);
+  //def1->setResolutionFlags(ResolutionFlagsSettings resolutionFlags);
+  def1->setLoV(orientation);
+  def1->setDxInMetres(iInc);
+  def1->setDyInMetres(jInc);
+  //def1->setProjectionCentreFlag(std::uint8_t projectionCentreFlag);
+  def1->setLatin1(latin1);
+  def1->setLatin2(latin2);
+  def1->setLatitudeOfSouthernPole(latitudeOfSouthernPole);
+  def1->setLongitudeOfSouthernPole(longitudeOfSouthernPole);
+
+  def1->setGridGeometryId(geometryId);
+  geometryNames.insert(std::pair<uint,std::string>(geometryId,geometryName));
+  def1->setEarthSemiMajor(earthSemiMajor);
+  def1->setEarthSemiMinor(earthSemiMinor);
+  def1->initSpatialReference();
+  def1->countHash();
+
+  return def1;
+}
+
+
+
+
+
+}  // namespace
 
 
 
@@ -4340,29 +3893,9 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
     char st[1000];
     strcpy(st,str);
 
-    bool ind = false;
     const char *empty = "";
     char *field[100] = {(char*)empty};
-    uint c = 1;
-    field[0] = st;
-    char *p = st;
-    while (*p != '\0'  &&  c < 100)
-    {
-      if (*p == '"')
-        ind = !ind;
-
-      if ((*p == ';'  || *p == '\n') && !ind)
-      {
-        *p = '\0';
-        p++;
-        field[c] = p;
-        c++;
-      }
-      else
-      {
-        p++;
-      }
-    }
+    uint c = splitCsvFields(st,field);
 
     if (c > 1)
     {
@@ -4373,179 +3906,10 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
           break;
 
         case T::GridProjectionValue::LatLon:
-        {
-          if (c < 10)
-            return nullptr;
-
-          uint geometryId = toInt32(field[1]);
-          char *geometryName = field[2];
-          int ni = toInt32(field[3]);
-          int nj = toInt32(field[4]);
-          int longitude = C_INT(round(toDouble(field[5])*1000));
-          int latitude = C_INT(round(toDouble(field[6])*1000));
-          int lastLongitude = 0;
-          int lastLatitude = 0;
-          int iInc = C_INT(round(toDouble(field[7]) * 1000));
-          int jInc = C_INT(round(toDouble(field[8]) * 1000));
-          char *scanningMode = field[9];
-          double earthSemiMajor = toDouble(field[10]);
-          double earthSemiMinor = toDouble(field[11]);
-
-          GRIB1::LatLonImpl *def1 = new GRIB1::LatLonImpl();
-          GRIB1::GridAreaSettings gridArea;
-          GRIB1::ScanningModeSettings scanningMode1;
-          if (strcasecmp(scanningMode,"+x+y") == 0)
-          {
-            lastLongitude = longitude + ni*iInc - iInc;
-            lastLatitude = latitude + nj*jInc - jInc;
-            scanningMode1.setScanningMode(0x40);
-          }
-          else
-          if (strcasecmp(scanningMode,"-x+y") == 0)
-          {
-            lastLongitude = longitude - ni*iInc + iInc;
-            lastLatitude = latitude + nj*jInc - jInc;
-            scanningMode1.setScanningMode(0x80+0x40);
-          }
-          else
-          if (strcasecmp(scanningMode,"+x-y") == 0)
-          {
-            lastLongitude = longitude + ni*iInc - iInc;
-            lastLatitude = latitude - nj*jInc + jInc;
-            scanningMode1.setScanningMode(0);
-          }
-          else
-          if (strcasecmp(scanningMode,"-x-y") == 0)
-          {
-            lastLongitude = longitude - ni*iInc + iInc;
-            lastLatitude = latitude - nj*jInc + jInc;
-            scanningMode1.setScanningMode(0x80);
-          }
-
-          if (lastLongitude > 360000)
-            lastLongitude -= 360000;
-
-          if (lastLatitude > 90000)
-            lastLatitude = 180000 - lastLatitude;
-
-          def1->setScanningMode(scanningMode1);
-
-          GRIB1::ResolutionFlagsSettings resolutionFlags;
-          resolutionFlags.setResolutionAndComponentFlags(128);
-          gridArea.setResolutionFlags(resolutionFlags);
-
-          gridArea.setLatitudeOfFirstGridPoint(latitude);
-          gridArea.setLongitudeOfFirstGridPoint(longitude);
-          gridArea.setLatitudeOfLastGridPoint(lastLatitude);
-          gridArea.setLongitudeOfLastGridPoint(lastLongitude);
-          def1->setGridArea(gridArea);
-
-          def1->setNi(ni);
-          def1->setNj(nj);
-          def1->setIDirectionIncrement(iInc);
-          def1->setJDirectionIncrement(jInc);
-
-          def1->setGridGeometryId(geometryId);
-          mGeometryNames.insert(std::pair<uint,std::string>(geometryId,geometryName));
-          def1->setEarthSemiMajor(earthSemiMajor);
-          def1->setEarthSemiMinor(earthSemiMinor);
-          def1->initSpatialReference();
-          def1->countHash();
-
-          return def1;
-        }
-        break;
+          return createGrib1LatLon(field,c,mGeometryNames);
 
         case T::GridProjectionValue::RotatedLatLon:
-        {
-          if (c < 13)
-            return nullptr;
-
-          uint geometryId = toInt32(field[1]);
-          char *geometryName = field[2];
-          int ni = toInt32(field[3]);
-          int nj = toInt32(field[4]);
-          int longitude = C_INT(round(toDouble(field[5])*1000));
-          int latitude = C_INT(round(toDouble(field[6])*1000));
-          int lastLongitude = 0;
-          int lastLatitude = 0;
-          int iInc = C_INT(round(toDouble(field[7]) * 1000));
-          int jInc = C_INT(round(toDouble(field[8]) * 1000));
-          char *scanningMode = field[9];
-          int longitudeOfSouthernPole = C_INT(round(toDouble(field[10])*1000));
-          int latitudeOfSouthernPole = C_INT(round(toDouble(field[11])*1000));
-          int angle = round(toDouble(field[12]));
-          double earthSemiMajor = toDouble(field[13]);
-          double earthSemiMinor = toDouble(field[14]);
-          //std::uint8_t resolutionAndComponentFlags = 48;
-
-          GRIB1::RotatedLatLonImpl *def1 = new GRIB1::RotatedLatLonImpl();
-          GRIB1::GridAreaSettings gridArea;
-          GRIB1::RotationSettings rotation1;
-          GRIB1::ScanningModeSettings scanningMode1;
-
-          if (strcasecmp(scanningMode,"+x+y") == 0)
-          {
-            lastLongitude = longitude + ni*iInc - iInc;
-            lastLatitude = latitude + nj*jInc - jInc;
-            scanningMode1.setScanningMode(0x40);
-          }
-          else
-          if (strcasecmp(scanningMode,"-x+y") == 0)
-          {
-            lastLongitude = longitude - ni*iInc + iInc;
-            lastLatitude = latitude + nj*jInc - jInc;
-            scanningMode1.setScanningMode(0x80+0x40);
-          }
-          else
-          if (strcasecmp(scanningMode,"+x-y") == 0)
-          {
-            lastLongitude = longitude + ni*iInc - iInc;
-            lastLatitude = latitude - nj*jInc + jInc;
-            scanningMode1.setScanningMode(0);
-          }
-          else
-          if (strcasecmp(scanningMode,"-x-y") == 0)
-          {
-            lastLongitude = longitude - ni*iInc + iInc;
-            lastLatitude = latitude - nj*jInc + jInc;
-            scanningMode1.setScanningMode(0x80);
-          }
-
-          if (lastLongitude > 360000)
-            lastLongitude -= 360000;
-
-          if (lastLatitude > 90000)
-            lastLatitude = 180000 - lastLatitude;
-
-          def1->setScanningMode(scanningMode1);
-
-          gridArea.setLatitudeOfFirstGridPoint(latitude);
-          gridArea.setLongitudeOfFirstGridPoint(longitude);
-          gridArea.setLatitudeOfLastGridPoint(lastLatitude);
-          gridArea.setLongitudeOfLastGridPoint(lastLongitude);
-
-          rotation1.setLatitudeOfSouthernPole(latitudeOfSouthernPole);
-          rotation1.setLongitudeOfSouthernPole(longitudeOfSouthernPole);
-          rotation1.setGeography_angleOfRotationInDegrees(angle);
-          def1->setRotation(rotation1);
-
-          def1->setNi(ni);
-          def1->setNj(nj);
-          def1->setGridArea(gridArea);
-          def1->setIDirectionIncrement(iInc);
-          def1->setJDirectionIncrement(jInc);
-
-          def1->setGridGeometryId(geometryId);
-          mGeometryNames.insert(std::pair<uint,std::string>(geometryId,geometryName));
-          def1->setEarthSemiMajor(earthSemiMajor);
-          def1->setEarthSemiMinor(earthSemiMinor);
-          def1->initSpatialReference();
-          def1->countHash();
-
-          return def1;
-        }
-        break;
+          return createGrib1RotatedLatLon(field,c,mGeometryNames);
 
         case T::GridProjectionValue::StretchedLatLon:
           break;
@@ -4560,218 +3924,18 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
           break;
 
         case T::GridProjectionValue::Mercator:
-        {
           return nullptr;
           // ************* IMPLEMENTATION NOT TESTED *************
-
-          if (c < 12)
-            return nullptr;
-
-          uint geometryId = toInt32(field[1]);
-          char *geometryName = field[2];
-          int ni = toInt32(field[3]);
-          int nj = toInt32(field[4]);
-          int longitude = C_INT(round(toDouble(field[5])*1000));
-          int latitude = C_INT(round(toDouble(field[6])*1000));
-          int lastLongitude = 0;
-          int lastLatitude = 0;
-          int iInc = C_INT(round(toDouble(field[7])));
-          int jInc = C_INT(round(toDouble(field[8])));
-          char *scanningMode = field[9];
-          int latin = C_INT(round(toDouble(field[10])*1000));
-
-          GRIB1::MercatorImpl *def1 = new GRIB1::MercatorImpl();
-          GRIB1::ScanningModeSettings scanningMode1;
-
-          if (strcasecmp(scanningMode,"+x+y") == 0)
-          {
-            lastLongitude = longitude + ni*iInc - iInc;
-            lastLatitude = latitude + nj*jInc - jInc;
-            scanningMode1.setScanningMode(0x40);
-          }
-          else
-          if (strcasecmp(scanningMode,"-x+y") == 0)
-          {
-            lastLongitude = longitude - ni*iInc + iInc;
-            lastLatitude = latitude + nj*jInc - jInc;
-            scanningMode1.setScanningMode(0x80+0x40);
-          }
-          else
-          if (strcasecmp(scanningMode,"+x-y") == 0)
-          {
-            lastLongitude = longitude + ni*iInc - iInc;
-            lastLatitude = latitude - nj*jInc + jInc;
-            scanningMode1.setScanningMode(0);
-          }
-          else
-          if (strcasecmp(scanningMode,"-x-y") == 0)
-          {
-            lastLongitude = longitude - ni*iInc + iInc;
-            lastLatitude = latitude - nj*jInc + jInc;
-            scanningMode1.setScanningMode(0x80);
-          }
-
-          if (lastLongitude > 360000)
-            lastLongitude -= 360000;
-
-          if (lastLatitude > 90000)
-            lastLatitude = 180000 - lastLatitude;
-
-          def1->setScanningMode(scanningMode1);
-
-          def1->setNi(std::uint16_t(ni));
-          def1->setNj(std::uint16_t(nj));
-
-          GRIB1::GridAreaSettings gridArea;
-          gridArea.setLatitudeOfFirstGridPoint(latitude);
-          gridArea.setLongitudeOfFirstGridPoint(longitude);
-          gridArea.setLatitudeOfLastGridPoint(lastLatitude);
-          gridArea.setLongitudeOfLastGridPoint(lastLongitude);
-          def1->setGridArea(gridArea);
-          def1->setDiInMetres(iInc);
-          def1->setDjInMetres(jInc);
-          def1->setLatin((std::int24_t)latin);
-
-          def1->setGridGeometryId(geometryId);
-          mGeometryNames.insert(std::pair<uint,std::string>(geometryId,geometryName));
-          //def1->setEarthSemiMajor(earthSemiMajor);
-          //def1->setEarthSemiMinor(earthSemiMinor);
-          def1->initSpatialReference();
-          def1->countHash();
-
-          return def1;
-        }
-        break;
+          // return createGrib1Mercator(field,c,mGeometryNames);
 
         case T::GridProjectionValue::TransverseMercator:
           break;
 
         case T::GridProjectionValue::PolarStereographic:
-        {
-          if (c < 12)
-            return nullptr;
-
-          uint geometryId = toInt32(field[1]);
-          char *geometryName = field[2];
-          int ni = toInt32(field[3]);
-          int nj = toInt32(field[4]);
-          int longitude = C_INT(round(toDouble(field[5])*1000));
-          int latitude = C_INT(round(toDouble(field[6])*1000));
-          int iInc = C_INT(round(toDouble(field[7])));
-          int jInc = C_INT(round(toDouble(field[8])));
-          char *scanningMode = field[9];
-          int orientation = C_INT(round(toDouble(field[10])*1000));
-          //int laD = C_INT(round(toDouble(field[11]) * 1000000));
-          double earthSemiMajor = toDouble(field[12]);
-          double earthSemiMinor = toDouble(field[13]);
-
-          GRIB1::PolarStereographicImpl *def1 = new GRIB1::PolarStereographicImpl();
-          GRIB1::ScanningModeSettings scanningMode1;
-
-          if (strcasecmp(scanningMode,"+x+y") == 0)
-            scanningMode1.setScanningMode(0x40);
-          else
-          if (strcasecmp(scanningMode,"-x+y") == 0)
-            scanningMode1.setScanningMode(0x80+0x40);
-          else
-          if (strcasecmp(scanningMode,"+x-y") == 0)
-            scanningMode1.setScanningMode(0);
-          else
-          if (strcasecmp(scanningMode,"-x-y") == 0)
-            scanningMode1.setScanningMode(0x80);
-
-          def1->setScanningMode(scanningMode1);
-
-          def1->setNx(std::uint16_t(ni));
-          def1->setNy(std::uint16_t(nj));
-          def1->setLatitudeOfFirstGridPoint(latitude);
-          def1->setLongitudeOfFirstGridPoint(longitude);
-          //def1->setResolutionFlags(ResolutionFlagsSettings resolutionFlags);
-          //def1->setLoV(orientation/1000);
-          def1->setOrientationOfTheGrid(orientation);
-          def1->setDxInMetres(iInc);
-          def1->setDyInMetres(jInc);
-          //def1->setProjectionCentreFlag(std::uint8_t projectionCentreFlag);
-          //def1->setLatin1((std::int24_t)latin1/1000);
-          //def1->setLatin2((std::int24_t)latin2/1000);
-          //def1->setLatitudeOfSouthernPole((std::int24_t)latitudeOfSouthernPole/1000);
-          //def1->setLongitudeOfSouthernPole((std::int24_t)longitudeOfSouthernPole/1000);
-
-          def1->setGridGeometryId(geometryId);
-          mGeometryNames.insert(std::pair<uint,std::string>(geometryId,geometryName));
-          def1->setEarthSemiMajor(earthSemiMajor);
-          def1->setEarthSemiMinor(earthSemiMinor);
-          def1->initSpatialReference();
-          def1->countHash();
-
-          return def1;
-        }
-        break;
+          return createGrib1PolarStereographic(field,c,mGeometryNames);
 
         case T::GridProjectionValue::LambertConformal:
-        {
-          if (c < 15)
-            return nullptr;
-
-          uint geometryId = toInt32(field[1]);
-          char *geometryName = field[2];
-          int ni = toInt32(field[3]);
-          int nj = toInt32(field[4]);
-          int longitude = C_INT(round(toDouble(field[5])*1000));
-          int latitude = C_INT(round(toDouble(field[6])*1000));
-          int iInc = toInt32(field[7]);
-          int jInc = toInt32(field[8]);
-          char *scanningMode = field[9];
-          int orientation = C_INT(round(toDouble(field[10])*1000));
-          int latin1 = C_INT(round(toDouble(field[11])*1000));
-          int latin2 = C_INT(round(toDouble(field[12])*1000));
-          int longitudeOfSouthernPole = C_INT(round(toDouble(field[13])*1000));
-          int latitudeOfSouthernPole = C_INT(round(toDouble(field[14])*1000));
-          //double laD = toDouble(field[15]);
-          double earthSemiMajor = toDouble(field[16]);
-          double earthSemiMinor = toDouble(field[17]);
-
-          GRIB1::LambertConformalImpl *def1 = new GRIB1::LambertConformalImpl();
-          GRIB1::ScanningModeSettings scanningMode1;
-
-          if (strcasecmp(scanningMode,"+x+y") == 0)
-             scanningMode1.setScanningMode(0x40);
-          else
-          if (strcasecmp(scanningMode,"-x+y") == 0)
-            scanningMode1.setScanningMode(0x80+0x40);
-          else
-          if (strcasecmp(scanningMode,"+x-y") == 0)
-            scanningMode1.setScanningMode(0);
-          else
-          if (strcasecmp(scanningMode,"-x-y") == 0)
-            scanningMode1.setScanningMode(0x80);
-
-          def1->setScanningMode(scanningMode1);
-
-          def1->setNx(std::uint16_t(ni));
-          def1->setNy(std::uint16_t(nj));
-          def1->setLatitudeOfFirstGridPoint(latitude);
-          def1->setLongitudeOfFirstGridPoint(longitude);
-          //def1->setResolutionFlags(ResolutionFlagsSettings resolutionFlags);
-          def1->setLoV(orientation);
-          def1->setDxInMetres(iInc);
-          def1->setDyInMetres(jInc);
-          //def1->setProjectionCentreFlag(std::uint8_t projectionCentreFlag);
-          def1->setLatin1(latin1);
-          def1->setLatin2(latin2);
-          def1->setLatitudeOfSouthernPole(latitudeOfSouthernPole);
-          def1->setLongitudeOfSouthernPole(longitudeOfSouthernPole);
-
-          def1->setGridGeometryId(geometryId);
-          mGeometryNames.insert(std::pair<uint,std::string>(geometryId,geometryName));
-          def1->setEarthSemiMajor(earthSemiMajor);
-          def1->setEarthSemiMinor(earthSemiMinor);
-          def1->initSpatialReference();
-          def1->countHash();
-
-          return def1;
-        }
-        break;
+          return createGrib1LambertConformal(field,c,mGeometryNames);
 
         case T::GridProjectionValue::ObliqueLambertConformal:
           break;
@@ -4841,6 +4005,8 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
 
         case T::GridProjectionValue::MillersCylindricalProjection:
           break;
+        default:
+          break;
       }
     }
     return nullptr;
@@ -4850,6 +4016,505 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
+
+
+
+
+
+namespace
+{
+/*! \brief Creates the GRIB2 LatLon grid definition from the CSV fields. */
+
+GRIB2::GridDefinition* createGrib2LatLon(char *field[],uint c,GeometryNames& geometryNames)
+{
+  if (c < 10)
+    return nullptr;
+
+  uint geometryId = toInt32(field[1]);
+  char *geometryName = field[2];
+  int ni = toInt32(field[3]);
+  int nj = toInt32(field[4]);
+  int longitude = C_INT(round(toDouble(field[5])*1000000));
+  int latitude = C_INT(round(toDouble(field[6])*1000000));
+  int iInc = C_INT(round(toDouble(field[7]) * 1000000));
+  int jInc = C_INT(round(toDouble(field[8]) * 1000000));
+  char *scanningMode = field[9];
+  double earthSemiMajor = toDouble(field[10]);
+  double earthSemiMinor = toDouble(field[11]);
+  int lastLongitude = 0;
+  int lastLatitude = 0;
+
+  auto *def2 = new GRIB2::LatLonImpl();
+  GRIB2::LatLonSettings latLon;
+  GRIB2::ScanningModeSettings scanningMode2;
+  GRIB2::GridSettings grid;
+
+  GRIB2::ResolutionSettings resolution;
+  resolution.setResolutionAndComponentFlags(48);
+  grid.setResolution(resolution);
+
+  if (strcasecmp(scanningMode,"+x+y") == 0)
+  {
+    lastLongitude = longitude + ni*iInc - iInc;
+    lastLatitude = latitude + nj*jInc - jInc;
+    scanningMode2.setScanningMode(0x40);
+  }
+  else if (strcasecmp(scanningMode,"-x+y") == 0)
+  {
+    lastLongitude = longitude - (ni*iInc - iInc);
+    lastLatitude = latitude + nj*jInc - jInc;
+    scanningMode2.setScanningMode(0x80+0x40);
+  }
+  else if (strcasecmp(scanningMode,"+x-y") == 0)
+  {
+    lastLongitude = longitude + ni*iInc - iInc;
+    lastLatitude = latitude - (nj*jInc - jInc);
+    scanningMode2.setScanningMode(0);
+  }
+  else if (strcasecmp(scanningMode,"-x-y") == 0)
+  {
+    lastLongitude = longitude - (ni*iInc - iInc);
+    lastLatitude = latitude - (nj*jInc - jInc);
+    scanningMode2.setScanningMode(0x80);
+  }
+
+  if (lastLongitude > 360000000)
+    lastLongitude -= 360000000;
+
+  if (lastLatitude > 90000000)
+    lastLatitude = 180000000 - lastLatitude;
+
+  latLon.setScanningMode(scanningMode2);
+
+  grid.setNi(T::UInt32_opt(ni));
+  grid.setNj(T::UInt32_opt(nj));
+  grid.setLongitudeOfFirstGridPoint(T::Int32_opt(longitude));
+  grid.setLatitudeOfFirstGridPoint(T::Int32_opt(latitude));
+  grid.setLongitudeOfLastGridPoint(T::Int32_opt(lastLongitude));
+  grid.setLatitudeOfLastGridPoint(T::Int32_opt(lastLatitude));
+  latLon.setGrid(grid);
+
+  latLon.setIDirectionIncrement(T::UInt32_opt(iInc));
+  latLon.setJDirectionIncrement(T::UInt32_opt(jInc));
+
+  def2->setLatLon(latLon);
+
+  def2->setGridGeometryId(geometryId);
+  geometryNames.insert(std::pair<uint,std::string>(geometryId,geometryName));
+  def2->setEarthSemiMajor(earthSemiMajor);
+  def2->setEarthSemiMinor(earthSemiMinor);
+  def2->initSpatialReference();
+  def2->countHash();
+
+  return def2;
+}
+
+
+
+
+
+/*! \brief Creates the GRIB2 RotatedLatLon grid definition from the CSV fields. */
+
+GRIB2::GridDefinition* createGrib2RotatedLatLon(char *field[],uint c,GeometryNames& geometryNames)
+{
+  if (c < 13)
+    return nullptr;
+
+  uint geometryId = toInt32(field[1]);
+  char *geometryName = field[2];
+  int ni = toInt32(field[3]);
+  int nj = toInt32(field[4]);
+  int longitude = C_INT(round(toDouble(field[5])*1000000));
+  int latitude = C_INT(round(toDouble(field[6])*1000000));
+  int iInc = C_INT(round(toDouble(field[7]) * 1000000));
+  int jInc = C_INT(round(toDouble(field[8]) * 1000000));
+  char *scanningMode = field[9];
+  int longitudeOfSouthernPole = C_INT(round(toDouble(field[10])*1000000));
+  int latitudeOfSouthernPole = C_INT(round(toDouble(field[11])*1000000));
+  int lastLongitude = longitude + ni*iInc - iInc;
+  int lastLatitude = latitude + nj*jInc - jInc;
+  //int lastLongitude = 0;
+  //int lastLatitude = 0;
+  int angle = round(toDouble(field[12]));
+  double earthSemiMajor = toDouble(field[13]);
+  double earthSemiMinor = toDouble(field[14]);
+  //std::uint8_t resolutionAndComponentFlags = 48;
+
+  auto *def2 = new GRIB2::RotatedLatLonImpl();
+  GRIB2::LatLonSettings latLon;
+  GRIB2::ScanningModeSettings scanningMode2;
+  GRIB2::GridSettings grid;
+  GRIB2::RotationSettings rotation2;
+
+  if (strcasecmp(scanningMode,"+x+y") == 0)
+  {
+    scanningMode2.setScanningMode(0x40);
+  }
+  else if (strcasecmp(scanningMode,"-x+y") == 0)
+  {
+    scanningMode2.setScanningMode(0x80+0x40);
+  }
+  else if (strcasecmp(scanningMode,"+x-y") == 0)
+  {
+    scanningMode2.setScanningMode(0);
+  }
+  else if (strcasecmp(scanningMode,"-x-y") == 0)
+  {
+    scanningMode2.setScanningMode(0x80);
+  }
+
+  if (lastLongitude > 360000000)
+    lastLongitude -= 360000000;
+
+  if (lastLatitude > 90000000)
+    lastLatitude = 180000000 - lastLatitude;
+
+  latLon.setScanningMode(scanningMode2);
+
+  grid.setNi(T::UInt32_opt(ni));
+  grid.setNj(T::UInt32_opt(nj));
+  grid.setLongitudeOfFirstGridPoint(T::Int32_opt(longitude));
+  grid.setLatitudeOfFirstGridPoint(T::Int32_opt(latitude));
+  grid.setLongitudeOfLastGridPoint(T::Int32_opt(lastLongitude));
+  grid.setLatitudeOfLastGridPoint(T::Int32_opt(lastLatitude));
+  latLon.setGrid(grid);
+
+  latLon.setIDirectionIncrement(T::UInt32_opt(iInc));
+  latLon.setJDirectionIncrement(T::UInt32_opt(jInc));
+
+  def2->setLatLon(latLon);
+
+  if (longitudeOfSouthernPole < 0)
+    longitudeOfSouthernPole = longitudeOfSouthernPole + 360000000;
+
+  rotation2.setLongitudeOfSouthernPole(T::UInt32_opt(longitudeOfSouthernPole));
+
+  rotation2.setLatitudeOfSouthernPole(T::Int32_opt(latitudeOfSouthernPole));
+  rotation2.setAngleOfRotation(angle);
+  def2->setRotation(rotation2);
+
+  def2->setGridGeometryId(geometryId);
+  geometryNames.insert(std::pair<uint,std::string>(geometryId,geometryName));
+  def2->setEarthSemiMajor(earthSemiMajor);
+  def2->setEarthSemiMinor(earthSemiMinor);
+  def2->initSpatialReference();
+  def2->countHash();
+  //printf("%s\n",str);
+  //std::string s = def2->getGridGeometryString();
+  //printf("GEOM [%s]\n",s.c_str());
+
+  return def2;
+}
+
+
+
+
+
+/*! \brief Creates the GRIB2 TransverseMercator grid definition from the CSV fields. */
+
+GRIB2::GridDefinition* createGrib2TransverseMercator(char *field[],uint c,GeometryNames& geometryNames)
+{
+  if (c < 16)
+    return nullptr;
+
+  uint geometryId = toInt32(field[1]);
+  char *geometryName = field[2];
+  int ni = toInt32(field[3]);
+  int nj = toInt32(field[4]);
+  double longitude = toDouble(field[5]);
+  double latitude = toDouble(field[6]);
+  int iInc = C_INT(round(toDouble(field[7]) * 100));
+  int jInc = C_INT(round(toDouble(field[8]) * 100));
+
+  char *scanningMode = field[9];
+  int rx = C_INT(round(toDouble(field[10])*1000000));
+  int ry = C_INT(round(toDouble(field[11])*1000000));
+  int false_eastening = C_INT(round(toDouble(field[12]) * 100));
+  int false_northing = C_INT(round(toDouble(field[13]) * 100));
+  double earthSemiMajor = toDouble(field[14]);
+  double earthSemiMinor = toDouble(field[15]);
+
+
+  auto *def2 = new GRIB2::TransverseMercatorImpl();
+  GRIB2::ScanningModeSettings scanningMode2;
+
+  if (strcasecmp(scanningMode,"+x+y") == 0)
+    scanningMode2.setScanningMode(0x40);
+  else if (strcasecmp(scanningMode,"-x+y") == 0)
+    scanningMode2.setScanningMode(0x80+0x40);
+  else if (strcasecmp(scanningMode,"+x-y") == 0)
+    scanningMode2.setScanningMode(0);
+  else if (strcasecmp(scanningMode,"-x-y") == 0)
+    scanningMode2.setScanningMode(0x80);
+
+  def2->setScanningMode(scanningMode2);
+  def2->setScaleFactorAtReferencePoint(0.9996);
+
+  def2->setNi(T::UInt32_opt(ni));
+  def2->setNj(T::UInt32_opt(nj));
+
+  def2->setLatitudeOfReferencePoint(T::Int32_opt(ry));
+
+  if (rx < 0)
+    rx = rx + 360000000;
+
+  def2->setLongitudeOfReferencePoint(T::UInt32_opt(rx));
+
+  def2->setDi(T::UInt32_opt(iInc));
+  def2->setDj(T::UInt32_opt(jInc));
+  def2->setYR(T::Int32_opt(false_northing));
+  //def2->setXR(T::Int32_opt(50000000));
+  def2->setXR(T::Int32_opt(false_eastening));
+
+  def2->setGridGeometryId(geometryId);
+  geometryNames.insert(std::pair<uint,std::string>(geometryId,geometryName));
+  def2->setEarthSemiMajor(earthSemiMajor);
+  def2->setEarthSemiMinor(earthSemiMinor);
+  def2->initSpatialReference();
+  def2->countHash();
+
+  double xx = 0;
+  double yy = 0;
+  def2->getGridOriginalCoordinatesByLatLonCoordinates(latitude,longitude,xx,yy);
+
+  int x1 = C_INT(round(xx))*100;
+  int y1 = C_INT(round(yy))*100;
+
+  def2->setX1(T::Int32_opt(x1));
+  def2->setY1(T::Int32_opt(y1));
+  def2->setX2(T::Int32_opt(x1 + (ni-1)*iInc));
+  def2->setY2(T::Int32_opt(y1 + (nj-1)*jInc));
+
+  def2->mLongitude = longitude;
+  def2->mLatitude = latitude;
+
+  // def2->print(std::cout,0,0);
+  // std::string gs = def2->getGridGeometryString();
+  // printf("GS [%s]\n",gs.c_str());
+
+  return def2;
+}
+
+
+
+
+
+/*! \brief Creates the GRIB2 PolarStereographic grid definition from the CSV fields. */
+
+GRIB2::GridDefinition* createGrib2PolarStereographic(char *field[],uint c,GeometryNames& geometryNames)
+{
+  if (c < 12)
+    return nullptr;
+
+  uint geometryId = toInt32(field[1]);
+  char *geometryName = field[2];
+  int ni = toInt32(field[3]);
+  int nj = toInt32(field[4]);
+  int longitude = C_INT(round(toDouble(field[5])*1000000));
+  int latitude = C_INT(round(toDouble(field[6])*1000000));
+  int iInc = C_INT(round(toDouble(field[7]) * 1000));
+  int jInc = C_INT(round(toDouble(field[8]) * 1000));
+  char *scanningMode = field[9];
+  int orientation = C_INT(round(toDouble(field[10])*1000000));
+  int laD = C_INT(round(toDouble(field[11]) * 1000000));
+  double earthSemiMajor = toDouble(field[12]);
+  double earthSemiMinor = toDouble(field[13]);
+
+  auto *def2 = new GRIB2::PolarStereographicImpl();
+  GRIB2::ScanningModeSettings scanningMode2;
+
+  if (strcasecmp(scanningMode,"+x+y") == 0)
+    scanningMode2.setScanningMode(0x40);
+  else if (strcasecmp(scanningMode,"-x+y") == 0)
+    scanningMode2.setScanningMode(0x80+0x40);
+  else if (strcasecmp(scanningMode,"+x-y") == 0)
+    scanningMode2.setScanningMode(0);
+  else if (strcasecmp(scanningMode,"-x-y") == 0)
+    scanningMode2.setScanningMode(0x80);
+
+  def2->setScanningMode(scanningMode2);
+
+  def2->setNx(T::UInt32_opt(ni));
+  def2->setNy(T::UInt32_opt(nj));
+  def2->setLatitudeOfFirstGridPoint(T::Int32_opt(latitude));
+
+  if (longitude < 0)
+    longitude = longitude + 360000000;
+
+  def2->setLongitudeOfFirstGridPoint(T::UInt32_opt(longitude));
+
+  def2->setLaD(laD);
+  def2->setOrientationOfTheGrid(orientation);
+  def2->setDx(T::UInt32_opt(iInc));
+  def2->setDy(T::UInt32_opt(jInc));
+  //def2->setProjectionCentreFlag(std::uint8_t projectionCentreFlag);
+  //def2->setLatin1(T::Int32_opt(latin1));
+  //def2->setLatin2(T::Int32_opt(latin2));
+  ////def2->setLatitudeOfSouthernPole(T::Int32_opt(latitudeOfSouthernPole));
+  //def2->setLongitudeOfSouthernPole(T::UInt32_opt(longitudeOfSouthernPole));
+
+  def2->setResolutionAndComponentFlags(0x30);
+
+  def2->setGridGeometryId(geometryId);
+  geometryNames.insert(std::pair<uint,std::string>(geometryId,geometryName));
+  def2->setEarthSemiMajor(earthSemiMajor);
+  def2->setEarthSemiMinor(earthSemiMinor);
+  def2->initSpatialReference();
+  def2->countHash();
+  return def2;
+}
+
+
+
+
+
+/*! \brief Creates the GRIB2 LambertConformal grid definition from the CSV fields. */
+
+GRIB2::GridDefinition* createGrib2LambertConformal(char *field[],uint c,GeometryNames& geometryNames)
+{
+  if (c < 15)
+    return nullptr;
+
+  uint geometryId = toInt32(field[1]);
+  char *geometryName = field[2];
+  int ni = toInt32(field[3]);
+  int nj = toInt32(field[4]);
+  int longitude = C_INT(round(toDouble(field[5])*1000000));
+  int latitude = C_INT(round(toDouble(field[6])*1000000));
+  int iInc = toInt32(field[7]);
+  int jInc = toInt32(field[8]);
+  char *scanningMode = field[9];
+  int orientation = C_INT(round(toDouble(field[10])*1000000));
+  int latin1 = C_INT(round(toDouble(field[11])*1000000));
+  int latin2 = C_INT(round(toDouble(field[12])*1000000));
+  int longitudeOfSouthernPole = C_INT(round(toDouble(field[13])*1000000));
+  int latitudeOfSouthernPole = C_INT(round(toDouble(field[14])*1000000));
+  int laD = 60000000;
+  if (c >= 15)
+    laD = C_INT(round(toDouble(field[15])*1000000));
+
+  double earthSemiMajor = toDouble(field[16]);
+  double earthSemiMinor = toDouble(field[17]);
+
+  auto *def2 = new GRIB2::LambertConformalImpl();
+  GRIB2::ScanningModeSettings scanningMode2;
+
+  if (strcasecmp(scanningMode,"+x+y") == 0)
+    scanningMode2.setScanningMode(0x40);
+  else if (strcasecmp(scanningMode,"-x+y") == 0)
+    scanningMode2.setScanningMode(0x80+0x40);
+  else if (strcasecmp(scanningMode,"+x-y") == 0)
+    scanningMode2.setScanningMode(0);
+  else if (strcasecmp(scanningMode,"-x-y") == 0)
+    scanningMode2.setScanningMode(0x80);
+
+  def2->setScanningMode(scanningMode2);
+
+  def2->setNx(T::UInt32_opt(ni));
+  def2->setNy(T::UInt32_opt(nj));
+  def2->setLatitudeOfFirstGridPoint(T::Int32_opt(latitude));
+
+  if (longitude < 0)
+    longitude = longitude + 360000000;
+
+  def2->setLongitudeOfFirstGridPoint(T::UInt32_opt(longitude));
+
+  def2->setLaD(laD);
+  def2->setLoV(orientation);
+  def2->setDx(T::UInt32_opt(iInc*1000));
+  def2->setDy(T::UInt32_opt(jInc*1000));
+  //def2->setProjectionCentreFlag(std::uint8_t projectionCentreFlag);
+  def2->setLatin1(T::Int32_opt(latin1));
+  def2->setLatin2(T::Int32_opt(latin2));
+  def2->setLatitudeOfSouthernPole(T::Int32_opt(latitudeOfSouthernPole));
+
+  if (longitudeOfSouthernPole < 0)
+    longitudeOfSouthernPole = longitudeOfSouthernPole + 360000000;
+
+  def2->setLongitudeOfSouthernPole(T::UInt32_opt(longitudeOfSouthernPole));
+
+  GRIB2::ResolutionSettings resolution;
+  resolution.setResolutionAndComponentFlags(0x30);
+  def2->setResolution(resolution);
+
+  def2->setGridGeometryId(geometryId);
+  geometryNames.insert(std::pair<uint,std::string>(geometryId,geometryName));
+  def2->setEarthSemiMajor(earthSemiMajor);
+  def2->setEarthSemiMinor(earthSemiMinor);
+  def2->initSpatialReference();
+  def2->countHash();
+
+  return def2;
+}
+
+
+
+
+
+/*! \brief Creates the GRIB2 LambertAzimuthalEqualArea grid definition from the CSV fields. */
+
+GRIB2::GridDefinition* createGrib2LambertAzimuthalEqualArea(char *field[],uint c,GeometryNames& geometryNames)
+{
+  if (c < 12)
+    return nullptr;
+
+  uint geometryId = toInt32(field[1]);
+  char *geometryName = field[2];
+  int ni = toInt32(field[3]);
+  int nj = toInt32(field[4]);
+  int longitude = C_INT(round(toDouble(field[5])*1000000));
+  int latitude = C_INT(round(toDouble(field[6])*1000000));
+  int iInc = toInt32(field[7]);
+  int jInc = toInt32(field[8]);
+  char *scanningMode = field[9];
+  int standardParallel = C_INT(round(toDouble(field[10])*1000000));
+  int centralLongitude = C_INT(round(toDouble(field[11])*1000000));
+  double earthSemiMajor = toDouble(field[12]);
+  double earthSemiMinor = toDouble(field[13]);
+
+  auto *def2 = new GRIB2::LambertAzimuthalEqualAreaImpl();
+  GRIB2::ScanningModeSettings scanningMode2;
+
+  if (strcasecmp(scanningMode,"+x+y") == 0)
+    scanningMode2.setScanningMode(0x40);
+  else if (strcasecmp(scanningMode,"-x+y") == 0)
+    scanningMode2.setScanningMode(0x80+0x40);
+  else if (strcasecmp(scanningMode,"+x-y") == 0)
+    scanningMode2.setScanningMode(0);
+  else if (strcasecmp(scanningMode,"-x-y") == 0)
+    scanningMode2.setScanningMode(0x80);
+
+  def2->setScanningMode(scanningMode2);
+
+  def2->setNumberOfPointsAlongXAxis(T::UInt32_opt(ni));
+  def2->setNumberOfPointsAlongYAxis(T::UInt32_opt(nj));
+  def2->setLatitudeOfFirstGridPoint(T::Int32_opt(latitude));
+  def2->setLongitudeOfFirstGridPoint(T::Int32_opt(longitude));
+
+  def2->setStandardParallelInMicrodegrees(T::Int32_opt(standardParallel));
+  def2->setCentralLongitudeInMicrodegrees(T::Int32_opt(centralLongitude));
+  def2->setXDirectionGridLengthInMillimetres(T::UInt32_opt(iInc*1000));
+  def2->setYDirectionGridLengthInMillimetres(T::UInt32_opt(jInc*1000));
+
+  def2->setResolutionAndComponentFlags(0x30);
+  def2->setGridGeometryId(geometryId);
+  geometryNames.insert(std::pair<uint,std::string>(geometryId,geometryName));
+  def2->setEarthSemiMajor(earthSemiMajor);
+  def2->setEarthSemiMinor(earthSemiMinor);
+  def2->initSpatialReference();
+  def2->countHash();
+
+  //std::string s = def2->getGridGeometryString();
+  //printf("GEOM [%s]\n",s.c_str());
+
+  return def2;
+}
+
+
+
+
+
+}  // namespace
 
 
 
@@ -4868,29 +4533,9 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
     char st[1000];
     strcpy(st,str);
 
-    bool ind = false;
     const char *empty = "";
     char *field[100] = {(char*)empty};
-    uint c = 1;
-    field[0] = st;
-    char *p = st;
-    while (*p != '\0'  &&  c < 100)
-    {
-      if (*p == '"')
-        ind = !ind;
-
-      if ((*p == ';'  || *p == '\n') && !ind)
-      {
-        *p = '\0';
-        p++;
-        field[c] = p;
-        c++;
-      }
-      else
-      {
-        p++;
-      }
-    }
+    uint c = splitCsvFields(st,field);
 
     if (c > 1)
     {
@@ -4901,187 +4546,10 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           break;
 
         case T::GridProjectionValue::LatLon:
-        {
-          if (c < 10)
-            return nullptr;
-
-          uint geometryId = toInt32(field[1]);
-          char *geometryName = field[2];
-          int ni = toInt32(field[3]);
-          int nj = toInt32(field[4]);
-          int longitude = C_INT(round(toDouble(field[5])*1000000));
-          int latitude = C_INT(round(toDouble(field[6])*1000000));
-          int iInc = C_INT(round(toDouble(field[7]) * 1000000));
-          int jInc = C_INT(round(toDouble(field[8]) * 1000000));
-          char *scanningMode = field[9];
-          double earthSemiMajor = toDouble(field[10]);
-          double earthSemiMinor = toDouble(field[11]);
-          int lastLongitude = 0;
-          int lastLatitude = 0;
-
-          GRIB2::LatLonImpl *def2 = new GRIB2::LatLonImpl();
-          GRIB2::LatLonSettings latLon;
-          GRIB2::ScanningModeSettings scanningMode2;
-          GRIB2::GridSettings grid;
-
-          GRIB2::ResolutionSettings resolution;
-          resolution.setResolutionAndComponentFlags(48);
-          grid.setResolution(resolution);
-
-          if (strcasecmp(scanningMode,"+x+y") == 0)
-          {
-            lastLongitude = longitude + ni*iInc - iInc;
-            lastLatitude = latitude + nj*jInc - jInc;
-            scanningMode2.setScanningMode(0x40);
-          }
-          else
-          if (strcasecmp(scanningMode,"-x+y") == 0)
-          {
-            lastLongitude = longitude - (ni*iInc - iInc);
-            lastLatitude = latitude + nj*jInc - jInc;
-            scanningMode2.setScanningMode(0x80+0x40);
-          }
-          else
-          if (strcasecmp(scanningMode,"+x-y") == 0)
-          {
-            lastLongitude = longitude + ni*iInc - iInc;
-            lastLatitude = latitude - (nj*jInc - jInc);
-            scanningMode2.setScanningMode(0);
-          }
-          else
-          if (strcasecmp(scanningMode,"-x-y") == 0)
-          {
-            lastLongitude = longitude - (ni*iInc - iInc);
-            lastLatitude = latitude - (nj*jInc - jInc);
-            scanningMode2.setScanningMode(0x80);
-          }
-
-          if (lastLongitude > 360000000)
-            lastLongitude -= 360000000;
-
-          if (lastLatitude > 90000000)
-            lastLatitude = 180000000 - lastLatitude;
-
-          latLon.setScanningMode(scanningMode2);
-
-          grid.setNi(T::UInt32_opt(ni));
-          grid.setNj(T::UInt32_opt(nj));
-          grid.setLongitudeOfFirstGridPoint(T::Int32_opt(longitude));
-          grid.setLatitudeOfFirstGridPoint(T::Int32_opt(latitude));
-          grid.setLongitudeOfLastGridPoint(T::Int32_opt(lastLongitude));
-          grid.setLatitudeOfLastGridPoint(T::Int32_opt(lastLatitude));
-          latLon.setGrid(grid);
-
-          latLon.setIDirectionIncrement(T::UInt32_opt(iInc));
-          latLon.setJDirectionIncrement(T::UInt32_opt(jInc));
-
-          def2->setLatLon(latLon);
-
-          def2->setGridGeometryId(geometryId);
-          mGeometryNames.insert(std::pair<uint,std::string>(geometryId,geometryName));
-          def2->setEarthSemiMajor(earthSemiMajor);
-          def2->setEarthSemiMinor(earthSemiMinor);
-          def2->initSpatialReference();
-          def2->countHash();
-
-          return def2;
-        }
-        break;
+          return createGrib2LatLon(field,c,mGeometryNames);
 
         case T::GridProjectionValue::RotatedLatLon:
-        {
-          if (c < 13)
-            return nullptr;
-
-          uint geometryId = toInt32(field[1]);
-          char *geometryName = field[2];
-          int ni = toInt32(field[3]);
-          int nj = toInt32(field[4]);
-          int longitude = C_INT(round(toDouble(field[5])*1000000));
-          int latitude = C_INT(round(toDouble(field[6])*1000000));
-          int iInc = C_INT(round(toDouble(field[7]) * 1000000));
-          int jInc = C_INT(round(toDouble(field[8]) * 1000000));
-          char *scanningMode = field[9];
-          int longitudeOfSouthernPole = C_INT(round(toDouble(field[10])*1000000));
-          int latitudeOfSouthernPole = C_INT(round(toDouble(field[11])*1000000));
-          int lastLongitude = longitude + ni*iInc - iInc;
-          int lastLatitude = latitude + nj*jInc - jInc;
-          //int lastLongitude = 0;
-          //int lastLatitude = 0;
-          int angle = round(toDouble(field[12]));
-          double earthSemiMajor = toDouble(field[13]);
-          double earthSemiMinor = toDouble(field[14]);
-          //std::uint8_t resolutionAndComponentFlags = 48;
-
-          GRIB2::RotatedLatLonImpl *def2 = new GRIB2::RotatedLatLonImpl();
-          GRIB2::LatLonSettings latLon;
-          GRIB2::ScanningModeSettings scanningMode2;
-          GRIB2::GridSettings grid;
-          GRIB2::RotationSettings rotation2;
-
-          if (strcasecmp(scanningMode,"+x+y") == 0)
-          {
-            scanningMode2.setScanningMode(0x40);
-          }
-          else
-          if (strcasecmp(scanningMode,"-x+y") == 0)
-          {
-            scanningMode2.setScanningMode(0x80+0x40);
-          }
-          else
-          if (strcasecmp(scanningMode,"+x-y") == 0)
-          {
-            scanningMode2.setScanningMode(0);
-          }
-          else
-          if (strcasecmp(scanningMode,"-x-y") == 0)
-          {
-            scanningMode2.setScanningMode(0x80);
-          }
-
-          if (lastLongitude > 360000000)
-            lastLongitude -= 360000000;
-
-          if (lastLatitude > 90000000)
-            lastLatitude = 180000000 - lastLatitude;
-
-          latLon.setScanningMode(scanningMode2);
-
-          grid.setNi(T::UInt32_opt(ni));
-          grid.setNj(T::UInt32_opt(nj));
-          grid.setLongitudeOfFirstGridPoint(T::Int32_opt(longitude));
-          grid.setLatitudeOfFirstGridPoint(T::Int32_opt(latitude));
-          grid.setLongitudeOfLastGridPoint(T::Int32_opt(lastLongitude));
-          grid.setLatitudeOfLastGridPoint(T::Int32_opt(lastLatitude));
-          latLon.setGrid(grid);
-
-          latLon.setIDirectionIncrement(T::UInt32_opt(iInc));
-          latLon.setJDirectionIncrement(T::UInt32_opt(jInc));
-
-          def2->setLatLon(latLon);
-
-          if (longitudeOfSouthernPole < 0)
-            longitudeOfSouthernPole = longitudeOfSouthernPole + 360000000;
-
-          rotation2.setLongitudeOfSouthernPole(T::UInt32_opt(longitudeOfSouthernPole));
-
-          rotation2.setLatitudeOfSouthernPole(T::Int32_opt(latitudeOfSouthernPole));
-          rotation2.setAngleOfRotation(angle);
-          def2->setRotation(rotation2);
-
-          def2->setGridGeometryId(geometryId);
-          mGeometryNames.insert(std::pair<uint,std::string>(geometryId,geometryName));
-          def2->setEarthSemiMajor(earthSemiMajor);
-          def2->setEarthSemiMinor(earthSemiMinor);
-          def2->initSpatialReference();
-          def2->countHash();
-          //printf("%s\n",str);
-          //std::string s = def2->getGridGeometryString();
-          //printf("GEOM [%s]\n",s.c_str());
-
-          return def2;
-        }
-        break;
+          return createGrib2RotatedLatLon(field,c,mGeometryNames);
 
         case T::GridProjectionValue::StretchedLatLon:
           break;
@@ -5099,238 +4567,13 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           break;
 
         case T::GridProjectionValue::TransverseMercator:
-        {
-          if (c < 16)
-            return nullptr;
-
-          uint geometryId = toInt32(field[1]);
-          char *geometryName = field[2];
-          int ni = toInt32(field[3]);
-          int nj = toInt32(field[4]);
-          double longitude = toDouble(field[5]);
-          double latitude = toDouble(field[6]);
-          int iInc = C_INT(round(toDouble(field[7]) * 100));
-          int jInc = C_INT(round(toDouble(field[8]) * 100));
-
-          char *scanningMode = field[9];
-          int rx = C_INT(round(toDouble(field[10])*1000000));
-          int ry = C_INT(round(toDouble(field[11])*1000000));
-          int false_eastening = C_INT(round(toDouble(field[12]) * 100));
-          int false_northing = C_INT(round(toDouble(field[13]) * 100));
-          double earthSemiMajor = toDouble(field[14]);
-          double earthSemiMinor = toDouble(field[15]);
-
-
-          GRIB2::TransverseMercatorImpl *def2 = new GRIB2::TransverseMercatorImpl();
-          GRIB2::ScanningModeSettings scanningMode2;
-
-          if (strcasecmp(scanningMode,"+x+y") == 0)
-            scanningMode2.setScanningMode(0x40);
-          else
-          if (strcasecmp(scanningMode,"-x+y") == 0)
-            scanningMode2.setScanningMode(0x80+0x40);
-          else
-          if (strcasecmp(scanningMode,"+x-y") == 0)
-            scanningMode2.setScanningMode(0);
-          else
-          if (strcasecmp(scanningMode,"-x-y") == 0)
-            scanningMode2.setScanningMode(0x80);
-
-          def2->setScanningMode(scanningMode2);
-          def2->setScaleFactorAtReferencePoint(0.9996);
-
-          def2->setNi(T::UInt32_opt(ni));
-          def2->setNj(T::UInt32_opt(nj));
-
-          def2->setLatitudeOfReferencePoint(T::Int32_opt(ry));
-
-          if (rx < 0)
-            rx = rx + 360000000;
-
-          def2->setLongitudeOfReferencePoint(T::UInt32_opt(rx));
-
-          def2->setDi(T::UInt32_opt(iInc));
-          def2->setDj(T::UInt32_opt(jInc));
-          def2->setYR(T::Int32_opt(false_northing));
-          //def2->setXR(T::Int32_opt(50000000));
-          def2->setXR(T::Int32_opt(false_eastening));
-
-          def2->setGridGeometryId(geometryId);
-          mGeometryNames.insert(std::pair<uint,std::string>(geometryId,geometryName));
-          def2->setEarthSemiMajor(earthSemiMajor);
-          def2->setEarthSemiMinor(earthSemiMinor);
-          def2->initSpatialReference();
-          def2->countHash();
-
-          double xx = 0,yy = 0;
-          def2->getGridOriginalCoordinatesByLatLonCoordinates(latitude,longitude,xx,yy);
-
-          int x1 = C_INT(round(xx))*100;
-          int y1 = C_INT(round(yy))*100;
-
-          def2->setX1(T::Int32_opt(x1));
-          def2->setY1(T::Int32_opt(y1));
-          def2->setX2(T::Int32_opt(x1 + (ni-1)*iInc));
-          def2->setY2(T::Int32_opt(y1 + (nj-1)*jInc));
-
-          def2->mLongitude = longitude;
-          def2->mLatitude = latitude;
-
-          // def2->print(std::cout,0,0);
-          // std::string gs = def2->getGridGeometryString();
-          // printf("GS [%s]\n",gs.c_str());
-
-          return def2;
-        }
-        break;
+          return createGrib2TransverseMercator(field,c,mGeometryNames);
 
         case T::GridProjectionValue::PolarStereographic:
-        {
-          if (c < 12)
-            return nullptr;
-
-          uint geometryId = toInt32(field[1]);
-          char *geometryName = field[2];
-          int ni = toInt32(field[3]);
-          int nj = toInt32(field[4]);
-          int longitude = C_INT(round(toDouble(field[5])*1000000));
-          int latitude = C_INT(round(toDouble(field[6])*1000000));
-          int iInc = C_INT(round(toDouble(field[7]) * 1000));
-          int jInc = C_INT(round(toDouble(field[8]) * 1000));
-          char *scanningMode = field[9];
-          int orientation = C_INT(round(toDouble(field[10])*1000000));
-          int laD = C_INT(round(toDouble(field[11]) * 1000000));
-          double earthSemiMajor = toDouble(field[12]);
-          double earthSemiMinor = toDouble(field[13]);
-
-          GRIB2::PolarStereographicImpl *def2 = new GRIB2::PolarStereographicImpl();
-          GRIB2::ScanningModeSettings scanningMode2;
-
-          if (strcasecmp(scanningMode,"+x+y") == 0)
-            scanningMode2.setScanningMode(0x40);
-          else
-          if (strcasecmp(scanningMode,"-x+y") == 0)
-            scanningMode2.setScanningMode(0x80+0x40);
-          else
-          if (strcasecmp(scanningMode,"+x-y") == 0)
-            scanningMode2.setScanningMode(0);
-          else
-          if (strcasecmp(scanningMode,"-x-y") == 0)
-            scanningMode2.setScanningMode(0x80);
-
-          def2->setScanningMode(scanningMode2);
-
-          def2->setNx(T::UInt32_opt(ni));
-          def2->setNy(T::UInt32_opt(nj));
-          def2->setLatitudeOfFirstGridPoint(T::Int32_opt(latitude));
-
-          if (longitude < 0)
-            longitude = longitude + 360000000;
-
-          def2->setLongitudeOfFirstGridPoint(T::UInt32_opt(longitude));
-
-          def2->setLaD(laD);
-          def2->setOrientationOfTheGrid(orientation);
-          def2->setDx(T::UInt32_opt(iInc));
-          def2->setDy(T::UInt32_opt(jInc));
-          //def2->setProjectionCentreFlag(std::uint8_t projectionCentreFlag);
-          //def2->setLatin1(T::Int32_opt(latin1));
-          //def2->setLatin2(T::Int32_opt(latin2));
-          ////def2->setLatitudeOfSouthernPole(T::Int32_opt(latitudeOfSouthernPole));
-          //def2->setLongitudeOfSouthernPole(T::UInt32_opt(longitudeOfSouthernPole));
-
-          def2->setResolutionAndComponentFlags(0x30);
-
-          def2->setGridGeometryId(geometryId);
-          mGeometryNames.insert(std::pair<uint,std::string>(geometryId,geometryName));
-          def2->setEarthSemiMajor(earthSemiMajor);
-          def2->setEarthSemiMinor(earthSemiMinor);
-          def2->initSpatialReference();
-          def2->countHash();
-          return def2;
-        }
-        break;
+          return createGrib2PolarStereographic(field,c,mGeometryNames);
 
         case T::GridProjectionValue::LambertConformal:
-        {
-          if (c < 15)
-            return nullptr;
-
-          uint geometryId = toInt32(field[1]);
-          char *geometryName = field[2];
-          int ni = toInt32(field[3]);
-          int nj = toInt32(field[4]);
-          int longitude = C_INT(round(toDouble(field[5])*1000000));
-          int latitude = C_INT(round(toDouble(field[6])*1000000));
-          int iInc = toInt32(field[7]);
-          int jInc = toInt32(field[8]);
-          char *scanningMode = field[9];
-          int orientation = C_INT(round(toDouble(field[10])*1000000));
-          int latin1 = C_INT(round(toDouble(field[11])*1000000));
-          int latin2 = C_INT(round(toDouble(field[12])*1000000));
-          int longitudeOfSouthernPole = C_INT(round(toDouble(field[13])*1000000));
-          int latitudeOfSouthernPole = C_INT(round(toDouble(field[14])*1000000));
-          int laD = 60000000;
-          if (c >= 15)
-            laD = C_INT(round(toDouble(field[15])*1000000));
-
-          double earthSemiMajor = toDouble(field[16]);
-          double earthSemiMinor = toDouble(field[17]);
-
-          GRIB2::LambertConformalImpl *def2 = new GRIB2::LambertConformalImpl();
-          GRIB2::ScanningModeSettings scanningMode2;
-
-          if (strcasecmp(scanningMode,"+x+y") == 0)
-            scanningMode2.setScanningMode(0x40);
-          else
-          if (strcasecmp(scanningMode,"-x+y") == 0)
-            scanningMode2.setScanningMode(0x80+0x40);
-          else
-          if (strcasecmp(scanningMode,"+x-y") == 0)
-            scanningMode2.setScanningMode(0);
-          else
-          if (strcasecmp(scanningMode,"-x-y") == 0)
-            scanningMode2.setScanningMode(0x80);
-
-          def2->setScanningMode(scanningMode2);
-
-          def2->setNx(T::UInt32_opt(ni));
-          def2->setNy(T::UInt32_opt(nj));
-          def2->setLatitudeOfFirstGridPoint(T::Int32_opt(latitude));
-
-          if (longitude < 0)
-            longitude = longitude + 360000000;
-
-          def2->setLongitudeOfFirstGridPoint(T::UInt32_opt(longitude));
-
-          def2->setLaD(laD);
-          def2->setLoV(orientation);
-          def2->setDx(T::UInt32_opt(iInc*1000));
-          def2->setDy(T::UInt32_opt(jInc*1000));
-          //def2->setProjectionCentreFlag(std::uint8_t projectionCentreFlag);
-          def2->setLatin1(T::Int32_opt(latin1));
-          def2->setLatin2(T::Int32_opt(latin2));
-          def2->setLatitudeOfSouthernPole(T::Int32_opt(latitudeOfSouthernPole));
-
-          if (longitudeOfSouthernPole < 0)
-            longitudeOfSouthernPole = longitudeOfSouthernPole + 360000000;
-
-          def2->setLongitudeOfSouthernPole(T::UInt32_opt(longitudeOfSouthernPole));
-
-          GRIB2::ResolutionSettings resolution;
-          resolution.setResolutionAndComponentFlags(0x30);
-          def2->setResolution(resolution);
-
-          def2->setGridGeometryId(geometryId);
-          mGeometryNames.insert(std::pair<uint,std::string>(geometryId,geometryName));
-          def2->setEarthSemiMajor(earthSemiMajor);
-          def2->setEarthSemiMinor(earthSemiMinor);
-          def2->initSpatialReference();
-          def2->countHash();
-
-          return def2;
-        }
-        break;
+          return createGrib2LambertConformal(field,c,mGeometryNames);
 
         case T::GridProjectionValue::ObliqueLambertConformal:
           break;
@@ -5381,65 +4624,7 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           break;
 
         case T::GridProjectionValue::LambertAzimuthalEqualArea:
-        {
-          if (c < 12)
-            return nullptr;
-
-          uint geometryId = toInt32(field[1]);
-          char *geometryName = field[2];
-          int ni = toInt32(field[3]);
-          int nj = toInt32(field[4]);
-          int longitude = C_INT(round(toDouble(field[5])*1000000));
-          int latitude = C_INT(round(toDouble(field[6])*1000000));
-          int iInc = toInt32(field[7]);
-          int jInc = toInt32(field[8]);
-          char *scanningMode = field[9];
-          int standardParallel = C_INT(round(toDouble(field[10])*1000000));
-          int centralLongitude = C_INT(round(toDouble(field[11])*1000000));
-          double earthSemiMajor = toDouble(field[12]);
-          double earthSemiMinor = toDouble(field[13]);
-
-          GRIB2::LambertAzimuthalEqualAreaImpl *def2 = new GRIB2::LambertAzimuthalEqualAreaImpl();
-          GRIB2::ScanningModeSettings scanningMode2;
-
-          if (strcasecmp(scanningMode,"+x+y") == 0)
-            scanningMode2.setScanningMode(0x40);
-          else
-          if (strcasecmp(scanningMode,"-x+y") == 0)
-            scanningMode2.setScanningMode(0x80+0x40);
-          else
-          if (strcasecmp(scanningMode,"+x-y") == 0)
-            scanningMode2.setScanningMode(0);
-          else
-          if (strcasecmp(scanningMode,"-x-y") == 0)
-            scanningMode2.setScanningMode(0x80);
-
-          def2->setScanningMode(scanningMode2);
-
-          def2->setNumberOfPointsAlongXAxis(T::UInt32_opt(ni));
-          def2->setNumberOfPointsAlongYAxis(T::UInt32_opt(nj));
-          def2->setLatitudeOfFirstGridPoint(T::Int32_opt(latitude));
-          def2->setLongitudeOfFirstGridPoint(T::Int32_opt(longitude));
-
-          def2->setStandardParallelInMicrodegrees(T::Int32_opt(standardParallel));
-          def2->setCentralLongitudeInMicrodegrees(T::Int32_opt(centralLongitude));
-          def2->setXDirectionGridLengthInMillimetres(T::UInt32_opt(iInc*1000));
-          def2->setYDirectionGridLengthInMillimetres(T::UInt32_opt(jInc*1000));
-
-          def2->setResolutionAndComponentFlags(0x30);
-          def2->setGridGeometryId(geometryId);
-          mGeometryNames.insert(std::pair<uint,std::string>(geometryId,geometryName));
-          def2->setEarthSemiMajor(earthSemiMajor);
-          def2->setEarthSemiMinor(earthSemiMinor);
-          def2->initSpatialReference();
-          def2->countHash();
-
-          //std::string s = def2->getGridGeometryString();
-          //printf("GEOM [%s]\n",s.c_str());
-
-          return def2;
-        }
-        break;
+          return createGrib2LambertAzimuthalEqualArea(field,c,mGeometryNames);
 
         case T::GridProjectionValue::CrossSection:
           break;
@@ -5457,6 +4642,8 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           break;
 
         case T::GridProjectionValue::MillersCylindricalProjection:
+          break;
+        default:
           break;
       }
     }
@@ -5497,7 +4684,7 @@ FmiParamId_grib_cptr GridDef::getGribParameterMappingByFmiId(T::FmiParamId fmiPa
 
 /*! \brief Returns the GRIB parameter id for the given GRIB1 message. */
 
-T::GribParamId GridDef::getGribParameterId(GRIB1::Message& message)
+T::GribParamId GridDef::getGribParameterId(const GRIB1::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -5505,45 +4692,28 @@ T::GribParamId GridDef::getGribParameterId(GRIB1::Message& message)
     T::GribParamId parameterId = 0;
     uint maxPoints = 0;
 
-    for (auto p = mGrib1_parameterDef_cache.begin(); p != mGrib1_parameterDef_cache.end(); ++p)
+    for (auto& p : mGrib1_parameterDef_cache)
     {
-      uint requiredPoints = p->mParameterList.size();
-      uint points = 0;
-      bool failed = false;
-
-      for (auto pm = p->mParameterList.begin(); pm != p->mParameterList.end() && !failed; ++pm)
-      {
-        if (message.hasAttributeValue(stringFactory[pm->first],pm->second.c_str()))
-          points++;
-        else
-          failed = true;
-      }
+      uint requiredPoints = p.mParameterList.size();
+      uint points = countMatchingAttributes(message,p);
 
       if (points == requiredPoints)
-        return p->mGribParameterId;
+        return p.mGribParameterId;
     }
 
     Grib1ParameterDef def;
-    for (auto p = mGrib1_parameterDef_records.begin(); p != mGrib1_parameterDef_records.end(); ++p)
+    for (auto& mGrib1_parameterDef_record : mGrib1_parameterDef_records)
     {
-      uint requiredPoints = p->mParameterList.size();
+      uint requiredPoints = mGrib1_parameterDef_record.mParameterList.size();
       if (maxPoints < requiredPoints)
       {
-        uint points = 0;
-        bool failed = false;
-        for (auto pm = p->mParameterList.begin(); pm != p->mParameterList.end() && !failed; ++pm)
-        {
-          if (message.hasAttributeValue(stringFactory[pm->first],pm->second.c_str()))
-            points++;
-          else
-            failed = true;
-        }
+        uint points = countMatchingAttributes(message,mGrib1_parameterDef_record);
 
         if (points == requiredPoints && points > maxPoints)
         {
-          parameterId = p->mGribParameterId;
+          parameterId = mGrib1_parameterDef_record.mGribParameterId;
           maxPoints = points;
-          def = *p;
+          def = mGrib1_parameterDef_record;
         }
       }
     }
@@ -5568,51 +4738,34 @@ T::GribParamId GridDef::getGribParameterId(GRIB1::Message& message)
 
 /*! \brief Returns the GRIB parameter id for the given GRIB2 message. */
 
-T::GribParamId GridDef::getGribParameterId(GRIB2::Message& message)
+T::GribParamId GridDef::getGribParameterId(const GRIB2::Message& message)
 {
   FUNCTION_TRACE
   try
   {
     uint maxPoints = 0;
     T::GribParamId parameterId = 0;
-    for (auto p = mGrib2_parameterDef_cache.begin(); p != mGrib2_parameterDef_cache.end(); ++p)
+    for (auto& p : mGrib2_parameterDef_cache)
     {
-      uint requiredPoints = p->mParameterList.size();
-      uint points = 0;
-      bool failed = false;
-
-      for (auto pm = p->mParameterList.begin(); pm != p->mParameterList.end() && !failed; ++pm)
-      {
-        if (message.hasAttributeValue(stringFactory[pm->first],pm->second.c_str()))
-          points++;
-        else
-          failed = true;
-      }
+      uint requiredPoints = p.mParameterList.size();
+      uint points = countMatchingAttributes(message,p);
 
       if (points == requiredPoints)
-        return p->mGribParameterId;
+        return p.mGribParameterId;
     }
     Grib2ParameterDef def;
-    for (auto p = mGrib2_parameterDef_records.begin(); p != mGrib2_parameterDef_records.end(); ++p)
+    for (auto& mGrib2_parameterDef_record : mGrib2_parameterDef_records)
     {
-      uint requiredPoints = p->mParameterList.size();
+      uint requiredPoints = mGrib2_parameterDef_record.mParameterList.size();
       if (maxPoints < requiredPoints)
       {
-        uint points = 0;
-        bool failed = false;
-        for (auto pm = p->mParameterList.begin(); pm != p->mParameterList.end() && !failed; ++pm)
-        {
-          if (message.hasAttributeValue(stringFactory[pm->first],pm->second.c_str()))
-            points++;
-          else
-            failed = true;
-        }
+        uint points = countMatchingAttributes(message,mGrib2_parameterDef_record);
 
         if (points == requiredPoints && points > maxPoints)
         {
-          parameterId = p->mGribParameterId;
+          parameterId = mGrib2_parameterDef_record.mGribParameterId;
           maxPoints = points;
-          def = *p;
+          def = mGrib2_parameterDef_record;
         }
       }
     }
@@ -5642,11 +4795,11 @@ bool GridDef::getGrib1LevelDef(uint fmiLevelId,FmiLevelId_grib& def)
   FUNCTION_TRACE
   try
   {
-    for (auto it = mFmi_levelsFromGrib1_records.begin(); it != mFmi_levelsFromGrib1_records.end(); ++it)
+    for (auto& mFmi_levelsFromGrib1_record : mFmi_levelsFromGrib1_records)
     {
-      if (it->mFmiLevelId == fmiLevelId)
+      if (mFmi_levelsFromGrib1_record.mFmiLevelId == fmiLevelId)
       {
-        def = *it;
+        def = mFmi_levelsFromGrib1_record;
         return true;
       }
     }
@@ -5670,11 +4823,11 @@ bool GridDef::getGrib2LevelDef(uint fmiLevelId,FmiLevelId_grib& def)
   FUNCTION_TRACE
   try
   {
-    for (auto it = mFmi_levelsFromGrib2_records.begin(); it != mFmi_levelsFromGrib2_records.end(); ++it)
+    for (auto& mFmi_levelsFromGrib2_record : mFmi_levelsFromGrib2_records)
     {
-      if (it->mFmiLevelId == fmiLevelId)
+      if (mFmi_levelsFromGrib2_record.mFmiLevelId == fmiLevelId)
       {
-        def = *it;
+        def = mFmi_levelsFromGrib2_record;
         return true;
       }
     }
@@ -5693,7 +4846,7 @@ bool GridDef::getGrib2LevelDef(uint fmiLevelId,FmiLevelId_grib& def)
 
 /*! \brief Returns the GRIB parameter name for the given GRIB1 message. */
 
-std::string GridDef::getGribParameterName(GRIB1::Message& message)
+std::string GridDef::getGribParameterName(const GRIB1::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -5702,7 +4855,7 @@ std::string GridDef::getGribParameterName(GRIB1::Message& message)
     if (gribId == 0)
       return std::string("");
 
-    auto p = getGribParameterDefById(gribId);
+    const auto *p = getGribParameterDefById(gribId);
     if (p)
       return p->mParameterName;
 
@@ -5720,7 +4873,7 @@ std::string GridDef::getGribParameterName(GRIB1::Message& message)
 
 /*! \brief Returns the GRIB parameter name for the given GRIB2 message. */
 
-std::string GridDef::getGribParameterName(GRIB2::Message& message)
+std::string GridDef::getGribParameterName(const GRIB2::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -5729,7 +4882,7 @@ std::string GridDef::getGribParameterName(GRIB2::Message& message)
     if (gribId == 0)
       return std::string("");
 
-    auto p = getGribParameterDefById(gribId);
+    const auto *p = getGribParameterDefById(gribId);
     if (p)
       return p->mParameterName;
 
@@ -5747,7 +4900,7 @@ std::string GridDef::getGribParameterName(GRIB2::Message& message)
 
 /*! \brief Returns the FMI parameter id for the given GRIB1 message. */
 
-T::FmiParamId GridDef::getFmiParameterId(GRIB1::Message& message)
+T::FmiParamId GridDef::getFmiParameterId(const GRIB1::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -5763,7 +4916,7 @@ T::FmiParamId GridDef::getFmiParameterId(GRIB1::Message& message)
     if (gribId == 0)
       return 0;
 
-    auto r =  getFmiParameterMappingByGribId(gribId);
+    const auto *r =  getFmiParameterMappingByGribId(gribId);
     if (r)
       return r->mFmiParameterId;
 
@@ -5781,7 +4934,7 @@ T::FmiParamId GridDef::getFmiParameterId(GRIB1::Message& message)
 
 /*! \brief Returns the FMI parameter id for the given GRIB2 message. */
 
-T::FmiParamId GridDef::getFmiParameterId(GRIB2::Message& message)
+T::FmiParamId GridDef::getFmiParameterId(const GRIB2::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -5797,7 +4950,7 @@ T::FmiParamId GridDef::getFmiParameterId(GRIB2::Message& message)
     if (gribId == 0)
       return 0;
 
-    auto r =  getFmiParameterMappingByGribId(gribId);
+    const auto *r =  getFmiParameterMappingByGribId(gribId);
     if (r)
       return r->mFmiParameterId;
 
@@ -5814,7 +4967,7 @@ T::FmiParamId GridDef::getFmiParameterId(GRIB2::Message& message)
 
 /*! \brief Returns the FMI level id for the given GRIB1 message. */
 
-T::ParamLevelId GridDef::getFmiLevelId(GRIB1::Message& message)
+T::ParamLevelId GridDef::getFmiLevelId(const GRIB1::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -5825,11 +4978,11 @@ T::ParamLevelId GridDef::getFmiLevelId(GRIB1::Message& message)
     int maxMatches = 0;
     FmiLevelId_grib def;
 
-    for (auto it = mFmi_levelsFromGrib1_records.begin(); it != mFmi_levelsFromGrib1_records.end(); ++it)
+    for (auto& mFmi_levelsFromGrib1_record : mFmi_levelsFromGrib1_records)
     {
-      int matchesRequired = it->mParameterList.size();
+      int matchesRequired = mFmi_levelsFromGrib1_record.mParameterList.size();
       int matchCount = 0;
-      for (auto itm = it->mParameterList.begin();itm != it->mParameterList.end(); ++itm)
+      for (auto itm = mFmi_levelsFromGrib1_record.mParameterList.begin();itm != mFmi_levelsFromGrib1_record.mParameterList.end(); ++itm)
       {
         if (message.hasAttributeValue(stringFactory[itm->first],itm->second.c_str()))
           matchCount++;
@@ -5838,7 +4991,7 @@ T::ParamLevelId GridDef::getFmiLevelId(GRIB1::Message& message)
       if (matchCount == matchesRequired  &&  matchCount > maxMatches)
       {
         maxMatches = matchCount;
-        def = *it;
+        def = mFmi_levelsFromGrib1_record;
       }
     }
 
@@ -5856,7 +5009,7 @@ T::ParamLevelId GridDef::getFmiLevelId(GRIB1::Message& message)
 
 /*! \brief Returns the FMI level id for the given GRIB2 message. */
 
-T::ParamLevelId GridDef::getFmiLevelId(GRIB2::Message& message)
+T::ParamLevelId GridDef::getFmiLevelId(const GRIB2::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -5867,11 +5020,11 @@ T::ParamLevelId GridDef::getFmiLevelId(GRIB2::Message& message)
     int maxMatches = 0;
     FmiLevelId_grib def;
 
-    for (auto it = mFmi_levelsFromGrib2_records.begin(); it != mFmi_levelsFromGrib2_records.end(); ++it)
+    for (auto& mFmi_levelsFromGrib2_record : mFmi_levelsFromGrib2_records)
     {
-      int matchesRequired = it->mParameterList.size();
+      int matchesRequired = mFmi_levelsFromGrib2_record.mParameterList.size();
       int matchCount = 0;
-      for (auto itm = it->mParameterList.begin();itm != it->mParameterList.end(); ++itm)
+      for (auto itm = mFmi_levelsFromGrib2_record.mParameterList.begin();itm != mFmi_levelsFromGrib2_record.mParameterList.end(); ++itm)
       {
         if (message.hasAttributeValue(stringFactory[itm->first],itm->second.c_str()))
           matchCount++;
@@ -5880,7 +5033,7 @@ T::ParamLevelId GridDef::getFmiLevelId(GRIB2::Message& message)
       if (matchCount == matchesRequired  &&  matchCount > maxMatches)
       {
         maxMatches = matchCount;
-        def = *it;
+        def = mFmi_levelsFromGrib2_record;
       }
     }
 
@@ -5906,7 +5059,7 @@ T::FmiParamId GridDef::getFmiParameterIdByFmiName(const std::string& fmiParamNam
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto p = getFmiParameterDefByName(fmiParamName);
+    const auto *p = getFmiParameterDefByName(fmiParamName);
     if (p)
       return p->mFmiParameterId;
 
@@ -6038,10 +5191,10 @@ AggregationDef_cptr GridDef::getFmiAggregationDef(int aggregationId)
   FUNCTION_TRACE
   try
   {
-    for (auto it = mFmi_aggregationDef_records.begin(); it != mFmi_aggregationDef_records.end(); ++it)
+    for (auto& mFmi_aggregationDef_record : mFmi_aggregationDef_records)
     {
-      if (it->mAggregationId == aggregationId)
-        return &(*it);
+      if (mFmi_aggregationDef_record.mAggregationId == aggregationId)
+        return &mFmi_aggregationDef_record;
     }
     return nullptr;
   }
@@ -6103,7 +5256,7 @@ FmiParamId_newbase_cptr GridDef::getFmiParameterMappingByNewbaseId(T::NewbasePar
 
 /*! \brief Returns a pointer to the FMI parameter mapping for the given NetCDF parameter name. */
 
-FmiParamId_netCdf_cptr GridDef::getFmiParameterMappingByNetCdfName(std::string& netCdfParamName)
+FmiParamId_netCdf_cptr GridDef::getFmiParameterMappingByNetCdfName(const std::string& netCdfParamName)
 {
   FUNCTION_TRACE
   try
@@ -6201,11 +5354,11 @@ bool GridDef::getNewbaseParameterDefByFmiId(T::FmiParamId fmiParamId,NewbasePara
   FUNCTION_TRACE
   try
   {
-    auto p = getNewbaseParameterMappingByFmiId(fmiParamId);
+    const auto *p = getNewbaseParameterMappingByFmiId(fmiParamId);
     if (p == nullptr)
       return false;
 
-    auto n = getNewbaseParameterDefById(p->mNewbaseParameterId);
+    const auto *n = getNewbaseParameterDefById(p->mNewbaseParameterId);
     if (n == nullptr)
       return false;
 
@@ -6229,11 +5382,11 @@ bool GridDef::getNetCdfParameterDefByFmiId(T::FmiParamId fmiParamId,NetCdfParame
   FUNCTION_TRACE
   try
   {
-    auto p = getNetCdfParameterMappingByFmiId(fmiParamId);
+    const auto *p = getNetCdfParameterMappingByFmiId(fmiParamId);
     if (p == nullptr)
       return false;
 
-    auto n = getNetCdfParameterDefByName(p->mNetCdfParameterName);
+    const auto *n = getNetCdfParameterDefByName(p->mNetCdfParameterName);
     if (n == nullptr)
       return false;
 
@@ -6257,7 +5410,7 @@ bool GridDef::getNewbaseParameterDefByName(const std::string& newbaseParamName,N
   FUNCTION_TRACE
   try
   {
-    auto p = GridDef::getNewbaseParameterDefByName(newbaseParamName);
+    const auto *p = GridDef::getNewbaseParameterDefByName(newbaseParamName);
     if (p == nullptr)
       return false;
 
@@ -6281,7 +5434,7 @@ bool GridDef::getNetCdfParameterDefByName(const std::string& netCdfParamName,Net
   FUNCTION_TRACE
   try
   {
-    auto p = GridDef::getNetCdfParameterDefByName(netCdfParamName);
+    const auto *p = GridDef::getNetCdfParameterDefByName(netCdfParamName);
     if (p == nullptr)
       return false;
 
@@ -6353,7 +5506,7 @@ bool GridDef::getNewbaseParameterDefById(T::NewbaseParamId newbaseParamId,Newbas
   FUNCTION_TRACE
   try
   {
-    auto n = getNewbaseParameterDefById(newbaseParamId);
+    const auto *n = getNewbaseParameterDefById(newbaseParamId);
     if (n == nullptr)
       return false;
 
@@ -6395,12 +5548,12 @@ FmiParamDef_cptr GridDef::getFmiParameterDefByNewbaseId(T::NewbaseParamId newbas
 
 /*! \brief Returns a pointer to the FMI parameter definition for the given NetCDF parameter name. */
 
-FmiParamDef_cptr GridDef::getFmiParameterDefByNetCdfName(std::string& netCdfParamName)
+FmiParamDef_cptr GridDef::getFmiParameterDefByNetCdfName(const std::string& netCdfParamName)
 {
   FUNCTION_TRACE
   try
   {
-    auto p = getFmiParameterMappingByNetCdfName(netCdfParamName);
+    const auto *p = getFmiParameterMappingByNetCdfName(netCdfParamName);
     if (p)
       return getFmiParameterDefById(p->mFmiParameterId);
 
@@ -6423,7 +5576,7 @@ FmiParamDef_cptr GridDef::getFmiParameterDefByGribId(T::GribParamId gribParamId)
   FUNCTION_TRACE
   try
   {
-    auto p = getFmiParameterMappingByGribId(gribParamId);
+    const auto *p = getFmiParameterMappingByGribId(gribParamId);
     if (p)
       return getFmiParameterDefById(p->mFmiParameterId);
 
@@ -6473,7 +5626,7 @@ bool GridDef::getFmiParameterDefById(T::FmiParamId fmiParamId,FmiParameterDef& p
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto def = getFmiParameterDefById(fmiParamId);
+    const auto *def = getFmiParameterDefById(fmiParamId);
     if (def == nullptr)
       return false;
 
@@ -6500,7 +5653,7 @@ bool GridDef::getFmiParameterDefByNewbaseId(T::NewbaseParamId newbaseParamId,Fmi
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto def = getFmiParameterDefByNewbaseId(newbaseParamId);
+    const auto *def = getFmiParameterDefByNewbaseId(newbaseParamId);
     if (def == nullptr)
       return false;
 
@@ -6519,7 +5672,7 @@ bool GridDef::getFmiParameterDefByNewbaseId(T::NewbaseParamId newbaseParamId,Fmi
 
 /*! \brief Fetches an FMI parameter definition by NetCDF parameter name (copy out). */
 
-bool GridDef::getFmiParameterDefByNetCdfName(std::string& netCdfParamName,FmiParameterDef& paramDef)
+bool GridDef::getFmiParameterDefByNetCdfName(const std::string& netCdfParamName,FmiParameterDef& paramDef)
 {
   FUNCTION_TRACE
   try
@@ -6527,7 +5680,7 @@ bool GridDef::getFmiParameterDefByNetCdfName(std::string& netCdfParamName,FmiPar
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto def = getFmiParameterDefByNetCdfName(netCdfParamName);
+    const auto *def = getFmiParameterDefByNetCdfName(netCdfParamName);
     if (def == nullptr)
       return false;
 
@@ -6554,7 +5707,7 @@ bool GridDef::getFmiParameterDefByGribId(T::GribParamId gribParamId,FmiParameter
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto def = getFmiParameterDefByGribId(gribParamId);
+    const auto *def = getFmiParameterDefByGribId(gribParamId);
     if (def == nullptr)
       return false;
 
@@ -6581,7 +5734,7 @@ bool GridDef::getFmiParameterDefByName(const std::string& fmiParamName,FmiParame
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto def = getFmiParameterDefByName(fmiParamName);
+    const auto *def = getFmiParameterDefByName(fmiParamName);
     if (def == nullptr)
       return false;
 
@@ -6600,7 +5753,7 @@ bool GridDef::getFmiParameterDefByName(const std::string& fmiParamName,FmiParame
 
 /*! \brief Returns the FMI parameter name for the given GRIB1 message. */
 
-std::string GridDef::getFmiParameterName(GRIB1::Message& message)
+std::string GridDef::getFmiParameterName(const GRIB1::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -6612,7 +5765,7 @@ std::string GridDef::getFmiParameterName(GRIB1::Message& message)
     if (fmiId == 0)
       return std::string("");
 
-    auto p = getFmiParameterDefById(fmiId);
+    const auto *p = getFmiParameterDefById(fmiId);
     if (p == nullptr)
       return std::string("");
 
@@ -6630,7 +5783,7 @@ std::string GridDef::getFmiParameterName(GRIB1::Message& message)
 
 /*! \brief Returns the FMI parameter name for the given GRIB2 message. */
 
-std::string GridDef::getFmiParameterName(GRIB2::Message& message)
+std::string GridDef::getFmiParameterName(const GRIB2::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -6642,7 +5795,7 @@ std::string GridDef::getFmiParameterName(GRIB2::Message& message)
     if (fmiId == 0)
       return std::string("");
 
-    auto p = getFmiParameterDefById(fmiId);
+    const auto *p = getFmiParameterDefById(fmiId);
     if (p == nullptr)
       return std::string("");
 
@@ -6660,7 +5813,7 @@ std::string GridDef::getFmiParameterName(GRIB2::Message& message)
 
 /*! \brief Returns the FMI parameter description for the given GRIB1 message. */
 
-std::string GridDef::getFmiParameterDescription(GRIB1::Message& message)
+std::string GridDef::getFmiParameterDescription(const GRIB1::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -6672,7 +5825,7 @@ std::string GridDef::getFmiParameterDescription(GRIB1::Message& message)
     if (fmiId == 0)
       return std::string("");
 
-    auto p = getFmiParameterDefById(fmiId);
+    const auto *p = getFmiParameterDefById(fmiId);
     if (p == nullptr)
       return std::string("");
 
@@ -6690,7 +5843,7 @@ std::string GridDef::getFmiParameterDescription(GRIB1::Message& message)
 
 /*! \brief Returns the FMI parameter description for the given GRIB2 message. */
 
-std::string GridDef::getFmiParameterDescription(GRIB2::Message& message)
+std::string GridDef::getFmiParameterDescription(const GRIB2::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -6702,7 +5855,7 @@ std::string GridDef::getFmiParameterDescription(GRIB2::Message& message)
     if (fmiId == 0)
       return std::string("");
 
-    auto p = getFmiParameterDefById(fmiId);
+    const auto *p = getFmiParameterDefById(fmiId);
     if (p == nullptr)
       return std::string("");
 
@@ -6720,7 +5873,7 @@ std::string GridDef::getFmiParameterDescription(GRIB2::Message& message)
 
 /*! \brief Returns the FMI parameter units for the given GRIB1 message. */
 
-std::string GridDef::getFmiParameterUnits(GRIB1::Message& message)
+std::string GridDef::getFmiParameterUnits(const GRIB1::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -6732,7 +5885,7 @@ std::string GridDef::getFmiParameterUnits(GRIB1::Message& message)
     if (fmiId == 0)
       return std::string("");
 
-    auto p = getFmiParameterDefById(fmiId);
+    const auto *p = getFmiParameterDefById(fmiId);
     if (p == nullptr)
       return std::string("");
 
@@ -6750,7 +5903,7 @@ std::string GridDef::getFmiParameterUnits(GRIB1::Message& message)
 
 /*! \brief Returns the FMI parameter units for the given GRIB2 message. */
 
-std::string GridDef::getFmiParameterUnits(GRIB2::Message& message)
+std::string GridDef::getFmiParameterUnits(const GRIB2::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -6762,7 +5915,7 @@ std::string GridDef::getFmiParameterUnits(GRIB2::Message& message)
     if (fmiId == 0)
       return std::string("");
 
-    auto p = getFmiParameterDefById(fmiId);
+    const auto *p = getFmiParameterDefById(fmiId);
     if (p == nullptr)
       return std::string("");
 
@@ -6780,7 +5933,7 @@ std::string GridDef::getFmiParameterUnits(GRIB2::Message& message)
 
 /*! \brief Returns the FMI area interpolation method for the given GRIB1 message. */
 
-short GridDef::getFmiParameterInterpolationMethod(GRIB1::Message& message)
+short GridDef::getFmiParameterInterpolationMethod(const GRIB1::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -6792,7 +5945,7 @@ short GridDef::getFmiParameterInterpolationMethod(GRIB1::Message& message)
     if (fmiId == 0)
       return T::AreaInterpolationMethod::None;
 
-    auto p = getFmiParameterDefById(fmiId);
+    const auto *p = getFmiParameterDefById(fmiId);
     if (p == nullptr)
       return T::AreaInterpolationMethod::None;
 
@@ -6810,7 +5963,7 @@ short GridDef::getFmiParameterInterpolationMethod(GRIB1::Message& message)
 
 /*! \brief Returns the FMI area interpolation method for the given GRIB2 message. */
 
-short GridDef::getFmiParameterInterpolationMethod(GRIB2::Message& message)
+short GridDef::getFmiParameterInterpolationMethod(const GRIB2::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -6822,7 +5975,7 @@ short GridDef::getFmiParameterInterpolationMethod(GRIB2::Message& message)
     if (fmiId == 0)
       return T::AreaInterpolationMethod::None;
 
-    auto p = getFmiParameterDefById(fmiId);
+    const auto *p = getFmiParameterDefById(fmiId);
     if (p == nullptr)
       return T::AreaInterpolationMethod::None;
 
@@ -6914,7 +6067,7 @@ NetCdfParamDef_cptr GridDef::getNetCdfParameterDefByName(const std::string& netC
 
 /*! \brief Returns the newbase parameter id for the given GRIB1 message. */
 
-T::NewbaseParamId GridDef::getNewbaseParameterId(GRIB1::Message& message)
+T::NewbaseParamId GridDef::getNewbaseParameterId(const GRIB1::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -6944,7 +6097,7 @@ T::NewbaseParamId GridDef::getNewbaseParameterId(GRIB1::Message& message)
 
 /*! \brief Returns the newbase parameter id for the given GRIB2 message. */
 
-T::NewbaseParamId GridDef::getNewbaseParameterId(GRIB2::Message& message)
+T::NewbaseParamId GridDef::getNewbaseParameterId(const GRIB2::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -6974,7 +6127,7 @@ T::NewbaseParamId GridDef::getNewbaseParameterId(GRIB2::Message& message)
 
 /*! \brief Returns the newbase parameter name for the given GRIB1 message. */
 
-std::string GridDef::getNewbaseParameterName(GRIB1::Message& message)
+std::string GridDef::getNewbaseParameterName(const GRIB1::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -6986,7 +6139,7 @@ std::string GridDef::getNewbaseParameterName(GRIB1::Message& message)
     if (id == 0)
       return std::string("");
 
-    auto n = getNewbaseParameterDefById(id);
+    const auto *n = getNewbaseParameterDefById(id);
     if (n == nullptr)
       return std::string("");
 
@@ -7004,7 +6157,7 @@ std::string GridDef::getNewbaseParameterName(GRIB1::Message& message)
 
 /*! \brief Returns the newbase parameter name for the given GRIB2 message. */
 
-std::string GridDef::getNewbaseParameterName(GRIB2::Message& message)
+std::string GridDef::getNewbaseParameterName(const GRIB2::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -7016,7 +6169,7 @@ std::string GridDef::getNewbaseParameterName(GRIB2::Message& message)
     if (id == 0)
       return std::string("");
 
-    auto n = getNewbaseParameterDefById(id);
+    const auto *n = getNewbaseParameterDefById(id);
     if (n == nullptr)
       return std::string("");
 
@@ -7034,7 +6187,7 @@ std::string GridDef::getNewbaseParameterName(GRIB2::Message& message)
 
 /*! \brief Returns the NetCDF parameter name for the given GRIB1 message. */
 
-std::string GridDef::getNetCdfParameterName(GRIB1::Message& message)
+std::string GridDef::getNetCdfParameterName(const GRIB1::Message& message)
 {
   FUNCTION_TRACE
   try  {
@@ -7045,7 +6198,7 @@ std::string GridDef::getNetCdfParameterName(GRIB1::Message& message)
     if (fmiId == 0)
       return std::string("");
 
-    auto p = getNetCdfParameterMappingByFmiId(fmiId);
+    const auto *p = getNetCdfParameterMappingByFmiId(fmiId);
     if (!p)
       return std::string("");
 
@@ -7063,7 +6216,7 @@ std::string GridDef::getNetCdfParameterName(GRIB1::Message& message)
 
 /*! \brief Returns the NetCDF parameter name for the given GRIB2 message. */
 
-std::string GridDef::getNetCdfParameterName(GRIB2::Message& message)
+std::string GridDef::getNetCdfParameterName(const GRIB2::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -7075,7 +6228,7 @@ std::string GridDef::getNetCdfParameterName(GRIB2::Message& message)
     if (fmiId == 0)
       return std::string("");
 
-    auto p = getNetCdfParameterMappingByFmiId(fmiId);
+    const auto *p = getNetCdfParameterMappingByFmiId(fmiId);
     if (!p)
       return std::string("");
 

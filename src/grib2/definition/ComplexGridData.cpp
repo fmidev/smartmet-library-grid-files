@@ -27,15 +27,14 @@ ComplexGridData::ComplexGridData() {
 
 /*! \brief The destructor of the class. */
 
-ComplexGridData::~ComplexGridData() {
-}
+ComplexGridData::~ComplexGridData() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
         \param memoryReader  This object controls the access to the memory mapped file.
 */
 
-void ComplexGridData::read(MemoryReader &memoryReader) {
+void ComplexGridData::read(MemoryReader &/*memoryReader*/) {
   try {
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
@@ -47,7 +46,7 @@ void ComplexGridData::read(MemoryReader &memoryReader) {
         \param dataWriter  This object is used for writing the object data.
 */
 
-void ComplexGridData::write(DataWriter &dataWriter) {
+void ComplexGridData::write(DataWriter &/*dataWriter*/) {
   try {
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
@@ -60,7 +59,7 @@ void ComplexGridData::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void ComplexGridData::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
+void ComplexGridData::getAttributeList(const std::string &/*prefix*/, T::AttributeList &/*attributeList*/) const {
   try {
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
@@ -73,7 +72,7 @@ void ComplexGridData::getAttributeList(const std::string &prefix, T::AttributeLi
     \param attributeValue The value of the attribute (string).
 */
 
-bool ComplexGridData::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+bool ComplexGridData::getAttributeValue(const char *attributeName, std::string &/*attributeValue*/) const {
   try {
     if (attributeName == nullptr)
       return false;
@@ -106,7 +105,7 @@ bool ComplexGridData::hasAttributeValue(const char *attributeName, const char *a
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void ComplexGridData::print(std::ostream &stream, uint level, uint optionFlags) const {
+void ComplexGridData::print(std::ostream &stream, uint level, uint /*optionFlags*/) const {
   try {
     stream << space(level) << "ComplexGridData\n";
   } catch (...) {

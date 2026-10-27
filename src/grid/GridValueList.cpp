@@ -1,5 +1,7 @@
 #include "GridValueList.h"
 #include <macgyver/Exception.h>
+
+#include <algorithm>
 #include "../common/GeneralFunctions.h"
 
 
@@ -85,7 +87,7 @@ GridValueList& GridValueList::operator=(const GridValueList& gridValueList)
 
 /*! \brief Appends a grid value to the end of the list. */
 
-void GridValueList::addGridValue(GridValue& gridValue)
+void GridValueList::addGridValue(const GridValue& gridValue)
 {
   try
   {
@@ -164,7 +166,7 @@ bool GridValueList::getGridValueByIndex(uint index,GridValue& gridValue) const
 
 /*! \brief Replaces the grid value at the given index with the supplied value. */
 
-bool GridValueList::setGridValueByIndex(uint index,GridValue& gridValue)
+bool GridValueList::setGridValueByIndex(uint index,const GridValue& gridValue)
 {
   try
   {
@@ -188,11 +190,11 @@ bool GridValueList::getGridValueByCoordinates(double x,double y,GridValue& gridV
 {
   try
   {
-    for (auto it=mList.begin(); it != mList.end(); ++it)
+    for (const auto& it : mList)
     {
-      if (it->mX == x  &&  it->mY == y)
+      if (it.mX == x  &&  it.mY == y)
       {
-        gridValue = *it;
+        gridValue = it;
         return true;
       }
     }
@@ -222,17 +224,13 @@ void GridValueList::getGridValueArea(double& minX,double& minY,double& maxX,doub
     uint len = mList.size();
     for (uint t=0; t<len; t++)
     {
-      if (mList[t].mX < minX)
-        minX = mList[t].mX;
+      minX = std::min(mList[t].mX, minX);
 
-      if (mList[t].mX > maxX)
-        maxX = mList[t].mX;
+      maxX = std::max(mList[t].mX, maxX);
 
-      if (mList[t].mY < minY)
-        minY = mList[t].mY;
+      minY = std::min(mList[t].mY, minY);
 
-      if (mList[t].mY > maxY)
-        maxY = mList[t].mY;
+      maxY = std::max(mList[t].mY, maxY);
     }
   }
   catch (...)
@@ -271,10 +269,10 @@ T::ParamValue GridValueList::getMaxValue() const
   {
     T::ParamValue max = ParamValueMissing;
 
-    for (auto it=mList.begin(); it != mList.end(); ++it)
+    for (const auto& it : mList)
     {
-      if (it->mValue != ParamValueMissing  &&  (max == ParamValueMissing || it->mValue > max))
-        max = it->mValue;
+      if (it.mValue != ParamValueMissing  &&  (max == ParamValueMissing || it.mValue > max))
+        max = it.mValue;
     }
     return max;
   }
@@ -296,10 +294,10 @@ T::ParamValue GridValueList::getMinValue() const
   {
     T::ParamValue min = ParamValueMissing;
 
-    for (auto it=mList.begin(); it != mList.end(); ++it)
+    for (const auto& it : mList)
     {
-      if (it->mValue != ParamValueMissing  &&  (min == ParamValueMissing || it->mValue < min))
-        min = it->mValue;
+      if (it.mValue != ParamValueMissing  &&  (min == ParamValueMissing || it.mValue < min))
+        min = it.mValue;
     }
     return min;
   }
@@ -322,11 +320,11 @@ T::ParamValue GridValueList::getAverageValue() const
     double total = 0;
     uint cnt = 0;
 
-    for (auto it=mList.begin(); it != mList.end(); ++it)
+    for (const auto& it : mList)
     {
-      if (it->mValue != ParamValueMissing)
+      if (it.mValue != ParamValueMissing)
       {
-        total = total + it->mValue;
+        total = total + it.mValue;
         cnt++;
       }
     }
@@ -353,9 +351,9 @@ uint GridValueList::getNumOfValuesInValueRange(T::ParamValue minValue,T::ParamVa
   try
   {
     uint cnt = 0;
-    for (auto it=mList.begin(); it != mList.end(); ++it)
+    for (const auto& it : mList)
     {
-      if (it->mValue >= minValue  &&  it->mValue <= maxValue)
+      if (it.mValue >= minValue  &&  it.mValue <= maxValue)
         cnt++;
     }
     return cnt;

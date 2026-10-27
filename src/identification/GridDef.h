@@ -23,6 +23,7 @@
 #include "../grid/Typedefs.h"
 #include "../grib2/GridDefinition.h"
 
+#include <atomic>
 #include <set>
 
 
@@ -35,9 +36,9 @@ namespace SmartMet
 namespace Identification
 {
 
-typedef std::unordered_map<uint,std::string> GeometryNames;  //!< Map from geometry ID to geometry name
-typedef std::unordered_map<uint,uint> IdMap;                 //!< Generic uint→uint identifier mapping
-typedef std::unordered_map<std::string,uint> StringIdMap;    //!< String→uint identifier mapping
+using GeometryNames = std::unordered_map<uint,std::string>;  //!< Map from geometry ID to geometry name
+using IdMap = std::unordered_map<uint,uint>;                 //!< Generic uint→uint identifier mapping
+using StringIdMap = std::unordered_map<std::string,uint>;    //!< String→uint identifier mapping
 
 
 // ====================================================================================
@@ -61,6 +62,8 @@ class GridDef
   public:
                         GridDef();
     virtual             ~GridDef();
+    GridDef(const GridDef&) = delete;
+    GridDef& operator=(const GridDef&) = delete;
 
     /*! \brief Initialise all mapping tables from the given libconfig configuration file.
      *  \param[in] configFile  Path to the GridDef configuration file. */
@@ -78,16 +81,16 @@ class GridDef
      *  \return true on success; false if not found. */
     bool                getGribParameterDefByName(const std::string& gribParamName,GribParameterDef&  paramDef);
     /*! \brief Determine the GRIB parameter ID from the fields of a GRIB 1 message. */
-    T::GribParamId      getGribParameterId(GRIB1::Message& message);
+    T::GribParamId      getGribParameterId(const GRIB1::Message& message);
     //! \overload (GRIB 2 message)
-    T::GribParamId      getGribParameterId(GRIB2::Message& message);
+    T::GribParamId      getGribParameterId(const GRIB2::Message& message);
     /*! \brief Look up the FMI→GRIB mapping record for an FMI parameter ID.
      *  \return true on success; false if no mapping exists. */
     bool                getGribParameterMappingByFmiId(T::FmiParamId fmiParamId,FmiParameterId_grib& def);
     /*! \brief Return the GRIB parameter name for a GRIB 1 message, or empty string if unknown. */
-    std::string         getGribParameterName(GRIB1::Message& message);
+    std::string         getGribParameterName(const GRIB1::Message& message);
     //! \overload (GRIB 2 message)
-    std::string         getGribParameterName(GRIB2::Message& message);
+    std::string         getGribParameterName(const GRIB2::Message& message);
 
     // -----------------------------------------------------------------------
     // GRIB 1 — geometry, level, and parameter lookups
@@ -98,9 +101,9 @@ class GridDef
     /*! \brief Return the GRIB 1 grid definition matching a geometry string descriptor. */
     GRIB1::GridDef_sptr getGrib1DefinitionByGeometryString(const char *geometryStr);
     //! \overload
-    GRIB1::GridDef_sptr getGrib1DefinitionByGeometryString(std::string& geometryStr);
+    GRIB1::GridDef_sptr getGrib1DefinitionByGeometryString(const std::string& geometryStr);
     /*! \brief Determine the FMI geometry ID from a GRIB 1 message's grid definition. */
-    int                 getGrib1GeometryId(GRIB1::Message& message);
+    int                 getGrib1GeometryId(const GRIB1::Message& message);
     /*! \brief Look up the GRIB 1 level key/value mapping for an FMI level ID.
      *  \return true on success; false if not found. */
     bool                getGrib1LevelDef(uint fmiLevelId,FmiLevelId_grib& def);
@@ -125,9 +128,9 @@ class GridDef
     /*! \brief Return the GRIB 2 grid definition matching a geometry string descriptor. */
     GRIB2::GridDef_sptr getGrib2DefinitionByGeometryString(const char *geometryStr);
     //! \overload
-    GRIB2::GridDef_sptr getGrib2DefinitionByGeometryString(std::string& geometryStr);
+    GRIB2::GridDef_sptr getGrib2DefinitionByGeometryString(const std::string& geometryStr);
     /*! \brief Determine the FMI geometry ID from a GRIB 2 message's grid definition. */
-    int                 getGrib2GeometryId(GRIB2::Message& message);
+    int                 getGrib2GeometryId(const GRIB2::Message& message);
     /*! \brief Look up the GRIB 2 level key/value mapping for an FMI level ID.
      *  \return true on success; false if not found. */
     bool                getGrib2LevelDef(uint fmiLevelId,FmiLevelId_grib& def);
@@ -166,9 +169,9 @@ class GridDef
      *  \return true on success; false if not found. */
     bool                getFmiLevelDef(uint levelId,LevelDef& levelDef);
     /*! \brief Determine the FMI level ID for a GRIB 1 message. */
-    T::ParamLevelId     getFmiLevelId(GRIB1::Message& message);
+    T::ParamLevelId     getFmiLevelId(const GRIB1::Message& message);
     //! \overload (GRIB 2 message)
-    T::ParamLevelId     getFmiLevelId(GRIB2::Message& message);
+    T::ParamLevelId     getFmiLevelId(const GRIB2::Message& message);
     /*! \brief Map a Newbase level ID to the corresponding FMI level ID. */
     uint                getFmiLevelIdByNewbaseLevelId(uint newbaseLevelId);
     /*! \brief Look up a forecast type definition by numeric ID.
@@ -185,14 +188,14 @@ class GridDef
     bool                getFmiParameterDefByNewbaseId(T::NewbaseParamId newbaseParamId,FmiParameterDef& paramDef);
     /*! \brief Look up an FMI parameter definition by NetCDF variable name.
      *  \return true on success; false if not found. */
-    bool                getFmiParameterDefByNetCdfName(std::string& netCdfParamName,FmiParameterDef& paramDef);
+    bool                getFmiParameterDefByNetCdfName(const std::string& netCdfParamName,FmiParameterDef& paramDef);
     /*! \brief Look up an FMI parameter definition by FMI parameter name.
      *  \return true on success; false if not found. */
     bool                getFmiParameterDefByName(const std::string& fmiParamName,FmiParameterDef& paramDef);
     /*! \brief Determine the FMI parameter ID for a GRIB 1 message. */
-    T::FmiParamId       getFmiParameterId(GRIB1::Message& message);
+    T::FmiParamId       getFmiParameterId(const GRIB1::Message& message);
     //! \overload (GRIB 2 message)
-    T::FmiParamId       getFmiParameterId(GRIB2::Message& message);
+    T::FmiParamId       getFmiParameterId(const GRIB2::Message& message);
     /*! \brief Look up the FMI parameter ID by FMI canonical parameter name. */
     T::FmiParamId       getFmiParameterIdByFmiName(const std::string& fmiParamName);
     /*! \brief Look up the FMI parameter ID by Newbase parameter name. */
@@ -204,21 +207,21 @@ class GridDef
     /*! \brief Look up the FMI parameter ID by GRIB numeric parameter ID. */
     T::FmiParamId       getFmiParameterIdByGribId(T::GribParamId gribParamId);
     /*! \brief Return the default area interpolation method for the parameter in a GRIB 1 message. */
-    short               getFmiParameterInterpolationMethod(GRIB1::Message& message);
+    short               getFmiParameterInterpolationMethod(const GRIB1::Message& message);
     //! \overload (GRIB 2 message)
-    short               getFmiParameterInterpolationMethod(GRIB2::Message& message);
+    short               getFmiParameterInterpolationMethod(const GRIB2::Message& message);
     /*! \brief Return the FMI canonical parameter name for a GRIB 1 message, or empty string. */
-    std::string         getFmiParameterName(GRIB1::Message& message);
+    std::string         getFmiParameterName(const GRIB1::Message& message);
     //! \overload (GRIB 2 message)
-    std::string         getFmiParameterName(GRIB2::Message& message);
+    std::string         getFmiParameterName(const GRIB2::Message& message);
     /*! \brief Return the FMI parameter description for a GRIB 1 message, or empty string. */
-    std::string         getFmiParameterDescription(GRIB1::Message& message);
+    std::string         getFmiParameterDescription(const GRIB1::Message& message);
     //! \overload (GRIB 2 message)
-    std::string         getFmiParameterDescription(GRIB2::Message& message);
+    std::string         getFmiParameterDescription(const GRIB2::Message& message);
     /*! \brief Return the FMI parameter units for a GRIB 1 message, or empty string. */
-    std::string         getFmiParameterUnits(GRIB1::Message& message);
+    std::string         getFmiParameterUnits(const GRIB1::Message& message);
     //! \overload (GRIB 2 message)
-    std::string         getFmiParameterUnits(GRIB2::Message& message);
+    std::string         getFmiParameterUnits(const GRIB2::Message& message);
     /*! \brief Look up a processing type definition by numeric ID.
      *  \return true on success; false if not found. */
     bool                getFmiProcessingTypeDef(int processingTypeId,ProcessingTypeDef& processingTypeDef);
@@ -237,9 +240,9 @@ class GridDef
      *  \return true on success; false if not found. */
     bool                getNetCdfParameterMappingByFmiId(T::FmiParamId fmiParamId,FmiParameterId_netCdf& paramMapping);
     /*! \brief Return the NetCDF variable name for the parameter in a GRIB 1 message, or empty string. */
-    std::string         getNetCdfParameterName(GRIB1::Message& message);
+    std::string         getNetCdfParameterName(const GRIB1::Message& message);
     //! \overload (GRIB 2 message)
-    std::string         getNetCdfParameterName(GRIB2::Message& message);
+    std::string         getNetCdfParameterName(const GRIB2::Message& message);
 
     // -----------------------------------------------------------------------
     // Newbase parameter lookups
@@ -258,13 +261,13 @@ class GridDef
      *  \return true on success; false if not found. */
     bool                getNewbaseParameterMappingByFmiId(T::FmiParamId fmiParamId,FmiParameterId_newbase& paramMapping);
     /*! \brief Determine the Newbase parameter ID for a GRIB 1 message. */
-    T::NewbaseParamId   getNewbaseParameterId(GRIB1::Message& message);
+    T::NewbaseParamId   getNewbaseParameterId(const GRIB1::Message& message);
     //! \overload (GRIB 2 message)
-    T::NewbaseParamId   getNewbaseParameterId(GRIB2::Message& message);
+    T::NewbaseParamId   getNewbaseParameterId(const GRIB2::Message& message);
     /*! \brief Return the Newbase parameter name for a GRIB 1 message, or empty string. */
-    std::string         getNewbaseParameterName(GRIB1::Message& message);
+    std::string         getNewbaseParameterName(const GRIB1::Message& message);
     //! \overload (GRIB 2 message)
-    std::string         getNewbaseParameterName(GRIB2::Message& message);
+    std::string         getNewbaseParameterName(const GRIB2::Message& message);
 
     // -----------------------------------------------------------------------
     // Geometry (grid projection) queries
@@ -326,12 +329,12 @@ class GridDef
     GribParamDef_cptr       getGribParameterDefByName(const std::string& gribParamName);
     FmiParamId_grib_cptr    getGribParameterMappingByFmiId(T::FmiParamId fmiParamId);
 
-    GRIB1::GridDef_sptr     getGrib1Definition(GRIB1::Message& message);
+    GRIB1::GridDef_sptr     getGrib1Definition(const GRIB1::Message& message);
     Grib1ParamDef_cptr      getGrib1ParameterDefById(T::GribParamId gribParamId);
     Grib1ParamDef_cptr      getGrib1ParameterDefByFmiId(T::FmiParamId fmiParamId);
     Grib1ParamDef_cptr      getGrib1ParameterDefByIndex(uint index);
 
-    GRIB2::GridDef_sptr     getGrib2Definition(GRIB2::Message& message);
+    GRIB2::GridDef_sptr     getGrib2Definition(const GRIB2::Message& message);
     Grib2ParamDef_cptr      getGrib2ParameterDefById(T::GribParamId gribParamId);
     Grib2ParamDef_cptr      getGrib2ParameterDefByFmiId(T::FmiParamId fmiParamId);
 
@@ -340,12 +343,12 @@ class GridDef
     LevelDef_cptr           getFmiLevelDef(uint levelId);
     ForecastTypeDef_cptr    getFmiForecastTypeDef(int forecastTypeId);
     FmiParamDef_cptr        getFmiParameterDefByGribId(T::GribParamId gribParamId);
-    FmiParamDef_cptr        getFmiParameterDefByNetCdfName(std::string& netCdfParamName);
+    FmiParamDef_cptr        getFmiParameterDefByNetCdfName(const std::string& netCdfParamName);
     FmiParamDef_cptr        getFmiParameterDefByNewbaseId(T::NewbaseParamId newbaseParamId);
     FmiParamDef_cptr        getFmiParameterDefByName(const std::string& fmiParamName);
     FmiParamId_newbase_cptr getFmiParameterMappingByNewbaseId(T::NewbaseParamId newbaseParamId);
     FmiParamId_grib_cptr    getFmiParameterMappingByGribId(T::GribParamId gribParamId);
-    FmiParamId_netCdf_cptr  getFmiParameterMappingByNetCdfName(std::string& netCdfParamName);
+    FmiParamId_netCdf_cptr  getFmiParameterMappingByNetCdfName(const std::string& netCdfParamName);
     ProcessingTypeDef_cptr  getFmiProcessingTypeDef(int processingTypeId);
     FmiGeomGroupDef_cptr    getFmiGeometryGroupDef(uint geometryGroupId);
     FmiGeomGroupDef_cptr    getFmiGeometryGroupDef(const char *producerName,uint groupType);
@@ -379,15 +382,15 @@ class GridDef
     void                    loadFmiLevelId_newbase(const char *filename);
 
     void                    updateCheck();
-    time_t                  getModificationTime(string_vec& files);
+    time_t                  getModificationTime(const string_vec& files);
 
-  protected:
+  
 
     std::string             mConfigFileName;
     ConfigurationFile       mConfigurationFile;
 
     bool                    mInitialized;
-    time_t                  mLastCheckTime;
+    std::atomic<time_t>     mLastCheckTime;
     ModificationLock        mModificationLock;
 
     string_vec              mGrib_parameterDef_files;
@@ -409,7 +412,7 @@ class GridDef
     FmiParamDef_umap        mFmi_parameterDef_records;
 
     string_vec              mFmi_geometryGroupDef_files;
-    time_t                  mFmi_geometryGroupDef_modificationTime;
+    time_t                  mFmi_geometryGroupDef_modificationTime = 0;
     FmiGeomGroupDef_vec     mFmi_geometryGroupDef_records;
 
     string_vec              mFmi_levelDef_files;
@@ -417,15 +420,15 @@ class GridDef
     LevelDef_vec            mFmi_levelDef_records;
 
     string_vec              mFmi_forecastTypeDef_files;
-    time_t                  mFmi_forecastTypeDef_modificationTime;
+    time_t                  mFmi_forecastTypeDef_modificationTime = 0;
     ForecastTypeDef_vec     mFmi_forecastTypeDef_records;
 
     string_vec              mFmi_aggregationDef_files;
-    time_t                  mFmi_aggregationDef_modificationTime;
+    time_t                  mFmi_aggregationDef_modificationTime = 0;
     AggregationDef_vec      mFmi_aggregationDef_records;
 
     string_vec              mFmi_processingTypeDef_files;
-    time_t                  mFmi_processingTypeDef_modificationTime;
+    time_t                  mFmi_processingTypeDef_modificationTime = 0;
     ProcessingTypeDef_vec   mFmi_processingTypeDef_records;
 
     string_vec              mFmi_parametersFromGrib_files;

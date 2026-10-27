@@ -29,8 +29,7 @@ RotationSettings::RotationSettings() {
 
 /*! \brief The destructor of the class. */
 
-RotationSettings::~RotationSettings() {
-}
+RotationSettings::~RotationSettings() = default;
 
 /*! \brief The method reads and initializes all data related to the current section object.
 
@@ -70,13 +69,9 @@ void RotationSettings::write(DataWriter &dataWriter) {
 
 void RotationSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sRotationSettings.LatitudeOfSouthernPole", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatitudeOfSouthernPole));
-    sprintf(name, "%sRotationSettings.LongitudeOfSouthernPole", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLongitudeOfSouthernPole));
-    sprintf(name, "%sRotationSettings.Geography_angleOfRotationInDegrees", prefix.c_str());
-    attributeList.addAttribute(name, toString(mGeography_angleOfRotationInDegrees));
+        attributeList.addAttribute(prefix + "RotationSettings.LatitudeOfSouthernPole", toString(mLatitudeOfSouthernPole));
+        attributeList.addAttribute(prefix + "RotationSettings.LongitudeOfSouthernPole", toString(mLongitudeOfSouthernPole));
+        attributeList.addAttribute(prefix + "RotationSettings.Geography_angleOfRotationInDegrees", toString(mGeography_angleOfRotationInDegrees));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -139,7 +134,7 @@ bool RotationSettings::hasAttributeValue(const char *attributeName, const char *
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void RotationSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
+void RotationSettings::print(std::ostream &stream, uint level, uint /*optionFlags*/) const {
   try {
     stream << space(level) << "RotationSettings\n";
     stream << space(level) << "- LatitudeOfSouthernPole = " << toString(mLatitudeOfSouthernPole) << "\n";
@@ -166,7 +161,7 @@ T::Hash RotationSettings::countHash() const {
 
 /*! \brief The method returns the value of the {@link mLatitudeOfSouthernPole} attribute. */
 
-std::int24_t RotationSettings::getLatitudeOfSouthernPole() const {
+SmartMet::int24_t RotationSettings::getLatitudeOfSouthernPole() const {
   try {
     return mLatitudeOfSouthernPole;
   } catch (...) {
@@ -176,7 +171,7 @@ std::int24_t RotationSettings::getLatitudeOfSouthernPole() const {
 
 /*! \brief The method returns the value of the {@link mLongitudeOfSouthernPole} attribute. */
 
-std::int24_t RotationSettings::getLongitudeOfSouthernPole() const {
+SmartMet::int24_t RotationSettings::getLongitudeOfSouthernPole() const {
   try {
     return mLongitudeOfSouthernPole;
   } catch (...) {
@@ -194,7 +189,7 @@ ibmfloat RotationSettings::getGeography_angleOfRotationInDegrees() const {
   }
 }
 
-void RotationSettings::setLatitudeOfSouthernPole(std::int24_t latitudeOfSouthernPole) {
+void RotationSettings::setLatitudeOfSouthernPole(SmartMet::int24_t latitudeOfSouthernPole) {
   try {
     mLatitudeOfSouthernPole = latitudeOfSouthernPole;
   } catch (...) {
@@ -202,7 +197,7 @@ void RotationSettings::setLatitudeOfSouthernPole(std::int24_t latitudeOfSouthern
   }
 }
 
-void RotationSettings::setLongitudeOfSouthernPole(std::int24_t longitudeOfSouthernPole) {
+void RotationSettings::setLongitudeOfSouthernPole(SmartMet::int24_t longitudeOfSouthernPole) {
   try {
     mLongitudeOfSouthernPole = longitudeOfSouthernPole;
   } catch (...) {

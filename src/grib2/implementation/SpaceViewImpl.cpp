@@ -21,10 +21,7 @@ SpaceViewImpl::SpaceViewImpl()
 
 /*! \brief The copy constructor of the class. */
 
-SpaceViewImpl::SpaceViewImpl(const SpaceViewImpl& other)
-:SpaceView(other)
-{
-}
+SpaceViewImpl::SpaceViewImpl(const SpaceViewImpl& other) = default;
 
 
 
@@ -32,9 +29,7 @@ SpaceViewImpl::SpaceViewImpl(const SpaceViewImpl& other)
 
 /*! \brief The destructor of the class. */
 
-SpaceViewImpl::~SpaceViewImpl()
-{
-}
+SpaceViewImpl::~SpaceViewImpl() = default;
 
 
 
@@ -114,7 +109,7 @@ T::Dimensions SpaceViewImpl::getGridDimensions() const
   try
   {
     if (!mNx || !mNy)
-      return T::Dimensions();
+      return {};
 
     return T::Dimensions(*mNx,*mNy);
   }

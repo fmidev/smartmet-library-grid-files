@@ -27,8 +27,7 @@ SphericalHarmonic::SphericalHarmonic() {
 
 /*! \brief The destructor of the class. */
 
-SphericalHarmonic::~SphericalHarmonic() {
-}
+SphericalHarmonic::~SphericalHarmonic() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -64,9 +63,7 @@ void SphericalHarmonic::write(DataWriter &dataWriter) {
 
 void SphericalHarmonic::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sSphericalHarmonic.", prefix.c_str());
-    mSphericalHarmonic.getAttributeList(name, attributeList);
+        mSphericalHarmonic.getAttributeList(prefix + "SphericalHarmonic.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -153,13 +150,13 @@ GridDefinition *SphericalHarmonic::createGridDefinition() const {
 
 SphericalHarmonicSettings *SphericalHarmonic::getSphericalHarmonic() const {
   try {
-    return static_cast<SphericalHarmonicSettings *>(&mSphericalHarmonic);
+    return &mSphericalHarmonic;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
-void SphericalHarmonic::setSphericalHarmonic(SphericalHarmonicSettings &sphericalHarmonic) {
+void SphericalHarmonic::setSphericalHarmonic(const SphericalHarmonicSettings &sphericalHarmonic) {
   try {
     mSphericalHarmonic = sphericalHarmonic;
   } catch (...) {

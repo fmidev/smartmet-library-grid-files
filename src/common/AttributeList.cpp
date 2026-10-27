@@ -124,7 +124,7 @@ void  AttributeList::addAttribute(Attribute *attribute)
 
 /*! \brief Creates and adds a new attribute from a C-string name and value. */
 
-void AttributeList::addAttribute(const char *name,std::string value)
+void AttributeList::addAttribute(const char *name,const std::string& value)
 {
   try
   {
@@ -465,8 +465,8 @@ std::size_t AttributeList::getHash()
   try
   {
     std::size_t hash = 0;
-    for (auto it = mAttributeVector.begin(); it != mAttributeVector.end(); ++it)
-      Fmi::hash_merge(hash,(*it)->getHash());
+    for (auto& it : mAttributeVector)
+      Fmi::hash_merge(hash,it->getHash());
 
     return hash;
   }
@@ -482,7 +482,7 @@ std::size_t AttributeList::getHash()
 
 /*! \brief Prints all attributes in the list to the given stream. */
 
-void AttributeList::print(std::ostream& stream,uint level,uint optionFlags) const
+void AttributeList::print(std::ostream& stream,uint level,uint /*optionFlags*/) const
 {
   try
   {

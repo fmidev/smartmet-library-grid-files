@@ -13,10 +13,10 @@ struct Point
   /*! \brief Construct from integer grid indices.
    *  \param[in] x  Column index.
    *  \param[in] y  Row index. */
-  Point(const int x, const int y)
+  Point(const int x, const int y) : mX(x), mY(y)
   {
-    mX = x;
-    mY = y;
+
+
   }
 
   /*! \brief Return the column index. */

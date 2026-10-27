@@ -24,36 +24,40 @@ namespace GRIB1 {
 class StretchedRotatedLatLon : public GridDefinition {
 public:
   StretchedRotatedLatLon();
-  virtual ~StretchedRotatedLatLon();
+  StretchedRotatedLatLon(const StretchedRotatedLatLon &) = default;
+  StretchedRotatedLatLon(StretchedRotatedLatLon &&) = default;
+  StretchedRotatedLatLon &operator=(const StretchedRotatedLatLon &) = default;
+  StretchedRotatedLatLon &operator=(StretchedRotatedLatLon &&) = default;
+  ~StretchedRotatedLatLon() override;
 
-  virtual void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const;
-  virtual void read(MemoryReader &memoryReader);
-  virtual void write(DataWriter &dataWriter);
-  virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
+  void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const override;
+  void read(MemoryReader &memoryReader) override;
+  void write(DataWriter &dataWriter) override;
+  void print(std::ostream &stream, uint level, uint optionFlags) const override;
   virtual bool getAttributeValue(const char *attributeName, std::string &attributeValue) const;
   virtual bool hasAttributeValue(const char *attributeName, const char *attributeValue) const;
-  virtual T::Hash countHash() const;
+  T::Hash countHash() const override;
 
-  virtual uint getTemplateNumber() const;
-  virtual GridDefinition *createGridDefinition() const;
+  uint getTemplateNumber() const override;
+  GridDefinition *createGridDefinition() const override;
   std::uint16_t getNi() const;
   void setNi(std::uint16_t ni);
   std::uint16_t getNj() const;
   void setNj(std::uint16_t nj);
-  GridAreaSettings *getGridArea() const;
-  void setGridArea(GridAreaSettings &gridArea);
+  GridAreaSettings *getGridArea() const override;
+  void setGridArea(const GridAreaSettings &gridArea);
   std::uint16_t getIDirectionIncrement() const;
   void setIDirectionIncrement(std::uint16_t iDirectionIncrement);
   std::uint16_t getJDirectionIncrement() const;
   void setJDirectionIncrement(std::uint16_t jDirectionIncrement);
-  ScanningModeSettings *getScanningMode() const;
-  void setScanningMode(ScanningModeSettings &scanningMode);
+  ScanningModeSettings *getScanningMode() const override;
+  void setScanningMode(const ScanningModeSettings &scanningMode);
   std::uint32_t getZero() const;
   void setZero(std::uint32_t zero);
-  RotationSettings *getRotation() const;
-  void setRotation(RotationSettings &rotation);
+  RotationSettings *getRotation() const override;
+  void setRotation(const RotationSettings &rotation);
   GridStretchingSettings *getGridStretching() const;
-  void setGridStretching(GridStretchingSettings &gridStretching);
+  void setGridStretching(const GridStretchingSettings &gridStretching);
 
 protected:
   // # Copyright 2005-2019 ECMWF.

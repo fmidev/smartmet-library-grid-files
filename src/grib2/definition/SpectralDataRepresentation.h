@@ -21,20 +21,24 @@ namespace GRIB2 {
 class SpectralDataRepresentation : public RepresentationDefinition {
 public:
   SpectralDataRepresentation();
-  virtual ~SpectralDataRepresentation();
+  SpectralDataRepresentation(const SpectralDataRepresentation &) = default;
+  SpectralDataRepresentation(SpectralDataRepresentation &&) = default;
+  SpectralDataRepresentation &operator=(const SpectralDataRepresentation &) = default;
+  SpectralDataRepresentation &operator=(SpectralDataRepresentation &&) = default;
+  ~SpectralDataRepresentation() override;
 
-  virtual uint getTemplateNumber() const;
-  virtual RepresentationDefinition *createRepresentationDefinition() const;
-  virtual void read(MemoryReader &memoryReader);
-  virtual void write(DataWriter &dataWriter);
-  virtual void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const;
+  uint getTemplateNumber() const override;
+  RepresentationDefinition *createRepresentationDefinition() const override;
+  void read(MemoryReader &memoryReader) override;
+  void write(DataWriter &dataWriter) override;
+  void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const override;
   virtual bool getAttributeValue(const char *attributeName, std::string &attributeValue) const;
   virtual bool hasAttributeValue(const char *attributeName, const char *attributeValue) const;
-  virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
+  void print(std::ostream &stream, uint level, uint optionFlags) const override;
   virtual T::Hash countHash() const;
 
-  PackingSettings *getPacking() const;
-  void setPacking(PackingSettings &packing);
+  PackingSettings *getPacking() const override;
+  void setPacking(const PackingSettings &packing);
   float getRealPartOf00() const;
   void setRealPartOf00(float realPartOf00);
 

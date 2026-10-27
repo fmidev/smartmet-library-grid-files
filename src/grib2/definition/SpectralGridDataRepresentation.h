@@ -22,22 +22,26 @@ namespace GRIB2 {
 class SpectralGridDataRepresentation : public RepresentationDefinition {
 public:
   SpectralGridDataRepresentation();
-  virtual ~SpectralGridDataRepresentation();
+  SpectralGridDataRepresentation(const SpectralGridDataRepresentation &) = default;
+  SpectralGridDataRepresentation(SpectralGridDataRepresentation &&) = default;
+  SpectralGridDataRepresentation &operator=(const SpectralGridDataRepresentation &) = default;
+  SpectralGridDataRepresentation &operator=(SpectralGridDataRepresentation &&) = default;
+  ~SpectralGridDataRepresentation() override;
 
-  virtual uint getTemplateNumber() const;
-  virtual RepresentationDefinition *createRepresentationDefinition() const;
-  virtual void read(MemoryReader &memoryReader);
-  virtual void write(DataWriter &dataWriter);
-  virtual void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const;
+  uint getTemplateNumber() const override;
+  RepresentationDefinition *createRepresentationDefinition() const override;
+  void read(MemoryReader &memoryReader) override;
+  void write(DataWriter &dataWriter) override;
+  void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const override;
   virtual bool getAttributeValue(const char *attributeName, std::string &attributeValue) const;
   virtual bool hasAttributeValue(const char *attributeName, const char *attributeValue) const;
-  virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
+  void print(std::ostream &stream, uint level, uint optionFlags) const override;
   virtual T::Hash countHash() const;
 
-  PackingSettings *getPacking() const;
-  void setPacking(PackingSettings &packing);
-  OriginalValuesSettings *getOriginalValues() const;
-  void setOriginalValues(OriginalValuesSettings &originalValues);
+  PackingSettings *getPacking() const override;
+  void setPacking(const PackingSettings &packing);
+  OriginalValuesSettings *getOriginalValues() const override;
+  void setOriginalValues(const OriginalValuesSettings &originalValues);
   const T::UInt8_opt &getCcsdsFlags() const;
   void setCcsdsFlags(T::UInt8_opt ccsdsFlags);
   const T::UInt8_opt &getCcsdsBlockSize() const;

@@ -4,8 +4,9 @@
 
 #include <macgyver/Exception.h>
 
-#include <stdio.h>
-#include <stdlib.h>
+#include <algorithm>
+#include <cstdio>
+#include <cstdlib>
 #include <string>
 #include <vector>
 #include <iostream>
@@ -15,7 +16,6 @@
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
 
 
-#define MAX_CONFIG_FILE_SIZE 100000
 
 namespace SmartMet
 {
@@ -115,9 +115,9 @@ void ConfigurationFile::addConfigurationFile(const std::string& filename)
 
     mIncludedConfigurationFiles.insert(filename);
     ConfigurationFile configFile(filename);
-    for (auto it=configFile.mAttributeList.begin(); it!=configFile.mAttributeList.end();++it)
+    for (auto& it : configFile.mAttributeList)
     {
-      mAttributeList.emplace_back(*it);
+      mAttributeList.emplace_back(it);
     }
   }
   catch (...)
@@ -158,7 +158,7 @@ void ConfigurationFile::readFile(const std::string& filename)
   FUNCTION_TRACE
   try
   {
-    if (mFilename.length() == 0)
+    if (mFilename.empty())
       mFilename = filename;
 
     mCurrentFilename = filename;
@@ -170,15 +170,31 @@ void ConfigurationFile::readFile(const std::string& filename)
       throw exception;
     }
 
-    char st[MAX_CONFIG_FILE_SIZE];
-    char newst[MAX_CONFIG_FILE_SIZE];
-    UInt64 positions[MAX_CONFIG_FILE_SIZE];
-    UInt64 newpositions[MAX_CONFIG_FILE_SIZE];
-    int n = fread(st,1,MAX_CONFIG_FILE_SIZE,file);
-    fclose(file);
+    // Read the whole file, the size is not limited
+    if (fseek(file,0,SEEK_END) != 0)
+      throw Fmi::Exception(BCP,"Failed to seek in the file");
+    long fileSize = ftell(file);
+    if (fseek(file,0,SEEK_SET) != 0)
+      throw Fmi::Exception(BCP,"Failed to seek in the file");
+    fileSize = std::max<long>(fileSize, 0);
+
+    // Room for the terminating null character
+    std::vector<char> stVec(fileSize + 1);
+    // Separators are expanded to three characters when comments are removed
+    std::vector<char> newstVec(3 * fileSize + 1);
+    std::vector<UInt64> positionsVec(fileSize + 1);
+    std::vector<UInt64> newpositionsVec(3 * fileSize + 1);
+    char *st = stVec.data();
+    char *newst = newstVec.data();
+    UInt64 *positions = positionsVec.data();
+    UInt64 *newpositions = newpositionsVec.data();
+
+    int n = fread(st,1,fileSize,file);
+    (void)fclose(file);
 
     if (n > 0)
     {
+      // codechecker_false_positive [security.ArrayBound] n <= fileSize and the buffer has fileSize + 1 bytes
       st[n] = '\0';
 
       setPositions(st,positions,n);
@@ -231,7 +247,7 @@ void ConfigurationFile::replaceAttributeNamesWithValues(const std::string& input
     FILE *outFile = fopen(outputFilename.c_str(),"we");
     if (outFile == nullptr)
     {
-      fclose(inFile);
+      (void)fclose(inFile);
       Fmi::Exception exception(BCP,"Cannot open the output file!");
       exception.addParameter("Output file",outputFilename);
       throw exception;
@@ -244,8 +260,9 @@ void ConfigurationFile::replaceAttributeNamesWithValues(const std::string& input
       fprintf(outFile,"%s",newStr.c_str());
     }
 
-    fclose(inFile);
-    fclose(outFile);
+    (void)fclose(inFile);
+    if (fclose(outFile) != 0)
+      throw Fmi::Exception(BCP,"Failed to close the output file");
   }
   catch (...)
   {
@@ -265,13 +282,13 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,bool& attrib
   FUNCTION_TRACE
   try
   {
-    for (auto attr = mAttributeList.begin(); attr != mAttributeList.end(); ++attr)
+    for (auto& attr : mAttributeList)
     {
-      if (strcasecmp(attr->mName.c_str(),attributeName) == 0)
+      if (strcasecmp(attr.mName.c_str(),attributeName) == 0)
       {
-        std::string val = parseValue(attr->mValue);
+        std::string val = parseValue(attr.mValue);
 
-        if (val.length() == 0)
+        if (val.empty())
         {
           Fmi::Exception exception(BCP,"The attribute value is empty (not a boolean as requested)!");
           exception.addParameter("AttributeName",attributeName);
@@ -325,13 +342,13 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,double& attr
   FUNCTION_TRACE
   try
   {
-    for (auto attr = mAttributeList.begin(); attr != mAttributeList.end(); ++attr)
+    for (auto& attr : mAttributeList)
     {
-      if (strcasecmp(attr->mName.c_str(),attributeName) == 0)
+      if (strcasecmp(attr.mName.c_str(),attributeName) == 0)
       {
-        std::string val = parseValue(attr->mValue);
+        std::string val = parseValue(attr.mValue);
 
-        if (val.length() == 0)
+        if (val.empty())
         {
           Fmi::Exception exception(BCP,"The attribute value is empty (not a float as requested)!");
           exception.addParameter("AttributeName",attributeName);
@@ -446,13 +463,13 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,Int64& attri
   FUNCTION_TRACE
   try
   {
-    for (auto attr = mAttributeList.begin(); attr != mAttributeList.end(); ++attr)
+    for (auto& attr : mAttributeList)
     {
-      if (strcasecmp(attr->mName.c_str(),attributeName) == 0)
+      if (strcasecmp(attr.mName.c_str(),attributeName) == 0)
       {
-        std::string val = parseValue(attr->mValue);
+        std::string val = parseValue(attr.mValue);
 
-        if (val.length() == 0)
+        if (val.empty())
         {
           Fmi::Exception exception(BCP,"The attribute value is empty (not an integer as requested)!");
           exception.addParameter("AttributeName",attributeName);
@@ -592,11 +609,11 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,std::string&
   FUNCTION_TRACE
   try
   {
-    for (auto attr = mAttributeList.begin(); attr != mAttributeList.end(); ++attr)
+    for (auto& attr : mAttributeList)
     {
-      if (strcasecmp(attr->mName.c_str(),attributeName) == 0)
+      if (strcasecmp(attr.mName.c_str(),attributeName) == 0)
       {
-        std::string val = parseValue(attr->mValue);
+        std::string val = parseValue(attr.mValue);
 
         auto len = val.length();
 
@@ -631,11 +648,11 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,std::vector<
   {
     bool exists = false;
     uint len = strlen(attributeName);
-    for (auto attr = mAttributeList.begin(); attr != mAttributeList.end(); ++attr)
+    for (auto& attr : mAttributeList)
     {
-      if (strncasecmp(attr->mName.c_str(),attributeName,len) == 0)
+      if (strncasecmp(attr.mName.c_str(),attributeName,len) == 0)
       {
-        if (attr->mName.length() == len)
+        if (attr.mName.length() == len)
         {
           // Attribute exists, but its value is not an array.
           Fmi::Exception exception(BCP,"The attribute value is not an array!");
@@ -643,15 +660,15 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,std::vector<
           throw exception;
         }
 
-        if (attr->mName.length() >= (len+2)  &&  attr->mName[len] == '['  &&  attr->mName[len+1] == ']')
+        if (attr.mName.length() >= (len+2)  &&  attr.mName[len] == '['  &&  attr.mName[len+1] == ']')
         {
           exists = true;
         }
         else
-        if (attr->mName[len] == '.')
+        if (attr.mName[len] == '.')
         {
           std::string itm;
-          std::size_t p = attr->mName.find(".",len+1);
+          std::size_t p = attr.mName.find('.',len+1);
 
           if (p != std::string::npos)
           {
@@ -661,16 +678,13 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,std::vector<
           }
 
           std::string val;
-          if (getAttributeValue(attr->mName.c_str(),val))
+          if (getAttributeValue(attr.mName.c_str(),val))
             attributeValueVec.emplace_back(val);
         }
       }
     }
 
-    if (attributeValueVec.size() > 0  ||  exists)
-      return true;
-
-    return false;
+    return !attributeValueVec.empty()  ||  exists;
   }
   catch (...)
   {
@@ -694,34 +708,33 @@ uint ConfigurationFile::getArraySize(const char *attributeName)
     int idx = -1;
     bool exists = false;
     uint len = strlen(attributeName);
-    for (auto attr = mAttributeList.begin(); attr != mAttributeList.end(); ++attr)
+    for (auto& attr : mAttributeList)
     {
-      if (strncasecmp(attr->mName.c_str(),attributeName,len) == 0)
+      if (strncasecmp(attr.mName.c_str(),attributeName,len) == 0)
       {
-        if (attr->mName.length() == len)
+        if (attr.mName.length() == len)
         {
           // Attribute exists, but its value is not an array.
           return 0;
         }
 
-        if (attr->mName.length() >= (len+2)  &&  attr->mName[len] == '['  &&  attr->mName[len+1] == ']')
+        if (attr.mName.length() >= (len+2)  &&  attr.mName[len] == '['  &&  attr.mName[len+1] == ']')
         {
           exists = true;
         }
         else
-        if (attr->mName[len] == '.')
+        if (attr.mName[len] == '.')
         {
           std::string itm;
 
-          std::size_t p = attr->mName.find(".",len+1);
+          std::size_t p = attr.mName.find('.',len+1);
           if (p != std::string::npos)
-            itm = attr->mName.substr(len+1,p-len-1);
+            itm = attr.mName.substr(len+1,p-len-1);
           else
-            itm = attr->mName.substr(len+1);
+            itm = attr.mName.substr(len+1);
 
-          int i = atoi(itm.c_str());
-          if (i > idx)
-            idx = i;
+          int i = toInt32(itm.c_str());
+          idx = std::max(i, idx);
         }
       }
     }
@@ -750,34 +763,31 @@ bool ConfigurationFile::getAttributeFields(const char *attributeName,std::set<st
   try
   {
     uint len = strlen(attributeName);
-    for (auto attr = mAttributeList.begin(); attr != mAttributeList.end(); ++attr)
+    for (auto& attr : mAttributeList)
     {
-      if (strncasecmp(attr->mName.c_str(),attributeName,len) == 0)
+      if (strncasecmp(attr.mName.c_str(),attributeName,len) == 0)
       {
-        if (attr->mName.length() == len)
+        if (attr.mName.length() == len)
         {
           // Attribute exists, but it does not have sub-attributes
           return true;
         }
 
-        if (attr->mName[len] == '.')
+        if (attr.mName[len] == '.')
         {
           std::string itm;
-          std::size_t p = attr->mName.find(".",len+1);
+          std::size_t p = attr.mName.find('.',len+1);
           if (p != std::string::npos)
-            itm = attr->mName.substr(len+1,p-len-1);
+            itm = attr.mName.substr(len+1,p-len-1);
           else
-            itm = attr->mName.substr(len+1);
+            itm = attr.mName.substr(len+1);
 
           attributeFields.insert(itm);
         }
       }
     }
 
-    if (attributeFields.size() > 0)
-      return true;
-
-    return false;
+    return !attributeFields.empty();
   }
   catch (...)
   {
@@ -799,29 +809,26 @@ bool ConfigurationFile::getSubAttributes(const char *attributeName,std::vector<s
   try
   {
     uint len = strlen(attributeName);
-    for (auto attr = mAttributeList.begin(); attr != mAttributeList.end(); ++attr)
+    for (auto& attr : mAttributeList)
     {
-      if (strncasecmp(attr->mName.c_str(),attributeName,len) == 0)
+      if (strncasecmp(attr.mName.c_str(),attributeName,len) == 0)
       {
-        if (attr->mName.length() == len)
+        if (attr.mName.length() == len)
         {
           // Attribute exists, but it does not have sub-attributes
           return true;
         }
 
-        if (attr->mName[len] == '.')
+        if (attr.mName[len] == '.')
         {
-          std::string itm = attr->mName.substr(len+1);
+          std::string itm = attr.mName.substr(len+1);
 
           attributeNames.emplace_back(itm);
         }
       }
     }
 
-    if (attributeNames.size() > 0)
-      return true;
-
-    return false;
+    return !attributeNames.empty();
   }
   catch (...)
   {
@@ -837,7 +844,7 @@ bool ConfigurationFile::getSubAttributes(const char *attributeName,std::vector<s
 
 /*! \brief Returns the name of the main configuration file. */
 
-std::string ConfigurationFile::getFilename()
+std::string ConfigurationFile::getFilename() const
 {
   try
   {
@@ -863,11 +870,11 @@ bool ConfigurationFile::findAttribute(const char *attributeName)
   try
   {
     uint len = strlen(attributeName);
-    for (auto attr = mAttributeList.begin(); attr != mAttributeList.end(); ++attr)
+    for (auto& attr : mAttributeList)
     {
-      if (strncasecmp(attr->mName.c_str(),attributeName,len) == 0)
+      if (strncasecmp(attr.mName.c_str(),attributeName,len) == 0)
       {
-        if (attr->mName.length() == len  ||  attr->mName[len] == '.' || attr->mName[len] == '[')
+        if (attr.mName.length() == len  ||  attr.mName[len] == '.' || attr.mName[len] == '[')
           return true;
       }
     }
@@ -887,16 +894,16 @@ bool ConfigurationFile::findAttribute(const char *attributeName)
 
 /*! \brief Sets or updates the value of the named attribute. */
 
-void ConfigurationFile::setAttributeValue(const char *attributeName,std::string& attributeValue)
+void ConfigurationFile::setAttributeValue(const char *attributeName,const std::string& attributeValue)
 {
   FUNCTION_TRACE
   try
   {
-    for (auto attr = mAttributeList.begin(); attr != mAttributeList.end(); ++attr)
+    for (auto& attr : mAttributeList)
     {
-      if (strcasecmp(attr->mName.c_str(),attributeName) == 0)
+      if (strcasecmp(attr.mName.c_str(),attributeName) == 0)
       {
-        attr->mValue = attributeValue;
+        attr.mValue = attributeValue;
         return;
       }
     }
@@ -925,12 +932,12 @@ void ConfigurationFile::print(std::ostream& stream,uint level,uint optionFlags)
     stream << space(level) << "- mFilename            = " << mFilename << "\n";
     stream << space(level) << "- mAttributeList       = \n";
 
-    for (auto attr = mAttributeList.begin(); attr != mAttributeList.end(); ++attr)
+    for (auto& attr : mAttributeList)
     {
       if ((optionFlags & 0x0001) != 0)
-        stream << space(level) << "    * ATTR " << attr->mName << " = " << parseValue(attr->mValue) << "\n";
+        stream << space(level) << "    * ATTR " << attr.mName << " = " << parseValue(attr.mValue) << "\n";
       else
-        stream << space(level) << "    * ATTR " << attr->mName << " = " << attr->mValue << "\n";
+        stream << space(level) << "    * ATTR " << attr.mName << " = " << attr.mValue << "\n";
     }
   }
   catch (...)
@@ -958,7 +965,7 @@ std::string ConfigurationFile::parseValue(const std::string& value)
       p1 = val.find("$(");
       if (p1 != std::string::npos)
       {
-        std::size_t p2 = val.find(")",p1+1);
+        std::size_t p2 = val.find(')',p1+1);
         if (p2 != std::string::npos)
         {
           std::string var = val.substr(p1+2,p2-p1-2);
@@ -1018,7 +1025,7 @@ std::string ConfigurationFile::parseConstValue(const std::string& value)
       p1 = val.find("%(");
       if (p1 != std::string::npos)
       {
-        std::size_t p2 = val.find(")",p1+1);
+        std::size_t p2 = val.find(')',p1+1);
         if (p2 != std::string::npos)
         {
           std::string var = val.substr(p1+2,p2-p1-2);
@@ -1028,9 +1035,8 @@ std::string ConfigurationFile::parseConstValue(const std::string& value)
           {
             varValue = getFileDir(mCurrentFilename);
           }
-          else
           // Searching a value for the variable
-          if (!getAttributeValue(var.c_str(),varValue))
+          else if (!getAttributeValue(var.c_str(),varValue))
           {
             // Variable not defined in the configuration file. Maybe it is an environmental variable.
             char *env = getenv(var.c_str());
@@ -1067,9 +1073,84 @@ std::string ConfigurationFile::parseConstValue(const std::string& value)
 
 
 
+namespace
+{
+/*! \brief Copies the character into the new string. Semicolons are replaced by spaces and
+    separators are surrounded by spaces. Returns the next position in the new string. */
+
+int copyCharacter(const char *st,const UInt64 *positions,char *newst,UInt64 *newpositions,int a,int b)
+{
+  newst[b] = st[a];
+  newpositions[b] = positions[a];
+
+  if (st[a] == ';')
+  {
+    newst[b] = ' ';
+    newpositions[b] = positions[a];
+  }
+
+  if (st[a] == ',' || st[a] == ':' ||  st[a] == '=' ||  st[a] == '(' ||  st[a] == ')' ||  st[a] == '[' ||  st[a] == ']' ||  st[a] == '{' ||  st[a] == '}')
+  {
+    newst[b+1] = st[a];
+    newst[b] = ' ';
+    newst[b+2] = ' ';
+
+    newpositions[b] = positions[a];
+    newpositions[b+1] = positions[a];
+    newpositions[b+2] = positions[a];
+
+    b = b + 2;
+  }
+
+  b++;
+  return b;
+}
+
+
+
+/*! \brief Processes the character outside of a string: skips the comments and copies the
+    other characters. */
+
+void processCharacter(const char *st,const UInt64 *positions,char *newst,UInt64 *newpositions,int len,int& a,int& b)
+{
+  if (st[a] == '#')
+  {
+    while (a < len  &&  st[a] != '\n')
+      a++;
+  }
+  if ((a+1) < len  &&  st[a] == '/'  &&  st[a+1] == '/')
+  {
+    while (a < len  &&  st[a] != '\n')
+      a++;
+
+    if (a < len)
+      a++;
+  }
+  else
+  if ((a+1) < len  &&  st[a] == '/'  &&  st[a+1] == '*')
+  {
+    while (a < len  &&  (a <= 0 ||  st[a-1] != '*'  ||  st[a] != '/'))
+      a++;
+
+    if (a < len)
+      a++;
+  }
+  else
+  if (a < len)
+  {
+    b = copyCharacter(st,positions,newst,newpositions,a,b);
+    a++;
+  }
+}
+}  // namespace
+
+
+
+
+
 /*! \brief Strips comments from the input buffer and pads delimiters with spaces in the output buffer. */
 
-void ConfigurationFile::removeComments(char *st,UInt64 *positions,char *newst,UInt64 *newpositions,int len)
+void ConfigurationFile::removeComments(const char *st,const UInt64 *positions,char *newst,UInt64 *newpositions,int len)
 {
   FUNCTION_TRACE
   try
@@ -1098,56 +1179,7 @@ void ConfigurationFile::removeComments(char *st,UInt64 *positions,char *newst,UI
 
       if (!ind)
       {
-        if (st[a] == '#')
-        {
-          while (a < len  &&  st[a] != '\n')
-            a++;
-        }
-        if ((a+1) < len  &&  st[a] == '/'  &&  st[a+1] == '/')
-        {
-          while (a < len  &&  st[a] != '\n')
-            a++;
-
-          if (a < len)
-            a++;
-        }
-        else
-        if ((a+1) < len  &&  st[a] == '/'  &&  st[a+1] == '*')
-        {
-          while (a < len  &&  !(a > 0 &&  st[a-1] == '*'  &&  st[a] == '/'))
-            a++;
-
-          if (a < len)
-            a++;
-        }
-        else
-        if (a < len)
-        {
-          newst[b] = st[a];
-          newpositions[b] = positions[a];
-
-          if (st[a] == ';')
-          {
-            newst[b] = ' ';
-            newpositions[b] = positions[a];
-          }
-
-          if (st[a] == ',' || st[a] == ':' ||  st[a] == '=' ||  st[a] == '(' ||  st[a] == ')' ||  st[a] == '[' ||  st[a] == ']' ||  st[a] == '{' ||  st[a] == '}')
-          {
-            newst[b+1] = st[a];
-            newst[b] = ' ';
-            newst[b+2] = ' ';
-
-            newpositions[b] = positions[a];
-            newpositions[b+1] = positions[a];
-            newpositions[b+2] = positions[a];
-
-            b = b + 2;
-          }
-
-          b++;
-          a++;
-        }
+        processCharacter(st,positions,newst,newpositions,len,a,b);
       }
       else
       {
@@ -1171,7 +1203,7 @@ void ConfigurationFile::removeComments(char *st,UInt64 *positions,char *newst,UI
 
 /*! \brief Builds row/column position information for each character in the input buffer. */
 
-void ConfigurationFile::setPositions(char *st,UInt64 *positions,int len)
+void ConfigurationFile::setPositions(const char *st,UInt64 *positions,int len)
 {
   FUNCTION_TRACE
   try
@@ -1207,7 +1239,7 @@ void ConfigurationFile::getWords(char *st,UInt64 *positions,std::vector<std::str
   FUNCTION_TRACE
   try
   {
-    char buf[10000];
+    std::string buf;
     uint a = 0;
     uint c = 0;
     bool ind = false;
@@ -1218,17 +1250,17 @@ void ConfigurationFile::getWords(char *st,UInt64 *positions,std::vector<std::str
 
       if ((!ind  &&  st[a] <= ' '))
       {
-        buf[c] = '\0';
         if (c > 0)
         {
           words.emplace_back(buf);
           wordPositions.emplace_back(positions[a-c]);
         }
+        buf.clear();
         c = 0;
       }
       else
       {
-        buf[c] = st[a];
+        buf += st[a];
         c++;
       }
 
@@ -1237,7 +1269,6 @@ void ConfigurationFile::getWords(char *st,UInt64 *positions,std::vector<std::str
 
     if (c > 0)
     {
-      buf[c] = '\0';
       words.emplace_back(buf);
       wordPositions.emplace_back(positions[a-c]);
     }
@@ -1248,6 +1279,150 @@ void ConfigurationFile::getWords(char *st,UInt64 *positions,std::vector<std::str
   }
 }
 
+
+
+
+
+
+/*! \brief Reads a structure value { ... }. */
+
+int ConfigurationFile::readStructure(std::vector<std::string>& words,std::vector<UInt64>& wordPositions,int len,int pos,const std::string& path)
+{
+  int startPos = pos;
+  pos++;
+  while (pos < len  &&  words[pos] != "}")
+  {
+    pos = readAttribute(words,wordPositions,len,pos,path,-1);
+  }
+
+  if (pos == len)
+  {
+    Fmi::Exception exception(BCP,"Cannot find the end char '}' for the structure!");
+    exception.addParameter("Row",std::to_string(wordPositions[startPos] >> 32));
+    exception.addParameter("Column",std::to_string(wordPositions[startPos] & 0xFFFFFFFF));
+    throw exception;
+  }
+
+  return pos+1;
+}
+
+
+
+
+
+/*! \brief Reads a list value ( ... ). */
+
+int ConfigurationFile::readList(std::vector<std::string>& words,std::vector<UInt64>& wordPositions,int len,int pos,const std::string& path)
+{
+  T::Attribute attr;
+  attr.mName = path + "()";
+  attr.mValue = "";
+  mAttributeList.emplace_back(attr);
+
+  int startPos = pos;
+  pos++;
+  int index = 0;
+  while (pos < len  &&  words[pos] != ")")
+  {
+    pos = readAttribute(words,wordPositions,len,pos,path,index);
+    index++;
+
+    if (words[pos] != ","  &&  words[pos] != ")")
+    {
+      Fmi::Exception exception(BCP,"Expected end char ')' for the list!");
+      exception.addParameter("Row",std::to_string(wordPositions[startPos] >> 32));
+      exception.addParameter("Column",std::to_string(wordPositions[startPos] & 0xFFFFFFFF));
+      throw exception;
+    }
+    while (pos < len  &&  words[pos] == ",")
+      pos++;
+  }
+
+  if (pos == len)
+  {
+    Fmi::Exception exception(BCP,"Cannot find the end char ')' for the list!");
+    exception.addParameter("Row",std::to_string(wordPositions[startPos] >> 32));
+    exception.addParameter("Column",std::to_string(wordPositions[startPos] & 0xFFFFFFFF));
+    throw exception;
+  }
+
+  return pos+1;
+}
+
+
+
+
+
+/*! \brief Returns the first free index of an existing array. */
+
+uint ConfigurationFile::firstFreeArrayIndex(const std::string& path)
+{
+  uint index = 0;
+  bool idxFound = true;
+  while (idxFound)
+  {
+    std::string tmp = path + "." + std::to_string(index);
+    if (findAttribute(tmp.c_str()))
+      index++;
+    else
+      idxFound = false;
+  }
+  return index;
+}
+
+
+
+
+
+/*! \brief Reads an array value [ ... ]. */
+
+int ConfigurationFile::readArray(std::vector<std::string>& words,std::vector<UInt64>& wordPositions,int len,int pos,const std::string& path)
+{
+  std::string tmp;
+  uint index = 0;
+  T::Attribute attr;
+  attr.mName = path + "[]";
+  attr.mValue = "";
+  if (!findAttribute(attr.mName.c_str()))
+  {
+    mAttributeList.emplace_back(attr);
+  }
+  else
+  {
+    // The array already exists. Let's try to find the first free index.
+    index = firstFreeArrayIndex(path);
+  }
+
+  int startPos = pos;
+  pos++;
+  while (pos < len  &&  words[pos] != "]")
+  {
+    tmp = path + "." + std::to_string(index);
+    std::string newPath = tmp;
+    pos = readValue(words,wordPositions,len,pos,newPath);
+    index++;
+    if (words[pos] != ","  &&  words[pos] != "]")
+    {
+      Fmi::Exception exception(BCP,"Expected end char ']' for the array!");
+      exception.addParameter("Row",std::to_string(wordPositions[startPos] >> 32));
+      exception.addParameter("Column",std::to_string(wordPositions[startPos] & 0xFFFFFFFF));
+      throw exception;
+    }
+
+    while (pos < len  &&  words[pos] == ",")
+      pos++;
+  }
+
+  if (pos == len)
+  {
+    Fmi::Exception exception(BCP,"Cannot find the end char ']' for the array!");
+    exception.addParameter("Row",std::to_string(wordPositions[startPos] >> 32));
+    exception.addParameter("Column",std::to_string(wordPositions[startPos] & 0xFFFFFFFF));
+    throw exception;
+  }
+
+  return pos+1;
+}
 
 
 
@@ -1272,7 +1447,6 @@ int ConfigurationFile::readValue(std::vector<std::string>& words,std::vector<UIn
 
       return pos + 4;
     }
-    else
     if ((pos+3) < len &&  words[pos] == "%" &&  words[pos+1] == "("  &&  words[pos+3] == ")")
     {
       T::Attribute attr;
@@ -1283,126 +1457,18 @@ int ConfigurationFile::readValue(std::vector<std::string>& words,std::vector<UIn
 
       return pos + 4;
     }
-    else
     if (words[pos] == "{" )
-    {
-      int startPos = pos;
-      pos++;
-      while (pos < len  &&  words[pos] != "}")
-      {
-        pos = readAttribute(words,wordPositions,len,pos,path,-1);
-      }
+      return readStructure(words,wordPositions,len,pos,path);
 
-      if (pos == len)
-      {
-        Fmi::Exception exception(BCP,"Cannot find the end char '}' for the structure!");
-        exception.addParameter("Row",std::to_string(wordPositions[startPos] >> 32));
-        exception.addParameter("Column",std::to_string(wordPositions[startPos] & 0xFFFFFFFF));
-        throw exception;
-      }
-
-      return pos+1;
-    }
-    else
     if (words[pos] == "(")
-    {
-      T::Attribute attr;
-      attr.mName = path + "()";
-      attr.mValue = "";
-      mAttributeList.emplace_back(attr);
+      return readList(words,wordPositions,len,pos,path);
 
-      int startPos = pos;
-      pos++;
-      int index = 0;
-      while (pos < len  &&  words[pos] != ")")
-      {
-        pos = readAttribute(words,wordPositions,len,pos,path,index);
-        index++;
-
-        if (words[pos] != ","  &&  words[pos] != ")")
-        {
-          Fmi::Exception exception(BCP,"Expected end char ')' for the list!");
-          exception.addParameter("Row",std::to_string(wordPositions[startPos] >> 32));
-          exception.addParameter("Column",std::to_string(wordPositions[startPos] & 0xFFFFFFFF));
-          throw exception;
-        }
-        while (pos < len  &&  words[pos] == ",")
-          pos++;
-      }
-
-      if (pos == len)
-      {
-        Fmi::Exception exception(BCP,"Cannot find the end char ')' for the list!");
-        exception.addParameter("Row",std::to_string(wordPositions[startPos] >> 32));
-        exception.addParameter("Column",std::to_string(wordPositions[startPos] & 0xFFFFFFFF));
-        throw exception;
-      }
-
-      return pos+1;
-    }
-    else
     if (words[pos] == "[")
-    {
-      char tmp[1000];
-      uint index = 0;
-      T::Attribute attr;
-      attr.mName = path + "[]";
-      attr.mValue = "";
-      if (!findAttribute(attr.mName.c_str()))
-      {
-        mAttributeList.emplace_back(attr);
-      }
-      else
-      {
-        // The array already exists. Let's try to find the first free index.
-        bool idxFound = true;
-        while (idxFound)
-        {
-          sprintf(tmp,"%s.%u",path.c_str(),index);
-          if (findAttribute(tmp))
-            index++;
-          else
-            idxFound = false;
-        }
-      }
+      return readArray(words,wordPositions,len,pos,path);
 
-      int startPos = pos;
-      pos++;
-      while (pos < len  &&  words[pos] != "]")
-      {
-        sprintf(tmp,"%s.%u",path.c_str(),index);
-        std::string newPath = tmp;
-        pos = readValue(words,wordPositions,len,pos,newPath);
-        index++;
-        if (words[pos] != ","  &&  words[pos] != "]")
-        {
-          Fmi::Exception exception(BCP,"Expected end char ']' for the array!");
-          exception.addParameter("Row",std::to_string(wordPositions[startPos] >> 32));
-          exception.addParameter("Column",std::to_string(wordPositions[startPos] & 0xFFFFFFFF));
-          throw exception;
-        }
-
-        while (pos < len  &&  words[pos] == ",")
-          pos++;
-      }
-
-      if (pos == len)
-      {
-        Fmi::Exception exception(BCP,"Cannot find the end char ']' for the array!");
-        exception.addParameter("Row",std::to_string(wordPositions[startPos] >> 32));
-        exception.addParameter("Column",std::to_string(wordPositions[startPos] & 0xFFFFFFFF));
-        throw exception;
-      }
-
-      return pos+1;
-    }
-    else
-    {
-      std::string attributeValue = parseConstValue(words[pos]);
-      setAttributeValue(path.c_str(),attributeValue);
-      return pos + 1;
-    }
-    return pos;
+    std::string attributeValue = parseConstValue(words[pos]);
+    setAttributeValue(path.c_str(),attributeValue);
+    return pos + 1;
   }
   catch (...)
   {
@@ -1421,11 +1487,11 @@ void ConfigurationFile::removeAttributes(const char *pattern)
   {
     std::vector<T::Attribute>  newAttributeList;
 
-    for (auto attr = mAttributeList.begin(); attr != mAttributeList.end(); ++attr)
+    for (auto& attr : mAttributeList)
     {
-      if (fnmatch(pattern,attr->mName.c_str(),0) != 0)
+      if (fnmatch(pattern,attr.mName.c_str(),0) != 0)
       {
-        newAttributeList.emplace_back(*attr);
+        newAttributeList.emplace_back(attr);
       }
     }
     if (newAttributeList.size() != mAttributeList.size())
@@ -1435,6 +1501,178 @@ void ConfigurationFile::removeAttributes(const char *pattern)
   {
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
+}
+
+
+
+
+
+namespace
+{
+/*! \brief Removes the surrounding quotes from the string. */
+
+std::string unquote(const std::string& str)
+{
+  auto slen = str.length();
+  if (slen > 1  &&  str[0] == '"'  &&  str[slen-1] == '"')
+    return str.substr(1,slen-2);
+  return str;
+}
+
+
+
+/*! \brief Marks the else section of a condition to be ignored. */
+
+void ignoreElseSection(std::vector<std::string>& words,int len,int pos)
+{
+  int p = pos;
+  while (p < len  &&  words[p] != "@endif"  &&  words[p] != "@else")
+    p++;
+
+  if (words[p] == "@else")
+  {
+    while (p < len  &&  words[p] != "@endif")
+    {
+      words[p] = "@ignore";
+      p++;
+    }
+  }
+}
+
+
+
+/*! \brief Checks that the '@endif' or '@else' directive has a matching start of the condition. */
+
+void checkConditionalStart(std::vector<std::string>& words,std::vector<UInt64>& wordPositions,int pos,bool isEndif)
+{
+  int p = pos-1;
+  while (p > 0  &&  words[p] != "@endif"  &&  words[p] != "@else"  &&  words[p] != "@ifdef"  &&  words[p] != "@ifndef")
+    p--;
+
+  if (words[p] != "@ifdef"  &&  words[p] != "@ifndef"  &&  (!isEndif  ||  words[p] != "@else"))
+  {
+    Fmi::Exception exception(BCP,"Unexpected '@endif' found!");
+    exception.addParameter("Row",std::to_string(wordPositions[pos] >> 32));
+    exception.addParameter("Column",std::to_string(wordPositions[pos] & 0xFFFFFFFF));
+    throw exception;
+  }
+}
+
+
+
+/*! \brief The path of the attribute. */
+
+std::string attributePath(const std::string& path,const std::string& attributeName,int index)
+{
+  std::string newPath = attributeName;
+  if (path > " ")
+    newPath = path + "." + attributeName;
+
+  if (index >= 0)
+    newPath = newPath + "." + std::to_string(index);
+
+  return newPath;
+}
+
+
+
+/*! \brief Throws an exception about an invalid attribute definition. */
+
+[[noreturn]] void throwInvalidAttribute(std::vector<UInt64>& wordPositions,int len,int pos)
+{
+  if ((pos+1) < len)
+  {
+    Fmi::Exception exception(BCP,"Expected ':'' or '=' character!");
+    exception.addParameter("Row",std::to_string(wordPositions[pos+1] >> 32));
+    exception.addParameter("Column",std::to_string(wordPositions[pos+1] & 0xFFFFFFFF));
+    throw exception;
+  }
+  Fmi::Exception exception(BCP,"Invalid attribute definition!");
+  exception.addParameter("Row",std::to_string(wordPositions[pos] >> 32));
+  exception.addParameter("Column",std::to_string(wordPositions[pos] & 0xFFFFFFFF));
+  throw exception;
+}
+}  // namespace
+
+
+
+
+
+/*! \brief Includes the configuration file given after the '@include' directive. */
+
+void ConfigurationFile::includeConfigurationFile(std::vector<std::string>& words,std::vector<UInt64>& wordPositions,int pos)
+{
+  std::string fname = parseConstValue(words[pos+1]);
+  fname = parseValue(fname);
+
+  fname = unquote(fname);
+
+
+  if (fname <= " ")
+  {
+    Fmi::Exception exception(BCP,"No include file defined!");
+    exception.addParameter("Row",std::to_string(wordPositions[pos] >> 32));
+    exception.addParameter("Column",std::to_string(wordPositions[pos] & 0xFFFFFFFF));
+    throw exception;
+  }
+
+  if (fname[0] != '/')
+  {
+    // The file name does not contain path, so it should be relational
+    // to the current path.
+
+    std::string dir = getFileDir(mCurrentFilename);
+    fname = dir + "/" + fname;
+  }
+
+  if (mIncludedConfigurationFiles.find(fname) == mIncludedConfigurationFiles.end())
+  {
+    std::string currentFilename = mCurrentFilename;
+    mIncludedConfigurationFiles.insert(fname);
+    readFile(fname);
+    mCurrentFilename = currentFilename;
+  }
+}
+
+
+
+
+
+/*! \brief Processes the '@ifdef' (ifdef=true) or '@ifndef' directive. Returns the position of the
+    last processed word. */
+
+int ConfigurationFile::readConditional(std::vector<std::string>& words,std::vector<UInt64>& wordPositions,int len,int pos,bool ifndef)
+{
+  int startPos = pos;
+  std::string attrName = parseValue(words[pos+1]);
+  pos = pos + 1;
+
+  bool defined = (findAttribute(attrName.c_str())  ||  getenv(attrName.c_str()) != nullptr);
+
+  if (defined == ifndef)
+  {
+    // The section should be ignored.
+    while (pos < len  &&  words[pos] != "@endif"  &&  words[pos] != "@else")
+    {
+      pos++;
+    }
+
+    if (words[pos] != "@endif"  &&  words[pos] != "@else")
+    {
+      Fmi::Exception exception(BCP,ifndef ? "Expected '@endif' or '@else' for '@ifndef'!" : "Expected '@endif' or '@else' for '@ifdef'!");
+      exception.addParameter("Row",std::to_string(wordPositions[startPos] >> 32));
+      exception.addParameter("Column",std::to_string(wordPositions[startPos] & 0xFFFFFFFF));
+      throw exception;
+    }
+  }
+  else
+  {
+    // The section is used. If there is 'else' section in this condition then we should
+    // ignore it.
+
+    ignoreElseSection(words,len,pos);
+  }
+  return pos;
 }
 
 
@@ -1453,73 +1691,32 @@ int ConfigurationFile::readAttribute(std::vector<std::string>& words,std::vector
 
     if ((pos+1) < len  &&  words[pos] == "@include")
     {
-      std::string fname = parseConstValue(words[pos+1]);
-      fname = parseValue(fname);
-
-      auto slen = fname.length();
-      if (slen > 1  &&  fname[0] == '"'  &&  fname[slen-1] == '"')
-        fname = fname.substr(1,slen-2);
-
-
-      if (fname <= " ")
-      {
-        Fmi::Exception exception(BCP,"No include file defined!");
-        exception.addParameter("Row",std::to_string(wordPositions[pos] >> 32));
-        exception.addParameter("Column",std::to_string(wordPositions[pos] & 0xFFFFFFFF));
-        throw exception;
-      }
-
-      if (fname[0] != '/')
-      {
-        // The file name does not contain path, so it should be relational
-        // to the current path.
-
-        std::string dir = getFileDir(mCurrentFilename);
-        fname = dir + fname;
-      }
-
-      if (mIncludedConfigurationFiles.find(fname) == mIncludedConfigurationFiles.end())
-      {
-        std::string currentFilename = mCurrentFilename;
-        mIncludedConfigurationFiles.insert(fname);
-        readFile(fname);
-        mCurrentFilename = currentFilename;
-      }
+      includeConfigurationFile(words,wordPositions,pos);
       pos = pos + 1;
     }
-    else
-    if ((pos+1) < len  &&  words[pos] == "@remove")
+    else if ((pos+1) < len  &&  words[pos] == "@remove")
     {
       std::string pattern = parseValue(words[pos+1]);
 
-      auto slen = pattern.length();
-      if (slen > 1  &&  pattern[0] == '"'  &&  pattern[slen-1] == '"')
-        pattern = pattern.substr(1,slen-2);
-
+      pattern = unquote(pattern);
       removeAttributes(pattern.c_str());
 
       pos = pos + 1;
     }
-    else
-    if ((pos+1) < len  &&  words[pos] == "@print")
+    else if ((pos+1) < len  &&  words[pos] == "@print")
     {
       std::string message = parseConstValue(words[pos+1]);
       message = parseValue(message);
 
-      auto slen = message.length();
-      if (slen > 1  &&  message[0] == '"'  &&  message[slen-1] == '"')
-        message = message.substr(1,slen-2);
-
+      message = unquote(message);
       printf("%s\n",message.c_str());
       pos = pos + 1;
     }
-    else
-    if ((pos+1) < len  &&  words[pos] == "@location")
+    else if ((pos+1) < len  &&  words[pos] == "@location")
     {
       printf("*** %s [%d:%d]\n",mCurrentFilename.c_str(),C_INT(wordPositions[pos] >> 32),C_INT(wordPositions[pos] & 0xFFFFFFFF));
     }
-    else
-    if ((pos+1) < len  &&  words[pos] == "@throw")
+    else if ((pos+1) < len  &&  words[pos] == "@throw")
     {
       std::string message = parseConstValue(words[pos+1]);
       message = parseValue(message);
@@ -1529,153 +1726,35 @@ int ConfigurationFile::readAttribute(std::vector<std::string>& words,std::vector
       exception.addParameter("Column",std::to_string(wordPositions[pos] & 0xFFFFFFFF));
       throw exception;
     }
-    else
-    if ((pos+1) < len  &&  words[pos] == "@ifdef")
+    else if ((pos+1) < len  &&  words[pos] == "@ifdef")
     {
-      int startPos = pos;
-      std::string attrName = parseValue(words[pos+1]);
-      pos = pos + 1;
-
-      if (!findAttribute(attrName.c_str())  &&  getenv(attrName.c_str()) == nullptr)
-      {
-        // Attribute not defined. Ignoring the section.
-        while (pos < len  &&  words[pos] != "@endif"  &&  words[pos] != "@else")
-        {
-          pos++;
-        }
-
-        if (words[pos] != "@endif"  &&  words[pos] != "@else")
-        {
-          Fmi::Exception exception(BCP,"Expected '@endif' or '@else' for '@ifdef'!");
-          exception.addParameter("Row",std::to_string(wordPositions[startPos] >> 32));
-          exception.addParameter("Column",std::to_string(wordPositions[startPos] & 0xFFFFFFFF));
-          throw exception;
-        }
-      }
-      else
-      {
-        // Attribute is defined. If there is 'else' section in this condition then we should
-        // ignore it.
-
-        int p = pos;
-        while (p < len  &&  words[p] != "@endif"  &&  words[p] != "@else")
-          p++;
-
-        if (words[p] == "@else")
-        {
-          while (p < len  &&  words[p] != "@endif")
-          {
-            words[p] = "@ignore";
-            p++;
-          }
-        }
-      }
+      pos = readConditional(words,wordPositions,len,pos,false);
     }
-    else
-    if ((pos+1) < len  &&  words[pos] == "@ifndef")
+    else if ((pos+1) < len  &&  words[pos] == "@ifndef")
     {
-      int startPos = pos;
-      std::string attrName = parseValue(words[pos+1]);
-      pos = pos + 1;
-
-      if (findAttribute(attrName.c_str())  ||  getenv(attrName.c_str()) != nullptr)
-      {
-        // Attribute defined. Ignoring the section.
-        while (pos < len  &&  words[pos] != "@endif"  &&  words[pos] != "@else")
-        {
-          pos++;
-        }
-        if (words[pos] != "@endif"  &&  words[pos] != "@else")
-        {
-          Fmi::Exception exception(BCP,"Expected '@endif' or '@else' for '@ifndef'!");
-          exception.addParameter("Row",std::to_string(wordPositions[startPos] >> 32));
-          exception.addParameter("Column",std::to_string(wordPositions[startPos] & 0xFFFFFFFF));
-          throw exception;
-        }
-      }
-      else
-      {
-        // Attribute nit defined. If there is 'else' section in this condition then we should
-        // ignore it.
-
-        int p = pos;
-        while (p < len  &&  words[p] != "@endif"  &&  words[p] != "@else")
-          p++;
-
-        if (words[p] == "@else")
-        {
-          while (p < len  &&  words[p] != "@endif")
-          {
-            words[p] = "@ignore";
-            p++;
-          }
-        }
-      }
+      pos = readConditional(words,wordPositions,len,pos,true);
     }
-    else
-    if (words[pos] == "@endif")
+    else if (words[pos] == "@endif")
     {
-      int p = pos-1;
-      while (p > 0  &&  words[p] != "@endif"  &&  words[p] != "@else"  &&  words[p] != "@ifdef"  &&  words[p] != "@ifndef")
-        p--;
-
-      if (words[p] != "@ifdef"  &&  words[p] != "@ifndef"  &&  words[p] != "@else")
-      {
-        Fmi::Exception exception(BCP,"Unexpected '@endif' found!");
-        exception.addParameter("Row",std::to_string(wordPositions[pos] >> 32));
-        exception.addParameter("Column",std::to_string(wordPositions[pos] & 0xFFFFFFFF));
-        throw exception;
-      }
+      checkConditionalStart(words,wordPositions,pos,true);
     }
-    else
-    if (words[pos] == "@else")
+    else if (words[pos] == "@else")
     {
-      int p = pos-1;
-      while (p > 0  &&  words[p] != "@endif"  &&  words[p] != "@else"  &&  words[p] != "@ifdef"  &&  words[p] != "@ifndef")
-        p--;
-
-      if (words[p] != "@ifdef"  &&  words[p] != "@ifndef")
-      {
-        Fmi::Exception exception(BCP,"Unexpected '@endif' found!");
-        exception.addParameter("Row",std::to_string(wordPositions[pos] >> 32));
-        exception.addParameter("Column",std::to_string(wordPositions[pos] & 0xFFFFFFFF));
-        throw exception;
-      }
+      checkConditionalStart(words,wordPositions,pos,false);
     }
-    else
-    if (words[pos] == "@ignore")
+    else if (words[pos] == "@ignore")
     {
     }
-    else
-    if ((pos+1) < len  &&  (words[pos+1] == ":" || words[pos+1] == "="))
+    else if ((pos+1) < len  &&  (words[pos+1] == ":" || words[pos+1] == "="))
     {
-      std::string attributeName = words[pos];
-      std::string newPath = attributeName;
-      if (path > " ")
-        newPath = path + "." + attributeName;
-
-      if (index >= 0)
-        newPath = newPath + "." + std::to_string(index);
+      std::string newPath = attributePath(path,words[pos],index);
 
       pos = readValue(words,wordPositions,len,pos+2,newPath);
       return pos;
     }
     else
     {
-      if ((pos+1) < len)
-      {
-        Fmi::Exception exception(BCP,"Expected ':'' or '=' character!");
-        exception.addParameter("Row",std::to_string(wordPositions[pos+1] >> 32));
-        exception.addParameter("Column",std::to_string(wordPositions[pos+1] & 0xFFFFFFFF));
-        throw exception;
-      }
-      else
-      {
-        Fmi::Exception exception(BCP,"Invalid attribute definition!");
-        exception.addParameter("Row",std::to_string(wordPositions[pos] >> 32));
-        exception.addParameter("Column",std::to_string(wordPositions[pos] & 0xFFFFFFFF));
-        throw exception;
-      }
+      throwInvalidAttribute(wordPositions,len,pos);
     }
     return pos+1;
   }

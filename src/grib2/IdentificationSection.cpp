@@ -345,6 +345,8 @@ bool IdentificationSection::getProperty(uint propertyId,Int64& value)
       case Property::IdentificationSection::TypeOfProcessedData:
         value = *mTypeOfProcessedData;
         return true;
+      default:
+        break;
     }
     return false;
   }
@@ -478,6 +480,8 @@ bool IdentificationSection::setProperty(uint propertyId,Int64 value)
       case Property::IdentificationSection::TypeOfProcessedData:
         setTypeOfProcessedData(value);
         return true;
+      default:
+        break;
     }
     return false;
   }
@@ -1297,7 +1301,7 @@ void IdentificationSection::setTypeOfProcessedData(T::UInt8_opt typeOfProcessedD
         \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void IdentificationSection::print(std::ostream& stream,uint level,uint optionFlags) const
+void IdentificationSection::print(std::ostream& stream,uint level,uint /*optionFlags*/) const
 {
   try
   {

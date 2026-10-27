@@ -15,37 +15,38 @@ class PolarStereographicImpl : public PolarStereographic
 
                         PolarStereographicImpl();
                         PolarStereographicImpl(const PolarStereographicImpl& other);
-    virtual             ~PolarStereographicImpl();
+    ~PolarStereographicImpl() override;
+    PolarStereographicImpl& operator=(const PolarStereographicImpl&) = default;
 
-    GridDefinition*     createGridDefinition() const;
+    GridDefinition*     createGridDefinition() const override;
 
-    bool                getGridMetricCellSize(double& width,double& height) const;
-    T::Coordinate_svec  getGridOriginalCoordinatesNoCache() const;
-    T::Dimensions       getGridDimensions() const;
-    std::size_t         getGridColumnCount() const;
-    std::size_t         getGridRowCount() const;
-    std::string         getGridGeometryString() const;
-    bool                getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;
-    bool                getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const;
-    bool                reverseXDirection() const;
-    bool                reverseYDirection() const;
+    bool                getGridMetricCellSize(double& width,double& height) const override;
+    T::Coordinate_svec  getGridOriginalCoordinatesNoCache() const override;
+    T::Dimensions       getGridDimensions() const override;
+    std::size_t         getGridColumnCount() const override;
+    std::size_t         getGridRowCount() const override;
+    std::string         getGridGeometryString() const override;
+    bool                getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const override;
+    bool                getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const override;
+    bool                reverseXDirection() const override;
+    bool                reverseYDirection() const override;
 
-    void                getProperties(T::PropertySettingVec& properties);
-    bool                setProperty(uint propertyId,Int64 value);
+    void                getProperties(T::PropertySettingVec& properties) override;
+    bool                setProperty(uint propertyId,Int64 value) override;
 
-    void                initSpatialReference();
-    void                print(std::ostream& stream,uint level,uint optionFlags) const;
-    void                read(MemoryReader& memoryReader);
+    void                initSpatialReference() override;
+    void                print(std::ostream& stream,uint level,uint optionFlags) const override;
+    void                read(MemoryReader& memoryReader) override;
 
   protected:
 
     void                init() const;
 
-    mutable double      mDxx;
-    mutable double      mDyy;
-    mutable double      mStartX;
-    mutable double      mStartY;
-    mutable bool        mInitialized;
+    mutable double      mDxx = 0.0;
+    mutable double      mDyy = 0.0;
+    mutable double      mStartX = 0.0;
+    mutable double      mStartY = 0.0;
+    mutable bool        mInitialized = false;
 
 
 };

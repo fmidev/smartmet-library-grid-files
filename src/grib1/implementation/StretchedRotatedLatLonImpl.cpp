@@ -1,5 +1,7 @@
 #include "StretchedRotatedLatLonImpl.h"
 #include <macgyver/Exception.h>
+
+#include <memory>
 #include "../../common/CoordinateConversions.h"
 
 namespace SmartMet
@@ -20,10 +22,7 @@ StretchedRotatedLatLonImpl::StretchedRotatedLatLonImpl()
 
 /*! \brief The copy constructor of the class. */
 
-StretchedRotatedLatLonImpl::StretchedRotatedLatLonImpl(const StretchedRotatedLatLonImpl& other)
-:StretchedRotatedLatLon(other)
-{
-}
+StretchedRotatedLatLonImpl::StretchedRotatedLatLonImpl(const StretchedRotatedLatLonImpl& other) = default;
 
 
 
@@ -31,9 +30,7 @@ StretchedRotatedLatLonImpl::StretchedRotatedLatLonImpl(const StretchedRotatedLat
 
 /*! \brief The destructor of the class. */
 
-StretchedRotatedLatLonImpl::~StretchedRotatedLatLonImpl()
-{
-}
+StretchedRotatedLatLonImpl::~StretchedRotatedLatLonImpl() = default;
 
 
 
@@ -106,10 +103,10 @@ T::Coordinate_svec StretchedRotatedLatLonImpl::getGridOriginalCoordinatesNoCache
     uint ni = mNi;
     uint nj = mNj;
 
-    double latitudeOfFirstGridPoint = C_DOUBLE(mGridArea.getLatitudeOfFirstGridPoint());
-    double longitudeOfFirstGridPoint = C_DOUBLE(mGridArea.getLongitudeOfFirstGridPoint());
-    double iDirectionIncrement = C_DOUBLE(mIDirectionIncrement);
-    double jDirectionIncrement = C_DOUBLE(mJDirectionIncrement);
+    auto latitudeOfFirstGridPoint = C_DOUBLE(mGridArea.getLatitudeOfFirstGridPoint());
+    auto longitudeOfFirstGridPoint = C_DOUBLE(mGridArea.getLongitudeOfFirstGridPoint());
+    auto iDirectionIncrement = C_DOUBLE(mIDirectionIncrement);
+    auto jDirectionIncrement = C_DOUBLE(mJDirectionIncrement);
 
     unsigned char scanMode = mScanningMode.getScanningMode();
 
@@ -224,13 +221,16 @@ bool StretchedRotatedLatLonImpl::getGridPointByLatLonCoordinates(double lat,doub
     double i = lonDiff / iDirectionIncrement;
     double j = latDiff / jDirectionIncrement;
 
+    // Projection round-off puts points on the first row or column slightly outside the grid
+    if (i < 0 && i > -1e-4)
+      i = 0;
+    if (j < 0 && j > -1e-4)
+      j = 0;
+
     grid_i = i;
     grid_j = j;
 
-    if (i < 0 ||  j < 0  ||  i >= C_DOUBLE(ni) ||  j > C_DOUBLE(nj))
-      return false;
-
-    return true;
+    return !(i < 0 ||  j < 0  ||  i >= C_DOUBLE(ni) ||  j > C_DOUBLE(nj));
   }
   catch (...)
   {
@@ -251,7 +251,7 @@ void StretchedRotatedLatLonImpl::initSpatialReference()
     mSpatialReference = getSpatialReference();
     if (!mSpatialReference)
     {
-      mSpatialReference.reset(new T::SpatialRef());
+      mSpatialReference = std::make_shared<T::SpatialRef>();
       addSpatialReference(mSpatialReference);
 
       // ### Set geographic coordinate system.

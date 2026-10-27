@@ -25,28 +25,32 @@ namespace GRIB2 {
 class EnsembleReforecast : public ProductDefinition {
 public:
   EnsembleReforecast();
-  virtual ~EnsembleReforecast();
+  EnsembleReforecast(const EnsembleReforecast &) = default;
+  EnsembleReforecast(EnsembleReforecast &&) = default;
+  EnsembleReforecast &operator=(const EnsembleReforecast &) = default;
+  EnsembleReforecast &operator=(EnsembleReforecast &&) = default;
+  ~EnsembleReforecast() override;
 
-  virtual uint getTemplateNumber() const;
-  virtual ProductDefinition *createProductDefinition() const;
-  virtual void read(MemoryReader &memoryReader);
-  virtual void write(DataWriter &dataWriter);
-  virtual void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const;
-  virtual bool getAttributeValue(const char *attributeName, std::string &attributeValue) const;
-  virtual bool hasAttributeValue(const char *attributeName, const char *attributeValue) const;
-  virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
+  uint getTemplateNumber() const override;
+  ProductDefinition *createProductDefinition() const override;
+  void read(MemoryReader &memoryReader) override;
+  void write(DataWriter &dataWriter) override;
+  void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const override;
+  bool getAttributeValue(const char *attributeName, std::string &attributeValue) const override;
+  bool hasAttributeValue(const char *attributeName, const char *attributeValue) const override;
+  void print(std::ostream &stream, uint level, uint optionFlags) const override;
   virtual T::Hash countHash() const;
 
-  ParameterSettings *getParameter() const;
-  void setParameter(ParameterSettings &parameter);
+  ParameterSettings *getParameter() const override;
+  void setParameter(const ParameterSettings &parameter);
   PointInTimeSettings *getPointInTime() const;
-  void setPointInTime(PointInTimeSettings &pointInTime);
-  HorizontalSettings *getHorizontal() const;
-  void setHorizontal(HorizontalSettings &horizontal);
-  EpsSettings *getEps() const;
-  void setEps(EpsSettings &eps);
+  void setPointInTime(const PointInTimeSettings &pointInTime);
+  HorizontalSettings *getHorizontal() const override;
+  void setHorizontal(const HorizontalSettings &horizontal);
+  EpsSettings *getEps() const override;
+  void setEps(const EpsSettings &eps);
   ReforecastSettings *getReforecast() const;
-  void setReforecast(ReforecastSettings &reforecast);
+  void setReforecast(const ReforecastSettings &reforecast);
 
 protected:
   // # Copyright 2005-2019 ECMWF.

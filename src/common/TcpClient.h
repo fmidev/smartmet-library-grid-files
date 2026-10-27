@@ -15,7 +15,9 @@ class TcpClient : public Client
 {
   public:
             TcpClient();
-    virtual ~TcpClient();
+    ~TcpClient() override;
+    TcpClient(const TcpClient&) = delete;
+    TcpClient& operator=(const TcpClient&) = delete;
 
     /*! \brief Open a TCP connection to the given server.
      *  \param[in] serverAddress  Hostname or IP address.
@@ -65,7 +67,7 @@ class TcpClient : public Client
     int           mSockfd;        //!< POSIX socket file descriptor (-1 when not connected)
 };
 
-typedef TcpClient* TcpClient_ptr;
-typedef std::vector<TcpClient_ptr> TcpClient_ptr_vec;
+using TcpClient_ptr = TcpClient*;
+using TcpClient_ptr_vec = std::vector<TcpClient_ptr>;
 
 }

@@ -31,8 +31,7 @@ GridAreaSettings::GridAreaSettings() {
 
 /*! \brief The destructor of the class. */
 
-GridAreaSettings::~GridAreaSettings() {
-}
+GridAreaSettings::~GridAreaSettings() = default;
 
 /*! \brief The method reads and initializes all data related to the current section object.
 
@@ -76,17 +75,11 @@ void GridAreaSettings::write(DataWriter &dataWriter) {
 
 void GridAreaSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sGridAreaSettings.LatitudeOfFirstGridPoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatitudeOfFirstGridPoint));
-    sprintf(name, "%sGridAreaSettings.LongitudeOfFirstGridPoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLongitudeOfFirstGridPoint));
-    sprintf(name, "%sGridAreaSettings.", prefix.c_str());
-    mResolutionFlags.getAttributeList(name, attributeList);
-    sprintf(name, "%sGridAreaSettings.LatitudeOfLastGridPoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatitudeOfLastGridPoint));
-    sprintf(name, "%sGridAreaSettings.LongitudeOfLastGridPoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLongitudeOfLastGridPoint));
+        attributeList.addAttribute(prefix + "GridAreaSettings.LatitudeOfFirstGridPoint", toString(mLatitudeOfFirstGridPoint));
+        attributeList.addAttribute(prefix + "GridAreaSettings.LongitudeOfFirstGridPoint", toString(mLongitudeOfFirstGridPoint));
+        mResolutionFlags.getAttributeList(prefix + "GridAreaSettings.", attributeList);
+        attributeList.addAttribute(prefix + "GridAreaSettings.LatitudeOfLastGridPoint", toString(mLatitudeOfLastGridPoint));
+        attributeList.addAttribute(prefix + "GridAreaSettings.LongitudeOfLastGridPoint", toString(mLongitudeOfLastGridPoint));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -188,7 +181,7 @@ T::Hash GridAreaSettings::countHash() const {
 
 /*! \brief The method returns the value of the {@link mLatitudeOfFirstGridPoint} attribute. */
 
-std::int24_t GridAreaSettings::getLatitudeOfFirstGridPoint() const {
+SmartMet::int24_t GridAreaSettings::getLatitudeOfFirstGridPoint() const {
   try {
     return mLatitudeOfFirstGridPoint;
   } catch (...) {
@@ -198,7 +191,7 @@ std::int24_t GridAreaSettings::getLatitudeOfFirstGridPoint() const {
 
 /*! \brief The method returns the value of the {@link mLongitudeOfFirstGridPoint} attribute. */
 
-std::int24_t GridAreaSettings::getLongitudeOfFirstGridPoint() const {
+SmartMet::int24_t GridAreaSettings::getLongitudeOfFirstGridPoint() const {
   try {
     return mLongitudeOfFirstGridPoint;
   } catch (...) {
@@ -210,7 +203,7 @@ std::int24_t GridAreaSettings::getLongitudeOfFirstGridPoint() const {
 
 ResolutionFlagsSettings *GridAreaSettings::getResolutionFlags() const {
   try {
-    return static_cast<ResolutionFlagsSettings *>(&mResolutionFlags);
+    return &mResolutionFlags;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -218,7 +211,7 @@ ResolutionFlagsSettings *GridAreaSettings::getResolutionFlags() const {
 
 /*! \brief The method returns the value of the {@link mLatitudeOfLastGridPoint} attribute. */
 
-std::int24_t GridAreaSettings::getLatitudeOfLastGridPoint() const {
+SmartMet::int24_t GridAreaSettings::getLatitudeOfLastGridPoint() const {
   try {
     return mLatitudeOfLastGridPoint;
   } catch (...) {
@@ -228,7 +221,7 @@ std::int24_t GridAreaSettings::getLatitudeOfLastGridPoint() const {
 
 /*! \brief The method returns the value of the {@link mLongitudeOfLastGridPoint} attribute. */
 
-std::int24_t GridAreaSettings::getLongitudeOfLastGridPoint() const {
+SmartMet::int24_t GridAreaSettings::getLongitudeOfLastGridPoint() const {
   try {
     return mLongitudeOfLastGridPoint;
   } catch (...) {
@@ -236,7 +229,7 @@ std::int24_t GridAreaSettings::getLongitudeOfLastGridPoint() const {
   }
 }
 
-void GridAreaSettings::setLatitudeOfFirstGridPoint(std::int24_t latitudeOfFirstGridPoint) {
+void GridAreaSettings::setLatitudeOfFirstGridPoint(SmartMet::int24_t latitudeOfFirstGridPoint) {
   try {
     mLatitudeOfFirstGridPoint = latitudeOfFirstGridPoint;
   } catch (...) {
@@ -244,7 +237,7 @@ void GridAreaSettings::setLatitudeOfFirstGridPoint(std::int24_t latitudeOfFirstG
   }
 }
 
-void GridAreaSettings::setLongitudeOfFirstGridPoint(std::int24_t longitudeOfFirstGridPoint) {
+void GridAreaSettings::setLongitudeOfFirstGridPoint(SmartMet::int24_t longitudeOfFirstGridPoint) {
   try {
     mLongitudeOfFirstGridPoint = longitudeOfFirstGridPoint;
   } catch (...) {
@@ -252,7 +245,7 @@ void GridAreaSettings::setLongitudeOfFirstGridPoint(std::int24_t longitudeOfFirs
   }
 }
 
-void GridAreaSettings::setResolutionFlags(ResolutionFlagsSettings &resolutionFlags) {
+void GridAreaSettings::setResolutionFlags(const ResolutionFlagsSettings &resolutionFlags) {
   try {
     mResolutionFlags = resolutionFlags;
   } catch (...) {
@@ -260,7 +253,7 @@ void GridAreaSettings::setResolutionFlags(ResolutionFlagsSettings &resolutionFla
   }
 }
 
-void GridAreaSettings::setLatitudeOfLastGridPoint(std::int24_t latitudeOfLastGridPoint) {
+void GridAreaSettings::setLatitudeOfLastGridPoint(SmartMet::int24_t latitudeOfLastGridPoint) {
   try {
     mLatitudeOfLastGridPoint = latitudeOfLastGridPoint;
   } catch (...) {
@@ -268,7 +261,7 @@ void GridAreaSettings::setLatitudeOfLastGridPoint(std::int24_t latitudeOfLastGri
   }
 }
 
-void GridAreaSettings::setLongitudeOfLastGridPoint(std::int24_t longitudeOfLastGridPoint) {
+void GridAreaSettings::setLongitudeOfLastGridPoint(SmartMet::int24_t longitudeOfLastGridPoint) {
   try {
     mLongitudeOfLastGridPoint = longitudeOfLastGridPoint;
   } catch (...) {

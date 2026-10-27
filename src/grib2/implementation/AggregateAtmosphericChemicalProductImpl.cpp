@@ -1,5 +1,7 @@
 #include "AggregateAtmosphericChemicalProductImpl.h"
 #include <macgyver/Exception.h>
+
+#include <utility>
 #include "../../common/GeneralFunctions.h"
 
 
@@ -11,9 +13,7 @@ namespace GRIB2
 
 /*! \brief The constructor of the class. */
 
-AggregateAtmosphericChemicalProductImpl::AggregateAtmosphericChemicalProductImpl()
-{
-}
+AggregateAtmosphericChemicalProductImpl::AggregateAtmosphericChemicalProductImpl() = default;
 
 
 
@@ -21,10 +21,7 @@ AggregateAtmosphericChemicalProductImpl::AggregateAtmosphericChemicalProductImpl
 
 /*! \brief The copy constructor of the class. */
 
-AggregateAtmosphericChemicalProductImpl::AggregateAtmosphericChemicalProductImpl(const AggregateAtmosphericChemicalProductImpl& other)
-:AggregateAtmosphericChemicalProduct(other)
-{
-}
+AggregateAtmosphericChemicalProductImpl::AggregateAtmosphericChemicalProductImpl(const AggregateAtmosphericChemicalProductImpl& other) = default;
 
 
 
@@ -32,9 +29,7 @@ AggregateAtmosphericChemicalProductImpl::AggregateAtmosphericChemicalProductImpl
 
 /*! \brief The destructor of the class. */
 
-AggregateAtmosphericChemicalProductImpl::~AggregateAtmosphericChemicalProductImpl()
-{
-}
+AggregateAtmosphericChemicalProductImpl::~AggregateAtmosphericChemicalProductImpl() = default;
 
 
 
@@ -131,7 +126,7 @@ T::UInt8_opt AggregateAtmosphericChemicalProductImpl::getGeneratingProcessIdenti
 
 
 
-T::TimeString AggregateAtmosphericChemicalProductImpl::countForecastStartTime(T::TimeString referenceTime) const
+T::TimeString AggregateAtmosphericChemicalProductImpl::countForecastStartTime(const T::TimeString& referenceTime) const
 {
   try
   {
@@ -190,6 +185,8 @@ T::TimeString AggregateAtmosphericChemicalProductImpl::countForecastStartTime(T:
 
       case 13: //  s Second
         dt = Fmi::TimeDuration(0,0,forecastTime);
+        break;
+      default:
         break;
     }
 

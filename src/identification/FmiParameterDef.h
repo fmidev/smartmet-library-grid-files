@@ -23,6 +23,8 @@ class FmiParameterDef
   public:
                   FmiParameterDef();
     virtual       ~FmiParameterDef();
+    FmiParameterDef(const FmiParameterDef&) = default;
+    FmiParameterDef& operator=(const FmiParameterDef&) = default;
 
     /*! \brief Write a human-readable dump to \p stream (for debugging). */
     void          print(std::ostream& stream,uint level,uint optionFlags) const;
@@ -37,9 +39,9 @@ class FmiParameterDef
     short         mDefaultPrecision;          //!< Default display precision (decimal places)
 };
 
-typedef std::vector<FmiParameterDef> FmiParamDef_vec;           //!< Ordered list of FMI parameter definitions
-typedef std::unordered_map<uint,FmiParameterDef> FmiParamDef_umap; //!< Hash map keyed by FMI parameter ID
-typedef const FmiParameterDef* FmiParamDef_cptr;                //!< Non-owning const pointer
+using FmiParamDef_vec = std::vector<FmiParameterDef>;           //!< Ordered list of FMI parameter definitions
+using FmiParamDef_umap = std::unordered_map<uint,FmiParameterDef>; //!< Hash map keyed by FMI parameter ID
+using FmiParamDef_cptr = const FmiParameterDef*;                //!< Non-owning const pointer
 
 }
 }

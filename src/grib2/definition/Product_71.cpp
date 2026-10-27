@@ -27,8 +27,7 @@ Product_71::Product_71() {
 
 /*! \brief The destructor of the class. */
 
-Product_71::~Product_71() {
-}
+Product_71::~Product_71() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -70,15 +69,10 @@ void Product_71::write(DataWriter &dataWriter) {
 
 void Product_71::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sProduct_71.", prefix.c_str());
-    mPostproc.getAttributeList(name, attributeList);
-    sprintf(name, "%sProduct_71.", prefix.c_str());
-    mPointInTime.getAttributeList(name, attributeList);
-    sprintf(name, "%sProduct_71.", prefix.c_str());
-    mHorizontal.getAttributeList(name, attributeList);
-    sprintf(name, "%sProduct_71.", prefix.c_str());
-    mEps.getAttributeList(name, attributeList);
+        mPostproc.getAttributeList(prefix + "Product_71.", attributeList);
+        mPointInTime.getAttributeList(prefix + "Product_71.", attributeList);
+        mHorizontal.getAttributeList(prefix + "Product_71.", attributeList);
+        mEps.getAttributeList(prefix + "Product_71.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -180,7 +174,7 @@ ProductDefinition *Product_71::createProductDefinition() const {
 
 PostprocSettings *Product_71::getPostproc() const {
   try {
-    return static_cast<PostprocSettings *>(&mPostproc);
+    return &mPostproc;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -190,7 +184,7 @@ PostprocSettings *Product_71::getPostproc() const {
 
 PointInTimeSettings *Product_71::getPointInTime() const {
   try {
-    return static_cast<PointInTimeSettings *>(&mPointInTime);
+    return &mPointInTime;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -200,7 +194,7 @@ PointInTimeSettings *Product_71::getPointInTime() const {
 
 HorizontalSettings *Product_71::getHorizontal() const {
   try {
-    return static_cast<HorizontalSettings *>(&mHorizontal);
+    return &mHorizontal;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -210,13 +204,13 @@ HorizontalSettings *Product_71::getHorizontal() const {
 
 EpsSettings *Product_71::getEps() const {
   try {
-    return static_cast<EpsSettings *>(&mEps);
+    return &mEps;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
-void Product_71::setPostproc(PostprocSettings &postproc) {
+void Product_71::setPostproc(const PostprocSettings &postproc) {
   try {
     mPostproc = postproc;
   } catch (...) {
@@ -224,7 +218,7 @@ void Product_71::setPostproc(PostprocSettings &postproc) {
   }
 }
 
-void Product_71::setPointInTime(PointInTimeSettings &pointInTime) {
+void Product_71::setPointInTime(const PointInTimeSettings &pointInTime) {
   try {
     mPointInTime = pointInTime;
   } catch (...) {
@@ -232,7 +226,7 @@ void Product_71::setPointInTime(PointInTimeSettings &pointInTime) {
   }
 }
 
-void Product_71::setHorizontal(HorizontalSettings &horizontal) {
+void Product_71::setHorizontal(const HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
@@ -240,7 +234,7 @@ void Product_71::setHorizontal(HorizontalSettings &horizontal) {
   }
 }
 
-void Product_71::setEps(EpsSettings &eps) {
+void Product_71::setEps(const EpsSettings &eps) {
   try {
     mEps = eps;
   } catch (...) {

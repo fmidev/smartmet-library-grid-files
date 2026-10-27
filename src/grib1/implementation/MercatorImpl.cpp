@@ -1,6 +1,8 @@
 #include "MercatorImpl.h"
 #include "../Properties.h"
 #include <macgyver/Exception.h>
+
+#include <memory>
 #include "../../common/GeneralFunctions.h"
 #include "../../grid/PrintOptions.h"
 #include "../../grid/Typedefs.h"
@@ -125,8 +127,8 @@ std::string MercatorImpl::getGridGeometryString() const
 
     double x = getLongitude(C_DOUBLE(mGridArea.getLongitudeOfFirstGridPoint()) / 1000);
     double y = C_DOUBLE(mGridArea.getLatitudeOfFirstGridPoint()) / 1000;
-    double dx = C_DOUBLE(mDiInMetres);
-    double dy = C_DOUBLE(mDjInMetres);
+    auto dx = C_DOUBLE(mDiInMetres);
+    auto dy = C_DOUBLE(mDjInMetres);
     double latin = C_DOUBLE(mLatin)/1000;
 
     unsigned char scanningMode = mScanningMode.getScanningMode();
@@ -146,11 +148,11 @@ std::string MercatorImpl::getGridGeometryString() const
     if ((scanningMode & 0x40) == 0)
     {
       dy = -dy;
-      p += sprintf(p,"-y");
+      sprintf(p,"-y");
     }
     else
     {
-      p += sprintf(p,"+y");
+      sprintf(p,"+y");
     }
 
     sprintf(buf,"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;description",
@@ -188,8 +190,8 @@ T::Coordinate_svec MercatorImpl::getGridOriginalCoordinatesNoCache() const
     double latitudeOfFirstGridPoint = C_DOUBLE(mGridArea.getLatitudeOfFirstGridPoint()) / 1000;
     double longitudeOfFirstGridPoint = C_DOUBLE(mGridArea.getLongitudeOfFirstGridPoint()) / 1000;
 
-    double di = C_DOUBLE(mDiInMetres);
-    double dj = C_DOUBLE(mDjInMetres);
+    auto di = C_DOUBLE(mDiInMetres);
+    auto dj = C_DOUBLE(mDjInMetres);
 
     unsigned char scanningMode = mScanningMode.getScanningMode();
     if ((scanningMode & 0x80) != 0)
@@ -292,8 +294,8 @@ bool MercatorImpl::getGridPointByOriginalCoordinates(double x,double y,double& g
     double latitudeOfFirstGridPoint = C_DOUBLE(mGridArea.getLatitudeOfFirstGridPoint()) / 1000;
     double longitudeOfFirstGridPoint = C_DOUBLE(mGridArea.getLongitudeOfFirstGridPoint()) / 1000;
 
-    double di = C_DOUBLE(mDiInMetres);
-    double dj = C_DOUBLE(mDjInMetres);
+    auto di = C_DOUBLE(mDiInMetres);
+    auto dj = C_DOUBLE(mDjInMetres);
 
     unsigned char scanningMode = mScanningMode.getScanningMode();
     if ((scanningMode & 0x80) != 0)
@@ -315,13 +317,16 @@ bool MercatorImpl::getGridPointByOriginalCoordinates(double x,double y,double& g
     double i = xDiff / di;
     double j = yDiff / dj;
 
+    // Projection round-off puts points on the first row or column slightly outside the grid
+    if (i < 0 && i > -1e-4)
+      i = 0;
+    if (j < 0 && j > -1e-4)
+      j = 0;
+
     grid_i = i;
     grid_j = j;
 
-    if (i < 0 ||  j < 0  ||  i >= C_DOUBLE(ni) ||  j > C_DOUBLE(nj))
-      return false;
-
-    return true;
+    return !(i < 0 ||  j < 0  ||  i >= C_DOUBLE(ni) ||  j > C_DOUBLE(nj));
   }
   catch (...)
   {
@@ -346,10 +351,7 @@ bool MercatorImpl::reverseXDirection() const
   {
     unsigned char scanMode = mScanningMode.getScanningMode();
 
-    if ((scanMode & 0x80) != 0)
-      return true;
-
-    return false;
+    return (scanMode & 0x80) != 0;
   }
   catch (...)
   {
@@ -373,10 +375,7 @@ bool MercatorImpl::reverseYDirection() const
   {
     unsigned char scanMode = mScanningMode.getScanningMode();
 
-    if ((scanMode & 0x40) == 0)
-      return true;
-
-    return false;
+    return (scanMode & 0x40) == 0;
   }
   catch (...)
   {
@@ -441,6 +440,8 @@ bool MercatorImpl::getProperty(uint propertyId,Int64& value)
       case Property::GridSection::Mercator::DjInMetres:
         value = getDjInMetres();
         return true;
+      default:
+        break;
     }
 
     return GridDefinition::getProperty(propertyId,value);
@@ -487,6 +488,8 @@ bool MercatorImpl::setProperty(uint propertyId,Int64 value)
       case Property::GridSection::Mercator::DjInMetres:
         setDjInMetres(value);
         return true;
+      default:
+        break;
     }
 
     return GridDefinition::setProperty(propertyId,value);
@@ -514,10 +517,9 @@ void MercatorImpl::initSpatialReference()
     mSpatialReference = getSpatialReference();
     if (!mSpatialReference)
     {
-      mSpatialReference.reset(new T::SpatialRef());
+      mSpatialReference = std::make_shared<T::SpatialRef>();
       addSpatialReference(mSpatialReference);
 
-      auto dfCenterLat = mGridArea.getLatitudeOfFirstGridPoint();
       auto dfCenterLong = mGridArea.getLongitudeOfFirstGridPoint();
 
       // ### Set geographic coordinate system.
@@ -542,14 +544,15 @@ void MercatorImpl::initSpatialReference()
 
       // ### Set the projection and the linear units for the projection.
 
-      double centerLat = C_DOUBLE(dfCenterLat) / 1000;
       double centerLon = C_DOUBLE(dfCenterLong) / 1000;
       double dfFalseEasting = 0.0;
       double dfFalseNorthing = 0.0;
       double latin = C_DOUBLE(mLatin)/1000;
 
-      //mSpatialReference->SetMercator(centerLat,centerLon,1.0,dfFalseEasting,dfFalseNorthing);
-      mSpatialReference->SetMercator2SP(latin,centerLat,centerLon,dfFalseEasting,dfFalseNorthing);
+      // The latitude of origin of Mercator is always the equator. Passing the latitude of the
+      // first grid point here made PROJ fail the inverse projection and all coordinates inf.
+      // The central meridian does not matter since the grid is positioned by its first point.
+      mSpatialReference->SetMercator2SP(latin,0.0,centerLon,dfFalseEasting,dfFalseNorthing);
       mSpatialReference->SetTargetLinearUnits("PROJCS", SRS_UL_METER, 1.0);
       mSpatialReference->SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
 

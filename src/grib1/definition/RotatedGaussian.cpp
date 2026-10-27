@@ -31,8 +31,7 @@ RotatedGaussian::RotatedGaussian() {
 
 /*! \brief The destructor of the class. */
 
-RotatedGaussian::~RotatedGaussian() {
-}
+RotatedGaussian::~RotatedGaussian() = default;
 
 /*! \brief The method reads and initializes all data related to the current section object.
 
@@ -84,21 +83,13 @@ void RotatedGaussian::write(DataWriter &dataWriter) {
 
 void RotatedGaussian::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sRotatedGaussian.Ni", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNi));
-    sprintf(name, "%sRotatedGaussian.Nj", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNj));
-    sprintf(name, "%sRotatedGaussian.", prefix.c_str());
-    mGridArea.getAttributeList(name, attributeList);
-    sprintf(name, "%sRotatedGaussian.IDirectionIncrement", prefix.c_str());
-    attributeList.addAttribute(name, toString(mIDirectionIncrement));
-    sprintf(name, "%sRotatedGaussian.N", prefix.c_str());
-    attributeList.addAttribute(name, toString(mN));
-    sprintf(name, "%sRotatedGaussian.", prefix.c_str());
-    mScanningMode.getAttributeList(name, attributeList);
-    sprintf(name, "%sRotatedGaussian.", prefix.c_str());
-    mRotation.getAttributeList(name, attributeList);
+        attributeList.addAttribute(prefix + "RotatedGaussian.Ni", toString(mNi));
+        attributeList.addAttribute(prefix + "RotatedGaussian.Nj", toString(mNj));
+        mGridArea.getAttributeList(prefix + "RotatedGaussian.", attributeList);
+        attributeList.addAttribute(prefix + "RotatedGaussian.IDirectionIncrement", toString(mIDirectionIncrement));
+        attributeList.addAttribute(prefix + "RotatedGaussian.N", toString(mN));
+        mScanningMode.getAttributeList(prefix + "RotatedGaussian.", attributeList);
+        mRotation.getAttributeList(prefix + "RotatedGaussian.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -247,7 +238,7 @@ std::int16_t RotatedGaussian::getNj() const {
 
 GridAreaSettings *RotatedGaussian::getGridArea() const {
   try {
-    return static_cast<GridAreaSettings *>(&mGridArea);
+    return &mGridArea;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -277,7 +268,7 @@ std::uint16_t RotatedGaussian::getN() const {
 
 ScanningModeSettings *RotatedGaussian::getScanningMode() const {
   try {
-    return static_cast<ScanningModeSettings *>(&mScanningMode);
+    return &mScanningMode;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -287,7 +278,7 @@ ScanningModeSettings *RotatedGaussian::getScanningMode() const {
 
 RotationSettings *RotatedGaussian::getRotation() const {
   try {
-    return static_cast<RotationSettings *>(&mRotation);
+    return &mRotation;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -309,7 +300,7 @@ void RotatedGaussian::setNj(std::int16_t nj) {
   }
 }
 
-void RotatedGaussian::setGridArea(GridAreaSettings &gridArea) {
+void RotatedGaussian::setGridArea(const GridAreaSettings &gridArea) {
   try {
     mGridArea = gridArea;
   } catch (...) {
@@ -333,7 +324,7 @@ void RotatedGaussian::setN(std::uint16_t n) {
   }
 }
 
-void RotatedGaussian::setScanningMode(ScanningModeSettings &scanningMode) {
+void RotatedGaussian::setScanningMode(const ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {
@@ -341,7 +332,7 @@ void RotatedGaussian::setScanningMode(ScanningModeSettings &scanningMode) {
   }
 }
 
-void RotatedGaussian::setRotation(RotationSettings &rotation) {
+void RotatedGaussian::setRotation(const RotationSettings &rotation) {
   try {
     mRotation = rotation;
   } catch (...) {

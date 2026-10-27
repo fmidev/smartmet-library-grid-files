@@ -31,7 +31,7 @@ FileWriter::~FileWriter()
   try
   {
     if (mFileHandle != nullptr)
-      fclose(mFileHandle);
+      (void)fclose(mFileHandle);
 
     mFileHandle = nullptr;
   }
@@ -78,9 +78,13 @@ void FileWriter::closeFile()
   try
   {
     if (mFileHandle != nullptr)
-      fclose(mFileHandle);
-
-    mFileHandle = nullptr;
+    {
+      // Forget the handle first: it must not be closed again if this throws
+      FILE *file = mFileHandle;
+      mFileHandle = nullptr;
+      if (fclose(file) != 0)
+        throw Fmi::Exception(BCP,"Failed to close the output file");
+    }
   }
   catch (...)
   {
@@ -143,7 +147,8 @@ void FileWriter::setWritePosition(UInt64 _pos)
     if (mFileHandle == nullptr)
       throw Fmi::Exception(BCP,"No file defined!");
 
-    fseek(mFileHandle,_pos,SEEK_SET);
+    if (fseek(mFileHandle,_pos,SEEK_SET) != 0)
+      throw Fmi::Exception(BCP,"Failed to seek in the file");
   }
   catch (...)
   {
@@ -164,7 +169,8 @@ void FileWriter::write_data(void *_data,UInt64 _size)
     if (mFileHandle == nullptr)
       throw Fmi::Exception(BCP,"No file defined!");
 
-    fwrite(_data,_size,1,mFileHandle);
+    if (fwrite(_data,_size,1,mFileHandle) != 1)
+      throw Fmi::Exception(BCP,"Failed to write the file");
   }
   catch (...)
   {

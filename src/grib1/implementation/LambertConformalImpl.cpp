@@ -1,5 +1,7 @@
 #include "LambertConformalImpl.h"
 #include <macgyver/Exception.h>
+
+#include <memory>
 #include "../Properties.h"
 
 namespace SmartMet
@@ -84,8 +86,8 @@ void LambertConformalImpl::init() const
     double latitudeOfFirstGridPoint = C_DOUBLE(mLatitudeOfFirstGridPoint) / 1000;
     double longitudeOfFirstGridPoint = C_DOUBLE(mLongitudeOfFirstGridPoint) / 1000;
 
-    double dx = C_DOUBLE(mDxInMetres);
-    double dy = C_DOUBLE(mDyInMetres);
+    auto dx = C_DOUBLE(mDxInMetres);
+    auto dy = C_DOUBLE(mDyInMetres);
 
     mDx = dx;
     mDy = dy;
@@ -223,8 +225,8 @@ std::string LambertConformalImpl::getGridGeometryString() const
     double latin2 = C_DOUBLE(mLatin2) / 1000;
     double sx = getLongitude(C_DOUBLE(mLongitudeOfSouthernPole) / 1000);
     double sy = C_DOUBLE(mLatitudeOfSouthernPole) / 1000;
-    double dx = C_DOUBLE(mDxInMetres);
-    double dy = C_DOUBLE(mDyInMetres);
+    auto dx = C_DOUBLE(mDxInMetres);
+    auto dy = C_DOUBLE(mDyInMetres);
     double laD = latin1;
 
     unsigned char scanningMode = mScanningMode.getScanningMode();
@@ -244,11 +246,11 @@ std::string LambertConformalImpl::getGridGeometryString() const
     if ((scanningMode & 0x40) == 0)
     {
       dy = -dy;
-      p += sprintf(p,"-y");
+      sprintf(p,"-y");
     }
     else
     {
-      p += sprintf(p,"+y");
+      sprintf(p,"+y");
     }
 
 
@@ -400,13 +402,16 @@ bool LambertConformalImpl::getGridPointByOriginalCoordinates(double x,double y,d
     double i = xDiff / mDx;
     double j = yDiff / mDy;
 
+    // Projection round-off puts points on the first row or column slightly outside the grid
+    if (i < 0 && i > -1e-4)
+      i = 0;
+    if (j < 0 && j > -1e-4)
+      j = 0;
+
     grid_i = i;
     grid_j = j;
 
-    if (i < 0 ||  j < 0  ||  i >= C_DOUBLE(mNx) ||  j > C_DOUBLE(mNy))
-      return false;
-
-    return true;
+    return !(i < 0 ||  j < 0  ||  i >= C_DOUBLE(mNx) ||  j > C_DOUBLE(mNy));
   }
   catch (...)
   {
@@ -431,10 +436,7 @@ bool LambertConformalImpl::reverseXDirection() const
   {
     unsigned char scanMode = mScanningMode.getScanningMode();
 
-    if ((scanMode & 0x80) != 0)
-      return true;
-
-    return false;
+    return (scanMode & 0x80) != 0;
   }
   catch (...)
   {
@@ -458,10 +460,7 @@ bool LambertConformalImpl::reverseYDirection() const
   {
     unsigned char scanMode = mScanningMode.getScanningMode();
 
-    if ((scanMode & 0x40) == 0)
-      return true;
-
-    return false;
+    return (scanMode & 0x40) == 0;
   }
   catch (...)
   {
@@ -562,6 +561,8 @@ bool LambertConformalImpl::getProperty(uint propertyId,Int64& value)
         value = getLongitudeOfSouthernPole();
         return true;
 
+      default:
+        break;
     }
 
     return GridDefinition::getProperty(propertyId,value);
@@ -646,6 +647,8 @@ bool LambertConformalImpl::setProperty(uint propertyId,Int64 value)
           setLongitudeOfSouthernPole(value+360000);
         return true;
 
+      default:
+        break;
     }
 
     return GridDefinition::setProperty(propertyId,value);
@@ -669,7 +672,7 @@ void LambertConformalImpl::initSpatialReference()
     mSpatialReference = getSpatialReference();
     if (!mSpatialReference)
     {
-      mSpatialReference.reset(new T::SpatialRef());
+      mSpatialReference = std::make_shared<T::SpatialRef>();
       addSpatialReference(mSpatialReference);
 
       auto dfStdP1 = mLatin1;

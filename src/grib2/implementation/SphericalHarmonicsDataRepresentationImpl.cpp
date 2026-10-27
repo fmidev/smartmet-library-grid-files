@@ -9,19 +9,14 @@ namespace GRIB2
 
 /*! \brief The constructor of the class. */
 
-SphericalHarmonicsDataRepresentationImpl::SphericalHarmonicsDataRepresentationImpl()
-{
-}
+SphericalHarmonicsDataRepresentationImpl::SphericalHarmonicsDataRepresentationImpl() = default;
 
 
 
 
 /*! \brief The copy constructor of the class. */
 
-SphericalHarmonicsDataRepresentationImpl::SphericalHarmonicsDataRepresentationImpl(const SphericalHarmonicsDataRepresentationImpl& other)
-:SphericalHarmonicsDataRepresentation(other)
-{
-}
+SphericalHarmonicsDataRepresentationImpl::SphericalHarmonicsDataRepresentationImpl(const SphericalHarmonicsDataRepresentationImpl& other) = default;
 
 
 
@@ -29,9 +24,7 @@ SphericalHarmonicsDataRepresentationImpl::SphericalHarmonicsDataRepresentationIm
 
 /*! \brief The destructor of the class. */
 
-SphericalHarmonicsDataRepresentationImpl::~SphericalHarmonicsDataRepresentationImpl()
-{
-}
+SphericalHarmonicsDataRepresentationImpl::~SphericalHarmonicsDataRepresentationImpl() = default;
 
 
 
@@ -83,7 +76,7 @@ void SphericalHarmonicsDataRepresentationImpl::read(MemoryReader& memoryReader)
 
 /*! \brief Decodes the spherical-harmonics packed grid values (not implemented). */
 
-void SphericalHarmonicsDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec& decodedValues) const
+void SphericalHarmonicsDataRepresentationImpl::decodeValues(Message * /*message*/,T::ParamValue_vec& /*decodedValues*/) const
 {
   throw Fmi::Exception(BCP,"The method not implemented!");
 }

@@ -19,6 +19,10 @@ namespace GRIB2 {
 class ComplexPackingSettings {
 public:
   ComplexPackingSettings();
+  ComplexPackingSettings(const ComplexPackingSettings &) = default;
+  ComplexPackingSettings(ComplexPackingSettings &&) = default;
+  ComplexPackingSettings &operator=(const ComplexPackingSettings &) = default;
+  ComplexPackingSettings &operator=(ComplexPackingSettings &&) = default;
   virtual ~ComplexPackingSettings();
 
   virtual void read(MemoryReader &memoryReader);

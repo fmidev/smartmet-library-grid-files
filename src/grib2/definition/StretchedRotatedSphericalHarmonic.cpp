@@ -27,8 +27,7 @@ StretchedRotatedSphericalHarmonic::StretchedRotatedSphericalHarmonic() {
 
 /*! \brief The destructor of the class. */
 
-StretchedRotatedSphericalHarmonic::~StretchedRotatedSphericalHarmonic() {
-}
+StretchedRotatedSphericalHarmonic::~StretchedRotatedSphericalHarmonic() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -68,13 +67,9 @@ void StretchedRotatedSphericalHarmonic::write(DataWriter &dataWriter) {
 
 void StretchedRotatedSphericalHarmonic::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sStretchedRotatedSphericalHarmonic.", prefix.c_str());
-    mSphericalHarmonic.getAttributeList(name, attributeList);
-    sprintf(name, "%sStretchedRotatedSphericalHarmonic.", prefix.c_str());
-    mRotation.getAttributeList(name, attributeList);
-    sprintf(name, "%sStretchedRotatedSphericalHarmonic.", prefix.c_str());
-    mStretching.getAttributeList(name, attributeList);
+        mSphericalHarmonic.getAttributeList(prefix + "StretchedRotatedSphericalHarmonic.", attributeList);
+        mRotation.getAttributeList(prefix + "StretchedRotatedSphericalHarmonic.", attributeList);
+        mStretching.getAttributeList(prefix + "StretchedRotatedSphericalHarmonic.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -171,7 +166,7 @@ GridDefinition *StretchedRotatedSphericalHarmonic::createGridDefinition() const 
 
 SphericalHarmonicSettings *StretchedRotatedSphericalHarmonic::getSphericalHarmonic() const {
   try {
-    return static_cast<SphericalHarmonicSettings *>(&mSphericalHarmonic);
+    return &mSphericalHarmonic;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -181,7 +176,7 @@ SphericalHarmonicSettings *StretchedRotatedSphericalHarmonic::getSphericalHarmon
 
 RotationSettings *StretchedRotatedSphericalHarmonic::getRotation() const {
   try {
-    return static_cast<RotationSettings *>(&mRotation);
+    return &mRotation;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -191,13 +186,13 @@ RotationSettings *StretchedRotatedSphericalHarmonic::getRotation() const {
 
 StretchingSettings *StretchedRotatedSphericalHarmonic::getStretching() const {
   try {
-    return static_cast<StretchingSettings *>(&mStretching);
+    return &mStretching;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
-void StretchedRotatedSphericalHarmonic::setSphericalHarmonic(SphericalHarmonicSettings &sphericalHarmonic) {
+void StretchedRotatedSphericalHarmonic::setSphericalHarmonic(const SphericalHarmonicSettings &sphericalHarmonic) {
   try {
     mSphericalHarmonic = sphericalHarmonic;
   } catch (...) {
@@ -205,7 +200,7 @@ void StretchedRotatedSphericalHarmonic::setSphericalHarmonic(SphericalHarmonicSe
   }
 }
 
-void StretchedRotatedSphericalHarmonic::setRotation(RotationSettings &rotation) {
+void StretchedRotatedSphericalHarmonic::setRotation(const RotationSettings &rotation) {
   try {
     mRotation = rotation;
   } catch (...) {
@@ -213,7 +208,7 @@ void StretchedRotatedSphericalHarmonic::setRotation(RotationSettings &rotation) 
   }
 }
 
-void StretchedRotatedSphericalHarmonic::setStretching(StretchingSettings &stretching) {
+void StretchedRotatedSphericalHarmonic::setStretching(const StretchingSettings &stretching) {
   try {
     mStretching = stretching;
   } catch (...) {

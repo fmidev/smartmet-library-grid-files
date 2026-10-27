@@ -22,32 +22,36 @@ namespace GRIB1 {
 class Mercator : public GridDefinition {
 public:
   Mercator();
-  virtual ~Mercator();
+  Mercator(const Mercator &) = default;
+  Mercator(Mercator &&) = default;
+  Mercator &operator=(const Mercator &) = default;
+  Mercator &operator=(Mercator &&) = default;
+  ~Mercator() override;
 
-  virtual void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const;
-  virtual void read(MemoryReader &memoryReader);
-  virtual void write(DataWriter &dataWriter);
-  virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
+  void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const override;
+  void read(MemoryReader &memoryReader) override;
+  void write(DataWriter &dataWriter) override;
+  void print(std::ostream &stream, uint level, uint optionFlags) const override;
   virtual bool getAttributeValue(const char *attributeName, std::string &attributeValue) const;
   virtual bool hasAttributeValue(const char *attributeName, const char *attributeValue) const;
-  virtual T::Hash countHash() const;
+  T::Hash countHash() const override;
 
-  virtual uint getTemplateNumber() const;
-  virtual GridDefinition *createGridDefinition() const;
+  uint getTemplateNumber() const override;
+  GridDefinition *createGridDefinition() const override;
   std::int16_t getNi() const;
   void setNi(std::int16_t ni);
   std::int16_t getNj() const;
   void setNj(std::int16_t nj);
-  GridAreaSettings *getGridArea() const;
-  void setGridArea(GridAreaSettings &gridArea);
-  std::int24_t getLatin() const;
-  void setLatin(std::int24_t latin);
-  ScanningModeSettings *getScanningMode() const;
-  void setScanningMode(ScanningModeSettings &scanningMode);
-  std::int24_t getDiInMetres() const;
-  void setDiInMetres(std::int24_t diInMetres);
-  std::int24_t getDjInMetres() const;
-  void setDjInMetres(std::int24_t djInMetres);
+  GridAreaSettings *getGridArea() const override;
+  void setGridArea(const GridAreaSettings &gridArea);
+  SmartMet::int24_t getLatin() const;
+  void setLatin(SmartMet::int24_t latin);
+  ScanningModeSettings *getScanningMode() const override;
+  void setScanningMode(const ScanningModeSettings &scanningMode);
+  SmartMet::int24_t getDiInMetres() const;
+  void setDiInMetres(SmartMet::int24_t diInMetres);
+  SmartMet::int24_t getDjInMetres() const;
+  void setDjInMetres(SmartMet::int24_t djInMetres);
 
 protected:
   // # Copyright 2005-2019 ECMWF.
@@ -79,7 +83,7 @@ protected:
   //
   // signed[3] Latin : edition_specific,no_copy;
 
-  std::int24_t mLatin;
+  SmartMet::int24_t mLatin;
 
   // meta geography.LaDInDegrees scale(Latin,oneConstant,grib1divider,truncateDegrees) : dump;
   //
@@ -99,7 +103,7 @@ protected:
   //
   // signed[3] DiInMetres   : dump;
 
-  std::int24_t mDiInMetres;
+  SmartMet::int24_t mDiInMetres;
 
   // alias longitudinalDirectionGridLength=DiInMetres;
   // alias Di=DiInMetres;
@@ -107,7 +111,7 @@ protected:
   //
   // signed[3] DjInMetres   : dump;
 
-  std::int24_t mDjInMetres;
+  SmartMet::int24_t mDjInMetres;
 
   // alias latitudinalDirectionGridLength=DjInMetres;
   // alias Dj=DjInMetres;

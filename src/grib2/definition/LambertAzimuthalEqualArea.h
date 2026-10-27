@@ -22,20 +22,24 @@ namespace GRIB2 {
 class LambertAzimuthalEqualArea : public GridDefinition {
 public:
   LambertAzimuthalEqualArea();
-  virtual ~LambertAzimuthalEqualArea();
+  LambertAzimuthalEqualArea(const LambertAzimuthalEqualArea &) = default;
+  LambertAzimuthalEqualArea(LambertAzimuthalEqualArea &&) = default;
+  LambertAzimuthalEqualArea &operator=(const LambertAzimuthalEqualArea &) = default;
+  LambertAzimuthalEqualArea &operator=(LambertAzimuthalEqualArea &&) = default;
+  ~LambertAzimuthalEqualArea() override;
 
-  virtual uint getTemplateNumber() const;
-  virtual GridDefinition *createGridDefinition() const;
-  virtual void read(MemoryReader &memoryReader);
-  virtual void write(DataWriter &dataWriter);
-  virtual void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const;
+  uint getTemplateNumber() const override;
+  GridDefinition *createGridDefinition() const override;
+  void read(MemoryReader &memoryReader) override;
+  void write(DataWriter &dataWriter) override;
+  void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const override;
   virtual bool getAttributeValue(const char *attributeName, std::string &attributeValue) const;
   virtual bool hasAttributeValue(const char *attributeName, const char *attributeValue) const;
-  virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
-  virtual T::Hash countHash() const;
+  void print(std::ostream &stream, uint level, uint optionFlags) const override;
+  T::Hash countHash() const override;
 
-  EarthShapeSettings *getEarthShape() const;
-  void setEarthShape(EarthShapeSettings &earthShape);
+  EarthShapeSettings *getEarthShape() const override;
+  void setEarthShape(const EarthShapeSettings &earthShape);
   const T::UInt32_opt &getNumberOfPointsAlongXAxis() const;
   void setNumberOfPointsAlongXAxis(T::UInt32_opt numberOfPointsAlongXAxis);
   const T::UInt32_opt &getNumberOfPointsAlongYAxis() const;
@@ -55,7 +59,7 @@ public:
   const T::UInt32_opt &getYDirectionGridLengthInMillimetres() const;
   void setYDirectionGridLengthInMillimetres(T::UInt32_opt yDirectionGridLengthInMillimetres);
   ScanningModeSettings *getScanningMode() const;
-  void setScanningMode(ScanningModeSettings &scanningMode);
+  void setScanningMode(const ScanningModeSettings &scanningMode);
 
 protected:
   // # Copyright 2005-2019 ECMWF.

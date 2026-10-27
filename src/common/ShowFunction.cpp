@@ -6,17 +6,20 @@ namespace SmartMet
 
 
 Log *globalTraceLog = nullptr;
+namespace
+{
 int globalTraceLevel = 0;
+}  // namespace
 
 
 
 /*! \brief Constructs a trace logger and prints a START entry for the scope. */
 
-ShowFunction::ShowFunction(const char *_file,uint _line,const char *_function)
+ShowFunction::ShowFunction(const char *_file,uint _line,const char *_function) : function(_function), filename(_file), line(_line)
 {
-  filename = _file;
-  line = _line;
-  function = _function;
+
+
+
   startTime = getTime();
 
   if (globalTraceLog != nullptr)
@@ -26,7 +29,7 @@ ShowFunction::ShowFunction(const char *_file,uint _line,const char *_function)
   else
   {
     printf("[%04u][        ] %sSTART %s [%s]\n",_line,space(globalTraceLevel).c_str(),_function,_file);
-    fflush(stdout);
+    (void)fflush(stdout);
   }
   globalTraceLevel++;
 }
@@ -48,7 +51,7 @@ ShowFunction::~ShowFunction()
   else
   {
     printf("[%04u][%.06f] %sEND\n",line,C_DOUBLE(endTime-startTime)/1000000,space(globalTraceLevel).c_str());
-    fflush(stdout);
+    (void)fflush(stdout);
   }
 }
 

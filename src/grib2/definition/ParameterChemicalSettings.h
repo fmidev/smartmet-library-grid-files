@@ -19,6 +19,10 @@ namespace GRIB2 {
 class ParameterChemicalSettings {
 public:
   ParameterChemicalSettings();
+  ParameterChemicalSettings(const ParameterChemicalSettings &) = default;
+  ParameterChemicalSettings(ParameterChemicalSettings &&) = default;
+  ParameterChemicalSettings &operator=(const ParameterChemicalSettings &) = default;
+  ParameterChemicalSettings &operator=(ParameterChemicalSettings &&) = default;
   virtual ~ParameterChemicalSettings();
 
   virtual void read(MemoryReader &memoryReader);

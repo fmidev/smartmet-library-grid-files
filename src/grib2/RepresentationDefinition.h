@@ -30,6 +30,8 @@ class RepresentationDefinition
                   RepresentationDefinition();
                   //RepresentationDefinition(const RepresentationDefinition& other);
     virtual       ~RepresentationDefinition();
+    RepresentationDefinition(const RepresentationDefinition&) = default;
+    RepresentationDefinition& operator=(const RepresentationDefinition&) = default;
 
     virtual void  decodeValues(Message *message,T::ParamValue_vec& decodedValues) const;
     virtual void  encodeValues(Message *message,T::ParamValue_vec& values);
@@ -58,7 +60,7 @@ class RepresentationDefinition
 };
 
 
-typedef std::shared_ptr<RepresentationDefinition> RepresentationDefinition_sptr;  //!< Shared ownership pointer to a RepresentationDefinition.
+using RepresentationDefinition_sptr = std::shared_ptr<RepresentationDefinition>;  //!< Shared ownership pointer to a RepresentationDefinition.
 
 }  // namespace GRIB2
 }  // namespace SmartMet

@@ -1,5 +1,7 @@
 #include "GridPointValueList.h"
 #include <macgyver/Exception.h>
+
+#include <algorithm>
 #include "../common/GeneralFunctions.h"
 #include "../common/AutoWriteLock.h"
 #include "../common/AutoThreadLock.h"
@@ -12,6 +14,8 @@ namespace T
 {
 
 
+namespace
+{
 ThreadLock GridPointValueList_sortLock;
 
 GridPointValue::ComparisonMethod gridPointValue_comparisonMethod = GridPointValue::ComparisonMethod::none;
@@ -24,13 +28,54 @@ int gridPointValue_compare(const void *_val1,const void *_val2)
 {
   if (_val1 != nullptr  &&  _val2 != nullptr)
   {
-    GridPointValuePtr *obj1 = const_cast<GridPointValuePtr*>(reinterpret_cast<const GridPointValuePtr *>(_val1));
-    GridPointValuePtr *obj2 = const_cast<GridPointValuePtr*>(reinterpret_cast<const GridPointValuePtr *>(_val2));
+    auto *obj1 = const_cast<GridPointValuePtr*>(reinterpret_cast<const GridPointValuePtr *>(_val1));
+    auto *obj2 = const_cast<GridPointValuePtr*>(reinterpret_cast<const GridPointValuePtr *>(_val2));
 
     return (*obj1)->compare(gridPointValue_comparisonMethod,(*obj2));
   }
   return 0;
 }
+
+
+
+/*! \brief Finds the index of the first value equal to the given value by a linear search,
+    zero if not found. */
+
+int findEqualIndex(GridPointValuePtr *array,uint length,GridPointValue::ComparisonMethod comparisonMethod,GridPointValue& gridPointValue)
+{
+  for (uint t=0; t<length; t++)
+  {
+    if (array[t] != nullptr)
+    {
+      int res = array[t]->compare(comparisonMethod,&gridPointValue);
+      if (res == 0)
+      {
+        return t;
+      }
+    }
+  }
+  return 0;
+}
+
+
+
+/*! \brief Moves the index found by an unsuccessful binary search to the closest preceding value. */
+
+int adjustClosestIndex(GridPointValuePtr *array,int mid,int sz,GridPointValue::ComparisonMethod comparisonMethod,GridPointValue& gridPointValue)
+{
+  if (array[mid]->compare(comparisonMethod,&gridPointValue) < 0)
+  {
+    while (mid < sz  &&  array[mid] != nullptr  &&   array[mid]->compare(comparisonMethod,&gridPointValue) < 0)
+      mid++;
+
+    return mid-1;
+  }
+  while (mid > 0  &&  array[mid] != nullptr  &&   array[mid]->compare(comparisonMethod,&gridPointValue) > 0)
+    mid--;
+
+  return mid;
+}
+}  // namespace
 
 
 
@@ -318,7 +363,7 @@ void GridPointValueList::increaseSize(uint newSize)
       return;
     }
 
-    GridPointValuePtr *newArray = new GridPointValuePtr[newSize];
+    auto *newArray = new GridPointValuePtr[newSize];
     for (uint t=0; t<newSize; t++)
     {
       if (t < mSize)
@@ -355,20 +400,7 @@ int GridPointValueList::getClosestIndex(GridPointValue::ComparisonMethod compari
           return 0;
 
     if (comparisonMethod != mComparisonMethod)
-    {
-      for (uint t=0; t<mLength; t++)
-      {
-        if (mArray[t] != nullptr)
-        {
-          int res = mArray[t]->compare(comparisonMethod,&gridPointValue);
-          if (res == 0)
-          {
-            return t;
-          }
-        }
-      }
-      return 0;
-    }
+      return findEqualIndex(mArray,mLength,comparisonMethod,gridPointValue);
 
     int low = 0;
     int len = C_INT(mLength);
@@ -396,22 +428,8 @@ int GridPointValueList::getClosestIndex(GridPointValue::ComparisonMethod compari
     }
 
     if (mid >= 0  &&  mid < len  &&  mArray[mid] != nullptr)
-    {
-      if (mArray[mid]->compare(comparisonMethod,&gridPointValue) < 0)
-      {
-        while (mid < sz  &&  mArray[mid] != nullptr  &&   mArray[mid]->compare(comparisonMethod,&gridPointValue) < 0)
-          mid++;
+      return adjustClosestIndex(mArray,mid,sz,comparisonMethod,gridPointValue);
 
-        return mid-1;
-      }
-      else
-      {
-        while (mid > 0  &&  mArray[mid] != nullptr  &&   mArray[mid]->compare(comparisonMethod,&gridPointValue) > 0)
-          mid--;
-
-        return mid;
-      }
-    }
     return 0;
   }
   catch (...)
@@ -581,17 +599,13 @@ void GridPointValueList::getGridPointValueArea(double& minX,double& minY,double&
 
     for (uint t=0; t<mLength; t++)
     {
-      if (mArray[t]->mX < minX)
-        minX = mArray[t]->mX;
+      minX = std::min(mArray[t]->mX, minX);
 
-      if (mArray[t]->mX > maxX)
-        maxX = mArray[t]->mX;
+      maxX = std::max(mArray[t]->mX, maxX);
 
-      if (mArray[t]->mY < minY)
-        minY = mArray[t]->mY;
+      minY = std::min(mArray[t]->mY, minY);
 
-      if (mArray[t]->mY > maxY)
-        maxY = mArray[t]->mY;
+      maxY = std::max(mArray[t]->mY, maxY);
     }
   }
   catch (...)
@@ -728,7 +742,7 @@ void GridPointValueList::getGridPointValueListByValueRange(T::ParamValue minValu
 
 /*! \brief Returns the number of grid point values currently stored in the list. */
 
-uint GridPointValueList::getLength()
+uint GridPointValueList::getLength() const
 {
   try
   {
@@ -779,7 +793,7 @@ bool GridPointValueList::deleteGridPointValueByIndex(uint index)
 
 /*! \brief Returns whether the list owns and releases its grid point value objects. */
 
-bool GridPointValueList::getReleaseObjects()
+bool GridPointValueList::getReleaseObjects() const
 {
   try
   {
@@ -876,8 +890,7 @@ T::ParamValue GridPointValueList::getMaxValue()
 
     for (uint t=1; t<mLength; t++)
     {
-      if (mArray[t]->mValue > maxValue)
-        maxValue = mArray[t]->mValue;
+      maxValue = std::max(mArray[t]->mValue, maxValue);
     }
     return maxValue;
   }
@@ -936,8 +949,7 @@ T::ParamValue GridPointValueList::getMinValue()
 
     for (uint t=1; t<mLength; t++)
     {
-      if (mArray[t]->mValue < minValue)
-        minValue = mArray[t]->mValue;
+      minValue = std::min(mArray[t]->mValue, minValue);
     }
     return minValue;
   }

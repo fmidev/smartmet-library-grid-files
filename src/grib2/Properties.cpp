@@ -225,7 +225,7 @@ void Property::addProperty(const char *name,uint id)
   try
   {
     propertyMap.insert(std::pair<std::string,uint>(name,id));
-    propertyVector.push_back(std::pair<std::string,uint>(name,id));
+    propertyVector.emplace_back(name,id);
   }
   catch (...)
   {
@@ -265,10 +265,10 @@ std::string Property::getPropertyName(uint id)
 {
   try
   {
-    for (auto it = propertyMap.begin(); it != propertyMap.end(); ++it)
+    for (auto& it : propertyMap)
     {
-      if (it->second == id)
-        return it->first;
+      if (it.second == id)
+        return it.first;
     }
 
     return "";

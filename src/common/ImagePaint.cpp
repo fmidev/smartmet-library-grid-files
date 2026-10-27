@@ -2,6 +2,8 @@
 #include "ImageFunctions.h"
 #include "MemoryReader.h"
 #include "ShowFunction.h"
+#include <algorithm>
+#include <vector>
 #include <macgyver/Exception.h>
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
@@ -260,10 +262,10 @@ void ImagePaint::paintLine(int _x1,int _y1,int _x2,int _y2,uint _color)
       return;
     }
 
-    int x1 = (int)_x1;
-    int y1 = (int)_y1;
-    int x2 = (int)_x2;
-    int y2 = (int)_y2;
+    int x1 = _x1;
+    int y1 = _y1;
+    int x2 = _x2;
+    int y2 = _y2;
 
     int dy = (y2 - y1);
     int dx = (x2 - x1);
@@ -326,6 +328,128 @@ void ImagePaint::paintLine(int _x1,int _y1,int _x2,int _y2,uint _color)
 
 
 
+namespace
+{
+
+/*! \brief Appends the first point of the polygon to its end unless the polygon is already closed. */
+
+void closePolygon(std::vector<T::Coordinate>& polygonPoints)
+{
+  uint numOfPoints = polygonPoints.size();
+  if (polygonPoints[0].x() != polygonPoints[numOfPoints-1].x()  ||  polygonPoints[0].y() != polygonPoints[numOfPoints-1].y())
+    polygonPoints.emplace_back(polygonPoints[0]);
+}
+
+
+
+
+
+/*! \brief Draws the outline of a closed polygon. */
+
+void paintOutline(ImagePaint& paint,const std::vector<T::Coordinate>& polygonPoints,uint _drawColor)
+{
+  uint numOfPoints = polygonPoints.size();
+  for (uint t=1; t<numOfPoints; t++)
+  {
+    paint.paintLine(polygonPoints[t-1].x(),polygonPoints[t-1].y(),polygonPoints[t].x(),polygonPoints[t].y(),_drawColor);
+  }
+}
+
+
+
+
+
+/*! \brief Extends the rounded y-range [minY,maxY] to cover the given polygon points. */
+
+void updateYRange(const std::vector<T::Coordinate>& polygonPoints,int& minY,int& maxY)
+{
+  for (const auto& polygonPoint : polygonPoints)
+  {
+    double yp = round(polygonPoint.y());
+
+    if (yp < minY)
+      minY = C_INT(yp);
+
+    if (yp > maxY)
+      maxY = C_INT(yp);
+  }
+}
+
+
+
+
+
+/*! \brief Adds the x-coordinates where the polygon edges cross the image row y into the node list. */
+
+template <class XAt,class YAt>
+void addRowCrossings(int cnt,int y,XAt xAt,YAt yAt,std::vector<double>& nodeX,int& nodes)
+{
+  int j = cnt - 1;
+  for (int i = 0; i<cnt; i++)
+  {
+    double xi = xAt(i);
+    double yi = yAt(i);
+
+    double xj = xAt(j);
+    double yj = yAt(j);
+
+    auto dy = C_DOUBLE(y);
+
+    if ((yi < dy  &&  yj >= dy)  ||  (yj < dy &&  yi >= dy))
+    {
+      auto xx = C_DOUBLE(xi + (y - yi)/(yj - yi)*(xj - xi));
+      if (nodes >= C_INT(nodeX.size()))
+        nodeX.resize(2 * nodeX.size());
+      nodeX[nodes++] = C_DOUBLE(xx);
+    }
+    j = i;
+  }
+}
+
+
+
+
+
+/*! \brief Sorts the row crossings and fills the pixels between the node pairs. */
+
+void fillRow(ImagePaint& paint,std::vector<double>& nodeX,int nodes,int y,int minX,int maxX,uint _fillColor)
+{
+  qsort(nodeX.data(), nodes, sizeof(double),compare_coordinates);
+
+  for (int i=0; i<nodes; i+=2)
+  {
+    if (nodeX[i] >= maxX  ||  (i + 1) >= nodes)
+      break;
+
+    if (nodeX[i+1] > minX)
+    {
+      nodeX[i] = std::max<double>(nodeX[i], minX);
+
+      nodeX[i+1] = std::min<double>(nodeX[i+1], maxX);
+
+      int xStart = C_INT(nodeX[i]);
+      int xEnd = C_INT(nodeX[i+1]);
+
+      if ((nodeX[i] - xStart) > 0)
+        xStart++;
+
+      if ((xEnd - nodeX[i+1]) > 0)
+        xEnd--;
+
+      for (int x=xStart; x<=xEnd; x++)
+      {
+        paint.paintPixel(x,y,_fillColor);
+      }
+    }
+  }
+}
+
+}  // namespace
+
+
+
+
+
 /*! \brief Draws the outline of a polygon and fills its interior with the given colors. */
 
 void ImagePaint::paintPolygon(std::vector<T::Coordinate>& polygonPoints,uint _drawColor,uint _fillColor)
@@ -335,26 +459,17 @@ void ImagePaint::paintPolygon(std::vector<T::Coordinate>& polygonPoints,uint _dr
     if (mCountingActive)
       return;
 
-    std::set<UInt64> cList;
-    uint numOfPoints = polygonPoints.size();
-    if (numOfPoints == 0)
+    if (polygonPoints.empty())
       return;
 
     // It the last polygon point is not same than the first point, then we should add it to the list.
 
-    if (polygonPoints[0].x() != polygonPoints[numOfPoints-1].x()  ||  polygonPoints[0].y() != polygonPoints[numOfPoints-1].y())
-    {
-      polygonPoints.emplace_back(polygonPoints[0]);
-      numOfPoints++;
-    }
-
+    closePolygon(polygonPoints);
+    int numOfPoints = polygonPoints.size();
 
     // Painting points that are below the polygon line.
 
-    for (uint t=1; t<numOfPoints; t++)
-    {
-      paintLine(polygonPoints[t-1].x(),polygonPoints[t-1].y(),polygonPoints[t].x(),polygonPoints[t].y(),_drawColor);
-    }
+    paintOutline(*this,polygonPoints,_drawColor);
 
     // Painting points that are inside the polygon line.
 
@@ -363,78 +478,23 @@ void ImagePaint::paintPolygon(std::vector<T::Coordinate>& polygonPoints,uint _dr
     int minX = 0;
     int maxX = mImageWidth-1;
 
-    for (auto it = polygonPoints.begin(); it != polygonPoints.end(); ++it)
-    {
-      double yp = round(it->y());
+    updateYRange(polygonPoints,minY,maxY);
 
-      if (yp < minY)
-        minY = C_INT(yp);
-
-      if (yp > maxY)
-        maxY = C_INT(yp);
-    }
-
-    if (minY < 0)
-      minY = 0;
+    minY = std::max(minY, 0);
 
     if (maxY >= mImageHeight)
       maxY = mImageHeight - 1;
 
-    double nodeX[10000] = {0};
+    std::vector<double> nodeX(10000, 0.0);
+
+    auto xAt = [&polygonPoints](int i) { return polygonPoints[i].x(); };
+    auto yAt = [&polygonPoints](int i) { return polygonPoints[i].y(); };
 
     for (int y = minY; y <= maxY; y++)
     {
       int nodes = 0;
-      int cnt = numOfPoints;
-      int j = cnt - 1;
-      for (int i = 0; i<cnt; i++)
-      {
-        double xi = polygonPoints[i].x();
-        double yi = polygonPoints[i].y();
-
-        double xj = polygonPoints[j].x();
-        double yj = polygonPoints[j].y();
-
-        double dy = C_DOUBLE(y);
-
-        if ((yi < dy  &&  yj >= dy)  ||  (yj < dy &&  yi >= dy))
-        {
-          double xx = C_DOUBLE(xi + (y - yi)/(yj - yi)*(xj - xi));
-          nodeX[nodes++] = C_DOUBLE(xx);
-        }
-        j = i;
-      }
-
-      qsort(&nodeX, nodes, sizeof(double),compare_coordinates);
-
-      for (int i=0; i<nodes; i+=2)
-      {
-        if (nodeX[i] >= maxX  ||  (i+1) > nodes)
-          break;
-
-        if (nodeX[i+1] > minX)
-        {
-          if (nodeX[i] < minX)
-            nodeX[i] = minX;
-
-          if (nodeX[i+1] > maxX)
-            nodeX[i+1] = maxX;
-
-          int xStart = C_INT(nodeX[i]);
-          int xEnd = C_INT(nodeX[i+1]);
-
-          if ((nodeX[i] - xStart) > 0)
-            xStart++;
-
-          if ((xEnd - nodeX[i+1]) > 0)
-            xEnd--;
-
-          for (int x=xStart; x<=xEnd; x++)
-          {
-            paintPixel(x,y,_fillColor);
-          }
-        }
-      }
+      addRowCrossings(numOfPoints,y,xAt,yAt,nodeX,nodes);
+      fillRow(*this,nodeX,nodes,y,minX,maxX,_fillColor);
     }
   }
   catch (...)
@@ -457,73 +517,54 @@ void ImagePaint::paintPolygonPath(std::vector<std::vector<T::Coordinate>>& polyg
     if (mCountingActive)
       return;
 
-    if (polygonPath.size() == 0)
+    if (polygonPath.empty())
       return;
-
-    std::set<UInt64> cList;
 
     int minY = mImageHeight-1;
     int maxY = 0;
     int minX = 0;
     int maxX = mImageWidth-1;
-    double nodeX[10000] = {0};
-    double pointsX[200000];
-    double pointsY[200000];
+    std::vector<double> nodeX(10000, 0.0);
+    std::vector<double> pointsX(200000);
+    std::vector<double> pointsY(200000);
 
-    for (auto polygonPoints = polygonPath.begin(); polygonPoints != polygonPath.end(); ++polygonPoints)
+    for (auto& polygonPoints : polygonPath)
     {
-      uint numOfPoints = polygonPoints->size();
-
-      if (numOfPoints > 0)
+      if (!polygonPoints.empty())
       {
         // It the last polygon point is not same than the first point, then we should add it to the list.
 
-        if ((*polygonPoints)[0].x() != (*polygonPoints)[numOfPoints-1].x()  ||  (*polygonPoints)[0].y() != (*polygonPoints)[numOfPoints-1].y())
-        {
-          (*polygonPoints).emplace_back((*polygonPoints)[0]);
-          numOfPoints++;
-        }
+        closePolygon(polygonPoints);
 
         // Adding points that are below the polygon line.
 
-        for (uint t=1; t<numOfPoints; t++)
-        {
-          paintLine((*polygonPoints)[t-1].x(),(*polygonPoints)[t-1].y(),(*polygonPoints)[t].x(),(*polygonPoints)[t].y(),_drawColor);
-        }
+        paintOutline(*this,polygonPoints,_drawColor);
 
         // Adding points that are inside the polygon line.
 
-        for (auto it = polygonPoints->begin(); it != polygonPoints->end(); ++it)
-        {
-          double yp = round(it->y());
-
-          if (yp < minY)
-            minY = C_INT(yp);
-
-          if (yp > maxY)
-            maxY = C_INT(yp);
-        }
+        updateYRange(polygonPoints,minY,maxY);
       }
     }
 
-    if (minY < 0)
-      minY = 0;
+    minY = std::max(minY, 0);
 
     if (maxY >= mImageHeight)
       maxY = mImageHeight - 1;
 
+    auto xAt = [&pointsX](int i) { return pointsX[i]; };
+    auto yAt = [&pointsY](int i) { return pointsY[i]; };
 
     //  Loop through the rows of the image.
     for (int y = minY; y <= maxY; y++)
     {
       //  Build a list of nodes.
       int nodes = 0;
-      for (auto polygonPoints = polygonPath.begin(); polygonPoints != polygonPath.end(); ++polygonPoints)
+      for (auto& polygonPoints : polygonPath)
       {
-        uint numOfPoints = polygonPoints->size();
+        uint numOfPoints = polygonPoints.size();
 
         uint c = 0;
-        for (auto it = polygonPoints->begin(); it != polygonPoints->end(); ++it)
+        for (auto it = polygonPoints.begin(); it != polygonPoints.end(); ++it)
         {
           pointsX[c] = it->x();
           pointsY[c] = it->y();
@@ -535,58 +576,12 @@ void ImagePaint::paintPolygonPath(std::vector<std::vector<T::Coordinate>>& polyg
           }
         }
 
-        int cnt = numOfPoints;
-        int j = cnt - 1;
-        for (int i = 0; i<cnt; i++)
-        {
-          double xi = pointsX[i];
-          double yi = pointsY[i];
-
-          double xj = pointsX[j];
-          double yj = pointsY[j];
-
-          double dy = C_DOUBLE(y);
-
-          if ((yi < dy  &&  yj >= dy)  ||  (yj < dy &&  yi >= dy))
-          {
-            double xx = C_DOUBLE(xi + (y - yi)/(yj - yi)*(xj - xi));
-            nodeX[nodes++] = C_DOUBLE(xx);
-          }
-          j = i;
-        }
+        addRowCrossings(numOfPoints,y,xAt,yAt,nodeX,nodes);
       }
-      qsort(&nodeX, nodes, sizeof(double),compare_coordinates);
 
       //  Fill the pixels between node pairs.
 
-      for (int i=0; i<nodes; i+=2)
-      {
-        if (nodeX[i] >= maxX  ||  (i+1) > nodes)
-          break;
-
-        if (nodeX[i+1] > minX)
-        {
-          if (nodeX[i] < minX)
-            nodeX[i] = minX;
-
-          if (nodeX[i+1] > maxX)
-            nodeX[i+1] = maxX;
-
-          int xStart = C_INT(nodeX[i]);
-          int xEnd = C_INT(nodeX[i+1]);
-
-          if ((nodeX[i] - xStart) > 0)
-            xStart++;
-
-          if ((xEnd - nodeX[i+1]) > 0)
-            xEnd--;
-
-          for (int x=xStart; x<=xEnd; x++)
-          {
-            paintPixel(x,y,_fillColor);
-          }
-        }
-      }
+      fillRow(*this,nodeX,nodes,y,minX,maxX,_fillColor);
     }
   }
   catch (...)
@@ -618,17 +613,13 @@ void ImagePaint::paintWkbPoint(double _mpx,double _mpy,double _dx,double _dy,Mem
 
     if (mCountingActive)
     {
-      if (x < mMinX)
-        mMinX = x;
+      mMinX = std::min(x, mMinX);
 
-      if (x > mMaxX)
-        mMaxX = x;
+      mMaxX = std::max(x, mMaxX);
 
-      if (y < mMinY)
-        mMinY = y;
+      mMinY = std::min(y, mMinY);
 
-      if (y > mMaxY)
-        mMaxY = y;
+      mMaxY = std::max(y, mMaxY);
     }
     else
     {
@@ -666,17 +657,13 @@ void ImagePaint::paintWkbLine(double _mpx,double _mpy,double _dx,double _dy,Memo
 
       if (mCountingActive)
       {
-        if (x < mMinX)
-          mMinX = x;
+        mMinX = std::min(x, mMinX);
 
-        if (x > mMaxX)
-          mMaxX = x;
+        mMaxX = std::max(x, mMaxX);
 
-        if (y < mMinY)
-          mMinY = y;
+        mMinY = std::min(y, mMinY);
 
-        if (y > mMaxY)
-          mMaxY = y;
+        mMaxY = std::max(y, mMaxY);
       }
       else
       {
@@ -715,17 +702,13 @@ void ImagePaint::paintWkbRing(double _mpx,double _mpy,double _dx,double _dy,Memo
 
       if (mCountingActive)
       {
-        if (x < mMinX)
-          mMinX = x;
+        mMinX = std::min(x, mMinX);
 
-        if (x > mMaxX)
-          mMaxX = x;
+        mMaxX = std::max(x, mMaxX);
 
-        if (y < mMinY)
-          mMinY = y;
+        mMinY = std::min(y, mMinY);
 
-        if (y > mMaxY)
-          mMaxY = y;
+        mMaxY = std::max(y, mMaxY);
       }
       else
       {
@@ -851,17 +834,13 @@ void ImagePaint::paintWkbMultiPolygon(double _mpx,double _mpy,double _dx,double 
 
           if (mCountingActive)
           {
-            if (x < mMinX)
-              mMinX = x;
+            mMinX = std::min(x, mMinX);
 
-            if (x > mMaxX)
-              mMaxX = x;
+            mMaxX = std::max(x, mMaxX);
 
-            if (y < mMinY)
-              mMinY = y;
+            mMinY = std::min(y, mMinY);
 
-            if (y > mMaxY)
-              mMaxY = y;
+            mMaxY = std::max(y, mMaxY);
           }
           else
           {
@@ -953,6 +932,8 @@ void ImagePaint::paintWkb(double _mpx,double _mpy,double _dx,double _dy,MemoryRe
         case 7:
           paintWkbGeometryCollection(_mpx,_mpy,_dx,_dy,_memoryReader);
           break;
+        default:
+          break;
       }
     }
   }
@@ -1000,7 +981,7 @@ void ImagePaint::paintWkb(double _mpx,double _mpy,double _dx,double _dy,T::ByteD
     if (sz == 0)
       return;
 
-    uchar *buf = new uchar[sz];
+    auto *buf = new uchar[sz];
     MemoryReader memoryReader(buf,sz,true);
 
     for (size_t t=0; t<sz; t++)
@@ -1025,9 +1006,9 @@ void ImagePaint::paintWkb(double _mpx,double _mpy,double _dx,double _dy,T::ByteD
   FUNCTION_TRACE
   try
   {
-    for (auto it = _wkbVec.begin(); it != _wkbVec.end(); ++it)
+    for (auto& it : _wkbVec)
     {
-      paintWkb(_mpx,_mpy,_dx,_dy,*it);
+      paintWkb(_mpx,_mpy,_dx,_dy,it);
     }
   }
   catch (...)

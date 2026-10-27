@@ -19,6 +19,10 @@ namespace GRIB1 {
 class ScanningModeSettings {
 public:
   ScanningModeSettings();
+  ScanningModeSettings(const ScanningModeSettings &) = default;
+  ScanningModeSettings(ScanningModeSettings &&) = default;
+  ScanningModeSettings &operator=(const ScanningModeSettings &) = default;
+  ScanningModeSettings &operator=(ScanningModeSettings &&) = default;
   virtual ~ScanningModeSettings();
 
   virtual void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const;

@@ -21,10 +21,7 @@ StretchedGaussianImpl::StretchedGaussianImpl()
 
 /*! \brief The copy constructor of the class. */
 
-StretchedGaussianImpl::StretchedGaussianImpl(const StretchedGaussianImpl& other)
-:StretchedGaussian(other)
-{
-}
+StretchedGaussianImpl::StretchedGaussianImpl(const StretchedGaussianImpl& other) = default;
 
 
 
@@ -32,9 +29,7 @@ StretchedGaussianImpl::StretchedGaussianImpl(const StretchedGaussianImpl& other)
 
 /*! \brief The destructor of the class. */
 
-StretchedGaussianImpl::~StretchedGaussianImpl()
-{
-}
+StretchedGaussianImpl::~StretchedGaussianImpl() = default;
 
 
 
@@ -114,7 +109,7 @@ T::Dimensions StretchedGaussianImpl::getGridDimensions() const
   try
   {
     if (!mGaussian.getGrid()->getNi() || !mGaussian.getGrid()->getNj())
-      return T::Dimensions();
+      return {};
 
     return T::Dimensions(*mGaussian.getGrid()->getNi(),*mGaussian.getGrid()->getNi());
   }

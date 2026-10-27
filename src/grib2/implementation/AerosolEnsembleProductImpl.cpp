@@ -10,9 +10,7 @@ namespace GRIB2
 
 /*! \brief The constructor of the class. */
 
-AerosolEnsembleProductImpl::AerosolEnsembleProductImpl()
-{
-}
+AerosolEnsembleProductImpl::AerosolEnsembleProductImpl() = default;
 
 
 
@@ -20,10 +18,7 @@ AerosolEnsembleProductImpl::AerosolEnsembleProductImpl()
 
 /*! \brief The copy constructor of the class. */
 
-AerosolEnsembleProductImpl::AerosolEnsembleProductImpl(const AerosolEnsembleProductImpl& other)
-:AerosolEnsembleProduct(other)
-{
-}
+AerosolEnsembleProductImpl::AerosolEnsembleProductImpl(const AerosolEnsembleProductImpl& other) = default;
 
 
 
@@ -31,9 +26,7 @@ AerosolEnsembleProductImpl::AerosolEnsembleProductImpl(const AerosolEnsembleProd
 
 /*! \brief The destructor of the class. */
 
-AerosolEnsembleProductImpl::~AerosolEnsembleProductImpl()
-{
-}
+AerosolEnsembleProductImpl::~AerosolEnsembleProductImpl() = default;
 
 
 
@@ -90,7 +83,7 @@ void AerosolEnsembleProductImpl::read(MemoryReader& memoryReader)
         \return               The forecast time.
 */
 
-T::TimeString AerosolEnsembleProductImpl::getForecastTime(T::TimeString referenceTime) const
+T::TimeString AerosolEnsembleProductImpl::getForecastTime(T::TimeString /*referenceTime*/) const
 {
   throw Fmi::Exception(BCP, "Not implemented!");
 }

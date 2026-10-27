@@ -10,9 +10,7 @@ namespace GRIB2
 
 /*! \brief The constructor of the class. */
 
-AreaProcessedCrossSectionProductImpl::AreaProcessedCrossSectionProductImpl()
-{
-}
+AreaProcessedCrossSectionProductImpl::AreaProcessedCrossSectionProductImpl() = default;
 
 
 
@@ -20,10 +18,7 @@ AreaProcessedCrossSectionProductImpl::AreaProcessedCrossSectionProductImpl()
 
 /*! \brief The copy constructor of the class. */
 
-AreaProcessedCrossSectionProductImpl::AreaProcessedCrossSectionProductImpl(const AreaProcessedCrossSectionProductImpl& other)
-:AreaProcessedCrossSectionProduct(other)
-{
-}
+AreaProcessedCrossSectionProductImpl::AreaProcessedCrossSectionProductImpl(const AreaProcessedCrossSectionProductImpl& other) = default;
 
 
 
@@ -31,9 +26,7 @@ AreaProcessedCrossSectionProductImpl::AreaProcessedCrossSectionProductImpl(const
 
 /*! \brief The destructor of the class. */
 
-AreaProcessedCrossSectionProductImpl::~AreaProcessedCrossSectionProductImpl()
-{
-}
+AreaProcessedCrossSectionProductImpl::~AreaProcessedCrossSectionProductImpl() = default;
 
 
 

@@ -16,9 +16,9 @@ class AutoWriteLock
   public:
     /*! \brief Acquire a write lock on \p modificationLock.
      *  \param[in] modificationLock  Lock to acquire; nullptr disables the guard. */
-    AutoWriteLock(ModificationLock *modificationLock)
+    AutoWriteLock(ModificationLock *modificationLock) : mModificationLock(modificationLock)
     {
-      mModificationLock = modificationLock;
+
       if (mModificationLock)
         mModificationLock->writeLock();
     }
@@ -29,6 +29,8 @@ class AutoWriteLock
       if (mModificationLock)
         mModificationLock->writeUnlock();
     }
+    AutoWriteLock(const AutoWriteLock&) = delete;
+    AutoWriteLock& operator=(const AutoWriteLock&) = delete;
 
   protected:
 

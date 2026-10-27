@@ -14,8 +14,8 @@ struct MessageInfo
 {
   char*              mDataPtr = nullptr;
   uint               mDataSize = 0;
-  uint               mDataType;
-  uint               mBitsPerValue;
+  uint               mDataType = 0;
+  uint               mBitsPerValue = 0;
   time_t             mForecastTimeT = 0;
   uint               mColumns = 0;
   uint               mRows = 0;
@@ -28,7 +28,7 @@ struct MessageInfo
 };
 
 
-typedef std::vector<MessageInfo> MessageInfoVec;
+using MessageInfoVec = std::vector<MessageInfo>;
 
 class GeoTiffFile;
 
@@ -39,79 +39,83 @@ class Message : public GRID::Message
 
                         Message();
                         Message(const Message& message);
-                        Message(GRID::GridFile *gridFile,GeoTiffFile *geoTiffFile,T::MessageIndex messageIndex,GeoTiff::MessageInfo& messageInfo);
-    virtual             ~Message();
+                        Message(GRID::GridFile *gridFile,GeoTiffFile *geoTiffFile,T::MessageIndex messageIndex,const GeoTiff::MessageInfo& messageInfo);
+    ~Message() override;
+    Message& operator=(const Message&) = default;
 
-    void                getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const;
-    T::FileId           getFileId() const;
-    T::FileType         getMessageType() const;
-    T::ProducerId       getProducerId() const;
-    T::GenerationId     getGenerationId() const;
-    T::FilePosition     getFilePosition() const;
-    T::TimeString       getForecastTime() const;
-    time_t              getForecastTimeT() const;
-    T::ForecastType     getForecastType() const;
-    T::ForecastNumber   getForecastNumber() const;
+    void                getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const override;
+    T::FileId           getFileId() const override;
+    T::FileType         getMessageType() const override;
+    T::ProducerId       getProducerId() const override;
+    T::GenerationId     getGenerationId() const override;
+    T::FilePosition     getFilePosition() const override;
+    T::TimeString       getForecastTime() const override;
+    time_t              getForecastTimeT() const override;
+    T::ForecastType     getForecastType() const override;
+    T::ForecastNumber   getForecastNumber() const override;
 
-    void                getGridCellAverageSize(double& width,double& height) const;
-    T::Dimensions       getGridDimensions() const;
-    T::GeometryId       getGridGeometryId() const;
-    std::string         getGridGeometryString() const;
-    T::Hash             getGridHash() const;
-    bool                getGridLatLonArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight);
-    T::Coordinate_svec  getGridLatLonCoordinates() const;
-    bool                getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const;
-    bool                getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j,double& lat,double& lon) const;
-    bool                getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,double& lat,double& lon) const;
-    bool                getGridMetricArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight);
-    bool                getGridMetricCellSize(double& width,double& height) const;
-    bool                getGridMetricSize(double& width,double& height) const;
-    T::Coordinate_svec  getGridOriginalCoordinates() const;
-    bool                getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,double& x,double& y) const;
-    bool                getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const;
-    bool                getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lon,double& x,double& y) const;
-    std::size_t         getGridOriginalValueCount() const;
-    int                 getGridOriginalValueIndex(uint grid_i,uint grid_j) const;
-    void                getGridPointListByLatLonCoordinates(T::Coordinate_vec& latlon,T::Coordinate_vec& points) const;
-    bool                getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const;
-    bool                getGridPointByLatLonCoordinatesNoCache(double lat,double lon,double& grid_i,double& grid_j) const;
-    bool                getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;
-    T::GridProjection   getGridProjection() const;
-    void                getGridProjectionAttributes(const std::string& prefix,T::AttributeList& attributeList) const;
-    std::size_t         getGridColumnCount() const;
-    std::size_t         getGridRowCount() const;
+    void                getGridCellAverageSize(double& width,double& height) const override;
+    T::Dimensions       getGridDimensions() const override;
+    T::GeometryId       getGridGeometryId() const override;
+    std::string         getGridGeometryString() const override;
+    T::Hash             getGridHash() const override;
+    bool                getGridLatLonArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight) override;
+    T::Coordinate_svec  getGridLatLonCoordinates() const override;
+    bool                getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const override;
+    void                getGridLatLonCoordinatesByGridPointList(std::vector<T::Point>& gridPoints,T::Coordinate_vec& coordinates,std::vector<bool>& found) const override;
+    bool                getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j,double& lat,double& lon) const override;
+    bool                getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,double& lat,double& lon) const override;
+    bool                getGridMetricArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight) override;
+    bool                getGridMetricCellSize(double& width,double& height) const override;
+    bool                getGridMetricSize(double& width,double& height) const override;
+    T::Coordinate_svec  getGridOriginalCoordinates() const override;
+    bool                getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,double& x,double& y) const override;
+    bool                getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const override;
+    bool                getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lon,double& x,double& y) const override;
+    std::size_t         getGridOriginalValueCount() const override;
+    int                 getGridOriginalValueIndex(uint grid_i,uint grid_j) const override;
+    void                getGridPointListByLatLonCoordinates(T::Coordinate_vec& latlon,T::Coordinate_vec& points) const override;
+    bool                getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const override;
+    bool                getGridPointByLatLonCoordinatesNoCache(double lat,double lon,double& grid_i,double& grid_j) const override;
+    bool                getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const override;
+    T::GridProjection   getGridProjection() const override;
+    void                getGridProjectionAttributes(const std::string& prefix,T::AttributeList& attributeList) const override;
+    std::size_t         getGridColumnCount() const override;
+    std::size_t         getGridRowCount() const override;
 
-    T::ParamValue       getGridValueByGridPoint(uint grid_i,uint grid_j) const;
-    void                getGridValueVector(T::ParamValue_vec& values) const;
-    void                getGridOriginalValueVector(T::ParamValue_vec& values) const;
-    T::ParamLevel       getGridParameterLevel() const;
-    T::ParamLevelId     getGridParameterLevelId() const;
-    void                getGridMinAndMaxValues(T::ParamValue& minValue,T::ParamValue& maxValue) const;
+    T::ParamValue       getGridValueByGridPoint(uint grid_i,uint grid_j) const override;
+    void                getGridValueVector(T::ParamValue_vec& values) const override;
+    void                getGridOriginalValueVector(T::ParamValue_vec& values) const override;
+    T::ParamLevel       getGridParameterLevel() const override;
+    T::ParamLevelId     getGridParameterLevelId() const override;
+    void                getGridMinAndMaxValues(T::ParamValue& minValue,T::ParamValue& maxValue) const override;
 
-    T::TimeString       getReferenceTime() const;
-    T::SpatialRef_sptr  getSpatialReference() const;
-    std::string         getWKT() const;
-    std::string         getProj4() const;
-    void                initSpatialReference();
-    bool                isGridGlobal() const;
-    bool                isRelativeUV() const;
-    bool                reverseXDirection() const;
-    bool                reverseYDirection() const;
+    T::TimeString       getReferenceTime() const override;
+    T::SpatialRef_sptr  getSpatialReference() const override;
+    std::string         getWKT() const override;
+    std::string         getProj4() const override;
+    void                initSpatialReference() override;
+    bool                isGridGlobal() const override;
+    bool                isRelativeUV() const override;
+    bool                reverseXDirection() const override;
+    bool                reverseYDirection() const override;
 
     void                setGridSize(uint columns,uint rows);
-    void                setGridGeometryId(T::GeometryId geometryId);
-    void                setGridValues(T::ParamValue_vec& values);
+    void                setGridGeometryId(T::GeometryId geometryId) override;
+    void                setGridValues(T::ParamValue_vec& values) override;
 
-    void                lockData();
-    void                unlockData();
+    void                lockData() override;
+    void                unlockData() override;
 
-    bool                isRead();
-    void                print(std::ostream& stream,uint level,uint optionFlags) const;
-    void                read();
-    void                read(MemoryReader& memoryReader);
-    void                write(DataWriter& dataWriter);
+    bool                isRead() override;
+    void                print(std::ostream& stream,uint level,uint optionFlags) const override;
+    void                read() override;
+    void                read(MemoryReader& memoryReader) override;
+    void                write(DataWriter& dataWriter) override;
 
   protected:
+
+    void                printCornerData(std::ostream& stream,uint level) const;
 
     GRID::GridFile*     mGridFile;
     char*               mDataPtr;
@@ -130,8 +134,8 @@ class Message : public GRID::Message
 
 
 
-typedef Message* MessagePtr;
-typedef std::vector<MessagePtr> MessagePtr_vec;
+using MessagePtr = Message*;
+using MessagePtr_vec = std::vector<MessagePtr>;
 
 
 }  // namespace NetCDF

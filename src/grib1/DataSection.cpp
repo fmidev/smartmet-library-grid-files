@@ -136,7 +136,7 @@ void DataSection::setMessagePtr(Message *message)
         \return            The method returns true if the value of the requested property was found.
 */
 
-bool DataSection::getProperty(uint propertyId,Int64& value)
+bool DataSection::getProperty(uint propertyId,Int64& value) const
 {
   try
   {
@@ -161,6 +161,8 @@ bool DataSection::getProperty(uint propertyId,Int64& value)
       case Property::DataSection::PackingMethod:
         //value = mPackingMethod;
         return true;
+      default:
+        break;
     }
     return false;
   }
@@ -232,6 +234,8 @@ bool DataSection::setProperty(uint propertyId,Int64 value)
       case Property::DataSection::PackingMethod:
         //setPackingMethod(value);
         return true;
+      default:
+        break;
     }
     return false;
   }
@@ -278,6 +282,8 @@ bool DataSection::setProperty(uint propertyId,double value)
       case Property::DataSection::PackingMethod:
         //setPackingMethod(value);
         return true;
+      default:
+        break;
     }
     return false;
   }
@@ -320,12 +326,12 @@ void DataSection::getAttributeList(const std::string& prefix,T::AttributeList& a
     if (mFlags & SphercicalHarmonicCoefficients)
       p += sprintf(p,"Spherical harmonic coefficients;");
     else
-      p += sprintf(p,"Grid-point data;");;
+      p += sprintf(p,"Grid-point data;");
 
     if (mFlags & ComplexPacking)
       p += sprintf(p,"Complex or second-order packing;");
     else
-      p += sprintf(p,"Simple packing;");;
+      p += sprintf(p,"Simple packing;");
 
     if (mFlags & IntegerValues)
       p += sprintf(p,"Integer values (in the original data) are represented;");
@@ -333,9 +339,9 @@ void DataSection::getAttributeList(const std::string& prefix,T::AttributeList& a
       p += sprintf(p,"Floating point values (in the original data) are represented;");
 
     if (mFlags & AdditionalFlags)
-      p += sprintf(p,"Additional flags used;");
+      sprintf(p,"Additional flags used;");
     else
-      p += sprintf(p,"No additional flags;");
+      sprintf(p,"No additional flags;");
 
     sprintf(name,"%sdata.flagsString",prefix.c_str());
     attributeList.addAttribute(name,val);
@@ -380,13 +386,13 @@ void DataSection::read(MemoryReader& memoryReader)
     {
       if ((mFlags & ComplexPacking) == 0)
       {
-        auto dataDefinition = new SimplePacking();
+        auto *dataDefinition = new SimplePacking();
         mDataDefinition.reset(dataDefinition);
         dataDefinition->read(memoryReader);
       }
       else
       {
-        auto dataDefinition = new SecondOrderPacking();
+        auto *dataDefinition = new SecondOrderPacking();
         mDataDefinition.reset(dataDefinition);
         dataDefinition->read(memoryReader);
       }
@@ -395,13 +401,13 @@ void DataSection::read(MemoryReader& memoryReader)
     {
       if ((mFlags & ComplexPacking) == 0)
       {
-        auto dataDefinition = new SphericalHarmonicsSimplePacking();
+        auto *dataDefinition = new SphericalHarmonicsSimplePacking();
         mDataDefinition.reset(dataDefinition);
         dataDefinition->read(memoryReader);
       }
       else
       {
-        auto dataDefinition = new SphericalHarmonicsComplexPacking();
+        auto *dataDefinition = new SphericalHarmonicsComplexPacking();
         mDataDefinition.reset(dataDefinition);
         dataDefinition->read(memoryReader);
       }
@@ -488,6 +494,8 @@ void DataSection::setDataDefinition(ushort compressionMethod)
         break;
 
       case T::CompressionMethod::SpectralData_ComplexPacking:
+        break;
+      default:
         break;
     }
 
@@ -854,12 +862,12 @@ void DataSection::setFlags(std::uint8_t flags)
     {
       if ((mFlags & ComplexPacking) == 0)
       {
-        auto dataDefinition = new SimplePacking();
+        auto *dataDefinition = new SimplePacking();
         mDataDefinition.reset(dataDefinition);
       }
       else
       {
-        auto dataDefinition = new SecondOrderPacking();
+        auto *dataDefinition = new SecondOrderPacking();
         mDataDefinition.reset(dataDefinition);
       }
     }
@@ -867,12 +875,12 @@ void DataSection::setFlags(std::uint8_t flags)
     {
       if ((mFlags & ComplexPacking) == 0)
       {
-        auto dataDefinition = new SphericalHarmonicsSimplePacking();
+        auto *dataDefinition = new SphericalHarmonicsSimplePacking();
         mDataDefinition.reset(dataDefinition);
       }
       else
       {
-        auto dataDefinition = new SphericalHarmonicsComplexPacking();
+        auto *dataDefinition = new SphericalHarmonicsComplexPacking();
         mDataDefinition.reset(dataDefinition);
       }
     }

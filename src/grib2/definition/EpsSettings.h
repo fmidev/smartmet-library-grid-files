@@ -19,6 +19,10 @@ namespace GRIB2 {
 class EpsSettings {
 public:
   EpsSettings();
+  EpsSettings(const EpsSettings &) = default;
+  EpsSettings(EpsSettings &&) = default;
+  EpsSettings &operator=(const EpsSettings &) = default;
+  EpsSettings &operator=(EpsSettings &&) = default;
   virtual ~EpsSettings();
 
   virtual void read(MemoryReader &memoryReader);

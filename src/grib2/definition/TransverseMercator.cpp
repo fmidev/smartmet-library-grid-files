@@ -28,8 +28,7 @@ TransverseMercator::TransverseMercator() {
 
 /*! \brief The destructor of the class. */
 
-TransverseMercator::~TransverseMercator() {
-}
+TransverseMercator::~TransverseMercator() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -95,39 +94,22 @@ void TransverseMercator::write(DataWriter &dataWriter) {
 
 void TransverseMercator::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sTransverseMercator.", prefix.c_str());
-    mEarthShape.getAttributeList(name, attributeList);
-    sprintf(name, "%sTransverseMercator.Ni", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNi));
-    sprintf(name, "%sTransverseMercator.Nj", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNj));
-    sprintf(name, "%sTransverseMercator.LatitudeOfReferencePoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatitudeOfReferencePoint));
-    sprintf(name, "%sTransverseMercator.LongitudeOfReferencePoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLongitudeOfReferencePoint));
-    sprintf(name, "%sTransverseMercator.", prefix.c_str());
-    mResolution.getAttributeList(name, attributeList);
-    sprintf(name, "%sTransverseMercator.ScaleFactorAtReferencePoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mScaleFactorAtReferencePoint));
-    sprintf(name, "%sTransverseMercator.XR", prefix.c_str());
-    attributeList.addAttribute(name, toString(mXR));
-    sprintf(name, "%sTransverseMercator.YR", prefix.c_str());
-    attributeList.addAttribute(name, toString(mYR));
-    sprintf(name, "%sTransverseMercator.", prefix.c_str());
-    mScanningMode.getAttributeList(name, attributeList);
-    sprintf(name, "%sTransverseMercator.Di", prefix.c_str());
-    attributeList.addAttribute(name, toString(mDi));
-    sprintf(name, "%sTransverseMercator.Dj", prefix.c_str());
-    attributeList.addAttribute(name, toString(mDj));
-    sprintf(name, "%sTransverseMercator.X1", prefix.c_str());
-    attributeList.addAttribute(name, toString(mX1));
-    sprintf(name, "%sTransverseMercator.Y1", prefix.c_str());
-    attributeList.addAttribute(name, toString(mY1));
-    sprintf(name, "%sTransverseMercator.X2", prefix.c_str());
-    attributeList.addAttribute(name, toString(mX2));
-    sprintf(name, "%sTransverseMercator.Y2", prefix.c_str());
-    attributeList.addAttribute(name, toString(mY2));
+        mEarthShape.getAttributeList(prefix + "TransverseMercator.", attributeList);
+        attributeList.addAttribute(prefix + "TransverseMercator.Ni", toString(mNi));
+        attributeList.addAttribute(prefix + "TransverseMercator.Nj", toString(mNj));
+        attributeList.addAttribute(prefix + "TransverseMercator.LatitudeOfReferencePoint", toString(mLatitudeOfReferencePoint));
+        attributeList.addAttribute(prefix + "TransverseMercator.LongitudeOfReferencePoint", toString(mLongitudeOfReferencePoint));
+        mResolution.getAttributeList(prefix + "TransverseMercator.", attributeList);
+        attributeList.addAttribute(prefix + "TransverseMercator.ScaleFactorAtReferencePoint", toString(mScaleFactorAtReferencePoint));
+        attributeList.addAttribute(prefix + "TransverseMercator.XR", toString(mXR));
+        attributeList.addAttribute(prefix + "TransverseMercator.YR", toString(mYR));
+        mScanningMode.getAttributeList(prefix + "TransverseMercator.", attributeList);
+        attributeList.addAttribute(prefix + "TransverseMercator.Di", toString(mDi));
+        attributeList.addAttribute(prefix + "TransverseMercator.Dj", toString(mDj));
+        attributeList.addAttribute(prefix + "TransverseMercator.X1", toString(mX1));
+        attributeList.addAttribute(prefix + "TransverseMercator.Y1", toString(mY1));
+        attributeList.addAttribute(prefix + "TransverseMercator.X2", toString(mX2));
+        attributeList.addAttribute(prefix + "TransverseMercator.Y2", toString(mY2));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -340,7 +322,7 @@ GridDefinition *TransverseMercator::createGridDefinition() const {
 
 EarthShapeSettings *TransverseMercator::getEarthShape() const {
   try {
-    return static_cast<EarthShapeSettings *>(&mEarthShape);
+    return &mEarthShape;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -390,7 +372,7 @@ const T::Int32_opt &TransverseMercator::getLongitudeOfReferencePoint() const {
 
 ResolutionSettings *TransverseMercator::getResolution() const {
   try {
-    return static_cast<ResolutionSettings *>(&mResolution);
+    return &mResolution;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -430,7 +412,7 @@ const T::Int32_opt &TransverseMercator::getYR() const {
 
 ScanningModeSettings *TransverseMercator::getScanningMode() const {
   try {
-    return static_cast<ScanningModeSettings *>(&mScanningMode);
+    return &mScanningMode;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -496,7 +478,7 @@ const T::Int32_opt &TransverseMercator::getY2() const {
   }
 }
 
-void TransverseMercator::setEarthShape(EarthShapeSettings &earthShape) {
+void TransverseMercator::setEarthShape(const EarthShapeSettings &earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
@@ -536,7 +518,7 @@ void TransverseMercator::setLongitudeOfReferencePoint(T::Int32_opt longitudeOfRe
   }
 }
 
-void TransverseMercator::setResolution(ResolutionSettings &resolution) {
+void TransverseMercator::setResolution(const ResolutionSettings &resolution) {
   try {
     mResolution = resolution;
   } catch (...) {
@@ -568,7 +550,7 @@ void TransverseMercator::setYR(T::Int32_opt yR) {
   }
 }
 
-void TransverseMercator::setScanningMode(ScanningModeSettings &scanningMode) {
+void TransverseMercator::setScanningMode(const ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {

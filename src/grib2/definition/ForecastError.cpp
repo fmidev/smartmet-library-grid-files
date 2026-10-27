@@ -27,8 +27,7 @@ ForecastError::ForecastError() {
 
 /*! \brief The destructor of the class. */
 
-ForecastError::~ForecastError() {
-}
+ForecastError::~ForecastError() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -64,9 +63,7 @@ void ForecastError::write(DataWriter &dataWriter) {
 
 void ForecastError::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sForecastError.", prefix.c_str());
-    mNormalProduct.getAttributeList(name, attributeList);
+        mNormalProduct.getAttributeList(prefix + "ForecastError.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -153,13 +150,13 @@ ProductDefinition *ForecastError::createProductDefinition() const {
 
 NormalProduct *ForecastError::getNormalProduct() const {
   try {
-    return static_cast<NormalProduct *>(&mNormalProduct);
+    return &mNormalProduct;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
-void ForecastError::setNormalProduct(NormalProduct &normalProduct) {
+void ForecastError::setNormalProduct(const NormalProduct &normalProduct) {
   try {
     mNormalProduct = normalProduct;
   } catch (...) {

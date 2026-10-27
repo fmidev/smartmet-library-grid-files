@@ -14,9 +14,7 @@ const int bitmask[] = {128, 64, 32, 16, 8, 4, 2, 1};
 
 /*! \brief The constructor of the class. */
 
-FloatingPointGridDataRepresentationImpl::FloatingPointGridDataRepresentationImpl()
-{
-}
+FloatingPointGridDataRepresentationImpl::FloatingPointGridDataRepresentationImpl() = default;
 
 
 
@@ -24,10 +22,7 @@ FloatingPointGridDataRepresentationImpl::FloatingPointGridDataRepresentationImpl
 
 /*! \brief The copy constructor of the class. */
 
-FloatingPointGridDataRepresentationImpl::FloatingPointGridDataRepresentationImpl(const FloatingPointGridDataRepresentationImpl& other)
-:FloatingPointGridDataRepresentation(other)
-{
-}
+FloatingPointGridDataRepresentationImpl::FloatingPointGridDataRepresentationImpl(const FloatingPointGridDataRepresentationImpl& other) = default;
 
 
 
@@ -35,9 +30,7 @@ FloatingPointGridDataRepresentationImpl::FloatingPointGridDataRepresentationImpl
 
 /*! \brief The destructor of the class. */
 
-FloatingPointGridDataRepresentationImpl::~FloatingPointGridDataRepresentationImpl()
-{
-}
+FloatingPointGridDataRepresentationImpl::~FloatingPointGridDataRepresentationImpl() = default;
 
 
 
@@ -87,6 +80,44 @@ void FloatingPointGridDataRepresentationImpl::read(MemoryReader& memoryReader)
 
 
 
+namespace
+{
+
+/*! \brief Reads numOfValues values with the given reader, skipping the values whose bitmap bit is not set. */
+
+template <class ReadValue>
+void decodeIeeeValues(std::size_t numOfValues,T::Data_ptr bitmap,T::ParamValue_vec& decodedValues,ReadValue readValue)
+{
+  if (bitmap == nullptr)
+  {
+    for (std::uint32_t i = 0; i < numOfValues; i++)
+    {
+      auto val = readValue();
+      decodedValues.emplace_back(val);
+    }
+    return;
+  }
+
+  for (std::uint32_t i = 0; i < numOfValues; i++)
+  {
+    if ((bitmap[i / 8] & bitmask[i % 8]) == 0)
+    {
+      decodedValues.emplace_back(ParamValueMissing);
+    }
+    else
+    {
+      auto val = readValue();
+      decodedValues.emplace_back(val);
+    }
+  }
+}
+
+}  // namespace
+
+
+
+
+
 /*! \brief Decodes the floating-point grid values into a vector of parameter values. */
 
 void FloatingPointGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec& decodedValues) const
@@ -109,58 +140,16 @@ void FloatingPointGridDataRepresentationImpl::decodeValues(Message *message,T::P
     switch (*mPrecision)
     {
       case 1: // 32 bits
-        if (bitmap == nullptr)
-        {
-          for (std::uint32_t i = 0; i < numOfValues; i++)
-          {
-            float val = memoryReader.read_float();
-            decodedValues.emplace_back(val);
-          }
-        }
-        else
-        {
-          for (std::uint32_t i = 0; i < numOfValues; i++)
-          {
-            if ((bitmap[i / 8] & bitmask[i % 8]) == 0)
-            {
-              decodedValues.emplace_back(ParamValueMissing);
-            }
-            else
-            {
-              float val = memoryReader.read_float();
-              decodedValues.emplace_back(val);
-            }
-          }
-        }
+        decodeIeeeValues(numOfValues,bitmap,decodedValues,[&memoryReader]() { return memoryReader.read_float(); });
         break;
 
         case 2: // 64 bits
-          if (bitmap == nullptr)
-          {
-            for (std::uint32_t i = 0; i < numOfValues; i++)
-            {
-              double val = memoryReader.read_double();
-              decodedValues.emplace_back(val);
-            }
-          }
-          else
-          {
-            for (std::uint32_t i = 0; i < numOfValues; i++)
-            {
-              if ((bitmap[i / 8] & bitmask[i % 8]) == 0)
-              {
-                decodedValues.emplace_back(ParamValueMissing);
-              }
-              else
-              {
-                double val = memoryReader.read_double();
-                decodedValues.emplace_back(val);
-              }
-            }
-          }
+          decodeIeeeValues(numOfValues,bitmap,decodedValues,[&memoryReader]() { return memoryReader.read_double(); });
           break;
 
         case 3: // 128 bits
+          break;
+        default:
           break;
     }
   }

@@ -23,20 +23,24 @@ namespace GRIB2 {
 class TransverseMercator : public GridDefinition {
 public:
   TransverseMercator();
-  virtual ~TransverseMercator();
+  TransverseMercator(const TransverseMercator &) = default;
+  TransverseMercator(TransverseMercator &&) = default;
+  TransverseMercator &operator=(const TransverseMercator &) = default;
+  TransverseMercator &operator=(TransverseMercator &&) = default;
+  ~TransverseMercator() override;
 
-  virtual uint getTemplateNumber() const;
-  virtual GridDefinition *createGridDefinition() const;
-  virtual void read(MemoryReader &memoryReader);
-  virtual void write(DataWriter &dataWriter);
-  virtual void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const;
+  uint getTemplateNumber() const override;
+  GridDefinition *createGridDefinition() const override;
+  void read(MemoryReader &memoryReader) override;
+  void write(DataWriter &dataWriter) override;
+  void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const override;
   virtual bool getAttributeValue(const char *attributeName, std::string &attributeValue) const;
   virtual bool hasAttributeValue(const char *attributeName, const char *attributeValue) const;
-  virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
-  virtual T::Hash countHash() const;
+  void print(std::ostream &stream, uint level, uint optionFlags) const override;
+  T::Hash countHash() const override;
 
-  EarthShapeSettings *getEarthShape() const;
-  void setEarthShape(EarthShapeSettings &earthShape);
+  EarthShapeSettings *getEarthShape() const override;
+  void setEarthShape(const EarthShapeSettings &earthShape);
   const T::UInt32_opt &getNi() const;
   void setNi(T::UInt32_opt ni);
   const T::UInt32_opt &getNj() const;
@@ -45,8 +49,8 @@ public:
   void setLatitudeOfReferencePoint(T::Int32_opt latitudeOfReferencePoint);
   const T::Int32_opt &getLongitudeOfReferencePoint() const;
   void setLongitudeOfReferencePoint(T::Int32_opt longitudeOfReferencePoint);
-  ResolutionSettings *getResolution() const;
-  void setResolution(ResolutionSettings &resolution);
+  ResolutionSettings *getResolution() const override;
+  void setResolution(const ResolutionSettings &resolution);
   float getScaleFactorAtReferencePoint() const;
   void setScaleFactorAtReferencePoint(float scaleFactorAtReferencePoint);
   const T::Int32_opt &getXR() const;
@@ -54,7 +58,7 @@ public:
   const T::Int32_opt &getYR() const;
   void setYR(T::Int32_opt yR);
   ScanningModeSettings *getScanningMode() const;
-  void setScanningMode(ScanningModeSettings &scanningMode);
+  void setScanningMode(const ScanningModeSettings &scanningMode);
   const T::UInt32_opt &getDi() const;
   void setDi(T::UInt32_opt di);
   const T::UInt32_opt &getDj() const;

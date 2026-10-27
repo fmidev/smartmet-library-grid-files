@@ -27,15 +27,14 @@ FloatingPointGridData::FloatingPointGridData() {
 
 /*! \brief The destructor of the class. */
 
-FloatingPointGridData::~FloatingPointGridData() {
-}
+FloatingPointGridData::~FloatingPointGridData() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
         \param memoryReader  This object controls the access to the memory mapped file.
 */
 
-void FloatingPointGridData::read(MemoryReader &memoryReader) {
+void FloatingPointGridData::read(MemoryReader &/*memoryReader*/) {
   try {
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
@@ -47,7 +46,7 @@ void FloatingPointGridData::read(MemoryReader &memoryReader) {
         \param dataWriter  This object is used for writing the object data.
 */
 
-void FloatingPointGridData::write(DataWriter &dataWriter) {
+void FloatingPointGridData::write(DataWriter &/*dataWriter*/) {
   try {
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
@@ -60,7 +59,7 @@ void FloatingPointGridData::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void FloatingPointGridData::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
+void FloatingPointGridData::getAttributeList(const std::string &/*prefix*/, T::AttributeList &/*attributeList*/) const {
   try {
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
@@ -73,7 +72,7 @@ void FloatingPointGridData::getAttributeList(const std::string &prefix, T::Attri
     \param attributeValue The value of the attribute (string).
 */
 
-bool FloatingPointGridData::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+bool FloatingPointGridData::getAttributeValue(const char *attributeName, std::string &/*attributeValue*/) const {
   try {
     if (attributeName == nullptr)
       return false;
@@ -106,7 +105,7 @@ bool FloatingPointGridData::hasAttributeValue(const char *attributeName, const c
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void FloatingPointGridData::print(std::ostream &stream, uint level, uint optionFlags) const {
+void FloatingPointGridData::print(std::ostream &stream, uint level, uint /*optionFlags*/) const {
   try {
     stream << space(level) << "FloatingPointGridData\n";
   } catch (...) {

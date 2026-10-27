@@ -43,6 +43,7 @@ class DataDefinition
                             DataDefinition();
                             DataDefinition(const DataDefinition& other);
     virtual                 ~DataDefinition();
+    DataDefinition& operator=(const DataDefinition&) = default;
 
     virtual DataDefinition* createDataDefinition() const;
     virtual void            getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const;
@@ -59,7 +60,7 @@ class DataDefinition
 };
 
 
-typedef std::unique_ptr<DataDefinition> DataDefintionUptr;  //!< Owning pointer to a DataDefinition.
+using DataDefintionUptr = std::unique_ptr<DataDefinition>;  //!< Owning pointer to a DataDefinition.
 
 }  // namespace GRIB1
 }  // namespace SmartMet

@@ -21,10 +21,7 @@ HovmollerImpl::HovmollerImpl()
 
 /*! \brief The copy constructor of the class. */
 
-HovmollerImpl::HovmollerImpl(const HovmollerImpl& other)
-:Hovmoller(other)
-{
-}
+HovmollerImpl::HovmollerImpl(const HovmollerImpl& other) = default;
 
 
 
@@ -32,9 +29,7 @@ HovmollerImpl::HovmollerImpl(const HovmollerImpl& other)
 
 /*! \brief The destructor of the class. */
 
-HovmollerImpl::~HovmollerImpl()
-{
-}
+HovmollerImpl::~HovmollerImpl() = default;
 
 
 
@@ -113,7 +108,7 @@ T::Dimensions HovmollerImpl::getGridDimensions() const
 {
   try
   {
-    return T::Dimensions();
+    return {};
   }
   catch (...)
   {

@@ -21,10 +21,7 @@ TimeSectionImpl::TimeSectionImpl()
 
 /*! \brief The copy constructor of the class. */
 
-TimeSectionImpl::TimeSectionImpl(const TimeSectionImpl& other)
-:TimeSection(other)
-{
-}
+TimeSectionImpl::TimeSectionImpl(const TimeSectionImpl& other) = default;
 
 
 
@@ -32,9 +29,7 @@ TimeSectionImpl::TimeSectionImpl(const TimeSectionImpl& other)
 
 /*! \brief The destructor of the class. */
 
-TimeSectionImpl::~TimeSectionImpl()
-{
-}
+TimeSectionImpl::~TimeSectionImpl() = default;
 
 
 
@@ -114,7 +109,7 @@ T::Dimensions TimeSectionImpl::getGridDimensions() const
 {
   try
   {
-    return T::Dimensions();
+    return {};
   }
   catch (...)
   {

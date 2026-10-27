@@ -17,7 +17,9 @@
 #include <sys/syscall.h>
 #include <sys/ioctl.h>
 #include <fcntl.h>
-#include <signal.h>
+#include <algorithm>
+#include <csignal>
+#include <memory>
 #include <poll.h>
 
 
@@ -39,7 +41,7 @@ GridFile::GridFile()
   {
     mCheckTime = 0;
     mFileId = 0;
-    mMemoryMapInfo.reset(new MapInfo());
+    mMemoryMapInfo = std::make_shared<MapInfo>();
     mMemoryMapInfo->serverType = 1;
     mMemoryMapInfo->protocol = 0;
     mFlags = 0;
@@ -103,13 +105,13 @@ GridFile::GridFile(const GridFile& other)
 
 /*! \brief Constructs a GridFile by initializing members based on an existing GridFile pointer. */
 
-GridFile::GridFile(GridFile *gridFile)
+GridFile::GridFile(GridFile * /*gridFile*/)
 {
   FUNCTION_TRACE
   try
   {
     mCheckTime = 0;
-    mMemoryMapInfo.reset(new MapInfo());
+    mMemoryMapInfo = std::make_shared<MapInfo>();
     mMemoryMapInfo->serverType = 1;
     mMemoryMapInfo->protocol = 0;
     mFileId = 0;
@@ -143,21 +145,18 @@ GridFile::~GridFile()
   FUNCTION_TRACE
   try
   {
-    for (auto msg = mMessages.begin();  msg != mMessages.end(); ++msg)
+    for (auto& mMessage : mMessages)
     {
-      delete (msg->second);
+      delete (mMessage.second);
     }
 
-    if (mNetCdfFile)
-      delete mNetCdfFile;
+    delete mNetCdfFile;
 
-    if (mQueryDataFile)
-      delete mQueryDataFile;
+    delete mQueryDataFile;
 
-    if (mGeoTiffFile)
-      delete mGeoTiffFile;
+    delete mGeoTiffFile;
 
-    if (isMemoryMapped())
+    if (GridFile::isMemoryMapped())
     {
       memoryMapper.unmap(mMemoryMapInfo);
     }
@@ -471,20 +470,18 @@ Int64 GridFile::countSize()
   try
   {
     Int64 fileSize = 0;
-    for (auto it = mMessagePositions.begin(); it != mMessagePositions.end(); ++it)
+    for (auto& mMessagePosition : mMessagePositions)
     {
-      Int64 fsize = it->second.mFilePosition + it->second.mMessageSize;
-      if (fileSize < fsize)
-        fileSize = fsize;
+      Int64 fsize = mMessagePosition.second.mFilePosition + mMessagePosition.second.mMessageSize;
+      fileSize = std::max(fileSize, fsize);
     }
 
-    for (auto it = mMessages.begin(); it != mMessages.end(); ++it)
+    for (auto& mMessage : mMessages)
     {
-      if (it->second->getFileMemoryPtr() == nullptr)
+      if (mMessage.second->getFileMemoryPtr() == nullptr)
       {
-        Int64 fsize = it->second->getFilePosition() + it->second->getMessageSize();
-        if (fileSize < fsize)
-          fileSize = fsize;
+        Int64 fsize = mMessage.second->getFilePosition() + mMessage.second->getMessageSize();
+        fileSize = std::max(fileSize, fsize);
       }
     }
 
@@ -508,12 +505,11 @@ Int64 GridFile::getRequestCounters(RequestCounters& requestCounters)
   try
   {
     Int64 max = 0;
-    for (auto it = mMessages.begin(); it != mMessages.end(); ++it)
+    for (auto& mMessage : mMessages)
     {
-      UInt64 key = ((UInt64)mFileId << 24) + it->first;
-      Int64 cnt = it->second->getRequestCounter();
-      if (cnt > max)
-        max = cnt;
+      UInt64 key = ((UInt64)mFileId << 24) + mMessage.first;
+      Int64 cnt = mMessage.second->getRequestCounter();
+      max = std::max(cnt, max);
 
       if (cnt > 0)
         requestCounters.insert(std::pair<UInt64,Int64>(key,cnt));
@@ -537,8 +533,8 @@ void GridFile::resetRequestCounters()
   FUNCTION_TRACE
   try
   {
-    for (auto it = mMessages.begin(); it != mMessages.end(); ++it)
-      it->second->setRequestCounter((uint)((double)it->second->getRequestCounter()/100.0));
+    for (auto& mMessage : mMessages)
+      mMessage.second->setRequestCounter((uint)((double)mMessage.second->getRequestCounter()/100.0));
   }
   catch (...)
   {
@@ -551,7 +547,7 @@ void GridFile::resetRequestCounters()
 
 /*! \brief Registers a dependence on another file (currently a no-op placeholder). */
 
-void GridFile::addDependence(T::FileId fileId)
+void GridFile::addDependence(T::FileId /*fileId*/)
 {
   FUNCTION_TRACE
   try
@@ -593,10 +589,7 @@ bool GridFile::hasMemoryMapperError() const
   FUNCTION_TRACE
   try
   {
-    if (memoryMapper.isEnabled()  &&  mMemoryMapInfo->mappingError)
-      return true;
-
-    return false;
+    return memoryMapper.isEnabled()  &&  mMemoryMapInfo->mappingError;
   }
   catch (...)
   {
@@ -615,10 +608,7 @@ bool GridFile::isMemoryMapped() const
   FUNCTION_TRACE
   try
   {
-    if (mMemoryMapInfo->memoryPtr)
-      return true;
-
-    return false;
+    return mMemoryMapInfo->memoryPtr != nullptr;
   }
   catch (...)
   {
@@ -987,14 +977,14 @@ Message* GridFile::newMessage(T::FileType fileType)
     {
       case T::FileTypeValue::Grib1:
       {
-        GRIB1::Message *msg = new GRIB1::Message();
+        auto *msg = new GRIB1::Message();
         addMessage(msg);
         return msg;
       }
 
       case T::FileTypeValue::Grib2:
       {
-        GRIB2::Message *msg = new GRIB2::Message();
+        auto *msg = new GRIB2::Message();
 
         msg->setBitmapSection(new GRIB2::BitmapSection());
         msg->setIdentificationSection(new GRIB2::IdentificationSection());
@@ -1007,6 +997,8 @@ Message* GridFile::newMessage(T::FileType fileType)
         addMessage(msg);
         return msg;
       }
+      default:
+        break;
     }
     return nullptr;
   }
@@ -1103,9 +1095,9 @@ void GridFile::write(DataWriter& dataWriter)
   FUNCTION_TRACE
   try
   {
-    for (auto msg = mMessages.begin();  msg != mMessages.end(); ++msg)
+    for (auto& mMessage : mMessages)
     {
-      msg->second->write(dataWriter);
+      mMessage.second->write(dataWriter);
     }
   }
   catch (...)
@@ -1205,9 +1197,72 @@ std::string GridFile::getFileTypeString() const
 
 
 
+namespace
+{
+/*! \brief Creates the message objects of a file containing several messages. */
+
+template <class MessageClass,class FileClass,class InfoVec>
+void createFileMessages(GridFile *gridFile,FileClass *file,InfoVec& messageInfoList,Message_ptr_map& messages)
+{
+  uint idx = 0;
+  for (auto& it : messageInfoList)
+  {
+    auto *message = new MessageClass(gridFile,file,idx,it);
+    messages.insert(std::pair<uint,Message*>(idx,message));
+    idx++;
+  }
+}
+
+
+
+/*! \brief Finds the message by its index, returns nullptr if not found. */
+
+GRID::Message* findMessage(Message_ptr_map& messages,T::MessageIndex messageIndex)
+{
+  auto msg = messages.find(messageIndex);
+  if (msg != messages.end())
+    return msg->second;
+
+  return nullptr;
+}
+
+
+
+/*! \brief Creates the message objects of a file containing several messages until the maximum
+    number of messages is reached. Returns true if the maximum number of messages was reached. */
+
+template <class MessageClass,class FileClass,class InfoVec>
+bool createFileMessagesUpTo(GridFile *gridFile,FileClass *file,InfoVec& messageInfoList,Message_ptr_map& messages,uint maxMessages)
+{
+  uint idx = 0;
+  for (auto& it : messageInfoList)
+  {
+    auto *message = new MessageClass(gridFile,file,idx,it);
+    messages.insert(std::pair<uint,Message*>(idx,message));
+    idx++;
+    if (messages.size() >= maxMessages)
+      return true;
+  }
+  return false;
+}
+
+
+
+/*! \brief The index of the next message (after the last existing one). */
+
+T::MessageIndex nextMessageIndex(const Message_ptr_map& messages)
+{
+  return (messages.empty() ? 0 : messages.rbegin()->first + 1);
+}
+}  // namespace
+
+
+
+
+
 /*! \brief Creates a format-specific message object based on the supplied message information. */
 
-GRID::Message* GridFile::createMessage(T::MessageIndex messageIndex,GRID::MessageInfo& messageInfo)
+GRID::Message* GridFile::createMessage(T::MessageIndex messageIndex,const GRID::MessageInfo& messageInfo)
 {
   FUNCTION_TRACE
   try
@@ -1234,8 +1289,8 @@ GRID::Message* GridFile::createMessage(T::MessageIndex messageIndex,GRID::Messag
     }
 
 
-    auto startAddr = mMemoryMapInfo->memoryPtr + messageInfo.mFilePosition;
-    auto endAddr = startAddr + messageInfo.mMessageSize;
+    auto *startAddr = mMemoryMapInfo->memoryPtr + messageInfo.mFilePosition;
+    auto *endAddr = startAddr + messageInfo.mMessageSize;
 
     if (messageInfo.mFileMemoryPtr  &&  !mMemoryMapInfo->mappedFile)
     {
@@ -1246,94 +1301,73 @@ GRID::Message* GridFile::createMessage(T::MessageIndex messageIndex,GRID::Messag
 
     if (messageInfo.mMessageType == T::FileTypeValue::NetCdf3 || messageInfo.mMessageType == T::FileTypeValue::NetCdf4)
     {
-      auto startAddr = mMemoryMapInfo->memoryPtr;
-      auto endAddr = startAddr + fsize;
+      auto *startAddr = mMemoryMapInfo->memoryPtr;
+      auto *endAddr = startAddr + fsize;
 
 
       MemoryReader memoryReader(reinterpret_cast<unsigned char*>(startAddr),reinterpret_cast<unsigned char*>(endAddr));
 
-      if (mMessages.size() == 0)
+      if (mMessages.empty())
       {
         memoryReader.setReadPosition(0);
         mNetCdfFile = new NetCDF::NetCdfFile();
         NetCDF::MessageInfoVec messageInfoList;
         mNetCdfFile->read(memoryReader,messageInfoList);
 
-        uint idx = 0;
-        for (auto it = messageInfoList.begin();it != messageInfoList.end(); ++it)
-        {
-          NetCDF::Message *message = new NetCDF::Message(this,mNetCdfFile,idx,*it);
-          mMessages.insert(std::pair<uint,Message*>(idx,message));
-          idx++;
-        }
+        createFileMessages<NetCDF::Message>(this,mNetCdfFile,messageInfoList,mMessages);
       }
-      auto msg = mMessages.find(messageIndex);
-      if (msg != mMessages.end())
-        return msg->second;
-
-      return nullptr;
+      return findMessage(mMessages,messageIndex);
     }
 
     if (messageInfo.mMessageType == T::FileTypeValue::QueryData)
     {
-      auto startAddr = mMemoryMapInfo->memoryPtr;
-      auto endAddr = startAddr + fsize;
+      auto *startAddr = mMemoryMapInfo->memoryPtr;
+      auto *endAddr = startAddr + fsize;
 
       MemoryReader memoryReader(reinterpret_cast<unsigned char*>(startAddr),reinterpret_cast<unsigned char*>(endAddr));
 
-      if (mMessages.size() == 0)
+      if (mMessages.empty())
       {
         memoryReader.setReadPosition(0);
         mQueryDataFile = new QueryData::QueryDataFile(mMemoryMapInfo->filename.c_str());
         QueryData::MessageInfoVec messageInfoList;
         mQueryDataFile->read(messageInfoList);
 
-        uint idx = 0;
-        for (auto it = messageInfoList.begin();it != messageInfoList.end(); ++it)
-        {
-          QueryData::Message *message = new QueryData::Message(this,mQueryDataFile,idx,*it);
-          mMessages.insert(std::pair<uint,Message*>(idx,message));
-          idx++;
-        }
+        createFileMessages<QueryData::Message>(this,mQueryDataFile,messageInfoList,mMessages);
       }
-      auto msg = mMessages.find(messageIndex);
-      if (msg != mMessages.end())
-        return msg->second;
-
-      return nullptr;
+      return findMessage(mMessages,messageIndex);
     }
 
     if (messageInfo.mMessageType == T::FileTypeValue::GeoTiff)
     {
-      auto startAddr = mMemoryMapInfo->memoryPtr;
-      auto endAddr = startAddr + fsize;
+      auto *startAddr = mMemoryMapInfo->memoryPtr;
+      auto *endAddr = startAddr + fsize;
 
       MemoryReader memoryReader(reinterpret_cast<unsigned char*>(startAddr),reinterpret_cast<unsigned char*>(endAddr));
 
-      if (mMessages.size() == 0)
+      if (mMessages.empty())
       {
         memoryReader.setReadPosition(0);
         mGeoTiffFile = new GeoTiff::GeoTiffFile(mMemoryMapInfo->filename.c_str());
         GeoTiff::MessageInfoVec messageInfoList;
         mGeoTiffFile->read(memoryReader,messageInfoList);
 
-        uint idx = 0;
-        for (auto it = messageInfoList.begin();it != messageInfoList.end(); ++it)
-        {
-          GeoTiff::Message *message = new GeoTiff::Message(this,mGeoTiffFile,idx,*it);
-          mMessages.insert(std::pair<uint,Message*>(idx,message));
-          idx++;
-        }
+        createFileMessages<GeoTiff::Message>(this,mGeoTiffFile,messageInfoList,mMessages);
       }
-      auto msg = mMessages.find(messageIndex);
-      if (msg != mMessages.end())
-        return msg->second;
-
-      return nullptr;
+      return findMessage(mMessages,messageIndex);
     }
 
     MemoryReader memoryReader(reinterpret_cast<unsigned char*>(startAddr),reinterpret_cast<unsigned char*>(endAddr));
-    uchar fileType = readMessageType(memoryReader);
+
+    // A GRIB2 field which repeats sections of its message does not start with
+    // "GRIB" but with a section header, so its type cannot be sniffed from it.
+    const bool startsWithGrib = (messageInfo.mMessageSize >= 4 && memcmp(startAddr,"GRIB",4) == 0);
+    uchar fileType = 0;
+    if (!startsWithGrib && messageInfo.mMessageType == T::FileTypeValue::Grib2)
+      fileType = T::FileTypeValue::Grib2;
+    else
+      fileType = readMessageType(memoryReader);
+
     if (fileType == 0)
     {
       MemoryReader memoryReader2(reinterpret_cast<unsigned char*>(mMemoryMapInfo->memoryPtr),reinterpret_cast<unsigned char*>(endAddr));
@@ -1345,17 +1379,19 @@ GRID::Message* GridFile::createMessage(T::MessageIndex messageIndex,GRID::Messag
     {
       case T::FileTypeValue::Grib1:
       {
-        GRIB1::Message *msg = new GRIB1::Message(this,messageIndex,messageInfo);
+        auto *msg = new GRIB1::Message(this,messageIndex,messageInfo);
         mMessages.insert(std::pair<uint,Message*>(messageIndex,msg));
         return msg;
       }
 
       case T::FileTypeValue::Grib2:
       {
-        GRIB2::Message *msg = new GRIB2::Message(this,messageIndex,messageInfo);
+        auto *msg = new GRIB2::Message(this,messageIndex,messageInfo);
         mMessages.insert(std::pair<uint,Message*>(messageIndex,msg));
         return msg;
       }
+      default:
+        break;
     }
     return nullptr;
   }
@@ -1500,7 +1536,7 @@ void GridFile::read(const std::string& filename,uint maxMessages)
       mapToMemory();
     }
 
-    auto endAddr = mMemoryMapInfo->memoryPtr + mMemoryMapInfo->fileSize;
+    auto *endAddr = mMemoryMapInfo->memoryPtr + mMemoryMapInfo->fileSize;
 
     MemoryReader memoryReader(reinterpret_cast<unsigned char*>(mMemoryMapInfo->memoryPtr),reinterpret_cast<unsigned char*>(endAddr));
     read(memoryReader,maxMessages);
@@ -1552,95 +1588,75 @@ void GridFile::read(MemoryReader& memoryReader,uint maxMessages)
     memoryReader.setReadPosition(0);
     auto gribs = searchMessageLocations(memoryReader,maxMessages);
 
-    auto startAddr = memoryReader.getStartPtr();
-    auto endAddr = memoryReader.getEndPtr();
-
+    auto *startAddr = memoryReader.getStartPtr();
     uint sz = gribs.size();
     for (uint i = 0; i < sz; i++)
     {
-      auto ptr = reinterpret_cast<unsigned char*>(startAddr + gribs[i].second);
-      if ((i+1) < gribs.size())
-        endAddr = reinterpret_cast<unsigned char*>(startAddr + gribs[i+1].second);
-      else
-        endAddr = memoryReader.getEndPtr();
+      auto *ptr = reinterpret_cast<unsigned char*>(startAddr + gribs[i].second);
+      unsigned char *endAddr = ((i+1) < gribs.size()) ? reinterpret_cast<unsigned char*>(startAddr + gribs[i+1].second) : memoryReader.getEndPtr();
 
       MemoryReader memoryReader2(ptr,endAddr);
       memoryReader2.setParentPtr(startAddr);
 
+      // A GRIB2 message may contain several fields, each of which becomes a
+      // message of its own, so the message index is not the GRIB message index.
+      const T::MessageIndex nextIndex = nextMessageIndex(mMessages);
+
       switch (gribs[i].first)
       {
         case T::FileTypeValue::Grib1:
-          readGrib1Message(memoryReader2,i);
+          readGrib1Message(memoryReader2,nextIndex);
           break;
 
         case T::FileTypeValue::Grib2:
-          readGrib2Message(memoryReader2,i);
+          readGrib2Message(memoryReader2,nextIndex);
           break;
 
         case T::FileTypeValue::NetCdf3:
         case T::FileTypeValue::NetCdf4:
         {
-          if (mMessages.size() == 0)
-          {
-            memoryReader.setReadPosition(0);
-            mNetCdfFile = new NetCDF::NetCdfFile();
-            NetCDF::MessageInfoVec messageInfoList;
-            mNetCdfFile->read(memoryReader,messageInfoList);
+          if (!mMessages.empty())
+            break;
 
-            uint idx = 0;
-            for (auto it = messageInfoList.begin();it != messageInfoList.end(); ++it)
-            {
-              NetCDF::Message *message = new NetCDF::Message(this,mNetCdfFile,idx,*it);
-              mMessages.insert(std::pair<uint,Message*>(idx,message));
-              idx++;
-              if (mMessages.size() >= maxMessages)
-                return;
-            }
-          }
+          memoryReader.setReadPosition(0);
+          mNetCdfFile = new NetCDF::NetCdfFile();
+          NetCDF::MessageInfoVec messageInfoList;
+          mNetCdfFile->read(memoryReader,messageInfoList);
+
+          if (createFileMessagesUpTo<NetCDF::Message>(this,mNetCdfFile,messageInfoList,mMessages,maxMessages))
+            return;
         }
         break;
 
         case T::FileTypeValue::QueryData:
         {
-          if (mMessages.size() == 0)
-          {
-            memoryReader.setReadPosition(0);
-            mQueryDataFile = new QueryData::QueryDataFile(mMemoryMapInfo->filename.c_str());
-            QueryData::MessageInfoVec messageInfoList;
-            mQueryDataFile->read(messageInfoList);
-            uint idx = 0;
-            for (auto it = messageInfoList.begin();it != messageInfoList.end(); ++it)
-            {
-              QueryData::Message *message = new QueryData::Message(this,mQueryDataFile,idx,*it);
-              mMessages.insert(std::pair<uint,Message*>(idx,message));
-              idx++;
-              if (mMessages.size() >= maxMessages)
-                return;
-            }
-          }
+          if (!mMessages.empty())
+            break;
+
+          memoryReader.setReadPosition(0);
+          mQueryDataFile = new QueryData::QueryDataFile(mMemoryMapInfo->filename.c_str());
+          QueryData::MessageInfoVec messageInfoList;
+          mQueryDataFile->read(messageInfoList);
+          if (createFileMessagesUpTo<QueryData::Message>(this,mQueryDataFile,messageInfoList,mMessages,maxMessages))
+            return;
         }
         break;
 
         case T::FileTypeValue::GeoTiff:
         {
-          if (mMessages.size() == 0)
-          {
-            memoryReader.setReadPosition(0);
-            mGeoTiffFile = new GeoTiff::GeoTiffFile(mMemoryMapInfo->filename.c_str());
-            GeoTiff::MessageInfoVec messageInfoList;
-            mGeoTiffFile->read(memoryReader,messageInfoList);
-            uint idx = 0;
-            for (auto it = messageInfoList.begin();it != messageInfoList.end(); ++it)
-            {
-              GeoTiff::Message *message = new GeoTiff::Message(this,mGeoTiffFile,idx,*it);
-              mMessages.insert(std::pair<uint,Message*>(idx,message));
-              idx++;
-              if (mMessages.size() >= maxMessages)
-                return;
-            }
-          }
+          if (!mMessages.empty())
+            break;
+
+          memoryReader.setReadPosition(0);
+          mGeoTiffFile = new GeoTiff::GeoTiffFile(mMemoryMapInfo->filename.c_str());
+          GeoTiff::MessageInfoVec messageInfoList;
+          mGeoTiffFile->read(memoryReader,messageInfoList);
+          if (createFileMessagesUpTo<GeoTiff::Message>(this,mGeoTiffFile,messageInfoList,mMessages,maxMessages))
+            return;
         }
         break;
+        default:
+          break;
       }
     }
   }
@@ -1669,7 +1685,7 @@ void GridFile::readGrib1Message(MemoryReader& memoryReader, T::MessageIndex mess
   FUNCTION_TRACE
   try
   {
-    GRIB1::Message *message = new GRIB1::Message();
+    auto *message = new GRIB1::Message();
     message->setGridFilePtr(this);
     message->setMessageIndex(messageIndex);
     mMessages.insert(std::pair<uint,Message*>(messageIndex,message));
@@ -1733,26 +1749,13 @@ void GridFile::readGrib2Message(MemoryReader& memoryReader, T::MessageIndex mess
         break;
       }
 
-      GRIB2::Message *message = new GRIB2::Message();
+      auto *message = new GRIB2::Message();
       message->setGridFilePtr(this);
       message->setMessageIndex(messageIndex);
+      // A field after the first one repeats sections 2-7, 3-7 or 4-7 of the
+      // message. Message::read() recognizes this and takes the other sections
+      // from the earlier fields.
       message->read(memoryReader);
-
-      // Complete the sections from the previous message
-      if (!mMessages.empty())
-      {
-        if (messageIndex > 0)
-        {
-          auto msg = mMessages.find(messageIndex-1);
-          if (msg != mMessages.end())
-          {
-            /*
-            if (msg->second != nullptr)
-              message->copyMissingSections(*msg->second);
-              */
-          }
-        }
-      }
 
       // Some bitmap sections refer to earlier ones
       if (message->getBitmapSection() != nullptr &&  message->getBitmapSection()->getBitmapDataPtr() != nullptr)
@@ -1770,6 +1773,9 @@ void GridFile::readGrib2Message(MemoryReader& memoryReader, T::MessageIndex mess
 
       message->initParameterInfo();
       mMessages.insert(std::pair<uint,Message*>(messageIndex,message));
+
+      // The next field of the same GRIB2 message gets the next message index
+      messageIndex++;
     }
   }
   catch (...)
@@ -1777,6 +1783,70 @@ void GridFile::readGrib2Message(MemoryReader& memoryReader, T::MessageIndex mess
     throw Fmi::Exception(BCP,"Message addition failed!",nullptr);
   }
 }
+
+
+
+
+
+namespace
+{
+
+/*! \brief Reads the GRIB indicator section and checks it is valid.
+
+        \param memoryReader  The reader positioned at the "GRIB" identifier.
+        \param edition       The returned GRIB edition.
+        \param totalLength   The returned total length of the message.
+        \return              True if the indicator section is valid.
+*/
+
+bool readGribIndicator(MemoryReader& memoryReader,std::uint8_t& edition,std::uint64_t& totalLength)
+{
+  bool valid = true;
+
+  memoryReader.read_null(4);
+
+  std::uint8_t s[3];
+  memoryReader >> s[0];
+  memoryReader >> s[1];
+  memoryReader >> s[2];
+
+
+  edition = 0;
+  memoryReader >> edition;
+
+  // TODO: Keeping this genering for now
+  if (missing(edition))
+  {
+    valid = false;
+  }
+
+  if (edition != 1 &&  edition != 2)
+  {
+    valid = false;
+  }
+
+  totalLength = 0;
+
+  if (edition == 1)
+    totalLength = (s[0] << 16) + (s[1] << 8) + s[2];
+
+  if (edition == 2)
+    memoryReader >> totalLength;
+
+  // The value of the total length contains also 16 bytes in the beginning of the section 0.
+  if (totalLength < 16 || (totalLength-16) > (memoryReader.getDataSize() - memoryReader.getReadPosition()))
+  {
+    valid = false;
+    //Fmi::Exception exception(BCP,"The GRIB size ('totalLength') is out of the limits!");
+    //exception.addParameter("Read position",uint64_toHex(memoryReader.getReadPosition()));
+    //exception.addParameter("totalLength",Fmi::to_string(totalLength));
+    //throw exception;
+  }
+
+  return valid;
+}
+
+}  // namespace
 
 
 
@@ -1794,7 +1864,7 @@ void GridFile::readGrib2Message(MemoryReader& memoryReader, T::MessageIndex mess
         \return              A vector of data pointers pointing to the found messages.
 */
 
-MessagePos_vec GridFile::searchMessageLocations(MemoryReader& memoryReader,uint maxMessages)
+MessagePos_vec GridFile::searchMessageLocations(MemoryReader& memoryReader,uint maxMessages) const
 {
   FUNCTION_TRACE
   try
@@ -1804,13 +1874,19 @@ MessagePos_vec GridFile::searchMessageLocations(MemoryReader& memoryReader,uint 
     // A complete indicator section takes 16 bytes, hence we can stop the loop earlier
     // thus making sure all reads inside the loop succeed.
 
-    auto fileStartPtr = memoryReader.getReadPtr();
+    auto *fileStartPtr = memoryReader.getReadPtr();
 
+    // Classic NetCDF (CDF-1 / CDF-2), the only NetCDF format the reader supports
     if (memoryReader.peek_string("CDF"))
     {
-      gribs.emplace_back(T::FileTypeValue::NetCdf4,0);
+      gribs.emplace_back(T::FileTypeValue::NetCdf3,0);
       return gribs;
     }
+
+    // NetCDF-4 files are HDF5 files, which the NetCDF reader does not support.
+    // An HDF5 container may still hold GRIB messages, so it is searched like
+    // any other file, and rejected only if no GRIB messages are found.
+    const bool isHdf5 = memoryReader.peek_string("\x89HDF\r\n\x1a\n");
 
     const uchar qd[] = {0x40,0x24,0xB0,0xA3,0x51,0};
     if (memoryReader.peek_string((const char*)qd))
@@ -1837,54 +1913,16 @@ MessagePos_vec GridFile::searchMessageLocations(MemoryReader& memoryReader,uint 
       int spos = memoryReader.search_string("GRIB");
 
       if (spos < 0)
-        return gribs;
+        break;
 
       memoryReader.setReadPosition(memoryReader.getReadPosition()+spos);
 
-      bool valid = true;
-
       // Skip identifier, reserved and discipline and then read the edition number
 
-      auto startPtr = memoryReader.getReadPtr();
-      memoryReader.read_null(4);
-
-      std::uint8_t s[3];
-      memoryReader >> s[0];
-      memoryReader >> s[1];
-      memoryReader >> s[2];
-
-
+      auto *startPtr = memoryReader.getReadPtr();
       std::uint8_t edition = 0;
-      memoryReader >> edition;
-
-      // TODO: Keeping this genering for now
-      if (missing(edition))
-      {
-        valid = false;
-      }
-
-      if (edition != 1 &&  edition != 2)
-      {
-        valid = false;
-      }
-
       std::uint64_t totalLength = 0;
-
-      if (edition == 1)
-        totalLength = (s[0] << 16) + (s[1] << 8) + s[2];
-
-      if (edition == 2)
-        memoryReader >> totalLength;
-
-      // The value of the total length contains also 16 bytes in the beginning of the section 0.
-      if ((memoryReader.getReadPosition() + totalLength-16) > memoryReader.getDataSize())
-      {
-        valid = false;
-        //Fmi::Exception exception(BCP,"The GRIB size ('totalLength') is out of the limits!");
-        //exception.addParameter("Read position",uint64_toHex(memoryReader.getReadPosition()));
-        //exception.addParameter("totalLength",Fmi::to_string(totalLength));
-        //throw exception;
-      }
+      bool valid = readGribIndicator(memoryReader,edition,totalLength);
 
       if (valid)
       {
@@ -1898,6 +1936,13 @@ MessagePos_vec GridFile::searchMessageLocations(MemoryReader& memoryReader,uint 
         memoryReader.setReadPtr(startPtr);
         memoryReader.read_null(1);
       }
+    }
+
+    if (isHdf5 && gribs.empty())
+    {
+      Fmi::Exception exception(BCP,"NetCDF-4 (HDF5) files are not supported, only classic NetCDF files are!");
+      exception.addParameter("Filename",getFileName());
+      throw exception;
     }
 
     return gribs;
@@ -1931,19 +1976,19 @@ GRID::Message* GridFile::getMessageByIndex(std::size_t index)
       // It seems that there have been problems with the current memory map.
       // We should wait some time before retrying the mapping.
 
-      if ((mMemoryMapInfo->mappingTime + 10) > time(0))
+      if ((mMemoryMapInfo->mappingTime + 10) > time(nullptr))
         return nullptr;
 
       // We should try to map the file again.
 
       memoryMapper.unmap(mMemoryMapInfo);
 
-      for (auto msg = mMessages.begin();  msg != mMessages.end(); ++msg)
+      for (auto& mMessage : mMessages)
       {
-        delete (msg->second);
+        delete (mMessage.second);
       }
       mMessages.clear();
-      mMemoryMapInfo->memoryPtr = 0;
+      mMemoryMapInfo->memoryPtr = nullptr;
       mMemoryMapInfo->mappingError = false;
     }
 
@@ -1966,7 +2011,7 @@ GRID::Message* GridFile::getMessageByIndex(std::size_t index)
       return msg->second;
     }
 
-    if (mMessagePositions.size() > 0)
+    if (!mMessagePositions.empty())
     {
       auto pos = mMessagePositions.find(index);
       if (pos != mMessagePositions.end())
@@ -1995,16 +2040,13 @@ GRID::Message* GridFile::getMessageByIndex(std::size_t index)
       msg->second->incRequestCounter();
       return msg->second;
     }
-    else
+    printf("*** GridFile.cpp: Message not found (%s) %lu / %lu /%lu\n",mMemoryMapInfo->filename.c_str(),index,mMessages.size(),mMessagePositions.size());
+    if (mMessages.size() != mMessagePositions.size())
     {
-      printf("*** GridFile.cpp: Message not found (%s) %lu / %lu /%lu\n",mMemoryMapInfo->filename.c_str(),index,mMessages.size(),mMessagePositions.size());
-      if (mMessages.size() != mMessagePositions.size())
-      {
-        mMessages.clear();
-        mMemoryMapInfo->memoryPtr = 0;
-        //for (auto it = mMessagePositions.begin(); it != mMessagePositions.end(); ++it)
-        //  printf("** %d\n",it->first);
-      }
+      mMessages.clear();
+      mMemoryMapInfo->memoryPtr = nullptr;
+      //for (auto it = mMessagePositions.begin(); it != mMessagePositions.end(); ++it)
+      //  printf("** %d\n",it->first);
     }
 
     return nullptr;
@@ -2035,13 +2077,13 @@ std::size_t GridFile::getNumberOfMessages()
   {
     std::size_t cnt = 0;
 
-    if (mMessagePositions.size() > 0)
+    if (!mMessagePositions.empty())
     {
       auto pos = mMessagePositions.rbegin();
       cnt = pos->first + 1;
     }
 
-    if (mMessages.size() > 0)
+    if (!mMessages.empty())
     {
       auto pos = mMessages.rbegin();
       if (pos->first >= cnt)
@@ -2065,7 +2107,7 @@ std::size_t GridFile::getNumberOfMessages()
         \param memoryReader  This object controls the access to the memory mapped file.
 */
 
-uchar GridFile::readMessageType(MemoryReader& memoryReader)
+uchar GridFile::readMessageType(MemoryReader& memoryReader) const
 {
   FUNCTION_TRACE
   try
@@ -2106,7 +2148,13 @@ uchar GridFile::readMessageType(MemoryReader& memoryReader)
       // This is a NetCDF file.
 
       if (d[3] == 1 || d[3] == 2)
-        return T::FileTypeValue::NetCdf4;
+        return T::FileTypeValue::NetCdf3;
+    }
+
+    if (d[0] == 0x89 && d[1] == 'H' && d[2] == 'D' && d[3] == 'F' && d[4] == '\r' && d[5] == '\n' && d[6] == 0x1A && d[7] == '\n')
+    {
+      // This is a HDF5 file, for example NetCDF-4.
+      return T::FileTypeValue::NetCdf4;
     }
 
     if (d[0] == 0x40 &&  d[1] == 0x24  &&  d[2] == 0xB0  &&  d[3] == 0xA3  &&  d[4] == 0x51)
@@ -2171,10 +2219,10 @@ void GridFile::print(std::ostream& stream,uint level,uint optionFlags) const
     if (optionFlags & GRID::PrintFlag::no_messages)
       return;
 
-    for (auto msg = mMessages.begin();  msg != mMessages.end(); ++msg)
+    for (auto mMessage : mMessages)
     {
-      if (msg->second)
-        msg->second->print(stream,level+1,optionFlags);
+      if (mMessage.second)
+        mMessage.second->print(stream,level+1,optionFlags);
     }
   }
   catch (...)

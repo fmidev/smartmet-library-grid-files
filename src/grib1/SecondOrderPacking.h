@@ -42,15 +42,16 @@ class SecondOrderPacking : public DataDefinition
   public:
                     SecondOrderPacking();
                     SecondOrderPacking(const SecondOrderPacking& other);
-    virtual         ~SecondOrderPacking();
+    ~SecondOrderPacking() override;
+    SecondOrderPacking& operator=(const SecondOrderPacking&) = default;
 
-    DataDefinition* createDataDefinition() const;
-    void            decodeValues(Message *message,T::ParamValue_vec& decodedValues) const;
-    PackingMethod   getPackingMethod() const;
+    DataDefinition* createDataDefinition() const override;
+    void            decodeValues(Message *message,T::ParamValue_vec& decodedValues) const override;
+    PackingMethod   getPackingMethod() const override;
 
-    void            read(MemoryReader& memoryReader);
-    void            write(DataWriter& dataWriter);
-    void            print(std::ostream& stream,uint level,uint optionFlags) const;
+    void            read(MemoryReader& memoryReader) override;
+    void            write(DataWriter& dataWriter) override;
+    void            print(std::ostream& stream,uint level,uint optionFlags) const override;
 
   private:
 
@@ -61,11 +62,11 @@ class SecondOrderPacking : public DataDefinition
     std::uint16_t   mP2;            //!< Number of second-order packed values.
     std::uint8_t    mExtraValues;   //!< Reserved extra-value byte (octet 21).
 
-  private:
+  
 
-    void decodeValues_rowByRow(
+    [[noreturn]] void decodeValues_rowByRow(
         std::size_t numOfValues,
-        T::Dimensions dimensions,
+        const T::Dimensions& dimensions,
         T::Data_ptr data,
         std::size_t dataSize,
         T::Data_ptr bitmap,
@@ -77,9 +78,9 @@ class SecondOrderPacking : public DataDefinition
         std::uint8_t flags,
         T::ParamValue_vec& decodedValues) const;
 
-    void decodeValues_constantWidth(
+    [[noreturn]] void decodeValues_constantWidth(
         std::size_t numOfValues,
-        T::Dimensions dimensions,
+        const T::Dimensions& dimensions,
         T::Data_ptr data,
         std::size_t dataSize,
         T::Data_ptr bitmap,
@@ -91,9 +92,9 @@ class SecondOrderPacking : public DataDefinition
         std::uint8_t flags,
         T::ParamValue_vec& decodedValues) const;
 
-    void decodeValues_differentWidth(
+    [[noreturn]] void decodeValues_differentWidth(
         std::size_t numOfValues,
-        T::Dimensions dimensions,
+        const T::Dimensions& dimensions,
         T::Data_ptr data,
         std::size_t dataSize,
         T::Data_ptr bitmap,
@@ -107,7 +108,7 @@ class SecondOrderPacking : public DataDefinition
 
     void decodeValues_SPD(
         std::size_t numOfValues,
-        T::Dimensions dimensions,
+        const T::Dimensions& dimensions,
         T::Data_ptr data,
         std::size_t dataSize,
         T::Data_ptr bitmap,

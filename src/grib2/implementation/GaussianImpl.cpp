@@ -6,7 +6,8 @@
 #include "../../grid/GaussianLatitudeCache.h"
 
 #include <iostream>
-#include <math.h>
+#include <memory>
+#include <cmath>
 
 
 namespace SmartMet
@@ -28,10 +29,7 @@ GaussianImpl::GaussianImpl()
 
 /*! \brief The copy constructor of the class. */
 
-GaussianImpl::GaussianImpl(const GaussianImpl& other)
-:Gaussian(other)
-{
-}
+GaussianImpl::GaussianImpl(const GaussianImpl& other) = default;
 
 
 
@@ -39,9 +37,7 @@ GaussianImpl::GaussianImpl(const GaussianImpl& other)
 
 /*! \brief The destructor of the class. */
 
-GaussianImpl::~GaussianImpl()
-{
-}
+GaussianImpl::~GaussianImpl() = default;
 
 
 
@@ -115,8 +111,8 @@ T::Coordinate_svec GaussianImpl::getGridOriginalCoordinatesNoCache() const
     uint nj = (*mGaussian.getGrid()->getNj());
     long n = (long)(*mGaussian.getN());
 
-    double longitudeOfFirstGridPoint = C_DOUBLE(*mGaussian.getGrid()->getLongitudeOfFirstGridPoint());
-    double longitudeOfLastGridPoint = C_DOUBLE(*mGaussian.getGrid()->getLongitudeOfLastGridPoint());
+    auto longitudeOfFirstGridPoint = C_DOUBLE(*mGaussian.getGrid()->getLongitudeOfFirstGridPoint());
+    auto longitudeOfLastGridPoint = C_DOUBLE(*mGaussian.getGrid()->getLongitudeOfLastGridPoint());
     //double iDirectionIncrement = C_DOUBLE(*mGaussian.iDirectionIncrement());
     double iDirectionIncrement = (longitudeOfLastGridPoint - longitudeOfFirstGridPoint) / C_DOUBLE(ni-1);
 
@@ -125,7 +121,13 @@ T::Coordinate_svec GaussianImpl::getGridOriginalCoordinatesNoCache() const
     if ((scanningMode & 0x80) != 0)
       iDirectionIncrement = -iDirectionIncrement;
 
-    double *lats = GRID::gaussianLatitudeCache.getLatitudes(nj,n);
+    // A sub-area grid starts at the Gaussian latitude of its northern edge
+    double northLat = 90;
+    if (mGaussian.getGrid()->getLatitudeOfFirstGridPoint() && mGaussian.getGrid()->getLatitudeOfLastGridPoint())
+      northLat = std::max(C_DOUBLE(*mGaussian.getGrid()->getLatitudeOfFirstGridPoint()),
+                          C_DOUBLE(*mGaussian.getGrid()->getLatitudeOfLastGridPoint())) / 1000000;
+    const uint firstRow = GRID::gaussianLatitudeCache.getFirstRow(nj,n,northLat);
+    double *lats = GRID::gaussianLatitudeCache.getLatitudes(nj,n) + firstRow;
 
     coordinateList->reserve(ni*nj);
 
@@ -137,7 +139,7 @@ T::Coordinate_svec GaussianImpl::getGridOriginalCoordinatesNoCache() const
       for (uint i=0; i < ni; i++)
       {
         double cx = x/1000000;
-        double cy = y; ;
+        double cy = y;
         T::Coordinate coord(cx,cy);
         coordinateList->emplace_back(coord);
         x += iDirectionIncrement;
@@ -169,9 +171,9 @@ T::Dimensions GaussianImpl::getGridDimensions() const
   try
   {
     if (!mGaussian.getGrid()->getNi() || !mGaussian.getGrid()->getNj())
-      return T::Dimensions();
+      return {};
 
-    return T::Dimensions(*mGaussian.getGrid()->getNi(),*mGaussian.getGrid()->getNi());
+    return T::Dimensions(*mGaussian.getGrid()->getNi(),*mGaussian.getGrid()->getNj());
   }
   catch (...)
   {
@@ -266,23 +268,27 @@ bool GaussianImpl::getGridPointByOriginalCoordinates(double x,double y,double& g
     double latLow = 0;
     double latHigh = 0;
 
-    int t = GRID::gaussianLatitudeCache.getClosestLatitudes(nj,n,y,latLow,latHigh);
+    // A sub-area grid starts at the Gaussian latitude of its northern edge
+    double northLat = 90;
+    if (mGaussian.getGrid()->getLatitudeOfFirstGridPoint() && mGaussian.getGrid()->getLatitudeOfLastGridPoint())
+      northLat = std::max(C_DOUBLE(*mGaussian.getGrid()->getLatitudeOfFirstGridPoint()),
+                          C_DOUBLE(*mGaussian.getGrid()->getLatitudeOfLastGridPoint())) / 1000000;
+    const uint firstRow = GRID::gaussianLatitudeCache.getFirstRow(nj,n,northLat);
+    int t = GRID::gaussianLatitudeCache.getClosestLatitudes(nj,n,firstRow,y,latLow,latHigh);
     if (t < 0)
       return false;
 
     latLow += 90;
     latHigh += 90;
 
+    // An exact hit on a grid latitude gives latLow == latHigh
     double latDiff = aLat-latLow;
-    double j = t + latDiff / (latHigh-latLow);
+    double j = (latHigh == latLow ? C_DOUBLE(t) : t + latDiff / (latHigh-latLow));
 
     grid_i = i;
     grid_j = j;
 
-    if (j < 0  ||  j > C_DOUBLE(nj))
-      return false;
-
-    return true;
+    return !(j < 0  ||  j > C_DOUBLE(nj));
   }
   catch (...)
   {
@@ -303,7 +309,7 @@ void GaussianImpl::initSpatialReference()
     mSpatialReference = getSpatialReference();
     if (!mSpatialReference)
     {
-      mSpatialReference.reset(new T::SpatialRef());
+      mSpatialReference = std::make_shared<T::SpatialRef>();
       addSpatialReference(mSpatialReference);
 
       // ### Set geographic coordinate system.

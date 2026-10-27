@@ -22,22 +22,26 @@ namespace GRIB2 {
 class VariableResolutionLatLon : public GridDefinition {
 public:
   VariableResolutionLatLon();
-  virtual ~VariableResolutionLatLon();
+  VariableResolutionLatLon(const VariableResolutionLatLon &) = default;
+  VariableResolutionLatLon(VariableResolutionLatLon &&) = default;
+  VariableResolutionLatLon &operator=(const VariableResolutionLatLon &) = default;
+  VariableResolutionLatLon &operator=(VariableResolutionLatLon &&) = default;
+  ~VariableResolutionLatLon() override;
 
-  virtual uint getTemplateNumber() const;
-  virtual GridDefinition *createGridDefinition() const;
-  virtual void read(MemoryReader &memoryReader);
-  virtual void write(DataWriter &dataWriter);
-  virtual void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const;
+  uint getTemplateNumber() const override;
+  GridDefinition *createGridDefinition() const override;
+  void read(MemoryReader &memoryReader) override;
+  void write(DataWriter &dataWriter) override;
+  void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const override;
   virtual bool getAttributeValue(const char *attributeName, std::string &attributeValue) const;
   virtual bool hasAttributeValue(const char *attributeName, const char *attributeValue) const;
-  virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
-  virtual T::Hash countHash() const;
+  void print(std::ostream &stream, uint level, uint optionFlags) const override;
+  T::Hash countHash() const override;
 
-  EarthShapeSettings *getEarthShape() const;
-  void setEarthShape(EarthShapeSettings &earthShape);
+  EarthShapeSettings *getEarthShape() const override;
+  void setEarthShape(const EarthShapeSettings &earthShape);
   VariableLatLonSettings *getVariableLatLon() const;
-  void setVariableLatLon(VariableLatLonSettings &variableLatLon);
+  void setVariableLatLon(const VariableLatLonSettings &variableLatLon);
 
 protected:
   // # Copyright 2005-2019 ECMWF.

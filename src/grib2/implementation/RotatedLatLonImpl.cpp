@@ -5,6 +5,7 @@
 #include "../../common/Dimensions.h"
 #include "../../grid/PrintOptions.h"
 #include <iostream>
+#include <memory>
 
 
 namespace SmartMet
@@ -113,13 +114,18 @@ void RotatedLatLonImpl::init() const
       if ((flags & 0x20) == 0  &&  mLatLon.getGrid()->getLongitudeOfLastGridPoint())
       {
         // i direction increment not given
-        dx = (mEndX-mStartX)/mNi;
+        double endX = mEndX;
+        if (endX < mStartX)
+          endX += 360;
+        if (mNi > 1)
+          dx = (endX-mStartX)/(mNi-1);
       }
 
       if ((flags & 0x10) == 0  &&  mLatLon.getGrid()->getLatitudeOfLastGridPoint())
       {
-        // j direction increment not given
-        dy = (mEndY-mStartY)/mNj;
+        // j direction increment not given. The sign comes from the scanning mode below.
+        if (mNj > 1)
+          dy = std::fabs(mEndY-mStartY)/(mNj-1);
       }
     }
 
@@ -318,8 +324,8 @@ void RotatedLatLonImpl:: getGridPointListByLatLonCoordinates(T::Coordinate_vec& 
     int sz = latlon.size();
     points.reserve(sz);
 
-    double *x = new double[sz+1];
-    double *y = new double[sz+1];
+    auto *x = new double[sz+1];
+    auto *y = new double[sz+1];
 
     std::unique_ptr<double[]> rx(x);
     std::unique_ptr<double[]> ry(y);
@@ -407,7 +413,7 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint gri
         \return        The method return true if the latlon values were succesfully returned.
 */
 
-bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j,double& lat,double& lon) const
+bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j,double& /*lat*/,double& /*lon*/) const
 {
   try
   {
@@ -427,6 +433,46 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPosition(double grid_i,dou
     double lon = rotated_lon;
 
     return convert(mSpatialReference,latlonSpatialReference,1,&lon,&lat);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+/*! \brief The method returns the grid original (rotated latlon) coordinates of the given grid points
+    (= integer coordinates). The coordinates are calculated directly from the grid definition.
+
+        \param gridPoints  The grid points (i,j).
+        \param x           The x-coordinates in the original projection are returned in this parameter.
+        \param y           The y-coordinates in the original projection are returned in this parameter.
+        \param found       The method sets 'true' for each point whose coordinates were returned.
+*/
+
+void RotatedLatLonImpl::getGridOriginalCoordinatesByGridPointList(std::vector<T::Point>& gridPoints,std::vector<double>& x,std::vector<double>& y,std::vector<bool>& found) const
+{
+  try
+  {
+    std::size_t sz = gridPoints.size();
+    x.assign(sz,0);
+    y.assign(sz,0);
+    found.assign(sz,false);
+
+    for (std::size_t t=0; t<sz; t++)
+    {
+      double xx = 0;
+      double yy = 0;
+      if (getGridOriginalCoordinatesByGridPoint(gridPoints[t].x(),gridPoints[t].y(),xx,yy))
+      {
+        x[t] = xx;
+        y[t] = yy;
+        found[t] = true;
+      }
+    }
   }
   catch (...)
   {
@@ -539,7 +585,7 @@ std::string RotatedLatLonImpl::getGridGeometryString() const
     double sy = C_DOUBLE(*mRotation.getLatitudeOfSouthernPole())/1000000;
     double sx = getLongitude(C_DOUBLE(*mRotation.getLongitudeOfSouthernPole())/1000000);
 
-    double angle = C_DOUBLE(mRotation.getAngleOfRotation());
+    auto angle = C_DOUBLE(mRotation.getAngleOfRotation());
 
     unsigned char scanningMode = mLatLon.getScanningMode()->getScanningMode();
 
@@ -558,11 +604,11 @@ std::string RotatedLatLonImpl::getGridGeometryString() const
     if ((scanningMode & 0x40) == 0)
     {
       dy = -dy;
-      p += sprintf(p,"-y");
+      sprintf(p,"-y");
     }
     else
     {
-      p += sprintf(p,"+y");
+      sprintf(p,"+y");
     }
 
     sprintf(buf,"%d;id;name;%u;%u;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;%.6f;description",
@@ -593,7 +639,7 @@ T::Dimensions RotatedLatLonImpl::getGridDimensions() const
   try
   {
     if (!mLatLon.getGrid()->getNi() || !mLatLon.getGrid()->getNj())
-      return T::Dimensions();
+      return {};
 
     return T::Dimensions(*mLatLon.getGrid()->getNi(), *mLatLon.getGrid()->getNj());
   }
@@ -697,7 +743,7 @@ bool RotatedLatLonImpl::getGridOriginalCoordinatesByLatLonCoordinates(double lat
         \return        The method return true if the latlon values were succesfully returned.
 */
 
-bool RotatedLatLonImpl::getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,double& lat,double& lon) const
+bool RotatedLatLonImpl::getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,double& /*lat*/,double& /*lon*/) const
 {
   try
   {
@@ -730,15 +776,23 @@ bool RotatedLatLonImpl::getGridPointByOriginalCoordinates(double x,double y,doub
 {
   try
   {
+    // The coordinates used to be rounded to 0.01 degrees here, which moved the grid point by
+    // up to 0.005 degrees, i.e. half a grid cell on a 0.01 degree grid.
     double aLon = getLongitude(x);
-    if ((int)(100*aLon) < (int)(100*mStartX))
+    if (aLon < mStartX - 1e-6)
       aLon += 360;
 
-    double latDiff = (round(y*100) - round(mStartY*100)) / 100;
-    double lonDiff = (round(aLon*100) - round(mStartX*100)) / 100;
+    double latDiff = y - mStartY;
+    double lonDiff = aLon - mStartX;
 
     grid_i = lonDiff / mDx;
     grid_j = latDiff / mDy;
+
+    // Round-off puts points on the first row or column slightly outside the grid
+    if (grid_i < 0 && grid_i > -1e-4)
+      grid_i = 0;
+    if (grid_j < 0 && grid_j > -1e-4)
+      grid_j = 0;
 
     if (grid_i < 0 ||  grid_j < 0  ||  grid_i >= C_DOUBLE(mNi) ||  grid_j >= C_DOUBLE(mNj))
       return false;
@@ -769,7 +823,8 @@ bool RotatedLatLonImpl::getGridPointByLatLonCoordinates(double lat,double lon,do
 {
   try
   {
-    double x = 0, y = 0;
+    double x = 0;
+    double y = 0;
     getGridOriginalCoordinatesByLatLonCoordinates(lat,lon,x,y);
 
     return getGridPointByOriginalCoordinates(x,y,grid_i,grid_j);
@@ -797,10 +852,7 @@ bool RotatedLatLonImpl::reverseXDirection() const
   {
     unsigned char scanMode = mLatLon.getScanningMode()->getScanningMode();
 
-    if ((scanMode & 0x80) != 0)
-      return true;
-
-    return false;
+    return (scanMode & 0x80) != 0;
   }
   catch (...)
   {
@@ -824,10 +876,7 @@ bool RotatedLatLonImpl::reverseYDirection() const
   {
     unsigned char scanMode = mLatLon.getScanningMode()->getScanningMode();
 
-    if ((scanMode & 0x40) == 0)
-      return true;
-
-    return false;
+    return (scanMode & 0x40) == 0;
   }
   catch (...)
   {
@@ -884,7 +933,7 @@ void RotatedLatLonImpl::initSpatialReference()
     mSpatialReference = getSpatialReference();
     if (!mSpatialReference)
     {
-      mSpatialReference.reset(new T::SpatialRef());
+      mSpatialReference = std::make_shared<T::SpatialRef>();
       addSpatialReference(mSpatialReference);
 
       // ### Set geographic coordinate system.
@@ -898,7 +947,7 @@ void RotatedLatLonImpl::initSpatialReference()
       if (dfFlattening != 0)
         dfInvFlattening = 1/dfFlattening;
 
-      double angle = C_DOUBLE(mRotation.getAngleOfRotation());
+      auto angle = C_DOUBLE(mRotation.getAngleOfRotation());
 
       mSpatialReference->SetGeogCS(pszGeogName,pszDatumName,pszSpheroidName,dfSemiMajor,dfInvFlattening);
       mSpatialReference->SetDerivedGeogCRSWithPoleRotationGRIBConvention("RotatedLatlon",mSouthPoleLat,mSouthPoleLon,angle);

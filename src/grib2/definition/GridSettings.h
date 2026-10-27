@@ -20,6 +20,10 @@ namespace GRIB2 {
 class GridSettings {
 public:
   GridSettings();
+  GridSettings(const GridSettings &) = default;
+  GridSettings(GridSettings &&) = default;
+  GridSettings &operator=(const GridSettings &) = default;
+  GridSettings &operator=(GridSettings &&) = default;
   virtual ~GridSettings();
 
   virtual void read(MemoryReader &memoryReader);
@@ -43,7 +47,7 @@ public:
   const T::Int32_opt &getLongitudeOfFirstGridPoint() const;
   void setLongitudeOfFirstGridPoint(T::Int32_opt longitudeOfFirstGridPoint);
   ResolutionSettings *getResolution() const;
-  void setResolution(ResolutionSettings &resolution);
+  void setResolution(const ResolutionSettings &resolution);
   const T::Int32_opt &getLatitudeOfLastGridPoint() const;
   void setLatitudeOfLastGridPoint(T::Int32_opt latitudeOfLastGridPoint);
   const T::Int32_opt &getLongitudeOfLastGridPoint() const;

@@ -27,8 +27,7 @@ DeprecatedSatelliteProduct::DeprecatedSatelliteProduct() {
 
 /*! \brief The destructor of the class. */
 
-DeprecatedSatelliteProduct::~DeprecatedSatelliteProduct() {
-}
+DeprecatedSatelliteProduct::~DeprecatedSatelliteProduct() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -82,27 +81,16 @@ void DeprecatedSatelliteProduct::write(DataWriter &dataWriter) {
 
 void DeprecatedSatelliteProduct::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sDeprecatedSatelliteProduct.ParameterCategory", prefix.c_str());
-    attributeList.addAttribute(name, toString(mParameterCategory));
-    sprintf(name, "%sDeprecatedSatelliteProduct.ParameterNumber", prefix.c_str());
-    attributeList.addAttribute(name, toString(mParameterNumber));
-    sprintf(name, "%sDeprecatedSatelliteProduct.TypeOfGeneratingProcess", prefix.c_str());
-    attributeList.addAttribute(name, toString(mTypeOfGeneratingProcess));
-    sprintf(name, "%sDeprecatedSatelliteProduct.ObservationGeneratingProcessIdentifier", prefix.c_str());
-    attributeList.addAttribute(name, toString(mObservationGeneratingProcessIdentifier));
-    sprintf(name, "%sDeprecatedSatelliteProduct.NB", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNB));
-    sprintf(name, "%sDeprecatedSatelliteProduct.SatelliteSeries", prefix.c_str());
-    attributeList.addAttribute(name, toString(mSatelliteSeries));
-    sprintf(name, "%sDeprecatedSatelliteProduct.SatelliteNumber", prefix.c_str());
-    attributeList.addAttribute(name, toString(mSatelliteNumber));
-    sprintf(name, "%sDeprecatedSatelliteProduct.InstrumentType", prefix.c_str());
-    attributeList.addAttribute(name, toString(mInstrumentType));
-    sprintf(name, "%sDeprecatedSatelliteProduct.ScaleFactorOfCentralWaveNumber", prefix.c_str());
-    attributeList.addAttribute(name, toString(mScaleFactorOfCentralWaveNumber));
-    sprintf(name, "%sDeprecatedSatelliteProduct.ScaledValueOfCentralWaveNumber", prefix.c_str());
-    attributeList.addAttribute(name, toString(mScaledValueOfCentralWaveNumber));
+        attributeList.addAttribute(prefix + "DeprecatedSatelliteProduct.ParameterCategory", toString(mParameterCategory));
+        attributeList.addAttribute(prefix + "DeprecatedSatelliteProduct.ParameterNumber", toString(mParameterNumber));
+        attributeList.addAttribute(prefix + "DeprecatedSatelliteProduct.TypeOfGeneratingProcess", toString(mTypeOfGeneratingProcess));
+        attributeList.addAttribute(prefix + "DeprecatedSatelliteProduct.ObservationGeneratingProcessIdentifier", toString(mObservationGeneratingProcessIdentifier));
+        attributeList.addAttribute(prefix + "DeprecatedSatelliteProduct.NB", toString(mNB));
+        attributeList.addAttribute(prefix + "DeprecatedSatelliteProduct.SatelliteSeries", toString(mSatelliteSeries));
+        attributeList.addAttribute(prefix + "DeprecatedSatelliteProduct.SatelliteNumber", toString(mSatelliteNumber));
+        attributeList.addAttribute(prefix + "DeprecatedSatelliteProduct.InstrumentType", toString(mInstrumentType));
+        attributeList.addAttribute(prefix + "DeprecatedSatelliteProduct.ScaleFactorOfCentralWaveNumber", toString(mScaleFactorOfCentralWaveNumber));
+        attributeList.addAttribute(prefix + "DeprecatedSatelliteProduct.ScaledValueOfCentralWaveNumber", toString(mScaledValueOfCentralWaveNumber));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -207,7 +195,7 @@ bool DeprecatedSatelliteProduct::hasAttributeValue(const char *attributeName, co
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void DeprecatedSatelliteProduct::print(std::ostream &stream, uint level, uint optionFlags) const {
+void DeprecatedSatelliteProduct::print(std::ostream &stream, uint level, uint /*optionFlags*/) const {
   try {
     stream << space(level) << "DeprecatedSatelliteProduct\n";
     stream << space(level) << "- ParameterCategory = " << toString(mParameterCategory) << "\n";

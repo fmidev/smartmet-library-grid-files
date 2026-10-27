@@ -21,20 +21,24 @@ namespace GRIB2 {
 class SphericalHarmonicsDataRepresentation : public RepresentationDefinition {
 public:
   SphericalHarmonicsDataRepresentation();
-  virtual ~SphericalHarmonicsDataRepresentation();
+  SphericalHarmonicsDataRepresentation(const SphericalHarmonicsDataRepresentation &) = default;
+  SphericalHarmonicsDataRepresentation(SphericalHarmonicsDataRepresentation &&) = default;
+  SphericalHarmonicsDataRepresentation &operator=(const SphericalHarmonicsDataRepresentation &) = default;
+  SphericalHarmonicsDataRepresentation &operator=(SphericalHarmonicsDataRepresentation &&) = default;
+  ~SphericalHarmonicsDataRepresentation() override;
 
-  virtual uint getTemplateNumber() const;
-  virtual RepresentationDefinition *createRepresentationDefinition() const;
-  virtual void read(MemoryReader &memoryReader);
-  virtual void write(DataWriter &dataWriter);
-  virtual void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const;
+  uint getTemplateNumber() const override;
+  RepresentationDefinition *createRepresentationDefinition() const override;
+  void read(MemoryReader &memoryReader) override;
+  void write(DataWriter &dataWriter) override;
+  void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const override;
   virtual bool getAttributeValue(const char *attributeName, std::string &attributeValue) const;
   virtual bool hasAttributeValue(const char *attributeName, const char *attributeValue) const;
-  virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
+  void print(std::ostream &stream, uint level, uint optionFlags) const override;
   virtual T::Hash countHash() const;
 
-  PackingSettings *getPacking() const;
-  void setPacking(PackingSettings &packing);
+  PackingSettings *getPacking() const override;
+  void setPacking(const PackingSettings &packing);
   const T::Int32_opt &getLaplacianScalingFactor() const;
   void setLaplacianScalingFactor(T::Int32_opt laplacianScalingFactor);
   const T::UInt16_opt &getJS() const;

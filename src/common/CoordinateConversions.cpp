@@ -20,13 +20,16 @@
 #include <newbase/NFmiLocation.h>
 #include <unordered_map>
 
+namespace
+{
 Fmi::Cache::Cache<std::size_t,std::shared_ptr<SmartMet::CoordinateConverter>> coordinateConverterCache(10000);
+}  // namespace
 
 
 
 /*! \brief Converts coordinates between two spatial references using a cached converter. */
 
-bool convert(const std::shared_ptr<OGRSpatialReference> sr_from,const std::shared_ptr<OGRSpatialReference> sr_to,int nCount,double *x,double *y)
+bool convert(const std::shared_ptr<OGRSpatialReference>& sr_from,const std::shared_ptr<OGRSpatialReference>& sr_to,int nCount,double *x,double *y)
 {
   try
   {
@@ -59,15 +62,17 @@ bool convert(const std::shared_ptr<OGRSpatialReference> sr_from,const std::share
 
 /*! \brief Normalises an angle to the (-180, 180] range. */
 
+namespace
+{
 double getValue(double theAngle)
 {
   try
   {
     if (::fabs(theAngle - 180) < 0.0000001)
       return 180;
-    else if (::fabs(theAngle + 180) < 0.0000001)
+    if (::fabs(theAngle + 180) < 0.0000001)
       return -180;
-    else if (theAngle > 180)
+    if (theAngle > 180)
       return getValue(theAngle - 360);
     else if (theAngle < -180)
       return getValue(theAngle + 360);
@@ -79,6 +84,7 @@ double getValue(double theAngle)
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
+}  // namespace
 
 
 

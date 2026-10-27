@@ -19,6 +19,10 @@ namespace GRIB2 {
 class ParameterSettings {
 public:
   ParameterSettings();
+  ParameterSettings(const ParameterSettings &) = default;
+  ParameterSettings(ParameterSettings &&) = default;
+  ParameterSettings &operator=(const ParameterSettings &) = default;
+  ParameterSettings &operator=(ParameterSettings &&) = default;
   virtual ~ParameterSettings();
 
   virtual void read(MemoryReader &memoryReader);

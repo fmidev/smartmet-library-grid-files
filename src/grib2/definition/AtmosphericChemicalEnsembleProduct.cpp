@@ -27,8 +27,7 @@ AtmosphericChemicalEnsembleProduct::AtmosphericChemicalEnsembleProduct() {
 
 /*! \brief The destructor of the class. */
 
-AtmosphericChemicalEnsembleProduct::~AtmosphericChemicalEnsembleProduct() {
-}
+AtmosphericChemicalEnsembleProduct::~AtmosphericChemicalEnsembleProduct() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -70,15 +69,10 @@ void AtmosphericChemicalEnsembleProduct::write(DataWriter &dataWriter) {
 
 void AtmosphericChemicalEnsembleProduct::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sAtmosphericChemicalEnsembleProduct.", prefix.c_str());
-    mParameterChemical.getAttributeList(name, attributeList);
-    sprintf(name, "%sAtmosphericChemicalEnsembleProduct.", prefix.c_str());
-    mPointInTime.getAttributeList(name, attributeList);
-    sprintf(name, "%sAtmosphericChemicalEnsembleProduct.", prefix.c_str());
-    mHorizontal.getAttributeList(name, attributeList);
-    sprintf(name, "%sAtmosphericChemicalEnsembleProduct.", prefix.c_str());
-    mEps.getAttributeList(name, attributeList);
+        mParameterChemical.getAttributeList(prefix + "AtmosphericChemicalEnsembleProduct.", attributeList);
+        mPointInTime.getAttributeList(prefix + "AtmosphericChemicalEnsembleProduct.", attributeList);
+        mHorizontal.getAttributeList(prefix + "AtmosphericChemicalEnsembleProduct.", attributeList);
+        mEps.getAttributeList(prefix + "AtmosphericChemicalEnsembleProduct.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -180,7 +174,7 @@ ProductDefinition *AtmosphericChemicalEnsembleProduct::createProductDefinition()
 
 ParameterChemicalSettings *AtmosphericChemicalEnsembleProduct::getParameterChemical() const {
   try {
-    return static_cast<ParameterChemicalSettings *>(&mParameterChemical);
+    return &mParameterChemical;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -190,7 +184,7 @@ ParameterChemicalSettings *AtmosphericChemicalEnsembleProduct::getParameterChemi
 
 PointInTimeSettings *AtmosphericChemicalEnsembleProduct::getPointInTime() const {
   try {
-    return static_cast<PointInTimeSettings *>(&mPointInTime);
+    return &mPointInTime;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -200,7 +194,7 @@ PointInTimeSettings *AtmosphericChemicalEnsembleProduct::getPointInTime() const 
 
 HorizontalSettings *AtmosphericChemicalEnsembleProduct::getHorizontal() const {
   try {
-    return static_cast<HorizontalSettings *>(&mHorizontal);
+    return &mHorizontal;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -210,13 +204,13 @@ HorizontalSettings *AtmosphericChemicalEnsembleProduct::getHorizontal() const {
 
 EpsSettings *AtmosphericChemicalEnsembleProduct::getEps() const {
   try {
-    return static_cast<EpsSettings *>(&mEps);
+    return &mEps;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
-void AtmosphericChemicalEnsembleProduct::setParameterChemical(ParameterChemicalSettings &parameterChemical) {
+void AtmosphericChemicalEnsembleProduct::setParameterChemical(const ParameterChemicalSettings &parameterChemical) {
   try {
     mParameterChemical = parameterChemical;
   } catch (...) {
@@ -224,7 +218,7 @@ void AtmosphericChemicalEnsembleProduct::setParameterChemical(ParameterChemicalS
   }
 }
 
-void AtmosphericChemicalEnsembleProduct::setPointInTime(PointInTimeSettings &pointInTime) {
+void AtmosphericChemicalEnsembleProduct::setPointInTime(const PointInTimeSettings &pointInTime) {
   try {
     mPointInTime = pointInTime;
   } catch (...) {
@@ -232,7 +226,7 @@ void AtmosphericChemicalEnsembleProduct::setPointInTime(PointInTimeSettings &poi
   }
 }
 
-void AtmosphericChemicalEnsembleProduct::setHorizontal(HorizontalSettings &horizontal) {
+void AtmosphericChemicalEnsembleProduct::setHorizontal(const HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
@@ -240,7 +234,7 @@ void AtmosphericChemicalEnsembleProduct::setHorizontal(HorizontalSettings &horiz
   }
 }
 
-void AtmosphericChemicalEnsembleProduct::setEps(EpsSettings &eps) {
+void AtmosphericChemicalEnsembleProduct::setEps(const EpsSettings &eps) {
   try {
     mEps = eps;
   } catch (...) {

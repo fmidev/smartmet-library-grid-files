@@ -21,10 +21,7 @@ VariableResolutionLatLonImpl::VariableResolutionLatLonImpl()
 
 /*! \brief The copy constructor of the class. */
 
-VariableResolutionLatLonImpl::VariableResolutionLatLonImpl(const VariableResolutionLatLonImpl& other)
-:VariableResolutionLatLon(other)
-{
-}
+VariableResolutionLatLonImpl::VariableResolutionLatLonImpl(const VariableResolutionLatLonImpl& other) = default;
 
 
 
@@ -32,9 +29,7 @@ VariableResolutionLatLonImpl::VariableResolutionLatLonImpl(const VariableResolut
 
 /*! \brief The destructor of the class. */
 
-VariableResolutionLatLonImpl::~VariableResolutionLatLonImpl()
-{
-}
+VariableResolutionLatLonImpl::~VariableResolutionLatLonImpl() = default;
 
 
 
@@ -114,7 +109,7 @@ T::Dimensions VariableResolutionLatLonImpl::getGridDimensions() const
   try
   {
     if (!mVariableLatLon.getNi() || !mVariableLatLon.getNj())
-      return T::Dimensions();
+      return {};
 
     return T::Dimensions(*mVariableLatLon.getNi(),*mVariableLatLon.getNj());
   }

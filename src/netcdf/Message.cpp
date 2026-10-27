@@ -10,6 +10,8 @@
 #include <macgyver/FastMath.h>
 #include <arpa/inet.h>
 
+#include <algorithm>
+
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
 
@@ -31,7 +33,7 @@ Message::Message()
     mDataEndPtr = nullptr;
     mMessageIndex = 0;
     mFilePosition = 0;
-    mFileType = T::FileTypeValue::NetCdf4;
+    mFileType = T::FileTypeValue::NetCdf3;
     mColumns = 0;
     mRows = 0;
     mRowMultiplier = 0;
@@ -108,7 +110,7 @@ Message::Message(const Message& message)
 
 /*! \brief Constructs the message from grid file, NetCDF file and message info metadata. */
 
-Message::Message(GRID::GridFile *gridFile,NetCdfFile *netCdfFile,T::MessageIndex messageIndex,NetCDF::MessageInfo& messageInfo)
+Message::Message(GRID::GridFile *gridFile,NetCdfFile *netCdfFile,T::MessageIndex messageIndex,const NetCDF::MessageInfo& messageInfo)
 {
   FUNCTION_TRACE
   try
@@ -201,9 +203,7 @@ Message::Message(GRID::GridFile *gridFile,NetCdfFile *netCdfFile,T::MessageIndex
 
 /*! \brief The destructor of the class. */
 
-Message::~Message()
-{
-}
+Message::~Message() = default;
 
 
 
@@ -1081,7 +1081,7 @@ void Message::setGridGeometryId(T::GeometryId geometryId)
         \param values  The vector of grid values.
 */
 
-void Message::setGridValues(T::ParamValue_vec& values)
+void Message::setGridValues(T::ParamValue_vec& /*values*/)
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -1108,6 +1108,39 @@ bool Message::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double
       return false;
 
     return mGeometryDef->getGridLatLonCoordinatesByGridPoint(grid_i,grid_j,lat,lon);
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
+}
+
+
+
+
+
+/*! \brief The method returns the grid latlon coordinates of the given grid points (= integer coordinates).
+
+        \param gridPoints   The grid points (i,j).
+        \param coordinates  The latlon coordinates (x = longitude, y = latitude) are returned in this parameter.
+        \param found        The method sets 'true' for each point whose coordinates were returned.
+*/
+
+void Message::getGridLatLonCoordinatesByGridPointList(std::vector<T::Point>& gridPoints,T::Coordinate_vec& coordinates,std::vector<bool>& found) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (!mGeometryDef)
+    {
+      coordinates.assign(gridPoints.size(),T::Coordinate(0,0));
+      found.assign(gridPoints.size(),false);
+      return;
+    }
+
+    mGeometryDef->getGridLatLonCoordinatesByGridPointList(gridPoints,coordinates,found);
   }
   catch (...)
   {
@@ -1523,20 +1556,19 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
     int typeSize[] = {0,1,1,2,4,4,8};
 
     UInt64 idx = (grid_j*mColumnMultiplier+grid_i*mRowMultiplier)*typeSize[mDataType];
-    if (idx >= (mMessageSize + typeSize[mDataType]))
+    if (idx + typeSize[mDataType] > mMessageSize)
       return ParamValueMissing;
 
     switch (mDataType)
     {
       case 1:  // byte
       {
-        uchar *v = (uchar*)(mDataStartPtr + idx);
+        auto *v = (uchar*)(mDataStartPtr + idx);
         if ((T::ParamValue)(*v) == mMissingValue)
           return ParamValueMissing;
 
         return mScaleFactor*(T::ParamValue)(*v) + mBaseValue;
       }
-      break;
 
       case 2:  // char
       {
@@ -1546,13 +1578,12 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
 
         return mScaleFactor*(T::ParamValue)(*v) + mBaseValue;
       }
-      break;
 
       case 3:  // short
       {
-        uchar *v = (uchar*)(mDataStartPtr + idx);
+        auto *v = (uchar*)(mDataStartPtr + idx);
         short val = 0;
-        uchar *vv = (uchar*)&val;
+        auto *vv = (uchar*)&val;
         vv[0] = v[1];
         vv[1] = v[0];
         if ((T::ParamValue)val == mMissingValue)
@@ -1560,13 +1591,12 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
 
         return mScaleFactor*(T::ParamValue)val + mBaseValue;
       }
-      break;
 
       case 4:  // int
       {
-        uchar *v = (uchar*)(mDataStartPtr + idx);
+        auto *v = (uchar*)(mDataStartPtr + idx);
         int val = 0;
-        uchar *vv = (uchar*)&val;
+        auto *vv = (uchar*)&val;
         vv[0] = v[3];
         vv[1] = v[2];
         vv[2] = v[1];
@@ -1576,13 +1606,12 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
 
         return mScaleFactor*(T::ParamValue)val + mBaseValue;
       }
-      break;
 
       case 5:  // float
       {
-        uchar *v = (uchar*)(mDataStartPtr + idx);
+        auto *v = (uchar*)(mDataStartPtr + idx);
         float val = 0;
-        uchar *vv = (uchar*)&val;
+        auto *vv = (uchar*)&val;
         vv[0] = v[3];
         vv[1] = v[2];
         vv[2] = v[1];
@@ -1592,13 +1621,12 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
 
         return mScaleFactor*(T::ParamValue)(val) + mBaseValue;
       }
-      break;
 
       case 6:  // double
       {
-        uchar *v = (uchar*)(mDataStartPtr + idx);
+        auto *v = (uchar*)(mDataStartPtr + idx);
         double val = 0;
-        uchar *vv = (uchar*)&val;
+        auto *vv = (uchar*)&val;
         vv[0] = v[7];
         vv[1] = v[6];
         vv[2] = v[5];
@@ -1612,7 +1640,8 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
         //printf("VAL %016x  %f  %f  %f\n",*v,mScaleFactor,val,mBaseValue);
         return mScaleFactor*(T::ParamValue)(val) + mBaseValue;
       }
-      break;
+      default:
+        break;
     }
     return ParamValueMissing;
   }
@@ -1651,11 +1680,9 @@ void Message::getGridMinAndMaxValues(T::ParamValue& minValue,T::ParamValue& maxV
         T::ParamValue val = getGridValueByGridPoint(x,y);
         if (val != ParamValueMissing)
         {
-          if (val < minValue)
-            minValue = val;
+          minValue = std::min(val, minValue);
 
-          if (val > maxValue)
-            maxValue = val;
+          maxValue = std::max(val, maxValue);
         }
       }
     }
@@ -2030,7 +2057,7 @@ void Message::read(MemoryReader& memoryReader)
         \param dataWriter  The data stream object.
 */
 
-void Message::write(DataWriter& dataWriter)
+void Message::write(DataWriter& /*dataWriter*/)
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -2091,43 +2118,66 @@ void Message::print(std::ostream& stream,uint level,uint optionFlags) const
       mGeometryDef->print(stream,level,optionFlags);
 
     if (optionFlags &  GRID::PrintFlag::data)
+      printCornerData(stream,level);
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
+}
+
+
+
+
+
+/*! \brief The method prints the grid values and coordinates of the grid corners.
+
+        \param stream      The output stream.
+        \param level        The print level (used when printing multi-level structures).
+*/
+
+void Message::printCornerData(std::ostream& stream,uint level) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    T::ParamValue_vec values;
+    getGridValueVector(values);
+
+    stream << space(level+1) << "- data (from the grid corners):\n";
+
+    char st[1000];
+    uint ny = getGridRowCount();
+    uint nx = getGridColumnCount();
+    uint c = 0;
+    std::size_t sz = values.size();
+
+    for (uint y=0; y < ny; y++)
     {
-      T::ParamValue_vec values;
-      getGridValueVector(values);
-
-      stream << space(level+1) << "- data (from the grid corners):\n";
-
-      char st[1000];
-      uint ny = getGridRowCount();
-      uint nx = getGridColumnCount();
-      uint c = 0;
-      std::size_t sz = values.size();
-
-      for (uint y=0; y < ny; y++)
+      for (uint x=0; x < nx; x++)
       {
-        for (uint x=0; x < nx; x++)
+        if ((y < 3  ||  y >= ny-3)  &&  (x < 3  ||  x >= nx-3))
         {
-          if ((y < 3  ||  y >= ny-3)  &&  (x < 3  ||  x >= nx-3))
+          if (c < sz)
           {
-            if (c < sz)
-            {
-              auto val = getGridValueByGridPoint(x,y);
-              double xx = 0;
-              double yy = 0;
-              getGridOriginalCoordinatesByGridPoint(x,y,xx,yy);
-              double xxx = 0;
-              double yyy = 0;
-              getGridLatLonCoordinatesByGridPoint(x,y,xxx,yyy);
-              //auto val = values[c];
-              if (val != ParamValueMissing)
-                sprintf(st,"[%u,%u] [%f,%f] [%f,%f] %f",y+1,x+1,xx,yy,xxx,yyy,val);
-              else
-                sprintf(st,"[%u,%u] [%f,%f] NA",y+1,x+1,xx,yy);
-              stream << space(level+3) << st << "\n";
-            }
+            auto val = getGridValueByGridPoint(x,y);
+            double xx = 0;
+            double yy = 0;
+            getGridOriginalCoordinatesByGridPoint(x,y,xx,yy);
+            double xxx = 0;
+            double yyy = 0;
+            getGridLatLonCoordinatesByGridPoint(x,y,xxx,yyy);
+            //auto val = values[c];
+            if (val != ParamValueMissing)
+              sprintf(st,"[%u,%u] [%f,%f] [%f,%f] %f",y+1,x+1,xx,yy,xxx,yyy,val);
+            else
+              sprintf(st,"[%u,%u] [%f,%f] NA",y+1,x+1,xx,yy);
+            stream << space(level+3) << st << "\n";
           }
-          c++;
         }
+        c++;
       }
     }
   }

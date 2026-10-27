@@ -27,8 +27,7 @@ TimeIntervalEnsembleDerivedForecast::TimeIntervalEnsembleDerivedForecast() {
 
 /*! \brief The destructor of the class. */
 
-TimeIntervalEnsembleDerivedForecast::~TimeIntervalEnsembleDerivedForecast() {
-}
+TimeIntervalEnsembleDerivedForecast::~TimeIntervalEnsembleDerivedForecast() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -70,15 +69,10 @@ void TimeIntervalEnsembleDerivedForecast::write(DataWriter &dataWriter) {
 
 void TimeIntervalEnsembleDerivedForecast::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sTimeIntervalEnsembleDerivedForecast.", prefix.c_str());
-    mParameter.getAttributeList(name, attributeList);
-    sprintf(name, "%sTimeIntervalEnsembleDerivedForecast.", prefix.c_str());
-    mHorizontal.getAttributeList(name, attributeList);
-    sprintf(name, "%sTimeIntervalEnsembleDerivedForecast.", prefix.c_str());
-    mDerived.getAttributeList(name, attributeList);
-    sprintf(name, "%sTimeIntervalEnsembleDerivedForecast.", prefix.c_str());
-    mStatistical.getAttributeList(name, attributeList);
+        mParameter.getAttributeList(prefix + "TimeIntervalEnsembleDerivedForecast.", attributeList);
+        mHorizontal.getAttributeList(prefix + "TimeIntervalEnsembleDerivedForecast.", attributeList);
+        mDerived.getAttributeList(prefix + "TimeIntervalEnsembleDerivedForecast.", attributeList);
+        mStatistical.getAttributeList(prefix + "TimeIntervalEnsembleDerivedForecast.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -180,7 +174,7 @@ ProductDefinition *TimeIntervalEnsembleDerivedForecast::createProductDefinition(
 
 ParameterSettings *TimeIntervalEnsembleDerivedForecast::getParameter() const {
   try {
-    return static_cast<ParameterSettings *>(&mParameter);
+    return &mParameter;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -190,7 +184,7 @@ ParameterSettings *TimeIntervalEnsembleDerivedForecast::getParameter() const {
 
 HorizontalSettings *TimeIntervalEnsembleDerivedForecast::getHorizontal() const {
   try {
-    return static_cast<HorizontalSettings *>(&mHorizontal);
+    return &mHorizontal;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -200,7 +194,7 @@ HorizontalSettings *TimeIntervalEnsembleDerivedForecast::getHorizontal() const {
 
 DerivedSettings *TimeIntervalEnsembleDerivedForecast::getDerived() const {
   try {
-    return static_cast<DerivedSettings *>(&mDerived);
+    return &mDerived;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -210,13 +204,13 @@ DerivedSettings *TimeIntervalEnsembleDerivedForecast::getDerived() const {
 
 StatisticalSettings *TimeIntervalEnsembleDerivedForecast::getStatistical() const {
   try {
-    return static_cast<StatisticalSettings *>(&mStatistical);
+    return &mStatistical;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
-void TimeIntervalEnsembleDerivedForecast::setParameter(ParameterSettings &parameter) {
+void TimeIntervalEnsembleDerivedForecast::setParameter(const ParameterSettings &parameter) {
   try {
     mParameter = parameter;
   } catch (...) {
@@ -224,7 +218,7 @@ void TimeIntervalEnsembleDerivedForecast::setParameter(ParameterSettings &parame
   }
 }
 
-void TimeIntervalEnsembleDerivedForecast::setHorizontal(HorizontalSettings &horizontal) {
+void TimeIntervalEnsembleDerivedForecast::setHorizontal(const HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
@@ -232,7 +226,7 @@ void TimeIntervalEnsembleDerivedForecast::setHorizontal(HorizontalSettings &hori
   }
 }
 
-void TimeIntervalEnsembleDerivedForecast::setDerived(DerivedSettings &derived) {
+void TimeIntervalEnsembleDerivedForecast::setDerived(const DerivedSettings &derived) {
   try {
     mDerived = derived;
   } catch (...) {
@@ -240,7 +234,7 @@ void TimeIntervalEnsembleDerivedForecast::setDerived(DerivedSettings &derived) {
   }
 }
 
-void TimeIntervalEnsembleDerivedForecast::setStatistical(StatisticalSettings &statistical) {
+void TimeIntervalEnsembleDerivedForecast::setStatistical(const StatisticalSettings &statistical) {
   try {
     mStatistical = statistical;
   } catch (...) {

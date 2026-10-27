@@ -87,9 +87,7 @@ GridPointValue::GridPointValue(T::FileId fileId,T::MessageIndex messageIndex,dou
 
 /*! \brief The destructor of the class. */
 
-GridPointValue::~GridPointValue()
-{
-}
+GridPointValue::~GridPointValue() = default;
 
 
 
@@ -125,107 +123,152 @@ GridPointValue& GridPointValue::operator=(const GridPointValue& gridPointValue)
 
 /*! \brief Compares this grid point value against another using the specified ordering scheme. */
 
-int GridPointValue::compare(ComparisonMethod comparisonMethod,GridPointValue *gridPointValue)
+namespace
+{
+/*! \brief Compares the grid point values in the time,x,y,level,value order. */
+
+int compare_time_x_y_level_value(const GridPointValue& a,GridPointValue *b)
+{
+  int res = 0;
+  res = time_compare(a.mTime,b->mTime);
+  if (res != 0)
+    return res;
+  res = num_compare(a.mX,b->mX);
+  if (res != 0)
+    return res;
+  res = num_compare(a.mY,b->mY);
+  if (res != 0)
+    return res;
+  res = num_compare(a.mLevel,b->mLevel);
+  if (res != 0)
+    return res;
+  return num_compare(a.mValue,b->mValue);
+}
+
+
+
+
+/*! \brief Compares the grid point values in the x,y,level,time,value order. */
+
+int compare_x_y_level_time_value(const GridPointValue& a,GridPointValue *b)
+{
+  int res = 0;
+  res = num_compare(a.mX,b->mX);
+  if (res != 0)
+    return res;
+  res = num_compare(a.mY,b->mY);
+  if (res != 0)
+    return res;
+  res = num_compare(a.mLevel,b->mLevel);
+  if (res != 0)
+    return res;
+  res = time_compare(a.mTime,b->mTime);
+  if (res != 0)
+    return res;
+  return num_compare(a.mValue,b->mValue);
+}
+
+
+
+
+/*! \brief Compares the grid point values in the y,x,level,time,value order. */
+
+int compare_y_x_level_time_value(const GridPointValue& a,GridPointValue *b)
+{
+  int res = 0;
+  res = num_compare(a.mY,b->mY);
+  if (res != 0)
+    return res;
+  res = num_compare(a.mX,b->mX);
+  if (res != 0)
+    return res;
+  res = num_compare(a.mLevel,b->mLevel);
+  if (res != 0)
+    return res;
+  res = time_compare(a.mTime,b->mTime);
+  if (res != 0)
+    return res;
+  return num_compare(a.mValue,b->mValue);
+}
+
+
+
+
+/*! \brief Compares the grid point values in the value,x,y,level,time order. */
+
+int compare_value_x_y_level_time(const GridPointValue& a,GridPointValue *b)
+{
+  int res = 0;
+  res = num_compare(a.mValue,b->mValue);
+  if (res != 0)
+    return res;
+  res = time_compare(a.mTime,b->mTime);
+  if (res != 0)
+    return res;
+  res = num_compare(a.mX,b->mX);
+  if (res != 0)
+    return res;
+  res = num_compare(a.mY,b->mY);
+  if (res != 0)
+    return res;
+  return num_compare(a.mLevel,b->mLevel);
+}
+
+
+
+
+/*! \brief Compares the grid point values in the file,message,x,y,level order. */
+
+int compare_file_message_x_y_level(const GridPointValue& a,GridPointValue *b)
+{
+  int res = 0;
+  res = num_compare(a.mFileId,b->mFileId);
+  if (res != 0)
+    return res;
+  res = num_compare(a.mMessageIndex,b->mMessageIndex);
+  if (res != 0)
+    return res;
+  res = num_compare(a.mX,b->mX);
+  if (res != 0)
+    return res;
+  res = num_compare(a.mY,b->mY);
+  if (res != 0)
+    return res;
+  return num_compare(a.mLevel,b->mLevel);
+}
+}  // namespace
+
+
+
+
+
+int GridPointValue::compare(ComparisonMethod comparisonMethod,GridPointValue *gridPointValue) const
 {
   try
   {
-    int res = 0;
     switch (comparisonMethod)
     {
       case ComparisonMethod::none:
         return 0;
 
       case ComparisonMethod::time_x_y_level_value:
-        res = time_compare(mTime,gridPointValue->mTime);
-        if (res != 0)
-          return res;
-        res = num_compare(mX,gridPointValue->mX);
-        if (res != 0)
-          return res;
-        res = num_compare(mY,gridPointValue->mY);
-        if (res != 0)
-          return res;
-        res = num_compare(mLevel,gridPointValue->mLevel);
-        if (res != 0)
-          return res;
-        return num_compare(mValue,gridPointValue->mValue);
+        return compare_time_x_y_level_value(*this,gridPointValue);
 
       case ComparisonMethod::x_y_level_time_value:
-        res = num_compare(mX,gridPointValue->mX);
-        if (res != 0)
-          return res;
-        res = num_compare(mY,gridPointValue->mY);
-        if (res != 0)
-          return res;
-        res = num_compare(mLevel,gridPointValue->mLevel);
-        if (res != 0)
-          return res;
-        res = time_compare(mTime,gridPointValue->mTime);
-        if (res != 0)
-          return res;
-        return num_compare(mValue,gridPointValue->mValue);
+        return compare_x_y_level_time_value(*this,gridPointValue);
 
       case ComparisonMethod::y_x_level_time_value:
-        res = num_compare(mY,gridPointValue->mY);
-        if (res != 0)
-          return res;
-        res = num_compare(mX,gridPointValue->mX);
-        if (res != 0)
-          return res;
-        res = num_compare(mLevel,gridPointValue->mLevel);
-        if (res != 0)
-          return res;
-        res = time_compare(mTime,gridPointValue->mTime);
-        if (res != 0)
-          return res;
-        return num_compare(mValue,gridPointValue->mValue);
+        return compare_y_x_level_time_value(*this,gridPointValue);
 
       case ComparisonMethod::value_x_y_level_time:
-        res = num_compare(mValue,gridPointValue->mValue);
-        if (res != 0)
-          return res;
-        res = time_compare(mTime,gridPointValue->mTime);
-        if (res != 0)
-          return res;
-        res = num_compare(mX,gridPointValue->mX);
-        if (res != 0)
-          return res;
-        res = num_compare(mY,gridPointValue->mY);
-        if (res != 0)
-          return res;
-        return num_compare(mLevel,gridPointValue->mLevel);
+        return compare_value_x_y_level_time(*this,gridPointValue);
 
       case ComparisonMethod::file_message_x_y_level:
-        res = num_compare(mFileId,gridPointValue->mFileId);
-        if (res != 0)
-          return res;
-        res = num_compare(mMessageIndex,gridPointValue->mMessageIndex);
-        if (res != 0)
-          return res;
-        res = num_compare(mX,gridPointValue->mX);
-        if (res != 0)
-          return res;
-        res = num_compare(mY,gridPointValue->mY);
-        if (res != 0)
-          return res;
-        return num_compare(mLevel,gridPointValue->mLevel);
+        return compare_file_message_x_y_level(*this,gridPointValue);
 
       default:
-        res = time_compare(mTime,gridPointValue->mTime);
-        if (res != 0)
-          return res;
-        res = num_compare(mX,gridPointValue->mX);
-        if (res != 0)
-          return res;
-        res = num_compare(mY,gridPointValue->mY);
-        if (res != 0)
-          return res;
-        res = num_compare(mLevel,gridPointValue->mLevel);
-        if (res != 0)
-          return res;
-        return num_compare(mValue,gridPointValue->mValue);
+        return compare_time_x_y_level_value(*this,gridPointValue);
     }
-    return 0;
   }
   catch (...)
   {
@@ -261,7 +304,7 @@ GridPointValue* GridPointValue::duplicate()
         \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void GridPointValue::print(std::ostream& stream,uint level,uint optionFlags) const
+void GridPointValue::print(std::ostream& stream,uint level,uint /*optionFlags*/) const
 {
   try
   {

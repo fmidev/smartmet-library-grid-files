@@ -21,18 +21,22 @@ namespace GRIB1 {
 class StretchedSphericalHarmonic : public GridDefinition {
 public:
   StretchedSphericalHarmonic();
-  virtual ~StretchedSphericalHarmonic();
+  StretchedSphericalHarmonic(const StretchedSphericalHarmonic &) = default;
+  StretchedSphericalHarmonic(StretchedSphericalHarmonic &&) = default;
+  StretchedSphericalHarmonic &operator=(const StretchedSphericalHarmonic &) = default;
+  StretchedSphericalHarmonic &operator=(StretchedSphericalHarmonic &&) = default;
+  ~StretchedSphericalHarmonic() override;
 
-  virtual void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const;
-  virtual void read(MemoryReader &memoryReader);
-  virtual void write(DataWriter &dataWriter);
-  virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
+  void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const override;
+  void read(MemoryReader &memoryReader) override;
+  void write(DataWriter &dataWriter) override;
+  void print(std::ostream &stream, uint level, uint optionFlags) const override;
   virtual bool getAttributeValue(const char *attributeName, std::string &attributeValue) const;
   virtual bool hasAttributeValue(const char *attributeName, const char *attributeValue) const;
-  virtual T::Hash countHash() const;
+  T::Hash countHash() const override;
 
-  virtual uint getTemplateNumber() const;
-  virtual GridDefinition *createGridDefinition() const;
+  uint getTemplateNumber() const override;
+  GridDefinition *createGridDefinition() const override;
   std::uint16_t getJ() const;
   void setJ(std::uint16_t j);
   std::uint16_t getK() const;
@@ -44,7 +48,7 @@ public:
   std::uint8_t getRepresentationMode() const;
   void setRepresentationMode(std::uint8_t representationMode);
   GridStretchingSettings *getGridStretching() const;
-  void setGridStretching(GridStretchingSettings &gridStretching);
+  void setGridStretching(const GridStretchingSettings &gridStretching);
 
 protected:
   // # Copyright 2005-2019 ECMWF.

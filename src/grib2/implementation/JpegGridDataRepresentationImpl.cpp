@@ -24,22 +24,15 @@ namespace GRIB2
 {
 /*! \brief The constructor of the class. */
 
-JpegGridDataRepresentationImpl::JpegGridDataRepresentationImpl()
-{
-}
+JpegGridDataRepresentationImpl::JpegGridDataRepresentationImpl() = default;
 
 /*! \brief The copy constructor of the class. */
 
-JpegGridDataRepresentationImpl::JpegGridDataRepresentationImpl(const JpegGridDataRepresentationImpl &other) :
-    JpegGridDataRepresentation(other)
-{
-}
+JpegGridDataRepresentationImpl::JpegGridDataRepresentationImpl(const JpegGridDataRepresentationImpl &other) = default;
 
 /*! \brief The destructor of the class. */
 
-JpegGridDataRepresentationImpl::~JpegGridDataRepresentationImpl()
-{
-}
+JpegGridDataRepresentationImpl::~JpegGridDataRepresentationImpl() = default;
 
 /*! \brief The method creates a duplicate of the current object. */
 
@@ -79,7 +72,7 @@ void JpegGridDataRepresentationImpl::read(MemoryReader &memoryReader)
 
 /*! \brief Encodes the given grid values into a JPEG-2000 packed data buffer (placeholder). */
 
-void JpegGridDataRepresentationImpl::encodeValues(Message *message, T::ParamValue_vec &values)
+void JpegGridDataRepresentationImpl::encodeValues(Message * /*message*/, T::ParamValue_vec & /*values*/)
 {
   try
   {
@@ -165,6 +158,13 @@ void JpegGridDataRepresentationImpl::decodeValues(Message* message,
     jas_matrix_t* matrix = jas_matrix_create(height, width);
     jas_image_readcmpt(image, 0, 0, 0, width, height, matrix);
 
+    // Number of decoded samples available in the matrix. The unpack loops below index
+    // matrix->data_ with a running counter that must never exceed this, otherwise a
+    // crafted JPEG-2000 image smaller than the declared grid causes an OOB heap read.
+    if (width <= 0 || height <= 0)
+      throw Fmi::Exception(BCP, "Invalid JPEG-2000 image dimensions!");
+    const std::size_t jpegSampleCount = static_cast<std::size_t>(width) * static_cast<std::size_t>(height);
+
     // Vector to return
     decodedValues.clear();
     decodedValues.reserve(numOfValues);
@@ -209,6 +209,8 @@ void JpegGridDataRepresentationImpl::decodeValues(Message* message,
       {
         if (bitmapReader.readBit())
         {
+          if (pos >= jpegSampleCount)
+            throw Fmi::Exception(BCP, "JPEG-2000 image has fewer samples than the bitmap requires!");
           int X = matrix->data_[pos];
           double Y = RDfac + X * EDfac;
           decodedValues.emplace_back(Y);
@@ -222,6 +224,8 @@ void JpegGridDataRepresentationImpl::decodeValues(Message* message,
     }
     else
     {
+      if (numOfValues > jpegSampleCount)
+        throw Fmi::Exception(BCP, "JPEG-2000 image has fewer samples than the declared value count!");
       for (int i = 0; i < C_INT(numOfValues); i++)
       {
         int X = matrix->data_[i];
@@ -260,9 +264,11 @@ typedef struct
 
 
 
-static OPJ_SIZE_T readMemoryStream(void *data, OPJ_SIZE_T dataSize, void *handle)
+namespace
 {
-  StreamHandle *streamHandle = (StreamHandle*)handle;
+OPJ_SIZE_T readMemoryStream(void *data, OPJ_SIZE_T dataSize, void *handle)
+{
+  auto *streamHandle = (StreamHandle*)handle;
   if (streamHandle->offset >= streamHandle->dataSize)
     return (OPJ_SIZE_T)-1;
 
@@ -279,13 +285,13 @@ static OPJ_SIZE_T readMemoryStream(void *data, OPJ_SIZE_T dataSize, void *handle
 
 
 
-static OPJ_OFF_T moveMemoryStreamOffset(OPJ_OFF_T bytes, void *handle)
+OPJ_OFF_T moveMemoryStreamOffset(OPJ_OFF_T bytes, void *handle)
 {
   if (bytes < 0)
     return -1;
 
-  StreamHandle *streamHandle = (StreamHandle*)handle;
-  OPJ_SIZE_T n = (OPJ_SIZE_T)bytes;
+  auto *streamHandle = (StreamHandle*)handle;
+  auto n = (OPJ_SIZE_T)bytes;
 
   if ((streamHandle->offset + bytes) > streamHandle->dataSize)
     n = streamHandle->dataSize - streamHandle->offset;
@@ -296,9 +302,9 @@ static OPJ_OFF_T moveMemoryStreamOffset(OPJ_OFF_T bytes, void *handle)
 
 
 
-static OPJ_BOOL seekMemoryStream(OPJ_OFF_T position, void *handle)
+OPJ_BOOL seekMemoryStream(OPJ_OFF_T position, void *handle)
 {
-  StreamHandle *streamHandle = (StreamHandle*)handle;
+  auto *streamHandle = (StreamHandle*)handle;
 
   if (position < 0)
     return OPJ_FALSE;
@@ -312,17 +318,17 @@ static OPJ_BOOL seekMemoryStream(OPJ_OFF_T position, void *handle)
 
 
 
-static void nopMemoryStream(void *handle)
+void nopMemoryStream(void *handle)
 {
   OPJ_ARG_NOT_USED(handle);
 }
 
 
 
-static opj_stream_t* createMemoryStream(StreamHandle& streamHandle)
+opj_stream_t* createMemoryStream(StreamHandle& streamHandle)
 {
   if (!(streamHandle.stream = opj_stream_default_create(true)))
-    return (NULL);
+    return (nullptr);
 
   opj_stream_set_read_function(streamHandle.stream, readMemoryStream);
   opj_stream_set_seek_function(streamHandle.stream, seekMemoryStream);
@@ -335,24 +341,71 @@ static opj_stream_t* createMemoryStream(StreamHandle& streamHandle)
 
 
 
-void openjpeg_error_callback(const char *msg, void*)
+[[noreturn]] void openjpeg_error_callback(const char *msg, void* /*unused*/)
 {
   //std::cerr << "OpenJPEG error: " << msg << std::endl;
   throw Fmi::Exception(BCP, "JPEG Error: " + std::string(msg));
 }
 
 
-void openjpeg_warning_callback(const char *msg, void*)
+[[noreturn]] void openjpeg_warning_callback(const char *msg, void* /*unused*/)
 {
   //std::cerr << "OpenJPEG warning: " << msg << std::endl;
   throw Fmi::Exception(BCP, "JPEG Warning: " + std::string(msg));
 }
 
 
-void openjpeg_info_callback(const char *msg, void*)
+void openjpeg_info_callback(const char *msg, void* /*unused*/)
 {
   //std::cout << "OpenJPEG info: " << msg << std::endl;
 }
+
+
+/*! \brief Scales the decoded image values into the output vector, inserting ParamValueMissing where the bitmap bit is not set. */
+
+void storeValues(const OPJ_INT32 *imageData,std::size_t imageSize,T::Data_ptr bitmap,std::size_t bitmapSizeInBytes,std::size_t numOfValues,double RDfac,double EDfac,T::ParamValue_vec& decodedValues)
+{
+  if (bitmapSizeInBytes > 0)
+  {
+    T::Data_ptr bmap = bitmap;
+    unsigned char tmp = 0;
+    if (bmap == nullptr)
+      bmap = &tmp;
+
+    BitArrayReader bitmapReader(bmap, bitmapSizeInBytes * 8);
+
+    uint pos = 0;
+    for (int t = 0; t < static_cast<int>(numOfValues); t++)
+    {
+      if (bitmapReader.readBit())
+      {
+        if (pos >= imageSize)
+          throw Fmi::Exception(BCP, "JPEG-2000 image contains fewer values than the bitmap!");
+        int X = imageData[pos];
+        double Y = RDfac + X * EDfac;
+        decodedValues.emplace_back(Y);
+        pos++;
+      }
+      else
+      {
+        decodedValues.emplace_back(ParamValueMissing);
+      }
+    }
+  }
+  else
+  {
+    if (imageSize < numOfValues)
+      throw Fmi::Exception(BCP, "JPEG-2000 image contains fewer values than the grid!");
+
+    for (int t = 0; t < static_cast<int>(numOfValues); t++)
+    {
+      int X = imageData[t];
+      double Y = RDfac + X * EDfac;
+      decodedValues.emplace_back(Y);
+    }
+  }
+}
+}  // namespace
 
 
 /*! \brief Decodes a JPEG-2000 packed message into a vector of parameter values (OpenJPEG backend). */
@@ -432,16 +485,11 @@ void JpegGridDataRepresentationImpl::decodeValues(Message *message, T::ParamValu
 
       // ### PROCESSING DECODED DATA FOR THE GRIB
 
-      // Get data dimensions
+      if (image->numcomps < 1 || image->comps == nullptr || image->comps->data == nullptr)
+        throw Fmi::Exception(BCP, "JPEG-2000 image contains no data!");
 
-      //int width = 0;
-      //int height = 0;
-
-      if (image->comps)
-      {
-        //width = image->comps->w;
-        //height = image->comps->h;
-      }
+      // The decoded image size is independent of the GRIB value count
+      const std::size_t imageSize = C_UINT64(image->comps->w) * C_UINT64(image->comps->h);
 
       // Clear the output vector and reserve space
       decodedValues.clear();
@@ -462,40 +510,7 @@ void JpegGridDataRepresentationImpl::decodeValues(Message *message, T::ParamValu
       const double EDfac = Efac * Dfac;
 
       // Decode and store values based on the presence of a bitmap
-      if (bitmapSizeInBytes > 0)
-      {
-        T::Data_ptr bmap = bitmap;
-        unsigned char tmp = 0;
-        if (bmap == nullptr)
-          bmap = &tmp;
-
-        BitArrayReader bitmapReader(bmap, bitmapSizeInBytes * 8);
-
-        uint pos = 0;
-        for (int t = 0; t < static_cast<int>(numOfValues); t++)
-        {
-          if (bitmapReader.readBit())
-          {
-            int X = image->comps->data[pos];
-            double Y = RDfac + X * EDfac;
-            decodedValues.emplace_back(Y);
-            pos++;
-          }
-          else
-          {
-            decodedValues.emplace_back(ParamValueMissing);
-          }
-        }
-      }
-      else
-      {
-        for (int t = 0; t < static_cast<int>(numOfValues); t++)
-        {
-          int X = image->comps->data[t];
-          double Y = RDfac + X * EDfac;
-          decodedValues.emplace_back(Y);
-        }
-      }
+      storeValues(image->comps->data,imageSize,bitmap,bitmapSizeInBytes,numOfValues,RDfac,EDfac,decodedValues);
 
       opj_stream_destroy(stream);
       opj_destroy_codec(codec);

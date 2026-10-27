@@ -40,9 +40,7 @@ GeoTiffFile::GeoTiffFile(const char *filename)
 
 /*! \brief The destructor of the class. */
 
-GeoTiffFile::~GeoTiffFile()
-{
-}
+GeoTiffFile::~GeoTiffFile() = default;
 
 
 
@@ -78,8 +76,7 @@ void GeoTiffFile::read(MemoryReader& memoryReader,MessageInfoVec& messageInfoLis
     ushort byteOrder = memoryReader.read_uint16();
     if (byteOrder == 0x4949)
       memoryReader.setLittleEndian(true);
-    else
-    if (byteOrder == 0x4D4D)
+    else if (byteOrder == 0x4D4D)
       throw Fmi::Exception(BCP,"Big-endian geoTiffs not supported!",nullptr);
       //memoryReader.setLittleEndian(false);
     else
@@ -131,7 +128,7 @@ void GeoTiffFile::readIFD(MemoryReader& memoryReader,MessageInfoVec& messageInfo
     for (ushort t = 0; t < numOfDirectoryEntries; t++)
     {
       ushort tag = memoryReader.read_uint16();
-      ushort type = memoryReader.read_uint16();
+      [[maybe_unused]] ushort type = memoryReader.read_uint16();  // only in the debug print below
       uint count = memoryReader.read_uint32();
       uint value = memoryReader.read_uint32();
 
@@ -248,6 +245,8 @@ void GeoTiffFile::readIFD(MemoryReader& memoryReader,MessageInfoVec& messageInfo
         case Tag::ReferenceBlackWhite:
         case Tag::Copyright:
           break;
+        default:
+          break;
       }
     }
 
@@ -265,6 +264,12 @@ void GeoTiffFile::readIFD(MemoryReader& memoryReader,MessageInfoVec& messageInfo
       throw exception;
     }
 
+
+    if (numOfGrids == 0)
+    {
+      Fmi::Exception exception(BCP,"The number of grids is not defined!",nullptr);
+      throw exception;
+    }
 
     uint rows = totalRows/numOfGrids;
     uint gridSize = totalSize/numOfGrids;
@@ -291,7 +296,8 @@ void GeoTiffFile::readIFD(MemoryReader& memoryReader,MessageInfoVec& messageInfo
     Int64 rp = memoryReader.getReadPosition();
 
     std::vector<std::string> lines;
-    char buf[metaSize+1];
+    // Heap buffer: the size comes from the file (a stack array of that size could overflow)
+    std::vector<char> buf(static_cast<std::size_t>(metaSize) + 1);
     memoryReader.setReadPosition(metaOffset);
     uint c = 0;
     for (uint t=0; t<metaSize; t++)
@@ -301,7 +307,7 @@ void GeoTiffFile::readIFD(MemoryReader& memoryReader,MessageInfoVec& messageInfo
       {
         buf[c] = '\0';
         if (c > 0)
-          lines.push_back(std::string(buf));
+          lines.emplace_back(buf.data());
 
         c = 0;
       }
@@ -313,7 +319,7 @@ void GeoTiffFile::readIFD(MemoryReader& memoryReader,MessageInfoVec& messageInfo
     }
     buf[c] = '\0';
     if (c > 0)
-      lines.push_back(std::string(buf));
+      lines.emplace_back(buf.data());
 
     memoryReader.setReadPosition(rp);
 
@@ -375,7 +381,7 @@ void GeoTiffFile::readIFD(MemoryReader& memoryReader,MessageInfoVec& messageInfo
         \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void GeoTiffFile::print(std::ostream& stream,uint level,uint optionFlags) const
+void GeoTiffFile::print(std::ostream& stream,uint level,uint /*optionFlags*/) const
 {
   try
   {

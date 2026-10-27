@@ -27,8 +27,7 @@ SimulatedSatelliteEnsembleProduct::SimulatedSatelliteEnsembleProduct() {
 
 /*! \brief The destructor of the class. */
 
-SimulatedSatelliteEnsembleProduct::~SimulatedSatelliteEnsembleProduct() {
-}
+SimulatedSatelliteEnsembleProduct::~SimulatedSatelliteEnsembleProduct() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -66,11 +65,8 @@ void SimulatedSatelliteEnsembleProduct::write(DataWriter &dataWriter) {
 
 void SimulatedSatelliteEnsembleProduct::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sSimulatedSatelliteEnsembleProduct.", prefix.c_str());
-    mSimulatedSatelliteProduct.getAttributeList(name, attributeList);
-    sprintf(name, "%sSimulatedSatelliteEnsembleProduct.", prefix.c_str());
-    mEps.getAttributeList(name, attributeList);
+        mSimulatedSatelliteProduct.getAttributeList(prefix + "SimulatedSatelliteEnsembleProduct.", attributeList);
+        mEps.getAttributeList(prefix + "SimulatedSatelliteEnsembleProduct.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -162,7 +158,7 @@ ProductDefinition *SimulatedSatelliteEnsembleProduct::createProductDefinition() 
 
 SimulatedSatelliteProduct *SimulatedSatelliteEnsembleProduct::getSimulatedSatelliteProduct() const {
   try {
-    return static_cast<SimulatedSatelliteProduct *>(&mSimulatedSatelliteProduct);
+    return &mSimulatedSatelliteProduct;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -172,13 +168,13 @@ SimulatedSatelliteProduct *SimulatedSatelliteEnsembleProduct::getSimulatedSatell
 
 EpsSettings *SimulatedSatelliteEnsembleProduct::getEps() const {
   try {
-    return static_cast<EpsSettings *>(&mEps);
+    return &mEps;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
-void SimulatedSatelliteEnsembleProduct::setSimulatedSatelliteProduct(SimulatedSatelliteProduct &simulatedSatelliteProduct) {
+void SimulatedSatelliteEnsembleProduct::setSimulatedSatelliteProduct(const SimulatedSatelliteProduct &simulatedSatelliteProduct) {
   try {
     mSimulatedSatelliteProduct = simulatedSatelliteProduct;
   } catch (...) {
@@ -186,7 +182,7 @@ void SimulatedSatelliteEnsembleProduct::setSimulatedSatelliteProduct(SimulatedSa
   }
 }
 
-void SimulatedSatelliteEnsembleProduct::setEps(EpsSettings &eps) {
+void SimulatedSatelliteEnsembleProduct::setEps(const EpsSettings &eps) {
   try {
     mEps = eps;
   } catch (...) {

@@ -27,8 +27,7 @@ FloatingPointGridDataRepresentation::FloatingPointGridDataRepresentation() {
 
 /*! \brief The destructor of the class. */
 
-FloatingPointGridDataRepresentation::~FloatingPointGridDataRepresentation() {
-}
+FloatingPointGridDataRepresentation::~FloatingPointGridDataRepresentation() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -64,9 +63,7 @@ void FloatingPointGridDataRepresentation::write(DataWriter &dataWriter) {
 
 void FloatingPointGridDataRepresentation::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sFloatingPointGridDataRepresentation.Precision", prefix.c_str());
-    attributeList.addAttribute(name, toString(mPrecision));
+        attributeList.addAttribute(prefix + "FloatingPointGridDataRepresentation.Precision", toString(mPrecision));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -117,7 +114,7 @@ bool FloatingPointGridDataRepresentation::hasAttributeValue(const char *attribut
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void FloatingPointGridDataRepresentation::print(std::ostream &stream, uint level, uint optionFlags) const {
+void FloatingPointGridDataRepresentation::print(std::ostream &stream, uint level, uint /*optionFlags*/) const {
   try {
     stream << space(level) << "FloatingPointGridDataRepresentation\n";
     stream << space(level) << "- Precision = " << toString(mPrecision) << "\n";

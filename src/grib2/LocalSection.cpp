@@ -93,7 +93,7 @@ LocalSection::~LocalSection()
     to the current section.
 */
 
-void LocalSection::getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const
+void LocalSection::getAttributeList(const std::string& /*prefix*/,T::AttributeList& /*attributeList*/) const
 {
   try
   {
@@ -164,7 +164,7 @@ void LocalSection::setData(T::Data_ptr data,std::size_t size)
         \return            The method returns true if the value of the requested property was found.
 */
 
-bool LocalSection::getProperty(uint propertyId,Int64& value)
+bool LocalSection::getProperty(uint /*propertyId*/,Int64& /*value*/)
 {
   try
   {
@@ -182,7 +182,7 @@ bool LocalSection::getProperty(uint propertyId,Int64& value)
 
 /*! \brief The method collects the local section properties into the given vector. */
 
-void LocalSection::getProperties(T::PropertySettingVec& properties)
+void LocalSection::getProperties(T::PropertySettingVec& /*properties*/)
 {
   try
   {
@@ -208,7 +208,7 @@ void LocalSection::getProperties(T::PropertySettingVec& properties)
         \return            The method returns true if the value of the requested property was set.
 */
 
-bool LocalSection::setProperty(uint propertyId,Int64 value)
+bool LocalSection::setProperty(uint /*propertyId*/,Int64 /*value*/)
 {
   try
   {
@@ -442,7 +442,7 @@ std::size_t LocalSection::getDataSize() const
         \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void LocalSection::print(std::ostream& stream,uint level,uint optionFlags) const
+void LocalSection::print(std::ostream& stream,uint level,uint /*optionFlags*/) const
 {
   try
   {

@@ -19,6 +19,10 @@ namespace GRIB2 {
 class ResolutionSettings {
 public:
   ResolutionSettings();
+  ResolutionSettings(const ResolutionSettings &) = default;
+  ResolutionSettings(ResolutionSettings &&) = default;
+  ResolutionSettings &operator=(const ResolutionSettings &) = default;
+  ResolutionSettings &operator=(ResolutionSettings &&) = default;
   virtual ~ResolutionSettings();
 
   virtual void read(MemoryReader &memoryReader);

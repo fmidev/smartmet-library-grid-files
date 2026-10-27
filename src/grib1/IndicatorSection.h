@@ -43,15 +43,16 @@ class IndicatorSection : public GRID::MessageSection
 
                   IndicatorSection();
                   IndicatorSection(const IndicatorSection& other);
-    virtual       ~IndicatorSection();
+    ~IndicatorSection() override;
+    IndicatorSection& operator=(const IndicatorSection&) = default;
 
     // ### Common methods for all message sections
 
-    void            getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const;
-    T::FilePosition getFilePosition() const;
-    std::uint32_t   getSectionLength() const;
-    std::string     getSectionName() const;
-    std::uint8_t    getSectionNumber() const;
+    void            getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const override;
+    T::FilePosition getFilePosition() const override;
+    std::uint32_t   getSectionLength() const override;
+    std::string     getSectionName() const override;
+    std::uint8_t    getSectionNumber() const override;
 
     // ### Section specific methods
 
@@ -61,7 +62,7 @@ class IndicatorSection : public GRID::MessageSection
     void            setMessagePtr(Message *message);
     void            setTotalLength(std::uint32_t length);
 
-    bool            getProperty(uint propertyId,Int64& value);
+    bool            getProperty(uint propertyId,Int64& value) const;
     void            getProperties(T::PropertySettingVec& properties);
 
     bool            setProperty(uint propertyId,Int64 value);
@@ -69,7 +70,7 @@ class IndicatorSection : public GRID::MessageSection
 
     void            read(MemoryReader& memoryReader);
     void            write(DataWriter& dataWriter);
-    void            print(std::ostream& stream,uint level,uint optionFlags) const;
+    void            print(std::ostream& stream,uint level,uint optionFlags) const override;
 
   private:
 
@@ -79,13 +80,13 @@ class IndicatorSection : public GRID::MessageSection
     /*! \brief The section start position in the file. */
     T::FilePosition mFilePosition;
 
-    uchar           mIdentifier[4];  //!< GRIB magic bytes ("GRIB", octets 1-4).
+    uchar           mIdentifier[4]{};  //!< GRIB magic bytes ("GRIB", octets 1-4).
     std::uint32_t   mTotalLength;    //!< Total length of the GRIB message in octets (octets 5-7).
     std::uint8_t    mEditionNumber;  //!< GRIB edition number (octet 8).
 };
 
 
-typedef std::shared_ptr<IndicatorSection> IndicatorSect_sptr;  //!< Shared ownership pointer to an IndicatorSection.
+using IndicatorSect_sptr = std::shared_ptr<IndicatorSection>;  //!< Shared ownership pointer to an IndicatorSection.
 
 }  // namespace GRIB1
 }  // namespace SmartMet

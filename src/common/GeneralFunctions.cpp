@@ -2,14 +2,15 @@
 #include <arpa/inet.h>
 #include <dirent.h>
 #include <fnmatch.h>
-#include <limits.h>
+#include <algorithm>
+#include <climits>
 #include <macgyver/StringConversion.h>
 #include <macgyver/TimeParser.h>
 #include <macgyver/LocalDateTime.h>
 #include <macgyver/TimeZones.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <sys/types.h>
@@ -30,7 +31,7 @@
 #include "AutoThreadLock.h"
 #include "GeneralDefinitions.h"
 
-#define NUM(a) (a-'0')
+#define NUM(a) ((a)-'0')
 
 
 namespace fs = std::filesystem;
@@ -38,7 +39,10 @@ namespace fs = std::filesystem;
 namespace SmartMet
 {
 
+namespace
+{
 Fmi::TimeZones itsTimeZones;
+}  // namespace
 
 
 /*! \brief Converts an unsigned 64-bit integer to a hexadecimal string. */
@@ -240,7 +244,8 @@ int time_compare(time_t v1, time_t v2)
 
 void time_usleep(int _sec, int _usec)
 {
-  timespec r1, r2;
+  timespec r1{};
+  timespec r2{};
   r1.tv_sec = _sec;
   r1.tv_nsec = _usec;  // * 1000;
   nanosleep(&r1, &r2);
@@ -355,7 +360,7 @@ float ibm2ieee(float ibmFloat)
 {
   try
   {
-    unsigned char *v = reinterpret_cast<unsigned char *>(&ibmFloat);
+    auto *v = reinterpret_cast<unsigned char *>(&ibmFloat);
     unsigned char a = v[0];
     unsigned char b = v[1];
     unsigned char c = v[2];
@@ -426,7 +431,7 @@ UInt64 getTime()
 {
   try
   {
-    struct timeval tt;
+    struct timeval tt{};
     gettimeofday(&tt, nullptr);
     return 1000000 * tt.tv_sec + tt.tv_usec;
   }
@@ -444,7 +449,7 @@ time_t getFileModificationTime(const char *filename)
 {
   try
   {
-    struct stat buf;
+    struct stat buf{};
     if (stat(filename, &buf) == 0) return buf.st_mtime;
 
     return 0;
@@ -459,12 +464,12 @@ time_t getFileModificationTime(const char *filename)
 
 /*! \brief Copies a source file to a target file, aborting if shutdown is requested. */
 
-void copyFile(const char *sourceFileName,const char *targetFileName,bool& shutdownRequested)
+void copyFile(const char *sourceFileName,const char *targetFileName,const bool& shutdownRequested)
 {
   try
   {
     FILE *sFile = fopen(sourceFileName,"r");
-    if (sFile == NULL)
+    if (sFile == nullptr)
     {
       Fmi::Exception exception(BCP, "Cannot open file for reading!", nullptr);
       exception.addParameter("sourceFileName",sourceFileName);
@@ -472,31 +477,37 @@ void copyFile(const char *sourceFileName,const char *targetFileName,bool& shutdo
     }
 
     FILE *tFile = fopen(targetFileName,"w");
-    if (tFile == NULL)
+    if (tFile == nullptr)
     {
-      fclose(sFile);
+      (void)fclose(sFile);
       Fmi::Exception exception(BCP, "Cannot open file for writing!", nullptr);
       exception.addParameter("targetFileName",targetFileName);
       throw exception;
     }
 
-    char buf[1000000];
-    int nr;
+    std::vector<char> bufVec(1000000);
+    char *buf = bufVec.data();
+    int nr = 0;
     while (!shutdownRequested && (nr = fread(buf,1,1000000,sFile)) > 0)
     {
-      if (!shutdownRequested)
+      if (!shutdownRequested && fwrite(buf,1,nr,tFile) != static_cast<size_t>(nr))
       {
-        int nw = fwrite(buf,1,nr,tFile);
+        (void)fclose(sFile);
+        (void)fclose(tFile);
+        Fmi::Exception exception(BCP, "File write failed!", nullptr);
+        exception.addParameter("targetFileName",targetFileName);
+        throw exception;
       }
     }
 
-    fclose(sFile);
-    fclose(tFile);
+    (void)fclose(sFile);
+    if (fclose(tFile) != 0)
+      throw Fmi::Exception(BCP, "Failed to close the output file");
 
     // Checking that the source file and the target file have the same size.
 
-    struct stat s1;
-    struct stat s2;
+    struct stat s1{};
+    struct stat s2{};
     if (stat(sourceFileName, &s1) == 0 && stat(targetFileName, &s2) == 0  &&  s1.st_size == s2.st_size)
       return;
 
@@ -523,7 +534,7 @@ Int64 getFileSize(const char *filename)
     if (filename == nullptr)
       return -1;
 
-    struct stat buf;
+    struct stat buf{};
     if (stat(filename, &buf) == 0)
       return (Int64)buf.st_size;
 
@@ -548,7 +559,7 @@ Int64 getFileSize(FILE *file)
 
     int fd = fileno(file);
 
-    struct stat buf;
+    struct stat buf{};
     if (fstat(fd, &buf) == 0)
       return (Int64)buf.st_size;
 
@@ -564,7 +575,7 @@ Int64 getFileSize(FILE *file)
 
 /*! \brief Replaces all occurrences of a substring within a string. */
 
-std::string stringReplaceAll(const std::string& st,const std::string& oldStr,std::string newStr)
+std::string stringReplaceAll(const std::string& st,const std::string& oldStr,const std::string& newStr)
 {
   try
   {
@@ -740,16 +751,16 @@ time_t localTimeToTimeT(const std::string& localTime, const char *tzone)
 
     const char *str = localTime.c_str();
 
-    struct tm tt;
+    struct tm tt{};
     tt.tm_year = getInt(str, 0, 4) - 1900; /* Year - 1900 */
     tt.tm_mon = getInt(str, 4, 2) - 1;     /* Month (0-11) */
     tt.tm_mday = getInt(str, 6, 2);        /* Day of the month (1-31) */
     tt.tm_hour = getInt(str, 9, 2);
-    ; /* Hours (0-23) */
+    /* Hours (0-23) */
     tt.tm_min = getInt(str, 11, 2);
-    ; /* Minutes (0-59) */
+    /* Minutes (0-59) */
     tt.tm_sec = getInt(str, 13, 2);
-    ;                 /* Seconds (0-60) */
+    /* Seconds (0-60) */
     tt.tm_isdst = -1; /* Daylight saving time */
 
     return mktime_tz(&tt, tzone);
@@ -768,19 +779,19 @@ time_t utcTimeToTimeT(const char *utcTime)
 {
   try
   {
-    if (utcTime == 0 || strlen(utcTime) != 15)
+    if (utcTime == nullptr || strlen(utcTime) != 15)
       throw Fmi::Exception(BCP, "Invalid timestamp format (expected YYYYMMDDTHHMMSS)!");
 
-    struct tm tt;
+    struct tm tt{};
     tt.tm_year = getInt(utcTime, 0, 4) - 1900; /* Year - 1900 */
     tt.tm_mon = getInt(utcTime, 4, 2) - 1;     /* Month (0-11) */
     tt.tm_mday = getInt(utcTime, 6, 2);        /* Day of the month (1-31) */
     tt.tm_hour = getInt(utcTime, 9, 2);
-    ; /* Hours (0-23) */
+    /* Hours (0-23) */
     tt.tm_min = getInt(utcTime, 11, 2);
-    ; /* Minutes (0-59) */
+    /* Minutes (0-59) */
     tt.tm_sec = getInt(utcTime, 13, 2);
-    ;                 /* Seconds (0-60) */
+    /* Seconds (0-60) */
     tt.tm_isdst = -1; /* Daylight saving time */
 
     return mktime_tz(&tt, "");
@@ -820,7 +831,7 @@ time_t utcTimeToTimeT(int year,int month,int day,int hour,int minute,int second)
 {
   try
   {
-    struct tm tt;
+    struct tm tt{};
     tt.tm_year = year - 1900;
     tt.tm_mon = month - 1;
     tt.tm_mday = day;
@@ -898,7 +909,7 @@ std::string localTimeFromTimeT(time_t t, const char *tzone)
 {
   try
   {
-    struct tm tt;
+    struct tm tt{};
     localtime_tz(t, &tt, tzone);
 
     char buf[200];
@@ -937,24 +948,9 @@ std::string utcTimeFromTimeT(time_t t)
 
 
 
-/*! \brief Converts a local-time ISO timestamp in the given timezone to a UTC ISO timestamp. */
-
-std::string localTimeToUtcTime(const std::string& localTime, const char *tzone)
-{
-  try
-  {
-    time_t t = localTimeToTimeT(localTime, tzone);
-    return utcTimeFromTimeT(t);
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
 /*! \brief Converts a local DateTime in the given timezone to UTC. */
 
-Fmi::DateTime localTimeToUtc(const Fmi::DateTime& localTime,Fmi::TimeZonePtr tz)
+Fmi::DateTime localTimeToUtc(const Fmi::DateTime& localTime,const Fmi::TimeZonePtr& tz)
 {
   // Used inteentionally boost::(local|posix_time) here to force update
   // after macgyver changes (AP)
@@ -963,7 +959,7 @@ Fmi::DateTime localTimeToUtc(const Fmi::DateTime& localTime,Fmi::TimeZonePtr tz)
     auto lTime = Fmi::TimeParser::make_time(localTime.date(), localTime.time_of_day(), tz);
     return lTime.utc_time();
   }
-  catch(const std::exception& e)
+  catch(const std::exception&)
   {
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
@@ -972,7 +968,7 @@ Fmi::DateTime localTimeToUtc(const Fmi::DateTime& localTime,Fmi::TimeZonePtr tz)
 
 /*! \brief Converts a local-time ISO string in the given timezone to a UTC ISO string. */
 
-std::string localTimeToUtc(const std::string& localTime, Fmi::TimeZonePtr tz)
+std::string localTimeToUtc(const std::string& localTime, const Fmi::TimeZonePtr& tz)
 {
   try
   {
@@ -989,26 +985,9 @@ std::string localTimeToUtc(const std::string& localTime, Fmi::TimeZonePtr tz)
 
 
 
-/*! \brief Converts a UTC ISO timestamp to a local-time ISO timestamp in the given timezone. */
-
-std::string utcTimeToLocalTime(const std::string& utcTime, const char *tzone)
-{
-  try
-  {
-    time_t t = utcTimeToTimeT(utcTime);
-    return localTimeFromTimeT(t, tzone);
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-
-
 /*! \brief Converts an Fmi::DateTime to a time_t. */
 
-time_t toTimeT(Fmi::DateTime tim)
+time_t toTimeT(const Fmi::DateTime& tim)
 {
   try
   {
@@ -1048,7 +1027,7 @@ char toInt8(const char *str)
   {
     if (str == nullptr || str[0] == '\0') return 0;
 
-    return static_cast<char>(atoll(str));
+    return static_cast<char>(strtoll(str, nullptr, 10));
   }
   catch (...)
   {
@@ -1066,7 +1045,7 @@ short toInt16(const char *str)
   {
     if (str == nullptr || str[0] == '\0') return 0;
 
-    return static_cast<short>(atoll(str));
+    return static_cast<short>(strtoll(str, nullptr, 10));
   }
   catch (...)
   {
@@ -1084,7 +1063,7 @@ int toInt32(const char *str)
   {
     if (str == nullptr || str[0] == '\0') return 0;
 
-    return static_cast<int>(atoll(str));
+    return static_cast<int>(strtoll(str, nullptr, 10));
   }
   catch (...)
   {
@@ -1102,7 +1081,7 @@ Int64 toInt64(const char *str)
   {
     if (str == nullptr || str[0] == '\0') return 0;
 
-    return atoll(str);
+    return strtoll(str, nullptr, 10);
   }
   catch (...)
   {
@@ -1120,7 +1099,7 @@ size_t toSize_t(const char *str)
   {
     if (str == nullptr || str[0] == '\0') return 0;
 
-    return static_cast<size_t>(atoll(str));
+    return static_cast<size_t>(strtoll(str, nullptr, 10));
   }
   catch (...)
   {
@@ -1138,7 +1117,7 @@ uchar toUInt8(const char *str)
   {
     if (str == nullptr || str[0] == '\0') return 0;
 
-    return static_cast<uchar>(atoll(str));
+    return static_cast<uchar>(strtoll(str, nullptr, 10));
   }
   catch (...)
   {
@@ -1156,7 +1135,7 @@ ushort toUInt16(const char *str)
   {
     if (str == nullptr || str[0] == '\0') return 0;
 
-    return static_cast<ushort>(atoll(str));
+    return static_cast<ushort>(strtoll(str, nullptr, 10));
   }
   catch (...)
   {
@@ -1174,7 +1153,7 @@ uint toUInt32(const char *str)
   {
     if (str == nullptr || str[0] == '\0') return 0;
 
-    return static_cast<uint>(atoll(str));
+    return static_cast<uint>(strtoll(str, nullptr, 10));
   }
   catch (...)
   {
@@ -1202,49 +1181,6 @@ UInt64 toUInt64(const char *str)
 
 
 
-/*! \brief Parses a C string into a double using a locale-independent custom parser. */
-
-double toDouble2(const char* str)
-{
-  double result = 0;
-  double sign = *str == '-' ? str++, -1 : 1;
-  while (*str >= '0' && *str <= '9')
-  {
-    result *= 10;
-    result += *str - '0';
-    str++;
-  }
-
-  if (*str == ',' || *str == '.')
-  {
-    str++;
-    double multiplier = 0.1;
-    while (*str >= '0' && *str <= '9')
-    {
-      result += (*str - '0') * multiplier;
-      multiplier /= 10;
-      str++;
-    }
-  }
-  result *= sign;
-  if (*str == 'e' || *str == 'E')
-  {
-    str++;
-    double powerer = *str == '-'? str++, 0.1 : 10;
-    double power = 0;
-    while (*str >= '0' && *str <= '9')
-    {
-      power *= 10;
-      power += *str - '0';
-      str++;
-    }
-    result *= pow(powerer, power);
-  }
-  return result;
-}
-
-
-
 /*! \brief Parses a C string into a float. */
 
 float toFloat(const char *str)
@@ -1257,7 +1193,7 @@ float toFloat(const char *str)
     if (str == nullptr)
       return 0.0;
 
-    return C_FLOAT(atof(str));
+    return C_FLOAT(strtod(str, nullptr));
   }
   catch (...)
   {
@@ -1280,7 +1216,7 @@ double toDouble(const char *str)
     if (str == nullptr)
       return 0.0;
 
-    return atof(str);
+    return strtod(str, nullptr);
   }
   catch (...)
   {
@@ -1469,7 +1405,7 @@ size_t toSize_t(const std::string &str)
 
 /*! \brief Returns a placeholder string for a 16-byte char array value. */
 
-std::string toString(std::array<char, 16> value)
+std::string toString(std::array<char, 16> /*value*/)
 {
   try
   {
@@ -1809,7 +1745,7 @@ std::string toString(T::Int64_opt value)
 
 /*! \brief Converts an Fmi::DateTime to an ISO timestamp string. */
 
-std::string toString(Fmi::DateTime time)
+std::string toString(const Fmi::DateTime& time)
 {
   try
   {
@@ -1908,7 +1844,7 @@ std::string toUpperString(const std::string& sourceString)
 
 /*! \brief Parses an ISO time string into an Fmi::DateTime value. */
 
-Fmi::DateTime toTimeStamp(T::TimeString timeStr)
+Fmi::DateTime toTimeStamp(const T::TimeString& timeStr)
 {
   try
   {
@@ -1949,7 +1885,7 @@ int compressData(void *_data, uint _dataSize, void *_compressedData, uint &_comp
 {
   try
   {
-    uLongf comprLen = (uLongf)_compressedDataSize;
+    auto comprLen = (uLongf)_compressedDataSize;
     compress((Bytef *)_compressedData, &comprLen, (Bytef *)_data, (uLong)_dataSize);
 
     if (comprLen > 0)
@@ -1978,7 +1914,7 @@ int decompressData(void *_compressedData,
 {
   try
   {
-    uLongf len = (uLongf)_decompressedDataSize;
+    auto len = (uLongf)_decompressedDataSize;
     int res = uncompress((Bytef *)_decompressedData, &len, (Bytef *)_compressedData, (uLong)_compressedDataSize);
     _decompressedDataSize = len;
 
@@ -2072,7 +2008,7 @@ void parseUnits(const char *unitString,double& value,std::string& units)
     *u = '\0';
     *v = '\0';
 
-    value = atof(val);
+    value = strtod(val, nullptr);
     units = unit;
   }
   catch (...)
@@ -2086,7 +2022,7 @@ void parseUnits(const char *unitString,double& value,std::string& units)
 
 /*! \brief Parses a NetCDF time-unit string into reference date components and unit size. */
 
-void parseNetCdfTime(std::string& timeStr,int& year,int& month,int& day,int& hour,int& minute,int& second,time_t& unitSize)
+void parseNetCdfTime(const std::string& timeStr,int& year,int& month,int& day,int& hour,int& minute,int& second,time_t& unitSize)
 {
   try
   {
@@ -2097,11 +2033,9 @@ void parseNetCdfTime(std::string& timeStr,int& year,int& month,int& day,int& hou
     {
       if (strncasecmp(partList[0].c_str(),"day",3) == 0)
         unitSize = 3600*24;
-      else
-      if (strncasecmp(partList[0].c_str(),"hour",4) == 0)
+      else if (strncasecmp(partList[0].c_str(),"hour",4) == 0)
         unitSize = 3600;
-      else
-      if (strncasecmp(partList[0].c_str(),"minute",6) == 0)
+      else if (strncasecmp(partList[0].c_str(),"minute",6) == 0)
         unitSize = 60;
       if (strncasecmp(partList[0].c_str(),"second",6) == 0)
         unitSize = 1;
@@ -2670,10 +2604,10 @@ void splitNumbers(const char *str,std::vector<std::string>& numbers)
   std::vector<std::string> parts;
   splitString(str,'/',parts);
 
-  for (auto p = parts.begin(); p != parts.end(); ++p)
+  for (auto& part : parts)
   {
     std::vector<std::string> nums;
-    splitString(p->c_str(),'-',nums);
+    splitString(part.c_str(),'-',nums);
 
     if (nums.size() == 2  &&  nums[0] > " ")
     {
@@ -2687,7 +2621,7 @@ void splitNumbers(const char *str,std::vector<std::string>& numbers)
     }
     else
     {
-      numbers.emplace_back(*p);
+      numbers.emplace_back(part);
     }
   }
 }
@@ -2768,10 +2702,10 @@ std::string getFileDir(const std::string& filename)
   try
   {
     std::string fname = getAbsoluteFilePath(filename);
-    std::string::size_type n = fname.rfind("/");
+    std::string::size_type n = fname.rfind('/');
     if (n != std::string::npos) return fname.substr(0, n);
 
-    n = fname.rfind("\\");
+    n = fname.rfind('\\');
     if (n != std::string::npos) return fname.substr(0, n);
 
     return std::string("");
@@ -2786,13 +2720,13 @@ std::string getFileDir(const std::string& filename)
 
 /*! \brief Returns true if the string matches any of the supplied glob patterns. */
 
-bool patternMatch(const char *str, std::vector<std::string> &patterns)
+bool patternMatch(const char *str, const std::vector<std::string> &patterns)
 {
   try
   {
-    for (auto it = patterns.begin(); it != patterns.end(); ++it)
+    for (const auto& pattern : patterns)
     {
-      if (fnmatch(it->c_str(), str, 0) == 0) return true;
+      if (fnmatch(pattern.c_str(), str, 0) == 0) return true;
     }
 
     return false;
@@ -2802,6 +2736,60 @@ bool patternMatch(const char *str, std::vector<std::string> &patterns)
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
+
+
+namespace
+{
+/*! \brief The type of a directory entry. */
+
+enum class DirEntryType
+{
+  Directory,
+  File,
+  Other
+};
+
+
+
+/*! \brief Checks if the entry is "." or "..". */
+
+bool isDotDirEntry(const struct dirent *ep)
+{
+  return (strcmp(ep->d_name, "..") == 0  ||  strcmp(ep->d_name, ".") == 0);
+}
+
+
+
+/*! \brief Classifies the directory entry. Directories are reported only when subdirectories
+    are included. */
+
+DirEntryType classifyDirEntry(const struct dirent *ep,const char *fullName,bool includeSubDirs)
+{
+  if (includeSubDirs && ep->d_type == DT_DIR && !isDotDirEntry(ep))
+    return DirEntryType::Directory;
+
+  if (ep->d_type == DT_REG)
+    return DirEntryType::File;
+
+  if (ep->d_type != DT_UNKNOWN)
+    return DirEntryType::Other;
+
+  struct stat s{};
+  if (stat(fullName, &s) != 0)
+    return DirEntryType::Other;
+
+  if (includeSubDirs && (s.st_mode & S_IFDIR) != 0 && !isDotDirEntry(ep))
+    return DirEntryType::Directory;
+
+  if (s.st_mode & S_IFREG)
+    return DirEntryType::File;
+
+  return DirEntryType::Other;
+}
+}  // namespace
+
+
 
 
 
@@ -2815,12 +2803,15 @@ void getFileList(const char *dirName,
 {
   try
   {
-    char *path = realpath(dirName, nullptr);
-    if (path == nullptr)
+    char *real = realpath(dirName, nullptr);
+    if (real == nullptr)
     {
       return;
     }
+    const std::string path(real);
+    free(real);
 
+    // Directories are identified by their real path, which also stops symbolic link loops
     if (dirList.find(path) != dirList.end())
       return;  // Dir already processed
 
@@ -2830,7 +2821,7 @@ void getFileList(const char *dirName,
       return;
     }
 
-    dirList.insert(std::string(dirName));
+    dirList.insert(path);
 
     bool ind = true;
 
@@ -2840,34 +2831,19 @@ void getFileList(const char *dirName,
       if (ep != nullptr)
       {
         char fullName[2000];
-        sprintf(fullName, "%s/%s", path, ep->d_name);
+        int len = snprintf(fullName, sizeof(fullName), "%s/%s", path.c_str(), ep->d_name);
+        if (len < 0 || len >= C_INT(sizeof(fullName)))
+          continue;  // Name does not fit
 
-        if (includeSubDirs && ep->d_type == DT_DIR && strcmp(ep->d_name, "..") != 0 &&
-            strcmp(ep->d_name, ".") != 0)
+        DirEntryType type = classifyDirEntry(ep,fullName,includeSubDirs);
+
+        if (type == DirEntryType::Directory)
         {
           getFileList(fullName, filePatterns, includeSubDirs, dirList, fileList);
         }
-        else if (ep->d_type == DT_REG)
+        else if (type == DirEntryType::File  &&  (filePatterns.empty() || patternMatch(ep->d_name, filePatterns)))
         {
-          if (filePatterns.size() == 0 || patternMatch(ep->d_name, filePatterns))
-            fileList.emplace_back(path, ep->d_name);
-        }
-        else if (ep->d_type == DT_UNKNOWN)
-        {
-          struct stat s;
-          if (stat(fullName, &s) == 0)
-          {
-            if (includeSubDirs && (s.st_mode & S_IFDIR) != 0 && strcmp(ep->d_name, "..") != 0 &&
-                strcmp(ep->d_name, ".") != 0)
-            {
-              getFileList(fullName, filePatterns, includeSubDirs, dirList, fileList);
-            }
-            else if (s.st_mode & S_IFREG)
-            {
-              if (filePatterns.size() == 0 || patternMatch(ep->d_name, filePatterns))
-                fileList.emplace_back(path, ep->d_name);
-            }
-          }
+          fileList.emplace_back(path, ep->d_name);
         }
       }
       else
@@ -2876,7 +2852,6 @@ void getFileList(const char *dirName,
       }
     }
     closedir(dp);
-    free(path);
   }
   catch (...)
   {
@@ -2898,7 +2873,7 @@ int timePeriodToSeconds(const char *timePeriod)
     if (p != nullptr)
     {
       *p = '\0';
-      return atoi(tmp);
+      return static_cast<int>(strtol(tmp, nullptr, 10));
     }
     else
     {
@@ -2906,7 +2881,7 @@ int timePeriodToSeconds(const char *timePeriod)
       if (p != nullptr)
       {
         *p = '\0';
-        return (atoi(tmp) * 60);
+        return (static_cast<int>(strtol(tmp, nullptr, 10)) * 60);
       }
       else
       {
@@ -2914,7 +2889,7 @@ int timePeriodToSeconds(const char *timePeriod)
         if (p != nullptr)
         {
           *p = '\0';
-          return (atoi(tmp) * 3600);
+          return (static_cast<int>(strtol(tmp, nullptr, 10)) * 3600);
         }
         else
         {
@@ -2922,11 +2897,11 @@ int timePeriodToSeconds(const char *timePeriod)
           if (p != nullptr)
           {
             *p = '\0';
-            return (atoi(tmp) * 3600 * 24);
+            return (static_cast<int>(strtol(tmp, nullptr, 10)) * 3600 * 24);
           }
           else
           {
-            return (atoi(tmp) * 60);
+            return (static_cast<int>(strtol(tmp, nullptr, 10)) * 60);
           }
         }
       }
@@ -2965,7 +2940,7 @@ std::string toString(std::list<std::string> &parts, char separator)
 
 /*! \brief Joins a set of integers with the given separator. */
 
-std::string toString(std::set<int> &parts, char separator)
+std::string toString(const std::set<int> &parts, char separator)
 {
   try
   {
@@ -2988,7 +2963,7 @@ std::string toString(std::set<int> &parts, char separator)
 
 /*! \brief Joins a set of floats with the given separator. */
 
-std::string toString(std::set<float> &parts, char separator)
+std::string toString(const std::set<float> &parts, char separator)
 {
   try
   {
@@ -3049,12 +3024,12 @@ void parseCoordinates(const std::string& coordinateStr,
     std::vector<std::string> partList;
 
     splitString(coordinateStr, separator2, partList);
-    for (auto it = partList.begin(); it != partList.end(); ++it)
+    for (auto& it : partList)
     {
       T::Coordinate_vec coordinateList;
 
       std::vector<double> cList;
-      splitString(*it, separator1, cList);
+      splitString(it, separator1, cList);
       size_t sz = cList.size();
       if ((sz % 2) == 0)
       {
@@ -3076,8 +3051,7 @@ void parseCoordinates(const std::string& coordinateStr,
 
 void tuneLevels(int &level1, int &level2, int newLevel)
 {
-  if (level1 > level2)
-    level2 = level1;
+  level2 = std::max(level1, level2);
 
   if (level1 <= newLevel && newLevel <= level2) return;
 
@@ -3124,10 +3098,9 @@ std::string base64_encode(unsigned char *data, size_t dataSize)
     std::stringstream os;
 
     // convert binary values to base64 characters
-    typedef bai::base64_from_binary
+    using base64_enc = bai::base64_from_binary
         // retrieve 6 bit integers from a sequence of 8 bit bytes
-        <bai::transform_width<const char *, 6, 8>>
-            base64_enc;
+        <bai::transform_width<const char *, 6, 8>>;
 
     std::copy(base64_enc(data), base64_enc(data + dataSize), std::ostream_iterator<char>(os));
 
@@ -3165,18 +3138,18 @@ std::string fileToBase64(const char *filename)
       throw exception;
     }
 
-    unsigned char *data = new unsigned char[size + 1];
+    auto *data = new unsigned char[size + 1];
     size_t n = fread(data, 1, size, file);
     if (n <= 0)
     {
-      fclose(file);
+      (void)fclose(file);
       delete[] data;
       Fmi::Exception exception(BCP, "File read failed!");
       exception.addParameter("Filename", filename);
       throw exception;
     }
 
-    fclose(file);
+    (void)fclose(file);
 
     std::string st = base64_encode(data, size);
     delete[] data;
@@ -3190,6 +3163,53 @@ std::string fileToBase64(const char *filename)
 }
 
 
+
+
+
+namespace
+{
+
+/*! \brief Splits a semicolon-separated CSV line into fields and appends them as a record. */
+
+void splitCsvLine(char *st,std::vector<std::vector<std::string>>& records)
+{
+  std::vector<std::string> fields;
+  bool ind = false;
+  char *field[1000];
+  uint c = 1;
+  field[0] = st;
+  char *p = st;
+  while (*p != '\0'  &&  c < 100)
+  {
+    if (*p == '"')
+      ind = !ind;
+
+    if ((*p == ';'  || *p == '\n') && !ind)
+    {
+      *p = '\0';
+      //printf("[%s]",field[c-1]);
+      p++;
+      field[c] = p;
+      c++;
+    }
+    else
+    {
+      p++;
+    }
+  }
+
+  //printf("\n");
+  if (c > 1)
+  {
+    c--;
+    for (uint t=0; t<c; t++)
+      fields.emplace_back(field[t]);
+
+    records.emplace_back(fields);
+  }
+}
+
+}  // namespace
 
 
 
@@ -3212,44 +3232,9 @@ void readCsvFile(const char *filename,std::vector<std::vector<std::string>>& rec
     while (fgets(st,10000,file) != nullptr)
     {
       if (st[0] != '#')
-      {
-        std::vector<std::string> fields;
-        bool ind = false;
-        char *field[1000];
-        uint c = 1;
-        field[0] = st;
-        char *p = st;
-        while (*p != '\0'  &&  c < 100)
-        {
-          if (*p == '"')
-            ind = !ind;
-
-          if ((*p == ';'  || *p == '\n') && !ind)
-          {
-            *p = '\0';
-            //printf("[%s]",field[c-1]);
-            p++;
-            field[c] = p;
-            c++;
-          }
-          else
-          {
-            p++;
-          }
-        }
-
-        //printf("\n");
-        if (c > 1)
-        {
-          c--;
-          for (uint t=0; t<c; t++)
-            fields.emplace_back(field[t]);
-
-          records.emplace_back(fields);
-        }
-      }
+        splitCsvLine(st,records);
     }
-    fclose(file);
+    (void)fclose(file);
   }
   catch (...)
   {
@@ -3289,7 +3274,8 @@ void readEofLines(const char *filename,uint numberOfLines,std::vector<std::strin
       startPos = fSize - s;
 
     char st[10000];
-    fseek(file,startPos,SEEK_SET);
+    if (fseek(file,startPos,SEEK_SET) != 0)
+      throw Fmi::Exception(BCP, "Failed to seek in the file");
 
     while (fgets(st,10000,file) != nullptr)
     {
@@ -3297,9 +3283,9 @@ void readEofLines(const char *filename,uint numberOfLines,std::vector<std::strin
       if (p)
         *p ='\0';
 
-      tmpLines.push_back(std::string(st));
+      tmpLines.emplace_back(st);
     }
-    fclose(file);
+    (void)fclose(file);
 
     for (auto it = tmpLines.rbegin(); it != tmpLines.rend(); it++)
     {
@@ -3365,7 +3351,7 @@ std::uint16_t read_uint16(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos)
     unsigned char* rPtr = dataPtr + readPos;
     unsigned short a = rPtr[0];
     unsigned short b = rPtr[1];
-    unsigned short val = static_cast<unsigned short>((a << 8 | b));
+    auto val = static_cast<unsigned short>((a << 8 | b));
 
     return val;
   }
@@ -3536,7 +3522,7 @@ std::int16_t read_int16(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos)
 
     unsigned char a = rPtr[0];
     unsigned char b = rPtr[1];
-    short val = static_cast<short>((1 - ((a & 128) >> 6)) * ((a & 127) << 8 | b));
+    auto val = static_cast<short>((1 - ((a & 128) >> 6)) * ((a & 127) << 8 | b));
 
     return val;
   }
@@ -3569,7 +3555,7 @@ std::int32_t read_int24(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos)
     unsigned char a = rPtr[0];
     unsigned char b = rPtr[1];
     unsigned char c = rPtr[2];
-    int val =  static_cast<int>((1 - ((a & 128) >> 6)) * ((a & 127) << 24 | b << 16 | c << 8));
+    int val =  ((1 - ((a & 128) >> 6)) * ((a & 127) << 24 | b << 16 | c << 8));
 
     val = val / 256;
 
@@ -3605,7 +3591,7 @@ std::int32_t read_int32(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos)
     unsigned char b = rPtr[1];
     unsigned char c = rPtr[2];
     unsigned char d = rPtr[3];
-    int val =  static_cast<int>((1 - ((a & 128) >> 6)) * ((a & 127) << 24 | b << 16 | c << 8 | d));
+    int val =  ((1 - ((a & 128) >> 6)) * ((a & 127) << 24 | b << 16 | c << 8 | d));
 
     return val;
   }
@@ -3636,7 +3622,7 @@ std::float_t read_float(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos)
 
     float val = 0.0;
 
-    unsigned char* f = reinterpret_cast<unsigned char*>(&val);
+    auto* f = reinterpret_cast<unsigned char*>(&val);
 
     unsigned char* rPtr = dataPtr + readPos;
 
@@ -3674,7 +3660,7 @@ std::double_t read_double(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos)
 
     double val = 0.0;
 
-    unsigned char* f = reinterpret_cast<unsigned char*>(&val);
+    auto* f = reinterpret_cast<unsigned char*>(&val);
 
     unsigned char* rPtr = dataPtr + readPos;
 
@@ -3740,6 +3726,8 @@ std::float_t read_ibmFloat(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos
 
 /*! \brief Returns the mathematical floor-based modulo of x by y. */
 
+namespace
+{
 double mod(double x,double y)
 {
   return (x - y * floor(x / y));
@@ -3751,7 +3739,7 @@ double mod(double x,double y)
 
 bool isGregorianLeapYear(int year)
 {
-    return ((year % 4) == 0) && (!(((year % 100) == 0) && ((year % 400) != 0)));
+    return ((year % 4) == 0) && (((year % 100) != 0) || ((year % 400) == 0));
 }
 
 
@@ -3763,13 +3751,17 @@ double gregorian_to_jd(int year, int month, int day)
 {
   try
   {
+    int monthCorrection = 0;
+    if (month > 2)
+      monthCorrection = (isGregorianLeapYear(year) ? -1 : -2);
+
     return (1721425.5 - 1) +
-           (365 * (year - 1)) +
+           (365.0 * (year - 1.0)) +
            floor((year - 1) / 4) +
            (-floor((year - 1) / 100)) +
            floor((year - 1) / 400) +
            floor((((367 * month) - 362) / 12) +
-           ((month <= 2) ? 0 : (isGregorianLeapYear(year) ? -1 : -2)) +
+           monthCorrection +
            day);
   }
   catch (...)
@@ -3777,6 +3769,7 @@ double gregorian_to_jd(int year, int month, int day)
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
+}  // namespace
 
 
 
@@ -3788,6 +3781,10 @@ void jdnToGregorian(double jd,int& year, int& month, int& day)
 {
   try
   {
+    // The year must fit into an int
+    if (!std::isfinite(jd) || std::fabs(jd) > 1e9)
+      throw Fmi::Exception(BCP,"Julian day number is out of range!");
+
     double wjd = floor(jd - 0.5) + 0.5;
     double depoch = wjd - 1721425.5;
     double quadricent = floor(depoch / 146097);
@@ -3799,7 +3796,7 @@ void jdnToGregorian(double jd,int& year, int& month, int& day)
     double yindex = floor(dquad / 365);
 
     year = (quadricent * 400) + (cent * 100) + (quad * 4) + yindex;
-    if (!((cent == 4) || (yindex == 4)))
+    if ((cent != 4) && (yindex != 4))
       year++;
 
     double yearday = wjd - gregorian_to_jd(year, 1, 1);
@@ -4064,7 +4061,7 @@ int getClosestIndex(FloatVec& values,float value)
 {
   try
   {
-    if (values.size() == 0)
+    if (values.empty())
       return 0;
 
     if (values[0] >= values[values.size()-1])
@@ -4098,12 +4095,7 @@ Int64 getCsvInt64Field(const char *csv,uint fieldIndex)
       if (*p == ';' || *p == '\n' || *p == '\0')
       {
         if (cnt == fieldIndex)
-        {
-          if (neg)
-            return -val;
-          else
-            return val;
-        }
+          return neg ? -val : val;
 
         if (*p == '\0')
           return 0;
@@ -4111,18 +4103,16 @@ Int64 getCsvInt64Field(const char *csv,uint fieldIndex)
         cnt++;
       }
       else
+      if (cnt == fieldIndex)
       {
-        if (cnt == fieldIndex)
+        if (*p == '-')
         {
-          if (*p == '-')
-          {
-            neg = true;
-          }
-          else
-          {
-            val = val * 10;
-            val = val + (*p - '0');
-          }
+          neg = true;
+        }
+        else
+        {
+          val = val * 10;
+          val = val + (*p - '0');
         }
       }
 
@@ -4296,7 +4286,7 @@ int hmac_sha256(const uint8_t *secretKey,int secretKeyLen,const uint8_t *input,i
 
 /*! \brief Computes an AWS S3 v4 request signature as a hexadecimal string. */
 
-int signature_aws_s3_v4(const char *username,
+int signature_aws_s3_v4(const char * /*username*/,
                  const char *password,
                  const char *date,
                  const char *dateRegion,
@@ -4342,8 +4332,8 @@ int signature_aws_s3_v4(const char *username,
   //for (uint t=0; t<32; t++) printf("%02x",signature[t]); printf("\n");
 
   char *p = hexSignature;
-  for (uint t=0; t<32; t++)
-    p += sprintf(p,"%02x",signature[t]);
+  for (unsigned char t : signature)
+    p += sprintf(p,"%02x",t);
 
   return 0;
 }
@@ -4361,8 +4351,8 @@ void hash_sha256(uchar *input,int inputLen,char *hexHash)
   SHA256_Final(hash, &sha256);
 
   char *p = hexHash;
-  for (uint t=0; t<SHA256_DIGEST_LENGTH; t++)
-    p += sprintf(p,"%02x",hash[t]);
+  for (unsigned char t : hash)
+    p += sprintf(p,"%02x",t);
 }
 
 
@@ -4381,7 +4371,7 @@ std::string replaceVariables(const std::string& str,std::map<std::string,std::st
       p1 = val.find("$(");
       if (p1 != std::string::npos)
       {
-        std::size_t p2 = val.find(")",p1+1);
+        std::size_t p2 = val.find(')',p1+1);
         if (p2 != std::string::npos)
         {
           std::string var = val.substr(p1+2,p2-p1-2);

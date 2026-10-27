@@ -78,9 +78,7 @@ RepresentationSection::RepresentationSection(const RepresentationSection& other)
 
 /*! \brief The destructor of the class. */
 
-RepresentationSection::~RepresentationSection()
-{
-}
+RepresentationSection::~RepresentationSection() = default;
 
 
 
@@ -159,6 +157,8 @@ bool RepresentationSection::getProperty(uint propertyId,Int64& value)
       case Property::RepresentationSection::RepresentationTemplateNumber:
         value = *mDataRepresentationTemplateNumber;
         return true;
+      default:
+        break;
     }
 
     if (mRepresentationDefinition)
@@ -215,6 +215,8 @@ bool RepresentationSection::setProperty(uint propertyId,Int64 value)
       case Property::RepresentationSection::RepresentationTemplateNumber:
         setRepresentationDefinition((std::uint16_t)value);
         return true;
+      default:
+        break;
     }
 
     if (mRepresentationDefinition)
@@ -271,7 +273,7 @@ void RepresentationSection::read(MemoryReader& memoryReader)
 
     if (mDataRepresentationTemplateNumber)
     {
-      auto representationDefinition = createRepresentationDefinition(*mDataRepresentationTemplateNumber);
+      auto *representationDefinition = createRepresentationDefinition(*mDataRepresentationTemplateNumber);
       mRepresentationDefinition.reset(representationDefinition);
       representationDefinition->read(memoryReader);
     }
@@ -531,7 +533,7 @@ void RepresentationSection::decodeValues(T::ParamValue_vec& decodedValues) const
 
 /*! \brief The method encodes the given values via the representation definition. */
 
-void RepresentationSection::encodeValues(Message *message,T::ParamValue_vec& values)
+void RepresentationSection::encodeValues(Message * /*message*/,T::ParamValue_vec& values)
 {
   try
   {
@@ -663,6 +665,8 @@ RepresentationDefinition* RepresentationSection::createRepresentationDefinition(
 
       case Template::ComplexSphericalHarmonicsDataRepresentation:
         return new ComplexSphericalHarmonicsDataRepresentationImpl();
+      default:
+        break;
     }
 
     Fmi::Exception exception(BCP,"Unknown representation definition template number!'");

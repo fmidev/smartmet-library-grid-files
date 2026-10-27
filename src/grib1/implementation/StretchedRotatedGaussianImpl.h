@@ -13,16 +13,17 @@ class StretchedRotatedGaussianImpl : public StretchedRotatedGaussian
 
                         StretchedRotatedGaussianImpl();
                         StretchedRotatedGaussianImpl(const StretchedRotatedGaussianImpl& other);
-    virtual             ~StretchedRotatedGaussianImpl();
+    ~StretchedRotatedGaussianImpl() override;
+    StretchedRotatedGaussianImpl& operator=(const StretchedRotatedGaussianImpl&) = default;
 
-    GridDefinition*     createGridDefinition() const;
+    GridDefinition*     createGridDefinition() const override;
 
-    T::Coordinate_svec  getGridOriginalCoordinatesNoCache() const;
-    T::Dimensions       getGridDimensions() const;
-    bool                getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const;
+    T::Coordinate_svec  getGridOriginalCoordinatesNoCache() const override;
+    T::Dimensions       getGridDimensions() const override;
+    bool                getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const override;
 
-    void                initSpatialReference();
-    void                read(MemoryReader& memoryReader);
+    void                initSpatialReference() override;
+    void                read(MemoryReader& memoryReader) override;
 };
 
 }  // namespace GRIB1

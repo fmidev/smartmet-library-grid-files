@@ -18,7 +18,9 @@ class FileWriter : public DataWriter
 {
   public:
                 FileWriter();
-    virtual     ~FileWriter();
+    ~FileWriter() override;
+    FileWriter(const FileWriter&) = delete;
+    FileWriter& operator=(const FileWriter&) = delete;
 
     /*! \brief Open (or create) a file for writing.
      *  \param[in] _filename  Path to the output file. */
@@ -28,13 +30,13 @@ class FileWriter : public DataWriter
     void        closeFile();
 
     //! \overload DataWriter::getWritePosition()
-    UInt64      getWritePosition();
+    UInt64      getWritePosition() override;
     //! \overload DataWriter::getMaxWritePosition()
-    UInt64      getMaxWritePosition();
+    UInt64      getMaxWritePosition() override;
     //! \overload DataWriter::setWritePosition()
-    void        setWritePosition(UInt64 _pos);
+    void        setWritePosition(UInt64 _pos) override;
     //! \overload DataWriter::write_data()
-    void        write_data(void *_data,UInt64 _size);
+    void        write_data(void *_data,UInt64 _size) override;
 
   protected:
 

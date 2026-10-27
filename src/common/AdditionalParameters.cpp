@@ -3,6 +3,7 @@
 #include "ShowFunction.h"
 
 #include <boost/cast.hpp>
+#include <utility>
 #include <macgyver/StringConversion.h>
 #include <macgyver/TimeParser.h>
 #include <macgyver/Astronomy.h>
@@ -131,154 +132,466 @@ bool AdditionalParameters::isAdditionalParameter(const char *parameterName)
 
 
 
+namespace
+{
+
+/*! \brief Returns the value of a location-based parameter not needing the value formatter. */
+
+bool locationTextValue(const std::string& param,
+    std::string& tag,
+    const Spine::LocationPtr& loc,
+    const std::string& country,
+    std::string& value)
+{
+  if (param == "place")
+  {
+    value = std::move(tag);
+    //value = loc->name;
+    return true;
+  }
+
+  if (param == "name")
+  {
+    value = loc->name;
+    return true;
+  }
+
+  if (param == "iso2")
+  {
+    value = loc->iso2;
+    return true;
+  }
+
+  if (param == "geoid")
+  {
+    value = Fmi::to_string(loc->geoid);
+    return true;
+  }
+
+  if (param == "country")
+  {
+    if (country > " ")
+      value = country;
+    else
+      value = loc->country;
+    return true;
+  }
+
+  if (param == "countryname")
+  {
+    value = loc->country;
+    return true;
+  }
+
+  if (param == "feature")
+  {
+    value = loc->feature;
+    return true;
+  }
+
+  if (param == "population")
+  {
+    value = Fmi::to_string(loc->population);
+    return true;
+  }
+
+  if (param == "covertype")
+  {
+    value = Fmi::to_string(loc->covertype);
+    return true;
+  }
+
+  if (param == "elevation")
+  {
+    //value = mValueFormatter.format(loc->elevation,precision);
+    if (std::isnan(loc->elevation))
+      value = "nan";
+    else
+      value = Fmi::to_string(loc->elevation);
+    return true;
+  }
+
+  return false;
+}
+
+
+
+
+
+/*! \brief Returns the value of a location parameter formatted with the value formatter. */
+
+bool locationFormattedValue(const Fmi::ValueFormatter& mValueFormatter,
+    const std::string& param,
+    const Spine::LocationPtr& loc,
+    int precision,
+    std::string& value)
+{
+  int def_coordinatePrecision = 6;
+
+  if (param == "latitude" || param == "lat")
+  {
+    if (precision >= 0)
+      value = mValueFormatter.format(loc->latitude, precision);
+    else
+      value = mValueFormatter.format(loc->latitude, def_coordinatePrecision);
+    return true;
+  }
+
+  if (param == "longitude" || param == "lon")
+  {
+    if (precision >= 0)
+      value = mValueFormatter.format(loc->longitude, precision);
+    else
+      value = mValueFormatter.format(loc->longitude, def_coordinatePrecision);
+    return true;
+  }
+
+  if (param == "latlon")
+  {
+    if (precision >= 0)
+      value = mValueFormatter.format(loc->latitude, precision) + ", " + mValueFormatter.format(loc->longitude, precision);
+    else
+      value = mValueFormatter.format(loc->latitude, precision) + ", " + mValueFormatter.format(loc->longitude, def_coordinatePrecision);
+    return true;
+  }
+
+  if (param == "lonlat")
+  {
+    if (precision >= 0)
+      value = mValueFormatter.format(loc->longitude, precision) + ", " + mValueFormatter.format(loc->latitude, precision);
+    else
+      value = mValueFormatter.format(loc->longitude, precision) + ", " + mValueFormatter.format(loc->latitude, def_coordinatePrecision);
+    return true;
+  }
+
+  if (param == "dem")
+  {
+    value = mValueFormatter.format(loc->dem, precision);
+    return true;
+  }
+
+  if (param == "region")
+  {
+    if (loc->area.empty())
+    {
+      if (loc->name.empty())
+      {
+        value = mValueFormatter.missing();
+        return true;
+      }
+      value = loc->name;
+      return true;
+    }
+    value = loc->area;
+    return true;
+  }
+
+  return false;
+}
+
+
+
+
+
+/*! \brief Returns the value of a time or time zone parameter. */
+
+bool timeValue(const Fmi::TimeFormatter& mTimeFormatter,
+    const Fmi::TimeZones& mTimezones,
+    const std::string& param,
+    const Spine::LocationPtr& loc,
+    const Fmi::LocalDateTime& queryTime,
+    const Fmi::TimeZonePtr& tz,
+    std::string& value)
+{
+  if (param == "time")
+  {
+    value = mTimeFormatter.format(queryTime);
+    return true;
+  }
+
+  if (param == "utctime")
+  {
+    value = mTimeFormatter.format(queryTime.utc_time());
+    return true;
+  }
+
+  if (param == "tz")
+  {
+    // FIXME: what should be returned here?
+    value = tz->name();
+    // WAS: value = std_zone_abbrev();
+    return true;
+  }
+
+  if (param == "localtz")
+  {
+    value = loc->timezone;
+    return true;
+  }
+
+  if (param == "localtime")
+  {
+    Fmi::TimeZonePtr localtz = mTimezones.time_zone_from_string(loc->timezone);
+    Fmi::LocalDateTime lTime(queryTime.utc_time(),localtz);
+    value = mTimeFormatter.format(lTime);
+    return true;
+  }
+
+  if (param == "isotime")
+  {
+    value = Fmi::to_iso_string(queryTime.local_time());
+    return true;
+  }
+
+  if (param == "xmltime")
+  {
+    value = Fmi::to_iso_extended_string(queryTime.local_time());
+    return true;
+  }
+
+  if (param == "epochtime")
+  {
+    Fmi::DateTime time_t_epoch(Fmi::Date(1970, 1, 1));
+    Fmi::TimeDuration diff = queryTime.utc_time() - time_t_epoch;
+    value = Fmi::to_string(diff.total_seconds());
+    return true;
+  }
+
+  return false;
+}
+
+
+
+
+
+/*! \brief Returns the value of a solar position or moon phase parameter. */
+
+bool solarPositionValue(const Fmi::ValueFormatter& mValueFormatter,
+    const std::string& param,
+    const Spine::LocationPtr& loc,
+    const Fmi::LocalDateTime& queryTime,
+    int precision,
+    std::string& value)
+{
+  if (param == "sunelevation")
+  {
+    Fmi::Astronomy::solar_position_t sp = Fmi::Astronomy::solar_position(queryTime,loc->longitude, loc->latitude);
+    value = mValueFormatter.format(sp.elevation,precision);
+    return true;
+  }
+
+  if (param == "sundeclination")
+  {
+    Fmi::Astronomy::solar_position_t sp = Fmi::Astronomy::solar_position(queryTime, loc->longitude, loc->latitude);
+    value = mValueFormatter.format(sp.declination,precision);
+    return true;
+  }
+
+  if (param == "sunatzimuth")
+  {
+    Fmi::Astronomy::solar_position_t sp = Fmi::Astronomy::solar_position(queryTime, loc->longitude, loc->latitude);
+    value = mValueFormatter.format(sp.azimuth,precision);
+    return true;
+  }
+
+  if (param == "dark")
+  {
+    Fmi::Astronomy::solar_position_t sp = Fmi::Astronomy::solar_position(queryTime, loc->longitude, loc->latitude);
+    value = Fmi::to_string(sp.dark());
+    return true;
+  }
+
+  if (param == "moonphase")
+  {
+    value = mValueFormatter.format(Fmi::Astronomy::moonphase(queryTime.utc_time()),precision);
+    return true;
+  }
+
+  return false;
+}
+
+
+
+
+
+/*! \brief Returns the value of a moon rise or set parameter. */
+
+bool lunarTimeValue(const std::string& param,
+    const Spine::LocationPtr& loc,
+    const Fmi::LocalDateTime& queryTime,
+    std::string& value)
+{
+  if (param == "moonrise")
+  {
+    Fmi::Astronomy::lunar_time_t lt = Fmi::Astronomy::lunar_time(queryTime, loc->longitude, loc->latitude);
+    value = Fmi::to_iso_string(lt.moonrise.local_time());
+    return true;
+  }
+
+  if (param == "moonrise2")
+  {
+    Fmi::Astronomy::lunar_time_t lt = Fmi::Astronomy::lunar_time(queryTime, loc->longitude, loc->latitude);
+
+    if (lt.moonrise2_today())
+      value = Fmi::to_iso_string(lt.moonrise2.local_time());
+    else
+      value = std::string("");
+
+    return true;
+  }
+
+  if (param == "moonset")
+  {
+    Fmi::Astronomy::lunar_time_t lt = Fmi::Astronomy::lunar_time(queryTime, loc->longitude, loc->latitude);
+    value = Fmi::to_iso_string(lt.moonset.local_time());
+    return true;
+  }
+
+  if (param == "moonset2")
+  {
+    Fmi::Astronomy::lunar_time_t lt = Fmi::Astronomy::lunar_time(queryTime, loc->longitude, loc->latitude);
+
+    if (lt.moonset2_today())
+      value = Fmi::to_iso_string(lt.moonset2.local_time());
+    else
+      value = std::string("");
+
+    return true;
+  }
+
+  if (param == "moonrisetoday")
+  {
+    Fmi::Astronomy::lunar_time_t lt = Fmi::Astronomy::lunar_time(queryTime, loc->longitude, loc->latitude);
+    value = Fmi::to_string(lt.moonrise_today());
+    return true;
+  }
+
+  if (param == "moonrise2today")
+  {
+    Fmi::Astronomy::lunar_time_t lt = Fmi::Astronomy::lunar_time(queryTime, loc->longitude, loc->latitude);
+    value = Fmi::to_string(lt.moonrise2_today());
+    return true;
+  }
+
+  if (param == "moonsettoday")
+  {
+    Fmi::Astronomy::lunar_time_t lt = Fmi::Astronomy::lunar_time(queryTime, loc->longitude, loc->latitude);
+    value = Fmi::to_string(lt.moonset_today());
+    return true;
+  }
+
+  if (param == "moonset2today")
+  {
+    Fmi::Astronomy::lunar_time_t lt = Fmi::Astronomy::lunar_time(queryTime, loc->longitude, loc->latitude);
+    value = Fmi::to_string(lt.moonset2_today());
+    return true;
+  }
+
+  if (param == "moonup24h")
+  {
+    Fmi::Astronomy::lunar_time_t lt = Fmi::Astronomy::lunar_time(queryTime, loc->longitude, loc->latitude);
+    value = Fmi::to_string(lt.above_horizont_24h());
+    return true;
+  }
+
+  if (param == "moondown24h")
+  {
+    Fmi::Astronomy::lunar_time_t lt = Fmi::Astronomy::lunar_time(queryTime, loc->longitude, loc->latitude);
+    value = Fmi::to_string(!lt.moonrise_today() && !lt.moonset_today() && !lt.above_horizont_24h());
+    return true;
+  }
+
+  return false;
+}
+
+
+
+
+
+/*! \brief Returns the value of a sun rise, set or day length parameter. */
+
+bool solarTimeValue(const std::string& param,
+    const Spine::LocationPtr& loc,
+    const Fmi::LocalDateTime& queryTime,
+    std::string& value)
+{
+  if (param == "sunrise")
+  {
+    Fmi::Astronomy::solar_time_t st = Fmi::Astronomy::solar_time(queryTime, loc->longitude, loc->latitude);
+    value = Fmi::to_iso_string(st.sunrise.local_time());
+    return true;
+  }
+
+  if (param == "sunset")
+  {
+    Fmi::Astronomy::solar_time_t st = Fmi::Astronomy::solar_time(queryTime, loc->longitude, loc->latitude);
+    value = Fmi::to_iso_string(st.sunset.local_time());
+    return true;
+  }
+
+  if (param == "noon")
+  {
+    Fmi::Astronomy::solar_time_t st = Fmi::Astronomy::solar_time(queryTime, loc->longitude, loc->latitude);
+    value = Fmi::to_iso_string(st.noon.local_time());
+    return true;
+  }
+
+  if (param == "sunrisetoday")
+  {
+    Fmi::Astronomy::solar_time_t st = Fmi::Astronomy::solar_time(queryTime, loc->longitude, loc->latitude);
+    value = Fmi::to_string(st.sunrise_today());
+    return true;
+  }
+
+  if (param == "sunsettoday")
+  {
+    Fmi::Astronomy::solar_time_t st = Fmi::Astronomy::solar_time(queryTime, loc->longitude, loc->latitude);
+    value = Fmi::to_string(st.sunset_today());
+    return true;
+  }
+
+  if (param == "daylength")
+  {
+    Fmi::Astronomy::solar_time_t st = Fmi::Astronomy::solar_time(queryTime, loc->longitude, loc->latitude);
+    auto seconds = st.daylength().total_seconds();
+    auto minutes = boost::numeric_cast<long>(round(seconds / 60.0));
+    value = Fmi::to_string(minutes);
+    return true;
+  }
+
+  return false;
+}
+
+
+
+
+
+}  // namespace
+
+
+
+
+
 /*! \brief Returns the value of a location-based additional parameter. */
 
 bool AdditionalParameters::getParameterValueByLocation(
-    std::string parameterName,
+    const std::string& parameterName,
     std::string tag,
-    Spine::LocationPtr loc,
-    std::string country,
+    const Spine::LocationPtr& loc,
+    const std::string& country,
     int precision,
     std::string& value)
 {
   FUNCTION_TRACE
   try
   {
-    int def_coordinatePrecision = 6;
     std::string param = toLowerString(parameterName);
 
-    if (param == "place")
-    {
-      value = tag;
-      //value = loc->name;
+    if (locationTextValue(param,tag,loc,country,value))
       return true;
-    }
 
-    if (param == "name")
-    {
-      value = loc->name;
+    if (locationFormattedValue(mValueFormatter,param,loc,precision,value))
       return true;
-    }
-
-    if (param == "iso2")
-    {
-      value = loc->iso2;
-      return true;
-    }
-
-    if (param == "geoid")
-    {
-      value = Fmi::to_string(loc->geoid);
-      return true;
-    }
-
-    if (param == "country")
-    {
-      if (country > " ")
-        value = country;
-      else
-        value = loc->country;
-      return true;
-    }
-
-    if (param == "countryname")
-    {
-      value = loc->country;
-      return true;
-    }
-
-    if (param == "feature")
-    {
-      value = loc->feature;
-      return true;
-    }
-
-    if (param == "latitude" || param == "lat")
-    {
-      if (precision >= 0)
-        value = mValueFormatter.format(loc->latitude, precision);
-      else
-        value = mValueFormatter.format(loc->latitude, def_coordinatePrecision);
-      return true;
-    }
-
-    if (param == "longitude" || param == "lon")
-    {
-      if (precision >= 0)
-        value = mValueFormatter.format(loc->longitude, precision);
-      else
-        value = mValueFormatter.format(loc->longitude, def_coordinatePrecision);
-      return true;
-    }
-
-    if (param == "latlon")
-    {
-      if (precision >= 0)
-        value = mValueFormatter.format(loc->latitude, precision) + ", " + mValueFormatter.format(loc->longitude, precision);
-      else
-        value = mValueFormatter.format(loc->latitude, precision) + ", " + mValueFormatter.format(loc->longitude, def_coordinatePrecision);
-      return true;
-    }
-
-    if (param == "lonlat")
-    {
-      if (precision >= 0)
-        value = mValueFormatter.format(loc->longitude, precision) + ", " + mValueFormatter.format(loc->latitude, precision);
-      else
-        value = mValueFormatter.format(loc->longitude, precision) + ", " + mValueFormatter.format(loc->latitude, def_coordinatePrecision);
-      return true;
-    }
-
-    if (param == "population")
-    {
-      value = Fmi::to_string(loc->population);
-      return true;
-    }
-
-    if (param == "covertype")
-    {
-      value = Fmi::to_string(loc->covertype);
-      return true;
-    }
-
-    if (param == "elevation")
-    {
-      //value = mValueFormatter.format(loc->elevation,precision);
-      if (std::isnan(loc->elevation))
-        value = "nan";
-      else
-        value = Fmi::to_string(loc->elevation);
-      return true;
-    }
-
-    if (param == "dem")
-    {
-      value = mValueFormatter.format(loc->dem, precision);
-      return true;
-    }
-
-    if (param == "region")
-    {
-      if (loc->area.empty())
-      {
-        if (loc->name.empty())
-        {
-          value = mValueFormatter.missing();
-          return true;
-        }
-        else
-        {
-          value = loc->name;
-          return true;
-        }
-      }
-      else
-      {
-        value = loc->area;
-        return true;
-      }
-      return false;
-    }
 
     return false;
   }
@@ -295,11 +608,11 @@ bool AdditionalParameters::getParameterValueByLocation(
 /*! \brief Returns the value of a location- and time-based additional parameter. */
 
 bool AdditionalParameters::getParameterValueByLocationAndTime(
-    std::string parameterName,
-    std::string tag,
-    Spine::LocationPtr loc,
-    Fmi::LocalDateTime queryTime,
-    Fmi::TimeZonePtr tz,
+    const std::string& parameterName,
+    const std::string& /*tag*/,
+    const Spine::LocationPtr& loc,
+    const Fmi::LocalDateTime& queryTime,
+    const Fmi::TimeZonePtr& tz,
     int precision,
     std::string& value)
 {
@@ -308,217 +621,17 @@ bool AdditionalParameters::getParameterValueByLocationAndTime(
   {
     std::string param = toLowerString(parameterName);
 
-    if (param == "time")
-    {
-      value = mTimeFormatter.format(queryTime);
+    if (timeValue(mTimeFormatter,mTimezones,param,loc,queryTime,tz,value))
       return true;
-    }
 
-    if (param == "utctime")
-    {
-      value = mTimeFormatter.format(queryTime.utc_time());
+    if (solarPositionValue(mValueFormatter,param,loc,queryTime,precision,value))
       return true;
-    }
 
-    if (param == "tz")
-    {
-      // FIXME: what should be returned here?
-      value = tz->name();
-      // WAS: value = std_zone_abbrev();
+    if (lunarTimeValue(param,loc,queryTime,value))
       return true;
-    }
 
-    if (param == "localtz")
-    {
-      value = loc->timezone;
+    if (solarTimeValue(param,loc,queryTime,value))
       return true;
-    }
-
-    if (param == "localtime")
-    {
-      Fmi::TimeZonePtr localtz = mTimezones.time_zone_from_string(loc->timezone);
-      Fmi::LocalDateTime lTime(queryTime.utc_time(),localtz);
-      value = mTimeFormatter.format(lTime);
-      return true;
-    }
-
-    if (param == "isotime")
-    {
-      value = Fmi::to_iso_string(queryTime.local_time());
-      return true;
-    }
-
-    if (param == "xmltime")
-    {
-      value = Fmi::to_iso_extended_string(queryTime.local_time());
-      return true;
-    }
-
-    if (param == "epochtime")
-    {
-      Fmi::DateTime time_t_epoch(Fmi::Date(1970, 1, 1));
-      Fmi::TimeDuration diff = queryTime.utc_time() - time_t_epoch;
-      value = Fmi::to_string(diff.total_seconds());
-      return true;
-    }
-
-    if (param == "sunelevation")
-    {
-      Fmi::Astronomy::solar_position_t sp = Fmi::Astronomy::solar_position(queryTime,loc->longitude, loc->latitude);
-      value = mValueFormatter.format(sp.elevation,precision);
-      return true;
-    }
-
-    if (param == "sundeclination")
-    {
-      Fmi::Astronomy::solar_position_t sp = Fmi::Astronomy::solar_position(queryTime, loc->longitude, loc->latitude);
-      value = mValueFormatter.format(sp.declination,precision);
-      return true;
-    }
-
-    if (param == "sunatzimuth")
-    {
-      Fmi::Astronomy::solar_position_t sp = Fmi::Astronomy::solar_position(queryTime, loc->longitude, loc->latitude);
-      value = mValueFormatter.format(sp.azimuth,precision);
-      return true;
-    }
-
-    if (param == "dark")
-    {
-      Fmi::Astronomy::solar_position_t sp = Fmi::Astronomy::solar_position(queryTime, loc->longitude, loc->latitude);
-      value = Fmi::to_string(sp.dark());
-      return true;
-    }
-
-    if (param == "moonphase")
-    {
-      value = mValueFormatter.format(Fmi::Astronomy::moonphase(queryTime.utc_time()),precision);
-      return true;
-    }
-
-    if (param == "moonrise")
-    {
-      Fmi::Astronomy::lunar_time_t lt = Fmi::Astronomy::lunar_time(queryTime, loc->longitude, loc->latitude);
-      value = Fmi::to_iso_string(lt.moonrise.local_time());
-      return true;
-    }
-
-    if (param == "moonrise2")
-    {
-      Fmi::Astronomy::lunar_time_t lt = Fmi::Astronomy::lunar_time(queryTime, loc->longitude, loc->latitude);
-
-      if (lt.moonrise2_today())
-        value = Fmi::to_iso_string(lt.moonrise2.local_time());
-      else
-        value = std::string("");
-
-      return true;
-    }
-
-    if (param == "moonset")
-    {
-      Fmi::Astronomy::lunar_time_t lt = Fmi::Astronomy::lunar_time(queryTime, loc->longitude, loc->latitude);
-      value = Fmi::to_iso_string(lt.moonset.local_time());
-      return true;
-    }
-
-    if (param == "moonset2")
-    {
-      Fmi::Astronomy::lunar_time_t lt = Fmi::Astronomy::lunar_time(queryTime, loc->longitude, loc->latitude);
-
-      if (lt.moonset2_today())
-        value = Fmi::to_iso_string(lt.moonset2.local_time());
-      else
-        value = std::string("");
-
-      return true;
-    }
-
-    if (param == "moonrisetoday")
-    {
-      Fmi::Astronomy::lunar_time_t lt = Fmi::Astronomy::lunar_time(queryTime, loc->longitude, loc->latitude);
-      value = Fmi::to_string(lt.moonrise_today());
-      return true;
-    }
-
-    if (param == "moonrise2today")
-    {
-      Fmi::Astronomy::lunar_time_t lt = Fmi::Astronomy::lunar_time(queryTime, loc->longitude, loc->latitude);
-      value = Fmi::to_string(lt.moonrise2_today());
-      return true;
-    }
-
-    if (param == "moonsettoday")
-    {
-      Fmi::Astronomy::lunar_time_t lt = Fmi::Astronomy::lunar_time(queryTime, loc->longitude, loc->latitude);
-      value = Fmi::to_string(lt.moonset_today());
-      return true;
-    }
-
-    if (param == "moonset2today")
-    {
-      Fmi::Astronomy::lunar_time_t lt = Fmi::Astronomy::lunar_time(queryTime, loc->longitude, loc->latitude);
-      value = Fmi::to_string(lt.moonset2_today());
-      return true;
-    }
-
-    if (param == "moonup24h")
-    {
-      Fmi::Astronomy::lunar_time_t lt = Fmi::Astronomy::lunar_time(queryTime, loc->longitude, loc->latitude);
-      value = Fmi::to_string(lt.above_horizont_24h());
-      return true;
-    }
-
-    if (param == "moondown24h")
-    {
-      Fmi::Astronomy::lunar_time_t lt = Fmi::Astronomy::lunar_time(queryTime, loc->longitude, loc->latitude);
-      value = Fmi::to_string(!lt.moonrise_today() && !lt.moonset_today() && !lt.above_horizont_24h());
-      return true;
-    }
-
-    if (param == "sunrise")
-    {
-      Fmi::Astronomy::solar_time_t st = Fmi::Astronomy::solar_time(queryTime, loc->longitude, loc->latitude);
-      value = Fmi::to_iso_string(st.sunrise.local_time());
-      return true;
-    }
-
-    if (param == "sunset")
-    {
-      Fmi::Astronomy::solar_time_t st = Fmi::Astronomy::solar_time(queryTime, loc->longitude, loc->latitude);
-      value = Fmi::to_iso_string(st.sunset.local_time());
-      return true;
-    }
-
-    if (param == "noon")
-    {
-      Fmi::Astronomy::solar_time_t st = Fmi::Astronomy::solar_time(queryTime, loc->longitude, loc->latitude);
-      value = Fmi::to_iso_string(st.noon.local_time());
-      return true;
-    }
-
-    if (param == "sunrisetoday")
-    {
-      Fmi::Astronomy::solar_time_t st = Fmi::Astronomy::solar_time(queryTime, loc->longitude, loc->latitude);
-      value = Fmi::to_string(st.sunrise_today());
-      return true;
-    }
-
-    if (param == "sunsettoday")
-    {
-      Fmi::Astronomy::solar_time_t st = Fmi::Astronomy::solar_time(queryTime, loc->longitude, loc->latitude);
-      value = Fmi::to_string(st.sunset_today());
-      return true;
-    }
-
-    if (param == "daylength")
-    {
-      Fmi::Astronomy::solar_time_t st = Fmi::Astronomy::solar_time(queryTime, loc->longitude, loc->latitude);
-      auto seconds = st.daylength().total_seconds();
-      auto minutes = boost::numeric_cast<long>(round(seconds / 60.0));
-      value = Fmi::to_string(minutes);
-      return true;
-    }
 
     if (param == "wday")
     {
@@ -571,8 +684,8 @@ bool AdditionalParameters::getParameterValueByLocationAndTime(
 /*! \brief Formats a local date/time using the given C-style format string. */
 
 std::string AdditionalParameters::formatDate(
-    Fmi::LocalDateTime& ldt,
-    std::locale& llocale,
+    const Fmi::LocalDateTime& ldt,
+    const std::locale& llocale,
     const char *fmt)
 {
   FUNCTION_TRACE
@@ -594,9 +707,9 @@ std::string AdditionalParameters::formatDate(
 /*! \brief Formats a local date/time using the given std::string format. */
 
 std::string AdditionalParameters::formatDate(
-    Fmi::LocalDateTime& ldt,
-    std::locale& llocale,
-    std::string fmt)
+    const Fmi::LocalDateTime& ldt,
+    const std::locale& llocale,
+    const std::string& fmt)
 {
   FUNCTION_TRACE
   try

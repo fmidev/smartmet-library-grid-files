@@ -5,6 +5,7 @@
 #include "AutoReadLock.h"
 #include "ShowFunction.h"
 #include <macgyver/Exception.h>
+#include <cstring>
 #include <sys/stat.h>
 #include <dirent.h>
 
@@ -23,7 +24,7 @@ namespace SmartMet
 DataFetcher_filesys::DataFetcher_filesys()
 {
   FUNCTION_TRACE
-  mLastChecked = time(0);
+  mLastChecked = time(nullptr);
   mFileHandleLimit = 10000;
 }
 
@@ -35,12 +36,12 @@ DataFetcher_filesys::DataFetcher_filesys()
 DataFetcher_filesys::~DataFetcher_filesys()
 {
   FUNCTION_TRACE
-  for (auto it = mFileHandles.begin(); it != mFileHandles.end(); ++it)
+  for (auto& mFileHandle : mFileHandles)
   {
-    if (it->second->fileHandle)
-      fclose(it->second->fileHandle);
+    if (mFileHandle.second->fileHandle)
+      (void)fclose(mFileHandle.second->fileHandle);
 
-    delete it->second;
+    delete mFileHandle.second;
   }
 }
 
@@ -71,33 +72,33 @@ void DataFetcher_filesys::checkFileHandles()
   FUNCTION_TRACE
   try
   {
-    time_t interv = (time(0) - mLastChecked);
+    time_t interv = (time(nullptr) - mLastChecked);
     if (interv > CHECK_INTERVAL || (mFileHandles.size() > mFileHandleLimit  && interv > 30))
     {
       //printf("CHECK FILES %ld\n",mFileHandles.size());
       std::vector<std::string> deleteList;
-      mLastChecked = time(0);
+      mLastChecked = time(nullptr);
       time_t deleteLimit = mLastChecked - 600;
       if (mFileHandles.size() > mFileHandleLimit)
         deleteLimit = mLastChecked - 30;
 
-      for (auto it = mFileHandles.begin(); it != mFileHandles.end(); ++it)
+      for (auto& mFileHandle : mFileHandles)
       {
-        if (it->second->lastUsed < deleteLimit)
+        if (mFileHandle.second->lastUsed < deleteLimit)
         {
-          if (it->second->threadLock.tryLock())
+          if (mFileHandle.second->threadLock.tryLock())
           {
-            fclose(it->second->fileHandle);
-            it->second->fileHandle = NULL;
-            deleteList.push_back(it->first);
-            it->second->threadLock.unlock();
+            (void)fclose(mFileHandle.second->fileHandle);  // read-only cache handle
+            mFileHandle.second->fileHandle = nullptr;
+            deleteList.push_back(mFileHandle.first);
+            mFileHandle.second->threadLock.unlock();
           }
         }
       }
 
-      for (auto it = deleteList.begin(); it != deleteList.end(); ++it)
+      for (auto& it : deleteList)
       {
-        auto itm = mFileHandles.find(*it);
+        auto itm = mFileHandles.find(it);
         if (itm != mFileHandles.end())
         {
           delete itm->second;
@@ -122,7 +123,7 @@ FileHandle* DataFetcher_filesys::getFileHandle(const char *filename)
   FUNCTION_TRACE
   try
   {
-    time_t currentTime = time(0);
+    time_t currentTime = time(nullptr);
 
     {
       AutoReadLock lock(&mModificationLock);
@@ -137,15 +138,12 @@ FileHandle* DataFetcher_filesys::getFileHandle(const char *filename)
       }
     }
 
-    time_t interv = (time(0) - mLastChecked);
-
-    if (interv > CHECK_INTERVAL || (mFileHandles.size() > mFileHandleLimit  && interv > 30))
-    {
-      AutoWriteLock lock(&mModificationLock);
-      checkFileHandles();
-    }
-
     AutoWriteLock lock(&mModificationLock);
+
+    time_t interv = (time(nullptr) - mLastChecked);
+    if (interv > CHECK_INTERVAL || (mFileHandles.size() > mFileHandleLimit  && interv > 30))
+      checkFileHandles();
+
     auto fh = mFileHandles.find(filename);
     if (fh != mFileHandles.end())
     {
@@ -156,9 +154,9 @@ FileHandle* DataFetcher_filesys::getFileHandle(const char *filename)
       }
     }
 
-    FileHandle *f = new FileHandle;
+    auto *f = new FileHandle;
     f->fileHandle = fopen(filename,"r");
-    if (f->fileHandle != NULL)
+    if (f->fileHandle != nullptr)
     {
       f->lastUsed = currentTime;
       mFileHandles.insert(std::pair<std::string,FileHandle*>(filename,f));
@@ -179,7 +177,7 @@ FileHandle* DataFetcher_filesys::getFileHandle(const char *filename)
 
 /*! \brief Reads a range of bytes from a local file into the given buffer. */
 
-int DataFetcher_filesys::getData(uint serverType,uint protocol,const char *server,const char *filename,std::size_t filePosition,int dataSize,char *dataPtr)
+int DataFetcher_filesys::getData(uint /*serverType*/,uint /*protocol*/,const char * /*server*/,const char *filename,std::size_t filePosition,int dataSize,char *dataPtr)
 {
   FUNCTION_TRACE
   try
@@ -197,19 +195,20 @@ int DataFetcher_filesys::getData(uint serverType,uint protocol,const char *serve
       AutoThreadLock lock(&fh->threadLock);
       if (fh->fileHandle)
       {
-        fseek(fh->fileHandle,filePosition,SEEK_SET);
+        if (fseek(fh->fileHandle,filePosition,SEEK_SET) != 0)
+          return 0;
+
         int n = fread(dataPtr,1,dataSize,fh->fileHandle);
         if (n < dataSize)
         {
           if (feof(fh->fileHandle))
           {
-            // We have reached the ene of the file
+            // We have reached the end of the file. The rest of the page must not contain
+            // stale data from earlier use of the buffer.
+            memset(dataPtr + n, 0, dataSize - n);
             return dataSize;
           }
-          else
-          {
-            printf("### WARNING: Cannot read all requested data (%s) filepos = %ld  %d/%d\n",filename,filePosition,n,dataSize);
-          }
+          printf("### WARNING: Cannot read all requested data (%s) filepos = %zu  %d/%d\n",filename,filePosition,n,dataSize);
         }
 
         return n;
@@ -230,6 +229,74 @@ int DataFetcher_filesys::getData(uint serverType,uint protocol,const char *serve
 
 
 
+namespace
+{
+/*! \brief The type of a directory entry. */
+
+enum class EntryType
+{
+  Directory,
+  File,
+  Other
+};
+
+
+
+/*! \brief Checks if the entry is "." or "..". */
+
+bool isDotEntry(const struct dirent *ep)
+{
+  return (strcmp(ep->d_name, "..") == 0  ||  strcmp(ep->d_name, ".") == 0);
+}
+
+
+
+/*! \brief Classifies the directory entry. The file status is read into s unless the entry
+    is known to be a directory. */
+
+EntryType classifyEntry(const struct dirent *ep,const char *fullName,struct stat& s)
+{
+  if (ep->d_type == DT_DIR && !isDotEntry(ep))
+    return EntryType::Directory;
+
+  if (stat(fullName, &s) != 0)
+    return EntryType::Other;
+
+  if (ep->d_type == DT_REG || ep->d_type == DT_LNK)
+    return EntryType::File;
+
+  if (ep->d_type != DT_UNKNOWN)
+    return EntryType::Other;
+
+  if ((s.st_mode & S_IFDIR) != 0 && !isDotEntry(ep))
+    return EntryType::Directory;
+
+  if ((s.st_mode & S_IFREG)  || (s.st_mode & S_IFLNK))
+    return EntryType::File;
+
+  return EntryType::Other;
+}
+
+
+
+/*! \brief Adds the file into the file list. */
+
+void addFileRecord(const char *fullName,const struct stat& s,std::vector<DataFetcher::FileRec>& fileList)
+{
+  DataFetcher::FileRec rec;
+  rec.filename = fullName;
+  rec.size = s.st_size;
+  rec.lastModified = s.st_mtime;
+  rec.serverType = DataFetcher::ServerType::Filesys;
+  rec.protocol = 0;
+  fileList.emplace_back(rec);
+}
+}  // namespace
+
+
+
+
+
 /*! \brief Recursively lists matching files under a directory into the given vector. */
 
 void DataFetcher_filesys::getFileList(const char *dirName,std::vector<std::string> &filePatterns,std::set<std::string> &dirList,std::vector<FileRec>& fileList)
@@ -237,12 +304,15 @@ void DataFetcher_filesys::getFileList(const char *dirName,std::vector<std::strin
   FUNCTION_TRACE
   try
   {
-    char *path = realpath(dirName, nullptr);
-    if (path == nullptr)
+    char *real = realpath(dirName, nullptr);
+    if (real == nullptr)
     {
       return;
     }
+    const std::string path(real);
+    free(real);
 
+    // Directories are identified by their real path, which also stops symbolic link loops
     if (dirList.find(path) != dirList.end())
       return;  // Dir already processed
 
@@ -252,7 +322,7 @@ void DataFetcher_filesys::getFileList(const char *dirName,std::vector<std::strin
       return;
     }
 
-    dirList.insert(std::string(dirName));
+    dirList.insert(path);
 
     bool ind = true;
 
@@ -262,52 +332,20 @@ void DataFetcher_filesys::getFileList(const char *dirName,std::vector<std::strin
       if (ep != nullptr)
       {
         char fullName[2000];
-        sprintf(fullName, "%s/%s", path, ep->d_name);
+        int len = snprintf(fullName, sizeof(fullName), "%s/%s", path.c_str(), ep->d_name);
+        if (len < 0 || len >= C_INT(sizeof(fullName)))
+          continue;  // Name does not fit
 
-        if (ep->d_type == DT_DIR && strcmp(ep->d_name, "..") != 0 &&
-            strcmp(ep->d_name, ".") != 0)
+        struct stat s{};
+        EntryType type = classifyEntry(ep,fullName,s);
+
+        if (type == EntryType::Directory)
         {
           getFileList(fullName,filePatterns, dirList, fileList);
         }
-        else
+        else if (type == EntryType::File  &&  (filePatterns.empty() || patternMatch(fullName,filePatterns)))
         {
-          struct stat s;
-          if (stat(fullName, &s) == 0)
-          {
-            if (ep->d_type == DT_REG || ep->d_type == DT_LNK)
-            {
-              if (filePatterns.size() == 0 || patternMatch(fullName,filePatterns))
-              {
-                FileRec rec;
-                rec.filename = fullName;
-                rec.size = s.st_size;
-                rec.lastModified = s.st_mtime;
-                rec.serverType = ServerType::Filesys;
-                rec.protocol = 0;
-                fileList.emplace_back(rec);
-              }
-            }
-            else if (ep->d_type == DT_UNKNOWN)
-            {
-              if ((s.st_mode & S_IFDIR) != 0 && strcmp(ep->d_name, "..") != 0 &&  strcmp(ep->d_name, ".") != 0)
-              {
-                getFileList(fullName, filePatterns, dirList, fileList);
-              }
-              else if ((s.st_mode & S_IFREG)  || (s.st_mode & S_IFLNK))
-              {
-                if (filePatterns.size() == 0 || patternMatch(fullName,filePatterns))
-                {
-                  FileRec rec;
-                  rec.filename = fullName;
-                  rec.size = s.st_size;
-                  rec.lastModified = s.st_mtime;
-                  rec.serverType = ServerType::Filesys;
-                  rec.protocol = 0;
-                  fileList.emplace_back(rec);
-                }
-              }
-            }
-          }
+          addFileRecord(fullName,s,fileList);
         }
       }
       else
@@ -316,7 +354,6 @@ void DataFetcher_filesys::getFileList(const char *dirName,std::vector<std::strin
       }
     }
     closedir(dp);
-    free(path);
   }
   catch (...)
   {
@@ -328,7 +365,7 @@ void DataFetcher_filesys::getFileList(const char *dirName,std::vector<std::strin
 
 /*! \brief Lists files matching the given patterns under the given directory. */
 
-void DataFetcher_filesys::getFileList(uint serverType,uint protocol,const char *server,const char *dir,std::vector<std::string> &filePatterns,std::vector<FileRec>& fileList)
+void DataFetcher_filesys::getFileList(uint /*serverType*/,uint /*protocol*/,const char * /*server*/,const char *dir,std::vector<std::string> &filePatterns,std::vector<FileRec>& fileList)
 {
   FUNCTION_TRACE
   try
@@ -346,12 +383,12 @@ void DataFetcher_filesys::getFileList(uint serverType,uint protocol,const char *
 
 /*! \brief Returns the size of the given local file, or -1 on error. */
 
-Int64 DataFetcher_filesys::getFileSize(uint serverType,uint protocol,const char *server,const char *filename)
+Int64 DataFetcher_filesys::getFileSize(uint /*serverType*/,uint /*protocol*/,const char * /*server*/,const char *filename)
 {
   FUNCTION_TRACE
   try
   {
-    struct stat buf;
+    struct stat buf{};
     if (stat(filename, &buf) == 0)
       return (Int64)buf.st_size;
 
@@ -367,7 +404,7 @@ Int64 DataFetcher_filesys::getFileSize(uint serverType,uint protocol,const char 
 
 /*! \brief No-op file headers retrieval for local files. */
 
-void DataFetcher_filesys::getFileHeaders(uint serverType,uint protocol,const char *server,const char *filename,std::map<std::string,std::string>& headers)
+void DataFetcher_filesys::getFileHeaders(uint /*serverType*/,uint /*protocol*/,const char * /*server*/,const char * /*filename*/,std::map<std::string,std::string>& /*headers*/)
 {
   FUNCTION_TRACE
   try

@@ -23,20 +23,24 @@ namespace GRIB2 {
 class Mercator : public GridDefinition {
 public:
   Mercator();
-  virtual ~Mercator();
+  Mercator(const Mercator &) = default;
+  Mercator(Mercator &&) = default;
+  Mercator &operator=(const Mercator &) = default;
+  Mercator &operator=(Mercator &&) = default;
+  ~Mercator() override;
 
-  virtual uint getTemplateNumber() const;
-  virtual GridDefinition *createGridDefinition() const;
-  virtual void read(MemoryReader &memoryReader);
-  virtual void write(DataWriter &dataWriter);
-  virtual void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const;
+  uint getTemplateNumber() const override;
+  GridDefinition *createGridDefinition() const override;
+  void read(MemoryReader &memoryReader) override;
+  void write(DataWriter &dataWriter) override;
+  void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const override;
   virtual bool getAttributeValue(const char *attributeName, std::string &attributeValue) const;
   virtual bool hasAttributeValue(const char *attributeName, const char *attributeValue) const;
-  virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
-  virtual T::Hash countHash() const;
+  void print(std::ostream &stream, uint level, uint optionFlags) const override;
+  T::Hash countHash() const override;
 
-  EarthShapeSettings *getEarthShape() const;
-  void setEarthShape(EarthShapeSettings &earthShape);
+  EarthShapeSettings *getEarthShape() const override;
+  void setEarthShape(const EarthShapeSettings &earthShape);
   const T::UInt32_opt &getNi() const;
   void setNi(T::UInt32_opt ni);
   const T::UInt32_opt &getNj() const;
@@ -45,8 +49,8 @@ public:
   void setLatitudeOfFirstGridPoint(T::Int32_opt latitudeOfFirstGridPoint);
   const T::Int32_opt &getLongitudeOfFirstGridPoint() const;
   void setLongitudeOfFirstGridPoint(T::Int32_opt longitudeOfFirstGridPoint);
-  ResolutionSettings *getResolution() const;
-  void setResolution(ResolutionSettings &resolution);
+  ResolutionSettings *getResolution() const override;
+  void setResolution(const ResolutionSettings &resolution);
   const T::Int32_opt &getLaD() const;
   void setLaD(T::Int32_opt laD);
   const T::Int32_opt &getLatitudeOfLastGridPoint() const;
@@ -54,7 +58,7 @@ public:
   const T::Int32_opt &getLongitudeOfLastGridPoint() const;
   void setLongitudeOfLastGridPoint(T::Int32_opt longitudeOfLastGridPoint);
   ScanningModeSettings *getScanningMode() const;
-  void setScanningMode(ScanningModeSettings &scanningMode);
+  void setScanningMode(const ScanningModeSettings &scanningMode);
   const T::UInt32_opt &getOrientationOfTheGrid() const;
   void setOrientationOfTheGrid(T::UInt32_opt orientationOfTheGrid);
   const T::UInt32_opt &getDi() const;

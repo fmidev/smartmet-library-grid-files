@@ -32,8 +32,7 @@ StretchedSphericalHarmonic::StretchedSphericalHarmonic() {
 
 /*! \brief The destructor of the class. */
 
-StretchedSphericalHarmonic::~StretchedSphericalHarmonic() {
-}
+StretchedSphericalHarmonic::~StretchedSphericalHarmonic() = default;
 
 /*! \brief The method reads and initializes all data related to the current section object.
 
@@ -83,19 +82,12 @@ void StretchedSphericalHarmonic::write(DataWriter &dataWriter) {
 
 void StretchedSphericalHarmonic::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sStretchedSphericalHarmonic.J", prefix.c_str());
-    attributeList.addAttribute(name, toString(mJ));
-    sprintf(name, "%sStretchedSphericalHarmonic.K", prefix.c_str());
-    attributeList.addAttribute(name, toString(mK));
-    sprintf(name, "%sStretchedSphericalHarmonic.M", prefix.c_str());
-    attributeList.addAttribute(name, toString(mM));
-    sprintf(name, "%sStretchedSphericalHarmonic.RepresentationType", prefix.c_str());
-    attributeList.addAttribute(name, toString(mRepresentationType));
-    sprintf(name, "%sStretchedSphericalHarmonic.RepresentationMode", prefix.c_str());
-    attributeList.addAttribute(name, toString(mRepresentationMode));
-    sprintf(name, "%sStretchedSphericalHarmonic.", prefix.c_str());
-    mGridStretching.getAttributeList(name, attributeList);
+        attributeList.addAttribute(prefix + "StretchedSphericalHarmonic.J", toString(mJ));
+        attributeList.addAttribute(prefix + "StretchedSphericalHarmonic.K", toString(mK));
+        attributeList.addAttribute(prefix + "StretchedSphericalHarmonic.M", toString(mM));
+        attributeList.addAttribute(prefix + "StretchedSphericalHarmonic.RepresentationType", toString(mRepresentationType));
+        attributeList.addAttribute(prefix + "StretchedSphericalHarmonic.RepresentationMode", toString(mRepresentationMode));
+        mGridStretching.getAttributeList(prefix + "StretchedSphericalHarmonic.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -272,7 +264,7 @@ std::uint8_t StretchedSphericalHarmonic::getRepresentationMode() const {
 
 GridStretchingSettings *StretchedSphericalHarmonic::getGridStretching() const {
   try {
-    return static_cast<GridStretchingSettings *>(&mGridStretching);
+    return &mGridStretching;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -318,7 +310,7 @@ void StretchedSphericalHarmonic::setRepresentationMode(std::uint8_t representati
   }
 }
 
-void StretchedSphericalHarmonic::setGridStretching(GridStretchingSettings &gridStretching) {
+void StretchedSphericalHarmonic::setGridStretching(const GridStretchingSettings &gridStretching) {
   try {
     mGridStretching = gridStretching;
   } catch (...) {

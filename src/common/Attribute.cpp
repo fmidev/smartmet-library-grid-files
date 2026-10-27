@@ -146,7 +146,7 @@ Attribute* Attribute::duplicate()
 
 /*! \brief Prints the attribute contents to the given stream. */
 
-void Attribute::print(std::ostream& stream,uint level,uint optionFlags)
+void Attribute::print(std::ostream& stream,uint level,uint /*optionFlags*/) const
 {
   try
   {

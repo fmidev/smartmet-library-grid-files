@@ -10,9 +10,7 @@ namespace GRIB2
 
 /*! \brief The constructor of the class. */
 
-TimeIntervalAerosolEnsembleProductImpl::TimeIntervalAerosolEnsembleProductImpl()
-{
-}
+TimeIntervalAerosolEnsembleProductImpl::TimeIntervalAerosolEnsembleProductImpl() = default;
 
 
 
@@ -20,10 +18,7 @@ TimeIntervalAerosolEnsembleProductImpl::TimeIntervalAerosolEnsembleProductImpl()
 
 /*! \brief The copy constructor of the class. */
 
-TimeIntervalAerosolEnsembleProductImpl::TimeIntervalAerosolEnsembleProductImpl(const TimeIntervalAerosolEnsembleProductImpl& other)
-:TimeIntervalAerosolEnsembleProduct(other)
-{
-}
+TimeIntervalAerosolEnsembleProductImpl::TimeIntervalAerosolEnsembleProductImpl(const TimeIntervalAerosolEnsembleProductImpl& other) = default;
 
 
 
@@ -31,9 +26,7 @@ TimeIntervalAerosolEnsembleProductImpl::TimeIntervalAerosolEnsembleProductImpl(c
 
 /*! \brief The destructor of the class. */
 
-TimeIntervalAerosolEnsembleProductImpl::~TimeIntervalAerosolEnsembleProductImpl()
-{
-}
+TimeIntervalAerosolEnsembleProductImpl::~TimeIntervalAerosolEnsembleProductImpl() = default;
 
 
 
@@ -90,7 +83,7 @@ void TimeIntervalAerosolEnsembleProductImpl::read(MemoryReader& memoryReader)
         \return               The forecast time.
 */
 
-T::TimeString TimeIntervalAerosolEnsembleProductImpl::getForecastTime(T::TimeString referenceTime) const
+T::TimeString TimeIntervalAerosolEnsembleProductImpl::getForecastTime(T::TimeString /*referenceTime*/) const
 {
   throw Fmi::Exception(BCP, "Not implemented!");
 }

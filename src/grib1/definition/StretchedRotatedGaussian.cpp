@@ -31,8 +31,7 @@ StretchedRotatedGaussian::StretchedRotatedGaussian() {
 
 /*! \brief The destructor of the class. */
 
-StretchedRotatedGaussian::~StretchedRotatedGaussian() {
-}
+StretchedRotatedGaussian::~StretchedRotatedGaussian() = default;
 
 /*! \brief The method reads and initializes all data related to the current section object.
 
@@ -86,23 +85,14 @@ void StretchedRotatedGaussian::write(DataWriter &dataWriter) {
 
 void StretchedRotatedGaussian::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sStretchedRotatedGaussian.Ni", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNi));
-    sprintf(name, "%sStretchedRotatedGaussian.Nj", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNj));
-    sprintf(name, "%sStretchedRotatedGaussian.", prefix.c_str());
-    mGridArea.getAttributeList(name, attributeList);
-    sprintf(name, "%sStretchedRotatedGaussian.IDirectionIncrement", prefix.c_str());
-    attributeList.addAttribute(name, toString(mIDirectionIncrement));
-    sprintf(name, "%sStretchedRotatedGaussian.N", prefix.c_str());
-    attributeList.addAttribute(name, toString(mN));
-    sprintf(name, "%sStretchedRotatedGaussian.", prefix.c_str());
-    mScanningMode.getAttributeList(name, attributeList);
-    sprintf(name, "%sStretchedRotatedGaussian.", prefix.c_str());
-    mRotation.getAttributeList(name, attributeList);
-    sprintf(name, "%sStretchedRotatedGaussian.", prefix.c_str());
-    mGridStretching.getAttributeList(name, attributeList);
+        attributeList.addAttribute(prefix + "StretchedRotatedGaussian.Ni", toString(mNi));
+        attributeList.addAttribute(prefix + "StretchedRotatedGaussian.Nj", toString(mNj));
+        mGridArea.getAttributeList(prefix + "StretchedRotatedGaussian.", attributeList);
+        attributeList.addAttribute(prefix + "StretchedRotatedGaussian.IDirectionIncrement", toString(mIDirectionIncrement));
+        attributeList.addAttribute(prefix + "StretchedRotatedGaussian.N", toString(mN));
+        mScanningMode.getAttributeList(prefix + "StretchedRotatedGaussian.", attributeList);
+        mRotation.getAttributeList(prefix + "StretchedRotatedGaussian.", attributeList);
+        mGridStretching.getAttributeList(prefix + "StretchedRotatedGaussian.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -256,7 +246,7 @@ std::int16_t StretchedRotatedGaussian::getNj() const {
 
 GridAreaSettings *StretchedRotatedGaussian::getGridArea() const {
   try {
-    return static_cast<GridAreaSettings *>(&mGridArea);
+    return &mGridArea;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -286,7 +276,7 @@ std::uint16_t StretchedRotatedGaussian::getN() const {
 
 ScanningModeSettings *StretchedRotatedGaussian::getScanningMode() const {
   try {
-    return static_cast<ScanningModeSettings *>(&mScanningMode);
+    return &mScanningMode;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -296,7 +286,7 @@ ScanningModeSettings *StretchedRotatedGaussian::getScanningMode() const {
 
 RotationSettings *StretchedRotatedGaussian::getRotation() const {
   try {
-    return static_cast<RotationSettings *>(&mRotation);
+    return &mRotation;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -306,7 +296,7 @@ RotationSettings *StretchedRotatedGaussian::getRotation() const {
 
 GridStretchingSettings *StretchedRotatedGaussian::getGridStretching() const {
   try {
-    return static_cast<GridStretchingSettings *>(&mGridStretching);
+    return &mGridStretching;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -328,7 +318,7 @@ void StretchedRotatedGaussian::setNj(std::int16_t nj) {
   }
 }
 
-void StretchedRotatedGaussian::setGridArea(GridAreaSettings &gridArea) {
+void StretchedRotatedGaussian::setGridArea(const GridAreaSettings &gridArea) {
   try {
     mGridArea = gridArea;
   } catch (...) {
@@ -352,7 +342,7 @@ void StretchedRotatedGaussian::setN(std::uint16_t n) {
   }
 }
 
-void StretchedRotatedGaussian::setScanningMode(ScanningModeSettings &scanningMode) {
+void StretchedRotatedGaussian::setScanningMode(const ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {
@@ -360,7 +350,7 @@ void StretchedRotatedGaussian::setScanningMode(ScanningModeSettings &scanningMod
   }
 }
 
-void StretchedRotatedGaussian::setRotation(RotationSettings &rotation) {
+void StretchedRotatedGaussian::setRotation(const RotationSettings &rotation) {
   try {
     mRotation = rotation;
   } catch (...) {
@@ -368,7 +358,7 @@ void StretchedRotatedGaussian::setRotation(RotationSettings &rotation) {
   }
 }
 
-void StretchedRotatedGaussian::setGridStretching(GridStretchingSettings &gridStretching) {
+void StretchedRotatedGaussian::setGridStretching(const GridStretchingSettings &gridStretching) {
   try {
     mGridStretching = gridStretching;
   } catch (...) {

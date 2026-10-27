@@ -17,23 +17,22 @@
 namespace SmartMet
 {
 
-static const char *emptyStr = "\0";
+namespace
+{
+const char *emptyStr = "\0";
+}  // namespace
 
 
 
 /*! \brief Default constructor for Session. */
 
-Session::Session()
-{
-}
+Session::Session() = default;
 
 
 
 /*! \brief Destructor for Session. */
 
-Session::~Session()
-{
-}
+Session::~Session() = default;
 
 
 
@@ -55,16 +54,16 @@ void Session::clearAttributes()
 
 /*! \brief Sets attributes by parsing a semicolon-separated key=value string. */
 
-void Session::setAttributes(std::string& attributes)
+void Session::setAttributes(const std::string& attributes)
 {
   try
   {
     std::vector<std::string> list;
     splitString(attributes,';',list);
-    for (auto it=list.begin(); it != list.end(); it++)
+    for (auto& it : list)
     {
       std::vector<std::string> attr;
-      splitString(it->c_str(),'=',attr);
+      splitString(it.c_str(),'=',attr);
       if (attr.size() == 1)
       {
         setAttribute(attr[0].c_str(),"");
@@ -201,7 +200,7 @@ void Session::setAttribute(const char *name,UInt64 value)
 
 /*! \brief Sets a session attribute to a std::string value. */
 
-void Session::setAttribute(const char *name,std::string& value)
+void Session::setAttribute(const char *name,const std::string& value)
 {
   try
   {
@@ -294,10 +293,7 @@ bool Session::findAttribute(const char *name)
   try
   {
     auto attr = attributes.find(name);
-    if (attr != attributes.end())
-      return true;
-
-    return false;
+    return attr != attributes.end();
   }
   catch (...)
   {
@@ -317,10 +313,7 @@ bool Session::findAttribute(const char *prefix,const char *name)
     char newName[200];
     sprintf(newName,"%s%s",prefix,name);
     auto attr = attributes.find(newName);
-    if (attr != attributes.end())
-      return true;
-
-    return false;
+    return attr != attributes.end();
   }
   catch (...)
   {
@@ -567,10 +560,10 @@ std::string Session::getUrlParameter()
   try
   {
     std::ostringstream output;
-    for (auto it = attributes.begin(); it != attributes.end(); ++it)
+    for (auto& attribute : attributes)
     {
-      if (it->first.substr(0,1) != "#")
-        output << it->first << "=" << it->second << ";";
+      if (attribute.first.substr(0,1) != "#")
+        output << attribute.first << "=" << attribute.second << ";";
     }
     return output.str();
   }
@@ -584,14 +577,14 @@ std::string Session::getUrlParameter()
 
 /*! \brief Prints all session attributes to the given stream. */
 
-void Session::print(std::ostream& stream,uint level,uint optionFlags)
+void Session::print(std::ostream& stream,uint /*level*/,uint /*optionFlags*/)
 {
   try
   {
     stream << "SESSION:\n";
-    for (auto it = attributes.begin(); it != attributes.end(); ++it)
+    for (auto& attribute : attributes)
     {
-      stream << "  - " << it->first << "=" << it->second << "\n";
+      stream << "  - " << attribute.first << "=" << attribute.second << "\n";
     }
   }
   catch (...)

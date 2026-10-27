@@ -28,8 +28,7 @@ RotationSettings::RotationSettings() {
 
 /*! \brief The destructor of the class. */
 
-RotationSettings::~RotationSettings() {
-}
+RotationSettings::~RotationSettings() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -69,13 +68,9 @@ void RotationSettings::write(DataWriter &dataWriter) {
 
 void RotationSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sRotationSettings.LatitudeOfSouthernPole", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatitudeOfSouthernPole));
-    sprintf(name, "%sRotationSettings.LongitudeOfSouthernPole", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLongitudeOfSouthernPole));
-    sprintf(name, "%sRotationSettings.AngleOfRotation", prefix.c_str());
-    attributeList.addAttribute(name, toString(mAngleOfRotation));
+        attributeList.addAttribute(prefix + "RotationSettings.LatitudeOfSouthernPole", toString(mLatitudeOfSouthernPole));
+        attributeList.addAttribute(prefix + "RotationSettings.LongitudeOfSouthernPole", toString(mLongitudeOfSouthernPole));
+        attributeList.addAttribute(prefix + "RotationSettings.AngleOfRotation", toString(mAngleOfRotation));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -138,7 +133,7 @@ bool RotationSettings::hasAttributeValue(const char *attributeName, const char *
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void RotationSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
+void RotationSettings::print(std::ostream &stream, uint level, uint /*optionFlags*/) const {
   try {
     stream << space(level) << "RotationSettings\n";
     stream << space(level) << "- LatitudeOfSouthernPole = " << toString(mLatitudeOfSouthernPole) << "\n";

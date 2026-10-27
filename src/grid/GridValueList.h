@@ -27,7 +27,7 @@ class GridValueList
 
      /*! \brief Append a grid value.
       *  \param[in] gridValue  Value to append. */
-     void             addGridValue(GridValue& gridValue);
+     void             addGridValue(const GridValue& gridValue);
 
      /*! \brief Remove all entries. */
      void             clear();
@@ -79,7 +79,7 @@ class GridValueList
       *  \param[in] index      Zero-based index.
       *  \param[in] gridValue  New value to store.
       *  \return True if the index was valid. */
-     bool             setGridValueByIndex(uint index,GridValue& gridValue);
+     bool             setGridValueByIndex(uint index,const GridValue& gridValue);
 
      /*! \brief Print the list to a stream (for debugging).
       *  \param[in] stream      Output stream.

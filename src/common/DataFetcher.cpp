@@ -2,6 +2,7 @@
 #include "GeneralFunctions.h"
 #include <macgyver/Exception.h>
 #include "ShowFunction.h"
+#include <vector>
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
 
@@ -12,18 +13,14 @@ namespace SmartMet
 /*! \brief Default constructor for DataFetcher. */
 
 DataFetcher::DataFetcher()
-{
-  mDebugEnabled = false;
-}
+= default;
 
 
 
 
 /*! \brief Destructor for DataFetcher. */
 
-DataFetcher::~DataFetcher()
-{
-}
+DataFetcher::~DataFetcher() = default;
 
 
 
@@ -31,7 +28,7 @@ DataFetcher::~DataFetcher()
 
 /*! \brief Stub for retrieving file size; must be implemented in subclasses. */
 
-Int64 DataFetcher::getFileSize(uint serverType,uint protocol,const char *server,const char *filename)
+Int64 DataFetcher::getFileSize(uint /*serverType*/,uint /*protocol*/,const char * /*server*/,const char * /*filename*/)
 {
   throw Fmi::Exception(BCP,"This method should be implemented in child classes!");
 }
@@ -41,7 +38,7 @@ Int64 DataFetcher::getFileSize(uint serverType,uint protocol,const char *server,
 
 /*! \brief Stub for retrieving file headers; must be implemented in subclasses. */
 
-void DataFetcher::getFileHeaders(uint serverType,uint protocol,const char *server,const char *filename,std::map<std::string,std::string>& headers)
+void DataFetcher::getFileHeaders(uint /*serverType*/,uint /*protocol*/,const char * /*server*/,const char * /*filename*/,std::map<std::string,std::string>& /*headers*/)
 {
   throw Fmi::Exception(BCP,"This method should be implemented in child classes!");
 }
@@ -51,7 +48,7 @@ void DataFetcher::getFileHeaders(uint serverType,uint protocol,const char *serve
 
 /*! \brief Stub for fetching file data; must be implemented in subclasses. */
 
-int DataFetcher::getData(uint serverType,uint protocol,const char *server,const char *filename,std::size_t filePosition,int dataSize,char *dataPtr)
+int DataFetcher::getData(uint /*serverType*/,uint /*protocol*/,const char * /*server*/,const char * /*filename*/,std::size_t /*filePosition*/,int /*dataSize*/,char * /*dataPtr*/)
 {
   throw Fmi::Exception(BCP,"This method should be implemented in child classes!");
 }
@@ -61,7 +58,7 @@ int DataFetcher::getData(uint serverType,uint protocol,const char *server,const 
 
 /*! \brief Stub for listing files in a directory; must be implemented in subclasses. */
 
-void DataFetcher::getFileList(uint serverType,uint protocol,const char *server,const char *dir,std::vector<std::string> &filePatterns,std::vector<FileRec>& fileList)
+void DataFetcher::getFileList(uint /*serverType*/,uint /*protocol*/,const char * /*server*/,const char * /*dir*/,std::vector<std::string> & /*filePatterns*/,std::vector<FileRec>& /*fileList*/)
 {
   throw Fmi::Exception(BCP,"This method should be implemented in child classes!");
 }
@@ -96,6 +93,68 @@ void DataFetcher::setAccessFile(const char *filename)
 
 
 
+namespace
+{
+/*! \brief Splits the CSV line into fields separated by ';' or '\n' (outside of quotes).
+    The separators are replaced by '\0' characters. Returns the number of fields. */
+
+uint splitCsvFields(char *st,char *field[100])
+{
+  bool ind = false;
+  uint c = 1;
+  field[0] = st;
+  char *p = st;
+  while (*p != '\0'  &&  c < 100)
+  {
+    if (*p == '"')
+      ind = !ind;
+
+    if ((*p == ';'  || *p == '\n') && !ind)
+    {
+      *p = '\0';
+      p++;
+      field[c] = p;
+      c++;
+    }
+    else
+    {
+      p++;
+    }
+  }
+  return c;
+}
+
+
+
+/*! \brief Adds the access information of the server. */
+
+void addAccessRecord(char *field[],DataFetcher::AccessMap& mAccessMap)
+{
+  std::string server;
+  DataFetcher::AccessInfo rec;
+
+  if (field[0][0] != '\0')
+    server = field[0];
+
+  if (field[1][0] != '\0')
+    rec.authenticationMethod = toUInt32(field[1]);
+
+  if (field[2][0] != '\0')
+    rec.username = field[2];
+
+  if (field[3][0] != '\0')
+    rec.password = field[3];
+
+  std::string key = toLowerString(server);
+  //printf("ADD ACCESS [%s][%u][%s][%s]\n",server.c_str(),rec.authenticationMethod,rec.username.c_str(),rec.password.c_str());
+  mAccessMap.insert(std::pair<std::string,DataFetcher::AccessInfo>(key,rec));
+}
+}  // namespace
+
+
+
+
+
 /*! \brief Parses an access credentials file into the given access map. */
 
 void DataFetcher::loadAccessFile(const char *filename,AccessMap& mAccessMap)
@@ -122,53 +181,14 @@ void DataFetcher::loadAccessFile(const char *filename,AccessMap& mAccessMap)
     {
       if (st[0] != '#')
       {
-        bool ind = false;
         char *field[100];
-        uint c = 1;
-        field[0] = st;
-        char *p = st;
-        while (*p != '\0'  &&  c < 100)
-        {
-          if (*p == '"')
-            ind = !ind;
-
-          if ((*p == ';'  || *p == '\n') && !ind)
-          {
-            *p = '\0';
-            p++;
-            field[c] = p;
-            c++;
-          }
-          else
-          {
-            p++;
-          }
-        }
+        uint c = splitCsvFields(st,field);
 
         if (c > 3)
-        {
-          std::string server;
-          AccessInfo rec;
-
-          if (field[0][0] != '\0')
-            server = field[0];
-
-          if (field[1][0] != '\0')
-            rec.authenticationMethod = toUInt32(field[1]);
-
-          if (field[2][0] != '\0')
-            rec.username = field[2];
-
-          if (field[3][0] != '\0')
-            rec.password = field[3];
-
-          std::string key = toLowerString(server);
-          //printf("ADD ACCESS [%s][%u][%s][%s]\n",server.c_str(),rec.authenticationMethod,rec.username.c_str(),rec.password.c_str());
-          mAccessMap.insert(std::pair<std::string,AccessInfo>(key,rec));
-        }
+          addAccessRecord(field,mAccessMap);
       }
     }
-    fclose(file);
+    (void)fclose(file);
   }
   catch (...)
   {
@@ -211,15 +231,15 @@ DataFetcher::AccessInfo* DataFetcher::getAccessInfo(const char *server)
   FUNCTION_TRACE
   try
   {
-    if (mAccessMap.size() == 0)
-      return NULL;
+    if (mAccessMap.empty())
+      return nullptr;
 
     std::string key = toLowerString(server);
     auto rec = mAccessMap.find(key);
     if (rec != mAccessMap.end())
       return &rec->second;
 
-    return NULL;
+    return nullptr;
   }
   catch (...)
   {
@@ -240,8 +260,8 @@ void DataFetcher::parseHeaders(char *data,int dataSize,std::map<std::string,std:
     if (dataSize <= 0)
       return;
 
-    char dat[dataSize];
-    memcpy(dat,data,dataSize);
+    std::vector<char> datVec(data,data + dataSize);
+    char *dat = datVec.data();
 
     int c = 0;
     char *p = dat;
@@ -281,7 +301,7 @@ void DataFetcher::parseHeaders(char *data,int dataSize,std::map<std::string,std:
       }
     }
   }
-  catch (Fmi::Exception& e)
+  catch (Fmi::Exception&)
   {
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
@@ -309,8 +329,7 @@ void DataFetcher::splitUrl(const char *urlStr,uint& protocol,std::string& server
       protocol = 1;
       s = url+7;
     }
-    else
-    if (strncasecmp(url,"https://",8) == 0)
+    else if (strncasecmp(url,"https://",8) == 0)
     {
       protocol = 2;
       s = url+8;
@@ -330,7 +349,7 @@ void DataFetcher::splitUrl(const char *urlStr,uint& protocol,std::string& server
       filename = "/";
     }
   }
-  catch (Fmi::Exception& e)
+  catch (Fmi::Exception&)
   {
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }

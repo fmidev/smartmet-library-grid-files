@@ -205,6 +205,79 @@ $nohash = array (
  * - signed[1], signed[2], signed[4]
  */
 
+// Comment out the names of the parameters a generated method does not use,
+// e.g. "read(MemoryReader& /*memoryReader*/)" for a template without members
+// The methods the parent class declares virtual, read from its header, so
+// that only real overrides are marked override ("~" stands for the destructor)
+function parent_virtuals($parent, $edition)
+{
+  $virtuals = array();
+  if ($parent > " ")
+  {
+    $text = file_get_contents(dirname(__FILE__) . "/../src/$edition/$parent.h");
+    preg_match_all('/virtual[^;(]*?(~?\w+)\s*\(/', $text, $m);
+    foreach ($m[1] as $method)
+      $virtuals[$method[0] == "~" ? "~" : $method] = true;
+  }
+  return $virtuals;
+}
+
+// A method declaration, marked override if the parent declares it virtual
+function declare_method($virtuals, $declaration)
+{
+  preg_match('/(~?\w+)\s*\(/', $declaration, $m);
+  $method = ($m[1][0] == "~") ? "~" : $m[1];
+  if (isset($virtuals[$method]))
+    return "$declaration override;\n";
+  return "virtual $declaration;\n";
+}
+
+// Mark the plain member declarations that override a parent virtual (e.g. a
+// generated getter like getEarthShape) with override
+function mark_overrides($text, $virtuals)
+{
+  // Declarations may share a line, so start after any ; { } : or newline
+  return preg_replace_callback('/(?<=[;{}:\n])([ \t]*)([^;{}()\n]*?\b(\w+)\s*\([^;{}()]*\)(\s*const)?)\s*;/',
+    function ($m) use ($virtuals) {
+      if (isset($virtuals[$m[3]]) && !preg_match('/\b(virtual|override)\b|=/', $m[0]))
+        return $m[1] . $m[2] . " override;";
+      return $m[0];
+    }, $text);
+}
+
+function comment_unused_parameters($cpp)
+{
+  $out = "";
+  $pos = 0;
+  $pattern = '/::(read|write|getAttributeList|getAttributeValue|hasAttributeValue|print)\(([^)]*)\)( const)?\s*\{/';
+  while (preg_match($pattern, $cpp, $m, PREG_OFFSET_CAPTURE, $pos))
+  {
+    $paramStart = $m[2][1];
+    $paramEnd = $paramStart + strlen($m[2][0]);
+    $open = $m[0][1] + strlen($m[0][0]) - 1;
+    $depth = 0;
+    for ($close = $open; $close < strlen($cpp); $close++)
+    {
+      if ($cpp[$close] == '{')
+        $depth++;
+      else if ($cpp[$close] == '}' && --$depth == 0)
+        break;
+    }
+    $body = substr($cpp, $open, $close - $open + 1);
+    $params = array();
+    foreach (explode(",", $m[2][0]) as $param)
+    {
+      if (preg_match('/^(.*?)(\w+)(\s*)$/s', $param, $p) && !preg_match('/\b' . $p[2] . '\b/', $body))
+        $param = $p[1] . "/*" . $p[2] . "*/" . $p[3];
+      $params[] = $param;
+    }
+    $out .= substr($cpp, $pos, $paramStart - $pos) . implode(",", $params);
+    $out .= substr($cpp, $paramEnd, $close + 1 - $paramEnd);
+    $pos = $close + 1;
+  }
+  return $out . substr($cpp, $pos);
+}
+
 define ( 'PADDING', 30 );
 
 $templateFile = $argv [1];
@@ -314,26 +387,32 @@ function process_template($file, $name, $class, $outdir)
   $body .= "{\n/*! \brief The class is automatically created from the template ($name).*/\n\n";
   $body .= "class $class $parentdecl\n";
   $body .= "{ public:\n";
+  // Overriding methods are marked override, new ones virtual
+  $virtuals = parent_virtuals($parent, "grib2");
+
   $body .= "${class}();\n";
-//  $body .= "${class}(const ${class}& other);\n";
-  $body .= "virtual ~${class}();\n\n";
+  $body .= "${class}(const ${class}&) = default;\n";
+  $body .= "${class}(${class}&&) = default;\n";
+  $body .= "${class}& operator=(const ${class}&) = default;\n";
+  $body .= "${class}& operator=(${class}&&) = default;\n";
+  $body .= declare_method($virtuals, "~${class}()") . "\n";
    
   $p = explode(".", $name);
   if (($p[0] == "3" || $p[0] == "4" ||  $p[0] == "5"  || $p[0] == "7") &&  is_numeric($p[1]))
   {  
-    $body .= "virtual uint getTemplateNumber() const;\n";
+    $body .= declare_method($virtuals, "uint getTemplateNumber() const");
     
     if ($parent > " ")
-      $body .= "virtual ${parent}* create${parent}() const;\n";
+      $body .= declare_method($virtuals, "${parent}* create${parent}() const");
   }
 
-  $body .= "virtual void read(MemoryReader& memoryReader);\n";
-  $body .= "virtual void write(DataWriter& dataWriter);\n";
-  $body .= "virtual void getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const;\n";
-  $body .= "virtual bool getAttributeValue(const char *attributeName,std::string& attributeValue) const;\n";
-  $body .= "virtual bool hasAttributeValue(const char *attributeName,const char *attributeValue) const;\n";
-  $body .= "virtual void print(std::ostream& stream,uint level,uint optionFlags) const;\n";
-  $body .= "virtual T::Hash countHash() const;\n\n";
+  $body .= declare_method($virtuals, "void read(MemoryReader& memoryReader)");
+  $body .= declare_method($virtuals, "void write(DataWriter& dataWriter)");
+  $body .= declare_method($virtuals, "void getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const");
+  $body .= declare_method($virtuals, "bool getAttributeValue(const char *attributeName,std::string& attributeValue) const");
+  $body .= declare_method($virtuals, "bool hasAttributeValue(const char *attributeName,const char *attributeValue) const");
+  $body .= declare_method($virtuals, "void print(std::ostream& stream,uint level,uint optionFlags) const");
+  $body .= declare_method($virtuals, "T::Hash countHash() const") . "\n";
 
   $protected = "\n\nprotected:\n\n";
  
@@ -370,10 +449,10 @@ function process_template($file, $name, $class, $outdir)
         $body .= "$incclass * get$Var() const;";
 
         $getters .= "\n/*! \brief The method returns the pointer to the {@link m${Var}} attribute. */\n\n";        
-        $getters .= "$incclass * ${class}::get$Var() const { try { return static_cast<${incclass}*>(&m${Var}); } catch (...) {throw Fmi::Exception(BCP,\"Operation failed\",nullptr);}\n}\n\n";
+        $getters .= "$incclass * ${class}::get$Var() const { try { return &m${Var}; } catch (...) {throw Fmi::Exception(BCP,\"Operation failed\",nullptr);}\n}\n\n";
 
-        $body .= "void set$Var($incclass& $var);";
-        $setters .= "void ${class}::set$Var($incclass& $var) { try { m${Var} = $var; } catch (...) {throw Fmi::Exception(BCP,\"Operation failed\",nullptr);}\n}\n\n";
+        $body .= "void set$Var(const $incclass& $var);";
+        $setters .= "void ${class}::set$Var(const $incclass& $var) { try { m${Var} = $var; } catch (...) {throw Fmi::Exception(BCP,\"Operation failed\",nullptr);}\n}\n\n";
 
         $protected .= "mutable $incclass m$Var;\n";
         $headers ["\"${incclass}.h\""] = 1;
@@ -421,9 +500,9 @@ function process_template($file, $name, $class, $outdir)
               $headers ["<array>"] = 1;
               $members [$Var] = "normal";
               if (strpos($realtype, "boost::optional") > 0 or strpos($realtype, "_opt") > 0)
-                $hash .= "${prefix} if (m${Var}) boost::hash_combine(seed,*m${Var});\n";
+                $hash .= "${prefix} if (m${Var}) Fmi::hash_merge(seed,*m${Var});\n";
               else
-                $hash .= "${prefix} boost::hash_combine(seed,m${Var});\n";
+                $hash .= "${prefix} Fmi::hash_merge(seed,m${Var});\n";
             } 
             else if (substr ( $vartype, 0, 9 ) == "codetable")
             {
@@ -437,9 +516,9 @@ function process_template($file, $name, $class, $outdir)
               $members [$Var] = "codetable";
               $codetables [$var] = extract_codetable ( $row );
               if (strpos ( $realtype, "boost::optional" ) > 0  or  strpos($realtype, "_opt") > 0)
-                $hash .= "${prefix} if (m${Var}) boost::hash_combine(seed,*m${Var});\n";
+                $hash .= "${prefix} if (m${Var}) Fmi::hash_merge(seed,*m${Var});\n";
               else
-                $hash .= "${prefix} boost::hash_combine(seed,m${Var});\n";
+                $hash .= "${prefix} Fmi::hash_merge(seed,m${Var});\n";
             } 
             else if (substr ( $vartype, 0, 5 ) == "flags")
             {
@@ -453,9 +532,9 @@ function process_template($file, $name, $class, $outdir)
               $members [$Var] = "flagtable";
               $flagtables [$var] = extract_flagtable ( $row );
               if (strpos($realtype,"boost::optional") > 0  or strpos($realtype, "_opt") > 0)              
-                $hash .= "${prefix} if (m${Var}) boost::hash_combine(seed,*m${Var});\n";
+                $hash .= "${prefix} if (m${Var}) Fmi::hash_merge(seed,*m${Var});\n";
               else
-                $hash .= "${prefix} boost::hash_combine(seed,m${Var});\n";
+                $hash .= "${prefix} Fmi::hash_merge(seed,m${Var});\n";
             } 
             else
             {
@@ -468,9 +547,9 @@ function process_template($file, $name, $class, $outdir)
 
               $members [$Var] = "normal";
               if (strpos ( $realtype, "boost::optional" ) > 0  or strpos($realtype, "_opt") > 0)
-                $hash .= "${prefix} if (m${Var}) boost::hash_combine(seed,*m${Var});\n";
+                $hash .= "${prefix} if (m${Var}) Fmi::hash_merge(seed,*m${Var});\n";
               else
-                $hash .= "${prefix} boost::hash_combine(seed,m${Var});\n";
+                $hash .= "${prefix} Fmi::hash_merge(seed,m${Var});\n";
             }
           }
           break;
@@ -493,7 +572,7 @@ function process_template($file, $name, $class, $outdir)
 
   $output = $header . $body . $protected . $skippedcode . $footer;
   $outfile = $outdir . "/" . $class . ".h";
-  file_put_contents ( $outfile, $output );
+  file_put_contents ( $outfile, mark_overrides ( $output, $virtuals ) );
   system ( "clang-format -i -style=file $outfile" );
 
 
@@ -513,7 +592,7 @@ function process_template($file, $name, $class, $outdir)
   $cpp .= "#include \"../../common/GeneralDefinitions.h\"\n";
   $cpp .= "#include <macgyver/Exception.h>\n";
   $cpp .= "#include <iostream>\n";
-  $cpp .= "#include <boost/functional/hash.hpp>\n";
+  $cpp .= "#include <macgyver/Hash.h>\n";
 
   $cpp .= "\n";
 
@@ -574,7 +653,7 @@ function process_template($file, $name, $class, $outdir)
   // ##### Adding the destructor.
 
   $cpp .= "\n/*! \brief The destructor of the class. */\n\n";
-  $cpp .= "${class}::~${class}() {\n}\n\n";
+  $cpp .= "${class}::~${class}() = default;\n\n";
 
 
 
@@ -647,9 +726,6 @@ function process_template($file, $name, $class, $outdir)
 
   $cpp .= "void ${class}::getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const { ";
   $cpp .= "try {";
-  
-  if (!empty($members))
-    $cpp .= "char name[300];";
 
   foreach ( $members as $member => $type )
   {
@@ -657,8 +733,7 @@ function process_template($file, $name, $class, $outdir)
 
     if ($type == "class")
     {
-      $cpp .= "sprintf(name,\"%s${class}.\",prefix.c_str());\n";
-      $cpp .= "m${member}.getAttributeList(name,attributeList);\n";
+      $cpp .= "m${member}.getAttributeList(prefix + \"${class}.\",attributeList);\n";
     } 
     else
     {
@@ -667,8 +742,7 @@ function process_template($file, $name, $class, $outdir)
       }     
       else
       {
-        $cpp .= "sprintf(name,\"%s${class}.$member\",prefix.c_str());\n";
-        $cpp .= "attributeList.addAttribute(name,toString(m${member}));\n";
+        $cpp .= "attributeList.addAttribute(prefix + \"${class}.$member\",toString(m${member}));\n";
       }
     }
   }
@@ -819,7 +893,7 @@ function process_template($file, $name, $class, $outdir)
 
 
 
-  file_put_contents ( $outfile, $cpp );
+  file_put_contents ( $outfile, comment_unused_parameters ( $cpp ) );
   system ( "clang-format -i -style=file $outfile" );
 }
 

@@ -10,9 +10,7 @@ namespace GRIB2
 
 /*! \brief The constructor of the class. */
 
-ComplexSphericalHarmonicsDataRepresentationImpl::ComplexSphericalHarmonicsDataRepresentationImpl()
-{
-}
+ComplexSphericalHarmonicsDataRepresentationImpl::ComplexSphericalHarmonicsDataRepresentationImpl() = default;
 
 
 
@@ -20,10 +18,7 @@ ComplexSphericalHarmonicsDataRepresentationImpl::ComplexSphericalHarmonicsDataRe
 
 /*! \brief The copy constructor of the class. */
 
-ComplexSphericalHarmonicsDataRepresentationImpl::ComplexSphericalHarmonicsDataRepresentationImpl(const ComplexSphericalHarmonicsDataRepresentationImpl& other)
-:ComplexSphericalHarmonicsDataRepresentation(other)
-{
-}
+ComplexSphericalHarmonicsDataRepresentationImpl::ComplexSphericalHarmonicsDataRepresentationImpl(const ComplexSphericalHarmonicsDataRepresentationImpl& other) = default;
 
 
 
@@ -31,9 +26,7 @@ ComplexSphericalHarmonicsDataRepresentationImpl::ComplexSphericalHarmonicsDataRe
 
 /*! \brief The destructor of the class. */
 
-ComplexSphericalHarmonicsDataRepresentationImpl::~ComplexSphericalHarmonicsDataRepresentationImpl()
-{
-}
+ComplexSphericalHarmonicsDataRepresentationImpl::~ComplexSphericalHarmonicsDataRepresentationImpl() = default;
 
 
 
@@ -85,7 +78,7 @@ void ComplexSphericalHarmonicsDataRepresentationImpl::read(MemoryReader& memoryR
 
 /*! \brief Decodes the complex spherical-harmonics packed grid values (not implemented). */
 
-void ComplexSphericalHarmonicsDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec& decodedValues) const
+void ComplexSphericalHarmonicsDataRepresentationImpl::decodeValues(Message * /*message*/,T::ParamValue_vec& /*decodedValues*/) const
 {
   throw Fmi::Exception(BCP,"The method not implemented!");
 }

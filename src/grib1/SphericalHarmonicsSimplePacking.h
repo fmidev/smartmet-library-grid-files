@@ -23,13 +23,14 @@ class SphericalHarmonicsSimplePacking : public DataDefinition
   public:
                     SphericalHarmonicsSimplePacking();
                     SphericalHarmonicsSimplePacking(const SphericalHarmonicsSimplePacking& other);
-    virtual         ~SphericalHarmonicsSimplePacking();
+    ~SphericalHarmonicsSimplePacking() override;
+    SphericalHarmonicsSimplePacking& operator=(const SphericalHarmonicsSimplePacking&) = default;
 
-    DataDefinition* createDataDefinition() const;
-    void            decodeValues(Message *message,T::ParamValue_vec& decodedValues) const;
-    PackingMethod   getPackingMethod() const;
+    DataDefinition* createDataDefinition() const override;
+    void            decodeValues(Message *message,T::ParamValue_vec& decodedValues) const override;
+    PackingMethod   getPackingMethod() const override;
 
-    void            print(std::ostream& stream,uint level,uint optionFlags) const;
+    void            print(std::ostream& stream,uint level,uint optionFlags) const override;
 };
 
 }  // namespace GRIB1

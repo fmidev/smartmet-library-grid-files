@@ -21,10 +21,7 @@ CrossSectionImpl::CrossSectionImpl()
 
 /*! \brief The copy constructor of the class. */
 
-CrossSectionImpl::CrossSectionImpl(const CrossSectionImpl& other)
-:CrossSection(other)
-{
-}
+CrossSectionImpl::CrossSectionImpl(const CrossSectionImpl& other) = default;
 
 
 
@@ -32,9 +29,7 @@ CrossSectionImpl::CrossSectionImpl(const CrossSectionImpl& other)
 
 /*! \brief The destructor of the class. */
 
-CrossSectionImpl::~CrossSectionImpl()
-{
-}
+CrossSectionImpl::~CrossSectionImpl() = default;
 
 
 
@@ -114,7 +109,7 @@ T::Dimensions CrossSectionImpl::getGridDimensions() const
   try
   {
     if (!mNumberOfHorizontalPoints || !mNumberOfVerticalPoints)
-      return T::Dimensions();
+      return {};
 
     return T::Dimensions(*mNumberOfHorizontalPoints, *mNumberOfVerticalPoints);
   }

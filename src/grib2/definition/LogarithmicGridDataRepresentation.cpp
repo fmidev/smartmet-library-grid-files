@@ -28,8 +28,7 @@ LogarithmicGridDataRepresentation::LogarithmicGridDataRepresentation() {
 
 /*! \brief The destructor of the class. */
 
-LogarithmicGridDataRepresentation::~LogarithmicGridDataRepresentation() {
-}
+LogarithmicGridDataRepresentation::~LogarithmicGridDataRepresentation() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -67,11 +66,8 @@ void LogarithmicGridDataRepresentation::write(DataWriter &dataWriter) {
 
 void LogarithmicGridDataRepresentation::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sLogarithmicGridDataRepresentation.", prefix.c_str());
-    mPacking.getAttributeList(name, attributeList);
-    sprintf(name, "%sLogarithmicGridDataRepresentation.PreProcessingParameter", prefix.c_str());
-    attributeList.addAttribute(name, toString(mPreProcessingParameter));
+        mPacking.getAttributeList(prefix + "LogarithmicGridDataRepresentation.", attributeList);
+        attributeList.addAttribute(prefix + "LogarithmicGridDataRepresentation.PreProcessingParameter", toString(mPreProcessingParameter));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -166,7 +162,7 @@ RepresentationDefinition *LogarithmicGridDataRepresentation::createRepresentatio
 
 PackingSettings *LogarithmicGridDataRepresentation::getPacking() const {
   try {
-    return static_cast<PackingSettings *>(&mPacking);
+    return &mPacking;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -182,7 +178,7 @@ float LogarithmicGridDataRepresentation::getPreProcessingParameter() const {
   }
 }
 
-void LogarithmicGridDataRepresentation::setPacking(PackingSettings &packing) {
+void LogarithmicGridDataRepresentation::setPacking(const PackingSettings &packing) {
   try {
     mPacking = packing;
   } catch (...) {

@@ -27,8 +27,7 @@ AtmosphericChemicalProduct::AtmosphericChemicalProduct() {
 
 /*! \brief The destructor of the class. */
 
-AtmosphericChemicalProduct::~AtmosphericChemicalProduct() {
-}
+AtmosphericChemicalProduct::~AtmosphericChemicalProduct() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -68,13 +67,9 @@ void AtmosphericChemicalProduct::write(DataWriter &dataWriter) {
 
 void AtmosphericChemicalProduct::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sAtmosphericChemicalProduct.", prefix.c_str());
-    mParameterChemical.getAttributeList(name, attributeList);
-    sprintf(name, "%sAtmosphericChemicalProduct.", prefix.c_str());
-    mPointInTime.getAttributeList(name, attributeList);
-    sprintf(name, "%sAtmosphericChemicalProduct.", prefix.c_str());
-    mHorizontal.getAttributeList(name, attributeList);
+        mParameterChemical.getAttributeList(prefix + "AtmosphericChemicalProduct.", attributeList);
+        mPointInTime.getAttributeList(prefix + "AtmosphericChemicalProduct.", attributeList);
+        mHorizontal.getAttributeList(prefix + "AtmosphericChemicalProduct.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -171,7 +166,7 @@ ProductDefinition *AtmosphericChemicalProduct::createProductDefinition() const {
 
 ParameterChemicalSettings *AtmosphericChemicalProduct::getParameterChemical() const {
   try {
-    return static_cast<ParameterChemicalSettings *>(&mParameterChemical);
+    return &mParameterChemical;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -181,7 +176,7 @@ ParameterChemicalSettings *AtmosphericChemicalProduct::getParameterChemical() co
 
 PointInTimeSettings *AtmosphericChemicalProduct::getPointInTime() const {
   try {
-    return static_cast<PointInTimeSettings *>(&mPointInTime);
+    return &mPointInTime;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -191,13 +186,13 @@ PointInTimeSettings *AtmosphericChemicalProduct::getPointInTime() const {
 
 HorizontalSettings *AtmosphericChemicalProduct::getHorizontal() const {
   try {
-    return static_cast<HorizontalSettings *>(&mHorizontal);
+    return &mHorizontal;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
-void AtmosphericChemicalProduct::setParameterChemical(ParameterChemicalSettings &parameterChemical) {
+void AtmosphericChemicalProduct::setParameterChemical(const ParameterChemicalSettings &parameterChemical) {
   try {
     mParameterChemical = parameterChemical;
   } catch (...) {
@@ -205,7 +200,7 @@ void AtmosphericChemicalProduct::setParameterChemical(ParameterChemicalSettings 
   }
 }
 
-void AtmosphericChemicalProduct::setPointInTime(PointInTimeSettings &pointInTime) {
+void AtmosphericChemicalProduct::setPointInTime(const PointInTimeSettings &pointInTime) {
   try {
     mPointInTime = pointInTime;
   } catch (...) {
@@ -213,7 +208,7 @@ void AtmosphericChemicalProduct::setPointInTime(PointInTimeSettings &pointInTime
   }
 }
 
-void AtmosphericChemicalProduct::setHorizontal(HorizontalSettings &horizontal) {
+void AtmosphericChemicalProduct::setHorizontal(const HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {

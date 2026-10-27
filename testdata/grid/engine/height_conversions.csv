@@ -1,0 +1,25 @@
+# This file is used in order to find metric height positions for grid points when the original
+# level information is not metric. For example, the orginal levels might be expressed in pressure
+# levels or hybrid levels, and we need to define how to find out matching metric levels. Notice
+# that each point of pressure/hybrid level might have different metric height. The basic idea
+# is that there should be a grid that defines these metric heights directly of indirectly by
+# using a multiplier. 
+
+# On the other hand, it is possible that the grid that contains the metric heights of the given 
+# level is found from different producer. In this case the producers should have the same analysis 
+# times in their generations, same timesteps and the same levels so that the matching height definitions 
+# can be found.
+#  
+# Fields:
+#   1) Producer that uses this mappping 
+#   2) Level type that uses this mapping
+#       2 Pressure level
+#       3 Hybrid level
+#   3) Producer that has the required height information  
+#   4) Parameter that contains the required height information
+#   5) Value of the height parameter needs to be multiplied by this value in order to get the metric value
+#
+
+
+ecmwf_skandinavia_painepinta;2;ecmwf_skandinavia_painepinta;ZH-GPM;1.0
+

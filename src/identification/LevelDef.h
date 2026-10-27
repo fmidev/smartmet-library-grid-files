@@ -21,6 +21,8 @@ class LevelDef
   public:
                       LevelDef();
     virtual           ~LevelDef();
+    LevelDef(const LevelDef&) = default;
+    LevelDef& operator=(const LevelDef&) = default;
 
     /*! \brief Write a human-readable dump to \p stream (for debugging). */
     void              print(std::ostream& stream,uint level,uint optionFlags) const;
@@ -33,8 +35,8 @@ class LevelDef
 };
 
 
-typedef std::vector<LevelDef> LevelDef_vec;  //!< Ordered list of level definitions
-typedef const LevelDef* LevelDef_cptr;       //!< Non-owning const pointer
+using LevelDef_vec = std::vector<LevelDef>;  //!< Ordered list of level definitions
+using LevelDef_cptr = const LevelDef*;       //!< Non-owning const pointer
 
 
 }

@@ -32,8 +32,7 @@ RotatedSphericalHarmonic::RotatedSphericalHarmonic() {
 
 /*! \brief The destructor of the class. */
 
-RotatedSphericalHarmonic::~RotatedSphericalHarmonic() {
-}
+RotatedSphericalHarmonic::~RotatedSphericalHarmonic() = default;
 
 /*! \brief The method reads and initializes all data related to the current section object.
 
@@ -83,19 +82,12 @@ void RotatedSphericalHarmonic::write(DataWriter &dataWriter) {
 
 void RotatedSphericalHarmonic::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sRotatedSphericalHarmonic.J", prefix.c_str());
-    attributeList.addAttribute(name, toString(mJ));
-    sprintf(name, "%sRotatedSphericalHarmonic.K", prefix.c_str());
-    attributeList.addAttribute(name, toString(mK));
-    sprintf(name, "%sRotatedSphericalHarmonic.M", prefix.c_str());
-    attributeList.addAttribute(name, toString(mM));
-    sprintf(name, "%sRotatedSphericalHarmonic.RepresentationType", prefix.c_str());
-    attributeList.addAttribute(name, toString(mRepresentationType));
-    sprintf(name, "%sRotatedSphericalHarmonic.RepresentationMode", prefix.c_str());
-    attributeList.addAttribute(name, toString(mRepresentationMode));
-    sprintf(name, "%sRotatedSphericalHarmonic.", prefix.c_str());
-    mRotation.getAttributeList(name, attributeList);
+        attributeList.addAttribute(prefix + "RotatedSphericalHarmonic.J", toString(mJ));
+        attributeList.addAttribute(prefix + "RotatedSphericalHarmonic.K", toString(mK));
+        attributeList.addAttribute(prefix + "RotatedSphericalHarmonic.M", toString(mM));
+        attributeList.addAttribute(prefix + "RotatedSphericalHarmonic.RepresentationType", toString(mRepresentationType));
+        attributeList.addAttribute(prefix + "RotatedSphericalHarmonic.RepresentationMode", toString(mRepresentationMode));
+        mRotation.getAttributeList(prefix + "RotatedSphericalHarmonic.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -272,7 +264,7 @@ std::uint8_t RotatedSphericalHarmonic::getRepresentationMode() const {
 
 RotationSettings *RotatedSphericalHarmonic::getRotation() const {
   try {
-    return static_cast<RotationSettings *>(&mRotation);
+    return &mRotation;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -318,7 +310,7 @@ void RotatedSphericalHarmonic::setRepresentationMode(std::uint8_t representation
   }
 }
 
-void RotatedSphericalHarmonic::setRotation(RotationSettings &rotation) {
+void RotatedSphericalHarmonic::setRotation(const RotationSettings &rotation) {
   try {
     mRotation = rotation;
   } catch (...) {

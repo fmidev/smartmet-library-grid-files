@@ -28,8 +28,7 @@ ResolutionFlagsSettings::ResolutionFlagsSettings() {
 
 /*! \brief The destructor of the class. */
 
-ResolutionFlagsSettings::~ResolutionFlagsSettings() {
-}
+ResolutionFlagsSettings::~ResolutionFlagsSettings() = default;
 
 /*! \brief The method reads and initializes all data related to the current section object.
 
@@ -65,9 +64,7 @@ void ResolutionFlagsSettings::write(DataWriter &dataWriter) {
 
 void ResolutionFlagsSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sResolutionFlagsSettings.ResolutionAndComponentFlags", prefix.c_str());
-    attributeList.addAttribute(name, toString(mResolutionAndComponentFlags));
+        attributeList.addAttribute(prefix + "ResolutionFlagsSettings.ResolutionAndComponentFlags", toString(mResolutionAndComponentFlags));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -118,7 +115,7 @@ bool ResolutionFlagsSettings::hasAttributeValue(const char *attributeName, const
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void ResolutionFlagsSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
+void ResolutionFlagsSettings::print(std::ostream &stream, uint level, uint /*optionFlags*/) const {
   try {
     stream << space(level) << "ResolutionFlagsSettings\n";
     stream << space(level) << "- ResolutionAndComponentFlags = " << toString(mResolutionAndComponentFlags) << "\n";

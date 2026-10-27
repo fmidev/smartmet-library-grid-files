@@ -38,15 +38,16 @@ class SphericalHarmonicsComplexPacking : public DataDefinition
   public:
                     SphericalHarmonicsComplexPacking();
                     SphericalHarmonicsComplexPacking(const SphericalHarmonicsComplexPacking& other);
-    virtual         ~SphericalHarmonicsComplexPacking();
+    ~SphericalHarmonicsComplexPacking() override;
+    SphericalHarmonicsComplexPacking& operator=(const SphericalHarmonicsComplexPacking&) = default;
 
-    DataDefinition* createDataDefinition() const;
-    void            decodeValues(Message *message,T::ParamValue_vec& decodedValues) const;
-    PackingMethod   getPackingMethod() const;
+    DataDefinition* createDataDefinition() const override;
+    void            decodeValues(Message *message,T::ParamValue_vec& decodedValues) const override;
+    PackingMethod   getPackingMethod() const override;
 
-    void            read(MemoryReader& memoryReader);
-    void            write(DataWriter& dataWriter);
-    void            print(std::ostream& stream,uint level,uint optionFlags) const;
+    void            read(MemoryReader& memoryReader) override;
+    void            write(DataWriter& dataWriter) override;
+    void            print(std::ostream& stream,uint level,uint optionFlags) const override;
 
   protected:
 

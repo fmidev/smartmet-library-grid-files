@@ -13,12 +13,13 @@ class SpectralGridDataRepresentationImpl : public SpectralGridDataRepresentation
   public:
               SpectralGridDataRepresentationImpl();
               SpectralGridDataRepresentationImpl(const SpectralGridDataRepresentationImpl& other);
-    virtual   ~SpectralGridDataRepresentationImpl();
+    ~SpectralGridDataRepresentationImpl() override;
+    SpectralGridDataRepresentationImpl& operator=(const SpectralGridDataRepresentationImpl&) = default;
 
-    RepresentationDefinition* createRepresentationDefinition() const;
+    RepresentationDefinition* createRepresentationDefinition() const override;
 
-    void      decodeValues(Message *message,T::ParamValue_vec& decodedValues) const;
-    void      read(MemoryReader& memoryReader);
+    void      decodeValues(Message *message,T::ParamValue_vec& decodedValues) const override;
+    void      read(MemoryReader& memoryReader) override;
 };
 
 

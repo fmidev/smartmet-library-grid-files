@@ -2,6 +2,8 @@
 #include <macgyver/Exception.h>
 #include "../common/CoordinateConversions.h"
 
+#include <cmath>
+#include <mutex>
 #include <string>
 #include <vector>
 
@@ -13,11 +15,17 @@ namespace GRID
 
 GaussianLatitudeCache gaussianLatitudeCache;
 
+namespace
+{
+// Serializes cache lookups and insertions, the cache is shared by all threads
+std::mutex gaussianLatitudeCacheMutex;
+}  // namespace
+
 
 
 // ########## Copied from grib_api-1.17 : grib_geography.c ############
 
-#define NUMBER(x) (sizeof(x)/sizeof(x[0]))
+#define NUMBER(x) (sizeof(x)/sizeof((x)[0]))
 #define MAXITER  10
 
 #ifndef M_PI
@@ -27,7 +35,9 @@ GaussianLatitudeCache gaussianLatitudeCache;
 
 /*! \brief Provides initial Newton iteration guesses for Gaussian latitudes. */
 
-static void gauss_first_guess(long N, double* vals)
+namespace
+{
+void gauss_first_guess(long N, double* vals)
 {
   try
   {
@@ -77,7 +87,7 @@ int gaussian_getLatitudes(long N, double *lats)
   {
     double precision = 1.0E-14;
     long  nlat = N*2;
-    double dnlat = C_DOUBLE(nlat);
+    auto dnlat = C_DOUBLE(nlat);
     double legfonc = 0;
     double rad2deg = 180.0/M_PI;
     double convval   = (1.0 - ((2.0 / M_PI)*(2.0 / M_PI)) * 0.25);
@@ -133,6 +143,7 @@ int gaussian_getLatitudes(long N, double *lats)
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
+}  // namespace
 
 // ########## end of copy ##########
 
@@ -169,10 +180,9 @@ GaussianLatitudeCache::~GaussianLatitudeCache()
 {
   try
   {
-    for (uint t=0; t<GaussianLatitudeCacheSize; t++)
+    for (auto& mLatitude : mLatitudes)
     {
-      if (mLatitudes[t] != nullptr)
-        delete mLatitudes[t];
+      delete[] mLatitude;
     }
   }
   catch (...)
@@ -192,13 +202,27 @@ double* GaussianLatitudeCache::getLatitudes(uint nj,long n)
 {
   try
   {
-    if (mLatitudes[lastAccess] != nullptr  &&  mLatitudes_number[lastAccess] == nj)
+    // The algorithm always produces all 2*N latitudes
+    if (n <= 0 || n > 0x7FFFFFFF || nj == 0 || C_UINT64(nj) > C_UINT64(2*n))
+    {
+      Fmi::Exception exception(BCP,"Invalid Gaussian grid dimensions!");
+      exception.addParameter("nj",std::to_string(nj));
+      exception.addParameter("N",std::to_string(n));
+      throw exception;
+    }
+
+    // The same number of rows may come from different N values in subgrids
+    const long key = (n << 32) | nj;
+
+    std::scoped_lock lock(gaussianLatitudeCacheMutex);
+
+    if (mLatitudes[lastAccess] != nullptr  &&  mLatitudes_number[lastAccess] == key)
       return mLatitudes[lastAccess];
 
     uint c = 0;
     while (c < GaussianLatitudeCacheSize  &&  mLatitudes[c] != nullptr)
     {
-      if (mLatitudes_number[c] == nj)
+      if (mLatitudes_number[c] == key)
       {
         lastAccess = c;
         return mLatitudes[c];
@@ -206,15 +230,22 @@ double* GaussianLatitudeCache::getLatitudes(uint nj,long n)
       c++;
     }
 
-    if (c == GaussianLatitudeCacheSize)
+    auto *lats = new double[2*n];
+    if (gaussian_getLatitudes(n,lats) != 0)
     {
-      c = GaussianLatitudeCacheSize-1;
-      delete mLatitudes[c];
+      delete[] lats;
+      throw Fmi::Exception(BCP,"Gaussian latitude iteration did not converge!");
     }
 
-    mLatitudes[c] = new double[nj];
-    mLatitudes_number[c] = nj;
-    gaussian_getLatitudes(n,mLatitudes[c]);
+    if (c == GaussianLatitudeCacheSize)
+    {
+      // Other threads may still be using the evicted array, hence it is intentionally
+      // not released. This can happen only with more than GaussianLatitudeCacheSize grids.
+      c = GaussianLatitudeCacheSize-1;
+    }
+
+    mLatitudes[c] = lats;
+    mLatitudes_number[c] = key;
     lastAccess = c;
     return mLatitudes[c];
   }
@@ -230,14 +261,46 @@ double* GaussianLatitudeCache::getLatitudes(uint nj,long n)
 
 /*! \brief Finds the two Gaussian latitudes that bracket the given latitude. */
 
-int GaussianLatitudeCache::getClosestLatitudes(uint nj,long n,double lat,double& latLow,double& latHigh)
+uint GaussianLatitudeCache::getFirstRow(uint nj,long n,double northLat)
 {
   try
   {
-    if (nj == 0)
+    double *lats = getLatitudes(nj,n);
+    const long rows = 2*n;
+    if (C_INT64(nj) >= rows)
+      return 0;
+
+    uint best = 0;
+    for (long k = 1; k <= rows - C_INT64(nj); k++)
+    {
+      if (fabs(lats[k] - northLat) < fabs(lats[best] - northLat))
+        best = C_UINT(k);
+    }
+    return best;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+int GaussianLatitudeCache::getClosestLatitudes(uint nj,long n,double lat,double& latLow,double& latHigh)
+{
+  return getClosestLatitudes(nj,n,0,lat,latLow,latHigh);
+}
+
+
+
+int GaussianLatitudeCache::getClosestLatitudes(uint nj,long n,uint firstRow,double lat,double& latLow,double& latHigh)
+{
+  try
+  {
+    if (nj == 0 || C_INT64(firstRow) + nj > 2*n)
       return -1;
 
-    double *lats = getLatitudes(nj,n);
+    double *lats = getLatitudes(nj,n) + firstRow;
     int endp = C_INT(nj-1);
 
     if (lat > lats[0] || lat < lats[endp])
@@ -267,6 +330,16 @@ int GaussianLatitudeCache::getClosestLatitudes(uint nj,long n,double lat,double&
 
     while (lats[low] < lat  &&  low > 0)
       low--;
+
+    if (low == endp)
+    {
+      // Only an exact match with the last latitude can end here, lats[low+1] is out of range
+      if (lats[low] != lat)
+        return -1;
+      latLow = lats[low];
+      latHigh = lats[low];
+      return low;
+    }
 
     if (lats[low] >= lat  &&  lats[low+1] <= lat)
     {

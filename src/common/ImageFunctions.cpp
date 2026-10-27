@@ -4,10 +4,11 @@
 #include "MemoryReader.h"
 #include "ShowFunction.h"
 #include <macgyver/Exception.h>
+#include <algorithm>
 #include <memory>
 #include <gis/OGR.h>
-#include <stdint.h>
-#include <math.h>
+#include <cstdint>
+#include <cmath>
 
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
@@ -15,10 +16,10 @@
 
 extern "C"
 {
-  #include <stdlib.h>
+  #include <math.h>
+#include <stdlib.h>
   #include <stdio.h>
   #include <jpeglib.h>
-  #include <math.h>
   #include <png.h>
   #include <setjmp.h>
   #include <webp/encode.h>
@@ -30,7 +31,7 @@ namespace SmartMet
 {
 
 
-typedef unsigned char uchar;
+using uchar = unsigned char;
 
 
 
@@ -38,8 +39,8 @@ typedef unsigned char uchar;
 
 int compare_coordinates(const void *p1, const void *p2)
 {
-  const double *v1 = (const double*)p1;
-  const double *v2 = (const double*)p2;
+  const auto *v1 = (const double*)p1;
+  const auto *v2 = (const double*)p2;
 
   if (*v1 < *v2)
     return -1;
@@ -54,6 +55,8 @@ int compare_coordinates(const void *p1, const void *p2)
 
 /*! \brief Returns the smaller of two integer values. */
 
+namespace
+{
 int int_min(int _val1,int _val2)
 {
   if (_val1 < _val2)
@@ -61,6 +64,7 @@ int int_min(int _val1,int _val2)
 
   return _val2;
 }
+}  // namespace
 
 
 
@@ -86,14 +90,12 @@ uint argb(const char *colStr)
     if (len == 8)
       col = strtoul(colStr,nullptr,16);
   }
-  else
-  if (v.size() == 3)
+  else if (v.size() == 3)
   {
     // RGB (a,r,g,b)
     col = 0xFF000000 + (v[0] <<  16) + (v[1] <<  8) + v[2];
   }
-  else
-  if (v.size() == 4)
+  else if (v.size() == 4)
   {
     // ARGB (a,r,g,b)
     col = (v[0] <<  24) + (v[1] <<  16) + (v[2] <<  8) + v[3];
@@ -111,7 +113,7 @@ uint argb(const char *colStr)
 
 /*! \brief Writes a 32-bit pixel buffer to disk as a JPEG file at the given quality. */
 
-void jpeg_save(const char *filename, uint *image, int image_height,int image_width, int quality)
+void jpeg_save(const char *filename, const uint *image, int image_height,int image_width, int quality)
 {
   try
   {
@@ -132,8 +134,8 @@ void jpeg_save(const char *filename, uint *image, int image_height,int image_wid
       }
     }
 
-    struct jpeg_compress_struct cinfo;
-    struct jpeg_error_mgr jerr;
+    struct jpeg_compress_struct cinfo{};
+    struct jpeg_error_mgr jerr{};
     FILE * outfile = nullptr;
     JSAMPROW row_pointer[1];
     int row_stride = 0;
@@ -168,7 +170,8 @@ void jpeg_save(const char *filename, uint *image, int image_height,int image_wid
     }
 
     jpeg_finish_compress(&cinfo);
-    fclose(outfile);
+    if (fclose(outfile) != 0)
+      throw Fmi::Exception(BCP, "Failed to close the output file");
 
     jpeg_destroy_compress(&cinfo);
   }
@@ -191,7 +194,7 @@ struct my_error_mgr
   jmp_buf setjmp_buffer;      // ### for return to caller
 };
 
-typedef struct my_error_mgr* my_error_ptr;
+using my_error_ptr = struct my_error_mgr*;
 
 
 
@@ -202,11 +205,11 @@ typedef struct my_error_mgr* my_error_ptr;
 
 /*! \brief libjpeg error_exit replacement that prints the message and jumps to the setjmp recovery point. */
 
-METHODDEF(void) my_error_exit (j_common_ptr cinfo)
+[[noreturn]] METHODDEF(void) my_error_exit (j_common_ptr cinfo)
 {
   // ### cinfo->err really points to a my_error_mgr struct, so coerce pointer
 
-  my_error_ptr myerr = (my_error_ptr) cinfo->err;
+  auto *myerr = (my_error_ptr) cinfo->err;
 
   // ### Always display the message.
   // ### We could postpone this until after returning, if we chose.
@@ -215,6 +218,7 @@ METHODDEF(void) my_error_exit (j_common_ptr cinfo)
 
   // ### Return control to the setjmp point
 
+  // NOLINTNEXTLINE(cert-err52-cpp): libpng/libjpeg report errors with longjmp
   longjmp(myerr->setjmp_buffer, 1);
 }
 
@@ -237,16 +241,16 @@ int jpg_load(const char *_filename,CImage& _image)
     // ### This struct contains the JPEG decompression parameters and pointers to
     // ### working space (which is allocated as needed by the JPEG library).
 
-    struct jpeg_decompress_struct cinfo;
+    struct jpeg_decompress_struct cinfo{};
 
     // ### We use our private extension JPEG error handler.
     // ### Note that this struct must live as long as the main JPEG parameter
     // ### struct, to avoid dangling-pointer problems.
 
-    struct my_error_mgr jerr;
+    struct my_error_mgr jerr{};
 
-    JSAMPARRAY buffer;  // ### Output row buffer
-    int row_stride;     // ###  physical row width in output buffer
+    JSAMPARRAY buffer = nullptr;  // ### Output row buffer
+    int row_stride = 0;     // ###  physical row width in output buffer
 
     FILE *infile = fopen(_filename, "rbe");
     if (infile == nullptr)
@@ -265,13 +269,14 @@ int jpg_load(const char *_filename,CImage& _image)
 
     // ### Establish the setjmp return context for my_error_exit to use.
 
+    // NOLINTNEXTLINE(cert-err52-cpp): libpng/libjpeg report errors with longjmp
     if (setjmp(jerr.setjmp_buffer))
     {
       // ### If we get here, the JPEG code has signaled an error.
       // ### We need to clean up the JPEG object, close the input file, and return.
 
       jpeg_destroy_decompress(&cinfo);
-      fclose(infile);
+      (void)fclose(infile);
       return - 2;
     }
 
@@ -345,7 +350,7 @@ int jpg_load(const char *_filename,CImage& _image)
       // ### Assume put_scanline_someplace wants a pointer and sample count.
 
       int p = 0;
-      uchar *data = (uchar*)buffer[0];
+      auto *data = (uchar*)buffer[0];
       for (uint x=0; x<cinfo.output_width; x++)
       {
         uchar cc[10] = {0};
@@ -421,7 +426,7 @@ int jpg_load(const char *_filename,CImage& _image)
     // ### After finish_decompress, we can close the input file.
 
 
-    fclose(infile);
+    (void)fclose(infile);
 
     // ### At this point you may want to check to see whether any corrupt-data
     // ### warnings occurred (test whether jerr.pub.num_warnings is nonzero).
@@ -443,8 +448,10 @@ int jpg_load(const char *_filename,CImage& _image)
 
 
 
-static png_structp png_ptr = nullptr;
-static png_infop info_ptr = nullptr;
+namespace
+{
+png_structp png_ptr = nullptr;
+png_infop info_ptr = nullptr;
 
 png_uint_32 width = 0, height = 0;
 int bit_depth = 0, color_type = 0;
@@ -454,12 +461,6 @@ uchar *image_data = nullptr;
 
 
 /*! \brief Placeholder that would print the libpng and zlib version information. */
-
-void readpng_version_info(void)
-{
-//  fprintf(moutput,"Compiled with libpng %s; using libpng %s.\n",PNG_LIBPNG_VER_STRING, png_libpng_ver);
-//  fprintf(moutput,"Compiled with zlib %s; using zlib %s.\n",ZLIB_VERSION, zlib_version);
-}
 
 
 
@@ -487,6 +488,7 @@ int readpng_init(FILE *infile, uint *pWidth, uint *pHeight)
     return -3;   /* out of memory */
   }
 
+  // NOLINTNEXTLINE(cert-err52-cpp): libpng/libjpeg report errors with longjmp
   if (setjmp(png_jmpbuf(png_ptr)))
   {
     png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
@@ -513,48 +515,6 @@ int readpng_init(FILE *infile, uint *pWidth, uint *pHeight)
 
 /*! \brief Retrieves the PNG file's background color, normalized to 8-bit RGB. */
 
-int readpng_get_bgcolor(uchar *red, uchar *green, uchar *blue)
-{
-  png_color_16p pBackground;
-
-  if (setjmp(png_jmpbuf(png_ptr)))
-  {
-    png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
-    return 2;
-  }
-
-
-  if (!png_get_valid(png_ptr, info_ptr, PNG_INFO_bKGD))
-    return 1;
-
-  png_get_bKGD(png_ptr, info_ptr, &pBackground);
-
-  if (bit_depth == 16)
-  {
-    *red   = pBackground->red   >> 8;
-    *green = pBackground->green >> 8;
-    *blue  = pBackground->blue  >> 8;
-  }
-  else
-  if (color_type == PNG_COLOR_TYPE_GRAY && bit_depth < 8)
-  {
-    if (bit_depth == 1)
-      *red = *green = *blue = pBackground->gray? 255 : 0;
-    else
-    if (bit_depth == 2)
-      *red = *green = *blue = (255/3) * pBackground->gray;
-    else /* bit_depth == 4 */
-      *red = *green = *blue = (255/15) * pBackground->gray;
-  }
-  else
-  {
-    *red   = C_UCHAR(pBackground->red);
-    *green = C_UCHAR(pBackground->green);
-    *blue  = C_UCHAR(pBackground->blue);
-  }
-  return 0;
-}
-
 
 
 
@@ -564,10 +524,12 @@ int readpng_get_bgcolor(uchar *red, uchar *green, uchar *blue)
 
 uchar *readpng_get_image(double display_exponent, int *pChannels, uint *pRowbytes)
 {
-  double gamma;
-  png_uint_32 i, rowbytes;
+  double gamma = NAN;
+  png_uint_32 i = 0;
+  png_uint_32 rowbytes = 0;
 
 
+  // NOLINTNEXTLINE(cert-err52-cpp): libpng/libjpeg report errors with longjmp
   if (setjmp(png_jmpbuf(png_ptr)))
   {
     png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
@@ -604,7 +566,7 @@ uchar *readpng_get_image(double display_exponent, int *pChannels, uint *pRowbyte
     return nullptr;
   }
 
-  png_bytepp row_pointers = (png_bytepp)malloc(height*sizeof(png_bytep));
+  auto *row_pointers = (png_bytepp)malloc(height*sizeof(png_bytep));
   if (row_pointers == nullptr)
   {
     png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
@@ -648,6 +610,7 @@ void readpng_cleanup(int free_image_data)
     info_ptr = nullptr;
   }
 }
+}  // namespace
 
 
 
@@ -681,24 +644,30 @@ int png_load(const char *_filename,CImage& _image)
       return -1;
 
     if (readpng_init(infile, &width, &height) != 0)
+    {
+      (void)fclose(infile);
       return -2;
+    }
 
     _image.width = width;
     _image.height = height;
 
     uchar *pixel = readpng_get_image(display_exponent, &image_channels,&image_rowbytes);
     if (pixel == nullptr)
+    {
+      (void)fclose(infile);
       return -3;
+    }
 
     int size = width * height;
     _image.pixel = (uint*)pixel;
 
-    _image.pixel = new uint[size];
+    _image.pixel = new uint[size]();  // RGB images leave the alpha byte unset
 
     int p1 = 0;
     int p2 = 0;
 
-    uchar *ptr = (uchar*)_image.pixel;
+    auto *ptr = (uchar*)_image.pixel;
 
     for (int t=0; t<size; t++)
     {
@@ -726,7 +695,7 @@ int png_load(const char *_filename,CImage& _image)
     free(pixel);
 
     readpng_cleanup(0);
-    fclose(infile);
+    (void)fclose(infile);
 
     if (!_image.pixel)
       return -4;
@@ -766,40 +735,44 @@ int png_load(const char *_filename,std::vector<uint>& _image,uint& _width,uint& 
       return -1;
 
     if (readpng_init(infile, &_width, &_height) != 0)
+    {
+      (void)fclose(infile);
       return -2;
+    }
 
     uchar *pixel = readpng_get_image(display_exponent, &image_channels,&image_rowbytes);
     if (pixel == nullptr)
+    {
+      (void)fclose(infile);
       return -3;
+    }
 
     int size = _width * _height;
     _image.reserve(size);
     int p1 = 0;
-    int p2 = 0;
 
     uint pix = 0;
-    uchar *ptr = (uchar*)&pix;
+    auto *ptr = (uchar*)&pix;
 
     for (int t=0; t<size; t++)
     {
-      ptr[p2+0] = pixel[p1+2];
-      ptr[p2+1] = pixel[p1+1];
-      ptr[p2+2] = pixel[p1+0];
+      ptr[0] = pixel[p1+2];
+      ptr[1] = pixel[p1+1];
+      ptr[2] = pixel[p1+0];
 
       if (image_channels == 4)
       {
-        ptr[p2+3] = pixel[p1+3];
+        ptr[3] = pixel[p1+3];
       }
 
       p1 = p1 + image_channels;
-      p2 = p2 + 4;
       _image.push_back(pix);
     }
 
     free(pixel);
 
     readpng_cleanup(0);
-    fclose(infile);
+    (void)fclose(infile);
 
     return 0;
   }
@@ -822,15 +795,9 @@ struct CImageHandle_png
 
 /* local prototype */
 
-static void writepng_error_handler(png_structp png_ptr, png_const_charp msg);
-
-
-
-/*! \brief Placeholder that would print libpng writer version information. */
-
-void writepng_version_info(void)
+namespace
 {
-}
+[[noreturn]] void writepng_error_handler(png_structp png_ptr, png_const_charp msg);
 
 
 
@@ -838,7 +805,7 @@ void writepng_version_info(void)
 
 void* png_writeOpen(const char *_filename,int image_width,int image_height,int compressionLevel)
 {
-  CImageHandle_png *handle = new CImageHandle_png;
+  auto *handle = new CImageHandle_png;
 
   handle->file = fopen(_filename,"wb");
   if (handle->file == nullptr)
@@ -861,6 +828,14 @@ void* png_writeOpen(const char *_filename,int image_width,int image_height,int c
     return nullptr;   // out of memory
   }
 
+  if (setjmp(png_jmpbuf(handle->png_ptr)))
+  {
+    png_destroy_write_struct(&handle->png_ptr, &handle->info_ptr);
+    (void)fclose(handle->file);
+    delete handle;
+    return nullptr;
+  }
+
   png_init_io(handle->png_ptr,handle->file);
   png_set_compression_level(handle->png_ptr, compressionLevel);
   png_set_IHDR(handle->png_ptr,handle->info_ptr,image_width,image_height,8,PNG_COLOR_TYPE_RGBA,PNG_INTERLACE_NONE,PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
@@ -874,41 +849,36 @@ void* png_writeOpen(const char *_filename,int image_width,int image_height,int c
 
 
 
-/*! \brief Writes a single image row through the previously opened PNG write handle. */
-
-int png_writeImageRow(void *_handle,uchar *_row)
-{
-  CImageHandle_png *handle = (CImageHandle_png*)_handle;
-  png_write_row(handle->png_ptr,_row);
-  return 0;
-}
-
-
-
-
-
 /*! \brief Finalizes the PNG output, closes the file and releases the write handle. */
 
 int png_writeClose(void *_handle)
 {
-  CImageHandle_png *handle = (CImageHandle_png*)_handle;
+  auto *handle = (CImageHandle_png*)_handle;
+  if (setjmp(png_jmpbuf(handle->png_ptr)))
+  {
+    png_destroy_write_struct(&handle->png_ptr, &handle->info_ptr);
+    (void)fclose(handle->file);
+    delete handle;
+    return -1;
+  }
   png_write_end(handle->png_ptr, nullptr);
+  png_destroy_write_struct(&handle->png_ptr, &handle->info_ptr);
 
-  fclose(handle->file);
+  const int result = fclose(handle->file);
   delete handle;
 
-  return 0;
+  return (result == 0 ? 0 : -1);
 }
 
 
 
 
 
-/*! \brief libpng error handler that terminates the process on PNG write failures. */
+/*! \brief libpng error handler: jumps back to the setjmp point of the PNG function being run. */
 
-static void writepng_error_handler(png_structp png_ptr, png_const_charp msg)
+[[noreturn]] void writepng_error_handler(png_structp png_ptr, png_const_charp /*msg*/)
 {
-  exit(-1);
+  png_longjmp(png_ptr, 1);
 }
 
 
@@ -918,7 +888,7 @@ static void writepng_error_handler(png_structp png_ptr, png_const_charp msg)
 
 void* png_writeOpenMem(char *buffer,int bufferSize,int image_width,int image_height,int compressionLevel)
 {
-  CImageHandle_png *handle = new CImageHandle_png;
+  auto *handle = new CImageHandle_png;
 
   handle->file = fmemopen(buffer,bufferSize,"w");
   if (handle->file == nullptr)
@@ -941,6 +911,14 @@ void* png_writeOpenMem(char *buffer,int bufferSize,int image_width,int image_hei
     return nullptr;   // out of memory
   }
 
+  if (setjmp(png_jmpbuf(handle->png_ptr)))
+  {
+    png_destroy_write_struct(&handle->png_ptr, &handle->info_ptr);
+    (void)fclose(handle->file);
+    delete handle;
+    return nullptr;
+  }
+
   png_init_io(handle->png_ptr,handle->file);
   png_set_compression_level(handle->png_ptr,compressionLevel);
   png_set_IHDR(handle->png_ptr,handle->info_ptr,image_width,image_height,8,PNG_COLOR_TYPE_RGBA,PNG_INTERLACE_NONE,PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
@@ -955,27 +933,45 @@ void* png_writeOpenMem(char *buffer,int bufferSize,int image_width,int image_hei
 
 int png_writeCloseMem(void *_handle)
 {
-  CImageHandle_png *handle = (CImageHandle_png*)_handle;
+  auto *handle = (CImageHandle_png*)_handle;
+  if (setjmp(png_jmpbuf(handle->png_ptr)))
+  {
+    png_destroy_write_struct(&handle->png_ptr, &handle->info_ptr);
+    (void)fclose(handle->file);
+    delete handle;
+    return -1;
+  }
   png_write_end(handle->png_ptr, nullptr);
   png_destroy_write_struct(&handle->png_ptr, &handle->info_ptr);
   int sz = ftell(handle->file);
-  fclose(handle->file);
+  if (fclose(handle->file) != 0)
+    sz = -1;
   delete handle;
   return sz;
 }
+}  // namespace
 
 
 /*! \brief Writes a 32-bit pixel buffer to disk as a PNG file using the given compression level. */
 
 int png_save(const char *filename,uint *image,int image_width,int image_height,int compressionLevel)
 {
-  CImageHandle_png *handle = (CImageHandle_png*)png_writeOpen(filename,image_width,image_height,compressionLevel);
+  auto *handle = (CImageHandle_png*)png_writeOpen(filename,image_width,image_height,compressionLevel);
   if (handle == nullptr)
     return -1;
 
   int psize = sizeof(uint);
   int len = image_width * psize;
-  uchar *pixel = new uchar[len];
+  auto *pixel = new uchar[len];
+
+  if (setjmp(png_jmpbuf(handle->png_ptr)))
+  {
+    delete[] pixel;
+    png_destroy_write_struct(&handle->png_ptr, &handle->info_ptr);
+    (void)fclose(handle->file);
+    delete handle;
+    return -1;
+  }
 
   for (int y=0; y<image_height; y++)
   {
@@ -985,6 +981,7 @@ int png_save(const char *filename,uint *image,int image_width,int image_height,i
 
     for (int x=0; x<image_width; x++)
     {
+      // codechecker_false_positive [security.ArrayBound] p1 + 3 < 4 * image_width, the size of the row buffer
       pixel[p1+3] = ptr[p2+3];
       pixel[p1+2] = ptr[p2+0];
       pixel[p1+1] = ptr[p2+1];
@@ -997,8 +994,7 @@ int png_save(const char *filename,uint *image,int image_width,int image_height,i
   }
 
   delete[] pixel;
-  png_writeClose(handle);
-  return 0;
+  return png_writeClose(handle);
 }
 
 
@@ -1016,13 +1012,22 @@ int png_save(const char *filename,uint *image,int image_width,int image_height)
 
 int png_saveMem(char *buffer,int bufferSize,uint *image,int image_width,int image_height,int compressionLevel)
 {
-  CImageHandle_png *handle = (CImageHandle_png*)png_writeOpenMem(buffer,bufferSize,image_width,image_height,compressionLevel);
+  auto *handle = (CImageHandle_png*)png_writeOpenMem(buffer,bufferSize,image_width,image_height,compressionLevel);
   if (handle == nullptr)
     return -1;
 
   int psize = sizeof(uint);
   int len = image_width * psize;
-  uchar *pixel = new uchar[len];
+  auto *pixel = new uchar[len];
+
+  if (setjmp(png_jmpbuf(handle->png_ptr)))
+  {
+    delete[] pixel;
+    png_destroy_write_struct(&handle->png_ptr, &handle->info_ptr);
+    (void)fclose(handle->file);
+    delete handle;
+    return -1;
+  }
 
   for (int y=0; y<image_height; y++)
   {
@@ -1129,9 +1134,11 @@ int webp_anim_save(const char *filename,
     if (!file)
       throw Fmi::Exception(BCP, "Cannot create a file!", nullptr);
 
-    fwrite(out.bytes, 1, out.size, file);
-    fclose(file);
-    file = nullptr;
+    const bool written = (fwrite(out.bytes, 1, out.size, file) == out.size);
+    const int closed = fclose(file);
+    file = nullptr;  // the catch block below must not close it again
+    if (closed != 0 || !written)
+      throw Fmi::Exception(BCP, "Failed to write the output file");
 
     WebPDataClear(&out);
     WebPAnimEncoderDelete(enc);
@@ -1142,7 +1149,7 @@ int webp_anim_save(const char *filename,
   catch (...)
   {
     if (file)
-      fclose(file);
+      (void)fclose(file);
 
     if (out.bytes)
       WebPDataClear(&out);
@@ -1154,6 +1161,61 @@ int webp_anim_save(const char *filename,
   }
 }
 
+
+
+
+namespace
+{
+
+/*! \brief Converts an ARGB image to RGBA into a new buffer and adds it as an animation frame. */
+
+void addWebpFrame(WebPAnimEncoder* enc,
+                  const uint *argb,
+                  uint*& rgba,
+                  uint sz,
+                  int image_width,
+                  int image_height,
+                  int ts)
+{
+  WebPConfig config;
+  WebPConfigInit(&config);
+  config.quality = 90;
+  config.lossless = 0;
+
+  WebPPicture frame;
+  if (!WebPPictureInitInternal(&frame, WEBP_ENCODER_ABI_VERSION))
+    throw Fmi::Exception(BCP, "WebPPictureInit failed", nullptr);
+
+  frame.width  = image_width;
+  frame.height = image_height;
+
+  rgba = new uint[sz];
+
+  for (uint s = 0; s < sz; s++)
+  {
+    uint oldCol = argb[s];
+    uint newCol = (oldCol & 0xFF000000) + ((oldCol & 0x00FF0000) >> 16) + (oldCol & 0x0000FF00) +((oldCol & 0x000000FF) << 16);
+    rgba[s] = newCol;
+  }
+
+  if (!WebPPictureImportRGBA(&frame,
+                             reinterpret_cast<uint8_t*>(rgba),
+                             image_width * 4))
+  {
+    WebPPictureFree(&frame);
+    throw Fmi::Exception(BCP, "WebPPictureImportRGBA failed", nullptr);
+  }
+
+  if (!WebPAnimEncoderAdd(enc, &frame, ts, &config))
+  {
+    WebPPictureFree(&frame);
+    throw Fmi::Exception(BCP, "WebPAnimEncoderAdd failed", nullptr);
+  }
+
+  WebPPictureFree(&frame);
+}
+
+}  // namespace
 
 
 
@@ -1190,42 +1252,8 @@ int webp_anim_save_ARGB(const char *filename,
 
     for (int t = 0; t < numberOfImages; t++)
     {
-      WebPConfig config;
-      WebPConfigInit(&config);
-      config.quality = 90;
-      config.lossless = 0;
+      addWebpFrame(enc,image[t],newImage[t],sz,image_width,image_height,ts);
 
-      WebPPicture frame;
-      if (!WebPPictureInitInternal(&frame, WEBP_ENCODER_ABI_VERSION))
-        throw Fmi::Exception(BCP, "WebPPictureInit failed", nullptr);
-
-      frame.width  = image_width;
-      frame.height = image_height;
-
-      newImage[t] = new uint[sz];
-
-      for (uint s = 0; s < sz; s++)
-      {
-        uint oldCol = image[t][s];
-        uint newCol = (oldCol & 0xFF000000) + ((oldCol & 0x00FF0000) >> 16) + (oldCol & 0x0000FF00) +((oldCol & 0x000000FF) << 16);
-        newImage[t][s] = newCol;
-      }
-
-      if (!WebPPictureImportRGBA(&frame,
-                                 reinterpret_cast<uint8_t*>(newImage[t]),
-                                 image_width * 4))
-      {
-        WebPPictureFree(&frame);
-        throw Fmi::Exception(BCP, "WebPPictureImportRGBA failed", nullptr);
-      }
-
-      if (!WebPAnimEncoderAdd(enc, &frame, ts, &config))
-      {
-        WebPPictureFree(&frame);
-        throw Fmi::Exception(BCP, "WebPAnimEncoderAdd failed", nullptr);
-      }
-
-      WebPPictureFree(&frame);
       int dt = 50;
       if (t < (int)timeStepMsec.size())
         dt = timeStepMsec[t];
@@ -1240,9 +1268,11 @@ int webp_anim_save_ARGB(const char *filename,
     if (!file)
       throw Fmi::Exception(BCP, "Cannot create a file!", nullptr);
 
-    fwrite(out.bytes, 1, out.size, file);
-    fclose(file);
-    file = nullptr;
+    const bool written = (fwrite(out.bytes, 1, out.size, file) == out.size);
+    const int closed = fclose(file);
+    file = nullptr;  // the catch block below must not close it again
+    if (closed != 0 || !written)
+      throw Fmi::Exception(BCP, "Failed to write the output file");
 
     WebPDataClear(&out);
     WebPAnimEncoderDelete(enc);
@@ -1256,7 +1286,7 @@ int webp_anim_save_ARGB(const char *filename,
   catch (...)
   {
     if (file)
-      fclose(file);
+      (void)fclose(file);
 
     if (out.bytes)
       WebPDataClear(&out);
@@ -1301,7 +1331,7 @@ void merge_ARGB_arrays(uint32_t *top, uint32_t *bottom, uint32_t *newArray,uint3
       }
     }
   }
-  catch (Fmi::Exception& e)
+  catch (Fmi::Exception&)
   {
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
@@ -1355,9 +1385,11 @@ void mergePngFiles(const char *newFile,std::vector<std::string>& fileList)
         unsigned long col = img.pixel[a];
         uint cc = col & 0xFF000000;
         if (cc == 0xFF000000)
+          // codechecker_false_positive [security.ArrayBound] both images have been checked to have sz = width * height pixels
           image.pixel[a] = col;
         else
         if (cc > 0)
+          // codechecker_false_positive [security.ArrayBound] both images have been checked to have sz = width * height pixels
           image.pixel[a] = merge_ARGB(col, image.pixel[a]);
       }
     }
@@ -1366,7 +1398,7 @@ void mergePngFiles(const char *newFile,std::vector<std::string>& fileList)
 
     png_save(newFile,image.pixel,image.width,image.height);
   }
-  catch (Fmi::Exception& e)
+  catch (Fmi::Exception&)
   {
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
@@ -1380,7 +1412,7 @@ void saveGeometryAsJpeg(const char *_filename,int width,int height,uint backgrou
 {
   try
   {
-    unsigned char* out = new unsigned char[geom->WkbSize()+10];
+    auto* out = new unsigned char[geom->WkbSize()+10];
     geom->exportToWkb(wkbNDR,out,wkbVariantOldOgc);
 
     //std::string st = Fmi::OGR::exportToWkt(*geom);
@@ -1396,7 +1428,10 @@ void saveGeometryAsJpeg(const char *_filename,int width,int height,uint backgrou
 
     if (autoscale)
     {
-      double minX = 0, minY = 0, maxX = 0, maxY = 0;
+      double minX = 0;
+      double minY = 0;
+      double maxX = 0;
+      double maxY = 0;
       imagePaint.countPaintWkbArea(out,geom->WkbSize(),minX,minY,maxX,maxY);
 
       dx = -minX;
@@ -1418,7 +1453,7 @@ void saveGeometryAsJpeg(const char *_filename,int width,int height,uint backgrou
     CPLFree(out);
     imagePaint.saveJpgImage(_filename);
   }
-  catch (Fmi::Exception& e)
+  catch (Fmi::Exception&)
   {
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
@@ -1429,7 +1464,7 @@ void saveGeometryAsJpeg(const char *_filename,int width,int height,uint backgrou
 
 /*! \brief Renders a collection of OGR geometries into a shared image and saves it as a JPEG file. */
 
-void saveGeometryAsJpeg(const char *_filename,int width,int height,uint backgroundColor,uint drawColor,uint fillColor,std::vector<std::shared_ptr<OGRGeometry>> geomVec,bool autoscale)
+void saveGeometryAsJpeg(const char *_filename,int width,int height,uint backgroundColor,uint drawColor,uint fillColor,const std::vector<std::shared_ptr<OGRGeometry>>& geomVec,bool autoscale)
 {
   try
   {
@@ -1441,7 +1476,10 @@ void saveGeometryAsJpeg(const char *_filename,int width,int height,uint backgrou
 
     ImagePaint imagePaint(width, height,backgroundColor,drawColor,fillColor,false,true);
 
-    double tminX = 0, tminY = 0, tmaxX = 0, tmaxY = 0;
+    double tminX = 0;
+    double tminY = 0;
+    double tmaxX = 0;
+    double tmaxY = 0;
     if (autoscale)
     {
       tminX = 1000000000;
@@ -1449,31 +1487,30 @@ void saveGeometryAsJpeg(const char *_filename,int width,int height,uint backgrou
       tmaxX = -1000000000;
       tmaxY = -1000000000;
 
-      for (auto g = geomVec.begin();g != geomVec.end(); ++g)
+      for (const auto& g : geomVec)
       {
-        auto gg = g->get();
-        unsigned char* out = new unsigned char[gg->WkbSize()+10];
+        auto *gg = g.get();
+        auto* out = new unsigned char[gg->WkbSize()+10];
         gg->exportToWkb(wkbNDR,out,wkbVariantOldOgc);
 
       //std::string st = Fmi::OGR::exportToWkt(*g);
 
-        double minX = 0, minY = 0, maxX = 0, maxY = 0;
+        double minX = 0;
+        double minY = 0;
+        double maxX = 0;
+        double maxY = 0;
         imagePaint.countPaintWkbArea(out,gg->WkbSize(),minX,minY,maxX,maxY);
         CPLFree(out);
 
         //printf("PAINT %f %f %f %f\n",minX,minY,maxX,maxY);
 
-        if (minX < tminX)
-          tminX = minX;
+        tminX = std::min(minX, tminX);
 
-        if (minY < tminY)
-          tminY = minY;
+        tminY = std::min(minY, tminY);
 
-        if (maxX > tmaxX)
-          tmaxX = maxX;
+        tmaxX = std::max(maxX, tmaxX);
 
-        if (maxY > tmaxY)
-          tmaxY = maxY;
+        tmaxY = std::max(maxY, tmaxY);
       }
     }
 
@@ -1495,10 +1532,10 @@ void saveGeometryAsJpeg(const char *_filename,int width,int height,uint backgrou
     if (sy < sx)
       ss = sy;
 
-    for (auto g = geomVec.begin();g != geomVec.end(); ++g)
+    for (const auto& g : geomVec)
     {
-      auto gg = g->get();
-      unsigned char* out = new unsigned char[gg->WkbSize()+10];
+      auto *gg = g.get();
+      auto* out = new unsigned char[gg->WkbSize()+10];
       gg->exportToWkb(wkbNDR,out,wkbVariantOldOgc);
       imagePaint.paintWkb(ss, ss, dx+10/ss, dy+10/ss,out,gg->WkbSize());
       CPLFree(out);
@@ -1506,7 +1543,7 @@ void saveGeometryAsJpeg(const char *_filename,int width,int height,uint backgrou
 
     imagePaint.saveJpgImage(_filename);
   }
-  catch (Fmi::Exception& e)
+  catch (Fmi::Exception&)
   {
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }

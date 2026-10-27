@@ -10,9 +10,7 @@ namespace GRIB2
 
 /*! \brief The constructor of the class. */
 
-CrossSectionProductImpl::CrossSectionProductImpl()
-{
-}
+CrossSectionProductImpl::CrossSectionProductImpl() = default;
 
 
 
@@ -20,10 +18,7 @@ CrossSectionProductImpl::CrossSectionProductImpl()
 
 /*! \brief The copy constructor of the class. */
 
-CrossSectionProductImpl::CrossSectionProductImpl(const CrossSectionProductImpl& other)
-:CrossSectionProduct(other)
-{
-}
+CrossSectionProductImpl::CrossSectionProductImpl(const CrossSectionProductImpl& other) = default;
 
 
 
@@ -31,9 +26,7 @@ CrossSectionProductImpl::CrossSectionProductImpl(const CrossSectionProductImpl& 
 
 /*! \brief The destructor of the class. */
 
-CrossSectionProductImpl::~CrossSectionProductImpl()
-{
-}
+CrossSectionProductImpl::~CrossSectionProductImpl() = default;
 
 
 
@@ -90,7 +83,7 @@ void CrossSectionProductImpl::read(MemoryReader& memoryReader)
         \return               The forecast time.
 */
 
-T::TimeString CrossSectionProductImpl::getForecastTime(T::TimeString referenceTime) const
+T::TimeString CrossSectionProductImpl::getForecastTime(T::TimeString /*referenceTime*/) const
 {
   throw Fmi::Exception(BCP, "Not implemented!");
 }

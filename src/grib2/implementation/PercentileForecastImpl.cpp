@@ -10,9 +10,7 @@ namespace GRIB2
 
 /*! \brief The constructor of the class. */
 
-PercentileForecastImpl::PercentileForecastImpl()
-{
-}
+PercentileForecastImpl::PercentileForecastImpl() = default;
 
 
 
@@ -20,10 +18,7 @@ PercentileForecastImpl::PercentileForecastImpl()
 
 /*! \brief The copy constructor of the class. */
 
-PercentileForecastImpl::PercentileForecastImpl(const PercentileForecastImpl& other)
-:PercentileForecast(other)
-{
-}
+PercentileForecastImpl::PercentileForecastImpl(const PercentileForecastImpl& other) = default;
 
 
 
@@ -31,9 +26,7 @@ PercentileForecastImpl::PercentileForecastImpl(const PercentileForecastImpl& oth
 
 /*! \brief The destructor of the class. */
 
-PercentileForecastImpl::~PercentileForecastImpl()
-{
-}
+PercentileForecastImpl::~PercentileForecastImpl() = default;
 
 
 

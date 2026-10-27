@@ -26,12 +26,12 @@ class DataFetcher
     class FileRec
     {
       public:
-        uint        serverType;   //!< Server type (see DataFetcher::ServerType)
-        uint        protocol;     //!< Protocol (see MapInfo::Protocol)
+        uint        serverType = 0;   //!< Server type (see DataFetcher::ServerType)
+        uint        protocol = 0;     //!< Protocol (see MapInfo::Protocol)
         std::string server;       //!< Server hostname or URL
         std::string filename;     //!< File path relative to the server
-        time_t      lastModified; //!< Last-modified timestamp
-        std::size_t size;         //!< File size in bytes
+        time_t      lastModified = 0; //!< Last-modified timestamp
+        std::size_t size = 0;         //!< File size in bytes
     };
 
     /*! \brief Server category constants (mirrors MapInfo::ServerType). */
@@ -57,9 +57,9 @@ class DataFetcher
         std::string password;          //!< Password or token
     };
 
-    typedef std::map<std::string,AccessInfo> AccessMap; //!< Per-server credential map
+    using AccessMap = std::map<std::string,AccessInfo>; //!< Per-server credential map
 
-  public:
+  
                         DataFetcher();
     virtual             ~DataFetcher();
 
@@ -140,11 +140,11 @@ class DataFetcher
 
   protected:
 
-    bool                mDebugEnabled; //!< True when debug logging is active
+    bool                mDebugEnabled{false}; //!< True when debug logging is active
     AccessMap           mAccessMap;    //!< Per-server authentication credentials
 };
 
-typedef std::shared_ptr<DataFetcher> DataFetcher_sptr;
-typedef std::map<uint,DataFetcher_sptr> DataFetcher_sptr_map;
+using DataFetcher_sptr = std::shared_ptr<DataFetcher>;
+using DataFetcher_sptr_map = std::map<uint,DataFetcher_sptr>;
 
 }  // namespace SmartMet

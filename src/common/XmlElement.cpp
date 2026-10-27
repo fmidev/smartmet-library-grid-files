@@ -1,6 +1,7 @@
 #include "XmlElement.h"
 #include "GeneralFunctions.h"
 #include <macgyver/Exception.h>
+#include <vector>
 
 namespace SmartMet
 {
@@ -15,7 +16,7 @@ XmlElement::XmlElement()
     parent = nullptr;
     filePosition = 0;
   }
-  catch (Fmi::Exception& e)
+  catch (Fmi::Exception&)
   {
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
@@ -34,7 +35,7 @@ XmlElement::XmlElement(const char *data,int size)
     filePosition = 0;
     parseXml(data,size,*this);
   }
-  catch (Fmi::Exception& e)
+  catch (Fmi::Exception&)
   {
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
@@ -47,9 +48,9 @@ XmlElement::XmlElement(const char *data,int size)
 
 XmlElement::~XmlElement()
 {
-  for (auto it=elementList.begin(); it!=elementList.end();++it)
+  for (auto& it : elementList)
   {
-    delete (*it);
+    delete it;
   }
 }
 
@@ -57,7 +58,7 @@ XmlElement::~XmlElement()
 
 /*! \brief Prints this element and its children to the given stream. */
 
-void XmlElement::print(std::ostream& stream,uint level,uint optionFlags)
+void XmlElement::print(std::ostream& stream,uint level,uint /*optionFlags*/)
 {
   try
   {
@@ -66,12 +67,12 @@ void XmlElement::print(std::ostream& stream,uint level,uint optionFlags)
     stream << space(level+1) << "Value        : " << value << "\n";
     stream << space(level+1) << "ElementList  : \n";
 
-    for (auto it=elementList.begin(); it!=elementList.end();++it)
-      (*it)->print(stream,level+2,0);
+    for (auto& it : elementList)
+      it->print(stream,level+2,0);
 
     stream << space(level) << "END " << tag << "\n";
   }
-  catch (Fmi::Exception& e)
+  catch (Fmi::Exception&)
   {
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
@@ -81,7 +82,7 @@ void XmlElement::print(std::ostream& stream,uint level,uint optionFlags)
 
 /*! \brief Extracts the tag name and type from a raw XML tag string. */
 
-int XmlElement::getTagNameAndType(const char *data,char *name,ParameterList& parameterList)
+int XmlElement::getTagNameAndType(const char *data,char *name,const ParameterList& /*parameterList*/)
 {
   try
   {
@@ -130,11 +131,61 @@ int XmlElement::getTagNameAndType(const char *data,char *name,ParameterList& par
     }
     return type;
   }
-  catch (Fmi::Exception& e)
+  catch (Fmi::Exception&)
   {
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
+
+
+
+
+namespace
+{
+
+/*! \brief Adds a start or empty element tag under the current element, or closes the current element on an end tag. Returns the new current element. */
+
+XmlElement *applyTag(XmlElement *xe,int type,const char *tag,int tagStart,const ParameterList& parameterList)
+{
+  if (type == 1)
+  {
+    auto *e = new XmlElement;
+    e->parent = xe;
+    e->filePosition = tagStart;
+    xe->elementList.push_back(e);
+    e->tag = tag;
+    e->parameters = parameterList;
+    xe = e;
+  }
+
+  if (type == 3)
+  {
+    auto *e = new XmlElement;
+    e->parent = xe;
+    e->filePosition = tagStart;
+    xe->elementList.push_back(e);
+    e->tag = tag;
+  }
+
+  if (type == 2)
+  {
+    if (xe->tag != tag)
+    {
+      printf("XML-ERROR: Wrong end tag (%s:%d), expected (%s:%d)!\n",tag,tagStart,xe->tag.c_str(),xe->filePosition);
+
+      if (xe->parent && xe->parent->tag == tag)
+        xe = xe->parent;
+    }
+
+    if (xe->parent)
+      xe = xe->parent;
+  }
+
+  return xe;
+}
+
+}  // namespace
+
 
 
 
@@ -151,7 +202,9 @@ void XmlElement::parseXml(const char *data,int size,XmlElement& xmlRoot)
     int c = 0;
     int tagStart = -1;
     int valueStart = -1;
-    char buf[size];
+    // Room for the terminating null character when a tag ends at the last byte
+    std::vector<char> bufVec(size + 1);
+    char *buf = bufVec.data();
 
     while (c < size)
     {
@@ -177,39 +230,7 @@ void XmlElement::parseXml(const char *data,int size,XmlElement& xmlRoot)
         ParameterList parameterList;
         int type = getTagNameAndType(buf,tag,parameterList);
 
-        if (type == 1)
-        {
-          XmlElement *e = new XmlElement;
-          e->parent = xe;
-          e->filePosition = tagStart;
-          xe->elementList.push_back(e);
-          e->tag = tag;
-          e->parameters = parameterList;
-          xe = e;
-        }
-
-        if (type == 3)
-        {
-          XmlElement *e = new XmlElement;
-          e->parent = xe;
-          e->filePosition = tagStart;
-          xe->elementList.push_back(e);
-          e->tag = tag;
-        }
-
-        if (type == 2)
-        {
-          if (xe->tag != tag)
-          {
-            printf("XML-ERROR: Wrong end tag (%s:%d), expected (%s:%d)!\n",tag,tagStart,xe->tag.c_str(),xe->filePosition);
-
-            if (xe->parent && xe->parent->tag == tag)
-              xe = xe->parent;
-          }
-
-          if (xe->parent)
-            xe = xe->parent;
-        }
+        xe = applyTag(xe,type,tag,tagStart,parameterList);
 
         if (data[tagStart+1] != '/'  &&  data[c-1] != '/')
         {
@@ -221,7 +242,7 @@ void XmlElement::parseXml(const char *data,int size,XmlElement& xmlRoot)
       c++;
     }
   }
-  catch (Fmi::Exception& e)
+  catch (Fmi::Exception&)
   {
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }

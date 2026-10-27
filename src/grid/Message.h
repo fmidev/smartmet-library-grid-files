@@ -18,6 +18,7 @@
 #include "../common/MemoryReader.h"
 #include "../common/StringFactory.h"
 
+#include <macgyver/CacheStats.h>
 #include <vector>
 #include <string>
 #include <memory>
@@ -48,7 +49,7 @@ struct MessageInfo
   T::GeometryId      mGeometryId;         //!< Grid geometry identifier
 };
 
-typedef std::map<uint,MessageInfo> MessageInfo_map; //!< Map from message index to MessageInfo
+using MessageInfo_map = std::map<uint,MessageInfo>; //!< Map from message index to MessageInfo
 
 
 class GridFile;
@@ -70,6 +71,7 @@ class Message
                                 /*! \brief Copy constructor. */
                                 Message(const Message& message);
     virtual                     ~Message();
+    Message& operator=(const Message&) = default;
 
     /*! \brief Populate \p attributeList with all message fields as key/value pairs.
      *  \param[in]  prefix         String prepended to every attribute key.
@@ -289,6 +291,14 @@ class Message
      *  \param[out] lat,lon        Latitude and longitude in degrees.
      *  \return True on success. */
     virtual bool                getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const;
+
+    /*! \brief Convert a list of integer grid indices to lat/lon coordinates in one call.
+     *  Equivalent to calling getGridLatLonCoordinatesByGridPoint() for each point, but
+     *  implementations may batch the coordinate transformation.
+     *  \param[in]  gridPoints   Zero-based column and row indices.
+     *  \param[out] coordinates  Lon/lat (x/y) coordinate for each point.
+     *  \param[out] found        True for each point whose coordinates were found. */
+    virtual void                getGridLatLonCoordinatesByGridPointList(std::vector<T::Point>& gridPoints,T::Coordinate_vec& coordinates,std::vector<bool>& found) const;
 
     /*! \brief Convert fractional grid position to lat/lon coordinates.
      *  \param[in]  grid_i,grid_j  Fractional column and row position.
@@ -973,11 +983,12 @@ class Operation
 };
 
 
-typedef Message* MessagePtr;
-typedef std::vector<MessagePtr> MessagePtr_vec;
+using MessagePtr = Message*;
+using MessagePtr_vec = std::vector<MessagePtr>;
 
 extern std::vector<double> EMPTY_DOUBLE_VEC;
 extern std::vector<Message*> EMPTY_MSG_VEC;
+extern Fmi::Cache::CacheStats circlePointCache_stats;  //!< Statistics of the latlon circle point cache
 
 
 

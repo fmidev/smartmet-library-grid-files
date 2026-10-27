@@ -27,8 +27,7 @@ Product_55::Product_55() {
 
 /*! \brief The destructor of the class. */
 
-Product_55::~Product_55() {
-}
+Product_55::~Product_55() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -66,11 +65,8 @@ void Product_55::write(DataWriter &dataWriter) {
 
 void Product_55::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sProduct_55.", prefix.c_str());
-    mPointInTime.getAttributeList(name, attributeList);
-    sprintf(name, "%sProduct_55.", prefix.c_str());
-    mHorizontal.getAttributeList(name, attributeList);
+        mPointInTime.getAttributeList(prefix + "Product_55.", attributeList);
+        mHorizontal.getAttributeList(prefix + "Product_55.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -162,7 +158,7 @@ ProductDefinition *Product_55::createProductDefinition() const {
 
 PointInTimeSettings *Product_55::getPointInTime() const {
   try {
-    return static_cast<PointInTimeSettings *>(&mPointInTime);
+    return &mPointInTime;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -172,13 +168,13 @@ PointInTimeSettings *Product_55::getPointInTime() const {
 
 HorizontalSettings *Product_55::getHorizontal() const {
   try {
-    return static_cast<HorizontalSettings *>(&mHorizontal);
+    return &mHorizontal;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
-void Product_55::setPointInTime(PointInTimeSettings &pointInTime) {
+void Product_55::setPointInTime(const PointInTimeSettings &pointInTime) {
   try {
     mPointInTime = pointInTime;
   } catch (...) {
@@ -186,7 +182,7 @@ void Product_55::setPointInTime(PointInTimeSettings &pointInTime) {
   }
 }
 
-void Product_55::setHorizontal(HorizontalSettings &horizontal) {
+void Product_55::setHorizontal(const HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {

@@ -19,7 +19,7 @@ namespace Identification
 
 /*! \brief List of GRIB key/value pairs (key as uint code, value as string) used to
  *  identify a parameter or level in a GRIB message. */
-typedef std::vector<std::pair<uint,std::string>> ParameterList;
+using ParameterList = std::vector<std::pair<uint,std::string>>;
 
 class Grib2ParameterDef
 {
@@ -27,6 +27,8 @@ class Grib2ParameterDef
 
                     Grib2ParameterDef();
     virtual         ~Grib2ParameterDef();
+    Grib2ParameterDef(const Grib2ParameterDef&) = default;
+    Grib2ParameterDef& operator=(const Grib2ParameterDef&) = default;
 
     /*! \brief Write a human-readable dump to \p stream (for debugging). */
     void            print(std::ostream& stream,uint level,uint optionFlags) const;
@@ -35,9 +37,9 @@ class Grib2ParameterDef
     ParameterList   mParameterList;    //!< GRIB 2 key/value pairs that identify this parameter
 };
 
-typedef const Grib2ParameterDef* Grib2ParamDef_cptr;          //!< Non-owning const pointer
-typedef std::vector<Grib2ParameterDef> Grib2ParamDef_vec;      //!< Ordered list of GRIB 2 parameter definitions
-typedef std::list<Grib2ParameterDef> Grib2ParamDef_list;       //!< List used as a lookup cache
+using Grib2ParamDef_cptr = const Grib2ParameterDef*;          //!< Non-owning const pointer
+using Grib2ParamDef_vec = std::vector<Grib2ParameterDef>;      //!< Ordered list of GRIB 2 parameter definitions
+using Grib2ParamDef_list = std::list<Grib2ParameterDef>;       //!< List used as a lookup cache
 
 
 }

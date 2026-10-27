@@ -29,8 +29,7 @@ Triangular::Triangular() {
 
 /*! \brief The destructor of the class. */
 
-Triangular::~Triangular() {
-}
+Triangular::~Triangular() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -86,29 +85,17 @@ void Triangular::write(DataWriter &dataWriter) {
 
 void Triangular::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sTriangular.N2", prefix.c_str());
-    attributeList.addAttribute(name, toString(mN2));
-    sprintf(name, "%sTriangular.N3", prefix.c_str());
-    attributeList.addAttribute(name, toString(mN3));
-    sprintf(name, "%sTriangular.Ni", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNi));
-    sprintf(name, "%sTriangular.Nd", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNd));
-    sprintf(name, "%sTriangular.LatitudeOfThePolePoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatitudeOfThePolePoint));
-    sprintf(name, "%sTriangular.LongitudeOfThePolePoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLongitudeOfThePolePoint));
-    sprintf(name, "%sTriangular.LongitudeOfFirstDiamondCenterLine", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLongitudeOfFirstDiamondCenterLine));
-    sprintf(name, "%sTriangular.GridPointPosition", prefix.c_str());
-    attributeList.addAttribute(name, toString(mGridPointPosition));
-    sprintf(name, "%sTriangular.NumberingOrderOfDiamonds", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNumberingOrderOfDiamonds));
-    sprintf(name, "%sTriangular.ScanningModeForOneDiamond", prefix.c_str());
-    attributeList.addAttribute(name, toString(mScanningModeForOneDiamond));
-    sprintf(name, "%sTriangular.TotalNumberOfGridPoints", prefix.c_str());
-    attributeList.addAttribute(name, toString(mTotalNumberOfGridPoints));
+        attributeList.addAttribute(prefix + "Triangular.N2", toString(mN2));
+        attributeList.addAttribute(prefix + "Triangular.N3", toString(mN3));
+        attributeList.addAttribute(prefix + "Triangular.Ni", toString(mNi));
+        attributeList.addAttribute(prefix + "Triangular.Nd", toString(mNd));
+        attributeList.addAttribute(prefix + "Triangular.LatitudeOfThePolePoint", toString(mLatitudeOfThePolePoint));
+        attributeList.addAttribute(prefix + "Triangular.LongitudeOfThePolePoint", toString(mLongitudeOfThePolePoint));
+        attributeList.addAttribute(prefix + "Triangular.LongitudeOfFirstDiamondCenterLine", toString(mLongitudeOfFirstDiamondCenterLine));
+        attributeList.addAttribute(prefix + "Triangular.GridPointPosition", toString(mGridPointPosition));
+        attributeList.addAttribute(prefix + "Triangular.NumberingOrderOfDiamonds", toString(mNumberingOrderOfDiamonds));
+        attributeList.addAttribute(prefix + "Triangular.ScanningModeForOneDiamond", toString(mScanningModeForOneDiamond));
+        attributeList.addAttribute(prefix + "Triangular.TotalNumberOfGridPoints", toString(mTotalNumberOfGridPoints));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -219,7 +206,7 @@ bool Triangular::hasAttributeValue(const char *attributeName, const char *attrib
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void Triangular::print(std::ostream &stream, uint level, uint optionFlags) const {
+void Triangular::print(std::ostream &stream, uint level, uint /*optionFlags*/) const {
   try {
     stream << space(level) << "Triangular\n";
     stream << space(level) << "- N2 = " << toString(mN2) << "\n";

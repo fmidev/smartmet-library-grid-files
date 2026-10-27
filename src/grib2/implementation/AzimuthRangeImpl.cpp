@@ -23,10 +23,7 @@ AzimuthRangeImpl::AzimuthRangeImpl()
 
 /*! \brief The copy constructor of the class. */
 
-AzimuthRangeImpl::AzimuthRangeImpl(const AzimuthRangeImpl& other)
-:AzimuthRange(other)
-{
-}
+AzimuthRangeImpl::AzimuthRangeImpl(const AzimuthRangeImpl& other) = default;
 
 
 
@@ -34,9 +31,7 @@ AzimuthRangeImpl::AzimuthRangeImpl(const AzimuthRangeImpl& other)
 
 /*! \brief The destructor of the class. */
 
-AzimuthRangeImpl::~AzimuthRangeImpl()
-{
-}
+AzimuthRangeImpl::~AzimuthRangeImpl() = default;
 
 
 
@@ -115,7 +110,7 @@ T::Dimensions AzimuthRangeImpl::getGridDimensions() const
 {
   try
   {
-    return T::Dimensions();
+    return {};
   }
   catch (...)
   {

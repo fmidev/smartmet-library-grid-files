@@ -27,8 +27,7 @@ Product_68::Product_68() {
 
 /*! \brief The destructor of the class. */
 
-Product_68::~Product_68() {
-}
+Product_68::~Product_68() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -68,13 +67,9 @@ void Product_68::write(DataWriter &dataWriter) {
 
 void Product_68::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sProduct_68.", prefix.c_str());
-    mHorizontal.getAttributeList(name, attributeList);
-    sprintf(name, "%sProduct_68.", prefix.c_str());
-    mEps.getAttributeList(name, attributeList);
-    sprintf(name, "%sProduct_68.", prefix.c_str());
-    mStatistical.getAttributeList(name, attributeList);
+        mHorizontal.getAttributeList(prefix + "Product_68.", attributeList);
+        mEps.getAttributeList(prefix + "Product_68.", attributeList);
+        mStatistical.getAttributeList(prefix + "Product_68.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -171,7 +166,7 @@ ProductDefinition *Product_68::createProductDefinition() const {
 
 HorizontalSettings *Product_68::getHorizontal() const {
   try {
-    return static_cast<HorizontalSettings *>(&mHorizontal);
+    return &mHorizontal;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -181,7 +176,7 @@ HorizontalSettings *Product_68::getHorizontal() const {
 
 EpsSettings *Product_68::getEps() const {
   try {
-    return static_cast<EpsSettings *>(&mEps);
+    return &mEps;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -191,13 +186,13 @@ EpsSettings *Product_68::getEps() const {
 
 StatisticalSettings *Product_68::getStatistical() const {
   try {
-    return static_cast<StatisticalSettings *>(&mStatistical);
+    return &mStatistical;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
-void Product_68::setHorizontal(HorizontalSettings &horizontal) {
+void Product_68::setHorizontal(const HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
@@ -205,7 +200,7 @@ void Product_68::setHorizontal(HorizontalSettings &horizontal) {
   }
 }
 
-void Product_68::setEps(EpsSettings &eps) {
+void Product_68::setEps(const EpsSettings &eps) {
   try {
     mEps = eps;
   } catch (...) {
@@ -213,7 +208,7 @@ void Product_68::setEps(EpsSettings &eps) {
   }
 }
 
-void Product_68::setStatistical(StatisticalSettings &statistical) {
+void Product_68::setStatistical(const StatisticalSettings &statistical) {
   try {
     mStatistical = statistical;
   } catch (...) {

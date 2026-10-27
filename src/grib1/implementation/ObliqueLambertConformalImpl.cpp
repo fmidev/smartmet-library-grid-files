@@ -1,6 +1,8 @@
 #include "ObliqueLambertConformalImpl.h"
 #include <macgyver/Exception.h>
 
+#include <memory>
+
 namespace SmartMet
 {
 namespace GRIB1
@@ -125,8 +127,8 @@ T::Coordinate_svec ObliqueLambertConformalImpl::getGridOriginalCoordinatesNoCach
     double latitudeOfFirstGridPoint = C_DOUBLE(mLatitudeOfFirstGridPoint) / 1000;
     double longitudeOfFirstGridPoint = C_DOUBLE(mLongitudeOfFirstGridPoint) / 1000;
 
-    double dx = C_DOUBLE(mDxInMetres);
-    double dy = C_DOUBLE(mDyInMetres);
+    auto dx = C_DOUBLE(mDxInMetres);
+    auto dy = C_DOUBLE(mDyInMetres);
 
     unsigned char scanningMode = mScanningMode.getScanningMode();
     if ((scanningMode & 0x80) != 0)
@@ -227,7 +229,7 @@ void ObliqueLambertConformalImpl::initSpatialReference()
     mSpatialReference = getSpatialReference();
     if (!mSpatialReference)
     {
-      mSpatialReference.reset(new T::SpatialRef());
+      mSpatialReference = std::make_shared<T::SpatialRef>();
       addSpatialReference(mSpatialReference);
 
       auto dfStdP1 = mLatin1;

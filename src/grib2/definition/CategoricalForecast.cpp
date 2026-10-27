@@ -27,8 +27,7 @@ CategoricalForecast::CategoricalForecast() {
 
 /*! \brief The destructor of the class. */
 
-CategoricalForecast::~CategoricalForecast() {
-}
+CategoricalForecast::~CategoricalForecast() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -70,15 +69,10 @@ void CategoricalForecast::write(DataWriter &dataWriter) {
 
 void CategoricalForecast::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sCategoricalForecast.", prefix.c_str());
-    mParameter.getAttributeList(name, attributeList);
-    sprintf(name, "%sCategoricalForecast.", prefix.c_str());
-    mPointInTime.getAttributeList(name, attributeList);
-    sprintf(name, "%sCategoricalForecast.", prefix.c_str());
-    mHorizontal.getAttributeList(name, attributeList);
-    sprintf(name, "%sCategoricalForecast.", prefix.c_str());
-    mCategorical.getAttributeList(name, attributeList);
+        mParameter.getAttributeList(prefix + "CategoricalForecast.", attributeList);
+        mPointInTime.getAttributeList(prefix + "CategoricalForecast.", attributeList);
+        mHorizontal.getAttributeList(prefix + "CategoricalForecast.", attributeList);
+        mCategorical.getAttributeList(prefix + "CategoricalForecast.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -180,7 +174,7 @@ ProductDefinition *CategoricalForecast::createProductDefinition() const {
 
 ParameterSettings *CategoricalForecast::getParameter() const {
   try {
-    return static_cast<ParameterSettings *>(&mParameter);
+    return &mParameter;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -190,7 +184,7 @@ ParameterSettings *CategoricalForecast::getParameter() const {
 
 PointInTimeSettings *CategoricalForecast::getPointInTime() const {
   try {
-    return static_cast<PointInTimeSettings *>(&mPointInTime);
+    return &mPointInTime;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -200,7 +194,7 @@ PointInTimeSettings *CategoricalForecast::getPointInTime() const {
 
 HorizontalSettings *CategoricalForecast::getHorizontal() const {
   try {
-    return static_cast<HorizontalSettings *>(&mHorizontal);
+    return &mHorizontal;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -210,13 +204,13 @@ HorizontalSettings *CategoricalForecast::getHorizontal() const {
 
 CategoricalSettings *CategoricalForecast::getCategorical() const {
   try {
-    return static_cast<CategoricalSettings *>(&mCategorical);
+    return &mCategorical;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
-void CategoricalForecast::setParameter(ParameterSettings &parameter) {
+void CategoricalForecast::setParameter(const ParameterSettings &parameter) {
   try {
     mParameter = parameter;
   } catch (...) {
@@ -224,7 +218,7 @@ void CategoricalForecast::setParameter(ParameterSettings &parameter) {
   }
 }
 
-void CategoricalForecast::setPointInTime(PointInTimeSettings &pointInTime) {
+void CategoricalForecast::setPointInTime(const PointInTimeSettings &pointInTime) {
   try {
     mPointInTime = pointInTime;
   } catch (...) {
@@ -232,7 +226,7 @@ void CategoricalForecast::setPointInTime(PointInTimeSettings &pointInTime) {
   }
 }
 
-void CategoricalForecast::setHorizontal(HorizontalSettings &horizontal) {
+void CategoricalForecast::setHorizontal(const HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
@@ -240,7 +234,7 @@ void CategoricalForecast::setHorizontal(HorizontalSettings &horizontal) {
   }
 }
 
-void CategoricalForecast::setCategorical(CategoricalSettings &categorical) {
+void CategoricalForecast::setCategorical(const CategoricalSettings &categorical) {
   try {
     mCategorical = categorical;
   } catch (...) {

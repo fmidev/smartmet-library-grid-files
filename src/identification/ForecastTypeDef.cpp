@@ -46,7 +46,7 @@ ForecastTypeDef::~ForecastTypeDef()
 
 /*! \brief Prints the content of the object into the given stream. */
 
-void ForecastTypeDef::print(std::ostream& stream,uint level,uint optionFlags) const
+void ForecastTypeDef::print(std::ostream& stream,uint level,uint /*optionFlags*/) const
 {
   try
   {

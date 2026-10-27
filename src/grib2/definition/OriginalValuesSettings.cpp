@@ -27,8 +27,7 @@ OriginalValuesSettings::OriginalValuesSettings() {
 
 /*! \brief The destructor of the class. */
 
-OriginalValuesSettings::~OriginalValuesSettings() {
-}
+OriginalValuesSettings::~OriginalValuesSettings() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -64,9 +63,7 @@ void OriginalValuesSettings::write(DataWriter &dataWriter) {
 
 void OriginalValuesSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sOriginalValuesSettings.TypeOfOriginalFieldValues", prefix.c_str());
-    attributeList.addAttribute(name, toString(mTypeOfOriginalFieldValues));
+        attributeList.addAttribute(prefix + "OriginalValuesSettings.TypeOfOriginalFieldValues", toString(mTypeOfOriginalFieldValues));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -117,7 +114,7 @@ bool OriginalValuesSettings::hasAttributeValue(const char *attributeName, const 
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void OriginalValuesSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
+void OriginalValuesSettings::print(std::ostream &stream, uint level, uint /*optionFlags*/) const {
   try {
     stream << space(level) << "OriginalValuesSettings\n";
     stream << space(level) << "- TypeOfOriginalFieldValues = " << toString(mTypeOfOriginalFieldValues) << "\n";

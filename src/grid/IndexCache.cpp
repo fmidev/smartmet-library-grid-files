@@ -50,13 +50,13 @@ IndexCache::~IndexCache()
 
 /*! \brief Inserts an index vector into the cache under the given hash, sorted by hash. */
 
-void IndexCache::addIndexVector(Int64 hash,T::IndexVector& indexVector)
+void IndexCache::addIndexVector(Int64 hash,const T::IndexVector& indexVector)
 {
   try
   {
     AutoWriteLock lock(&mModificationLock);
 
-    if (mHashVector.size() == 0)
+    if (mHashVector.empty())
     {
       mHashVector.emplace_back(hash);
       mVector.emplace_back(indexVector);
@@ -75,8 +75,7 @@ void IndexCache::addIndexVector(Int64 hash,T::IndexVector& indexVector)
       mTimeVector.insert(mTimeVector.begin(),time(nullptr));
       mVector.insert(mVector.begin(),indexVector);
     }
-    else
-    if (idx >= C_INT(mHashVector.size()))
+    else if (idx >= C_INT(mHashVector.size()))
     {
       mHashVector.emplace_back(hash);
       mTimeVector.emplace_back(time(nullptr));
@@ -142,11 +141,7 @@ bool IndexCache::findIndexVector(Int64 hash)
     int sz = C_INT(mHashVector.size());
     int idx = getClosestIndexByHashNoLock(hash);
 
-    if (idx >= 0  &&  idx < sz  &&  mHashVector[idx] == hash)
-    {
-      return true;
-    }
-    return false;
+    return idx >= 0  &&  idx < sz  &&  mHashVector[idx] == hash;
   }
   catch (...)
   {

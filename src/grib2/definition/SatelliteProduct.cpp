@@ -27,8 +27,7 @@ SatelliteProduct::SatelliteProduct() {
 
 /*! \brief The destructor of the class. */
 
-SatelliteProduct::~SatelliteProduct() {
-}
+SatelliteProduct::~SatelliteProduct() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -82,27 +81,16 @@ void SatelliteProduct::write(DataWriter &dataWriter) {
 
 void SatelliteProduct::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sSatelliteProduct.ParameterCategory", prefix.c_str());
-    attributeList.addAttribute(name, toString(mParameterCategory));
-    sprintf(name, "%sSatelliteProduct.ParameterNumber", prefix.c_str());
-    attributeList.addAttribute(name, toString(mParameterNumber));
-    sprintf(name, "%sSatelliteProduct.TypeOfGeneratingProcess", prefix.c_str());
-    attributeList.addAttribute(name, toString(mTypeOfGeneratingProcess));
-    sprintf(name, "%sSatelliteProduct.ObservationGeneratingProcessIdentifier", prefix.c_str());
-    attributeList.addAttribute(name, toString(mObservationGeneratingProcessIdentifier));
-    sprintf(name, "%sSatelliteProduct.NB", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNB));
-    sprintf(name, "%sSatelliteProduct.SatelliteSeries", prefix.c_str());
-    attributeList.addAttribute(name, toString(mSatelliteSeries));
-    sprintf(name, "%sSatelliteProduct.SatelliteNumber", prefix.c_str());
-    attributeList.addAttribute(name, toString(mSatelliteNumber));
-    sprintf(name, "%sSatelliteProduct.InstrumentType", prefix.c_str());
-    attributeList.addAttribute(name, toString(mInstrumentType));
-    sprintf(name, "%sSatelliteProduct.ScaleFactorOfCentralWaveNumber", prefix.c_str());
-    attributeList.addAttribute(name, toString(mScaleFactorOfCentralWaveNumber));
-    sprintf(name, "%sSatelliteProduct.ScaledValueOfCentralWaveNumber", prefix.c_str());
-    attributeList.addAttribute(name, toString(mScaledValueOfCentralWaveNumber));
+        attributeList.addAttribute(prefix + "SatelliteProduct.ParameterCategory", toString(mParameterCategory));
+        attributeList.addAttribute(prefix + "SatelliteProduct.ParameterNumber", toString(mParameterNumber));
+        attributeList.addAttribute(prefix + "SatelliteProduct.TypeOfGeneratingProcess", toString(mTypeOfGeneratingProcess));
+        attributeList.addAttribute(prefix + "SatelliteProduct.ObservationGeneratingProcessIdentifier", toString(mObservationGeneratingProcessIdentifier));
+        attributeList.addAttribute(prefix + "SatelliteProduct.NB", toString(mNB));
+        attributeList.addAttribute(prefix + "SatelliteProduct.SatelliteSeries", toString(mSatelliteSeries));
+        attributeList.addAttribute(prefix + "SatelliteProduct.SatelliteNumber", toString(mSatelliteNumber));
+        attributeList.addAttribute(prefix + "SatelliteProduct.InstrumentType", toString(mInstrumentType));
+        attributeList.addAttribute(prefix + "SatelliteProduct.ScaleFactorOfCentralWaveNumber", toString(mScaleFactorOfCentralWaveNumber));
+        attributeList.addAttribute(prefix + "SatelliteProduct.ScaledValueOfCentralWaveNumber", toString(mScaledValueOfCentralWaveNumber));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -207,7 +195,7 @@ bool SatelliteProduct::hasAttributeValue(const char *attributeName, const char *
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void SatelliteProduct::print(std::ostream &stream, uint level, uint optionFlags) const {
+void SatelliteProduct::print(std::ostream &stream, uint level, uint /*optionFlags*/) const {
   try {
     stream << space(level) << "SatelliteProduct\n";
     stream << space(level) << "- ParameterCategory = " << toString(mParameterCategory) << "\n";

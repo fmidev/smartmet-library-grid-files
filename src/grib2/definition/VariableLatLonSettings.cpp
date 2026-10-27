@@ -27,8 +27,7 @@ VariableLatLonSettings::VariableLatLonSettings() {
 
 /*! \brief The destructor of the class. */
 
-VariableLatLonSettings::~VariableLatLonSettings() {
-}
+VariableLatLonSettings::~VariableLatLonSettings() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -78,23 +77,14 @@ void VariableLatLonSettings::write(DataWriter &dataWriter) {
 
 void VariableLatLonSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sVariableLatLonSettings.Ni", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNi));
-    sprintf(name, "%sVariableLatLonSettings.Nj", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNj));
-    sprintf(name, "%sVariableLatLonSettings.BasicAngleOfTheInitialProductionDomain", prefix.c_str());
-    attributeList.addAttribute(name, toString(mBasicAngleOfTheInitialProductionDomain));
-    sprintf(name, "%sVariableLatLonSettings.SubdivisionsOfBasicAngle", prefix.c_str());
-    attributeList.addAttribute(name, toString(mSubdivisionsOfBasicAngle));
-    sprintf(name, "%sVariableLatLonSettings.", prefix.c_str());
-    mResolution.getAttributeList(name, attributeList);
-    sprintf(name, "%sVariableLatLonSettings.", prefix.c_str());
-    mScanningMode.getAttributeList(name, attributeList);
-    sprintf(name, "%sVariableLatLonSettings.Longitudes", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLongitudes));
-    sprintf(name, "%sVariableLatLonSettings.Latitudes", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatitudes));
+        attributeList.addAttribute(prefix + "VariableLatLonSettings.Ni", toString(mNi));
+        attributeList.addAttribute(prefix + "VariableLatLonSettings.Nj", toString(mNj));
+        attributeList.addAttribute(prefix + "VariableLatLonSettings.BasicAngleOfTheInitialProductionDomain", toString(mBasicAngleOfTheInitialProductionDomain));
+        attributeList.addAttribute(prefix + "VariableLatLonSettings.SubdivisionsOfBasicAngle", toString(mSubdivisionsOfBasicAngle));
+        mResolution.getAttributeList(prefix + "VariableLatLonSettings.", attributeList);
+        mScanningMode.getAttributeList(prefix + "VariableLatLonSettings.", attributeList);
+        attributeList.addAttribute(prefix + "VariableLatLonSettings.Longitudes", toString(mLongitudes));
+        attributeList.addAttribute(prefix + "VariableLatLonSettings.Latitudes", toString(mLatitudes));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -264,7 +254,7 @@ const T::UInt32_opt &VariableLatLonSettings::getSubdivisionsOfBasicAngle() const
 
 ResolutionSettings *VariableLatLonSettings::getResolution() const {
   try {
-    return static_cast<ResolutionSettings *>(&mResolution);
+    return &mResolution;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -274,7 +264,7 @@ ResolutionSettings *VariableLatLonSettings::getResolution() const {
 
 ScanningModeSettings *VariableLatLonSettings::getScanningMode() const {
   try {
-    return static_cast<ScanningModeSettings *>(&mScanningMode);
+    return &mScanningMode;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -332,7 +322,7 @@ void VariableLatLonSettings::setSubdivisionsOfBasicAngle(T::UInt32_opt subdivisi
   }
 }
 
-void VariableLatLonSettings::setResolution(ResolutionSettings &resolution) {
+void VariableLatLonSettings::setResolution(const ResolutionSettings &resolution) {
   try {
     mResolution = resolution;
   } catch (...) {
@@ -340,7 +330,7 @@ void VariableLatLonSettings::setResolution(ResolutionSettings &resolution) {
   }
 }
 
-void VariableLatLonSettings::setScanningMode(ScanningModeSettings &scanningMode) {
+void VariableLatLonSettings::setScanningMode(const ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {

@@ -1,6 +1,8 @@
 #include "AlbersImpl.h"
 #include <macgyver/Exception.h>
 
+#include <memory>
+
 namespace SmartMet
 {
 namespace GRIB1
@@ -20,10 +22,7 @@ AlbersImpl::AlbersImpl()
 
 /*! \brief The copy constructor of the class. */
 
-AlbersImpl::AlbersImpl(const AlbersImpl& other)
-:Albers(other)
-{
-}
+AlbersImpl::AlbersImpl(const AlbersImpl& other) = default;
 
 
 
@@ -31,9 +30,7 @@ AlbersImpl::AlbersImpl(const AlbersImpl& other)
 
 /*! \brief The destructor of the class. */
 
-AlbersImpl::~AlbersImpl()
-{
-}
+AlbersImpl::~AlbersImpl() = default;
 
 
 
@@ -180,7 +177,7 @@ void AlbersImpl::initSpatialReference()
     mSpatialReference = getSpatialReference();
     if (!mSpatialReference)
     {
-      mSpatialReference.reset(new T::SpatialRef());
+      mSpatialReference = std::make_shared<T::SpatialRef>();
       addSpatialReference(mSpatialReference);
 
       // ### Check that we have all necessary values needed by this method.

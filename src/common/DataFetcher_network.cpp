@@ -9,6 +9,7 @@
 #include <curl/curl.h>
 
 #include "ShowFunction.h"
+#include <vector>
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
 
 
@@ -41,9 +42,9 @@ DataFetcher_network::~DataFetcher_network()
   try
   {
     AutoThreadLock lock(&mThreadLock);
-    for (auto convec = mClients.begin(); convec != mClients.end(); ++convec)
+    for (auto& mClient : mClients)
     {
-      for (auto con = convec->second.begin(); con != convec->second.end(); ++con)
+      for (auto con = mClient.second.begin(); con != mClient.second.end(); ++con)
       {
         delete (*con);
       }
@@ -74,6 +75,8 @@ Client* DataFetcher_network::newClient(uint protocol)
 
       case Protocol::HTTPS:
         return new HttpsClient();
+      default:
+        break;
     }
     return new HttpClient();
   }
@@ -103,13 +106,13 @@ Client* DataFetcher_network::getClient(const char *serverAddress,uint serverType
     {
       //printf("Connections %ld:%ld\n",mClients.size(),convec->second.size());
 
-      for (auto it = convec->second.begin();it != convec->second.end(); ++it)
+      for (auto& it : convec->second)
       {
-        if (!(*it)->isActive())
+        if (!it->isActive())
         {
-          (*it)->setActive(true);
-          (*it)->setDebugEnabled(mDebugEnabled);
-          return *it;
+          it->setActive(true);
+          it->setDebugEnabled(mDebugEnabled);
+          return it;
         }
       }
 
@@ -129,21 +132,18 @@ Client* DataFetcher_network::getClient(const char *serverAddress,uint serverType
       //printf("Connections %ld:%ld\n",mClients.size(),convec->second.size());
       return conn;
     }
-    else
-    {
-      Client_ptr_vec vec;
-      Client *conn = newClient(protocol);
-      AccessInfo *accessInfo = getAccessInfo(serverAddress);
-      if (accessInfo)
-        conn->setAuthentication(accessInfo->authenticationMethod,accessInfo->username.c_str(),accessInfo->password.c_str());
-      //else
-      //  printf("NO AUTH %s\n",serverAddress);
-      conn->setActive(true);
-      conn->setDebugEnabled(mDebugEnabled);
-      vec.push_back(conn);
-      mClients.insert(std::pair<std::string,Client_ptr_vec>(key,vec));
-      return conn;
-    }
+    Client_ptr_vec vec;
+    Client *conn = newClient(protocol);
+    AccessInfo *accessInfo = getAccessInfo(serverAddress);
+    if (accessInfo)
+      conn->setAuthentication(accessInfo->authenticationMethod,accessInfo->username.c_str(),accessInfo->password.c_str());
+    //else
+    //  printf("NO AUTH %s\n",serverAddress);
+    conn->setActive(true);
+    conn->setDebugEnabled(mDebugEnabled);
+    vec.push_back(conn);
+    mClients.insert(std::pair<std::string,Client_ptr_vec>(key,vec));
+    return conn;
   }
   catch (...)
   {
@@ -194,68 +194,91 @@ int DataFetcher_network::getData(uint serverType,uint protocol,const char *serve
 
 
 
+namespace
+{
+/*! \brief Reads the file record from the S3 Contents element. */
+
+void readS3Contents(const XmlElement& contents,uint protocol,const char *server,const std::string& name,bool truncated,std::string& lastKey,DataFetcher::FileRec& rec)
+{
+  rec.serverType = DataFetcher::ServerType::S3;
+  rec.protocol = protocol;
+  rec.server = server;
+  for (auto& c : contents.elementList)
+  {
+    if (strcasecmp(c->tag.c_str(), "Key") == 0)
+    {
+      if (truncated)
+        lastKey = c->value;
+
+      rec.filename = "/" + name + "/" + c->value;
+    }
+    else
+    if (strcasecmp(c->tag.c_str(), "LastModified") == 0)
+    {
+      auto tt = Fmi::TimeParser::parse(c->value);
+      rec.lastModified = toTimeT(tt);
+    }
+    else
+    if (strcasecmp(c->tag.c_str(), "Size") == 0)
+    {
+      rec.size = toInt64(c->value.c_str());
+    }
+  }
+}
+
+
+
+/*! \brief Reads the file records from the S3 ListBucketResult element. */
+
+void readS3ListBucketResult(const XmlElement& result,uint protocol,const char *server,const std::vector<std::string> &filePatterns,std::vector<DataFetcher::FileRec>& fileList,std::string& lastKey,bool& truncated)
+{
+  std::string name;
+  for (auto b = result.elementList.begin(); b != result.elementList.end(); ++b)
+  {
+    if (strcasecmp((*b)->tag.c_str(), "IsTruncated") == 0)
+    {
+      if (strcasecmp((*b)->value.c_str(),"true") == 0)
+        truncated = true;
+    }
+    if (strcasecmp((*b)->tag.c_str(), "Name") == 0)
+    {
+      name = (*b)->value;
+    }
+    else
+    if (strcasecmp((*b)->tag.c_str(), "Contents") == 0)
+    {
+      DataFetcher::FileRec rec;
+      readS3Contents(**b,protocol,server,name,truncated,lastKey,rec);
+
+      if (filePatterns.empty() || patternMatch(rec.filename.c_str(),filePatterns))
+        fileList.push_back(rec);
+    }
+  }
+}
+}  // namespace
+
+
+
+
+
 /*! \brief Parses an S3 ListBucketResult XML element into a list of file records. */
 
-bool DataFetcher_network::getFileList(uint protocol,const char *server,XmlElement& rootElement,std::vector<std::string> &filePatterns,std::vector<FileRec>& fileList,std::string& lastKey)
+bool DataFetcher_network::getFileList(uint protocol,const char *server,const XmlElement& rootElement,const std::vector<std::string> &filePatterns,std::vector<FileRec>& fileList,std::string& lastKey)
 {
   FUNCTION_TRACE
   try
   {
     bool truncated = false;
-    for (auto a = rootElement.elementList.begin(); a != rootElement.elementList.end(); ++a)
+    for (const auto& a : rootElement.elementList)
     {
-      if (strcasecmp((*a)->tag.c_str(), "ListBucketResult") == 0)
+      if (strcasecmp(a->tag.c_str(), "ListBucketResult") == 0)
       {
-        std::string name;
-        for (auto b = (*a)->elementList.begin(); b != (*a)->elementList.end(); ++b)
-        {
-          if (strcasecmp((*b)->tag.c_str(), "IsTruncated") == 0)
-          {
-            if (strcasecmp((*b)->value.c_str(),"true") == 0)
-              truncated = true;
-          }
-          if (strcasecmp((*b)->tag.c_str(), "Name") == 0)
-          {
-            name = (*b)->value;
-          }
-          else
-          if (strcasecmp((*b)->tag.c_str(), "Contents") == 0)
-          {
-            FileRec rec;
-            rec.serverType = ServerType::S3;
-            rec.protocol = protocol;
-            rec.server = server;
-            for (auto c = (*b)->elementList.begin(); c != (*b)->elementList.end(); ++c)
-            {
-              if (strcasecmp((*c)->tag.c_str(), "Key") == 0)
-              {
-                if (truncated)
-                  lastKey = (*c)->value;
-
-                rec.filename = "/" + name + "/" + (*c)->value;
-              }
-              else
-              if (strcasecmp((*c)->tag.c_str(), "LastModified") == 0)
-              {
-                auto tt = Fmi::TimeParser::parse((*c)->value);
-                rec.lastModified = toTimeT(tt);
-              }
-              else
-              if (strcasecmp((*c)->tag.c_str(), "Size") == 0)
-              {
-                rec.size = atoll((*c)->value.c_str());
-              }
-            }
-
-            if (filePatterns.size() == 0 || patternMatch(rec.filename.c_str(),filePatterns))
-              fileList.push_back(rec);
-          }
-        }
+        readS3ListBucketResult(*a,protocol,server,filePatterns,fileList,lastKey,truncated);
       }
     }
     return truncated;
   }
-  catch (Fmi::Exception& e)
+  catch (Fmi::Exception&)
   {
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
@@ -287,9 +310,11 @@ void DataFetcher_network::getFileList(uint serverType,uint protocol,const char *
 
       case ServerType::HTTPD:
         return;
+      default:
+        break;
     }
   }
-  catch (Fmi::Exception& e)
+  catch (Fmi::Exception&)
   {
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
@@ -299,18 +324,19 @@ void DataFetcher_network::getFileList(uint serverType,uint protocol,const char *
 
 /*! \brief Lists files in an S3 bucket directory, handling pagination. */
 
-void DataFetcher_network::getFileList_S3(uint protocol,const char *server,const char *dir,std::vector<std::string> &filePatterns,std::vector<FileRec>& fileList)
+void DataFetcher_network::getFileList_S3(uint protocol,const char *server,const char *dir,const std::vector<std::string> &filePatterns,std::vector<FileRec>& fileList)
 {
   FUNCTION_TRACE
   try
   {
     int dataSize = 1000000;
-    char data[dataSize];
+    std::vector<char> dataVec(dataSize);
+    char *data = dataVec.data();
     bool truncated = false;
     std::string lastKey;
     std::string fname;
 
-    do
+    for (bool more = true; more; more = truncated)
     {
       if (truncated)
         fname = std::string(dir) + "?marker=" + lastKey;
@@ -325,10 +351,10 @@ void DataFetcher_network::getFileList_S3(uint protocol,const char *server,const 
       XmlElement xml;
       XmlElement::parseXml(data,n,xml);
       truncated = getFileList(protocol,server,xml,filePatterns,fileList,lastKey);
-    } while (truncated);
+    }
 
   }
-  catch (Fmi::Exception& e)
+  catch (Fmi::Exception&)
   {
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
@@ -391,7 +417,7 @@ Int64 DataFetcher_network::getFileSize(uint serverType,uint protocol,const char 
       char *p = (char*)it->second.c_str();
       char *n = strstr(p,"/");
       if (n)
-        return atoll(n+1);
+        return toInt64(n+1);
     }
 
     return -1;

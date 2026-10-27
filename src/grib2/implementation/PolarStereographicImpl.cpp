@@ -7,6 +7,7 @@
 #include "../Properties.h"
 
 #include <iostream>
+#include <memory>
 
 namespace SmartMet
 {
@@ -234,6 +235,8 @@ bool PolarStereographicImpl::setProperty(uint propertyId,Int64 value)
         }
         return false;
       }
+      default:
+        break;
     }
     return GridDefinition::setProperty(propertyId,value);
   }
@@ -336,14 +339,14 @@ std::string PolarStereographicImpl::getGridGeometryString() const
     if ((scanningMode & 0x40) == 0)
     {
       dy = -dy;
-      p += sprintf(p,"-y");
+      sprintf(p,"-y");
     }
     else
     {
-      p += sprintf(p,"+y");
+      sprintf(p,"+y");
     }
 
-    sprintf(buf,"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;description",
+    sprintf(buf,"%d;id;name;%u;%u;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;description",
         T::GridProjectionValue::PolarStereographic,*mNx,*mNy,x,y,fabs(dx),fabs(dy),sm,orientation,laD);
 
     return std::string(buf);
@@ -371,7 +374,7 @@ T::Dimensions PolarStereographicImpl::getGridDimensions() const
   try
   {
     if (!mNx || !mNy)
-      return T::Dimensions();
+      return {};
 
     return T::Dimensions(*mNx, *mNy);
   }
@@ -508,13 +511,16 @@ bool PolarStereographicImpl::getGridPointByOriginalCoordinates(double x,double y
     double i = xDiff / mDxx;
     double j = yDiff / mDyy;
 
+    // Projection round-off puts points on the first row or column slightly outside the grid
+    if (i < 0 && i > -1e-4)
+      i = 0;
+    if (j < 0 && j > -1e-4)
+      j = 0;
+
     grid_i = i;
     grid_j = j;
 
-    if (i < 0 ||  j < 0  ||  i >= C_DOUBLE(*mNx) ||  j > C_DOUBLE(*mNy))
-      return false;
-
-    return true;
+    return !(i < 0 ||  j < 0  ||  i >= C_DOUBLE(*mNx) ||  j > C_DOUBLE(*mNy));
   }
   catch (...)
   {
@@ -575,10 +581,7 @@ bool PolarStereographicImpl::reverseXDirection() const
   {
     unsigned char scanMode = mScanningMode.getScanningMode();
 
-    if ((scanMode & 0x80) != 0)
-      return true;
-
-    return false;
+    return (scanMode & 0x80) != 0;
   }
   catch (...)
   {
@@ -602,10 +605,7 @@ bool PolarStereographicImpl::reverseYDirection() const
   {
     unsigned char scanMode = mScanningMode.getScanningMode();
 
-    if ((scanMode & 0x40) == 0)
-      return true;
-
-    return false;
+    return (scanMode & 0x40) == 0;
   }
   catch (...)
   {
@@ -625,7 +625,7 @@ void PolarStereographicImpl::initSpatialReference()
     mSpatialReference = getSpatialReference();
     if (!mSpatialReference)
     {
-      mSpatialReference.reset(new T::SpatialRef());
+      mSpatialReference = std::make_shared<T::SpatialRef>();
       addSpatialReference(mSpatialReference);
 
 

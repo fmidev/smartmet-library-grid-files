@@ -9,9 +9,7 @@ namespace GRIB2
 
 /*! \brief The constructor of the class. */
 
-LogarithmicGridDataRepresentationImpl::LogarithmicGridDataRepresentationImpl()
-{
-}
+LogarithmicGridDataRepresentationImpl::LogarithmicGridDataRepresentationImpl() = default;
 
 
 
@@ -19,10 +17,7 @@ LogarithmicGridDataRepresentationImpl::LogarithmicGridDataRepresentationImpl()
 
 /*! \brief The copy constructor of the class. */
 
-LogarithmicGridDataRepresentationImpl::LogarithmicGridDataRepresentationImpl(const LogarithmicGridDataRepresentationImpl& other)
-:LogarithmicGridDataRepresentation(other)
-{
-}
+LogarithmicGridDataRepresentationImpl::LogarithmicGridDataRepresentationImpl(const LogarithmicGridDataRepresentationImpl& other) = default;
 
 
 
@@ -30,9 +25,7 @@ LogarithmicGridDataRepresentationImpl::LogarithmicGridDataRepresentationImpl(con
 
 /*! \brief The destructor of the class. */
 
-LogarithmicGridDataRepresentationImpl::~LogarithmicGridDataRepresentationImpl()
-{
-}
+LogarithmicGridDataRepresentationImpl::~LogarithmicGridDataRepresentationImpl() = default;
 
 
 
@@ -84,7 +77,7 @@ void LogarithmicGridDataRepresentationImpl::read(MemoryReader& memoryReader)
 
 /*! \brief Decodes the logarithmically packed grid values (not implemented). */
 
-void LogarithmicGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec& decodedValues) const
+void LogarithmicGridDataRepresentationImpl::decodeValues(Message * /*message*/,T::ParamValue_vec& /*decodedValues*/) const
 {
   throw Fmi::Exception(BCP,"The method not implemented!");
 }

@@ -27,8 +27,7 @@ ReforecastSettings::ReforecastSettings() {
 
 /*! \brief The destructor of the class. */
 
-ReforecastSettings::~ReforecastSettings() {
-}
+ReforecastSettings::~ReforecastSettings() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -74,19 +73,12 @@ void ReforecastSettings::write(DataWriter &dataWriter) {
 
 void ReforecastSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sReforecastSettings.YearOfModelVersion", prefix.c_str());
-    attributeList.addAttribute(name, toString(mYearOfModelVersion));
-    sprintf(name, "%sReforecastSettings.MonthOfModelVersion", prefix.c_str());
-    attributeList.addAttribute(name, toString(mMonthOfModelVersion));
-    sprintf(name, "%sReforecastSettings.DayOfModelVersion", prefix.c_str());
-    attributeList.addAttribute(name, toString(mDayOfModelVersion));
-    sprintf(name, "%sReforecastSettings.HourOfModelVersion", prefix.c_str());
-    attributeList.addAttribute(name, toString(mHourOfModelVersion));
-    sprintf(name, "%sReforecastSettings.MinuteOfModelVersion", prefix.c_str());
-    attributeList.addAttribute(name, toString(mMinuteOfModelVersion));
-    sprintf(name, "%sReforecastSettings.SecondOfModelVersion", prefix.c_str());
-    attributeList.addAttribute(name, toString(mSecondOfModelVersion));
+        attributeList.addAttribute(prefix + "ReforecastSettings.YearOfModelVersion", toString(mYearOfModelVersion));
+        attributeList.addAttribute(prefix + "ReforecastSettings.MonthOfModelVersion", toString(mMonthOfModelVersion));
+        attributeList.addAttribute(prefix + "ReforecastSettings.DayOfModelVersion", toString(mDayOfModelVersion));
+        attributeList.addAttribute(prefix + "ReforecastSettings.HourOfModelVersion", toString(mHourOfModelVersion));
+        attributeList.addAttribute(prefix + "ReforecastSettings.MinuteOfModelVersion", toString(mMinuteOfModelVersion));
+        attributeList.addAttribute(prefix + "ReforecastSettings.SecondOfModelVersion", toString(mSecondOfModelVersion));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -167,7 +159,7 @@ bool ReforecastSettings::hasAttributeValue(const char *attributeName, const char
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void ReforecastSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
+void ReforecastSettings::print(std::ostream &stream, uint level, uint /*optionFlags*/) const {
   try {
     stream << space(level) << "ReforecastSettings\n";
     stream << space(level) << "- YearOfModelVersion = " << toString(mYearOfModelVersion) << "\n";

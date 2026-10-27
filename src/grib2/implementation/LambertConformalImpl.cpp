@@ -7,6 +7,7 @@
 #include "../Properties.h"
 
 #include <iostream>
+#include <memory>
 #include <macgyver/Hash.h>
 
 
@@ -328,6 +329,8 @@ bool LambertConformalImpl::setProperty(uint propertyId,Int64 value)
         }
         return false;
       }
+      default:
+        break;
     }
     return GridDefinition::setProperty(propertyId,value);
   }
@@ -434,15 +437,15 @@ std::string LambertConformalImpl::getGridGeometryString() const
     if ((scanningMode & 0x40) == 0)
     {
       dy = -dy;
-      p += sprintf(p,"-y");
+      sprintf(p,"-y");
     }
     else
     {
-      p += sprintf(p,"+y");
+      sprintf(p,"+y");
     }
 
 
-    sprintf(buf,"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;%.6f;%.6f;%.6f;%.6f;description",
+    sprintf(buf,"%d;id;name;%u;%u;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;%.6f;%.6f;%.6f;%.6f;description",
       T::GridProjectionValue::LambertConformal,*mNx,*mNy,x,y,fabs(dx),fabs(dy),sm,loV,latin1,latin2,sx,sy,laD);
 
     return std::string(buf);
@@ -470,7 +473,7 @@ T::Dimensions LambertConformalImpl::getGridDimensions() const
   try
   {
     if (!mNx || !mNy)
-      return T::Dimensions();
+      return {};
 
     return T::Dimensions(*mNx, *mNy);
   }
@@ -598,6 +601,12 @@ bool LambertConformalImpl::getGridPointByOriginalCoordinates(double x,double y,d
     double i = xDiff / mDxx;
     double j = yDiff / mDyy;
 
+    // Projection round-off puts points on the first row or column slightly outside the grid
+    if (i < 0 && i > -1e-4)
+      i = 0;
+    if (j < 0 && j > -1e-4)
+      j = 0;
+
     grid_i = i;
     grid_j = j;
 
@@ -648,10 +657,7 @@ bool LambertConformalImpl::reverseXDirection() const
   {
     unsigned char scanMode = mScanningMode.getScanningMode();
 
-    if ((scanMode & 0x80) != 0)
-      return true;
-
-    return false;
+    return (scanMode & 0x80) != 0;
   }
   catch (...)
   {
@@ -675,10 +681,7 @@ bool LambertConformalImpl::reverseYDirection() const
   {
     unsigned char scanMode = mScanningMode.getScanningMode();
 
-    if ((scanMode & 0x40) == 0)
-      return true;
-
-    return false;
+    return (scanMode & 0x40) == 0;
   }
   catch (...)
   {
@@ -698,7 +701,7 @@ void LambertConformalImpl::initSpatialReference()
     mSpatialReference = getSpatialReference();
     if (!mSpatialReference)
     {
-      mSpatialReference.reset(new T::SpatialRef());
+      mSpatialReference = std::make_shared<T::SpatialRef>();
       addSpatialReference(mSpatialReference);
 
       // ### Check that we have all necessary values needed by this method.

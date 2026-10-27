@@ -27,8 +27,7 @@ Hovmoller::Hovmoller() {
 
 /*! \brief The destructor of the class. */
 
-Hovmoller::~Hovmoller() {
-}
+Hovmoller::~Hovmoller() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -104,49 +103,27 @@ void Hovmoller::write(DataWriter &dataWriter) {
 
 void Hovmoller::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sHovmoller.", prefix.c_str());
-    mEarthShape.getAttributeList(name, attributeList);
-    sprintf(name, "%sHovmoller.BasicAngleOfTheInitialProductionDomain", prefix.c_str());
-    attributeList.addAttribute(name, toString(mBasicAngleOfTheInitialProductionDomain));
-    sprintf(name, "%sHovmoller.SubdivisionsOfBasicAngle", prefix.c_str());
-    attributeList.addAttribute(name, toString(mSubdivisionsOfBasicAngle));
-    sprintf(name, "%sHovmoller.LatitudeOfFirstGridPoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatitudeOfFirstGridPoint));
-    sprintf(name, "%sHovmoller.LongitudeOfFirstGridPoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLongitudeOfFirstGridPoint));
-    sprintf(name, "%sHovmoller.", prefix.c_str());
-    mScanningMode.getAttributeList(name, attributeList);
-    sprintf(name, "%sHovmoller.LatitudeOfLastGridPoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatitudeOfLastGridPoint));
-    sprintf(name, "%sHovmoller.LongitudeOfLastGridPoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLongitudeOfLastGridPoint));
-    sprintf(name, "%sHovmoller.TypeOfHorizontalLine", prefix.c_str());
-    attributeList.addAttribute(name, toString(mTypeOfHorizontalLine));
-    sprintf(name, "%sHovmoller.NumberOfTimeSteps", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNumberOfTimeSteps));
-    sprintf(name, "%sHovmoller.UnitOfOffsetFromReferenceTime", prefix.c_str());
-    attributeList.addAttribute(name, toString(mUnitOfOffsetFromReferenceTime));
-    sprintf(name, "%sHovmoller.OffsetFromReferenceOfFirstTime", prefix.c_str());
-    attributeList.addAttribute(name, toString(mOffsetFromReferenceOfFirstTime));
-    sprintf(name, "%sHovmoller.TypeOfTimeIncrement", prefix.c_str());
-    attributeList.addAttribute(name, toString(mTypeOfTimeIncrement));
-    sprintf(name, "%sHovmoller.UnitOfTimeIncrement", prefix.c_str());
-    attributeList.addAttribute(name, toString(mUnitOfTimeIncrement));
-    sprintf(name, "%sHovmoller.TimeIncrement", prefix.c_str());
-    attributeList.addAttribute(name, toString(mTimeIncrement));
-    sprintf(name, "%sHovmoller.Year", prefix.c_str());
-    attributeList.addAttribute(name, toString(mYear));
-    sprintf(name, "%sHovmoller.Month", prefix.c_str());
-    attributeList.addAttribute(name, toString(mMonth));
-    sprintf(name, "%sHovmoller.Day", prefix.c_str());
-    attributeList.addAttribute(name, toString(mDay));
-    sprintf(name, "%sHovmoller.Hour", prefix.c_str());
-    attributeList.addAttribute(name, toString(mHour));
-    sprintf(name, "%sHovmoller.Minute", prefix.c_str());
-    attributeList.addAttribute(name, toString(mMinute));
-    sprintf(name, "%sHovmoller.Second", prefix.c_str());
-    attributeList.addAttribute(name, toString(mSecond));
+        mEarthShape.getAttributeList(prefix + "Hovmoller.", attributeList);
+        attributeList.addAttribute(prefix + "Hovmoller.BasicAngleOfTheInitialProductionDomain", toString(mBasicAngleOfTheInitialProductionDomain));
+        attributeList.addAttribute(prefix + "Hovmoller.SubdivisionsOfBasicAngle", toString(mSubdivisionsOfBasicAngle));
+        attributeList.addAttribute(prefix + "Hovmoller.LatitudeOfFirstGridPoint", toString(mLatitudeOfFirstGridPoint));
+        attributeList.addAttribute(prefix + "Hovmoller.LongitudeOfFirstGridPoint", toString(mLongitudeOfFirstGridPoint));
+        mScanningMode.getAttributeList(prefix + "Hovmoller.", attributeList);
+        attributeList.addAttribute(prefix + "Hovmoller.LatitudeOfLastGridPoint", toString(mLatitudeOfLastGridPoint));
+        attributeList.addAttribute(prefix + "Hovmoller.LongitudeOfLastGridPoint", toString(mLongitudeOfLastGridPoint));
+        attributeList.addAttribute(prefix + "Hovmoller.TypeOfHorizontalLine", toString(mTypeOfHorizontalLine));
+        attributeList.addAttribute(prefix + "Hovmoller.NumberOfTimeSteps", toString(mNumberOfTimeSteps));
+        attributeList.addAttribute(prefix + "Hovmoller.UnitOfOffsetFromReferenceTime", toString(mUnitOfOffsetFromReferenceTime));
+        attributeList.addAttribute(prefix + "Hovmoller.OffsetFromReferenceOfFirstTime", toString(mOffsetFromReferenceOfFirstTime));
+        attributeList.addAttribute(prefix + "Hovmoller.TypeOfTimeIncrement", toString(mTypeOfTimeIncrement));
+        attributeList.addAttribute(prefix + "Hovmoller.UnitOfTimeIncrement", toString(mUnitOfTimeIncrement));
+        attributeList.addAttribute(prefix + "Hovmoller.TimeIncrement", toString(mTimeIncrement));
+        attributeList.addAttribute(prefix + "Hovmoller.Year", toString(mYear));
+        attributeList.addAttribute(prefix + "Hovmoller.Month", toString(mMonth));
+        attributeList.addAttribute(prefix + "Hovmoller.Day", toString(mDay));
+        attributeList.addAttribute(prefix + "Hovmoller.Hour", toString(mHour));
+        attributeList.addAttribute(prefix + "Hovmoller.Minute", toString(mMinute));
+        attributeList.addAttribute(prefix + "Hovmoller.Second", toString(mSecond));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -405,7 +382,7 @@ GridDefinition *Hovmoller::createGridDefinition() const {
 
 EarthShapeSettings *Hovmoller::getEarthShape() const {
   try {
-    return static_cast<EarthShapeSettings *>(&mEarthShape);
+    return &mEarthShape;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -455,7 +432,7 @@ const T::UInt32_opt &Hovmoller::getLongitudeOfFirstGridPoint() const {
 
 ScanningModeSettings *Hovmoller::getScanningMode() const {
   try {
-    return static_cast<ScanningModeSettings *>(&mScanningMode);
+    return &mScanningMode;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -611,7 +588,7 @@ const T::UInt8_opt &Hovmoller::getSecond() const {
   }
 }
 
-void Hovmoller::setEarthShape(EarthShapeSettings &earthShape) {
+void Hovmoller::setEarthShape(const EarthShapeSettings &earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
@@ -651,7 +628,7 @@ void Hovmoller::setLongitudeOfFirstGridPoint(T::UInt32_opt longitudeOfFirstGridP
   }
 }
 
-void Hovmoller::setScanningMode(ScanningModeSettings &scanningMode) {
+void Hovmoller::setScanningMode(const ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {

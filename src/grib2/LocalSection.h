@@ -43,15 +43,16 @@ class LocalSection : public GRID::MessageSection
 
                     LocalSection();
                     LocalSection(const LocalSection& other);
-    virtual         ~LocalSection();
+    ~LocalSection() override;
+    LocalSection& operator=(const LocalSection&) = delete;
 
     // ### Common methods for all message sections
 
-    void            getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const;
-    T::FilePosition getFilePosition() const;
-    std::uint32_t   getSectionLength() const;
-    std::string     getSectionName() const;
-    std::uint8_t    getSectionNumber() const;
+    void            getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const override;
+    T::FilePosition getFilePosition() const override;
+    std::uint32_t   getSectionLength() const override;
+    std::string     getSectionName() const override;
+    std::uint8_t    getSectionNumber() const override;
 
     // ### Section specific methods
 
@@ -67,7 +68,7 @@ class LocalSection : public GRID::MessageSection
 
     void            read(MemoryReader& memoryReader);
     void            write(DataWriter& dataWriter);
-    void            print(std::ostream& stream,uint level,uint optionFlags) const;
+    void            print(std::ostream& stream,uint level,uint optionFlags) const override;
 
   private:
 
@@ -93,7 +94,7 @@ class LocalSection : public GRID::MessageSection
 };
 
 
-typedef std::shared_ptr<LocalSection> LocalSect_sptr;  //!< Shared ownership pointer to a LocalSection.
+using LocalSect_sptr = std::shared_ptr<LocalSection>;  //!< Shared ownership pointer to a LocalSection.
 
 
 }  // namespace GRIB2

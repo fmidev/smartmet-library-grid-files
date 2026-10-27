@@ -27,8 +27,7 @@ LatLon::LatLon() {
 
 /*! \brief The destructor of the class. */
 
-LatLon::~LatLon() {
-}
+LatLon::~LatLon() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -66,11 +65,8 @@ void LatLon::write(DataWriter &dataWriter) {
 
 void LatLon::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sLatLon.", prefix.c_str());
-    mEarthShape.getAttributeList(name, attributeList);
-    sprintf(name, "%sLatLon.", prefix.c_str());
-    mLatLon.getAttributeList(name, attributeList);
+        mEarthShape.getAttributeList(prefix + "LatLon.", attributeList);
+        mLatLon.getAttributeList(prefix + "LatLon.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -162,7 +158,7 @@ GridDefinition *LatLon::createGridDefinition() const {
 
 EarthShapeSettings *LatLon::getEarthShape() const {
   try {
-    return static_cast<EarthShapeSettings *>(&mEarthShape);
+    return &mEarthShape;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -172,13 +168,13 @@ EarthShapeSettings *LatLon::getEarthShape() const {
 
 LatLonSettings *LatLon::getLatLon() const {
   try {
-    return static_cast<LatLonSettings *>(&mLatLon);
+    return &mLatLon;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
-void LatLon::setEarthShape(EarthShapeSettings &earthShape) {
+void LatLon::setEarthShape(const EarthShapeSettings &earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
@@ -186,7 +182,7 @@ void LatLon::setEarthShape(EarthShapeSettings &earthShape) {
   }
 }
 
-void LatLon::setLatLon(LatLonSettings &latLon) {
+void LatLon::setLatLon(const LatLonSettings &latLon) {
   try {
     mLatLon = latLon;
   } catch (...) {

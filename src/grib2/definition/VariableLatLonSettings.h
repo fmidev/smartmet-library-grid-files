@@ -21,6 +21,10 @@ namespace GRIB2 {
 class VariableLatLonSettings {
 public:
   VariableLatLonSettings();
+  VariableLatLonSettings(const VariableLatLonSettings &) = default;
+  VariableLatLonSettings(VariableLatLonSettings &&) = default;
+  VariableLatLonSettings &operator=(const VariableLatLonSettings &) = default;
+  VariableLatLonSettings &operator=(VariableLatLonSettings &&) = default;
   virtual ~VariableLatLonSettings();
 
   virtual void read(MemoryReader &memoryReader);
@@ -40,9 +44,9 @@ public:
   const T::UInt32_opt &getSubdivisionsOfBasicAngle() const;
   void setSubdivisionsOfBasicAngle(T::UInt32_opt subdivisionsOfBasicAngle);
   ResolutionSettings *getResolution() const;
-  void setResolution(ResolutionSettings &resolution);
+  void setResolution(const ResolutionSettings &resolution);
   ScanningModeSettings *getScanningMode() const;
-  void setScanningMode(ScanningModeSettings &scanningMode);
+  void setScanningMode(const ScanningModeSettings &scanningMode);
   const T::UInt32_opt &getLongitudes() const;
   void setLongitudes(T::UInt32_opt longitudes);
   const T::Int32_opt &getLatitudes() const;

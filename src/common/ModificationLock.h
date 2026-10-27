@@ -31,7 +31,7 @@ class ModificationLock
     {
       mReadCounter.store(0);
       mWriteCounter.store(0);
-      mLockingEnabled = true;
+
 
       r1.tv_sec = 0;
       r1.tv_nsec = 10;
@@ -50,14 +50,14 @@ class ModificationLock
     }
 
 
-    ~ModificationLock()
-    {
-    }
+    ~ModificationLock() = default;
 
 
     /*! \brief Assignment — resets counters and copies locking-enabled flag. */
     void operator=(const ModificationLock& modificationLock)
     {
+      if (&modificationLock == this)
+        return;
       mReadCounter.store(0);
       mWriteCounter.store(0);
       mLockingEnabled = modificationLock.mLockingEnabled;
@@ -68,7 +68,7 @@ class ModificationLock
 
 
     /*! \brief Acquire a shared read lock (blocks if a writer is active). */
-    inline void readLock()
+    void readLock()
     {
       if (!mLockingEnabled)
         return;
@@ -86,7 +86,7 @@ class ModificationLock
 
 
     /*! \brief Release a previously acquired read lock. */
-    inline void readUnlock()
+    void readUnlock()
     {
       if (!mLockingEnabled)
         return;
@@ -96,7 +96,7 @@ class ModificationLock
 
 
     /*! \brief Acquire an exclusive write lock (spins until all readers have released). */
-    inline void writeLock()
+    void writeLock()
     {
       if (!mLockingEnabled)
         return;
@@ -117,7 +117,7 @@ class ModificationLock
      *
      *  The caller must already hold a read lock.  Blocks until all other readers
      *  have released before granting exclusive access. */
-    inline void writeLockWhenInsideReadLock()
+    void writeLockWhenInsideReadLock()
     {
       if (!mLockingEnabled)
         return;
@@ -135,7 +135,7 @@ class ModificationLock
 
 
     /*! \brief Release a previously acquired write lock. */
-    inline void writeUnlock()
+    void writeUnlock()
     {
       if (!mLockingEnabled)
         return;
@@ -146,7 +146,7 @@ class ModificationLock
 
 
     /*! \brief Acquire an exclusive mutex lock (bypasses the reader-writer logic). */
-    inline void lock()
+    void lock()
     {
       if (!mLockingEnabled)
         return;
@@ -156,7 +156,7 @@ class ModificationLock
 
 
     /*! \brief Release an exclusively held mutex lock. */
-    inline void unlock()
+    void unlock()
     {
       if (!mLockingEnabled)
         return;
@@ -166,18 +166,18 @@ class ModificationLock
 
     /*! \brief Enable or disable all locking operations.
      *  \param[in] lockingEnabled  False disables all lock/unlock calls (single-threaded mode). */
-    inline void setLockingEnabled(bool lockingEnabled)
+    void setLockingEnabled(bool lockingEnabled)
     {
       mLockingEnabled = lockingEnabled;
     }
 
   protected:
 
-    timespec          r1, r2;         //!< nanosleep interval used while spinning in writeLock()
+    timespec          r1{}, r2{};         //!< nanosleep interval used while spinning in writeLock()
     ThreadLock        mThreadLock;    //!< Underlying POSIX mutex for exclusive access
     std::atomic<int>  mReadCounter;   //!< Number of active readers
     std::atomic<int>  mWriteCounter;  //!< Non-zero when a writer is waiting or active
-    bool              mLockingEnabled; //!< When false all lock/unlock calls are no-ops
+    bool              mLockingEnabled{true}; //!< When false all lock/unlock calls are no-ops
 };
 
 

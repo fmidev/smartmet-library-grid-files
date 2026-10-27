@@ -10,9 +10,7 @@ namespace GRIB2
 
 /*! \brief The constructor of the class. */
 
-SimulatedSatelliteProductImpl::SimulatedSatelliteProductImpl()
-{
-}
+SimulatedSatelliteProductImpl::SimulatedSatelliteProductImpl() = default;
 
 
 
@@ -20,10 +18,7 @@ SimulatedSatelliteProductImpl::SimulatedSatelliteProductImpl()
 
 /*! \brief The copy constructor of the class. */
 
-SimulatedSatelliteProductImpl::SimulatedSatelliteProductImpl(const SimulatedSatelliteProductImpl& other)
-:SimulatedSatelliteProduct(other)
-{
-}
+SimulatedSatelliteProductImpl::SimulatedSatelliteProductImpl(const SimulatedSatelliteProductImpl& other) = default;
 
 
 
@@ -31,9 +26,7 @@ SimulatedSatelliteProductImpl::SimulatedSatelliteProductImpl(const SimulatedSate
 
 /*! \brief The destructor of the class. */
 
-SimulatedSatelliteProductImpl::~SimulatedSatelliteProductImpl()
-{
-}
+SimulatedSatelliteProductImpl::~SimulatedSatelliteProductImpl() = default;
 
 
 
@@ -90,7 +83,7 @@ void SimulatedSatelliteProductImpl::read(MemoryReader& memoryReader)
         \return               The forecast time.
 */
 
-T::TimeString SimulatedSatelliteProductImpl::getForecastTime(T::TimeString referenceTime) const
+T::TimeString SimulatedSatelliteProductImpl::getForecastTime(T::TimeString /*referenceTime*/) const
 {
   throw Fmi::Exception(BCP, "Not implemented!");
 }

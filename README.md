@@ -22,7 +22,8 @@ Small changes and bug fixes can be submitted via pull request. In larger contrib
 CLA is required in order to contribute. Please contact us for more information!
 
 ## Documentation
-<a href="https://github.com/fmidev/smartmet-library-grid-files/blob/master/doc/grid-files.md">Grid files</a>
+* <a href="https://github.com/fmidev/smartmet-library-grid-files/blob/master/doc/grid-files.md">Grid files</a> — identifiers and mapping concepts
+* <a href="https://github.com/fmidev/smartmet-library-grid-files/blob/master/docs/developer-guide.md">Developer guide</a> — architecture, code paths and conventions for developers
 
 ## Communication and Resources
 You may contact us from following channels:

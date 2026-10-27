@@ -27,8 +27,7 @@ ComplexGridDataRepresentation::ComplexGridDataRepresentation() {
 
 /*! \brief The destructor of the class. */
 
-ComplexGridDataRepresentation::~ComplexGridDataRepresentation() {
-}
+ComplexGridDataRepresentation::~ComplexGridDataRepresentation() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -88,33 +87,19 @@ void ComplexGridDataRepresentation::write(DataWriter &dataWriter) {
 
 void ComplexGridDataRepresentation::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sComplexGridDataRepresentation.", prefix.c_str());
-    mPacking.getAttributeList(name, attributeList);
-    sprintf(name, "%sComplexGridDataRepresentation.", prefix.c_str());
-    mOriginalValues.getAttributeList(name, attributeList);
-    sprintf(name, "%sComplexGridDataRepresentation.GroupSplittingMethodUsed", prefix.c_str());
-    attributeList.addAttribute(name, toString(mGroupSplittingMethodUsed));
-    sprintf(name, "%sComplexGridDataRepresentation.MissingValueManagementUsed", prefix.c_str());
-    attributeList.addAttribute(name, toString(mMissingValueManagementUsed));
-    sprintf(name, "%sComplexGridDataRepresentation.PrimaryMissingValueSubstitute", prefix.c_str());
-    attributeList.addAttribute(name, toString(mPrimaryMissingValueSubstitute));
-    sprintf(name, "%sComplexGridDataRepresentation.SecondaryMissingValueSubstitute", prefix.c_str());
-    attributeList.addAttribute(name, toString(mSecondaryMissingValueSubstitute));
-    sprintf(name, "%sComplexGridDataRepresentation.NumberOfGroupsOfDataValues", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNumberOfGroupsOfDataValues));
-    sprintf(name, "%sComplexGridDataRepresentation.ReferenceForGroupWidths", prefix.c_str());
-    attributeList.addAttribute(name, toString(mReferenceForGroupWidths));
-    sprintf(name, "%sComplexGridDataRepresentation.NumberOfBitsUsedForTheGroupWidths", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNumberOfBitsUsedForTheGroupWidths));
-    sprintf(name, "%sComplexGridDataRepresentation.ReferenceForGroupLengths", prefix.c_str());
-    attributeList.addAttribute(name, toString(mReferenceForGroupLengths));
-    sprintf(name, "%sComplexGridDataRepresentation.LengthIncrementForTheGroupLengths", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLengthIncrementForTheGroupLengths));
-    sprintf(name, "%sComplexGridDataRepresentation.TrueLengthOfLastGroup", prefix.c_str());
-    attributeList.addAttribute(name, toString(mTrueLengthOfLastGroup));
-    sprintf(name, "%sComplexGridDataRepresentation.NumberOfBitsForScaledGroupLengths", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNumberOfBitsForScaledGroupLengths));
+        mPacking.getAttributeList(prefix + "ComplexGridDataRepresentation.", attributeList);
+        mOriginalValues.getAttributeList(prefix + "ComplexGridDataRepresentation.", attributeList);
+        attributeList.addAttribute(prefix + "ComplexGridDataRepresentation.GroupSplittingMethodUsed", toString(mGroupSplittingMethodUsed));
+        attributeList.addAttribute(prefix + "ComplexGridDataRepresentation.MissingValueManagementUsed", toString(mMissingValueManagementUsed));
+        attributeList.addAttribute(prefix + "ComplexGridDataRepresentation.PrimaryMissingValueSubstitute", toString(mPrimaryMissingValueSubstitute));
+        attributeList.addAttribute(prefix + "ComplexGridDataRepresentation.SecondaryMissingValueSubstitute", toString(mSecondaryMissingValueSubstitute));
+        attributeList.addAttribute(prefix + "ComplexGridDataRepresentation.NumberOfGroupsOfDataValues", toString(mNumberOfGroupsOfDataValues));
+        attributeList.addAttribute(prefix + "ComplexGridDataRepresentation.ReferenceForGroupWidths", toString(mReferenceForGroupWidths));
+        attributeList.addAttribute(prefix + "ComplexGridDataRepresentation.NumberOfBitsUsedForTheGroupWidths", toString(mNumberOfBitsUsedForTheGroupWidths));
+        attributeList.addAttribute(prefix + "ComplexGridDataRepresentation.ReferenceForGroupLengths", toString(mReferenceForGroupLengths));
+        attributeList.addAttribute(prefix + "ComplexGridDataRepresentation.LengthIncrementForTheGroupLengths", toString(mLengthIncrementForTheGroupLengths));
+        attributeList.addAttribute(prefix + "ComplexGridDataRepresentation.TrueLengthOfLastGroup", toString(mTrueLengthOfLastGroup));
+        attributeList.addAttribute(prefix + "ComplexGridDataRepresentation.NumberOfBitsForScaledGroupLengths", toString(mNumberOfBitsForScaledGroupLengths));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -305,7 +290,7 @@ RepresentationDefinition *ComplexGridDataRepresentation::createRepresentationDef
 
 PackingSettings *ComplexGridDataRepresentation::getPacking() const {
   try {
-    return static_cast<PackingSettings *>(&mPacking);
+    return &mPacking;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -315,7 +300,7 @@ PackingSettings *ComplexGridDataRepresentation::getPacking() const {
 
 OriginalValuesSettings *ComplexGridDataRepresentation::getOriginalValues() const {
   try {
-    return static_cast<OriginalValuesSettings *>(&mOriginalValues);
+    return &mOriginalValues;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -431,7 +416,7 @@ const T::UInt8_opt &ComplexGridDataRepresentation::getNumberOfBitsForScaledGroup
   }
 }
 
-void ComplexGridDataRepresentation::setPacking(PackingSettings &packing) {
+void ComplexGridDataRepresentation::setPacking(const PackingSettings &packing) {
   try {
     mPacking = packing;
   } catch (...) {
@@ -439,7 +424,7 @@ void ComplexGridDataRepresentation::setPacking(PackingSettings &packing) {
   }
 }
 
-void ComplexGridDataRepresentation::setOriginalValues(OriginalValuesSettings &originalValues) {
+void ComplexGridDataRepresentation::setOriginalValues(const OriginalValuesSettings &originalValues) {
   try {
     mOriginalValues = originalValues;
   } catch (...) {

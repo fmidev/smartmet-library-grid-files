@@ -27,8 +27,7 @@ EarthShapeSettings::EarthShapeSettings() {
 
 /*! \brief The destructor of the class. */
 
-EarthShapeSettings::~EarthShapeSettings() {
-}
+EarthShapeSettings::~EarthShapeSettings() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -76,21 +75,13 @@ void EarthShapeSettings::write(DataWriter &dataWriter) {
 
 void EarthShapeSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sEarthShapeSettings.ShapeOfTheEarth", prefix.c_str());
-    attributeList.addAttribute(name, toString(mShapeOfTheEarth));
-    sprintf(name, "%sEarthShapeSettings.ScaleFactorOfRadiusOfSphericalEarth", prefix.c_str());
-    attributeList.addAttribute(name, toString(mScaleFactorOfRadiusOfSphericalEarth));
-    sprintf(name, "%sEarthShapeSettings.ScaledValueOfRadiusOfSphericalEarth", prefix.c_str());
-    attributeList.addAttribute(name, toString(mScaledValueOfRadiusOfSphericalEarth));
-    sprintf(name, "%sEarthShapeSettings.ScaleFactorOfEarthMajorAxis", prefix.c_str());
-    attributeList.addAttribute(name, toString(mScaleFactorOfEarthMajorAxis));
-    sprintf(name, "%sEarthShapeSettings.ScaledValueOfEarthMajorAxis", prefix.c_str());
-    attributeList.addAttribute(name, toString(mScaledValueOfEarthMajorAxis));
-    sprintf(name, "%sEarthShapeSettings.ScaleFactorOfEarthMinorAxis", prefix.c_str());
-    attributeList.addAttribute(name, toString(mScaleFactorOfEarthMinorAxis));
-    sprintf(name, "%sEarthShapeSettings.ScaledValueOfEarthMinorAxis", prefix.c_str());
-    attributeList.addAttribute(name, toString(mScaledValueOfEarthMinorAxis));
+        attributeList.addAttribute(prefix + "EarthShapeSettings.ShapeOfTheEarth", toString(mShapeOfTheEarth));
+        attributeList.addAttribute(prefix + "EarthShapeSettings.ScaleFactorOfRadiusOfSphericalEarth", toString(mScaleFactorOfRadiusOfSphericalEarth));
+        attributeList.addAttribute(prefix + "EarthShapeSettings.ScaledValueOfRadiusOfSphericalEarth", toString(mScaledValueOfRadiusOfSphericalEarth));
+        attributeList.addAttribute(prefix + "EarthShapeSettings.ScaleFactorOfEarthMajorAxis", toString(mScaleFactorOfEarthMajorAxis));
+        attributeList.addAttribute(prefix + "EarthShapeSettings.ScaledValueOfEarthMajorAxis", toString(mScaledValueOfEarthMajorAxis));
+        attributeList.addAttribute(prefix + "EarthShapeSettings.ScaleFactorOfEarthMinorAxis", toString(mScaleFactorOfEarthMinorAxis));
+        attributeList.addAttribute(prefix + "EarthShapeSettings.ScaledValueOfEarthMinorAxis", toString(mScaledValueOfEarthMinorAxis));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -177,7 +168,7 @@ bool EarthShapeSettings::hasAttributeValue(const char *attributeName, const char
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void EarthShapeSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
+void EarthShapeSettings::print(std::ostream &stream, uint level, uint /*optionFlags*/) const {
   try {
     stream << space(level) << "EarthShapeSettings\n";
     stream << space(level) << "- ShapeOfTheEarth = " << toString(mShapeOfTheEarth) << "\n";

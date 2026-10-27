@@ -4,6 +4,7 @@
 #include "AutoThreadLock.h"
 #include <ogr_spatialref.h>
 #include <macgyver/Exception.h>
+#include <atomic>
 #include <memory>
 
 namespace SmartMet
@@ -81,7 +82,7 @@ class CoordinateConverter
      *  reserved as long as the converter stays cached, so the key remains unique.
      *  The transformations themselves use the internal clones (sr1/sr2); these pinned
      *  references are kept solely to guarantee key stability. */
-    inline void keepAlive(const std::shared_ptr<OGRSpatialReference>& sr_from,
+    void keepAlive(const std::shared_ptr<OGRSpatialReference>& sr_from,
                           const std::shared_ptr<OGRSpatialReference>& sr_to)
     {
       mPinFrom = sr_from;
@@ -90,10 +91,10 @@ class CoordinateConverter
 
     ~CoordinateConverter()
     {
-      for (uint t=0; t<CONVERTER_COUNT; t++)
+      for (auto& t : transformation)
       {
-        if (transformation[t])
-          OCTDestroyCoordinateTransformation(transformation[t]);
+        if (t)
+          OCTDestroyCoordinateTransformation(t);
       }
 
       if (sr1 != nullptr)
@@ -102,21 +103,20 @@ class CoordinateConverter
       if (sr2 != nullptr)
         OGRSpatialReference::DestroySpatialReference(sr2);
     }
+    CoordinateConverter& operator=(const CoordinateConverter&) = delete;
 
 
     /*! \brief Acquire a free transformation slot index (spins until one is available).
      *  \return Slot index in [0, CONVERTER_COUNT). */
-    inline uint getTransform()
+    uint getTransform()
     {
       while (true)
       {
         for (uint t=0; t<CONVERTER_COUNT; t++)
         {
-          if (!tranformationInProgress[t])
-          {
-            tranformationInProgress[t] = true;
+          if (!tranformationInProgress[t].load(std::memory_order_relaxed) &&
+              !tranformationInProgress[t].exchange(true,std::memory_order_acquire))
             return t;
-          }
         }
         nanosleep(&r1,&r2);
       }
@@ -128,28 +128,29 @@ class CoordinateConverter
      *  \param[in,out] x       X values (overwritten with transformed values).
      *  \param[in,out] y       Y values (overwritten with transformed values).
      *  \return True on success. */
-    inline bool convert(int nCount,double *x,double *y)
+    bool convert(int nCount,double *x,double *y)
     {
       uint idx = getTransform();
       AutoThreadLock lock(&threadLock[idx]);
-      if (transformation[idx]->Transform(nCount,x,y))
+      // The transformation cannot be created for all coordinate systems
+      if (transformation[idx] == nullptr)
       {
-        tranformationInProgress[idx] = false;
-        return true;
+        tranformationInProgress[idx].store(false,std::memory_order_release);
+        return false;
       }
-
-      tranformationInProgress[idx] = false;
-      return false;
+      bool ok = transformation[idx]->Transform(nCount,x,y);
+      tranformationInProgress[idx].store(false,std::memory_order_release);
+      return ok;
     }
 
   protected:
 
-    OGRCoordinateTransformation *transformation[CONVERTER_COUNT]; //!< OGR transformation objects per slot
-    bool tranformationInProgress[CONVERTER_COUNT];                //!< True while slot is in use
+    OGRCoordinateTransformation *transformation[CONVERTER_COUNT]{}; //!< OGR transformation objects per slot
+    std::atomic<bool> tranformationInProgress[CONVERTER_COUNT];   //!< True while slot is in use
     OGRSpatialReference *sr1;                                     //!< Source spatial reference (owned)
     OGRSpatialReference *sr2;                                     //!< Target spatial reference (owned)
     ThreadLock threadLock[CONVERTER_COUNT];                       //!< Per-slot mutex
-    timespec r1, r2;                                              //!< nanosleep spin interval
+    timespec r1{}, r2{};                                              //!< nanosleep spin interval
     std::shared_ptr<OGRSpatialReference> mPinFrom;                //!< Pins source CRS address while cached
     std::shared_ptr<OGRSpatialReference> mPinTo;                  //!< Pins target CRS address while cached
 };

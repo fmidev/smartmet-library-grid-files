@@ -27,8 +27,7 @@ JpegGridDataRepresentation::JpegGridDataRepresentation() {
 
 /*! \brief The destructor of the class. */
 
-JpegGridDataRepresentation::~JpegGridDataRepresentation() {
-}
+JpegGridDataRepresentation::~JpegGridDataRepresentation() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -70,15 +69,10 @@ void JpegGridDataRepresentation::write(DataWriter &dataWriter) {
 
 void JpegGridDataRepresentation::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sJpegGridDataRepresentation.", prefix.c_str());
-    mPacking.getAttributeList(name, attributeList);
-    sprintf(name, "%sJpegGridDataRepresentation.", prefix.c_str());
-    mOriginalValues.getAttributeList(name, attributeList);
-    sprintf(name, "%sJpegGridDataRepresentation.TypeOfCompressionUsed", prefix.c_str());
-    attributeList.addAttribute(name, toString(mTypeOfCompressionUsed));
-    sprintf(name, "%sJpegGridDataRepresentation.TargetCompressionRatio", prefix.c_str());
-    attributeList.addAttribute(name, toString(mTargetCompressionRatio));
+        mPacking.getAttributeList(prefix + "JpegGridDataRepresentation.", attributeList);
+        mOriginalValues.getAttributeList(prefix + "JpegGridDataRepresentation.", attributeList);
+        attributeList.addAttribute(prefix + "JpegGridDataRepresentation.TypeOfCompressionUsed", toString(mTypeOfCompressionUsed));
+        attributeList.addAttribute(prefix + "JpegGridDataRepresentation.TargetCompressionRatio", toString(mTargetCompressionRatio));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -188,7 +182,7 @@ RepresentationDefinition *JpegGridDataRepresentation::createRepresentationDefini
 
 PackingSettings *JpegGridDataRepresentation::getPacking() const {
   try {
-    return static_cast<PackingSettings *>(&mPacking);
+    return &mPacking;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -198,7 +192,7 @@ PackingSettings *JpegGridDataRepresentation::getPacking() const {
 
 OriginalValuesSettings *JpegGridDataRepresentation::getOriginalValues() const {
   try {
-    return static_cast<OriginalValuesSettings *>(&mOriginalValues);
+    return &mOriginalValues;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -224,7 +218,7 @@ const T::UInt8_opt &JpegGridDataRepresentation::getTargetCompressionRatio() cons
   }
 }
 
-void JpegGridDataRepresentation::setPacking(PackingSettings &packing) {
+void JpegGridDataRepresentation::setPacking(const PackingSettings &packing) {
   try {
     mPacking = packing;
   } catch (...) {
@@ -232,7 +226,7 @@ void JpegGridDataRepresentation::setPacking(PackingSettings &packing) {
   }
 }
 
-void JpegGridDataRepresentation::setOriginalValues(OriginalValuesSettings &originalValues) {
+void JpegGridDataRepresentation::setOriginalValues(const OriginalValuesSettings &originalValues) {
   try {
     mOriginalValues = originalValues;
   } catch (...) {

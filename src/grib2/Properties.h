@@ -30,6 +30,8 @@ class Property
 
                       Property();
     virtual           ~Property();
+    Property(const Property&) = default;
+    Property& operator=(const Property&) = default;
 
     void              addProperty(const char *name,uint id);
     uint              getPropertyId(const char *name);

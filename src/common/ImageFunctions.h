@@ -26,11 +26,11 @@ class CImage
 {
   public:
     /*! \brief Construct an empty (0×0) image with no pixel buffer. */
-    CImage()
+    CImage() : width(0), height(0), pixel(nullptr)
     {
-      width = 0;
-      height = 0;
-      pixel = nullptr;
+
+
+
     }
 
     /*! \brief Deep-copy constructor. */
@@ -50,11 +50,11 @@ class CImage
     /*! \brief Allocate a width×height pixel buffer filled with opaque white (0xFFFFFFFF).
      *  \param[in] _width   Image width in pixels.
      *  \param[in] _height  Image height in pixels. */
-    CImage(int _width,int _height)
+    CImage(int _width,int _height) : width(_width), height(_height), pixel(nullptr)
     {
-      width = _width;
-      height = _height;
-      pixel = nullptr;
+
+
+
       if (width != 0  &&  height != 0)
       {
         int sz = width*height;
@@ -68,23 +68,23 @@ class CImage
      *  \param[in] _width   Image width.
      *  \param[in] _height  Image height.
      *  \param[in] _pixel   Existing pixel array (caller retains ownership). */
-    CImage(int _width,int _height,uint *_pixel)
+    CImage(int _width,int _height,uint *_pixel) : width(_width), height(_height), pixel(_pixel)
     {
-      width = _width;
-      height = _height;
-      pixel = _pixel;
+
+
+
     }
 
     virtual ~CImage()
     {
-      if (pixel != nullptr)
-        delete[] pixel;
+      delete[] pixel;
     }
 
     CImage& operator=(const CImage& image)
     {
-      if (pixel != nullptr)
-        delete[] pixel;
+      if (&image == this)
+        return *this;
+      delete[] pixel;
 
       pixel = nullptr;
       width = image.width;
@@ -110,7 +110,7 @@ class CImage
 int  jpg_load(const char *_filename,CImage& _image);
 
 /*! \brief Write a pixel buffer to a JPEG file at the given quality (1–100). */
-void jpeg_save(const char *filename,uint *image,int image_height,int image_width,int quality);
+void jpeg_save(const char *filename,const uint *image,int image_height,int image_width,int quality);
 
 /*! \brief Load a PNG file into a CImage.  \return 0 on success. */
 int  png_load(const char *_filename,CImage& _image);
@@ -149,7 +149,7 @@ uint rgb(uint red, uint green, uint blue);
 /*! \brief Render a single OGR geometry into a JPEG image file. */
 void saveGeometryAsJpeg(const char *_filename,int width,int height,uint backgroundColor,uint drawColor,uint fillColor,const OGRGeometry *geom,bool autoscale);
 //! \overload (renders a list of geometries)
-void saveGeometryAsJpeg(const char *_filename,int width,int height,uint backgroundColor,uint drawColor,uint fillColor,std::vector<std::shared_ptr<OGRGeometry>> geomVec,bool autoscale);
+void saveGeometryAsJpeg(const char *_filename,int width,int height,uint backgroundColor,uint drawColor,uint fillColor,const std::vector<std::shared_ptr<OGRGeometry>>& geomVec,bool autoscale);
 
 /*! \brief Alpha-composite two ARGB pixels using standard "over" blending.
  *  \param[in] top     Foreground ARGB pixel.
@@ -163,33 +163,33 @@ inline uint32_t merge_ARGB(uint32_t top, uint32_t bottom)
   if (!(bottom & 0xFF000000))
     return top;
 
-  float At = ((top >> 24) & 0xFF) / 255.0f;
-  float Rt = ((top >> 16) & 0xFF) / 255.0f;
-  float Gt = ((top >> 8)  & 0xFF) / 255.0f;
-  float Bt = (top         & 0xFF) / 255.0f;
+  float At = ((top >> 24) & 0xFF) / 255.0F;
+  float Rt = ((top >> 16) & 0xFF) / 255.0F;
+  float Gt = ((top >> 8)  & 0xFF) / 255.0F;
+  float Bt = (top         & 0xFF) / 255.0F;
 
-  float Ab = ((bottom >> 24) & 0xFF) / 255.0f;
-  float Rb = ((bottom >> 16) & 0xFF) / 255.0f;
-  float Gb = ((bottom >> 8)  & 0xFF) / 255.0f;
-  float Bb = (bottom         & 0xFF) / 255.0f;
+  float Ab = ((bottom >> 24) & 0xFF) / 255.0F;
+  float Rb = ((bottom >> 16) & 0xFF) / 255.0F;
+  float Gb = ((bottom >> 8)  & 0xFF) / 255.0F;
+  float Bb = (bottom         & 0xFF) / 255.0F;
 
-  float k = Ab*(1.0f - At);
+  float k = Ab*(1.0F - At);
   float Aout = At + k;
   float Rout = (Rt * At + Rb * k);
   float Gout = (Gt * At + Gb * k);
   float Bout = (Bt * At + Bb * k);
 
-  if (Aout > 0.0f)
+  if (Aout > 0.0F)
   {
     Rout /= Aout;
     Gout /= Aout;
     Bout /= Aout;
   }
 
-  uint8_t A = (uint8_t)(Aout * 255.0f + 0.49);
-  uint8_t R = (uint8_t)(Rout * 255.0f + 0.49);
-  uint8_t G = (uint8_t)(Gout * 255.0f + 0.49);
-  uint8_t B = (uint8_t)(Bout * 255.0f + 0.49);
+  auto A = (uint8_t)(Aout * 255.0F + 0.49);
+  auto R = (uint8_t)(Rout * 255.0F + 0.49);
+  auto G = (uint8_t)(Gout * 255.0F + 0.49);
+  auto B = (uint8_t)(Bout * 255.0F + 0.49);
 
   return (A << 24) | (R << 16) | (G << 8) | B;
 }
@@ -198,7 +198,7 @@ inline uint32_t merge_ARGB(uint32_t top, uint32_t bottom)
 /*! \brief Parse a colour string (e.g. "0xFF8800", "#FF8800", "255,128,0") into ARGB. */
 uint argb(const char *colStr);
 
-inline uint argb(std::string& colStr)
+inline uint argb(const std::string& colStr)
 {
   return argb(colStr.c_str());
 }

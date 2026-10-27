@@ -25,12 +25,14 @@ class QueryDataFile
 
                         QueryDataFile(const char *filename);
     virtual             ~QueryDataFile();
+    QueryDataFile(const QueryDataFile&) = delete;
+    QueryDataFile& operator=(const QueryDataFile&) = delete;
 
     void                read(MessageInfoVec& messageInfoList);
     void                print(std::ostream& stream,uint level,uint optionFlags) const;
     //T::ParamValue       getGridValue(uint paramIndex,uint levelIndex,uint timeIndex,uint grid_i,uint grid_j) const;
 
-    inline T::ParamValue getGridValue(uint paramIndex,uint levelIndex,uint timeIndex,uint grid_i,uint grid_j) const
+    T::ParamValue getGridValue(uint paramIndex,uint levelIndex,uint timeIndex,uint grid_i,uint grid_j) const
     {
       try
       {
@@ -66,7 +68,7 @@ class QueryDataFile
 
 
 
-typedef QueryDataFile* QueryDataFilePtr;  //!< Non-owning pointer to a QueryDataFile.
+using QueryDataFilePtr = QueryDataFile*;  //!< Non-owning pointer to a QueryDataFile.
 
 
 }  // namespace QueryData

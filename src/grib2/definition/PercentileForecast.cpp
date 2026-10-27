@@ -27,8 +27,7 @@ PercentileForecast::PercentileForecast() {
 
 /*! \brief The destructor of the class. */
 
-PercentileForecast::~PercentileForecast() {
-}
+PercentileForecast::~PercentileForecast() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -70,15 +69,10 @@ void PercentileForecast::write(DataWriter &dataWriter) {
 
 void PercentileForecast::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sPercentileForecast.", prefix.c_str());
-    mParameter.getAttributeList(name, attributeList);
-    sprintf(name, "%sPercentileForecast.", prefix.c_str());
-    mPointInTime.getAttributeList(name, attributeList);
-    sprintf(name, "%sPercentileForecast.", prefix.c_str());
-    mHorizontal.getAttributeList(name, attributeList);
-    sprintf(name, "%sPercentileForecast.", prefix.c_str());
-    mPercentile.getAttributeList(name, attributeList);
+        mParameter.getAttributeList(prefix + "PercentileForecast.", attributeList);
+        mPointInTime.getAttributeList(prefix + "PercentileForecast.", attributeList);
+        mHorizontal.getAttributeList(prefix + "PercentileForecast.", attributeList);
+        mPercentile.getAttributeList(prefix + "PercentileForecast.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -180,7 +174,7 @@ ProductDefinition *PercentileForecast::createProductDefinition() const {
 
 ParameterSettings *PercentileForecast::getParameter() const {
   try {
-    return static_cast<ParameterSettings *>(&mParameter);
+    return &mParameter;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -190,7 +184,7 @@ ParameterSettings *PercentileForecast::getParameter() const {
 
 PointInTimeSettings *PercentileForecast::getPointInTime() const {
   try {
-    return static_cast<PointInTimeSettings *>(&mPointInTime);
+    return &mPointInTime;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -200,7 +194,7 @@ PointInTimeSettings *PercentileForecast::getPointInTime() const {
 
 HorizontalSettings *PercentileForecast::getHorizontal() const {
   try {
-    return static_cast<HorizontalSettings *>(&mHorizontal);
+    return &mHorizontal;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -210,13 +204,13 @@ HorizontalSettings *PercentileForecast::getHorizontal() const {
 
 PercentileSettings *PercentileForecast::getPercentile() const {
   try {
-    return static_cast<PercentileSettings *>(&mPercentile);
+    return &mPercentile;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
-void PercentileForecast::setParameter(ParameterSettings &parameter) {
+void PercentileForecast::setParameter(const ParameterSettings &parameter) {
   try {
     mParameter = parameter;
   } catch (...) {
@@ -224,7 +218,7 @@ void PercentileForecast::setParameter(ParameterSettings &parameter) {
   }
 }
 
-void PercentileForecast::setPointInTime(PointInTimeSettings &pointInTime) {
+void PercentileForecast::setPointInTime(const PointInTimeSettings &pointInTime) {
   try {
     mPointInTime = pointInTime;
   } catch (...) {
@@ -232,7 +226,7 @@ void PercentileForecast::setPointInTime(PointInTimeSettings &pointInTime) {
   }
 }
 
-void PercentileForecast::setHorizontal(HorizontalSettings &horizontal) {
+void PercentileForecast::setHorizontal(const HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
@@ -240,7 +234,7 @@ void PercentileForecast::setHorizontal(HorizontalSettings &horizontal) {
   }
 }
 
-void PercentileForecast::setPercentile(PercentileSettings &percentile) {
+void PercentileForecast::setPercentile(const PercentileSettings &percentile) {
   try {
     mPercentile = percentile;
   } catch (...) {

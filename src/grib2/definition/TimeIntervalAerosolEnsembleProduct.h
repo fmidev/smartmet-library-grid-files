@@ -24,26 +24,30 @@ namespace GRIB2 {
 class TimeIntervalAerosolEnsembleProduct : public ProductDefinition {
 public:
   TimeIntervalAerosolEnsembleProduct();
-  virtual ~TimeIntervalAerosolEnsembleProduct();
+  TimeIntervalAerosolEnsembleProduct(const TimeIntervalAerosolEnsembleProduct &) = default;
+  TimeIntervalAerosolEnsembleProduct(TimeIntervalAerosolEnsembleProduct &&) = default;
+  TimeIntervalAerosolEnsembleProduct &operator=(const TimeIntervalAerosolEnsembleProduct &) = default;
+  TimeIntervalAerosolEnsembleProduct &operator=(TimeIntervalAerosolEnsembleProduct &&) = default;
+  ~TimeIntervalAerosolEnsembleProduct() override;
 
-  virtual uint getTemplateNumber() const;
-  virtual ProductDefinition *createProductDefinition() const;
-  virtual void read(MemoryReader &memoryReader);
-  virtual void write(DataWriter &dataWriter);
-  virtual void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const;
-  virtual bool getAttributeValue(const char *attributeName, std::string &attributeValue) const;
-  virtual bool hasAttributeValue(const char *attributeName, const char *attributeValue) const;
-  virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
+  uint getTemplateNumber() const override;
+  ProductDefinition *createProductDefinition() const override;
+  void read(MemoryReader &memoryReader) override;
+  void write(DataWriter &dataWriter) override;
+  void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const override;
+  bool getAttributeValue(const char *attributeName, std::string &attributeValue) const override;
+  bool hasAttributeValue(const char *attributeName, const char *attributeValue) const override;
+  void print(std::ostream &stream, uint level, uint optionFlags) const override;
   virtual T::Hash countHash() const;
 
   ParameterAerosolSettings *getParameterAerosol() const;
-  void setParameterAerosol(ParameterAerosolSettings &parameterAerosol);
-  HorizontalSettings *getHorizontal() const;
-  void setHorizontal(HorizontalSettings &horizontal);
-  EpsSettings *getEps() const;
-  void setEps(EpsSettings &eps);
-  StatisticalSettings *getStatistical() const;
-  void setStatistical(StatisticalSettings &statistical);
+  void setParameterAerosol(const ParameterAerosolSettings &parameterAerosol);
+  HorizontalSettings *getHorizontal() const override;
+  void setHorizontal(const HorizontalSettings &horizontal);
+  EpsSettings *getEps() const override;
+  void setEps(const EpsSettings &eps);
+  StatisticalSettings *getStatistical() const override;
+  void setStatistical(const StatisticalSettings &statistical);
 
 protected:
   // # Copyright 2005-2019 ECMWF.

@@ -28,9 +28,9 @@ namespace GRID
 // ====================================================================================
 
 
-typedef std::map<uint,Message*>              Message_ptr_map; //!< Map from message index to Message pointer
-typedef std::map<UInt64,Int64>               RequestCounters; //!< Per-message request counters (key = message hash)
-typedef std::vector<std::pair<uchar,UInt64>> MessagePos_vec;  //!< (format-byte, file-offset) pairs from a scan
+using Message_ptr_map = std::map<uint,Message*>; //!< Map from message index to Message pointer
+using RequestCounters = std::map<UInt64,Int64>; //!< Per-message request counters (key = message hash)
+using MessagePos_vec = std::vector<std::pair<uchar,UInt64>>;  //!< (format-byte, file-offset) pairs from a scan
 
 
 class GridFile
@@ -43,6 +43,7 @@ class GridFile
                            *  \param[in] gridFile  Source GridFile to copy metadata from. */
                           GridFile(GridFile *gridFile);
     virtual               ~GridFile();
+    GridFile& operator=(const GridFile&) = delete;
 
     /*! \brief Register a file that this file depends on (e.g. a shared bitmap file).
      *  \param[in] fileId  Identifier of the dependency file. */
@@ -260,13 +261,13 @@ class GridFile
 
   private:
 
-    GRID::Message*        createMessage(T::MessageIndex messageIndex,GRID::MessageInfo& messageInfo);
+    GRID::Message*        createMessage(T::MessageIndex messageIndex,const GRID::MessageInfo& messageInfo);
     Int64                 countSize();
     void                  readFmig1Message(MemoryReader& memoryReader, T::MessageIndex messageIndex);
     void                  readGrib1Message(MemoryReader& memoryReader, T::MessageIndex messageIndex);
     void                  readGrib2Message(MemoryReader& memoryReader, T::MessageIndex messageIndex);
-    uchar                 readMessageType(MemoryReader& memoryReader);
-    MessagePos_vec        searchMessageLocations(MemoryReader& memoryReader,uint maxMessages);
+    uchar                 readMessageType(MemoryReader& memoryReader) const;
+    MessagePos_vec        searchMessageLocations(MemoryReader& memoryReader,uint maxMessages) const;
 
   protected:
 
@@ -303,8 +304,8 @@ class GridFile
 };
 
 
-typedef std::shared_ptr<GridFile> GridFile_sptr;
-typedef std::vector<GridFile_sptr> GridFile_sptr_vec;
+using GridFile_sptr = std::shared_ptr<GridFile>;
+using GridFile_sptr_vec = std::vector<GridFile_sptr>;
 
 
 }  // namespace GRID

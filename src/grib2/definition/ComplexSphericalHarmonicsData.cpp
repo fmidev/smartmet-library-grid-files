@@ -27,15 +27,14 @@ ComplexSphericalHarmonicsData::ComplexSphericalHarmonicsData() {
 
 /*! \brief The destructor of the class. */
 
-ComplexSphericalHarmonicsData::~ComplexSphericalHarmonicsData() {
-}
+ComplexSphericalHarmonicsData::~ComplexSphericalHarmonicsData() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
         \param memoryReader  This object controls the access to the memory mapped file.
 */
 
-void ComplexSphericalHarmonicsData::read(MemoryReader &memoryReader) {
+void ComplexSphericalHarmonicsData::read(MemoryReader &/*memoryReader*/) {
   try {
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
@@ -47,7 +46,7 @@ void ComplexSphericalHarmonicsData::read(MemoryReader &memoryReader) {
         \param dataWriter  This object is used for writing the object data.
 */
 
-void ComplexSphericalHarmonicsData::write(DataWriter &dataWriter) {
+void ComplexSphericalHarmonicsData::write(DataWriter &/*dataWriter*/) {
   try {
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
@@ -60,7 +59,7 @@ void ComplexSphericalHarmonicsData::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void ComplexSphericalHarmonicsData::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
+void ComplexSphericalHarmonicsData::getAttributeList(const std::string &/*prefix*/, T::AttributeList &/*attributeList*/) const {
   try {
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
@@ -73,7 +72,7 @@ void ComplexSphericalHarmonicsData::getAttributeList(const std::string &prefix, 
     \param attributeValue The value of the attribute (string).
 */
 
-bool ComplexSphericalHarmonicsData::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+bool ComplexSphericalHarmonicsData::getAttributeValue(const char *attributeName, std::string &/*attributeValue*/) const {
   try {
     if (attributeName == nullptr)
       return false;
@@ -106,7 +105,7 @@ bool ComplexSphericalHarmonicsData::hasAttributeValue(const char *attributeName,
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void ComplexSphericalHarmonicsData::print(std::ostream &stream, uint level, uint optionFlags) const {
+void ComplexSphericalHarmonicsData::print(std::ostream &stream, uint level, uint /*optionFlags*/) const {
   try {
     stream << space(level) << "ComplexSphericalHarmonicsData\n";
   } catch (...) {

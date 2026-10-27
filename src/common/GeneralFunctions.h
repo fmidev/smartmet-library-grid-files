@@ -20,7 +20,7 @@
 namespace SmartMet
 {
 
-typedef std::vector<float> FloatVec;
+using FloatVec = std::vector<float>;
 
 std::string uint64_toHex(UInt64 value);
 double int_power(double x, int y);
@@ -51,19 +51,15 @@ float ieee2ibm(float value);
 int timePeriodToSeconds(const char *timePeriod);
 
 time_t localTimeToTimeT(const std::string& localTime,const char *tzone);
-/*
-std::string localTimeToUtcTime(std::string localTime,const char *tzone);
-std::string utcTimeToLocalTime(std::string utcTime,const char *tzone);
-*/
 
 std::string utcTimeFromTimeT(time_t t);
 time_t      utcTimeToTimeT(const std::string& utcTime);
 time_t      utcTimeToTimeT(const char *utcTime);
 time_t      utcTimeToTimeT(int year,int month,int day,int hour,int minute,int second);
 std::string localTimeFromTimeT(time_t t,const char *tzone);
-Fmi::DateTime toTimeStamp(T::TimeString timeStr);
-std::string localTimeToUtc(const std::string& localTime,Fmi::TimeZonePtr tz);
-Fmi::DateTime localTimeToUtc(const Fmi::DateTime& localTime,Fmi::TimeZonePtr tz);
+Fmi::DateTime toTimeStamp(const T::TimeString& timeStr);
+std::string localTimeToUtc(const std::string& localTime,const Fmi::TimeZonePtr& tz);
+Fmi::DateTime localTimeToUtc(const Fmi::DateTime& localTime,const Fmi::TimeZonePtr& tz);
 void splitTimeString(const std::string& timeStr,int& year,int& month,int& day,int& hour,int& minute,int& second);
 void splitTimeString(const std::string& timeStr, short &year, uchar &month, uchar &day, uchar &hour, uchar &minute, uchar &second);
 
@@ -75,9 +71,9 @@ time_t timeToValue(uint year,uint month,uint day,uint hour,uint min,uint sec,uin
 void valueToTime(time_t value,uint& year,uint& month,uint& day,uint& hour,uint& min,uint& sec,uint& usec);
 
 
-time_t toTimeT(Fmi::DateTime tim);
+time_t toTimeT(const Fmi::DateTime& tim);
 time_t getFileModificationTime(const char *filename);
-void copyFile(const char *sourceFileName,const char *targetFileName,bool& shutdownRequested);
+void copyFile(const char *sourceFileName,const char *targetFileName,const bool& shutdownRequested);
 Int64 getFileSize(const char *filename);
 Int64 getFileSize(FILE *file);
 std::string getAbsoluteFilePath(const std::string& filename);
@@ -135,7 +131,7 @@ std::string toString(T::Int16_opt value);
 std::string toString(T::Int32_opt value);
 std::string toString(T::Int64_opt value);
 
-std::string toString(Fmi::DateTime time);
+std::string toString(const Fmi::DateTime& time);
 
 std::string toLowerString(const char *sourceString);
 std::string toLowerString(const std::string& sourceString);
@@ -149,7 +145,7 @@ int decompressData(void *_compressedData,uint _compressedDataSize,void *_decompr
 void parseLatLonCoordinates(const std::string& latLonCoordinates,std::vector<T::Coordinate>& coordinates);
 void parseUnits(const char *unitString,double& value,std::string& units);
 
-std::string stringReplaceAll(const std::string& st,const std::string& oldStr,std::string newStr);
+std::string stringReplaceAll(const std::string& st,const std::string& oldStr,const std::string& newStr);
 
 void splitString(const char *str,char separator,std::vector<uint>& partList);
 void splitString(const std::string& str,char separator,std::vector<uint>& partList);
@@ -174,14 +170,14 @@ void splitNumbers(const char *str,std::vector<std::string>& numbers);
 void lineSplit(const char *str,std::vector<std::string> &lines);
 
 std::string toString(std::list<std::string>& parts,char separator);
-std::string toString(std::set<int>& parts,char separator);
-std::string toString(std::set<float>& parts,char separator);
+std::string toString(const std::set<int>& parts,char separator);
+std::string toString(const std::set<float>& parts,char separator);
 std::string toString(T::AreaCoordinates& coordinates,char separator1,char separator2);
 
 void parseCoordinates(const std::string& coordinateStr,char separator1,char separator2,T::AreaCoordinates& coordinates);
 
 
-bool patternMatch(const char *str,std::vector<std::string>& patterns);
+bool patternMatch(const char *str,const std::vector<std::string>& patterns);
 void getFileList(const char *dirName,std::vector<std::string>& filePatterns,bool includeSubDirs,std::set<std::string>& dirList,std::vector<std::pair<std::string,std::string>>& fileList);
 void tuneLevels(int& level1,int& level2,int newLevel);
 
@@ -211,7 +207,7 @@ double  gregorianToJdn(int year, int month, int day);
 double  julianToJdn(int year, int month, int day);
 void    jdnToJulian(double J,int& year, int& month, int& day);
 time_t  getGregorianTimeT(int refYear, int refMonth, int refDay,int refHour, int refMinute, int refSecond,time_t plusSeconds);
-void    parseNetCdfTime(std::string& timeStr,int& year,int& month,int& day,int& hour,int& minute,int& second,time_t& unitSize);
+void    parseNetCdfTime(const std::string& timeStr,int& year,int& month,int& day,int& hour,int& minute,int& second,time_t& unitSize);
 
 
 int getClosestIndexPos(FloatVec& values,float value);
@@ -233,7 +229,7 @@ void hash_sha256(uchar *input,int inputLen,char *hexHash);
 std::string replaceVariables(const std::string& str,std::map<std::string,std::string>& variables);
 
 
-inline int ptr_compare(char *v1, char *v2)
+inline int ptr_compare(const char *v1, const char *v2)
 {
   if (v1 == v2)
     return 0;

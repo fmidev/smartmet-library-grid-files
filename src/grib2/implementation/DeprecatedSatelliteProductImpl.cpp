@@ -9,9 +9,7 @@ namespace GRIB2
 
 /*! \brief The constructor of the class. */
 
-DeprecatedSatelliteProductImpl::DeprecatedSatelliteProductImpl()
-{
-}
+DeprecatedSatelliteProductImpl::DeprecatedSatelliteProductImpl() = default;
 
 
 
@@ -19,10 +17,7 @@ DeprecatedSatelliteProductImpl::DeprecatedSatelliteProductImpl()
 
 /*! \brief The copy constructor of the class. */
 
-DeprecatedSatelliteProductImpl::DeprecatedSatelliteProductImpl(const DeprecatedSatelliteProductImpl& other)
-:DeprecatedSatelliteProduct(other)
-{
-}
+DeprecatedSatelliteProductImpl::DeprecatedSatelliteProductImpl(const DeprecatedSatelliteProductImpl& other) = default;
 
 
 
@@ -30,9 +25,7 @@ DeprecatedSatelliteProductImpl::DeprecatedSatelliteProductImpl(const DeprecatedS
 
 /*! \brief The destructor of the class. */
 
-DeprecatedSatelliteProductImpl::~DeprecatedSatelliteProductImpl()
-{
-}
+DeprecatedSatelliteProductImpl::~DeprecatedSatelliteProductImpl() = default;
 
 
 

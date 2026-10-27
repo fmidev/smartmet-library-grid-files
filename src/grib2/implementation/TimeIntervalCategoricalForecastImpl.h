@@ -14,13 +14,14 @@ class TimeIntervalCategoricalForecastImpl : public TimeIntervalCategoricalForeca
   public:
                         TimeIntervalCategoricalForecastImpl();
                         TimeIntervalCategoricalForecastImpl(const TimeIntervalCategoricalForecastImpl& other);
-    virtual             ~TimeIntervalCategoricalForecastImpl();
+    ~TimeIntervalCategoricalForecastImpl() override;
+    TimeIntervalCategoricalForecastImpl& operator=(const TimeIntervalCategoricalForecastImpl&) = default;
 
-    ProductDefinition*  createProductDefinition() const;
+    ProductDefinition*  createProductDefinition() const override;
 
-    T::ParamLevel       getGribParameterLevel() const;
-    T::ParamLevelId     getGribParameterLevelId() const;
-    void                read(MemoryReader& memoryReader);
+    T::ParamLevel       getGribParameterLevel() const override;
+    T::ParamLevelId     getGribParameterLevelId() const override;
+    void                read(MemoryReader& memoryReader) override;
 };
 
 }  // namespace GRIB2

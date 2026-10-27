@@ -27,8 +27,7 @@ Product_72::Product_72() {
 
 /*! \brief The destructor of the class. */
 
-Product_72::~Product_72() {
-}
+Product_72::~Product_72() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -68,13 +67,9 @@ void Product_72::write(DataWriter &dataWriter) {
 
 void Product_72::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sProduct_72.", prefix.c_str());
-    mPostproc.getAttributeList(name, attributeList);
-    sprintf(name, "%sProduct_72.", prefix.c_str());
-    mHorizontal.getAttributeList(name, attributeList);
-    sprintf(name, "%sProduct_72.", prefix.c_str());
-    mStatistical.getAttributeList(name, attributeList);
+        mPostproc.getAttributeList(prefix + "Product_72.", attributeList);
+        mHorizontal.getAttributeList(prefix + "Product_72.", attributeList);
+        mStatistical.getAttributeList(prefix + "Product_72.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -171,7 +166,7 @@ ProductDefinition *Product_72::createProductDefinition() const {
 
 PostprocSettings *Product_72::getPostproc() const {
   try {
-    return static_cast<PostprocSettings *>(&mPostproc);
+    return &mPostproc;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -181,7 +176,7 @@ PostprocSettings *Product_72::getPostproc() const {
 
 HorizontalSettings *Product_72::getHorizontal() const {
   try {
-    return static_cast<HorizontalSettings *>(&mHorizontal);
+    return &mHorizontal;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -191,13 +186,13 @@ HorizontalSettings *Product_72::getHorizontal() const {
 
 StatisticalSettings *Product_72::getStatistical() const {
   try {
-    return static_cast<StatisticalSettings *>(&mStatistical);
+    return &mStatistical;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
-void Product_72::setPostproc(PostprocSettings &postproc) {
+void Product_72::setPostproc(const PostprocSettings &postproc) {
   try {
     mPostproc = postproc;
   } catch (...) {
@@ -205,7 +200,7 @@ void Product_72::setPostproc(PostprocSettings &postproc) {
   }
 }
 
-void Product_72::setHorizontal(HorizontalSettings &horizontal) {
+void Product_72::setHorizontal(const HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
@@ -213,7 +208,7 @@ void Product_72::setHorizontal(HorizontalSettings &horizontal) {
   }
 }
 
-void Product_72::setStatistical(StatisticalSettings &statistical) {
+void Product_72::setStatistical(const StatisticalSettings &statistical) {
   try {
     mStatistical = statistical;
   } catch (...) {

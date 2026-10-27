@@ -10,9 +10,7 @@ namespace GRIB2
 
 /*! \brief The constructor of the class. */
 
-TimeIntervalAggregateForecastImpl::TimeIntervalAggregateForecastImpl()
-{
-}
+TimeIntervalAggregateForecastImpl::TimeIntervalAggregateForecastImpl() = default;
 
 
 
@@ -20,10 +18,7 @@ TimeIntervalAggregateForecastImpl::TimeIntervalAggregateForecastImpl()
 
 /*! \brief The copy constructor of the class. */
 
-TimeIntervalAggregateForecastImpl::TimeIntervalAggregateForecastImpl(const TimeIntervalAggregateForecastImpl& other)
-:TimeIntervalAggregateForecast(other)
-{
-}
+TimeIntervalAggregateForecastImpl::TimeIntervalAggregateForecastImpl(const TimeIntervalAggregateForecastImpl& other) = default;
 
 
 
@@ -31,9 +26,7 @@ TimeIntervalAggregateForecastImpl::TimeIntervalAggregateForecastImpl(const TimeI
 
 /*! \brief The destructor of the class. */
 
-TimeIntervalAggregateForecastImpl::~TimeIntervalAggregateForecastImpl()
-{
-}
+TimeIntervalAggregateForecastImpl::~TimeIntervalAggregateForecastImpl() = default;
 
 
 

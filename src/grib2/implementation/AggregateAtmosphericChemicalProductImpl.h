@@ -14,21 +14,22 @@ class AggregateAtmosphericChemicalProductImpl : public AggregateAtmosphericChemi
   public:
                         AggregateAtmosphericChemicalProductImpl();
                         AggregateAtmosphericChemicalProductImpl(const AggregateAtmosphericChemicalProductImpl& other);
-    virtual             ~AggregateAtmosphericChemicalProductImpl();
+    ~AggregateAtmosphericChemicalProductImpl() override;
+    AggregateAtmosphericChemicalProductImpl& operator=(const AggregateAtmosphericChemicalProductImpl&) = default;
 
-    ProductDefinition*  createProductDefinition() const;
+    ProductDefinition*  createProductDefinition() const override;
 
-    const T::UInt8_opt  getGribParameterCategory() const;
-    const T::UInt8_opt  getGribParameterNumber() const;
-    T::UInt8_opt        getGeneratingProcessIdentifier() const;
-    T::TimeString       getForecastTime(T::TimeString referenceTime) const;
-    T::ParamLevel       getGribParameterLevel() const;
-    T::ParamLevelId     getGribParameterLevelId() const;
-    void                read(MemoryReader& memoryReader);
+    const T::UInt8_opt  getGribParameterCategory() const override;
+    const T::UInt8_opt  getGribParameterNumber() const override;
+    T::UInt8_opt        getGeneratingProcessIdentifier() const override;
+    T::TimeString       getForecastTime(T::TimeString referenceTime) const override;
+    T::ParamLevel       getGribParameterLevel() const override;
+    T::ParamLevelId     getGribParameterLevelId() const override;
+    void                read(MemoryReader& memoryReader) override;
 
   protected:
 
-    T::TimeString       countForecastStartTime(T::TimeString referenceTime) const;
+    T::TimeString       countForecastStartTime(const T::TimeString& referenceTime) const;
 };
 
 }  // namespace GRIB2

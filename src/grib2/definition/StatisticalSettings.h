@@ -19,6 +19,10 @@ namespace GRIB2 {
 class StatisticalSettings {
 public:
   StatisticalSettings();
+  StatisticalSettings(const StatisticalSettings &) = default;
+  StatisticalSettings(StatisticalSettings &&) = default;
+  StatisticalSettings &operator=(const StatisticalSettings &) = default;
+  StatisticalSettings &operator=(StatisticalSettings &&) = default;
   virtual ~StatisticalSettings();
 
   virtual void read(MemoryReader &memoryReader);

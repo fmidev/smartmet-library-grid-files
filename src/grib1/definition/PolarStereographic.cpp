@@ -35,8 +35,7 @@ PolarStereographic::PolarStereographic() {
 
 /*! \brief The destructor of the class. */
 
-PolarStereographic::~PolarStereographic() {
-}
+PolarStereographic::~PolarStereographic() = default;
 
 /*! \brief The method reads and initializes all data related to the current section object.
 
@@ -94,27 +93,16 @@ void PolarStereographic::write(DataWriter &dataWriter) {
 
 void PolarStereographic::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sPolarStereographic.Nx", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNx));
-    sprintf(name, "%sPolarStereographic.Ny", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNy));
-    sprintf(name, "%sPolarStereographic.LatitudeOfFirstGridPoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatitudeOfFirstGridPoint));
-    sprintf(name, "%sPolarStereographic.LongitudeOfFirstGridPoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLongitudeOfFirstGridPoint));
-    sprintf(name, "%sPolarStereographic.", prefix.c_str());
-    mResolutionFlags.getAttributeList(name, attributeList);
-    sprintf(name, "%sPolarStereographic.OrientationOfTheGrid", prefix.c_str());
-    attributeList.addAttribute(name, toString(mOrientationOfTheGrid));
-    sprintf(name, "%sPolarStereographic.DxInMetres", prefix.c_str());
-    attributeList.addAttribute(name, toString(mDxInMetres));
-    sprintf(name, "%sPolarStereographic.DyInMetres", prefix.c_str());
-    attributeList.addAttribute(name, toString(mDyInMetres));
-    sprintf(name, "%sPolarStereographic.ProjectionCentreFlag", prefix.c_str());
-    attributeList.addAttribute(name, toString(mProjectionCentreFlag));
-    sprintf(name, "%sPolarStereographic.", prefix.c_str());
-    mScanningMode.getAttributeList(name, attributeList);
+        attributeList.addAttribute(prefix + "PolarStereographic.Nx", toString(mNx));
+        attributeList.addAttribute(prefix + "PolarStereographic.Ny", toString(mNy));
+        attributeList.addAttribute(prefix + "PolarStereographic.LatitudeOfFirstGridPoint", toString(mLatitudeOfFirstGridPoint));
+        attributeList.addAttribute(prefix + "PolarStereographic.LongitudeOfFirstGridPoint", toString(mLongitudeOfFirstGridPoint));
+        mResolutionFlags.getAttributeList(prefix + "PolarStereographic.", attributeList);
+        attributeList.addAttribute(prefix + "PolarStereographic.OrientationOfTheGrid", toString(mOrientationOfTheGrid));
+        attributeList.addAttribute(prefix + "PolarStereographic.DxInMetres", toString(mDxInMetres));
+        attributeList.addAttribute(prefix + "PolarStereographic.DyInMetres", toString(mDyInMetres));
+        attributeList.addAttribute(prefix + "PolarStereographic.ProjectionCentreFlag", toString(mProjectionCentreFlag));
+        mScanningMode.getAttributeList(prefix + "PolarStereographic.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -288,7 +276,7 @@ std::uint16_t PolarStereographic::getNy() const {
 
 /*! \brief The method returns the value of the {@link mLatitudeOfFirstGridPoint} attribute. */
 
-std::int24_t PolarStereographic::getLatitudeOfFirstGridPoint() const {
+SmartMet::int24_t PolarStereographic::getLatitudeOfFirstGridPoint() const {
   try {
     return mLatitudeOfFirstGridPoint;
   } catch (...) {
@@ -298,7 +286,7 @@ std::int24_t PolarStereographic::getLatitudeOfFirstGridPoint() const {
 
 /*! \brief The method returns the value of the {@link mLongitudeOfFirstGridPoint} attribute. */
 
-std::int24_t PolarStereographic::getLongitudeOfFirstGridPoint() const {
+SmartMet::int24_t PolarStereographic::getLongitudeOfFirstGridPoint() const {
   try {
     return mLongitudeOfFirstGridPoint;
   } catch (...) {
@@ -310,7 +298,7 @@ std::int24_t PolarStereographic::getLongitudeOfFirstGridPoint() const {
 
 ResolutionFlagsSettings *PolarStereographic::getResolutionFlags() const {
   try {
-    return static_cast<ResolutionFlagsSettings *>(&mResolutionFlags);
+    return &mResolutionFlags;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -318,7 +306,7 @@ ResolutionFlagsSettings *PolarStereographic::getResolutionFlags() const {
 
 /*! \brief The method returns the value of the {@link mOrientationOfTheGrid} attribute. */
 
-std::int24_t PolarStereographic::getOrientationOfTheGrid() const {
+SmartMet::int24_t PolarStereographic::getOrientationOfTheGrid() const {
   try {
     return mOrientationOfTheGrid;
   } catch (...) {
@@ -328,7 +316,7 @@ std::int24_t PolarStereographic::getOrientationOfTheGrid() const {
 
 /*! \brief The method returns the value of the {@link mDxInMetres} attribute. */
 
-std::uint24_t PolarStereographic::getDxInMetres() const {
+SmartMet::uint24_t PolarStereographic::getDxInMetres() const {
   try {
     return mDxInMetres;
   } catch (...) {
@@ -338,7 +326,7 @@ std::uint24_t PolarStereographic::getDxInMetres() const {
 
 /*! \brief The method returns the value of the {@link mDyInMetres} attribute. */
 
-std::uint24_t PolarStereographic::getDyInMetres() const {
+SmartMet::uint24_t PolarStereographic::getDyInMetres() const {
   try {
     return mDyInMetres;
   } catch (...) {
@@ -360,7 +348,7 @@ std::uint8_t PolarStereographic::getProjectionCentreFlag() const {
 
 ScanningModeSettings *PolarStereographic::getScanningMode() const {
   try {
-    return static_cast<ScanningModeSettings *>(&mScanningMode);
+    return &mScanningMode;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -382,7 +370,7 @@ void PolarStereographic::setNy(std::uint16_t ny) {
   }
 }
 
-void PolarStereographic::setLatitudeOfFirstGridPoint(std::int24_t latitudeOfFirstGridPoint) {
+void PolarStereographic::setLatitudeOfFirstGridPoint(SmartMet::int24_t latitudeOfFirstGridPoint) {
   try {
     mLatitudeOfFirstGridPoint = latitudeOfFirstGridPoint;
   } catch (...) {
@@ -390,7 +378,7 @@ void PolarStereographic::setLatitudeOfFirstGridPoint(std::int24_t latitudeOfFirs
   }
 }
 
-void PolarStereographic::setLongitudeOfFirstGridPoint(std::int24_t longitudeOfFirstGridPoint) {
+void PolarStereographic::setLongitudeOfFirstGridPoint(SmartMet::int24_t longitudeOfFirstGridPoint) {
   try {
     mLongitudeOfFirstGridPoint = longitudeOfFirstGridPoint;
   } catch (...) {
@@ -398,7 +386,7 @@ void PolarStereographic::setLongitudeOfFirstGridPoint(std::int24_t longitudeOfFi
   }
 }
 
-void PolarStereographic::setResolutionFlags(ResolutionFlagsSettings &resolutionFlags) {
+void PolarStereographic::setResolutionFlags(const ResolutionFlagsSettings &resolutionFlags) {
   try {
     mResolutionFlags = resolutionFlags;
   } catch (...) {
@@ -406,7 +394,7 @@ void PolarStereographic::setResolutionFlags(ResolutionFlagsSettings &resolutionF
   }
 }
 
-void PolarStereographic::setOrientationOfTheGrid(std::int24_t orientationOfTheGrid) {
+void PolarStereographic::setOrientationOfTheGrid(SmartMet::int24_t orientationOfTheGrid) {
   try {
     mOrientationOfTheGrid = orientationOfTheGrid;
   } catch (...) {
@@ -414,7 +402,7 @@ void PolarStereographic::setOrientationOfTheGrid(std::int24_t orientationOfTheGr
   }
 }
 
-void PolarStereographic::setDxInMetres(std::uint24_t dxInMetres) {
+void PolarStereographic::setDxInMetres(SmartMet::uint24_t dxInMetres) {
   try {
     mDxInMetres = dxInMetres;
   } catch (...) {
@@ -422,7 +410,7 @@ void PolarStereographic::setDxInMetres(std::uint24_t dxInMetres) {
   }
 }
 
-void PolarStereographic::setDyInMetres(std::uint24_t dyInMetres) {
+void PolarStereographic::setDyInMetres(SmartMet::uint24_t dyInMetres) {
   try {
     mDyInMetres = dyInMetres;
   } catch (...) {
@@ -438,7 +426,7 @@ void PolarStereographic::setProjectionCentreFlag(std::uint8_t projectionCentreFl
   }
 }
 
-void PolarStereographic::setScanningMode(ScanningModeSettings &scanningMode) {
+void PolarStereographic::setScanningMode(const ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {

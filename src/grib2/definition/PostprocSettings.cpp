@@ -27,8 +27,7 @@ PostprocSettings::PostprocSettings() {
 
 /*! \brief The destructor of the class. */
 
-PostprocSettings::~PostprocSettings() {
-}
+PostprocSettings::~PostprocSettings() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -86,31 +85,18 @@ void PostprocSettings::write(DataWriter &dataWriter) {
 
 void PostprocSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sPostprocSettings.ParameterCategory", prefix.c_str());
-    attributeList.addAttribute(name, toString(mParameterCategory));
-    sprintf(name, "%sPostprocSettings.ParameterNumber", prefix.c_str());
-    attributeList.addAttribute(name, toString(mParameterNumber));
-    sprintf(name, "%sPostprocSettings.InputProcessIdentifier", prefix.c_str());
-    attributeList.addAttribute(name, toString(mInputProcessIdentifier));
-    sprintf(name, "%sPostprocSettings.InputOriginatingCentre", prefix.c_str());
-    attributeList.addAttribute(name, toString(mInputOriginatingCentre));
-    sprintf(name, "%sPostprocSettings.TypeOfPostProcessing", prefix.c_str());
-    attributeList.addAttribute(name, toString(mTypeOfPostProcessing));
-    sprintf(name, "%sPostprocSettings.TypeOfGeneratingProcess", prefix.c_str());
-    attributeList.addAttribute(name, toString(mTypeOfGeneratingProcess));
-    sprintf(name, "%sPostprocSettings.BackgroundProcess", prefix.c_str());
-    attributeList.addAttribute(name, toString(mBackgroundProcess));
-    sprintf(name, "%sPostprocSettings.GeneratingProcessIdentifier", prefix.c_str());
-    attributeList.addAttribute(name, toString(mGeneratingProcessIdentifier));
-    sprintf(name, "%sPostprocSettings.HoursAfterDataCutoff", prefix.c_str());
-    attributeList.addAttribute(name, toString(mHoursAfterDataCutoff));
-    sprintf(name, "%sPostprocSettings.MinutesAfterDataCutoff", prefix.c_str());
-    attributeList.addAttribute(name, toString(mMinutesAfterDataCutoff));
-    sprintf(name, "%sPostprocSettings.IndicatorOfUnitOfTimeRange", prefix.c_str());
-    attributeList.addAttribute(name, toString(mIndicatorOfUnitOfTimeRange));
-    sprintf(name, "%sPostprocSettings.ForecastTime", prefix.c_str());
-    attributeList.addAttribute(name, toString(mForecastTime));
+        attributeList.addAttribute(prefix + "PostprocSettings.ParameterCategory", toString(mParameterCategory));
+        attributeList.addAttribute(prefix + "PostprocSettings.ParameterNumber", toString(mParameterNumber));
+        attributeList.addAttribute(prefix + "PostprocSettings.InputProcessIdentifier", toString(mInputProcessIdentifier));
+        attributeList.addAttribute(prefix + "PostprocSettings.InputOriginatingCentre", toString(mInputOriginatingCentre));
+        attributeList.addAttribute(prefix + "PostprocSettings.TypeOfPostProcessing", toString(mTypeOfPostProcessing));
+        attributeList.addAttribute(prefix + "PostprocSettings.TypeOfGeneratingProcess", toString(mTypeOfGeneratingProcess));
+        attributeList.addAttribute(prefix + "PostprocSettings.BackgroundProcess", toString(mBackgroundProcess));
+        attributeList.addAttribute(prefix + "PostprocSettings.GeneratingProcessIdentifier", toString(mGeneratingProcessIdentifier));
+        attributeList.addAttribute(prefix + "PostprocSettings.HoursAfterDataCutoff", toString(mHoursAfterDataCutoff));
+        attributeList.addAttribute(prefix + "PostprocSettings.MinutesAfterDataCutoff", toString(mMinutesAfterDataCutoff));
+        attributeList.addAttribute(prefix + "PostprocSettings.IndicatorOfUnitOfTimeRange", toString(mIndicatorOfUnitOfTimeRange));
+        attributeList.addAttribute(prefix + "PostprocSettings.ForecastTime", toString(mForecastTime));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -227,7 +213,7 @@ bool PostprocSettings::hasAttributeValue(const char *attributeName, const char *
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void PostprocSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
+void PostprocSettings::print(std::ostream &stream, uint level, uint /*optionFlags*/) const {
   try {
     stream << space(level) << "PostprocSettings\n";
     stream << space(level) << "- ParameterCategory = " << toString(mParameterCategory) << "\n";

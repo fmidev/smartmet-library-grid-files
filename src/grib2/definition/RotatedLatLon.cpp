@@ -27,8 +27,7 @@ RotatedLatLon::RotatedLatLon() {
 
 /*! \brief The destructor of the class. */
 
-RotatedLatLon::~RotatedLatLon() {
-}
+RotatedLatLon::~RotatedLatLon() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -68,13 +67,9 @@ void RotatedLatLon::write(DataWriter &dataWriter) {
 
 void RotatedLatLon::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sRotatedLatLon.", prefix.c_str());
-    mEarthShape.getAttributeList(name, attributeList);
-    sprintf(name, "%sRotatedLatLon.", prefix.c_str());
-    mLatLon.getAttributeList(name, attributeList);
-    sprintf(name, "%sRotatedLatLon.", prefix.c_str());
-    mRotation.getAttributeList(name, attributeList);
+        mEarthShape.getAttributeList(prefix + "RotatedLatLon.", attributeList);
+        mLatLon.getAttributeList(prefix + "RotatedLatLon.", attributeList);
+        mRotation.getAttributeList(prefix + "RotatedLatLon.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -171,7 +166,7 @@ GridDefinition *RotatedLatLon::createGridDefinition() const {
 
 EarthShapeSettings *RotatedLatLon::getEarthShape() const {
   try {
-    return static_cast<EarthShapeSettings *>(&mEarthShape);
+    return &mEarthShape;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -181,7 +176,7 @@ EarthShapeSettings *RotatedLatLon::getEarthShape() const {
 
 LatLonSettings *RotatedLatLon::getLatLon() const {
   try {
-    return static_cast<LatLonSettings *>(&mLatLon);
+    return &mLatLon;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -191,13 +186,13 @@ LatLonSettings *RotatedLatLon::getLatLon() const {
 
 RotationSettings *RotatedLatLon::getRotation() const {
   try {
-    return static_cast<RotationSettings *>(&mRotation);
+    return &mRotation;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
-void RotatedLatLon::setEarthShape(EarthShapeSettings &earthShape) {
+void RotatedLatLon::setEarthShape(const EarthShapeSettings &earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
@@ -205,7 +200,7 @@ void RotatedLatLon::setEarthShape(EarthShapeSettings &earthShape) {
   }
 }
 
-void RotatedLatLon::setLatLon(LatLonSettings &latLon) {
+void RotatedLatLon::setLatLon(const LatLonSettings &latLon) {
   try {
     mLatLon = latLon;
   } catch (...) {
@@ -213,7 +208,7 @@ void RotatedLatLon::setLatLon(LatLonSettings &latLon) {
   }
 }
 
-void RotatedLatLon::setRotation(RotationSettings &rotation) {
+void RotatedLatLon::setRotation(const RotationSettings &rotation) {
   try {
     mRotation = rotation;
   } catch (...) {

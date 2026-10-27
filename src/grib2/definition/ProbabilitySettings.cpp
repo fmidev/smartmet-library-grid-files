@@ -27,8 +27,7 @@ ProbabilitySettings::ProbabilitySettings() {
 
 /*! \brief The destructor of the class. */
 
-ProbabilitySettings::~ProbabilitySettings() {
-}
+ProbabilitySettings::~ProbabilitySettings() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -76,21 +75,13 @@ void ProbabilitySettings::write(DataWriter &dataWriter) {
 
 void ProbabilitySettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sProbabilitySettings.ForecastProbabilityNumber", prefix.c_str());
-    attributeList.addAttribute(name, toString(mForecastProbabilityNumber));
-    sprintf(name, "%sProbabilitySettings.TotalNumberOfForecastProbabilities", prefix.c_str());
-    attributeList.addAttribute(name, toString(mTotalNumberOfForecastProbabilities));
-    sprintf(name, "%sProbabilitySettings.ProbabilityType", prefix.c_str());
-    attributeList.addAttribute(name, toString(mProbabilityType));
-    sprintf(name, "%sProbabilitySettings.ScaleFactorOfLowerLimit", prefix.c_str());
-    attributeList.addAttribute(name, toString(mScaleFactorOfLowerLimit));
-    sprintf(name, "%sProbabilitySettings.ScaledValueOfLowerLimit", prefix.c_str());
-    attributeList.addAttribute(name, toString(mScaledValueOfLowerLimit));
-    sprintf(name, "%sProbabilitySettings.ScaleFactorOfUpperLimit", prefix.c_str());
-    attributeList.addAttribute(name, toString(mScaleFactorOfUpperLimit));
-    sprintf(name, "%sProbabilitySettings.ScaledValueOfUpperLimit", prefix.c_str());
-    attributeList.addAttribute(name, toString(mScaledValueOfUpperLimit));
+        attributeList.addAttribute(prefix + "ProbabilitySettings.ForecastProbabilityNumber", toString(mForecastProbabilityNumber));
+        attributeList.addAttribute(prefix + "ProbabilitySettings.TotalNumberOfForecastProbabilities", toString(mTotalNumberOfForecastProbabilities));
+        attributeList.addAttribute(prefix + "ProbabilitySettings.ProbabilityType", toString(mProbabilityType));
+        attributeList.addAttribute(prefix + "ProbabilitySettings.ScaleFactorOfLowerLimit", toString(mScaleFactorOfLowerLimit));
+        attributeList.addAttribute(prefix + "ProbabilitySettings.ScaledValueOfLowerLimit", toString(mScaledValueOfLowerLimit));
+        attributeList.addAttribute(prefix + "ProbabilitySettings.ScaleFactorOfUpperLimit", toString(mScaleFactorOfUpperLimit));
+        attributeList.addAttribute(prefix + "ProbabilitySettings.ScaledValueOfUpperLimit", toString(mScaledValueOfUpperLimit));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -177,7 +168,7 @@ bool ProbabilitySettings::hasAttributeValue(const char *attributeName, const cha
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void ProbabilitySettings::print(std::ostream &stream, uint level, uint optionFlags) const {
+void ProbabilitySettings::print(std::ostream &stream, uint level, uint /*optionFlags*/) const {
   try {
     stream << space(level) << "ProbabilitySettings\n";
     stream << space(level) << "- ForecastProbabilityNumber = " << toString(mForecastProbabilityNumber) << "\n";

@@ -4,6 +4,7 @@
 #include <macgyver/Exception.h>
 #include <macgyver/StringConversion.h>
 
+#include <cstdarg>
 #include <sys/types.h>
 #include <unistd.h>
 
@@ -44,7 +45,7 @@ Log::~Log()
     if (file != nullptr)
     {
       AutoThreadLock tLock(&threadLock);
-      fclose(file);
+      (void)fclose(file);
       file = nullptr;
     }
   }
@@ -103,7 +104,7 @@ void Log::open()
 {
   try
   {
-    if (filename.length() == 0)
+    if (filename.empty())
       return;     // ### The log file name is empty.
 
     if (file != nullptr)
@@ -133,7 +134,7 @@ void Log::openForAppend()
 {
   try
   {
-    if (filename.length() == 0)
+    if (filename.empty())
       return;     // ### The log file name is empty.
 
     if (file != nullptr)
@@ -166,7 +167,7 @@ void Log::close()
     if (file != nullptr)
     {
       AutoThreadLock tLock(&threadLock);
-      fclose(file);
+      (void)fclose(file);
       file = nullptr;
     }
   }
@@ -189,13 +190,13 @@ void Log::clear()
     AutoThreadLock tLock(&threadLock);
     if (file != nullptr)
     {
-      fclose(file);
+      (void)fclose(file);
       file = nullptr;
     }
     open();
-    if (!enabled)
+    if (!enabled && file != nullptr)
     {
-      fclose(file);
+      (void)fclose(file);
       file = nullptr;
     }
   }
@@ -424,7 +425,7 @@ void Log::print(const char *_event)
 
     AutoThreadLock tLock(&threadLock);
     fprintf(file,"%s",_event);
-    fflush(file);
+    (void)fflush(file);
   }
   catch (...)
   {
@@ -445,11 +446,11 @@ void Log::print(time_t _time,const char *_event)
     if (!enabled  ||  file == nullptr  ||  _event == nullptr)
       return;
 
-    struct tm x_tm;
+    struct tm x_tm{};
     localtime_r(&_time,&x_tm);
     AutoThreadLock tLock(&threadLock);
-    fprintf(file,"[%04u-%02u-%02u/%02u:%02u:%02u] %s",x_tm.tm_year+1900,x_tm.tm_mon+1,x_tm.tm_mday,x_tm.tm_hour,x_tm.tm_min,x_tm.tm_sec,_event);
-    fflush(file);
+    fprintf(file,"[%04d-%02d-%02d/%02d:%02d:%02d] %s",x_tm.tm_year+1900,x_tm.tm_mon+1,x_tm.tm_mday,x_tm.tm_hour,x_tm.tm_min,x_tm.tm_sec,_event);
+    (void)fflush(file);
   }
   catch (...)
   {
@@ -470,11 +471,11 @@ void Log::print(time_t _time,const char *_filename,uint _line,const char *_funct
     if (!enabled  ||  file == nullptr  ||  _event == nullptr  ||  _filename == nullptr  ||  _function == nullptr)
       return;
 
-    struct tm x_tm;
+    struct tm x_tm{};
     localtime_r(&_time,&x_tm);
     AutoThreadLock tLock(&threadLock);
-    fprintf(file,"[%04u-%02u-%02u/%02u:%02u:%02u][%s:%u:%s()] %s",x_tm.tm_year+1900,x_tm.tm_mon+1,x_tm.tm_mday,x_tm.tm_hour,x_tm.tm_min,x_tm.tm_sec,_filename,_line,_function,_event);
-    fflush(file);
+    fprintf(file,"[%04d-%02d-%02d/%02d:%02d:%02d][%s:%u:%s()] %s",x_tm.tm_year+1900,x_tm.tm_mon+1,x_tm.tm_mday,x_tm.tm_hour,x_tm.tm_min,x_tm.tm_sec,_filename,_line,_function,_event);
+    (void)fflush(file);
   }
   catch (...)
   {
@@ -496,8 +497,125 @@ void Log::print(void *_data,uint _size)
       return;
 
     AutoThreadLock tLock(&threadLock);
-    fwrite(_data,1,_size,file);
-    fflush(file);
+    (void)fwrite(_data,1,_size,file);
+    (void)fflush(file);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+/*! \brief Writes the timestamp and the event number which start an event line. */
+
+namespace
+{
+void printEventPrefix(FILE *_file,UInt64 _eventCounter)
+{
+  time_t x_time = time(nullptr);
+  struct tm x_tm{};
+  localtime_r(&x_time,&x_tm);
+  fprintf(_file,"[%04d-%02d-%02d/%02d:%02d:%02d][%llu][",x_tm.tm_year+1900,x_tm.tm_mon+1,x_tm.tm_mday,x_tm.tm_hour,x_tm.tm_min,x_tm.tm_sec,static_cast<unsigned long long>(_eventCounter));
+}
+}  // namespace
+
+
+
+
+
+/*! \brief Writes printf formatted text to the log. */
+
+void Log::printData(const char *_format,...)  // NOLINT(cert-dcl50-cpp): printf style by design
+{
+  try
+  {
+    lock();
+    FILE *f = getFileHandle();
+    if (f == nullptr)
+    {
+      unlock();
+      return;
+    }
+
+    va_list args;
+    va_start(args,_format);
+    vfprintf(f,_format,args);
+    va_end(args);
+    (void)fflush(f);
+    unlock();
+    truncate();
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+/*! \brief Writes a timestamped, numbered event line of printf formatted text to the log. */
+
+void Log::printEventLine(const char *_format,...)  // NOLINT(cert-dcl50-cpp): printf style by design
+{
+  try
+  {
+    lock();
+    FILE *f = getFileHandle();
+    if (f == nullptr)
+    {
+      unlock();
+      return;
+    }
+
+    printEventPrefix(f,getEventCounter());
+    va_list args;
+    va_start(args,_format);
+    vfprintf(f,_format,args);
+    va_end(args);
+    fprintf(f,"]\n");
+    (void)fflush(f);
+    unlock();
+    truncate();
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+/*! \brief Writes a timestamped, numbered event of printf formatted text with its source location to the log. */
+
+void Log::printEvent(const char *_filename,uint _line,const char *_function,const char *_format,...)  // NOLINT(cert-dcl50-cpp): printf style by design
+{
+  try
+  {
+    lock();
+    FILE *f = getFileHandle();
+    if (f == nullptr)
+    {
+      unlock();
+      return;
+    }
+
+    printEventPrefix(f,getEventCounter());
+    va_list args;
+    va_start(args,_format);
+    vfprintf(f,_format,args);
+    va_end(args);
+    fprintf(f,"][%s:%u:%s()]\n",_filename,_line,_function);
+    (void)fflush(f);
+    unlock();
+    truncate();
   }
   catch (...)
   {
@@ -539,13 +657,15 @@ void Log::truncate()
 
     // ### Closing and renaming the log file
 
-    fclose(file);
+    (void)fclose(file);
     file = nullptr;
-    rename(filename.c_str(),tmpFilename);
+    (void)rename(filename.c_str(),tmpFilename);
 
     // ### Opening a new log file
 
     open();
+    if (file == nullptr)
+      return;
 
     // ### Copying log information into the new log file
 
@@ -558,18 +678,18 @@ void Log::truncate()
 
     // ### Moving to the correct position and making sure that we start from the beginning of the line.
 
-    fseek(oldfile,pos,SEEK_SET);
-    if (fgets(st,10000,oldfile) != 0)
+    (void)fseek(oldfile,pos,SEEK_SET);
+    if (fgets(st,10000,oldfile) != nullptr)
     {
-      int n;
+      int n = 0;
       while ((n = fread(st,1,10000,oldfile)) > 0)
       {
-        fwrite(st,1,n,file);
+        (void)fwrite(st,1,n,file);
       }
     }
-    fclose(oldfile);
-    remove(tmpFilename);
-    fflush(file);
+    (void)fclose(oldfile);
+    (void)remove(tmpFilename);
+    (void)fflush(file);
   }
   catch (...)
   {

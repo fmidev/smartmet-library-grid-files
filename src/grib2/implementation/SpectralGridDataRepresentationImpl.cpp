@@ -18,14 +18,91 @@ namespace GRIB2
 {
 
 
+namespace
+{
 ThreadLock AEC_threadLock;
+
+
+
+
+
+/*! \brief Sets all values to the reference value, or to ParamValueMissing where the bitmap bit is not set. */
+
+void fillReferenceValues(std::size_t numOfValues,T::Data_ptr bitmap,std::size_t bitmapSizeInBytes,double reference_value,T::ParamValue_vec& decodedValues)
+{
+  if (bitmap != nullptr  &&  bitmapSizeInBytes > 0)
+  {
+    // There is no data, but there is a bitmap available.
+    BitArrayReader bitmapReader(bitmap,bitmapSizeInBytes*8);
+    for (std::uint32_t i=0; i<numOfValues; i++)
+    {
+      if (bitmapReader.readBit())
+      {
+        decodedValues.emplace_back(reference_value);
+      }
+      else
+      {
+        decodedValues.emplace_back(ParamValueMissing);
+      }
+    }
+    return;
+  }
+  // All values are set to "reference_value".
+  for (std::uint32_t i=0; i<numOfValues; i++)
+  {
+    decodedValues.emplace_back(reference_value);
+  }
+}
+
+
+
+
+
+/*! \brief Unpacks and scales the decoded integer values, inserting ParamValueMissing where the bitmap bit is not set. */
+
+void unpackScaledValues(BitArrayReader& bitArrayReader,int bits,T::Data_ptr bitmap,std::size_t bitmapSizeInBytes,std::size_t numOfValues,double RDfac,double EDfac,T::ParamValue_vec& decodedValues)
+{
+  if (bitmapSizeInBytes > 0)
+  {
+    T::Data_ptr bmap = bitmap;
+    unsigned char tmp = 0;
+    if (bmap == nullptr)
+      bmap = &tmp;
+
+    BitArrayReader bitmapReader(bmap,bitmapSizeInBytes*8);
+    for (std::uint32_t i = 0; i < numOfValues; i++)
+    {
+      if (bitmapReader.readBit())
+      {
+        uint value = 0;
+        bitArrayReader.readBits(bits,value);
+        double val = RDfac + value * EDfac;
+        decodedValues.emplace_back(val);
+      }
+      else
+      {
+        decodedValues.emplace_back(ParamValueMissing);
+      }
+    }
+  }
+  else
+  {
+    for (std::uint32_t i = 0; i < numOfValues; i++)
+    {
+      uint value = 0;
+      bitArrayReader.readBits(bits,value);
+      double val = RDfac + value * EDfac;
+      decodedValues.emplace_back(val);
+    }
+  }
+}
+
+}  // namespace
 
 
 /*! \brief The constructor of the class. */
 
-SpectralGridDataRepresentationImpl::SpectralGridDataRepresentationImpl()
-{
-}
+SpectralGridDataRepresentationImpl::SpectralGridDataRepresentationImpl() = default;
 
 
 
@@ -33,10 +110,7 @@ SpectralGridDataRepresentationImpl::SpectralGridDataRepresentationImpl()
 
 /*! \brief The copy constructor of the class. */
 
-SpectralGridDataRepresentationImpl::SpectralGridDataRepresentationImpl(const SpectralGridDataRepresentationImpl& other)
-:SpectralGridDataRepresentation(other)
-{
-}
+SpectralGridDataRepresentationImpl::SpectralGridDataRepresentationImpl(const SpectralGridDataRepresentationImpl& other) = default;
 
 
 
@@ -44,9 +118,7 @@ SpectralGridDataRepresentationImpl::SpectralGridDataRepresentationImpl(const Spe
 
 /*! \brief The destructor of the class. */
 
-SpectralGridDataRepresentationImpl::~SpectralGridDataRepresentationImpl()
-{
-}
+SpectralGridDataRepresentationImpl::~SpectralGridDataRepresentationImpl() = default;
 
 
 
@@ -116,35 +188,11 @@ void SpectralGridDataRepresentationImpl::decodeValues(Message *message,T::ParamV
 
     if (dataSize == 0  || data == nullptr  ||  bits_per_value == 0)
     {
-      if (bitmap != nullptr  &&  bitmapSizeInBytes > 0)
-      {
-        // There is no data, but there is a bitmap available.
-        BitArrayReader bitmapReader(bitmap,bitmapSizeInBytes*8);
-        for (std::uint32_t i=0; i<numOfValues; i++)
-        {
-          if (bitmapReader.readBit())
-          {
-            decodedValues.emplace_back(reference_value);
-          }
-          else
-          {
-            decodedValues.emplace_back(ParamValueMissing);
-          }
-        }
-        return;
-      }
-      else
-      {
-        // All values are set to "reference_value".
-        for (std::uint32_t i=0; i<numOfValues; i++)
-        {
-          decodedValues.emplace_back(reference_value);
-        }
-        return;
-      }
+      fillReferenceValues(numOfValues,bitmap,bitmapSizeInBytes,reference_value,decodedValues);
+      return;
     }
 
-    int32_t *dest = new int32_t[numOfValues];
+    auto *dest = new int32_t[numOfValues];
     for (size_t t=0; t<numOfValues; t++)
       dest[t] = 0;
 
@@ -153,7 +201,7 @@ void SpectralGridDataRepresentationImpl::decodeValues(Message *message,T::ParamV
     {
       AutoThreadLock lock(&AEC_threadLock);
 
-      struct aec_stream strm;
+      struct aec_stream strm{};
       strm.bits_per_sample = bits_per_value;
 
       strm.block_size = 32;
@@ -237,39 +285,7 @@ void SpectralGridDataRepresentationImpl::decodeValues(Message *message,T::ParamV
 
     BitArrayReader bitArrayReader((unsigned char*)dest,outputBytes*8);
 
-    if (bitmapSizeInBytes > 0)
-    {
-      T::Data_ptr bmap = bitmap;
-      unsigned char tmp = 0;
-      if (bmap == nullptr)
-        bmap = &tmp;
-
-      BitArrayReader bitmapReader(bmap,bitmapSizeInBytes*8);
-      for (std::uint32_t i = 0; i < numOfValues; i++)
-      {
-        if (bitmapReader.readBit())
-        {
-          uint value = 0;
-          bitArrayReader.readBits(bits,value);
-          double val = RDfac + value * EDfac;
-          decodedValues.emplace_back(val);
-        }
-        else
-        {
-          decodedValues.emplace_back(ParamValueMissing);
-        }
-      }
-    }
-    else
-    {
-      for (std::uint32_t i = 0; i < numOfValues; i++)
-      {
-        uint value = 0;
-        bitArrayReader.readBits(bits,value);
-        double val = RDfac + value * EDfac;
-        decodedValues.emplace_back(val);
-      }
-    }
+    unpackScaledValues(bitArrayReader,bits,bitmap,bitmapSizeInBytes,numOfValues,RDfac,EDfac,decodedValues);
 
     delete [] dest;
   }

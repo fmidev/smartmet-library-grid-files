@@ -23,11 +23,13 @@ class BitArrayReader
      *  \param[in] numberOfBits  Total number of readable bits. */
                BitArrayReader(const unsigned char *data,UInt64 numberOfBits);
     virtual    ~BitArrayReader();
+    BitArrayReader(const BitArrayReader&) = default;
+    BitArrayReader& operator=(const BitArrayReader&) = default;
 
     /*! \brief Return the total number of bits in the buffer. */
-    UInt64     getNumberOfBits();
+    UInt64     getNumberOfBits() const;
     /*! \brief Return the current bit read position. */
-    UInt64     getReadPosition();
+    UInt64     getReadPosition() const;
     /*! \brief Set the current bit read position.
      *  \param[in] readPosition  New position (zero-based bit index). */
     void       setReadPosition(UInt64 readPosition);
@@ -65,7 +67,7 @@ class BitArrayReader
 
     /*! \brief Read and return one bit, advancing the read position.
      *  \return True if the bit is 1; false if 0. */
-    inline bool readBit()
+    bool readBit()
     {
       try
       {
@@ -85,10 +87,7 @@ class BitArrayReader
 
         mReadPosition++;
 
-        if ((1 << bit) & mData[byt])
-          return true;
-
-        return false;
+        return ((1 << bit) & mData[byt]) != 0;
       }
       catch (...)
       {
@@ -97,7 +96,7 @@ class BitArrayReader
     }
 
     /*! \brief Read one bit without bounds checking (faster inner-loop variant). */
-    inline bool readBitNoCheck()
+    bool readBitNoCheck()
     {
       try
       {
@@ -106,10 +105,7 @@ class BitArrayReader
 
         mReadPosition++;
 
-        if ((1 << bit) & mData[byt])
-          return true;
-
-        return false;
+        return ((1 << bit) & mData[byt]) != 0;
       }
       catch (...)
       {
@@ -121,7 +117,7 @@ class BitArrayReader
     /*! \brief Read \p numberOfBits bits and return an unsigned int value.
      *  \param[in]  numberOfBits  Number of bits to read (1–32).
      *  \param[out] value         Receives the decoded unsigned value. */
-    inline void readBits(unsigned int numberOfBits,unsigned int& value)
+    void readBits(unsigned int numberOfBits,unsigned int& value)
     {
       try
       {

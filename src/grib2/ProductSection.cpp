@@ -58,6 +58,7 @@
 #include "implementation/Product_73Impl.h"
 
 #include <iostream>
+#include <utility>
 #include <macgyver/StringConversion.h>
 
 namespace SmartMet
@@ -119,9 +120,7 @@ ProductSection::ProductSection(const ProductSection& other)
 
 /*! \brief The destructor of the class. */
 
-ProductSection::~ProductSection()
-{
-}
+ProductSection::~ProductSection() = default;
 
 
 
@@ -241,6 +240,8 @@ bool ProductSection::getProperty(uint propertyId,Int64& value)
       case Property::ProductSection::NV:
         value = *mNV;
         return true;
+      default:
+        break;
     }
 
     if (mProductDefinition)
@@ -305,6 +306,8 @@ bool ProductSection::setProperty(uint propertyId,Int64 value)
       case Property::ProductSection::NV:
         setNV(value);
         return true;
+      default:
+        break;
     }
 
     if (mProductDefinition)
@@ -354,7 +357,7 @@ void ProductSection::read(MemoryReader& memoryReader)
 
     if (mProductDefinitionTemplateNumber)
     {
-      auto productDefinition = createProductDefinition((*mProductDefinitionTemplateNumber));
+      auto *productDefinition = createProductDefinition((*mProductDefinitionTemplateNumber));
       if (productDefinition == nullptr)
       {
         Fmi::Exception exception(BCP,"Product definition template not supported!");
@@ -592,7 +595,7 @@ T::TimeString ProductSection::getForecastTime(T::TimeString referenceTime) const
     if (mProductDefinition == nullptr)
       throw Fmi::Exception(BCP,"The 'mProductDefinition' attribute points to nullptr!");
 
-    return mProductDefinition->getForecastTime(referenceTime);
+    return mProductDefinition->getForecastTime(std::move(referenceTime));
   }
   catch (...)
   {
@@ -608,7 +611,7 @@ T::TimeString ProductSection::getForecastTime(T::TimeString referenceTime) const
 
 /*! \brief The method returns the GRIB parameter category. */
 
-const T::UInt8_opt ProductSection::getGribParameterCategory() const
+T::UInt8_opt ProductSection::getGribParameterCategory() const
 {
   try
   {
@@ -630,7 +633,7 @@ const T::UInt8_opt ProductSection::getGribParameterCategory() const
 
 /*! \brief The method returns the GRIB parameter number. */
 
-const T::UInt8_opt ProductSection::getGribParameterNumber() const
+T::UInt8_opt ProductSection::getGribParameterNumber() const
 {
   try
   {
@@ -982,6 +985,8 @@ ProductDefinition* ProductSection::createProductDefinition(std::uint16_t product
 
       case Template::Product_73:
         return new Product_73Impl();
+      default:
+        break;
     }
 
     return nullptr;

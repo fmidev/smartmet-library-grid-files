@@ -10,9 +10,7 @@ namespace GRIB2
 
 /*! \brief The constructor of the class. */
 
-ProcessedHovmollerProductImpl::ProcessedHovmollerProductImpl()
-{
-}
+ProcessedHovmollerProductImpl::ProcessedHovmollerProductImpl() = default;
 
 
 
@@ -20,10 +18,7 @@ ProcessedHovmollerProductImpl::ProcessedHovmollerProductImpl()
 
 /*! \brief The copy constructor of the class. */
 
-ProcessedHovmollerProductImpl::ProcessedHovmollerProductImpl(const ProcessedHovmollerProductImpl& other)
-:ProcessedHovmollerProduct(other)
-{
-}
+ProcessedHovmollerProductImpl::ProcessedHovmollerProductImpl(const ProcessedHovmollerProductImpl& other) = default;
 
 
 
@@ -31,9 +26,7 @@ ProcessedHovmollerProductImpl::ProcessedHovmollerProductImpl(const ProcessedHovm
 
 /*! \brief The destructor of the class. */
 
-ProcessedHovmollerProductImpl::~ProcessedHovmollerProductImpl()
-{
-}
+ProcessedHovmollerProductImpl::~ProcessedHovmollerProductImpl() = default;
 
 
 

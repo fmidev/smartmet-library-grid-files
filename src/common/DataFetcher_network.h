@@ -16,7 +16,7 @@ struct Response
   uint maxSize;  //!< Allocated capacity of \p data
 };
 
-typedef std::map<std::string,Client_ptr_vec> Client_vecmap;
+using Client_vecmap = std::map<std::string,Client_ptr_vec>;
 
 
 
@@ -33,23 +33,25 @@ class DataFetcher_network : public DataFetcher
 {
   public:
                   DataFetcher_network();
-    virtual       ~DataFetcher_network();
+    ~DataFetcher_network() override;
+    DataFetcher_network(const DataFetcher_network&) = delete;
+    DataFetcher_network& operator=(const DataFetcher_network&) = delete;
 
     //! \overload DataFetcher::getData()
-    int           getData(uint serverType,uint protocol,const char *server,const char *filename,std::size_t filePosition,int dataSize,char *dataPtr);
+    int           getData(uint serverType,uint protocol,const char *server,const char *filename,std::size_t filePosition,int dataSize,char *dataPtr) override;
     //! \overload DataFetcher::getFileList()
-    void          getFileList(uint serverType,uint protocol,const char *server,const char *dir,std::vector<std::string> &filePatterns,std::vector<FileRec>& fileList);
+    void          getFileList(uint serverType,uint protocol,const char *server,const char *dir,std::vector<std::string> &filePatterns,std::vector<FileRec>& fileList) override;
     //! \overload DataFetcher::getFileSize()
-    Int64         getFileSize(uint serverType,uint protocol,const char *server,const char *filename);
+    Int64         getFileSize(uint serverType,uint protocol,const char *server,const char *filename) override;
     //! \overload DataFetcher::getFileHeaders()
-    void          getFileHeaders(uint serverType,uint protocol,const char *server,const char *filename,std::map<std::string,std::string>& headers);
+    void          getFileHeaders(uint serverType,uint protocol,const char *server,const char *filename,std::map<std::string,std::string>& headers) override;
 
   protected:
 
     Client*       newClient(uint protocol);
     Client*       getClient(const char *serverAddress,uint serverType,uint protocol);
-    bool          getFileList(uint protocol,const char *server,XmlElement& rootElement,std::vector<std::string> &filePatterns,std::vector<FileRec>& fileList,std::string& lastKey);
-    void          getFileList_S3(uint protocol,const char *server,const char *dir,std::vector<std::string> &filePatterns,std::vector<FileRec>& fileList);
+    bool          getFileList(uint protocol,const char *server,const XmlElement& rootElement,const std::vector<std::string> &filePatterns,std::vector<FileRec>& fileList,std::string& lastKey);
+    void          getFileList_S3(uint protocol,const char *server,const char *dir,const std::vector<std::string> &filePatterns,std::vector<FileRec>& fileList);
 
     ThreadLock    mThreadLock; //!< Guards the client pool
     Client_vecmap mClients;    //!< Reusable HTTP client pool keyed by server type

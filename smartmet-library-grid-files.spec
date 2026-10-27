@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 26.9.16
+Version: 26.10.26
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -21,11 +21,11 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %endif
 
 BuildRequires: rpm-build
-BuildRequires: smartmet-utils-devel >= 26.6.24
-BuildRequires: smartmet-library-newbase-devel >= 26.6.26
-BuildRequires: smartmet-library-spine-devel >= 26.7.10
-BuildRequires: smartmet-library-macgyver-devel >= 26.9.16
-BuildRequires: smartmet-library-trax-devel >= 26.6.26
+BuildRequires: smartmet-utils-devel >= 26.9.3
+BuildRequires: smartmet-library-newbase-devel >= 26.10.16
+BuildRequires: smartmet-library-spine-devel >= 26.10.16
+BuildRequires: smartmet-library-macgyver-devel >= 26.10.16
+BuildRequires: smartmet-library-trax-devel >= 26.10.16
 BuildRequires: %{smartmet_boost}-devel
 BuildRequires: gcc-c++
 BuildRequires: gdal312-devel
@@ -50,11 +50,23 @@ Requires: libaec
 Requires: libcurl
 Requires: openjpeg2
 Requires: libwebp13 >= 1.3.2
-Requires: smartmet-library-newbase >= 26.6.26
-Requires: smartmet-library-macgyver >= 26.9.16
-Requires: smartmet-library-spine >= 26.7.10
-Requires: smartmet-library-trax >= 26.6.26
+Requires: smartmet-library-newbase >= 26.10.17
+Requires: smartmet-library-macgyver >= 26.10.17
+Requires: smartmet-library-spine >= 26.10.17
+Requires: smartmet-library-trax >= 26.10.17
 Requires: smartmet-topography-data >= 1.0.0
+#TestRequires: %{smartmet_boost}-devel
+#TestRequires: gcc-c++
+#TestRequires: make
+#TestRequires: gdal312-devel
+#TestRequires: geos313-devel
+#TestRequires: libwebp13-devel >= 1.3.2
+#TestRequires: smartmet-library-macgyver-devel >= 26.10.16
+#TestRequires: smartmet-library-newbase-devel >= 26.10.16
+#TestRequires: smartmet-library-spine-devel >= 26.10.16
+#TestRequires: smartmet-library-trax-devel >= 26.10.16
+#TestRequires: smartmet-test-data >= 26.8.26
+#TestRequires: smartmet-qdtools-test-data >= 26.7.9
 
 %description
 FMI Grid File handling library
@@ -84,9 +96,9 @@ rm -rf $RPM_BUILD_ROOT
 Summary: FMI Grid File library development files
 Provides: %{SPECNAME}-devel
 Requires: %{SPECNAME} = %{version}-%{release}
-Requires: smartmet-library-newbase-devel >= 26.6.26
+Requires: smartmet-library-newbase-devel >= 26.10.16
 Requires: smartmet-library-spine-devel
-Requires: smartmet-library-macgyver-devel >= 26.9.16
+Requires: smartmet-library-macgyver-devel >= 26.10.16
 Requires: smartmet-library-trax-devel
 Requires: %{smartmet_boost}-devel
 Requires: libcurl-devel
@@ -99,7 +111,163 @@ FMI Grid File library development files
 %defattr(0664,root,root,0775)
 %{_includedir}/smartmet/%{DIRNAME}
 
+%package -n %{SPECNAME}-test
+Summary: Grid configuration and Redis content for testing the grid libraries, engine and plugins
+Requires: %{SPECNAME} = %{version}-%{release}
+Provides: smartmet-engine-grid-test = %{version}-%{release}
+Obsoletes: smartmet-engine-grid-test < 26.10.6
+
+%description -n %{SPECNAME}-test
+Grid configuration (grid-files, grid engine) and a Redis content database for testing the grid
+libraries, the grid engine and the plugins using it
+
+%files -n %{SPECNAME}-test
+%defattr(0664,root,root,0775)
+%{_datadir}/smartmet/test/grid
+%attr(0755,root,root) %{_bindir}/smartmet-grid-test-config-creator
+%attr(0755,root,root) %{_bindir}/smartmet-grid-test-redis
+
 %changelog
+* Mon Oct 26 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.26-1.fmi
+- Grid test fixture: producer pal_ensemble (grib/pal_ensemble of smartmet-test-data 26.10.26), an
+  ensemble control forecast and two perturbed members in one generation
+
+* Tue Oct 20 2026 Andris Pavēnis <andris.pavenis@fmi.fi> 26.10.20-2.fmi
+- Test configuration generator fix
+
+* Tue Oct 20 2026 Andris Pavēnis <andris.pavenis@fmi.fi> 26.10.20-1.fmi
+- Use UNIX socket with Valkey/Redis databse for tests
+
+* Sun Oct 18 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.18-1.fmi
+- png_load: close the file when the PNG cannot be decoded
+
+* Sat Oct 17 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.17-1.fmi
+- GRIB2 complex packing with spatial differencing: the non-missing value count read from the
+  message is bounded by the number of values
+- Grid test fixture: MEPS on 65 hybrid levels around Helsinki (producer meps_ml, geometry
+  5910) with pressure, temperature, dewpoint, humidity and wind on each level, for soundings
+- Remove the unused Int64 linearInterpolation overload
+- GridDef: extract the CSV field splitting shared by the definition file loaders
+- GRID::Message::getGridValueByGridPoint: index the grid modification parameters by the grid width
+- linearInterpolation: fix mirrored weights in the border interpolation
+- MemoryMapper: guard the mapping index, do not mark an unrelated mapping as failed
+- Streamlines: never loop forever with small steps
+- getFileList: identify visited directories by their real path and free it
+- ConfigurationFile: add the missing separator to relative @include paths
+- NetCdfFile: do not add padding bytes to byte attributes, report the right indicator
+- getGridValueListByCircle: apply the value modification for lat/lon circles
+- Split functions with a cognitive complexity above 25 into smaller helpers, no functional changes
+- ABI change: new or changed members in installed headers, dependent packages must be rebuilt
+- Isolines and isobands are computed again when no coordinate vector is given (grid
+  coordinates, contour.coordinateType = GRID_COORDINATES); since 2024-10 they were always empty
+
+* Fri Oct 16 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.16-1.fmi
+- PRINT_DATA, PRINT_EVENT_LINE and PRINT_EVENT expand to expressions calling new Log members with
+  printf format checking; the unused PRINT_FILE macro is removed
+- Removed the unused localTimeToUtcTime and utcTimeToLocalTime
+- Fixed compiler warnings and clang-tidy findings (unused code, unreachable code, empty statements, member initialization, parameter passing, noexcept), no functional changes
+- ABI change: parameters passed by const reference or by value, removed unused members and defaulted copy operations, dependent packages must be rebuilt
+
+* Thu Oct 15 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.15-1.fmi
+- Declare member functions and parameters const where nothing is modified (const correctness), no functional changes
+- The generated GRIB definition setters take their settings by const reference (PHP generators updated too)
+- Requires 26.10.15 versions of newbase, spine due to their ABI changes
+- Fixed an out-of-range read in GaussianLatitudeCache::getClosestLatitudes for the last latitude, zero-initialized the complex and second order packing value buffers, check JPEG-2000 components for null and stop log rotation if the new log file cannot be opened
+- Fixed data races: GridDef read its last definition check time and the file handle cache its last cleanup time without holding the lock
+- Fixed a stack overflow in png_load into a vector for images with more than one pixel, and zero-initialize the alpha channel of RGB images in png_load into a CImage
+- Fixed mechanical clang-tidy findings (internal linkage, unused parameters, initialization, redundant code), no functional changes
+- Fixed clang-tidy style findings (loops, nested conditionals, dead code)
+- copyFile now fails on write errors instead of ignoring them
+- Fixed clang-tidy correctness findings (member initialization, rule of five, printf formats, dead stores)
+- PNG write errors are reported instead of terminating the process, and the PNG writer no longer leaks
+- TcpClient resolves addresses with the thread safe getaddrinfo
+
+* Sun Oct 11 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.11-1.fmi
+- Failed file writes, closes and seeks are now reported instead of being ignored
+- Generated GRIB definition classes: override, defaulted copy/move, no sprintf into a fixed buffer for attribute names
+- The definition class generators run on PHP 8 and read the definitions from the given directory
+- Use auto and return {} where clang-tidy suggests it, no functional changes
+- Mark overriding methods override and use nullptr, no functional changes
+- Use = default and using declarations where clang-tidy suggests it, no functional changes
+- Remove redundant void parameter lists and use bool literals, no functional changes
+- Use emplace and C++ standard library headers where clang-tidy suggests it, no functional changes
+- Use raw string literals and std::make_shared where clang-tidy suggests it, no functional changes
+- Use range-based for loops where clang-tidy suggests it, no functional changes
+- Parenthesize macro arguments where clang-tidy suggests it
+
+* Thu Oct  8 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.8-2.fmi
+- GRIB2 Lambert azimuthal equal area grids report their metric cell size in kilometres
+  like the other projections, not in metres (BRAINSTORM-3518)
+
+* Tue Oct  6 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.6-1.fmi
+- New smartmet-library-grid-files-test package with the grid test configuration and
+  smartmet-grid-test-config-creator, moved here from smartmet-engine-grid-test so that
+  grid-content tests no longer depend on the grid engine
+
+* Sat Oct 03 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.3-2.fmi
+- QueryData geometries are identified with the exact grid step (rounded only to the precision
+  of the geometry configuration). The step used to be truncated to whole metres in metric
+  projections and divided by the number of columns instead of intervals in latlon projections,
+  so the coordinates drifted from those of the data (up to a grid cell at the far edge)
+- Configuration lines made by older versions still match; the reader then prints the exact
+  replacement line once per geometry, as it does when the configured earth radius differs
+  from that of the data
+- The suggested line for a missing QueryData geometry includes the earth axes of the data
+
+* Sat Oct 03 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.3-1.fmi
+- Mercator grids no longer return inf coordinates (wrong latitude of origin)
+- Rotated latlon grid point searches no longer round coordinates to 0.01 degrees, which moved
+  the result by up to half a grid cell on fine grids
+- Fixed increments derived from the first and last grid points (n vs n-1, GRIB1 units) and made
+  GRIB1 rotated latlon coordinates and grid point searches use the same increments
+- GRIB1 latlon increments are refined from the first and last grid points, removing a drift of
+  up to a grid cell caused by the millidegree rounding of the coded increments
+- Points on the first row or column are no longer reported outside the grid due to round-off
+- GRIB2 files with reduced grids (optional list of numbers of points) can be read
+- GRIB1 second order packing written by ecCodes is decoded
+- GRIB1 Gaussian grids return coordinates by grid point
+- Nearest time interpolation of point values no longer always chooses the earlier time
+- Bounded GRIB2 repeated field and point list lengths by the data (found by fuzzing)
+- GeoTIFF metadata is read into a heap buffer instead of a stack array sized by the file
+- Tests use Boost.Test, run in CI and fail when their fixtures are missing; new tests decode
+  synthetic GRIB1/GRIB2 files of all common grid types and packings against ecCodes, and
+  round-trip coordinates for every configured geometry
+
+* Fri Oct 02 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.2-1.fmi
+- Use Fmi::Cache::Cache again instead of Fmi::Cache::ClockCache, which was removed from macgyver
+  26.10.2 since Fmi::Cache::Cache now uses the same CLOCK eviction. CLOCK is faster than LRU since
+  a cache hit only takes a shared lock
+- Removed GridCache.h and the GRID_FILES_LRU_CACHE build option
+
+* Sat Sep 26 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.9.26-2.fmi
+- Security: hardened GRIB decoders against crafted messages (heap overflow / OOB reads).
+  Enforce that GRIB2 complex-packing group sizes sum to the declared value count, bound
+  GRIB2 bitmap reads by the bitmap length, bound JPEG-2000 sample reads by the image size,
+  bound the PNG read callback by the input buffer, replace GRIB1 second-order stack VLAs
+  with heap vectors and validate the group/differencing descriptors, and guard nx*ny
+  overflow in the value count.
+
+* Sat Sep 26 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.9.26-1.fmi
+- Use Fmi::Cache::ClockCache for the internal caches: find() no longer takes an exclusive lock,
+  which removes lock contention on repeated point transformations (3.2x faster point queries
+  with 16 threads). Build with -DGRID_FILES_LRU_CACHE to use the LRU Fmi::Cache::Cache instead
+- Requires macgyver 26.9.26 for ClockCache
+
+* Fri Sep 25 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.9.25-1.fmi
+- Fixed misspelt attribute keys set by MessageProcessing (contour.interpolationt.type,
+  grid.ogiginal.relativeUV)
+- Removed a redundant madvise(MADV_DONTDUMP) call; Fmi::MappedFile already applies it
+
+* Wed Sep 23 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.9.23-1.fmi
+- Repackaged since moving from boost::shared_lock to std::shared_lock
+
+* Wed Sep 23 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.9.23-1.fmi
+- Faster area queries (getGridValueListByCircle/Polygon): grid point coordinates are now transformed in one batch instead of one point at a time, avoiding per-point cache lookups, locks and PROJ calls
+- Latlon circle queries cache the grid points inside the circle per geometry, so all times, levels and parameters of the same model share them
+- New virtual method getGridLatLonCoordinatesByGridPointList (ABI change)
+- Fixed getGridValuesByPointList returning extra or missing values for out-of-grid points
+- Fixed a data race in CoordinateConverter transformation slot selection
+
 * Wed Sep 16 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.9.16-1.fmi
 - Repackaged due to Fmi::Cache::Cache locking changes
 - Fixed the build and devel dependencies to require smartmet-library-macgyver-devel

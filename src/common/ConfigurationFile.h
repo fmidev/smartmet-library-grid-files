@@ -31,6 +31,8 @@ class ConfigurationFile
      *  \param[in] filename  Path to the configuration file. */
                   ConfigurationFile(const std::string& filename);
     virtual       ~ConfigurationFile();
+    ConfigurationFile(const ConfigurationFile&) = default;
+    ConfigurationFile& operator=(const ConfigurationFile&) = default;
 
     /*! \brief Remove all loaded attributes. */
     void          clear();
@@ -76,7 +78,7 @@ class ConfigurationFile
     bool          getSubAttributes(const char *attributeName,std::vector<std::string>& attributeNames);
 
     /*! \brief Return the path of the primary configuration file. */
-    std::string   getFilename();
+    std::string   getFilename() const;
 
     /*! \brief Return the number of elements in an array attribute.
      *  \param[in] attributeName  Array path.
@@ -86,7 +88,7 @@ class ConfigurationFile
     /*! \brief Set or overwrite an attribute value at runtime.
      *  \param[in] attributeName   Dot-separated attribute path.
      *  \param[in] attributeValue  New value string. */
-    void          setAttributeValue(const char *attributeName,std::string& attributeValue);
+    void          setAttributeValue(const char *attributeName,const std::string& attributeValue);
 
     /*! \brief Check whether an attribute exists without retrieving its value.
      *  \param[in] attributeName  Attribute path to test.
@@ -113,11 +115,17 @@ class ConfigurationFile
     std::string   parseValue(const std::string& value);
     std::string   parseConstValue(const std::string& value);
 
-    void          removeComments(char *st,UInt64 *positions,char *newst,UInt64 *newpositions,int len);
-    void          setPositions(char *st,UInt64 *positions,int len);
+    void          removeComments(const char *st,const UInt64 *positions,char *newst,UInt64 *newpositions,int len);
+    void          setPositions(const char *st,UInt64 *positions,int len);
     void          getWords(char *st,UInt64 *positions,std::vector<std::string>& words,std::vector<UInt64>& wordPositions);
     int           readValue(std::vector<std::string>& words,std::vector<UInt64>& wordPositions,int len,int pos,const std::string& path);
     int           readAttribute(std::vector<std::string>& words,std::vector<UInt64>& wordPositions,int len,int pos,const std::string& path,int index);
+    int           readStructure(std::vector<std::string>& words,std::vector<UInt64>& wordPositions,int len,int pos,const std::string& path);
+    int           readList(std::vector<std::string>& words,std::vector<UInt64>& wordPositions,int len,int pos,const std::string& path);
+    int           readArray(std::vector<std::string>& words,std::vector<UInt64>& wordPositions,int len,int pos,const std::string& path);
+    uint          firstFreeArrayIndex(const std::string& path);
+    void          includeConfigurationFile(std::vector<std::string>& words,std::vector<UInt64>& wordPositions,int pos);
+    int           readConditional(std::vector<std::string>& words,std::vector<UInt64>& wordPositions,int len,int pos,bool ifndef);
 
   public:
 

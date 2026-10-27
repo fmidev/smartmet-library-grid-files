@@ -22,6 +22,8 @@ class NetCdfParameterDef
 
                   NetCdfParameterDef();
     virtual       ~NetCdfParameterDef();
+    NetCdfParameterDef(const NetCdfParameterDef&) = default;
+    NetCdfParameterDef& operator=(const NetCdfParameterDef&) = default;
 
     /*! \brief Write a human-readable dump to \p stream (for debugging). */
     void          print(std::ostream& stream,uint level,uint optionFlags) const;
@@ -31,9 +33,9 @@ class NetCdfParameterDef
     std::string   mParameterUnits; //!< Physical units (e.g. "K", "m/s")
 };
 
-typedef const NetCdfParameterDef* NetCdfParamDef_cptr;                               //!< Non-owning const pointer
-typedef std::vector<NetCdfParameterDef> NetCdfParamDef_vec;                          //!< Ordered list of NetCDF parameter definitions
-typedef std::unordered_map<std::string,NetCdfParameterDef> NetCdfParamDef_umap;      //!< Hash map keyed by NetCDF variable name
+using NetCdfParamDef_cptr = const NetCdfParameterDef*;                               //!< Non-owning const pointer
+using NetCdfParamDef_vec = std::vector<NetCdfParameterDef>;                          //!< Ordered list of NetCDF parameter definitions
+using NetCdfParamDef_umap = std::unordered_map<std::string,NetCdfParameterDef>;      //!< Hash map keyed by NetCDF variable name
 
 
 }

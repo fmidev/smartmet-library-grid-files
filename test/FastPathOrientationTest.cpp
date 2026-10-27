@@ -13,33 +13,27 @@
 // orientation while leaving the longitude handling correct.
 //
 // The test needs the ECMWF global thunderstorm-probability grid from smartmet-test-data
-// and a grid-files configuration with FMI geometry definitions (provided by the
-// smartmet-engine-grid-test fixtures). It SKIPS (does not fail) when either is absent so
-// it never breaks builds on hosts without the test fixtures installed.
+// and the FMI geometry definitions in ../cfg.
 
+#define BOOST_TEST_MODULE FastPathOrientationTest
+#include <boost/test/included/unit_test.hpp>
+
+#include "TestCommon.h"
 #include "../src/grid/GridFile.h"
 #include "../src/grid/Message.h"
 #include "../src/common/AttributeList.h"
 #include "../src/identification/GridDef.h"
 
-#include <sys/stat.h>
-#include <cstdio>
 #include <cstdlib>
 #include <string>
 #include <vector>
 
 using namespace SmartMet;
+using namespace GridTest;
 
 namespace
 {
-const char *CONFIG = "/usr/share/smartmet/test/grid/library/grid-files.conf";
-const char *GRIB = "/usr/share/smartmet/test/data/grib/ecgmta/ecgmta_pot_prcnt.grib";
-
-bool exists(const char *path)
-{
-  struct stat st;
-  return stat(path, &st) == 0 && st.st_size > 0;
-}
+const std::string GRIB = testData("grib/ecgmta/ecgmta_pot_prcnt.grib");
 
 std::vector<double> parseCsv(const char *s)
 {
@@ -62,84 +56,42 @@ std::vector<double> parseCsv(const char *s)
 }
 }  // namespace
 
-int main()
+BOOST_AUTO_TEST_CASE(fast_path_llbox_runs_south_to_north, *fixtures({CONFIG, GRIB}))
 {
-  if (!exists(CONFIG) || !exists(GRIB))
-  {
-    printf("SKIP FastPathOrientationTest: test fixtures not installed\n");
-    printf("      need %s\n      need %s\n", CONFIG, GRIB);
-    return 0;
-  }
+  requireFixture(CONFIG);
+  requireFixture(GRIB);
 
-  try
-  {
-    Identification::gridDef.init(CONFIG);
+  withFmiErrors(
+      []
+      {
+        Identification::gridDef.init(CONFIG);
 
-    GRID::GridFile gf;
-    gf.read(std::string(GRIB));
+        GRID::GridFile gf;
+        gf.read(GRIB);
+        BOOST_TEST_REQUIRE(gf.getNumberOfMessages() > 0);
 
-    if (gf.getNumberOfMessages() == 0)
-    {
-      fprintf(stderr, "FAIL FastPathOrientationTest: no messages in grib\n");
-      return 1;
-    }
+        GRID::Message *msg = gf.getMessageByIndex(0);
+        T::Dimensions d = msg->getGridDimensions();
+        T::GeometryId geomId = msg->getGridGeometryId();
 
-    GRID::Message *msg = gf.getMessageByIndex(0);
-    T::Dimensions d = msg->getGridDimensions();
-    T::GeometryId geomId = msg->getGridGeometryId();
+        BOOST_TEST_REQUIRE(msg->reverseYDirection(),
+                           "expected a north-to-south stored grid; fixture changed?");
 
-    if (!msg->reverseYDirection())
-    {
-      fprintf(stderr,
-              "FAIL FastPathOrientationTest: expected a north-to-south stored grid "
-              "(reverseYDirection); fixture changed?\n");
-      return 1;
-    }
+        // Drive the direct-copy fast path: crs=data + matching geometryId.
+        T::AttributeList attr;
+        attr.setAttribute("grid.crs", "data");
+        attr.setAttribute("grid.geometryId", std::to_string((int)geomId).c_str());
 
-    // Drive the direct-copy fast path: crs=data + matching geometryId.
-    T::AttributeList attr;
-    attr.setAttribute("grid.crs", "data");
-    attr.setAttribute("grid.geometryId", std::to_string((int)geomId).c_str());
+        T::ParamValue_vec values;
+        msg->getGridValueVectorByGeometry(attr, values);
 
-    T::ParamValue_vec values;
-    msg->getGridValueVectorByGeometry(attr, values);
+        BOOST_TEST_REQUIRE(values.size() == (size_t)d.nx() * d.ny());
 
-    if (values.size() != (size_t)d.nx() * d.ny())
-    {
-      fprintf(stderr,
-              "FAIL FastPathOrientationTest: fast path returned %zu values, expected %u\n",
-              values.size(), d.nx() * d.ny());
-      return 1;
-    }
+        auto b = parseCsv(attr.getAttributeValue("grid.llbox"));
+        BOOST_TEST_REQUIRE(b.size() == 4U, "could not parse grid.llbox");
 
-    auto b = parseCsv(attr.getAttributeValue("grid.llbox"));
-    if (b.size() != 4)
-    {
-      fprintf(stderr, "FAIL FastPathOrientationTest: could not parse grid.llbox\n");
-      return 1;
-    }
-
-    const double firstLat = b[1];
-    const double lastLat = b[3];
-
-    if (firstLat >= lastLat)
-    {
-      fprintf(stderr,
-              "FAIL FastPathOrientationTest: grid.llbox latitudes run north-to-south "
-              "(%.3f -> %.3f) while the data rows were flipped to south-to-north; the "
-              "download output would be vertically flipped\n",
-              firstLat, lastLat);
-      return 1;
-    }
-
-    printf("PASS FastPathOrientationTest: geometryId=%d %ux%u, grid.llbox lat %.3f -> %.3f "
-           "(south-to-north), consistent with the row-flipped data\n",
-           (int)geomId, d.nx(), d.ny(), firstLat, lastLat);
-    return 0;
-  }
-  catch (const std::exception &e)
-  {
-    fprintf(stderr, "FAIL FastPathOrientationTest: exception: %s\n", e.what());
-    return 1;
-  }
+        // The data rows were flipped to south-to-north, so must the reported latitudes be.
+        // Otherwise the download output would be vertically flipped.
+        BOOST_TEST(b[1] < b[3]);
+      });
 }

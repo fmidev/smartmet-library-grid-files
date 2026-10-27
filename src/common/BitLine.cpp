@@ -4,6 +4,8 @@
 
 #include <memory.h>
 
+#include <algorithm>
+
 namespace SmartMet
 {
 
@@ -37,7 +39,7 @@ BitLine::BitLine(uchar *bits,uint numOfBits)
     changeCount = 0;
     length = 0;
 
-    setValue(bits,numOfBits);
+    BitLine::setValue(bits,numOfBits);
   }
   catch (...)
   {
@@ -79,8 +81,7 @@ BitLine::BitLine(BitLine& bitLine)
 
 BitLine::~BitLine()
 {
-  if (changes)
-    delete[] changes;
+  delete[] changes;
 }
 
 
@@ -91,6 +92,8 @@ BitLine::~BitLine()
 
 void BitLine::operator=(BitLine& bitLine)
 {
+  if (&bitLine == this)
+    return;
   try
   {
     if (changes)
@@ -144,10 +147,7 @@ bool BitLine::isAllZeros()
 {
   try
   {
-    if (changeCount == 0 || changes == nullptr)
-      return true;
-
-    return false;
+    return changeCount == 0 || changes == nullptr;
   }
   catch (...)
   {
@@ -345,8 +345,7 @@ uint BitLine::getMaxChange()
     for (uint t=0; t<changeCount; t++)
     {
       uint diff = changes[t] - prevChange;
-      if (diff > maxChange)
-        maxChange = diff;
+      maxChange = std::max(diff, maxChange);
 
       prevChange = changes[t];
     }
@@ -463,7 +462,7 @@ void BitLine::readFromFile(const char *filename)
       throw exception;
     }
     readFromFile(file);
-    fclose(file);
+    (void)fclose(file);
   }
   catch (...)
   {
@@ -540,12 +539,16 @@ void BitLine::writeToFile(const char *filename)
       throw exception;
     }
 
-    fwrite(&length,4,1,file);
-    fwrite(&changeCount,4,1,file);
+    if (fwrite(&length,4,1,file) != 1)
+      throw Fmi::Exception(BCP,"Failed to write the file");
+    if (fwrite(&changeCount,4,1,file) != 1)
+      throw Fmi::Exception(BCP,"Failed to write the file");
     if (changeCount > 0)
-      fwrite(changes,4,changeCount,file);
+      if (fwrite(changes,4,changeCount,file) != changeCount)
+        throw Fmi::Exception(BCP,"Failed to write the file");
 
-    fclose(file);
+    if (fclose(file) != 0)
+      throw Fmi::Exception(BCP,"Failed to close the output file");
   }
   catch (...)
   {
@@ -562,10 +565,13 @@ void BitLine::writeToFile(FILE *file)
 {
   try
   {
-    fwrite(&length,4,1,file);
-    fwrite(&changeCount,4,1,file);
+    if (fwrite(&length,4,1,file) != 1)
+      throw Fmi::Exception(BCP,"Failed to write the file");
+    if (fwrite(&changeCount,4,1,file) != 1)
+      throw Fmi::Exception(BCP,"Failed to write the file");
     if (changeCount > 0)
-      fwrite(changes,4,changeCount,file);
+      if (fwrite(changes,4,changeCount,file) != changeCount)
+        throw Fmi::Exception(BCP,"Failed to write the file");
   }
   catch (...)
   {

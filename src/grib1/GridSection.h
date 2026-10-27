@@ -61,15 +61,16 @@ class GridSection : public GRID::MessageSection
 
                           GridSection();
                           GridSection(const GridSection& other);
-    virtual               ~GridSection();
+    ~GridSection() override;
+    GridSection& operator=(const GridSection&) = default;
 
     // ### Common methods for all message sections
 
-    void                  getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const;
-    T::FilePosition       getFilePosition() const;
-    std::uint32_t         getSectionLength() const;
-    std::string           getSectionName() const;
-    std::uint8_t          getSectionNumber() const;
+    void                  getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const override;
+    T::FilePosition       getFilePosition() const override;
+    std::uint32_t         getSectionLength() const override;
+    std::string           getSectionName() const override;
+    std::uint8_t          getSectionNumber() const override;
 
     // ### Section specific methods
 
@@ -123,7 +124,7 @@ class GridSection : public GRID::MessageSection
 
     void                  read(MemoryReader& memoryReader);
     void                  write(DataWriter& dataWriter);
-    void                  print(std::ostream& stream,uint level,uint optionFlags) const;
+    void                  print(std::ostream& stream,uint level,uint optionFlags) const override;
 
   private:
 
@@ -141,7 +142,7 @@ class GridSection : public GRID::MessageSection
     std::vector<std::uint32_t>  mVerticalCoordinates;  //!< Optional list of vertical coordinate parameters (NV entries).
 
     /*! \brief The length of the section. */
-    std::uint32_t         mSectionLength;
+    std::uint32_t         mSectionLength = 0;
 
     /*! \brief The number of the grid point (calculated when the grid is irregular). */
     std::uint32_t         mNumberOfPoints;
@@ -158,7 +159,7 @@ class GridSection : public GRID::MessageSection
 };
 
 
-typedef std::shared_ptr<GridSection> GridSect_sptr;  //!< Shared ownership pointer to a GridSection.
+using GridSect_sptr = std::shared_ptr<GridSection>;  //!< Shared ownership pointer to a GridSection.
 
 }  // namespace GRIB1
 }  // namespace SmartMet

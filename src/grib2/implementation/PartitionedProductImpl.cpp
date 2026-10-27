@@ -10,9 +10,7 @@ namespace GRIB2
 
 /*! \brief The constructor of the class. */
 
-PartitionedProductImpl::PartitionedProductImpl()
-{
-}
+PartitionedProductImpl::PartitionedProductImpl() = default;
 
 
 
@@ -20,10 +18,7 @@ PartitionedProductImpl::PartitionedProductImpl()
 
 /*! \brief The copy constructor of the class. */
 
-PartitionedProductImpl::PartitionedProductImpl(const PartitionedProductImpl& other)
-:PartitionedProduct(other)
-{
-}
+PartitionedProductImpl::PartitionedProductImpl(const PartitionedProductImpl& other) = default;
 
 
 
@@ -31,9 +26,7 @@ PartitionedProductImpl::PartitionedProductImpl(const PartitionedProductImpl& oth
 
 /*! \brief The destructor of the class. */
 
-PartitionedProductImpl::~PartitionedProductImpl()
-{
-}
+PartitionedProductImpl::~PartitionedProductImpl() = default;
 
 
 
@@ -90,7 +83,7 @@ void PartitionedProductImpl::read(MemoryReader& memoryReader)
         \return               The forecast time.
 */
 
-T::TimeString PartitionedProductImpl::getForecastTime(T::TimeString referenceTime) const
+T::TimeString PartitionedProductImpl::getForecastTime(T::TimeString /*referenceTime*/) const
 {
   throw Fmi::Exception(BCP, "Not implemented!");
 }

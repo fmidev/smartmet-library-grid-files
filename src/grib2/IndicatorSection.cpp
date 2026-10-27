@@ -64,9 +64,7 @@ IndicatorSection::IndicatorSection(const IndicatorSection& other)
 
 /*! \brief The destructor of the class. */
 
-IndicatorSection::~IndicatorSection()
-{
-}
+IndicatorSection::~IndicatorSection() = default;
 
 
 
@@ -130,10 +128,7 @@ bool IndicatorSection::hasAttributeValue(const char *attributeName, const char *
 {
   try
   {
-    if (strcasecmp(attributeName,"discipline") == 0  &&  strcasecmp(attributeValue,toString(getDiscipline()).c_str()) == 0)
-      return true;
-
-    return false;
+    return strcasecmp(attributeName,"discipline") == 0  &&  strcasecmp(attributeValue,toString(getDiscipline()).c_str()) == 0;
   }
   catch (...)
   {
@@ -173,7 +168,7 @@ void IndicatorSection::setMessagePtr(Message *message)
         \return            The method returns true if the value of the requested property was found.
 */
 
-bool IndicatorSection::getProperty(uint propertyId,Int64& value)
+bool IndicatorSection::getProperty(uint propertyId,Int64& value) const
 {
   try
   {
@@ -186,6 +181,8 @@ bool IndicatorSection::getProperty(uint propertyId,Int64& value)
       case Property::IndicatorSection::EditionNumber:
         value = *getEditionNumber();
         return true;
+      default:
+        break;
     }
     return false;
   }
@@ -242,6 +239,8 @@ bool IndicatorSection::setProperty(uint propertyId,Int64 value)
       case Property::IndicatorSection::EditionNumber:
         setEditionNumber(value);
         return true;
+      default:
+        break;
     }
     return false;
   }
@@ -546,7 +545,7 @@ void IndicatorSection::setTotalLength(std::uint64_t totalLength)
         \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void IndicatorSection::print(std::ostream& stream,uint level,uint optionFlags) const
+void IndicatorSection::print(std::ostream& stream,uint level,uint /*optionFlags*/) const
 {
   try
   {

@@ -10,9 +10,7 @@ namespace GRIB2
 
 /*! \brief The constructor of the class. */
 
-SimulatedSatelliteEnsembleProductImpl::SimulatedSatelliteEnsembleProductImpl()
-{
-}
+SimulatedSatelliteEnsembleProductImpl::SimulatedSatelliteEnsembleProductImpl() = default;
 
 
 
@@ -20,10 +18,7 @@ SimulatedSatelliteEnsembleProductImpl::SimulatedSatelliteEnsembleProductImpl()
 
 /*! \brief The copy constructor of the class. */
 
-SimulatedSatelliteEnsembleProductImpl::SimulatedSatelliteEnsembleProductImpl(const SimulatedSatelliteEnsembleProductImpl& other)
-:SimulatedSatelliteEnsembleProduct(other)
-{
-}
+SimulatedSatelliteEnsembleProductImpl::SimulatedSatelliteEnsembleProductImpl(const SimulatedSatelliteEnsembleProductImpl& other) = default;
 
 
 
@@ -31,9 +26,7 @@ SimulatedSatelliteEnsembleProductImpl::SimulatedSatelliteEnsembleProductImpl(con
 
 /*! \brief The destructor of the class. */
 
-SimulatedSatelliteEnsembleProductImpl::~SimulatedSatelliteEnsembleProductImpl()
-{
-}
+SimulatedSatelliteEnsembleProductImpl::~SimulatedSatelliteEnsembleProductImpl() = default;
 
 
 
@@ -90,7 +83,7 @@ void SimulatedSatelliteEnsembleProductImpl::read(MemoryReader& memoryReader)
         \return               The forecast time.
 */
 
-T::TimeString SimulatedSatelliteEnsembleProductImpl::getForecastTime(T::TimeString referenceTime) const
+T::TimeString SimulatedSatelliteEnsembleProductImpl::getForecastTime(T::TimeString /*referenceTime*/) const
 {
   throw Fmi::Exception(BCP, "Not implemented!");
 }

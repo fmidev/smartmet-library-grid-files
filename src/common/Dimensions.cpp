@@ -237,7 +237,7 @@ uint Dimensions::getSize(uint dimension) const
 
 /*! \brief Prints the dimension sizes to the given stream. */
 
-void Dimensions::print(std::ostream& stream,uint level,uint optionFlags) const
+void Dimensions::print(std::ostream& stream,uint level,uint /*optionFlags*/) const
 {
   try
   {

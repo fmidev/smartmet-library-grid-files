@@ -7,9 +7,9 @@
 namespace SmartMet
 {
 
-typedef char* pchar;                                         //!< Mutable C-string pointer
-typedef pchar* StringArray;                                  //!< Array of C-string pointers
-typedef std::unordered_map<std::string,uint> StringIndex;    //!< String → numeric id index
+using pchar = char*;                                         //!< Mutable C-string pointer
+using StringArray = pchar*;                                  //!< Array of C-string pointers
+using StringIndex = std::unordered_map<std::string,uint>;    //!< String → numeric id index
 
 // ====================================================================================
 /*! \brief Thread-safe string intern table.
@@ -27,6 +27,8 @@ class StringFactory
   public:
                   StringFactory();
                   ~StringFactory();
+                  StringFactory(const StringFactory&) = delete;
+                  StringFactory& operator=(const StringFactory&) = delete;
 
     /*! \brief Intern a string and return its numeric identifier.
      *  \param[in] str  C-string to intern.
@@ -34,7 +36,7 @@ class StringFactory
     uint          create(const char *str);
 
     //! \overload
-    uint          create(std::string str);
+    uint          create(const std::string& str);
 
     /*! \brief Return the interned string for the given id.
      *  \param[in] index  Numeric id returned by create().

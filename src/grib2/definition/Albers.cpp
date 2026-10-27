@@ -28,8 +28,7 @@ Albers::Albers() {
 
 /*! \brief The destructor of the class. */
 
-Albers::~Albers() {
-}
+Albers::~Albers() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -95,39 +94,22 @@ void Albers::write(DataWriter &dataWriter) {
 
 void Albers::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sAlbers.", prefix.c_str());
-    mEarthShape.getAttributeList(name, attributeList);
-    sprintf(name, "%sAlbers.Nx", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNx));
-    sprintf(name, "%sAlbers.Ny", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNy));
-    sprintf(name, "%sAlbers.LatitudeOfFirstGridPoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatitudeOfFirstGridPoint));
-    sprintf(name, "%sAlbers.LongitudeOfFirstGridPoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLongitudeOfFirstGridPoint));
-    sprintf(name, "%sAlbers.", prefix.c_str());
-    mResolution.getAttributeList(name, attributeList);
-    sprintf(name, "%sAlbers.LaD", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLaD));
-    sprintf(name, "%sAlbers.LoV", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLoV));
-    sprintf(name, "%sAlbers.XDirectionGridLength", prefix.c_str());
-    attributeList.addAttribute(name, toString(mXDirectionGridLength));
-    sprintf(name, "%sAlbers.YDirectionGridLength", prefix.c_str());
-    attributeList.addAttribute(name, toString(mYDirectionGridLength));
-    sprintf(name, "%sAlbers.ProjectionCentreFlag", prefix.c_str());
-    attributeList.addAttribute(name, toString(mProjectionCentreFlag));
-    sprintf(name, "%sAlbers.", prefix.c_str());
-    mScanningMode.getAttributeList(name, attributeList);
-    sprintf(name, "%sAlbers.Latin1", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatin1));
-    sprintf(name, "%sAlbers.Latin2", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatin2));
-    sprintf(name, "%sAlbers.LatitudeOfTheSouthernPoleOfProjection", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatitudeOfTheSouthernPoleOfProjection));
-    sprintf(name, "%sAlbers.LongitudeOfTheSouthernPoleOfProjection", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLongitudeOfTheSouthernPoleOfProjection));
+        mEarthShape.getAttributeList(prefix + "Albers.", attributeList);
+        attributeList.addAttribute(prefix + "Albers.Nx", toString(mNx));
+        attributeList.addAttribute(prefix + "Albers.Ny", toString(mNy));
+        attributeList.addAttribute(prefix + "Albers.LatitudeOfFirstGridPoint", toString(mLatitudeOfFirstGridPoint));
+        attributeList.addAttribute(prefix + "Albers.LongitudeOfFirstGridPoint", toString(mLongitudeOfFirstGridPoint));
+        mResolution.getAttributeList(prefix + "Albers.", attributeList);
+        attributeList.addAttribute(prefix + "Albers.LaD", toString(mLaD));
+        attributeList.addAttribute(prefix + "Albers.LoV", toString(mLoV));
+        attributeList.addAttribute(prefix + "Albers.XDirectionGridLength", toString(mXDirectionGridLength));
+        attributeList.addAttribute(prefix + "Albers.YDirectionGridLength", toString(mYDirectionGridLength));
+        attributeList.addAttribute(prefix + "Albers.ProjectionCentreFlag", toString(mProjectionCentreFlag));
+        mScanningMode.getAttributeList(prefix + "Albers.", attributeList);
+        attributeList.addAttribute(prefix + "Albers.Latin1", toString(mLatin1));
+        attributeList.addAttribute(prefix + "Albers.Latin2", toString(mLatin2));
+        attributeList.addAttribute(prefix + "Albers.LatitudeOfTheSouthernPoleOfProjection", toString(mLatitudeOfTheSouthernPoleOfProjection));
+        attributeList.addAttribute(prefix + "Albers.LongitudeOfTheSouthernPoleOfProjection", toString(mLongitudeOfTheSouthernPoleOfProjection));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -340,7 +322,7 @@ GridDefinition *Albers::createGridDefinition() const {
 
 EarthShapeSettings *Albers::getEarthShape() const {
   try {
-    return static_cast<EarthShapeSettings *>(&mEarthShape);
+    return &mEarthShape;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -390,7 +372,7 @@ const T::UInt32_opt &Albers::getLongitudeOfFirstGridPoint() const {
 
 ResolutionSettings *Albers::getResolution() const {
   try {
-    return static_cast<ResolutionSettings *>(&mResolution);
+    return &mResolution;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -450,7 +432,7 @@ std::uint8_t Albers::getProjectionCentreFlag() const {
 
 ScanningModeSettings *Albers::getScanningMode() const {
   try {
-    return static_cast<ScanningModeSettings *>(&mScanningMode);
+    return &mScanningMode;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -496,7 +478,7 @@ const T::UInt32_opt &Albers::getLongitudeOfTheSouthernPoleOfProjection() const {
   }
 }
 
-void Albers::setEarthShape(EarthShapeSettings &earthShape) {
+void Albers::setEarthShape(const EarthShapeSettings &earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
@@ -536,7 +518,7 @@ void Albers::setLongitudeOfFirstGridPoint(T::UInt32_opt longitudeOfFirstGridPoin
   }
 }
 
-void Albers::setResolution(ResolutionSettings &resolution) {
+void Albers::setResolution(const ResolutionSettings &resolution) {
   try {
     mResolution = resolution;
   } catch (...) {
@@ -584,7 +566,7 @@ void Albers::setProjectionCentreFlag(std::uint8_t projectionCentreFlag) {
   }
 }
 
-void Albers::setScanningMode(ScanningModeSettings &scanningMode) {
+void Albers::setScanningMode(const ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {

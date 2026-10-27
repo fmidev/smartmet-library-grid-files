@@ -9,9 +9,7 @@ namespace GRIB2
 
 /*! \brief The constructor of the class. */
 
-PreprocessedGridDataRepresentationImpl::PreprocessedGridDataRepresentationImpl()
-{
-}
+PreprocessedGridDataRepresentationImpl::PreprocessedGridDataRepresentationImpl() = default;
 
 
 
@@ -19,10 +17,7 @@ PreprocessedGridDataRepresentationImpl::PreprocessedGridDataRepresentationImpl()
 
 /*! \brief The copy constructor of the class. */
 
-PreprocessedGridDataRepresentationImpl::PreprocessedGridDataRepresentationImpl(const PreprocessedGridDataRepresentationImpl& other)
-:PreprocessedGridDataRepresentation(other)
-{
-}
+PreprocessedGridDataRepresentationImpl::PreprocessedGridDataRepresentationImpl(const PreprocessedGridDataRepresentationImpl& other) = default;
 
 
 
@@ -30,9 +25,7 @@ PreprocessedGridDataRepresentationImpl::PreprocessedGridDataRepresentationImpl(c
 
 /*! \brief The destructor of the class. */
 
-PreprocessedGridDataRepresentationImpl::~PreprocessedGridDataRepresentationImpl()
-{
-}
+PreprocessedGridDataRepresentationImpl::~PreprocessedGridDataRepresentationImpl() = default;
 
 
 
@@ -84,7 +77,7 @@ void PreprocessedGridDataRepresentationImpl::read(MemoryReader& memoryReader)
 
 /*! \brief Decodes the preprocessed-packed grid values (not implemented). */
 
-void PreprocessedGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec& decodedValues) const
+void PreprocessedGridDataRepresentationImpl::decodeValues(Message * /*message*/,T::ParamValue_vec& /*decodedValues*/) const
 {
   throw Fmi::Exception(BCP,"The method not implemented!");
 }

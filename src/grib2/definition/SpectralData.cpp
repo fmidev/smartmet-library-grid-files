@@ -27,15 +27,14 @@ SpectralData::SpectralData() {
 
 /*! \brief The destructor of the class. */
 
-SpectralData::~SpectralData() {
-}
+SpectralData::~SpectralData() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
         \param memoryReader  This object controls the access to the memory mapped file.
 */
 
-void SpectralData::read(MemoryReader &memoryReader) {
+void SpectralData::read(MemoryReader &/*memoryReader*/) {
   try {
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
@@ -47,7 +46,7 @@ void SpectralData::read(MemoryReader &memoryReader) {
         \param dataWriter  This object is used for writing the object data.
 */
 
-void SpectralData::write(DataWriter &dataWriter) {
+void SpectralData::write(DataWriter &/*dataWriter*/) {
   try {
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
@@ -60,7 +59,7 @@ void SpectralData::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void SpectralData::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
+void SpectralData::getAttributeList(const std::string &/*prefix*/, T::AttributeList &/*attributeList*/) const {
   try {
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
@@ -73,7 +72,7 @@ void SpectralData::getAttributeList(const std::string &prefix, T::AttributeList 
     \param attributeValue The value of the attribute (string).
 */
 
-bool SpectralData::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+bool SpectralData::getAttributeValue(const char *attributeName, std::string &/*attributeValue*/) const {
   try {
     if (attributeName == nullptr)
       return false;
@@ -106,7 +105,7 @@ bool SpectralData::hasAttributeValue(const char *attributeName, const char *attr
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void SpectralData::print(std::ostream &stream, uint level, uint optionFlags) const {
+void SpectralData::print(std::ostream &stream, uint level, uint /*optionFlags*/) const {
   try {
     stream << space(level) << "SpectralData\n";
   } catch (...) {

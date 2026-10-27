@@ -2,11 +2,11 @@
 #include "GeneralFunctions.h"
 #include <macgyver/Exception.h>
 #include <fcntl.h>
-#include <stdio.h>
+#include <cstdio>
 #include <unistd.h>
 #include <netinet/in.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdlib>
+#include <cstring>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h>
@@ -61,16 +61,15 @@ int HttpClient::getHeaderData(const char *server,const char *filename,int dataSi
       return 0;
 
     // printf("*** SEND REQUEST %s  : %ld : %d\n",info.filename.c_str(),filePosition,dataSize);
-    Response response;
+    Response response{};
     response.data = dataPtr;
     response.maxSize = dataSize;
     response.dataSize = 0;
 
-    char url[1000];
-    sprintf(url,"http://%s%s",server,filename);
+    const std::string url = std::string("http://") + server + filename;
     //printf("URL [%s]\n",url);
 
-    curl_easy_setopt(curl, CURLOPT_URL,url);
+    curl_easy_setopt(curl, CURLOPT_URL,url.c_str());
     curl_easy_setopt(curl, CURLOPT_PROXY,"");
     curl_easy_setopt(curl, CURLOPT_HTTPGET, 1L);
     curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
@@ -86,7 +85,7 @@ int HttpClient::getHeaderData(const char *server,const char *filename,int dataSi
       curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
     }
 
-    struct curl_slist *headerList = NULL;
+    struct curl_slist *headerList = nullptr;
     headerList = curl_slist_append(headerList, "Range: bytes=0-0");
 
     headerList = addAuthenticationHeaders(server,filename,headerList);
@@ -128,16 +127,15 @@ int HttpClient::getData(const char *server,const char *filename,std::size_t file
 
     // printf("*** SEND REQUEST %s  : %ld : %d\n",info.filename.c_str(),filePosition,dataSize);
 
-    Response response;
+    Response response{};
     response.data = dataPtr;
     response.maxSize = dataSize;
     response.dataSize = 0;
 
-    char url[1000];
-    sprintf(url,"http://%s%s",server,filename);
+    const std::string url = std::string("http://") + server + filename;
     //printf("URL [%s]\n",url);
 
-    curl_easy_setopt(curl, CURLOPT_URL,url);
+    curl_easy_setopt(curl, CURLOPT_URL,url.c_str());
     curl_easy_setopt(curl, CURLOPT_PROXY,"");
     curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
     curl_easy_setopt(curl, CURLOPT_HTTPGET, 1L);
@@ -151,12 +149,12 @@ int HttpClient::getData(const char *server,const char *filename,std::size_t file
       curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
     }
 
-    struct curl_slist *headerList = NULL;
+    struct curl_slist *headerList = nullptr;
 
     if ((int)filePosition != dataSize)
     {
       char tmp[1000];
-      sprintf(tmp,"Range: bytes=%ld-%ld",filePosition,filePosition+dataSize-1);
+      sprintf(tmp,"Range: bytes=%zu-%zu",filePosition,filePosition+dataSize-1);
       headerList = curl_slist_append(headerList, tmp);
     }
 

@@ -27,8 +27,7 @@ AerosolOpticalPropertiesProduct::AerosolOpticalPropertiesProduct() {
 
 /*! \brief The destructor of the class. */
 
-AerosolOpticalPropertiesProduct::~AerosolOpticalPropertiesProduct() {
-}
+AerosolOpticalPropertiesProduct::~AerosolOpticalPropertiesProduct() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -68,13 +67,9 @@ void AerosolOpticalPropertiesProduct::write(DataWriter &dataWriter) {
 
 void AerosolOpticalPropertiesProduct::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sAerosolOpticalPropertiesProduct.", prefix.c_str());
-    mParameterAerosolOptical.getAttributeList(name, attributeList);
-    sprintf(name, "%sAerosolOpticalPropertiesProduct.", prefix.c_str());
-    mPointInTime.getAttributeList(name, attributeList);
-    sprintf(name, "%sAerosolOpticalPropertiesProduct.", prefix.c_str());
-    mHorizontal.getAttributeList(name, attributeList);
+        mParameterAerosolOptical.getAttributeList(prefix + "AerosolOpticalPropertiesProduct.", attributeList);
+        mPointInTime.getAttributeList(prefix + "AerosolOpticalPropertiesProduct.", attributeList);
+        mHorizontal.getAttributeList(prefix + "AerosolOpticalPropertiesProduct.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -171,7 +166,7 @@ ProductDefinition *AerosolOpticalPropertiesProduct::createProductDefinition() co
 
 ParameterAerosolOpticalSettings *AerosolOpticalPropertiesProduct::getParameterAerosolOptical() const {
   try {
-    return static_cast<ParameterAerosolOpticalSettings *>(&mParameterAerosolOptical);
+    return &mParameterAerosolOptical;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -181,7 +176,7 @@ ParameterAerosolOpticalSettings *AerosolOpticalPropertiesProduct::getParameterAe
 
 PointInTimeSettings *AerosolOpticalPropertiesProduct::getPointInTime() const {
   try {
-    return static_cast<PointInTimeSettings *>(&mPointInTime);
+    return &mPointInTime;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -191,13 +186,13 @@ PointInTimeSettings *AerosolOpticalPropertiesProduct::getPointInTime() const {
 
 HorizontalSettings *AerosolOpticalPropertiesProduct::getHorizontal() const {
   try {
-    return static_cast<HorizontalSettings *>(&mHorizontal);
+    return &mHorizontal;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
-void AerosolOpticalPropertiesProduct::setParameterAerosolOptical(ParameterAerosolOpticalSettings &parameterAerosolOptical) {
+void AerosolOpticalPropertiesProduct::setParameterAerosolOptical(const ParameterAerosolOpticalSettings &parameterAerosolOptical) {
   try {
     mParameterAerosolOptical = parameterAerosolOptical;
   } catch (...) {
@@ -205,7 +200,7 @@ void AerosolOpticalPropertiesProduct::setParameterAerosolOptical(ParameterAeroso
   }
 }
 
-void AerosolOpticalPropertiesProduct::setPointInTime(PointInTimeSettings &pointInTime) {
+void AerosolOpticalPropertiesProduct::setPointInTime(const PointInTimeSettings &pointInTime) {
   try {
     mPointInTime = pointInTime;
   } catch (...) {
@@ -213,7 +208,7 @@ void AerosolOpticalPropertiesProduct::setPointInTime(PointInTimeSettings &pointI
   }
 }
 
-void AerosolOpticalPropertiesProduct::setHorizontal(HorizontalSettings &horizontal) {
+void AerosolOpticalPropertiesProduct::setHorizontal(const HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {

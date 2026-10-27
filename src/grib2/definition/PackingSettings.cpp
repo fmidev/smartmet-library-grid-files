@@ -28,8 +28,7 @@ PackingSettings::PackingSettings() {
 
 /*! \brief The destructor of the class. */
 
-PackingSettings::~PackingSettings() {
-}
+PackingSettings::~PackingSettings() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -71,15 +70,10 @@ void PackingSettings::write(DataWriter &dataWriter) {
 
 void PackingSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sPackingSettings.ReferenceValue", prefix.c_str());
-    attributeList.addAttribute(name, toString(mReferenceValue));
-    sprintf(name, "%sPackingSettings.BinaryScaleFactor", prefix.c_str());
-    attributeList.addAttribute(name, toString(mBinaryScaleFactor));
-    sprintf(name, "%sPackingSettings.DecimalScaleFactor", prefix.c_str());
-    attributeList.addAttribute(name, toString(mDecimalScaleFactor));
-    sprintf(name, "%sPackingSettings.BitsPerValue", prefix.c_str());
-    attributeList.addAttribute(name, toString(mBitsPerValue));
+        attributeList.addAttribute(prefix + "PackingSettings.ReferenceValue", toString(mReferenceValue));
+        attributeList.addAttribute(prefix + "PackingSettings.BinaryScaleFactor", toString(mBinaryScaleFactor));
+        attributeList.addAttribute(prefix + "PackingSettings.DecimalScaleFactor", toString(mDecimalScaleFactor));
+        attributeList.addAttribute(prefix + "PackingSettings.BitsPerValue", toString(mBitsPerValue));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -148,7 +142,7 @@ bool PackingSettings::hasAttributeValue(const char *attributeName, const char *a
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void PackingSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
+void PackingSettings::print(std::ostream &stream, uint level, uint /*optionFlags*/) const {
   try {
     stream << space(level) << "PackingSettings\n";
     stream << space(level) << "- ReferenceValue = " << toString(mReferenceValue) << "\n";

@@ -21,10 +21,7 @@ StretchedSphericalHarmonicImpl::StretchedSphericalHarmonicImpl()
 
 /*! \brief The copy constructor of the class. */
 
-StretchedSphericalHarmonicImpl::StretchedSphericalHarmonicImpl(const StretchedSphericalHarmonicImpl& other)
-:StretchedSphericalHarmonic(other)
-{
-}
+StretchedSphericalHarmonicImpl::StretchedSphericalHarmonicImpl(const StretchedSphericalHarmonicImpl& other) = default;
 
 
 
@@ -32,9 +29,7 @@ StretchedSphericalHarmonicImpl::StretchedSphericalHarmonicImpl(const StretchedSp
 
 /*! \brief The destructor of the class. */
 
-StretchedSphericalHarmonicImpl::~StretchedSphericalHarmonicImpl()
-{
-}
+StretchedSphericalHarmonicImpl::~StretchedSphericalHarmonicImpl() = default;
 
 
 
@@ -113,7 +108,7 @@ T::Dimensions StretchedSphericalHarmonicImpl::getGridDimensions() const
 {
   try
   {
-    return T::Dimensions();
+    return {};
   }
   catch (...)
   {

@@ -1,5 +1,7 @@
 #include "GaussianImpl.h"
 #include <macgyver/Exception.h>
+
+#include <memory>
 #include "../../common/GeneralFunctions.h"
 #include "../../grid/GaussianLatitudeCache.h"
 #include "../../grid/PrintOptions.h"
@@ -23,10 +25,7 @@ GaussianImpl::GaussianImpl()
 
 /*! \brief The copy constructor of the class. */
 
-GaussianImpl::GaussianImpl(const GaussianImpl& other)
-:Gaussian(other)
-{
-}
+GaussianImpl::GaussianImpl(const GaussianImpl& other) = default;
 
 
 
@@ -34,9 +33,7 @@ GaussianImpl::GaussianImpl(const GaussianImpl& other)
 
 /*! \brief The destructor of the class. */
 
-GaussianImpl::~GaussianImpl()
-{
-}
+GaussianImpl::~GaussianImpl() = default;
 
 
 
@@ -120,7 +117,11 @@ T::Coordinate_svec GaussianImpl::getGridOriginalCoordinatesNoCache() const
     if ((scanningMode & 0x80) != 0)
       iDirectionIncrement = -iDirectionIncrement;
 
-    double *lats = GRID::gaussianLatitudeCache.getLatitudes(nj,n);
+    // A sub-area grid starts at the Gaussian latitude of its northern edge
+    const double northLat = std::max(C_DOUBLE(mGridArea.getLatitudeOfFirstGridPoint()),
+                                     C_DOUBLE(mGridArea.getLatitudeOfLastGridPoint())) / 1000;
+    const uint firstRow = GRID::gaussianLatitudeCache.getFirstRow(nj,n,northLat);
+    double *lats = GRID::gaussianLatitudeCache.getLatitudes(nj,n) + firstRow;
 
     coordinateList->reserve(ni*nj);
 
@@ -256,23 +257,25 @@ bool GaussianImpl::getGridPointByOriginalCoordinates(double x,double y,double& g
     double latLow = 0;
     double latHigh = 0;
 
-    int t = GRID::gaussianLatitudeCache.getClosestLatitudes(nj,n,y,latLow,latHigh);
+    // A sub-area grid starts at the Gaussian latitude of its northern edge
+    const double northLat = std::max(C_DOUBLE(mGridArea.getLatitudeOfFirstGridPoint()),
+                                     C_DOUBLE(mGridArea.getLatitudeOfLastGridPoint())) / 1000;
+    const uint firstRow = GRID::gaussianLatitudeCache.getFirstRow(nj,n,northLat);
+    int t = GRID::gaussianLatitudeCache.getClosestLatitudes(nj,n,firstRow,y,latLow,latHigh);
     if (t < 0)
       return false;
 
     latLow += 90;
     latHigh += 90;
 
+    // An exact hit on a grid latitude gives latLow == latHigh
     double latDiff = aLat-latLow;
-    double j = t + latDiff / (latHigh-latLow);
+    double j = (latHigh == latLow ? C_DOUBLE(t) : t + latDiff / (latHigh-latLow));
 
     grid_i = i;
     grid_j = j;
 
-    if (j < 0  ||  j > C_DOUBLE(nj))
-      return false;
-
-    return true;
+    return !(j < 0  ||  j > C_DOUBLE(nj));
   }
   catch (...)
   {
@@ -293,7 +296,7 @@ void GaussianImpl::initSpatialReference()
     mSpatialReference = getSpatialReference();
     if (!mSpatialReference)
     {
-      mSpatialReference.reset(new T::SpatialRef());
+      mSpatialReference = std::make_shared<T::SpatialRef>();
       addSpatialReference(mSpatialReference);
 
       // ### Set geographic coordinate system.
@@ -398,7 +401,7 @@ void GaussianImpl::print(std::ostream& stream,uint level,uint optionFlags) const
           {
             T::Coordinate coord = coordinateList->at(c);
 
-            sprintf(str,"* [%03d,%03d] %f,%f",x,y,coord.x(),coord.y());
+            sprintf(str,"* [%03u,%03u] %f,%f",x,y,coord.x(),coord.y());
             stream << space(level+2) << str << "\n";
           }
           c++;

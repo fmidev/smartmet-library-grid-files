@@ -44,14 +44,14 @@ class Attribute
       *  \param[in] stream      Output stream.
       *  \param[in] level       Indentation level.
       *  \param[in] optionFlags PrintFlag bit mask. */
-     void           print(std::ostream& stream,uint level,uint optionFlags);
+     void           print(std::ostream& stream,uint level,uint optionFlags) const;
 
      std::string    mName;  //!< Attribute name
      std::string    mValue; //!< Attribute value (always stored as a string)
 };
 
 
-typedef Attribute* Attribute_ptr;
+using Attribute_ptr = Attribute*;
 
 
 }

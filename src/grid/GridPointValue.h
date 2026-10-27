@@ -31,7 +31,7 @@ class GridPointValue
       file_message_x_y_level  = 5,  //!< Sort by: file, message, x, y, level, value
     };
 
-  public:
+  
                     GridPointValue();
                     /*! \brief Copy constructor. */
                     GridPointValue(const GridPointValue& gridPointValue);
@@ -53,7 +53,7 @@ class GridPointValue
      *  \param[in] comparisonMethod  Field ordering to use.
      *  \param[in] gridPointValue   Object to compare against.
      *  \return Negative, zero, or positive per standard comparator convention. */
-    int             compare(ComparisonMethod comparisonMethod,GridPointValue *gridPointValue);
+    int             compare(ComparisonMethod comparisonMethod,GridPointValue *gridPointValue) const;
 
     /*! \brief Return a heap-allocated copy of this object.
      *  \return Pointer to the new copy; caller owns the memory. */
@@ -87,8 +87,8 @@ class GridPointValue
 };
 
 
-typedef std::vector<GridPointValue> GridPointValue_vec;
-typedef GridPointValue* GridPointValuePtr;
+using GridPointValue_vec = std::vector<GridPointValue>;
+using GridPointValuePtr = GridPointValue*;
 
 
 }

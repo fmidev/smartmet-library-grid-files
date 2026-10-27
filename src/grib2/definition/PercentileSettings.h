@@ -19,6 +19,10 @@ namespace GRIB2 {
 class PercentileSettings {
 public:
   PercentileSettings();
+  PercentileSettings(const PercentileSettings &) = default;
+  PercentileSettings(PercentileSettings &&) = default;
+  PercentileSettings &operator=(const PercentileSettings &) = default;
+  PercentileSettings &operator=(PercentileSettings &&) = default;
   virtual ~PercentileSettings();
 
   virtual void read(MemoryReader &memoryReader);

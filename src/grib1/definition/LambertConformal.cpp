@@ -39,8 +39,7 @@ LambertConformal::LambertConformal() {
 
 /*! \brief The destructor of the class. */
 
-LambertConformal::~LambertConformal() {
-}
+LambertConformal::~LambertConformal() = default;
 
 /*! \brief The method reads and initializes all data related to the current section object.
 
@@ -106,35 +105,20 @@ void LambertConformal::write(DataWriter &dataWriter) {
 
 void LambertConformal::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sLambertConformal.Nx", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNx));
-    sprintf(name, "%sLambertConformal.Ny", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNy));
-    sprintf(name, "%sLambertConformal.LatitudeOfFirstGridPoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatitudeOfFirstGridPoint));
-    sprintf(name, "%sLambertConformal.LongitudeOfFirstGridPoint", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLongitudeOfFirstGridPoint));
-    sprintf(name, "%sLambertConformal.", prefix.c_str());
-    mResolutionFlags.getAttributeList(name, attributeList);
-    sprintf(name, "%sLambertConformal.LoV", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLoV));
-    sprintf(name, "%sLambertConformal.DxInMetres", prefix.c_str());
-    attributeList.addAttribute(name, toString(mDxInMetres));
-    sprintf(name, "%sLambertConformal.DyInMetres", prefix.c_str());
-    attributeList.addAttribute(name, toString(mDyInMetres));
-    sprintf(name, "%sLambertConformal.ProjectionCentreFlag", prefix.c_str());
-    attributeList.addAttribute(name, toString(mProjectionCentreFlag));
-    sprintf(name, "%sLambertConformal.", prefix.c_str());
-    mScanningMode.getAttributeList(name, attributeList);
-    sprintf(name, "%sLambertConformal.Latin1", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatin1));
-    sprintf(name, "%sLambertConformal.Latin2", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatin2));
-    sprintf(name, "%sLambertConformal.LatitudeOfSouthernPole", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLatitudeOfSouthernPole));
-    sprintf(name, "%sLambertConformal.LongitudeOfSouthernPole", prefix.c_str());
-    attributeList.addAttribute(name, toString(mLongitudeOfSouthernPole));
+        attributeList.addAttribute(prefix + "LambertConformal.Nx", toString(mNx));
+        attributeList.addAttribute(prefix + "LambertConformal.Ny", toString(mNy));
+        attributeList.addAttribute(prefix + "LambertConformal.LatitudeOfFirstGridPoint", toString(mLatitudeOfFirstGridPoint));
+        attributeList.addAttribute(prefix + "LambertConformal.LongitudeOfFirstGridPoint", toString(mLongitudeOfFirstGridPoint));
+        mResolutionFlags.getAttributeList(prefix + "LambertConformal.", attributeList);
+        attributeList.addAttribute(prefix + "LambertConformal.LoV", toString(mLoV));
+        attributeList.addAttribute(prefix + "LambertConformal.DxInMetres", toString(mDxInMetres));
+        attributeList.addAttribute(prefix + "LambertConformal.DyInMetres", toString(mDyInMetres));
+        attributeList.addAttribute(prefix + "LambertConformal.ProjectionCentreFlag", toString(mProjectionCentreFlag));
+        mScanningMode.getAttributeList(prefix + "LambertConformal.", attributeList);
+        attributeList.addAttribute(prefix + "LambertConformal.Latin1", toString(mLatin1));
+        attributeList.addAttribute(prefix + "LambertConformal.Latin2", toString(mLatin2));
+        attributeList.addAttribute(prefix + "LambertConformal.LatitudeOfSouthernPole", toString(mLatitudeOfSouthernPole));
+        attributeList.addAttribute(prefix + "LambertConformal.LongitudeOfSouthernPole", toString(mLongitudeOfSouthernPole));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -340,7 +324,7 @@ std::uint16_t LambertConformal::getNy() const {
 
 /*! \brief The method returns the value of the {@link mLatitudeOfFirstGridPoint} attribute. */
 
-std::int24_t LambertConformal::getLatitudeOfFirstGridPoint() const {
+SmartMet::int24_t LambertConformal::getLatitudeOfFirstGridPoint() const {
   try {
     return mLatitudeOfFirstGridPoint;
   } catch (...) {
@@ -350,7 +334,7 @@ std::int24_t LambertConformal::getLatitudeOfFirstGridPoint() const {
 
 /*! \brief The method returns the value of the {@link mLongitudeOfFirstGridPoint} attribute. */
 
-std::int24_t LambertConformal::getLongitudeOfFirstGridPoint() const {
+SmartMet::int24_t LambertConformal::getLongitudeOfFirstGridPoint() const {
   try {
     return mLongitudeOfFirstGridPoint;
   } catch (...) {
@@ -362,7 +346,7 @@ std::int24_t LambertConformal::getLongitudeOfFirstGridPoint() const {
 
 ResolutionFlagsSettings *LambertConformal::getResolutionFlags() const {
   try {
-    return static_cast<ResolutionFlagsSettings *>(&mResolutionFlags);
+    return &mResolutionFlags;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -370,7 +354,7 @@ ResolutionFlagsSettings *LambertConformal::getResolutionFlags() const {
 
 /*! \brief The method returns the value of the {@link mLoV} attribute. */
 
-std::int24_t LambertConformal::getLoV() const {
+SmartMet::int24_t LambertConformal::getLoV() const {
   try {
     return mLoV;
   } catch (...) {
@@ -380,7 +364,7 @@ std::int24_t LambertConformal::getLoV() const {
 
 /*! \brief The method returns the value of the {@link mDxInMetres} attribute. */
 
-std::uint24_t LambertConformal::getDxInMetres() const {
+SmartMet::uint24_t LambertConformal::getDxInMetres() const {
   try {
     return mDxInMetres;
   } catch (...) {
@@ -390,7 +374,7 @@ std::uint24_t LambertConformal::getDxInMetres() const {
 
 /*! \brief The method returns the value of the {@link mDyInMetres} attribute. */
 
-std::uint24_t LambertConformal::getDyInMetres() const {
+SmartMet::uint24_t LambertConformal::getDyInMetres() const {
   try {
     return mDyInMetres;
   } catch (...) {
@@ -412,7 +396,7 @@ std::uint8_t LambertConformal::getProjectionCentreFlag() const {
 
 ScanningModeSettings *LambertConformal::getScanningMode() const {
   try {
-    return static_cast<ScanningModeSettings *>(&mScanningMode);
+    return &mScanningMode;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -420,7 +404,7 @@ ScanningModeSettings *LambertConformal::getScanningMode() const {
 
 /*! \brief The method returns the value of the {@link mLatin1} attribute. */
 
-std::int24_t LambertConformal::getLatin1() const {
+SmartMet::int24_t LambertConformal::getLatin1() const {
   try {
     return mLatin1;
   } catch (...) {
@@ -430,7 +414,7 @@ std::int24_t LambertConformal::getLatin1() const {
 
 /*! \brief The method returns the value of the {@link mLatin2} attribute. */
 
-std::int24_t LambertConformal::getLatin2() const {
+SmartMet::int24_t LambertConformal::getLatin2() const {
   try {
     return mLatin2;
   } catch (...) {
@@ -440,7 +424,7 @@ std::int24_t LambertConformal::getLatin2() const {
 
 /*! \brief The method returns the value of the {@link mLatitudeOfSouthernPole} attribute. */
 
-std::int24_t LambertConformal::getLatitudeOfSouthernPole() const {
+SmartMet::int24_t LambertConformal::getLatitudeOfSouthernPole() const {
   try {
     return mLatitudeOfSouthernPole;
   } catch (...) {
@@ -450,7 +434,7 @@ std::int24_t LambertConformal::getLatitudeOfSouthernPole() const {
 
 /*! \brief The method returns the value of the {@link mLongitudeOfSouthernPole} attribute. */
 
-std::int24_t LambertConformal::getLongitudeOfSouthernPole() const {
+SmartMet::int24_t LambertConformal::getLongitudeOfSouthernPole() const {
   try {
     return mLongitudeOfSouthernPole;
   } catch (...) {
@@ -474,7 +458,7 @@ void LambertConformal::setNy(std::uint16_t ny) {
   }
 }
 
-void LambertConformal::setLatitudeOfFirstGridPoint(std::int24_t latitudeOfFirstGridPoint) {
+void LambertConformal::setLatitudeOfFirstGridPoint(SmartMet::int24_t latitudeOfFirstGridPoint) {
   try {
     mLatitudeOfFirstGridPoint = latitudeOfFirstGridPoint;
   } catch (...) {
@@ -482,7 +466,7 @@ void LambertConformal::setLatitudeOfFirstGridPoint(std::int24_t latitudeOfFirstG
   }
 }
 
-void LambertConformal::setLongitudeOfFirstGridPoint(std::int24_t longitudeOfFirstGridPoint) {
+void LambertConformal::setLongitudeOfFirstGridPoint(SmartMet::int24_t longitudeOfFirstGridPoint) {
   try {
     mLongitudeOfFirstGridPoint = longitudeOfFirstGridPoint;
   } catch (...) {
@@ -490,7 +474,7 @@ void LambertConformal::setLongitudeOfFirstGridPoint(std::int24_t longitudeOfFirs
   }
 }
 
-void LambertConformal::setResolutionFlags(ResolutionFlagsSettings &resolutionFlags) {
+void LambertConformal::setResolutionFlags(const ResolutionFlagsSettings &resolutionFlags) {
   try {
     mResolutionFlags = resolutionFlags;
   } catch (...) {
@@ -498,7 +482,7 @@ void LambertConformal::setResolutionFlags(ResolutionFlagsSettings &resolutionFla
   }
 }
 
-void LambertConformal::setLoV(std::int24_t loV) {
+void LambertConformal::setLoV(SmartMet::int24_t loV) {
   try {
     mLoV = loV;
   } catch (...) {
@@ -506,7 +490,7 @@ void LambertConformal::setLoV(std::int24_t loV) {
   }
 }
 
-void LambertConformal::setDxInMetres(std::uint24_t dxInMetres) {
+void LambertConformal::setDxInMetres(SmartMet::uint24_t dxInMetres) {
   try {
     mDxInMetres = dxInMetres;
   } catch (...) {
@@ -514,7 +498,7 @@ void LambertConformal::setDxInMetres(std::uint24_t dxInMetres) {
   }
 }
 
-void LambertConformal::setDyInMetres(std::uint24_t dyInMetres) {
+void LambertConformal::setDyInMetres(SmartMet::uint24_t dyInMetres) {
   try {
     mDyInMetres = dyInMetres;
   } catch (...) {
@@ -530,7 +514,7 @@ void LambertConformal::setProjectionCentreFlag(std::uint8_t projectionCentreFlag
   }
 }
 
-void LambertConformal::setScanningMode(ScanningModeSettings &scanningMode) {
+void LambertConformal::setScanningMode(const ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {
@@ -538,7 +522,7 @@ void LambertConformal::setScanningMode(ScanningModeSettings &scanningMode) {
   }
 }
 
-void LambertConformal::setLatin1(std::int24_t latin1) {
+void LambertConformal::setLatin1(SmartMet::int24_t latin1) {
   try {
     mLatin1 = latin1;
   } catch (...) {
@@ -546,7 +530,7 @@ void LambertConformal::setLatin1(std::int24_t latin1) {
   }
 }
 
-void LambertConformal::setLatin2(std::int24_t latin2) {
+void LambertConformal::setLatin2(SmartMet::int24_t latin2) {
   try {
     mLatin2 = latin2;
   } catch (...) {
@@ -554,7 +538,7 @@ void LambertConformal::setLatin2(std::int24_t latin2) {
   }
 }
 
-void LambertConformal::setLatitudeOfSouthernPole(std::int24_t latitudeOfSouthernPole) {
+void LambertConformal::setLatitudeOfSouthernPole(SmartMet::int24_t latitudeOfSouthernPole) {
   try {
     mLatitudeOfSouthernPole = latitudeOfSouthernPole;
   } catch (...) {
@@ -562,7 +546,7 @@ void LambertConformal::setLatitudeOfSouthernPole(std::int24_t latitudeOfSouthern
   }
 }
 
-void LambertConformal::setLongitudeOfSouthernPole(std::int24_t longitudeOfSouthernPole) {
+void LambertConformal::setLongitudeOfSouthernPole(SmartMet::int24_t longitudeOfSouthernPole) {
   try {
     mLongitudeOfSouthernPole = longitudeOfSouthernPole;
   } catch (...) {

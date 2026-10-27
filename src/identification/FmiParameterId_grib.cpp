@@ -46,7 +46,7 @@ FmiParameterId_grib::~FmiParameterId_grib()
 
 /*! \brief Prints the content of the object into the given stream. */
 
-void FmiParameterId_grib::print(std::ostream& stream,uint level,uint optionFlags) const
+void FmiParameterId_grib::print(std::ostream& stream,uint level,uint /*optionFlags*/) const
 {
   try
   {

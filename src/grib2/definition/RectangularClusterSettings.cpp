@@ -27,8 +27,7 @@ RectangularClusterSettings::RectangularClusterSettings() {
 
 /*! \brief The destructor of the class. */
 
-RectangularClusterSettings::~RectangularClusterSettings() {
-}
+RectangularClusterSettings::~RectangularClusterSettings() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -90,35 +89,20 @@ void RectangularClusterSettings::write(DataWriter &dataWriter) {
 
 void RectangularClusterSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sRectangularClusterSettings.ClusterIdentifier", prefix.c_str());
-    attributeList.addAttribute(name, toString(mClusterIdentifier));
-    sprintf(name, "%sRectangularClusterSettings.NH", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNH));
-    sprintf(name, "%sRectangularClusterSettings.NL", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNL));
-    sprintf(name, "%sRectangularClusterSettings.TotalNumberOfClusters", prefix.c_str());
-    attributeList.addAttribute(name, toString(mTotalNumberOfClusters));
-    sprintf(name, "%sRectangularClusterSettings.ClusteringMethod", prefix.c_str());
-    attributeList.addAttribute(name, toString(mClusteringMethod));
-    sprintf(name, "%sRectangularClusterSettings.NorthernLatitudeOfClusterDomain", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNorthernLatitudeOfClusterDomain));
-    sprintf(name, "%sRectangularClusterSettings.SouthernLatitudeOfClusterDomain", prefix.c_str());
-    attributeList.addAttribute(name, toString(mSouthernLatitudeOfClusterDomain));
-    sprintf(name, "%sRectangularClusterSettings.EasternLongitudeOfClusterDomain", prefix.c_str());
-    attributeList.addAttribute(name, toString(mEasternLongitudeOfClusterDomain));
-    sprintf(name, "%sRectangularClusterSettings.WesternLongitudeOfClusterDomain", prefix.c_str());
-    attributeList.addAttribute(name, toString(mWesternLongitudeOfClusterDomain));
-    sprintf(name, "%sRectangularClusterSettings.NumberOfForecastsInTheCluster", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNumberOfForecastsInTheCluster));
-    sprintf(name, "%sRectangularClusterSettings.ScaleFactorOfStandardDeviation", prefix.c_str());
-    attributeList.addAttribute(name, toString(mScaleFactorOfStandardDeviation));
-    sprintf(name, "%sRectangularClusterSettings.ScaledValueOfStandardDeviation", prefix.c_str());
-    attributeList.addAttribute(name, toString(mScaledValueOfStandardDeviation));
-    sprintf(name, "%sRectangularClusterSettings.ScaleFactorOfDistanceFromEnsembleMean", prefix.c_str());
-    attributeList.addAttribute(name, toString(mScaleFactorOfDistanceFromEnsembleMean));
-    sprintf(name, "%sRectangularClusterSettings.ScaledValueOfDistanceFromEnsembleMean", prefix.c_str());
-    attributeList.addAttribute(name, toString(mScaledValueOfDistanceFromEnsembleMean));
+        attributeList.addAttribute(prefix + "RectangularClusterSettings.ClusterIdentifier", toString(mClusterIdentifier));
+        attributeList.addAttribute(prefix + "RectangularClusterSettings.NH", toString(mNH));
+        attributeList.addAttribute(prefix + "RectangularClusterSettings.NL", toString(mNL));
+        attributeList.addAttribute(prefix + "RectangularClusterSettings.TotalNumberOfClusters", toString(mTotalNumberOfClusters));
+        attributeList.addAttribute(prefix + "RectangularClusterSettings.ClusteringMethod", toString(mClusteringMethod));
+        attributeList.addAttribute(prefix + "RectangularClusterSettings.NorthernLatitudeOfClusterDomain", toString(mNorthernLatitudeOfClusterDomain));
+        attributeList.addAttribute(prefix + "RectangularClusterSettings.SouthernLatitudeOfClusterDomain", toString(mSouthernLatitudeOfClusterDomain));
+        attributeList.addAttribute(prefix + "RectangularClusterSettings.EasternLongitudeOfClusterDomain", toString(mEasternLongitudeOfClusterDomain));
+        attributeList.addAttribute(prefix + "RectangularClusterSettings.WesternLongitudeOfClusterDomain", toString(mWesternLongitudeOfClusterDomain));
+        attributeList.addAttribute(prefix + "RectangularClusterSettings.NumberOfForecastsInTheCluster", toString(mNumberOfForecastsInTheCluster));
+        attributeList.addAttribute(prefix + "RectangularClusterSettings.ScaleFactorOfStandardDeviation", toString(mScaleFactorOfStandardDeviation));
+        attributeList.addAttribute(prefix + "RectangularClusterSettings.ScaledValueOfStandardDeviation", toString(mScaledValueOfStandardDeviation));
+        attributeList.addAttribute(prefix + "RectangularClusterSettings.ScaleFactorOfDistanceFromEnsembleMean", toString(mScaleFactorOfDistanceFromEnsembleMean));
+        attributeList.addAttribute(prefix + "RectangularClusterSettings.ScaledValueOfDistanceFromEnsembleMean", toString(mScaledValueOfDistanceFromEnsembleMean));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -247,7 +231,7 @@ bool RectangularClusterSettings::hasAttributeValue(const char *attributeName, co
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void RectangularClusterSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
+void RectangularClusterSettings::print(std::ostream &stream, uint level, uint /*optionFlags*/) const {
   try {
     stream << space(level) << "RectangularClusterSettings\n";
     stream << space(level) << "- ClusterIdentifier = " << toString(mClusterIdentifier) << "\n";

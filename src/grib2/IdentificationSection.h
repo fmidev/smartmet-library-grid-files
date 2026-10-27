@@ -59,17 +59,18 @@ class IdentificationSection : public GRID::MessageSection
 
                     IdentificationSection();
                     IdentificationSection(const IdentificationSection& other);
-    virtual         ~IdentificationSection();
+    ~IdentificationSection() override;
+    IdentificationSection& operator=(const IdentificationSection&) = delete;
 
     // ### Common methods for all message sections
 
-    void            getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const;
+    void            getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const override;
     bool            getAttributeValue(const char *attributeName, std::string& attributeValue) const;
     bool            hasAttributeValue(const char *attributeName, const char *attributeValue) const;
-    T::FilePosition getFilePosition() const;
-    std::uint32_t   getSectionLength() const;
-    std::string     getSectionName() const;
-    std::uint8_t    getSectionNumber() const;
+    T::FilePosition getFilePosition() const override;
+    std::uint32_t   getSectionLength() const override;
+    std::string     getSectionName() const override;
+    std::uint8_t    getSectionNumber() const override;
     T::TimeString   getReferenceTime() const;
 
     // ### Section specific methods
@@ -111,7 +112,7 @@ class IdentificationSection : public GRID::MessageSection
 
     void            read(MemoryReader& memoryReader);
     void            write(DataWriter& dataWriter);
-    void            print(std::ostream& stream,uint level,uint optionFlags) const;
+    void            print(std::ostream& stream,uint level,uint optionFlags) const override;
 
   private:
 
@@ -177,7 +178,7 @@ class IdentificationSection : public GRID::MessageSection
     bool            mReleaseData;   //!< If true, free mDataPtr on destruction.
 };
 
-typedef std::shared_ptr<IdentificationSection> IdentifSect_sptr;  //!< Shared ownership pointer to an IdentificationSection.
+using IdentifSect_sptr = std::shared_ptr<IdentificationSection>;  //!< Shared ownership pointer to an IdentificationSection.
 
 }  // namespace GRIB2
 }  // namespace SmartMet

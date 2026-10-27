@@ -27,15 +27,14 @@ GridData::GridData() {
 
 /*! \brief The destructor of the class. */
 
-GridData::~GridData() {
-}
+GridData::~GridData() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
         \param memoryReader  This object controls the access to the memory mapped file.
 */
 
-void GridData::read(MemoryReader &memoryReader) {
+void GridData::read(MemoryReader &/*memoryReader*/) {
   try {
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
@@ -47,7 +46,7 @@ void GridData::read(MemoryReader &memoryReader) {
         \param dataWriter  This object is used for writing the object data.
 */
 
-void GridData::write(DataWriter &dataWriter) {
+void GridData::write(DataWriter &/*dataWriter*/) {
   try {
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
@@ -60,7 +59,7 @@ void GridData::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void GridData::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
+void GridData::getAttributeList(const std::string &/*prefix*/, T::AttributeList &/*attributeList*/) const {
   try {
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
@@ -73,7 +72,7 @@ void GridData::getAttributeList(const std::string &prefix, T::AttributeList &att
     \param attributeValue The value of the attribute (string).
 */
 
-bool GridData::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+bool GridData::getAttributeValue(const char *attributeName, std::string &/*attributeValue*/) const {
   try {
     if (attributeName == nullptr)
       return false;
@@ -106,7 +105,7 @@ bool GridData::hasAttributeValue(const char *attributeName, const char *attribut
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void GridData::print(std::ostream &stream, uint level, uint optionFlags) const {
+void GridData::print(std::ostream &stream, uint level, uint /*optionFlags*/) const {
   try {
     stream << space(level) << "GridData\n";
   } catch (...) {

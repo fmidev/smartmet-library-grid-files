@@ -6,6 +6,8 @@
 #include <sys/stat.h>
 #include <dirent.h>
 
+#include <algorithm>
+
 
 namespace SmartMet
 {
@@ -144,7 +146,7 @@ void ValueCache::setCacheDir(const char *cacheDir)
           {
             char fullName[2000];
             sprintf(fullName, "%s/%s", cacheDir, ep->d_name);
-            remove(fullName);
+            (void)remove(fullName);
           }
         }
       }
@@ -187,7 +189,7 @@ void ValueCache::getCacheStats(Fmi::Cache::CacheStatistics& statistics) const
 
 /*! \brief Adds the current cache configuration and usage attributes to the given parent node. */
 
-void ValueCache::getStateAttributes(std::shared_ptr<T::AttributeNode> parent)
+void ValueCache::getStateAttributes(const std::shared_ptr<T::AttributeNode>& parent)
 {
   try
   {
@@ -598,15 +600,9 @@ bool ValueCache::getMinAndMaxValues(uint key,T::ParamValue& minValue,T::ParamVal
       auto val = values[t];
       if (val != ParamValueMissing)
       {
-        if (val > maxValue)
-        {
-          maxValue = val;
-        }
+        maxValue = std::max(val, maxValue);
 
-        if (val < minValue)
-        {
-          minValue = val;
-        }
+        minValue = std::min(val, minValue);
       }
     }
     entry ->mAccessCounter = mAccessCounter++;

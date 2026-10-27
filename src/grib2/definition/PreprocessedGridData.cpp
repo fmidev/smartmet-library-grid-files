@@ -27,15 +27,14 @@ PreprocessedGridData::PreprocessedGridData() {
 
 /*! \brief The destructor of the class. */
 
-PreprocessedGridData::~PreprocessedGridData() {
-}
+PreprocessedGridData::~PreprocessedGridData() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
         \param memoryReader  This object controls the access to the memory mapped file.
 */
 
-void PreprocessedGridData::read(MemoryReader &memoryReader) {
+void PreprocessedGridData::read(MemoryReader &/*memoryReader*/) {
   try {
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
@@ -47,7 +46,7 @@ void PreprocessedGridData::read(MemoryReader &memoryReader) {
         \param dataWriter  This object is used for writing the object data.
 */
 
-void PreprocessedGridData::write(DataWriter &dataWriter) {
+void PreprocessedGridData::write(DataWriter &/*dataWriter*/) {
   try {
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
@@ -60,7 +59,7 @@ void PreprocessedGridData::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void PreprocessedGridData::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
+void PreprocessedGridData::getAttributeList(const std::string &/*prefix*/, T::AttributeList &/*attributeList*/) const {
   try {
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
@@ -73,7 +72,7 @@ void PreprocessedGridData::getAttributeList(const std::string &prefix, T::Attrib
     \param attributeValue The value of the attribute (string).
 */
 
-bool PreprocessedGridData::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+bool PreprocessedGridData::getAttributeValue(const char *attributeName, std::string &/*attributeValue*/) const {
   try {
     if (attributeName == nullptr)
       return false;
@@ -106,7 +105,7 @@ bool PreprocessedGridData::hasAttributeValue(const char *attributeName, const ch
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void PreprocessedGridData::print(std::ostream &stream, uint level, uint optionFlags) const {
+void PreprocessedGridData::print(std::ostream &stream, uint level, uint /*optionFlags*/) const {
   try {
     stream << space(level) << "PreprocessedGridData\n";
   } catch (...) {

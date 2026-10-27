@@ -28,8 +28,7 @@ SpectralDataRepresentation::SpectralDataRepresentation() {
 
 /*! \brief The destructor of the class. */
 
-SpectralDataRepresentation::~SpectralDataRepresentation() {
-}
+SpectralDataRepresentation::~SpectralDataRepresentation() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -67,11 +66,8 @@ void SpectralDataRepresentation::write(DataWriter &dataWriter) {
 
 void SpectralDataRepresentation::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sSpectralDataRepresentation.", prefix.c_str());
-    mPacking.getAttributeList(name, attributeList);
-    sprintf(name, "%sSpectralDataRepresentation.RealPartOf00", prefix.c_str());
-    attributeList.addAttribute(name, toString(mRealPartOf00));
+        mPacking.getAttributeList(prefix + "SpectralDataRepresentation.", attributeList);
+        attributeList.addAttribute(prefix + "SpectralDataRepresentation.RealPartOf00", toString(mRealPartOf00));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -166,7 +162,7 @@ RepresentationDefinition *SpectralDataRepresentation::createRepresentationDefini
 
 PackingSettings *SpectralDataRepresentation::getPacking() const {
   try {
-    return static_cast<PackingSettings *>(&mPacking);
+    return &mPacking;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -182,7 +178,7 @@ float SpectralDataRepresentation::getRealPartOf00() const {
   }
 }
 
-void SpectralDataRepresentation::setPacking(PackingSettings &packing) {
+void SpectralDataRepresentation::setPacking(const PackingSettings &packing) {
   try {
     mPacking = packing;
   } catch (...) {

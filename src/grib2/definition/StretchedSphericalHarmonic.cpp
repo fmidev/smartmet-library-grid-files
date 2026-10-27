@@ -27,8 +27,7 @@ StretchedSphericalHarmonic::StretchedSphericalHarmonic() {
 
 /*! \brief The destructor of the class. */
 
-StretchedSphericalHarmonic::~StretchedSphericalHarmonic() {
-}
+StretchedSphericalHarmonic::~StretchedSphericalHarmonic() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -66,11 +65,8 @@ void StretchedSphericalHarmonic::write(DataWriter &dataWriter) {
 
 void StretchedSphericalHarmonic::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sStretchedSphericalHarmonic.", prefix.c_str());
-    mSphericalHarmonic.getAttributeList(name, attributeList);
-    sprintf(name, "%sStretchedSphericalHarmonic.", prefix.c_str());
-    mStretching.getAttributeList(name, attributeList);
+        mSphericalHarmonic.getAttributeList(prefix + "StretchedSphericalHarmonic.", attributeList);
+        mStretching.getAttributeList(prefix + "StretchedSphericalHarmonic.", attributeList);
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -162,7 +158,7 @@ GridDefinition *StretchedSphericalHarmonic::createGridDefinition() const {
 
 SphericalHarmonicSettings *StretchedSphericalHarmonic::getSphericalHarmonic() const {
   try {
-    return static_cast<SphericalHarmonicSettings *>(&mSphericalHarmonic);
+    return &mSphericalHarmonic;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -172,13 +168,13 @@ SphericalHarmonicSettings *StretchedSphericalHarmonic::getSphericalHarmonic() co
 
 StretchingSettings *StretchedSphericalHarmonic::getStretching() const {
   try {
-    return static_cast<StretchingSettings *>(&mStretching);
+    return &mStretching;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
-void StretchedSphericalHarmonic::setSphericalHarmonic(SphericalHarmonicSettings &sphericalHarmonic) {
+void StretchedSphericalHarmonic::setSphericalHarmonic(const SphericalHarmonicSettings &sphericalHarmonic) {
   try {
     mSphericalHarmonic = sphericalHarmonic;
   } catch (...) {
@@ -186,7 +182,7 @@ void StretchedSphericalHarmonic::setSphericalHarmonic(SphericalHarmonicSettings 
   }
 }
 
-void StretchedSphericalHarmonic::setStretching(StretchingSettings &stretching) {
+void StretchedSphericalHarmonic::setStretching(const StretchingSettings &stretching) {
   try {
     mStretching = stretching;
   } catch (...) {

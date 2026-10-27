@@ -38,9 +38,7 @@ RequestCounter::RequestCounter()
 
 /*! \brief Destructor for RequestCounter. */
 
-RequestCounter::~RequestCounter()
-{
-}
+RequestCounter::~RequestCounter() = default;
 
 
 
@@ -121,7 +119,7 @@ TopList RequestCounter::getTopRequestCounters()
 
 /*! \brief Returns the total number of counted requests. */
 
-UInt64 RequestCounter::getTotalRequests()
+UInt64 RequestCounter::getTotalRequests() const
 {
   FUNCTION_TRACE
   try
@@ -348,7 +346,7 @@ void RequestCounter::setCountingEnabled(bool _enabled)
 
 /*! \brief Returns whether request counting is currently enabled. */
 
-bool RequestCounter::isCountingEnabled()
+bool RequestCounter::isCountingEnabled() const
 {
   FUNCTION_TRACE
   try
@@ -381,9 +379,9 @@ void RequestCounter::updateTopCounters()
 
     mTopRequestCounters.clear();
 
-    for (auto it = mRequestCounters.begin(); it != mRequestCounters.end(); ++it)
+    for (auto& mRequestCounter : mRequestCounters)
     {
-      mTopRequestCounters.insert(std::pair<uint,UInt64>(it->second,it->first));
+      mTopRequestCounters.insert(std::pair<uint,UInt64>(mRequestCounter.second,mRequestCounter.first));
     }
   }
   catch (...)
@@ -420,7 +418,8 @@ void RequestCounter::saveGeometryHitCounters(const char *filename)
         fprintf(file,"%u;%u;%u\n",geom->first,it->first,it->second);
       }
     }
-    fclose(file);
+    if (fclose(file) != 0)
+      throw Fmi::Exception(BCP,"Failed to close the output file");
   }
   catch (...)
   {
@@ -488,7 +487,7 @@ void RequestCounter::loadGeometryHitCounters(const char *filename)
         }
       }
     }
-    fclose(file);
+    (void)fclose(file);
   }
   catch (...)
   {

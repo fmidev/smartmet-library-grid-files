@@ -27,8 +27,7 @@ PercentileSettings::PercentileSettings() {
 
 /*! \brief The destructor of the class. */
 
-PercentileSettings::~PercentileSettings() {
-}
+PercentileSettings::~PercentileSettings() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -64,9 +63,7 @@ void PercentileSettings::write(DataWriter &dataWriter) {
 
 void PercentileSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sPercentileSettings.PercentileValue", prefix.c_str());
-    attributeList.addAttribute(name, toString(mPercentileValue));
+        attributeList.addAttribute(prefix + "PercentileSettings.PercentileValue", toString(mPercentileValue));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -117,7 +114,7 @@ bool PercentileSettings::hasAttributeValue(const char *attributeName, const char
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void PercentileSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
+void PercentileSettings::print(std::ostream &stream, uint level, uint /*optionFlags*/) const {
   try {
     stream << space(level) << "PercentileSettings\n";
     stream << space(level) << "- PercentileValue = " << toString(mPercentileValue) << "\n";

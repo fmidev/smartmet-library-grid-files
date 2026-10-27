@@ -58,15 +58,16 @@ class GridSection : public GRID::MessageSection
 
                           GridSection();
                           GridSection(const GridSection& other);
-    virtual               ~GridSection();
+    ~GridSection() override;
+    GridSection& operator=(const GridSection&) = default;
 
     // ### Common methods for all message sections
 
-    void                  getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const;
-    T::FilePosition       getFilePosition() const;
-    std::uint32_t         getSectionLength() const;
-    std::string           getSectionName() const;
-    std::uint8_t          getSectionNumber() const;
+    void                  getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const override;
+    T::FilePosition       getFilePosition() const override;
+    std::uint32_t         getSectionLength() const override;
+    std::string           getSectionName() const override;
+    std::uint8_t          getSectionNumber() const override;
 
     // ### Section specific methods
 
@@ -85,6 +86,7 @@ class GridSection : public GRID::MessageSection
     bool                  getGridLatLonArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight);
     T::Coordinate_svec    getGridLatLonCoordinates() const;
     bool                  getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const;
+    void                  getGridLatLonCoordinatesByGridPointList(std::vector<T::Point>& gridPoints,T::Coordinate_vec& coordinates,std::vector<bool>& found) const;
     bool                  getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j,double& lat,double& lon) const;
     bool                  getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,double& lat,double& lon) const;
     bool                  getGridMetricArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight);
@@ -128,9 +130,11 @@ class GridSection : public GRID::MessageSection
 
     void                  read(MemoryReader& memoryReader);
     void                  write(DataWriter& dataWriter);
-    void                  print(std::ostream& stream,uint level,uint optionFlags) const;
+    void                  print(std::ostream& stream,uint level,uint optionFlags) const override;
 
   private:
+
+    void                  readNumbersOfPoints(MemoryReader& memoryReader);
 
     GridDefinition*       createGridDefinition(std::uint16_t templateNumber);
 
@@ -205,7 +209,7 @@ class GridSection : public GRID::MessageSection
     };
 };
 
-typedef std::shared_ptr<GridSection> GridSect_sptr;  //!< Shared ownership pointer to a GridSection.
+using GridSect_sptr = std::shared_ptr<GridSection>;  //!< Shared ownership pointer to a GridSection.
 
 }  // namespace GRIB2
 }  // namespace SmartMet

@@ -21,20 +21,24 @@ namespace GRIB2 {
 class AreaProcessedCrossSectionProduct : public ProductDefinition {
 public:
   AreaProcessedCrossSectionProduct();
-  virtual ~AreaProcessedCrossSectionProduct();
+  AreaProcessedCrossSectionProduct(const AreaProcessedCrossSectionProduct &) = default;
+  AreaProcessedCrossSectionProduct(AreaProcessedCrossSectionProduct &&) = default;
+  AreaProcessedCrossSectionProduct &operator=(const AreaProcessedCrossSectionProduct &) = default;
+  AreaProcessedCrossSectionProduct &operator=(AreaProcessedCrossSectionProduct &&) = default;
+  ~AreaProcessedCrossSectionProduct() override;
 
-  virtual uint getTemplateNumber() const;
-  virtual ProductDefinition *createProductDefinition() const;
-  virtual void read(MemoryReader &memoryReader);
-  virtual void write(DataWriter &dataWriter);
-  virtual void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const;
-  virtual bool getAttributeValue(const char *attributeName, std::string &attributeValue) const;
-  virtual bool hasAttributeValue(const char *attributeName, const char *attributeValue) const;
-  virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
+  uint getTemplateNumber() const override;
+  ProductDefinition *createProductDefinition() const override;
+  void read(MemoryReader &memoryReader) override;
+  void write(DataWriter &dataWriter) override;
+  void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const override;
+  bool getAttributeValue(const char *attributeName, std::string &attributeValue) const override;
+  bool hasAttributeValue(const char *attributeName, const char *attributeValue) const override;
+  void print(std::ostream &stream, uint level, uint optionFlags) const override;
   virtual T::Hash countHash() const;
 
-  ParameterSettings *getParameter() const;
-  void setParameter(ParameterSettings &parameter);
+  ParameterSettings *getParameter() const override;
+  void setParameter(const ParameterSettings &parameter);
   const T::UInt8_opt &getHorizontalDimensionProcessed() const;
   void setHorizontalDimensionProcessed(T::UInt8_opt horizontalDimensionProcessed);
   const T::UInt8_opt &getTreatmentOfMissingData() const;

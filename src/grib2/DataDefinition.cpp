@@ -10,9 +10,7 @@ namespace GRIB2
 
 /*! \brief The constructor of the class. */
 
-DataDefinition::DataDefinition()
-{
-}
+DataDefinition::DataDefinition() = default;
 
 
 
@@ -20,9 +18,7 @@ DataDefinition::DataDefinition()
 
 /*! \brief The copy constructor of the class. */
 
-DataDefinition::DataDefinition(const DataDefinition& other)
-{
-}
+DataDefinition::DataDefinition(const DataDefinition& other) = default;
 
 
 
@@ -30,9 +26,7 @@ DataDefinition::DataDefinition(const DataDefinition& other)
 
 /*! \brief The destructor of the class. */
 
-DataDefinition::~DataDefinition()
-{
-}
+DataDefinition::~DataDefinition() = default;
 
 
 
@@ -56,7 +50,7 @@ uint DataDefinition::getTemplateNumber() const
         \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void DataDefinition::print(std::ostream& stream,uint level,uint optionFlags) const
+void DataDefinition::print(std::ostream& /*stream*/,uint /*level*/,uint /*optionFlags*/) const
 {
   throw Fmi::Exception(BCP,"Not implemented!");
 }

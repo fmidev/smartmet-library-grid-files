@@ -23,24 +23,28 @@ namespace GRIB2 {
 class Product_68 : public ProductDefinition {
 public:
   Product_68();
-  virtual ~Product_68();
+  Product_68(const Product_68 &) = default;
+  Product_68(Product_68 &&) = default;
+  Product_68 &operator=(const Product_68 &) = default;
+  Product_68 &operator=(Product_68 &&) = default;
+  ~Product_68() override;
 
-  virtual uint getTemplateNumber() const;
-  virtual ProductDefinition *createProductDefinition() const;
-  virtual void read(MemoryReader &memoryReader);
-  virtual void write(DataWriter &dataWriter);
-  virtual void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const;
-  virtual bool getAttributeValue(const char *attributeName, std::string &attributeValue) const;
-  virtual bool hasAttributeValue(const char *attributeName, const char *attributeValue) const;
-  virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
+  uint getTemplateNumber() const override;
+  ProductDefinition *createProductDefinition() const override;
+  void read(MemoryReader &memoryReader) override;
+  void write(DataWriter &dataWriter) override;
+  void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const override;
+  bool getAttributeValue(const char *attributeName, std::string &attributeValue) const override;
+  bool hasAttributeValue(const char *attributeName, const char *attributeValue) const override;
+  void print(std::ostream &stream, uint level, uint optionFlags) const override;
   virtual T::Hash countHash() const;
 
-  HorizontalSettings *getHorizontal() const;
-  void setHorizontal(HorizontalSettings &horizontal);
-  EpsSettings *getEps() const;
-  void setEps(EpsSettings &eps);
-  StatisticalSettings *getStatistical() const;
-  void setStatistical(StatisticalSettings &statistical);
+  HorizontalSettings *getHorizontal() const override;
+  void setHorizontal(const HorizontalSettings &horizontal);
+  EpsSettings *getEps() const override;
+  void setEps(const EpsSettings &eps);
+  StatisticalSettings *getStatistical() const override;
+  void setStatistical(const StatisticalSettings &statistical);
 
 protected:
   // # Copyright 2005-2019 ECMWF.

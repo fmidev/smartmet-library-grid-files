@@ -27,15 +27,14 @@ PngGridData::PngGridData() {
 
 /*! \brief The destructor of the class. */
 
-PngGridData::~PngGridData() {
-}
+PngGridData::~PngGridData() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
         \param memoryReader  This object controls the access to the memory mapped file.
 */
 
-void PngGridData::read(MemoryReader &memoryReader) {
+void PngGridData::read(MemoryReader &/*memoryReader*/) {
   try {
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
@@ -47,7 +46,7 @@ void PngGridData::read(MemoryReader &memoryReader) {
         \param dataWriter  This object is used for writing the object data.
 */
 
-void PngGridData::write(DataWriter &dataWriter) {
+void PngGridData::write(DataWriter &/*dataWriter*/) {
   try {
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
@@ -60,7 +59,7 @@ void PngGridData::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void PngGridData::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
+void PngGridData::getAttributeList(const std::string &/*prefix*/, T::AttributeList &/*attributeList*/) const {
   try {
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
@@ -73,7 +72,7 @@ void PngGridData::getAttributeList(const std::string &prefix, T::AttributeList &
     \param attributeValue The value of the attribute (string).
 */
 
-bool PngGridData::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+bool PngGridData::getAttributeValue(const char *attributeName, std::string &/*attributeValue*/) const {
   try {
     if (attributeName == nullptr)
       return false;
@@ -106,7 +105,7 @@ bool PngGridData::hasAttributeValue(const char *attributeName, const char *attri
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void PngGridData::print(std::ostream &stream, uint level, uint optionFlags) const {
+void PngGridData::print(std::ostream &stream, uint level, uint /*optionFlags*/) const {
   try {
     stream << space(level) << "PngGridData\n";
   } catch (...) {

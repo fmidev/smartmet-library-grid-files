@@ -20,16 +20,20 @@ namespace GRIB2 {
 class ComplexDifferenceGridData : public DataDefinition {
 public:
   ComplexDifferenceGridData();
-  virtual ~ComplexDifferenceGridData();
+  ComplexDifferenceGridData(const ComplexDifferenceGridData &) = default;
+  ComplexDifferenceGridData(ComplexDifferenceGridData &&) = default;
+  ComplexDifferenceGridData &operator=(const ComplexDifferenceGridData &) = default;
+  ComplexDifferenceGridData &operator=(ComplexDifferenceGridData &&) = default;
+  ~ComplexDifferenceGridData() override;
 
-  virtual uint getTemplateNumber() const;
+  uint getTemplateNumber() const override;
   virtual DataDefinition *createDataDefinition() const;
   virtual void read(MemoryReader &memoryReader);
   virtual void write(DataWriter &dataWriter);
   virtual void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const;
   virtual bool getAttributeValue(const char *attributeName, std::string &attributeValue) const;
   virtual bool hasAttributeValue(const char *attributeName, const char *attributeValue) const;
-  virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
+  void print(std::ostream &stream, uint level, uint optionFlags) const override;
   virtual T::Hash countHash() const;
 
 protected:

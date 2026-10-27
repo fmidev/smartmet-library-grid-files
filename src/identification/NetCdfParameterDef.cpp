@@ -49,7 +49,7 @@ NetCdfParameterDef::~NetCdfParameterDef()
         \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void NetCdfParameterDef::print(std::ostream& stream,uint level,uint optionFlags) const
+void NetCdfParameterDef::print(std::ostream& stream,uint level,uint /*optionFlags*/) const
 {
   try
   {

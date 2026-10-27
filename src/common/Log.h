@@ -23,6 +23,8 @@ class Log
   public:
                         Log();
     virtual             ~Log();
+    Log(const Log&) = delete;
+    Log& operator=(const Log&) = delete;
 
     /*! \brief Configure the logger.
      *  \param[in] _enabled       Start enabled if true.
@@ -89,6 +91,21 @@ class Log
     /*! \brief Truncate the log file if it exceeds maxSize. */
     virtual void        truncate();
 
+    /*! \brief Write printf formatted text (PRINT_DATA).
+     *  \param[in] _format  printf format string. */
+    void                printData(const char *_format,...) __attribute__((format(printf,2,3)));
+
+    /*! \brief Write a timestamped, numbered event line of printf formatted text (PRINT_EVENT_LINE).
+     *  \param[in] _format  printf format string. */
+    void                printEventLine(const char *_format,...) __attribute__((format(printf,2,3)));
+
+    /*! \brief Write a timestamped, numbered event of printf formatted text with its source location (PRINT_EVENT).
+     *  \param[in] _filename  Source file name.
+     *  \param[in] _line      Source line number.
+     *  \param[in] _function  Function name.
+     *  \param[in] _format    printf format string. */
+    void                printEvent(const char *_filename,uint _line,const char *_function,const char *_format,...) __attribute__((format(printf,5,6)));
+
   protected:
 
     FILE*               file;         //!< Open file handle (nullptr when not open)
@@ -104,75 +121,17 @@ class Log
 
 
 
-#define PRINT_EVENT(_xLog,_xfileName,_xLine,_xFunction,_xargs...) \
-  if (_xLog != nullptr  &&  _xLog->isEnabled())\
-  {\
-    _xLog->lock();\
-    FILE *file = _xLog->getFileHandle();\
-    if (file != nullptr)\
-    {\
-      time_t x_time = time(nullptr);\
-      struct tm x_tm;\
-      localtime_r(&x_time,&x_tm);\
-      fprintf(file,"[%04u-%02u-%02u/%02u:%02u:%02u][%llu][",x_tm.tm_year+1900,x_tm.tm_mon+1,x_tm.tm_mday,x_tm.tm_hour,x_tm.tm_min,x_tm.tm_sec,_xLog->getEventCounter());\
-      fprintf(file,_xargs);\
-      fprintf(file,"][%s:%u:%s()]\n",_xfileName,_xLine,_xFunction);\
-      fflush(file); \
-      _xLog->unlock();\
-      _xLog->truncate();\
-    }\
-    else \
-      _xLog->unlock();\
-  }
+// The macros evaluate their arguments only when the log is enabled, and expand to an
+// expression so that the terminating ';' of the call is part of the statement.
 
+#define PRINT_EVENT(_xLog,_xfileName,_xLine,_xFunction,...) \
+  ((_xLog) != nullptr  &&  (_xLog)->isEnabled() ? (_xLog)->printEvent(_xfileName,_xLine,_xFunction,__VA_ARGS__) : void())
 
+#define PRINT_EVENT_LINE(_xLog,...) \
+  ((_xLog) != nullptr  &&  (_xLog)->isEnabled() ? (_xLog)->printEventLine(__VA_ARGS__) : void())
 
-#define PRINT_EVENT_LINE(_xLog,_xargs...) \
-  if (_xLog != nullptr  &&  _xLog->isEnabled())\
-  {\
-    _xLog->lock();\
-    FILE *file = _xLog->getFileHandle();\
-    if (file != nullptr)\
-    {\
-      time_t x_time = time(nullptr);\
-      struct tm x_tm;\
-      localtime_r(&x_time,&x_tm);\
-      fprintf(file,"[%04u-%02u-%02u/%02u:%02u:%02u][%llu][",x_tm.tm_year+1900,x_tm.tm_mon+1,x_tm.tm_mday,x_tm.tm_hour,x_tm.tm_min,x_tm.tm_sec,_xLog->getEventCounter());\
-      fprintf(file,_xargs);\
-      fprintf(file,"]\n");\
-      fflush(file); \
-      _xLog->unlock();\
-      _xLog->truncate();\
-    }\
-    else \
-      _xLog->unlock();\
-  }
-
-
-
-#define PRINT_DATA(_xLog,_xargs...) \
-  if (_xLog != nullptr  &&  _xLog->isEnabled())\
-  {\
-    _xLog->lock();\
-    FILE *file = _xLog->getFileHandle();\
-    if (file != nullptr)\
-    {\
-      fprintf(file,_xargs);\
-      fflush(file); \
-      _xLog->unlock();\
-      _xLog->truncate();\
-    }\
-    else \
-      _xLog->unlock();\
-  }
-
-
-#define PRINT_FILE(_lFile,_xargs...) \
-  if (_lFile != nullptr)\
-  {\
-      fprintf(_lFile,_xargs);\
-      fflush(_lFile); \
-  }
+#define PRINT_DATA(_xLog,...) \
+  ((_xLog) != nullptr  &&  (_xLog)->isEnabled() ? (_xLog)->printData(__VA_ARGS__) : void())
 
 
 

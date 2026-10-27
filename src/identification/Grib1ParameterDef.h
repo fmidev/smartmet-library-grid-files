@@ -9,7 +9,7 @@ namespace Identification
 
 /*! \brief List of GRIB key/value pairs (key as uint code, value as string) that
  *  together identify a parameter or level in a GRIB message. */
-typedef std::vector<std::pair<uint,std::string>> ParameterList;
+using ParameterList = std::vector<std::pair<uint,std::string>>;
 
 // ====================================================================================
 /*! \brief GRIB edition 1 parameter definition record loaded from \c paramDef_grib1.csv.
@@ -25,6 +25,8 @@ class Grib1ParameterDef
 
                     Grib1ParameterDef();
     virtual         ~Grib1ParameterDef();
+    Grib1ParameterDef(const Grib1ParameterDef&) = default;
+    Grib1ParameterDef& operator=(const Grib1ParameterDef&) = default;
 
     /*! \brief Write a human-readable dump to \p stream (for debugging). */
     void            print(std::ostream& stream,uint level,uint optionFlags) const;
@@ -33,9 +35,9 @@ class Grib1ParameterDef
     ParameterList   mParameterList;    //!< GRIB 1 key/value pairs that identify this parameter
 };
 
-typedef const Grib1ParameterDef* Grib1ParamDef_cptr;          //!< Non-owning const pointer
-typedef std::vector<Grib1ParameterDef> Grib1ParamDef_vec;      //!< Ordered list of GRIB 1 parameter definitions
-typedef std::list<Grib1ParameterDef> Grib1ParamDef_list;       //!< List used as a lookup cache
+using Grib1ParamDef_cptr = const Grib1ParameterDef*;          //!< Non-owning const pointer
+using Grib1ParamDef_vec = std::vector<Grib1ParameterDef>;      //!< Ordered list of GRIB 1 parameter definitions
+using Grib1ParamDef_list = std::list<Grib1ParameterDef>;       //!< List used as a lookup cache
 
 
 }

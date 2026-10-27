@@ -1,5 +1,7 @@
 #include "TimeIntervalAtmosphericChemicalEnsembleProductImpl.h"
 #include <macgyver/Exception.h>
+
+#include <utility>
 #include "../../common/GeneralFunctions.h"
 
 
@@ -11,9 +13,7 @@ namespace GRIB2
 
 /*! \brief The constructor of the class. */
 
-TimeIntervalAtmosphericChemicalEnsembleProductImpl::TimeIntervalAtmosphericChemicalEnsembleProductImpl()
-{
-}
+TimeIntervalAtmosphericChemicalEnsembleProductImpl::TimeIntervalAtmosphericChemicalEnsembleProductImpl() = default;
 
 
 
@@ -21,10 +21,7 @@ TimeIntervalAtmosphericChemicalEnsembleProductImpl::TimeIntervalAtmosphericChemi
 
 /*! \brief The copy constructor of the class. */
 
-TimeIntervalAtmosphericChemicalEnsembleProductImpl::TimeIntervalAtmosphericChemicalEnsembleProductImpl(const TimeIntervalAtmosphericChemicalEnsembleProductImpl& other)
-:TimeIntervalAtmosphericChemicalEnsembleProduct(other)
-{
-}
+TimeIntervalAtmosphericChemicalEnsembleProductImpl::TimeIntervalAtmosphericChemicalEnsembleProductImpl(const TimeIntervalAtmosphericChemicalEnsembleProductImpl& other) = default;
 
 
 
@@ -32,9 +29,7 @@ TimeIntervalAtmosphericChemicalEnsembleProductImpl::TimeIntervalAtmosphericChemi
 
 /*! \brief The destructor of the class. */
 
-TimeIntervalAtmosphericChemicalEnsembleProductImpl::~TimeIntervalAtmosphericChemicalEnsembleProductImpl()
-{
-}
+TimeIntervalAtmosphericChemicalEnsembleProductImpl::~TimeIntervalAtmosphericChemicalEnsembleProductImpl() = default;
 
 
 
@@ -131,7 +126,7 @@ T::UInt8_opt TimeIntervalAtmosphericChemicalEnsembleProductImpl::getGeneratingPr
 
 
 
-T::TimeString TimeIntervalAtmosphericChemicalEnsembleProductImpl::countForecastStartTime(T::TimeString referenceTime) const
+T::TimeString TimeIntervalAtmosphericChemicalEnsembleProductImpl::countForecastStartTime(const T::TimeString& referenceTime) const
 {
   try
   {
@@ -190,6 +185,8 @@ T::TimeString TimeIntervalAtmosphericChemicalEnsembleProductImpl::countForecastS
 
       case 13: //  s Second
         dt = Fmi::TimeDuration(0,0,forecastTime);
+        break;
+      default:
         break;
     }
 

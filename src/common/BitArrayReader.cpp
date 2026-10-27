@@ -48,7 +48,7 @@ BitArrayReader::~BitArrayReader()
 
 /*! \brief The method returns the size of the bit array/stream counted in bits. */
 
-UInt64 BitArrayReader::getNumberOfBits()
+UInt64 BitArrayReader::getNumberOfBits() const
 {
   try
   {
@@ -68,7 +68,7 @@ UInt64 BitArrayReader::getNumberOfBits()
     The position is counted in bits from the beginning of the bit array/stream.
 */
 
-UInt64 BitArrayReader::getReadPosition()
+UInt64 BitArrayReader::getReadPosition() const
 {
   try
   {

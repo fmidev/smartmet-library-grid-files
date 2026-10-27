@@ -1,5 +1,7 @@
 #include "TransverseMercatorImpl.h"
 #include <macgyver/Exception.h>
+
+#include <memory>
 #include "../../grid/PrintOptions.h"
 #include "../../common/GeneralFunctions.h"
 
@@ -14,8 +16,8 @@ namespace GRIB2
 TransverseMercatorImpl::TransverseMercatorImpl()
 {
   mGridProjection = T::GridProjectionValue::TransverseMercator;
-  mLongitude = 0;
-  mLatitude = 0;
+
+
 
 }
 
@@ -38,9 +40,7 @@ TransverseMercatorImpl::TransverseMercatorImpl(const TransverseMercatorImpl& oth
 
 /*! \brief The destructor of the class. */
 
-TransverseMercatorImpl::~TransverseMercatorImpl()
-{
-}
+TransverseMercatorImpl::~TransverseMercatorImpl() = default;
 
 
 
@@ -159,7 +159,7 @@ T::Dimensions TransverseMercatorImpl::getGridDimensions() const
   try
   {
     if (!mNi || !mNj)
-      return T::Dimensions();
+      return {};
 
     return T::Dimensions(*mNi, *mNj);
   }
@@ -201,13 +201,16 @@ bool TransverseMercatorImpl::getGridPointByOriginalCoordinates(double x,double y
     double i = xDiff / di;
     double j = yDiff / dj;
 
+    // Projection round-off puts points on the first row or column slightly outside the grid
+    if (i < 0 && i > -1e-4)
+      i = 0;
+    if (j < 0 && j > -1e-4)
+      j = 0;
+
     grid_i = i;
     grid_j = j;
 
-    if (i < 0 ||  j < 0  ||  i >= C_DOUBLE(ni) ||  j > C_DOUBLE(nj))
-      return false;
-
-    return true;
+    return !(i < 0 ||  j < 0  ||  i >= C_DOUBLE(ni) ||  j > C_DOUBLE(nj));
 
   }
   catch (...)
@@ -258,10 +261,7 @@ bool TransverseMercatorImpl::reverseXDirection() const
   {
     unsigned char scanMode = mScanningMode.getScanningMode();
 
-    if ((scanMode & 0x80) != 0)
-      return true;
-
-    return false;
+    return (scanMode & 0x80) != 0;
   }
   catch (...)
   {
@@ -311,14 +311,14 @@ std::string TransverseMercatorImpl::getGridGeometryString() const
     if ((scanningMode & 0x40) == 0)
     {
       dy = -dy;
-      p += sprintf(p,"-y");
+      sprintf(p,"-y");
     }
     else
     {
-      p += sprintf(p,"+y");
+      sprintf(p,"+y");
     }
 
-    sprintf(buf,"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;%.6f;%.6f;%.6f;%.6f;description",
+    sprintf(buf,"%d;id;name;%u;%u;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;%.6f;%.6f;%.6f;%.6f;description",
         T::GridProjectionValue::TransverseMercator,*mNi,*mNj,mLongitude,mLatitude,fabs(dx),fabs(dy),sm,rx,ry,
         false_eastening,false_northing,mEarth_semiMajor,mEarth_semiMinor);
 
@@ -345,10 +345,7 @@ bool TransverseMercatorImpl::reverseYDirection() const
   {
     unsigned char scanMode = mScanningMode.getScanningMode();
 
-    if ((scanMode & 0x40) == 0)
-      return true;
-
-    return false;
+    return (scanMode & 0x40) == 0;
   }
   catch (...)
   {
@@ -367,7 +364,7 @@ void TransverseMercatorImpl::initSpatialReference()
     mSpatialReference = getSpatialReference();
     if (!mSpatialReference)
     {
-      mSpatialReference.reset(new T::SpatialRef());
+      mSpatialReference = std::make_shared<T::SpatialRef>();
 
       // ### Check that we have all necessary values needed by this method.
 

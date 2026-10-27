@@ -47,7 +47,7 @@ LevelDef::~LevelDef()
 
 /*! \brief Prints the content of the object into the given stream. */
 
-void LevelDef::print(std::ostream& stream,uint level,uint optionFlags) const
+void LevelDef::print(std::ostream& stream,uint level,uint /*optionFlags*/) const
 {
   try
   {

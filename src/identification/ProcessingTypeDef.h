@@ -20,6 +20,8 @@ class ProcessingTypeDef
   public:
                     ProcessingTypeDef();
     virtual         ~ProcessingTypeDef();
+    ProcessingTypeDef(const ProcessingTypeDef&) = default;
+    ProcessingTypeDef& operator=(const ProcessingTypeDef&) = default;
 
     /*! \brief Write a human-readable dump to \p stream (for debugging). */
     void            print(std::ostream& stream,uint level,uint optionFlags) const;
@@ -30,8 +32,8 @@ class ProcessingTypeDef
 };
 
 
-typedef std::vector<ProcessingTypeDef> ProcessingTypeDef_vec;  //!< Ordered list of processing type definitions
-typedef const ProcessingTypeDef* ProcessingTypeDef_cptr;       //!< Non-owning const pointer
+using ProcessingTypeDef_vec = std::vector<ProcessingTypeDef>;  //!< Ordered list of processing type definitions
+using ProcessingTypeDef_cptr = const ProcessingTypeDef*;       //!< Non-owning const pointer
 
 
 }

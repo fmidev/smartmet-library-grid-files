@@ -1,6 +1,8 @@
 #include "EquatorialAzimuthalEquidistantImpl.h"
 #include <macgyver/Exception.h>
 
+#include <memory>
+
 namespace SmartMet
 {
 namespace GRIB2
@@ -20,10 +22,7 @@ EquatorialAzimuthalEquidistantImpl::EquatorialAzimuthalEquidistantImpl()
 
 /*! \brief The copy constructor of the class. */
 
-EquatorialAzimuthalEquidistantImpl::EquatorialAzimuthalEquidistantImpl(const EquatorialAzimuthalEquidistantImpl& other)
-:EquatorialAzimuthalEquidistant(other)
-{
-}
+EquatorialAzimuthalEquidistantImpl::EquatorialAzimuthalEquidistantImpl(const EquatorialAzimuthalEquidistantImpl& other) = default;
 
 
 
@@ -31,9 +30,7 @@ EquatorialAzimuthalEquidistantImpl::EquatorialAzimuthalEquidistantImpl(const Equ
 
 /*! \brief The destructor of the class. */
 
-EquatorialAzimuthalEquidistantImpl::~EquatorialAzimuthalEquidistantImpl()
-{
-}
+EquatorialAzimuthalEquidistantImpl::~EquatorialAzimuthalEquidistantImpl() = default;
 
 
 
@@ -113,7 +110,7 @@ T::Dimensions EquatorialAzimuthalEquidistantImpl::getGridDimensions() const
   try
   {
     if (!mNumberOfPointsAlongXAxis || ! mNumberOfPointsAlongYAxis)
-      return T::Dimensions();
+      return {};
 
     return T::Dimensions(*mNumberOfPointsAlongXAxis,*mNumberOfPointsAlongYAxis);
   }
@@ -165,7 +162,7 @@ void EquatorialAzimuthalEquidistantImpl::initSpatialReference()
     mSpatialReference = getSpatialReference();
     if (!mSpatialReference)
     {
-      mSpatialReference.reset(new T::SpatialRef());
+      mSpatialReference = std::make_shared<T::SpatialRef>();
       addSpatialReference(mSpatialReference);
 
       // ### Check that we have all necessary values needed by this method.

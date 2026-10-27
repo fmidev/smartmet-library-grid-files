@@ -53,15 +53,15 @@ Grib2ParameterDef::~Grib2ParameterDef()
         \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void Grib2ParameterDef::print(std::ostream& stream,uint level,uint optionFlags) const
+void Grib2ParameterDef::print(std::ostream& stream,uint level,uint /*optionFlags*/) const
 {
   try
   {
     stream << space(level) << "GribParameterDef2\n";
     stream << space(level) << "- mGribParameterId  = " << mGribParameterId << "\n";
     stream << space(level) << "- mParameterList    = \n";
-    for (auto it = mParameterList.begin(); it != mParameterList.end(); ++it)
-      stream << space(level+2) << stringFactory[it->first] << " : " << it->second << "\n";
+    for (const auto& it : mParameterList)
+      stream << space(level+2) << stringFactory[it.first] << " : " << it.second << "\n";
   }
   catch (...)
   {

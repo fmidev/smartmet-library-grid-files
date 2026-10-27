@@ -22,11 +22,13 @@ class BitArrayWriter
      *  \param[in] numberOfBits  Total writable bit capacity. */
                 BitArrayWriter(unsigned char *data,UInt64 numberOfBits);
     virtual     ~BitArrayWriter();
+    BitArrayWriter(const BitArrayWriter&) = default;
+    BitArrayWriter& operator=(const BitArrayWriter&) = default;
 
     /*! \brief Return the total writable bit capacity. */
-    UInt64      getNumberOfBits();
+    UInt64      getNumberOfBits() const;
     /*! \brief Return the current bit write position. */
-    UInt64      getWritePosition();
+    UInt64      getWritePosition() const;
     /*! \brief Set the current bit write position.
      *  \param[in] writePosition  New position (zero-based bit index). */
     void        setWritePosition(UInt64 writePosition);

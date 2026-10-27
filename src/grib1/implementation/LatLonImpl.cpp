@@ -1,4 +1,6 @@
 #include "LatLonImpl.h"
+#include <cmath>
+#include <memory>
 #include "../Properties.h"
 #include <macgyver/Exception.h>
 #include "../../common/GeneralFunctions.h"
@@ -17,11 +19,11 @@ namespace GRIB1
 LatLonImpl::LatLonImpl()
 {
   mGridProjection = T::GridProjectionValue::LatLon;
-  mDx = 0;
-  mDy = 0;
-  mStartX = 0;
-  mStartY = 0;
-  mInitialized = false;
+
+
+
+
+
 }
 
 
@@ -53,9 +55,7 @@ LatLonImpl::LatLonImpl(const LatLonImpl& other)
 
 /*! \brief The destructor of the class. */
 
-LatLonImpl::~LatLonImpl()
-{
-}
+LatLonImpl::~LatLonImpl() = default;
 
 
 
@@ -117,6 +117,41 @@ void LatLonImpl::read(MemoryReader& memoryReader)
 
 
 
+namespace
+{
+// GRIB1 increments are whole millidegrees, so for example 0.249653 is coded as 0.250 and the
+// coordinates drift by a grid cell over 720 rows. When the first and last grid points agree
+// with the coded increment within that rounding, the increment is derived from them instead
+// (as ecCodes does). Missing increments (0 or all bits set) are always derived.
+double refinedIncrement(std::uint16_t coded, double first, double last, uint n)
+{
+  const double increment = coded / 1000.0;
+  if (n < 2)
+    return increment;
+
+  const double derived = std::fabs(last - first) / (n - 1);
+  if (coded == 0 || coded == 0xFFFF)
+    return derived;
+
+  if (std::fabs(derived - increment) <= 0.0005 + 1e-9)
+    return derived;
+
+  return increment;
+}
+
+// Longitude span of the grid in the scanning direction
+double longitudeOfLastPoint(double first, double last, bool negativeScan)
+{
+  if (!negativeScan && last < first)
+    return last + 360;
+  if (negativeScan && last > first)
+    return last - 360;
+  return last;
+}
+}  // namespace
+
+
+
 /*! \brief Initializes derived projection parameters (grid origin and direction increments). */
 
 void LatLonImpl::init() const
@@ -129,28 +164,16 @@ void LatLonImpl::init() const
     mStartY = C_DOUBLE(mGridArea.getLatitudeOfFirstGridPoint()) / 1000;
     mStartX = getLongitude(C_DOUBLE(mGridArea.getLongitudeOfFirstGridPoint()) / 1000);
 
+    unsigned char scanMode = mScanningMode.getScanningMode();
+
     double mEndY = C_DOUBLE(mGridArea.getLatitudeOfLastGridPoint()) / 1000;
-    double mEndX = getLongitude(C_DOUBLE(mGridArea.getLongitudeOfLastGridPoint()) / 1000);
+    double mEndX = longitudeOfLastPoint(mStartX,getLongitude(C_DOUBLE(mGridArea.getLongitudeOfLastGridPoint()) / 1000),(scanMode & 0x80) != 0);
 
-    double dx = C_DOUBLE(mIDirectionIncrement) / 1000;
-    double dy = C_DOUBLE(mJDirectionIncrement) / 1000;
-
-    auto rs = mGridArea.getResolutionFlags();
-    if (rs != nullptr)
-    {
-      std::uint8_t flags = rs->getResolutionAndComponentFlags();
-      if ((flags & 0x80) == 0)
-      {
-        // direction increments not given
-        dx = (mEndX-mStartX)/mNi;
-        dy = (mEndY-mStartY)/mNj;
-      }
-    }
+    double dx = refinedIncrement(mIDirectionIncrement,mStartX,mEndX,mNi);
+    double dy = refinedIncrement(mJDirectionIncrement,mStartY,mEndY,mNj);
 
     mDx = dx;
     mDy = dy;
-
-    unsigned char scanMode = mScanningMode.getScanningMode();
 
     if ((scanMode & 0x80) != 0)
       mDx = -dx;
@@ -272,11 +295,11 @@ std::string LatLonImpl::getGridGeometryString() const
     if ((scanningMode & 0x40) == 0)
     {
       dy = -dy;
-      p += sprintf(p,"-y");
+      sprintf(p,"-y");
     }
     else
     {
-      p += sprintf(p,"+y");
+      sprintf(p,"+y");
     }
 
 
@@ -644,10 +667,7 @@ bool LatLonImpl::reverseXDirection() const
   {
     unsigned char scanMode = mScanningMode.getScanningMode();
 
-    if ((scanMode & 0x80) != 0)
-      return true;
-
-    return false;
+    return (scanMode & 0x80) != 0;
   }
   catch (...)
   {
@@ -671,10 +691,7 @@ bool LatLonImpl::reverseYDirection() const
   {
     unsigned char scanMode = mScanningMode.getScanningMode();
 
-    if ((scanMode & 0x40) == 0)
-      return true;
-
-    return false;
+    return (scanMode & 0x40) == 0;
   }
   catch (...)
   {
@@ -735,6 +752,8 @@ bool LatLonImpl::getProperty(uint propertyId,Int64& value)
       case Property::GridSection::LatLon::JDirectionIncrement:
         value = getJDirectionIncrement();
         return true;
+      default:
+        break;
     }
 
     return GridDefinition::getProperty(propertyId,value);
@@ -777,6 +796,8 @@ bool LatLonImpl::setProperty(uint propertyId,Int64 value)
       case Property::GridSection::LatLon::JDirectionIncrement:
         setJDirectionIncrement(value);
         return true;
+      default:
+        break;
     }
 
     return GridDefinition::setProperty(propertyId,value);
@@ -800,7 +821,7 @@ void LatLonImpl::initSpatialReference()
     mSpatialReference = getSpatialReference();
     if (!mSpatialReference)
     {
-      mSpatialReference.reset(new T::SpatialRef());
+      mSpatialReference = std::make_shared<T::SpatialRef>();
       addSpatialReference(mSpatialReference);
 
       // ### Set geographic coordinate system.

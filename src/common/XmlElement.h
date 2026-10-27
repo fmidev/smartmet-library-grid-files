@@ -9,7 +9,7 @@ namespace SmartMet
 {
 
 
-typedef std::map<std::string,std::string> ParameterList; //!< XML element attribute map
+using ParameterList = std::map<std::string,std::string>; //!< XML element attribute map
 
 
 // ====================================================================================
@@ -32,6 +32,8 @@ class XmlElement
      *  \param[in] size  Size of \p data in bytes. */
                   XmlElement(const char *data,int size);
     virtual       ~XmlElement();
+    XmlElement(const XmlElement&) = delete;
+    XmlElement& operator=(const XmlElement&) = delete;
 
     /*! \brief Parse \p data into \p xmlRoot (static factory method).
      *  \param[in]  data     XML text buffer.
@@ -55,7 +57,7 @@ class XmlElement
 
   protected:
 
-    static int    getTagNameAndType(const char *data,char *name,ParameterList& parameterList);
+    static int    getTagNameAndType(const char *data,char *name,const ParameterList& parameterList);
 };
 
 

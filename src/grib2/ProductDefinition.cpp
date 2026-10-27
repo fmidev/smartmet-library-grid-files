@@ -1,6 +1,8 @@
 #include "ProductDefinition.h"
 #include "Properties.h"
 #include <macgyver/Exception.h>
+
+#include <utility>
 #include "../common/GeneralFunctions.h"
 
 
@@ -12,9 +14,7 @@ namespace GRIB2
 
 /*! \brief The constructor of the class. */
 
-ProductDefinition::ProductDefinition()
-{
-}
+ProductDefinition::ProductDefinition() = default;
 
 
 
@@ -32,9 +32,7 @@ ProductDefinition::ProductDefinition(const ProductDefinition& other)
 
 /*! \brief The destructor of the class. */
 
-ProductDefinition::~ProductDefinition()
-{
-}
+ProductDefinition::~ProductDefinition() = default;
 
 
 
@@ -543,6 +541,8 @@ bool ProductDefinition::getProperty_ParameterSettings(uint propertyId,Int64& val
       case Property::ProductSection::ParameterSettings::ForecastTime:
         value = *p->getForecastTime();
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -592,6 +592,8 @@ bool ProductDefinition::getProperty_HorizontalSettings(uint propertyId,Int64& va
       case Property::ProductSection::HorizontalSettings::ScaledValueOfSecondFixedSurface:
         value = *h->getScaledValueOfSecondFixedSurface();
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -673,6 +675,8 @@ bool ProductDefinition::getProperty_StatisticalSettings(uint propertyId,Int64& v
       case Property::ProductSection::StatisticalSettings::TimeIncrement:
         value = *p->getTimeIncrement();
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -710,6 +714,8 @@ bool ProductDefinition::getProperty_EpsSettings(uint propertyId,Int64& value)
       case Property::ProductSection::EpsSettings::NumberOfForecastsInEnsemble:
         value = *p->getNumberOfForecastsInEnsemble();
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -743,6 +749,8 @@ bool ProductDefinition::getProperty_DerivedSettings(uint propertyId,Int64& value
       case Property::ProductSection::DerivedSettings::NumberOfForecastsInEnsemble:
         value = *p->getNumberOfForecastsInEnsemble();
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -824,6 +832,8 @@ bool ProductDefinition::getProperty_RectangularClusterSettings(uint propertyId,I
       case Property::ProductSection::RectangularClusterSettings::ScaledValueOfDistanceFromEnsembleMean:
         value = *p->getScaledValueOfDistanceFromEnsembleMean();
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -877,6 +887,8 @@ bool ProductDefinition::getProperty_ProbabilitySettings(uint propertyId,Int64& v
       case Property::ProductSection::ProbabilitySettings::ScaledValueOfUpperLimit:
         value = *p->getScaledValueOfUpperLimit();
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -906,6 +918,8 @@ bool ProductDefinition::getProperty_PercentileSettings(uint propertyId,Int64& va
       case Property::ProductSection::PercentileSettings::PercentileValue:
         value = *p->getPercentileValue();
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -959,6 +973,8 @@ bool ProductDefinition::getProperty_CategoricalSettings(uint propertyId,Int64& v
       case Property::ProductSection::CategoricalSettings::ScaledValueOfUpperLimit:
         value = *p->getScaledValueOfUpperLimit();
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -1070,6 +1086,8 @@ bool ProductDefinition::setProperty_ParameterSettings(uint propertyId,Int64 valu
       case Property::ProductSection::ParameterSettings::ForecastTime:
         p->setForecastTime(value);
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -1119,6 +1137,8 @@ bool ProductDefinition::setProperty_HorizontalSettings(uint propertyId,Int64 val
       case Property::ProductSection::HorizontalSettings::ScaledValueOfSecondFixedSurface:
         h->setScaledValueOfSecondFixedSurface(value);
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -1200,6 +1220,8 @@ bool ProductDefinition::setProperty_StatisticalSettings(uint propertyId,Int64 va
       case Property::ProductSection::StatisticalSettings::TimeIncrement:
         p->setTimeIncrement(value);
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -1237,6 +1259,8 @@ bool ProductDefinition::setProperty_EpsSettings(uint propertyId,Int64 value)
       case Property::ProductSection::EpsSettings::NumberOfForecastsInEnsemble:
         p->setNumberOfForecastsInEnsemble(value);
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -1270,6 +1294,8 @@ bool ProductDefinition::setProperty_DerivedSettings(uint propertyId,Int64 value)
       case Property::ProductSection::DerivedSettings::NumberOfForecastsInEnsemble:
         p->setNumberOfForecastsInEnsemble(value);
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -1351,6 +1377,8 @@ bool ProductDefinition::setProperty_RectangularClusterSettings(uint propertyId,I
       case Property::ProductSection::RectangularClusterSettings::ScaledValueOfDistanceFromEnsembleMean:
         p->setScaledValueOfDistanceFromEnsembleMean(value);
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -1404,6 +1432,8 @@ bool ProductDefinition::setProperty_ProbabilitySettings(uint propertyId,Int64 va
       case Property::ProductSection::ProbabilitySettings::ScaledValueOfUpperLimit:
         p->setScaledValueOfUpperLimit(value);
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -1433,6 +1463,8 @@ bool ProductDefinition::setProperty_PercentileSettings(uint propertyId,Int64 val
       case Property::ProductSection::PercentileSettings::PercentileValue:
         p->setPercentileValue(value);
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -1486,6 +1518,8 @@ bool ProductDefinition::setProperty_CategoricalSettings(uint propertyId,Int64 va
       case Property::ProductSection::CategoricalSettings::ScaledValueOfUpperLimit:
         p->setScaledValueOfUpperLimit(value);
         return true;
+      default:
+        break;
     }
 
     return false;
@@ -1512,7 +1546,7 @@ void ProductDefinition::getAttributeList(const std::string& prefix,T::AttributeL
 
 /*! \brief The method returns true if the named attribute matches the given value. */
 
-bool ProductDefinition::hasAttributeValue(const char *attributeName, const char *attributeValue) const
+bool ProductDefinition::hasAttributeValue(const char * /*attributeName*/, const char * /*attributeValue*/) const
 {
   return false;
 }
@@ -1523,7 +1557,7 @@ bool ProductDefinition::hasAttributeValue(const char *attributeName, const char 
 
 /*! \brief The method returns the value of the named product definition attribute. */
 
-bool ProductDefinition::getAttributeValue(const char *attributeName, std::string& attributeValue) const
+bool ProductDefinition::getAttributeValue(const char * /*attributeName*/, std::string& /*attributeValue*/) const
 {
   return false;
 }
@@ -1682,7 +1716,7 @@ T::ParamLevel ProductDefinition::getGribParameterLevel() const
 {
   try
   {
-    auto horizontal = getHorizontal();
+    auto *horizontal = getHorizontal();
     if (horizontal && horizontal->getScaledValueOfFirstFixedSurface())
       return *horizontal->getScaledValueOfFirstFixedSurface(); // * std::pow(10.0,*mHorizontal.getScaleFactorOfFirstFixedSurface());
 
@@ -1708,7 +1742,7 @@ T::ParamLevelId ProductDefinition::getGribParameterLevelId() const
 {
   try
   {
-    auto horizontal = getHorizontal();
+    auto *horizontal = getHorizontal();
     if (horizontal->getTypeOfFirstFixedSurface())
       return *horizontal->getTypeOfFirstFixedSurface();
 
@@ -1729,7 +1763,7 @@ T::ParamLevelId ProductDefinition::getGribParameterLevelId() const
 
 /*! \brief The method computes the forecast start time from parameter settings. */
 
-T::TimeString ProductDefinition::countForecastStartTime(T::TimeString referenceTime,const ParameterSettings& parameter) const
+T::TimeString ProductDefinition::countForecastStartTime(const T::TimeString& referenceTime,const ParameterSettings& parameter) const
 {
   try
   {
@@ -1746,50 +1780,39 @@ T::TimeString ProductDefinition::countForecastStartTime(T::TimeString referenceT
     if (!indicator)
       throw Fmi::Exception(BCP, "The 'parameter.indicatorOfUnitOfTimeRange' value not defined!");
 
-    int ft = *forecastTimeP;
-    int forecastTime = ft;
-    if (ft < 0)
-      forecastTime = -ft;
+    // The forecast time comes from the message, compute in 64 bits and reject absurd values
+    const int ft = *forecastTimeP;
+    std::int64_t forecastTime = ft;
+    if (forecastTime < 0)
+      forecastTime = -forecastTime;
 
-    Fmi::TimeDuration dt;
-
+    std::int64_t unitSeconds = 0;
     switch (*indicator)
     {
-      case 0: // m Minute
-        dt = Fmi::TimeDuration(0,forecastTime,0);
-        break;
-
-      case 1: //  h Hour
-        dt = Fmi::TimeDuration(forecastTime,0,0);
-        break;
-
-      case 2: //  D Day
-        dt = Fmi::TimeDuration(24*forecastTime,0,0);
-        break;
-
-      case 3: //  M Month
-      case 4: //  Y Year
-      case 5: //  10Y Decade (10 years)
-      case 6: //  30Y Normal (30 years)
-      case 7: //  C Century (100 years)
+      case 0:   unitSeconds = 60; break;          //  m Minute
+      case 1:   unitSeconds = 3600; break;        //  h Hour
+      case 2:   unitSeconds = 24 * 3600; break;   //  D Day
+      case 3:   //  M Month
+      case 4:   //  Y Year
+      case 5:   //  10Y Decade (10 years)
+      case 6:   //  30Y Normal (30 years)
+      case 7:   //  C Century (100 years)
         throw Fmi::Exception(BCP, "Not implemented!");
-
-      case 10: //  3h 3 hours
-        dt = Fmi::TimeDuration(3*forecastTime,0,0);
-        break;
-
-      case 11: //  6h 6 hours
-        dt = Fmi::TimeDuration(6*forecastTime,0,0);
-        break;
-
-      case 12: //  12h 12 hours
-        dt = Fmi::TimeDuration(12*forecastTime,0,0);
-        break;
-
-      case 13: //  s Second
-        dt = Fmi::TimeDuration(0,0,forecastTime);
+      case 10:  unitSeconds = 3 * 3600; break;    //  3h 3 hours
+      case 11:  unitSeconds = 6 * 3600; break;    //  6h 6 hours
+      case 12:  unitSeconds = 12 * 3600; break;   //  12h 12 hours
+      case 13:  unitSeconds = 1; break;           //  s Second
+      default:
         break;
     }
+
+    const std::int64_t totalSeconds = forecastTime * unitSeconds;
+    if (totalSeconds > 200LL * 366 * 24 * 3600)
+      throw Fmi::Exception(BCP, "The forecast time is out of range!");
+
+    Fmi::TimeDuration dt(static_cast<int>(totalSeconds / 3600),
+                         static_cast<int>((totalSeconds % 3600) / 60),
+                         static_cast<int>(totalSeconds % 60));
 
     if (ft >= 0)
       tt = refTime + dt;
@@ -1810,7 +1833,7 @@ T::TimeString ProductDefinition::countForecastStartTime(T::TimeString referenceT
 
 /*! \brief The method computes the forecast start time from postprocessing settings. */
 
-T::TimeString ProductDefinition::countForecastStartTime(T::TimeString referenceTime,const PostprocSettings& parameter) const
+T::TimeString ProductDefinition::countForecastStartTime(const T::TimeString& referenceTime,const PostprocSettings& parameter) const
 {
   try
   {
@@ -1869,6 +1892,8 @@ T::TimeString ProductDefinition::countForecastStartTime(T::TimeString referenceT
 
       case 13: //  s Second
         dt = Fmi::TimeDuration(0,0,forecastTime);
+        break;
+      default:
         break;
     }
 
@@ -2041,7 +2066,7 @@ PostprocSettings* ProductDefinition::getPostproc() const
         \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void ProductDefinition::print(std::ostream& stream,uint level,uint optionFlags) const
+void ProductDefinition::print(std::ostream& /*stream*/,uint /*level*/,uint /*optionFlags*/) const
 {
   throw Fmi::Exception(BCP,"Not implemented!");
 }

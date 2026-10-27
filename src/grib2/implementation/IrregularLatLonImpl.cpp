@@ -22,10 +22,7 @@ IrregularLatLonImpl::IrregularLatLonImpl()
 
 /*! \brief The copy constructor of the class. */
 
-IrregularLatLonImpl::IrregularLatLonImpl(const IrregularLatLonImpl& other)
-:IrregularLatLon(other)
-{
-}
+IrregularLatLonImpl::IrregularLatLonImpl(const IrregularLatLonImpl& other) = default;
 
 
 
@@ -33,9 +30,7 @@ IrregularLatLonImpl::IrregularLatLonImpl(const IrregularLatLonImpl& other)
 
 /*! \brief The destructor of the class. */
 
-IrregularLatLonImpl::~IrregularLatLonImpl()
-{
-}
+IrregularLatLonImpl::~IrregularLatLonImpl() = default;
 
 
 
@@ -114,7 +109,7 @@ T::Dimensions IrregularLatLonImpl::getGridDimensions() const
 {
   try
   {
-    return T::Dimensions();
+    return {};
   }
   catch (...)
   {

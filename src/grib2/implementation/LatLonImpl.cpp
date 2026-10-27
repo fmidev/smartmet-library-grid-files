@@ -7,6 +7,7 @@
 #include "../../grid/PrintOptions.h"
 
 #include <iostream>
+#include <memory>
 
 
 namespace SmartMet
@@ -68,9 +69,7 @@ LatLonImpl::LatLonImpl(const LatLonImpl& other)
 
 /*! \brief The destructor of the class. */
 
-LatLonImpl::~LatLonImpl()
-{
-}
+LatLonImpl::~LatLonImpl() = default;
 
 
 
@@ -292,11 +291,11 @@ std::string LatLonImpl::getGridGeometryString() const
     if ((scanningMode & 0x40) == 0)
     {
       dy = -dy;
-      p += sprintf(p,"-y");
+      sprintf(p,"-y");
     }
     else
     {
-      p += sprintf(p,"+y");
+      sprintf(p,"+y");
     }
 
 
@@ -328,7 +327,7 @@ T::Dimensions LatLonImpl::getGridDimensions() const
   try
   {
     if (!mLatLon.getGrid()->getNi() || !mLatLon.getGrid()->getNj())
-      return T::Dimensions();
+      return {};
 
     return T::Dimensions(*mLatLon.getGrid()->getNi(), *mLatLon.getGrid()->getNj());
   }
@@ -528,6 +527,44 @@ bool LatLonImpl::getGridLatLonCoordinatesByGridPosition(double grid_i,double gri
 
 
 
+/*! \brief The method returns the grid latlon coordinates of the given grid points (= integer coordinates).
+    The coordinates are calculated directly from the grid definition, so no coordinate
+    transformation is needed.
+
+        \param gridPoints   The grid points (i,j).
+        \param coordinates  The latlon coordinates (x = longitude, y = latitude) are returned in this parameter.
+        \param found        The method sets 'true' for each point whose coordinates were returned.
+*/
+
+void LatLonImpl::getGridLatLonCoordinatesByGridPointList(std::vector<T::Point>& gridPoints,T::Coordinate_vec& coordinates,std::vector<bool>& found) const
+{
+  try
+  {
+    std::size_t sz = gridPoints.size();
+    coordinates.assign(sz,T::Coordinate(0,0));
+    found.assign(sz,false);
+
+    for (std::size_t t=0; t<sz; t++)
+    {
+      double lat = 0;
+      double lon = 0;
+      if (getGridLatLonCoordinatesByGridPoint(gridPoints[t].x(),gridPoints[t].y(),lat,lon))
+      {
+        coordinates[t] = T::Coordinate(lon,lat);
+        found[t] = true;
+      }
+    }
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
 /*! \brief The method returns the grid original (projection) coordinates in the given grid point (= integer coordinates).
 
         \param grid_i  The grid i-coordinate.
@@ -675,10 +712,7 @@ bool LatLonImpl::reverseXDirection() const
   {
     unsigned char scanMode = mLatLon.getScanningMode()->getScanningMode();
 
-    if ((scanMode & 0x80) != 0)
-      return true;
-
-    return false;
+    return (scanMode & 0x80) != 0;
   }
   catch (...)
   {
@@ -702,10 +736,7 @@ bool LatLonImpl::reverseYDirection() const
   {
     unsigned char scanMode = mLatLon.getScanningMode()->getScanningMode();
 
-    if ((scanMode & 0x40) == 0)
-      return true;
-
-    return false;
+    return (scanMode & 0x40) == 0;
   }
   catch (...)
   {
@@ -725,7 +756,7 @@ void LatLonImpl::initSpatialReference()
     mSpatialReference = getSpatialReference();
     if (!mSpatialReference)
     {
-      mSpatialReference.reset(new T::SpatialRef());
+      mSpatialReference = std::make_shared<T::SpatialRef>();
       addSpatialReference(mSpatialReference);
 
       // ### Set geographic coordinate system.
@@ -763,8 +794,7 @@ void LatLonImpl::initSpatialReference()
 
     if (len >= 360)
       mGlobal = true;
-    else
-    if (!mLatLon.getGrid()->getLongitudeOfFirstGridPoint()  &&  !mLatLon.getGrid()->getLongitudeOfLastGridPoint())
+    else if (!mLatLon.getGrid()->getLongitudeOfFirstGridPoint()  &&  !mLatLon.getGrid()->getLongitudeOfLastGridPoint())
     {
       double longitudeOfFirstGridPoint = C_DOUBLE(*mLatLon.getGrid()->getLongitudeOfFirstGridPoint()) / 1000000;
       double longitudeOfLastGridPoint = C_DOUBLE(*mLatLon.getGrid()->getLongitudeOfLastGridPoint()) / 1000000;

@@ -27,8 +27,7 @@ TimeIntervalAggregateForecast::TimeIntervalAggregateForecast() {
 
 /*! \brief The destructor of the class. */
 
-TimeIntervalAggregateForecast::~TimeIntervalAggregateForecast() {
-}
+TimeIntervalAggregateForecast::~TimeIntervalAggregateForecast() = default;
 
 /*! \brief The method reads and initializes all data related to the current object.
 
@@ -74,19 +73,12 @@ void TimeIntervalAggregateForecast::write(DataWriter &dataWriter) {
 
 void TimeIntervalAggregateForecast::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
-    char name[300];
-    sprintf(name, "%sTimeIntervalAggregateForecast.", prefix.c_str());
-    mParameter.getAttributeList(name, attributeList);
-    sprintf(name, "%sTimeIntervalAggregateForecast.", prefix.c_str());
-    mPointInTime.getAttributeList(name, attributeList);
-    sprintf(name, "%sTimeIntervalAggregateForecast.", prefix.c_str());
-    mHorizontal.getAttributeList(name, attributeList);
-    sprintf(name, "%sTimeIntervalAggregateForecast.StatisticalProcess", prefix.c_str());
-    attributeList.addAttribute(name, toString(mStatisticalProcess));
-    sprintf(name, "%sTimeIntervalAggregateForecast.SpatialProcessing", prefix.c_str());
-    attributeList.addAttribute(name, toString(mSpatialProcessing));
-    sprintf(name, "%sTimeIntervalAggregateForecast.NumberOfPointsUsed", prefix.c_str());
-    attributeList.addAttribute(name, toString(mNumberOfPointsUsed));
+        mParameter.getAttributeList(prefix + "TimeIntervalAggregateForecast.", attributeList);
+        mPointInTime.getAttributeList(prefix + "TimeIntervalAggregateForecast.", attributeList);
+        mHorizontal.getAttributeList(prefix + "TimeIntervalAggregateForecast.", attributeList);
+        attributeList.addAttribute(prefix + "TimeIntervalAggregateForecast.StatisticalProcess", toString(mStatisticalProcess));
+        attributeList.addAttribute(prefix + "TimeIntervalAggregateForecast.SpatialProcessing", toString(mSpatialProcessing));
+        attributeList.addAttribute(prefix + "TimeIntervalAggregateForecast.NumberOfPointsUsed", toString(mNumberOfPointsUsed));
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -210,7 +202,7 @@ ProductDefinition *TimeIntervalAggregateForecast::createProductDefinition() cons
 
 ParameterSettings *TimeIntervalAggregateForecast::getParameter() const {
   try {
-    return static_cast<ParameterSettings *>(&mParameter);
+    return &mParameter;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -220,7 +212,7 @@ ParameterSettings *TimeIntervalAggregateForecast::getParameter() const {
 
 PointInTimeSettings *TimeIntervalAggregateForecast::getPointInTime() const {
   try {
-    return static_cast<PointInTimeSettings *>(&mPointInTime);
+    return &mPointInTime;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -230,7 +222,7 @@ PointInTimeSettings *TimeIntervalAggregateForecast::getPointInTime() const {
 
 HorizontalSettings *TimeIntervalAggregateForecast::getHorizontal() const {
   try {
-    return static_cast<HorizontalSettings *>(&mHorizontal);
+    return &mHorizontal;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
@@ -266,7 +258,7 @@ const T::UInt8_opt &TimeIntervalAggregateForecast::getNumberOfPointsUsed() const
   }
 }
 
-void TimeIntervalAggregateForecast::setParameter(ParameterSettings &parameter) {
+void TimeIntervalAggregateForecast::setParameter(const ParameterSettings &parameter) {
   try {
     mParameter = parameter;
   } catch (...) {
@@ -274,7 +266,7 @@ void TimeIntervalAggregateForecast::setParameter(ParameterSettings &parameter) {
   }
 }
 
-void TimeIntervalAggregateForecast::setPointInTime(PointInTimeSettings &pointInTime) {
+void TimeIntervalAggregateForecast::setPointInTime(const PointInTimeSettings &pointInTime) {
   try {
     mPointInTime = pointInTime;
   } catch (...) {
@@ -282,7 +274,7 @@ void TimeIntervalAggregateForecast::setPointInTime(PointInTimeSettings &pointInT
   }
 }
 
-void TimeIntervalAggregateForecast::setHorizontal(HorizontalSettings &horizontal) {
+void TimeIntervalAggregateForecast::setHorizontal(const HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {

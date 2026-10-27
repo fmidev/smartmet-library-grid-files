@@ -13,6 +13,8 @@ Topography topography;
 
 /*! \brief Converts an ARGB pixel value into a grayscale intensity using the luminance formula. */
 
+namespace
+{
 inline unsigned char argb_to_gray(uint argb)
 {
   uint r = (argb & 0xFF0000) >> 16;
@@ -21,6 +23,7 @@ inline unsigned char argb_to_gray(uint argb)
 
   return (unsigned char)(0.299 * r + 0.587 * g + 0.114 * b);
 }
+}  // namespace
 
 
 
@@ -74,10 +77,10 @@ Topography::~Topography()
 {
   try
   {
-    if (mLandShading)
+    
       delete [] mLandShading;
 
-    if (mSeaShading)
+    
       delete [] mSeaShading;
   }
   catch (...)
@@ -268,7 +271,8 @@ void Topography::loadLandSeaMask()
       {
         if ((mLandSeaMask_width * mLandSeaMask_height) == length)
         {
-          fseek(file,8,SEEK_SET);
+          if (fseek(file,8,SEEK_SET) != 0)
+            throw Fmi::Exception(BCP,"Failed to seek in the file");
           mLandSeaMask.readFromFile(file);
         }
         else
@@ -282,7 +286,7 @@ void Topography::loadLandSeaMask()
         }
       }
 
-      fclose(file);
+      (void)fclose(file);
     }
 
     mLandSeaMask_size = mLandSeaMask_width * mLandSeaMask_height;
@@ -335,7 +339,7 @@ void Topography::loadLandShading()
       for (uint t=0; t<mLandShading_size; t++)
       {
         uint col = image.pixel[t];
-        double pp = (double)argb_to_gray(col);
+        auto pp = (double)argb_to_gray(col);
         if (pp <= 207)
           mLandShading[t] = (float)(-((207.0 - pp)/207.0));
         else
@@ -390,7 +394,7 @@ void Topography::loadSeaShading()
       for (uint t=0; t<mSeaShading_size; t++)
       {
         uint col = image.pixel[t];
-        double pp = (double)argb_to_gray(col);
+        auto pp = (double)argb_to_gray(col);
         if (pp <= 163)
           mSeaShading[t] = (float)(-((163.0 - pp)/163.0));
         else

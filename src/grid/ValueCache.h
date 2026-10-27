@@ -18,8 +18,8 @@
 namespace SmartMet
 {
 
-typedef boost::iostreams::mapped_file_params MappedFileParams;
-typedef Fmi::MappedFile MappedFile;
+using MappedFileParams = boost::iostreams::mapped_file_params;
+using MappedFile = Fmi::MappedFile;
 
 namespace GRID
 {
@@ -35,13 +35,13 @@ namespace GRID
  *  memory-mapped file, reducing heap pressure for large grids. */
 // ====================================================================================
 
-typedef UInt64 UInt64;
+using UInt64 = UInt64;
 
 #ifndef uchar
-  typedef unsigned char uchar;
+  using uchar = unsigned char;
 #endif
 
-typedef uchar *puchar;
+using puchar = uchar *;
 
 
 // ====================================================================================
@@ -58,13 +58,13 @@ class ValueCacheEntry
   public:
 
     /*! \brief Construct an empty (invalid) entry. */
-    ValueCacheEntry()
+    ValueCacheEntry() : mKey(0), mAccessCounter(0), mMappedFile(nullptr), mGrid(nullptr), mSize(0)
     {
-      mKey = 0;
-      mAccessCounter = 0;
-      mMappedFile = nullptr;
-      mGrid = nullptr;
-      mSize = 0;
+
+
+
+
+
     }
 
     /*! \brief Construct an entry that stores \p values under \p key.
@@ -72,11 +72,11 @@ class ValueCacheEntry
      *  \param[in] values  Grid values to store.
      *  \param[in] fname   If non-null, write values to this file and memory-map it;
      *                     otherwise copy values into a heap array. */
-    ValueCacheEntry(uint key,T::ParamValue_vec& values,const char *fname)
+    ValueCacheEntry(uint key,T::ParamValue_vec& values,const char *fname) : mKey(key), mAccessCounter(0), mMappedFile(nullptr)
     {
-      mKey =  key;
-      mAccessCounter = 0;
-      mMappedFile = nullptr;
+
+
+
       mSize = values.size();
       if (mSize > 0)
       {
@@ -92,8 +92,10 @@ class ValueCacheEntry
           }
 
           T::ParamValue *f = &values[0];
-          fwrite(f,sizeof(T::ParamValue),mSize,file);
-          fclose(file);
+          if (fwrite(f,sizeof(T::ParamValue),mSize,file) != mSize)
+            throw Fmi::Exception(BCP,"Failed to write the file");
+          if (fclose(file) != 0)
+            throw Fmi::Exception(BCP,"Failed to close the output file");
 
           Int64 fileSize = getFileSize(fname);
           if (fileSize < 0)
@@ -129,7 +131,7 @@ class ValueCacheEntry
       if (mMappedFile)
       {
         mMappedFile->close();
-        remove(mFilename.c_str());
+        (void)remove(mFilename.c_str());
         delete mMappedFile;
         mMappedFile = nullptr;
       }
@@ -142,6 +144,8 @@ class ValueCacheEntry
         }
       }
     }
+    ValueCacheEntry(const ValueCacheEntry&) = delete;
+    ValueCacheEntry& operator=(const ValueCacheEntry&) = delete;
 
     uint               mKey;           //!< Opaque key assigned when the entry was inserted
     std::atomic<UInt64> mAccessCounter; //!< Logical access time; used for LRU eviction (updated under the shared read lock, hence atomic)
@@ -152,7 +156,7 @@ class ValueCacheEntry
 };
 
 
-typedef ValueCacheEntry* ValueCacheEntry_ptr;
+using ValueCacheEntry_ptr = ValueCacheEntry*;
 
 
 // ====================================================================================
@@ -171,6 +175,8 @@ class ValueCache
   public:
                 ValueCache();
     virtual     ~ValueCache();
+    ValueCache(const ValueCache&) = delete;
+    ValueCache& operator=(const ValueCache&) = delete;
 
     /*! \brief Store a decoded grid value vector.
      *  \param[in] values  Values to cache.
@@ -202,7 +208,7 @@ class ValueCache
 
     /*! \brief Populate \p parent with an attribute sub-tree describing internal state.
      *  \param[in,out] parent  Attribute node that receives cache state attributes. */
-    void        getStateAttributes(std::shared_ptr<T::AttributeNode> parent);
+    void        getStateAttributes(const std::shared_ptr<T::AttributeNode>& parent);
 
     /*! \brief Initialise the cache with given limits (heap mode).
      *  \param[in] maxLen   Maximum number of entries.
@@ -228,7 +234,7 @@ class ValueCache
     uint        getEmpty();
 
 
-    uint        mMaxLength;          //!< Maximum number of entries allowed in the cache
+    uint        mMaxLength = 0;          //!< Maximum number of entries allowed in the cache
     UInt64      mMaxSize;            //!< Maximum total size of cached data in megabytes
     uint        mKeyCounter;         //!< Monotonically increasing counter used to generate cache keys
     std::atomic<UInt64> mAccessCounter; //!< Global access clock; incremented on each cache hit (bumped under the shared read lock, hence atomic)
@@ -249,7 +255,7 @@ class ValueCache
      *  \param[out] value  Receives the requested grid value.
      *  \return True if the entry is still in the cache; false if it was evicted
      *          (caller should re-decode and re-store). */
-    inline bool getValue(uint key,uint index,T::ParamValue& value)
+    bool getValue(uint key,uint index,T::ParamValue& value)
     {
       try
       {
