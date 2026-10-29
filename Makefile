@@ -5,7 +5,7 @@ INCDIR = smartmet/$(SUBNAME)
 
 REQUIRES = geos gdal webp filesystem
 
-include $(shell echo $${PREFIX-/usr})/share/smartmet/devel/makefile.inc
+include $(or $(PREFIX),$(shell smartbuildcfg --prefix))/share/smartmet/devel/makefile.inc
 
 DEFINES = -DUNIX -D_REENTRANT -DUSE_UNSTABLE_GEOS_CPP_API
 
