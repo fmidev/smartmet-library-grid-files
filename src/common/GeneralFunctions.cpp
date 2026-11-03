@@ -2613,10 +2613,21 @@ void splitNumbers(const char *str,std::vector<std::string>& numbers)
     {
       int startp = toInt32(nums[0]);
       int endp = toInt32(nums[1]);
-      while (startp <= endp)
+      // Bound the expansion: a request-controlled range such as 0-2147483647 would
+      // otherwise allocate one string per integer (and overflow startp++) until the
+      // process runs out of memory. Reject absurd ranges. (DoS hardening.)
+      if (endp >= startp  &&  (static_cast<long>(endp) - static_cast<long>(startp)) <= 100000)
       {
-        numbers.emplace_back(Fmi::to_string(startp));
-        startp++;
+        while (startp <= endp)
+        {
+          numbers.emplace_back(Fmi::to_string(startp));
+          startp++;
+        }
+      }
+      else
+      {
+        throw Fmi::Exception(BCP,"Numeric range is empty or too wide (max 100000)")
+            .addParameter("Range",part);
       }
     }
     else

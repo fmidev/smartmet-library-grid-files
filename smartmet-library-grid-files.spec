@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 26.10.28
+Version: 26.11.5
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -129,6 +129,9 @@ libraries, the grid engine and the plugins using it
 %attr(0755,root,root) %{_bindir}/smartmet-grid-test-redis
 
 %changelog
+* Thu Nov 5 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.11.5-1.fmi
+- splitNumbers rejects numeric ranges that would expand beyond a sane element count
+
 * Wed Oct 28 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.28-1.fmi
 - The test package requires smartmet-test-data >= 26.10.27, whose grib/pal_ensemble control
   forecast has the three steps the Redis content registers
