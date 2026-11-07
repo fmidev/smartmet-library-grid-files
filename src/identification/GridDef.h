@@ -390,7 +390,7 @@ class GridDef
     ConfigurationFile       mConfigurationFile;
 
     bool                    mInitialized;
-    std::atomic<time_t>     mLastCheckTime;
+    std::atomic<time_t>     mLastCheckTime{0};
     ModificationLock        mModificationLock;
 
     string_vec              mGrib_parameterDef_files;

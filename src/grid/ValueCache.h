@@ -148,7 +148,7 @@ class ValueCacheEntry
     ValueCacheEntry& operator=(const ValueCacheEntry&) = delete;
 
     uint               mKey;           //!< Opaque key assigned when the entry was inserted
-    std::atomic<UInt64> mAccessCounter; //!< Logical access time; used for LRU eviction (updated under the shared read lock, hence atomic)
+    std::atomic<UInt64> mAccessCounter{0}; //!< Logical access time; used for LRU eviction (updated under the shared read lock, hence atomic)
     std::string        mFilename;      //!< Backing file path (non-empty only in file-cache mode)
     MappedFile*        mMappedFile;    //!< Memory-mapped view of the backing file (nullptr in heap mode)
     T::ParamValue*     mGrid;          //!< Pointer to the value array (mapped or heap)
@@ -237,13 +237,13 @@ class ValueCache
     uint        mMaxLength = 0;          //!< Maximum number of entries allowed in the cache
     UInt64      mMaxSize;            //!< Maximum total size of cached data in megabytes
     uint        mKeyCounter;         //!< Monotonically increasing counter used to generate cache keys
-    std::atomic<UInt64> mAccessCounter; //!< Global access clock; incremented on each cache hit (bumped under the shared read lock, hence atomic)
+    std::atomic<UInt64> mAccessCounter{0}; //!< Global access clock; incremented on each cache hit (bumped under the shared read lock, hence atomic)
     bool        mFileCacheEnabled;   //!< True when values are written to temporary backing files
     ValueCacheEntry_ptr*    mEntryList;       //!< Fixed-size array of entry pointers (length = mMaxLength)
     std::string             mCacheDir;        //!< Directory for temporary backing files
     Fmi::Cache::CacheStats  mCacheStats;      //!< Cache metrics; hit/miss fields are populated from the atomic counters below when reported
-    std::atomic<std::size_t> mCacheHits;      //!< Cache hit counter (incremented under the shared read lock, hence atomic)
-    std::atomic<std::size_t> mCacheMisses;    //!< Cache miss counter (incremented under the shared read lock, hence atomic)
+    std::atomic<std::size_t> mCacheHits{0};      //!< Cache hit counter (incremented under the shared read lock, hence atomic)
+    std::atomic<std::size_t> mCacheMisses{0};    //!< Cache miss counter (incremented under the shared read lock, hence atomic)
     ModificationLock        mModificationLock; //!< Guards concurrent reads and writes
 
 

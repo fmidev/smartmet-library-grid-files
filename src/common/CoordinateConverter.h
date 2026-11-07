@@ -146,7 +146,7 @@ class CoordinateConverter
   protected:
 
     OGRCoordinateTransformation *transformation[CONVERTER_COUNT]{}; //!< OGR transformation objects per slot
-    std::atomic<bool> tranformationInProgress[CONVERTER_COUNT];   //!< True while slot is in use
+    std::atomic<bool> tranformationInProgress[CONVERTER_COUNT]{};   //!< True while slot is in use
     OGRSpatialReference *sr1;                                     //!< Source spatial reference (owned)
     OGRSpatialReference *sr2;                                     //!< Target spatial reference (owned)
     ThreadLock threadLock[CONVERTER_COUNT];                       //!< Per-slot mutex

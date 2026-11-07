@@ -138,9 +138,9 @@ class MemoryMapper
     std::vector<MapInfo_sptr> mMemoryMappings;          //!< Active mapping descriptors
     ModificationLock          mModificationLock;        //!< Guards mMemoryMappings
     uffd_msg*                 mMessage;                 //!< Reusable userfaultfd message buffer
-    std::atomic<Int64>        mMessageReadCount;        //!< Total fault messages read
-    std::atomic<Int64>        mMessageProcessCount;     //!< Total fault messages processed
-    std::atomic<uint>         mThreadsRunning;          //!< Number of active processing threads
+    std::atomic<Int64>        mMessageReadCount{0};        //!< Total fault messages read
+    std::atomic<Int64>        mMessageProcessCount{0};     //!< Total fault messages processed
+    std::atomic<uint>         mThreadsRunning{0};          //!< Number of active processing threads
     pthread_t                 mFaultHandlerThread = 0;      //!< Reader thread handle
     pthread_t*                mFaultProcessingThread;   //!< Pool of processing thread handles
     bool                      mStopRequired;            //!< Set to true to request thread shutdown
