@@ -800,17 +800,17 @@ void ProductSection::setProductDefinition(std::uint16_t productTemplateId)
 {
   try
   {
-    ProductDefinition *productDefintion = createProductDefinition(productTemplateId);
+    ProductDefinition *productDefinition = createProductDefinition(productTemplateId);
 
-    if (productDefintion == nullptr)
+    if (productDefinition == nullptr)
     {
       Fmi::Exception exception(BCP,"Cannot create product definition!");
       exception.addParameter("Product",Fmi::to_string(productTemplateId));
       throw exception;
     }
 
-    mProductDefinitionTemplateNumber = productDefintion->getTemplateNumber();
-    mProductDefinition.reset(productDefintion);
+    mProductDefinitionTemplateNumber = productDefinition->getTemplateNumber();
+    mProductDefinition.reset(productDefinition);
   }
   catch (...)
   {

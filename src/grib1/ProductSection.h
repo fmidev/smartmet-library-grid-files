@@ -137,7 +137,7 @@ class ProductSection : public GRID::MessageSection
     void              setSubCentre(std::uint8_t subCentre);
     void              setDecimalScaleFactor(std::uint16_t decimalScaleFactor);
     void              setForecastType(short forecastType);
-    void              setForecastNumber(short forecastNuber);
+    void              setForecastNumber(short forecastNumber);
     void              setMessagePtr(Message *message);
 
     bool              getProperty(uint propertyId,Int64& value) const;

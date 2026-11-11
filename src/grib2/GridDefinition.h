@@ -128,7 +128,7 @@ class GridDefinition
     virtual double              getMinorAxis(EarthShapeSettings& earthSettings);
     virtual double              getFlattening(EarthShapeSettings& earthSettings);
 
-    virtual void                insertTranformIntoCache(std::size_t hash,double lat,double lon,double x,double y) const;
+    virtual void                insertTransformIntoCache(std::size_t hash,double lat,double lon,double x,double y) const;
     virtual bool                getTransformFromCache(std::size_t hash,double lat,double lon,double& x,double& y) const;
 
 

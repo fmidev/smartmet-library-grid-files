@@ -120,7 +120,7 @@ class GridDefinition
     virtual double              getMinorAxis(uchar resolutionAndComponentFlags);
     virtual double              getFlattening(uchar resolutionAndComponentFlags);
 
-    virtual void                insertTranformIntoCache(std::size_t hash,double lat,double lon,double x,double y) const;
+    virtual void                insertTransformIntoCache(std::size_t hash,double lat,double lon,double x,double y) const;
     virtual bool                getTransformFromCache(std::size_t hash,double lat,double lon,double& x,double& y) const;
 
     virtual void                getProperties_gridArea(T::PropertySettingVec& properties);

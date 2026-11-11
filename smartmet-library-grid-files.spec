@@ -130,7 +130,8 @@ libraries, the grid engine and the plugins using it
 
 %changelog
 * Wed Nov 11 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.11.11-1.fmi
-- Fixed typos in messages and comments
+- Fixed typos in messages, comments and identifiers
+- Renamed GridDefinition::insertTranformIntoCache to insertTransformIntoCache (ABI change)
 
 * Sat Nov 7 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.11.7-1.fmi
 - Initialize member variables that some constructors left uninitialized

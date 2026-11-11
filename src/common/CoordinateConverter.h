@@ -30,7 +30,7 @@ class CoordinateConverter
       for (uint t=0; t<CONVERTER_COUNT; t++)
       {
         transformation[t] = nullptr;
-        tranformationInProgress[t] = false;
+        transformationInProgress[t] = false;
       }
 
       sr1 = nullptr;
@@ -48,7 +48,7 @@ class CoordinateConverter
       for (uint t=0; t<CONVERTER_COUNT; t++)
       {
         transformation[t] = OGRCreateCoordinateTransformation(sr1,sr2);
-        tranformationInProgress[t] = false;
+        transformationInProgress[t] = false;
       }
       r1.tv_sec = 0;
       r1.tv_nsec = 10;
@@ -66,7 +66,7 @@ class CoordinateConverter
       for (uint t=0; t<CONVERTER_COUNT; t++)
       {
         transformation[t] = OGRCreateCoordinateTransformation(sr1,sr2);
-        tranformationInProgress[t] = false;
+        transformationInProgress[t] = false;
       }
       r1.tv_sec = 0;
       r1.tv_nsec = 10;
@@ -114,8 +114,8 @@ class CoordinateConverter
       {
         for (uint t=0; t<CONVERTER_COUNT; t++)
         {
-          if (!tranformationInProgress[t].load(std::memory_order_relaxed) &&
-              !tranformationInProgress[t].exchange(true,std::memory_order_acquire))
+          if (!transformationInProgress[t].load(std::memory_order_relaxed) &&
+              !transformationInProgress[t].exchange(true,std::memory_order_acquire))
             return t;
         }
         nanosleep(&r1,&r2);
@@ -135,18 +135,18 @@ class CoordinateConverter
       // The transformation cannot be created for all coordinate systems
       if (transformation[idx] == nullptr)
       {
-        tranformationInProgress[idx].store(false,std::memory_order_release);
+        transformationInProgress[idx].store(false,std::memory_order_release);
         return false;
       }
       bool ok = transformation[idx]->Transform(nCount,x,y);
-      tranformationInProgress[idx].store(false,std::memory_order_release);
+      transformationInProgress[idx].store(false,std::memory_order_release);
       return ok;
     }
 
   protected:
 
     OGRCoordinateTransformation *transformation[CONVERTER_COUNT]{}; //!< OGR transformation objects per slot
-    std::atomic<bool> tranformationInProgress[CONVERTER_COUNT]{};   //!< True while slot is in use
+    std::atomic<bool> transformationInProgress[CONVERTER_COUNT]{};   //!< True while slot is in use
     OGRSpatialReference *sr1;                                     //!< Source spatial reference (owned)
     OGRSpatialReference *sr2;                                     //!< Target spatial reference (owned)
     ThreadLock threadLock[CONVERTER_COUNT];                       //!< Per-slot mutex

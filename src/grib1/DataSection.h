@@ -111,7 +111,7 @@ class DataSection : public GRID::MessageSection
     std::int16_t      mBinaryScaleFactor; //!< Binary scale factor E (octet 5-6).
     std::float_t      mReferenceValue;    //!< Reference value R — minimum of packed values (octets 7-10).
     std::uint8_t      mBitsPerValue;      //!< Number of bits per packed value (octet 11).
-    DataDefintionUptr mDataDefinition;    //!< Packing strategy (SimplePacking, SecondOrderPacking, etc.).
+    DataDefinitionUptr mDataDefinition;    //!< Packing strategy (SimplePacking, SecondOrderPacking, etc.).
     T::Data_ptr       mDataPtr;           //!< Pointer to the (memory-mapped) packed binary data.
     std::size_t       mDataSize;          //!< Actual size of the packed data in bytes.
     std::size_t       mDataSizeMax;       //!< Allocated (maximum) buffer size in bytes.

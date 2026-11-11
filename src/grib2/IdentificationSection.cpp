@@ -1094,11 +1094,11 @@ void IdentificationSection::setLocalTablesVersion(T::UInt8_opt localTablesVersio
 
 /*! \brief The method sets the significance of reference time. */
 
-void IdentificationSection::setSignificanceOfReferenceTime(T::UInt8_opt significanceOfRererenceTime)
+void IdentificationSection::setSignificanceOfReferenceTime(T::UInt8_opt significanceOfReferenceTime)
 {
   try
   {
-    mSignificanceOfReferenceTime = significanceOfRererenceTime;
+    mSignificanceOfReferenceTime = significanceOfReferenceTime;
   }
   catch (...)
   {

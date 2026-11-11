@@ -2026,7 +2026,7 @@ bool GridDefinition::getTransformFromCache(std::size_t hash,double lat,double lo
 
 /*! \brief The method inserts a coordinate transform result into the cache. */
 
-void GridDefinition::insertTranformIntoCache(std::size_t hash,double lat,double lon,double x,double y) const
+void GridDefinition::insertTransformIntoCache(std::size_t hash,double lat,double lon,double x,double y) const
 {
   FUNCTION_TRACE
   try

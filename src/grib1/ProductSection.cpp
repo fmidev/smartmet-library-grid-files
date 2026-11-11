@@ -1998,11 +1998,11 @@ void ProductSection::setForecastType(short forecastType)
 
 /*! \brief The method sets the forecast number. */
 
-void ProductSection::setForecastNumber(short forecastNuber)
+void ProductSection::setForecastNumber(short forecastNumber)
 {
   try
   {
-    mForecastNumber = forecastNuber;
+    mForecastNumber = forecastNumber;
   }
   catch (...)
   {
