@@ -403,7 +403,7 @@ class Property
     T::PropertyMap    propertyMap;
     T::PropertyVec    propertyVector;
 
-};  // class Propetry
+};  // class Property
 
 
 extern Property gribProperty;  //!< Global singleton pre-populated with all GRIB 2 property name-to-ID mappings.

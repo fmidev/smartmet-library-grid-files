@@ -246,7 +246,7 @@ T::Coordinate_svec RotatedLatLonImpl::getGridOriginalCoordinatesNoCache() const
 
 
 /*! \brief The method returns all grid coordinates as a latlon coordinate vector. If the grid
-    original coordiantes were not latlon coordinates then the original coordinates are converted
+    original coordinates were not latlon coordinates then the original coordinates are converted
     to the latlon coordinates.
 
         \return   The grid latlon coordinates.
@@ -410,7 +410,7 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint gri
         \param grid_j  The grid j-coordinate.
         \param lat     The latitude value is returned in this parameter.
         \param lon     The longitude value is returned in this parameter.
-        \return        The method return true if the latlon values were succesfully returned.
+        \return        The method return true if the latlon values were successfully returned.
 */
 
 bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j,double& /*lat*/,double& /*lon*/) const
@@ -490,7 +490,7 @@ void RotatedLatLonImpl::getGridOriginalCoordinatesByGridPointList(std::vector<T:
         \param grid_j  The grid j-coordinate.
         \param x       The x-coordinate in the original projection is returned in this parameter.
         \param y       The y-coordinate in the original projection is returned in this parameter.
-        \return        The method return true if the original coordinates were succesfully returned.
+        \return        The method return true if the original coordinates were successfully returned.
 */
 
 bool RotatedLatLonImpl::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,double& x,double& y) const
@@ -527,7 +527,7 @@ bool RotatedLatLonImpl::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint g
         \param grid_j  The grid j-coordinate.
         \param x       The x-coordinate in the original projection is returned in this parameter.
         \param y       The y-coordinate in the original projection is returned in this parameter.
-        \return        The method return true if the original coordinates were succesfully returned.
+        \return        The method return true if the original coordinates were successfully returned.
 */
 
 bool RotatedLatLonImpl::getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const
@@ -712,7 +712,7 @@ bool RotatedLatLonImpl::getGridMetricCellSize(double& width,double& height) cons
         \param lon  The longitude value.
         \param x    The x-coordinate in the original projection is returned in this parameter.
         \param y    The y-coordinate in the original projection is returned in this parameter.
-        \return     The method return true if the original coordinates were succesfully returned.
+        \return     The method return true if the original coordinates were successfully returned.
 */
 
 bool RotatedLatLonImpl::getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lon,double& x,double& y) const
@@ -740,7 +740,7 @@ bool RotatedLatLonImpl::getGridOriginalCoordinatesByLatLonCoordinates(double lat
         \param y       The y-coordinate in the original projection.
         \param lat     The latitude value is returned in this parameter.
         \param lon     The longitude value is returned in this parameter.
-        \return        The method return true if the latlon values were succesfully returned.
+        \return        The method return true if the latlon values were successfully returned.
 */
 
 bool RotatedLatLonImpl::getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,double& /*lat*/,double& /*lon*/) const

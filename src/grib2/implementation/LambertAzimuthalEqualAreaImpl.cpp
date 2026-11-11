@@ -384,7 +384,7 @@ bool LambertAzimuthalEqualAreaImpl::getGridMetricCellSize(double& width,double& 
         \param grid_j  The grid j-coordinate.
         \param x       The x-coordinate in the original projection is returned in this parameter.
         \param y       The y-coordinate in the original projection is returned in this parameter.
-        \return        The method return true if the original coordinates were succesfully returned.
+        \return        The method return true if the original coordinates were successfully returned.
 */
 
 bool LambertAzimuthalEqualAreaImpl::getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const

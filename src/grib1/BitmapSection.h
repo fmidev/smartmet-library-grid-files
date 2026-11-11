@@ -39,7 +39,7 @@ class Message;
           If the octets contain zero, a bit-map follows
           If the octets contain a number, it refers to a predetermined bit-map provided
           by the center
-  7-      The bit-map - contiguous bits with a bit to data point correspondance, ordered
+  7-      The bit-map - contiguous bits with a bit to data point correspondence, ordered
           as defined in the grid definition
   --------------------------------------------------------------------------------------
 */

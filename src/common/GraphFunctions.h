@@ -139,7 +139,7 @@ void getIsobands(
 bool getLineIntersectionPoint(
     double x1,double y1,double x2,double y2,  // Line 1
     double x3,double y3,double x4,double y4,  // Line 2
-    double& x,double& y);                     // Intesection point
+    double& x,double& y);                     // Intersection point
 
 int findPath(
     std::vector<float>& direction,
@@ -177,7 +177,7 @@ int findPath(
 void getStreamlineImage(
     float *direction,                           // Grid of directions in degrees (size = width x height). For example "wind direction".
     const float *value,                               // Grid of values (size = width x height). For example "wind speed"
-    uint *image,                                // RGB image (size = width x height). Values >= 0xFF000000 mean tranparent pixels).
+    uint *image,                                // RGB image (size = width x height). Values >= 0xFF000000 mean transparent pixels).
     int width,int height,                       // Size of the grids / the image
     int xStep,int yStep,                        // Counting steps
     int minLength,int maxLength,                // Min / max line lengths
@@ -188,7 +188,7 @@ void getStreamlineImage(
 void getStreamlineImage(
     float *direction,                           // Grid of directions in degrees (size = width x height). For example "wind direction".
     float *value,                               // Grid of values (size = width x height). For example "wind speed"
-    uint *image,                                // RGB image (size = width x height). Values >= 0xFF000000 mean tranparent pixels).
+    uint *image,                                // RGB image (size = width x height). Values >= 0xFF000000 mean transparent pixels).
     int width,int height,                       // Size of the grids / the image
     int xStep,int yStep,                        // Counting steps
     int minLength,int maxLength);               // Min / max line lengths

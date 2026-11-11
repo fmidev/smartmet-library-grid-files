@@ -702,7 +702,7 @@ T::ParamValue timeInterpolation(T::ParamValue value1,const T::ParamValue& value2
         return value2;
 
       default:
-        throw Fmi::Exception(BCP,"Unsupported or unknown intepolation method!");
+        throw Fmi::Exception(BCP,"Unsupported or unknown interpolation method!");
     }
 
     return ParamValueMissing;
@@ -811,7 +811,7 @@ void timeInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,int
         break;
 
       default:
-        throw Fmi::Exception(BCP,"Unsupported or unknown intepolation method!");
+        throw Fmi::Exception(BCP,"Unsupported or unknown interpolation method!");
     }
   }
   catch (...)

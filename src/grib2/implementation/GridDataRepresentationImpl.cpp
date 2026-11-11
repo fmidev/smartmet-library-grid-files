@@ -267,7 +267,7 @@ void decodeScaledValues(std::size_t numOfValues,T::Data_ptr bitmap,double RDfac,
     {
       UInt64 X = readValue();
 
-      // Output the caclulated value
+      // Output the calculated value
       double Y = RDfac + X * EDfac;
       decodedValues.emplace_back(Y);
     }
@@ -284,7 +284,7 @@ void decodeScaledValues(std::size_t numOfValues,T::Data_ptr bitmap,double RDfac,
     {
       UInt64 X = readValue();
 
-      // Output the caclulated value
+      // Output the calculated value
       double Y = RDfac + X * EDfac;
       decodedValues.emplace_back(Y);
     }

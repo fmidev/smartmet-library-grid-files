@@ -3910,14 +3910,14 @@ time_t getGregorianTimeT(int refYear, int refMonth, int refDay,int refHour, int 
   {
     if (refYear > 1582 || (refYear == 1582  &&  refMonth > 10) || (refYear == 1582  &&  refMonth == 10  && refDay >= 15))
     {
-      // The rererence time is Gregorian
+      // The reference time is Gregorian
 
       time_t tt = utcTimeToTimeT(refYear,refMonth,refDay,refHour,refMinute,refSecond);
       return (tt + plusSeconds);
     }
 
 
-    // The rererence time is Julian
+    // The reference time is Julian
 
     double jdn = julianToJdn(refYear,refMonth,refDay);
 

@@ -81,7 +81,7 @@ protected:
   // meta parameterUnits codetable_units(parameterNumber) : dump;
   // meta parameterName  codetable_title(parameterNumber) : dump;
   //
-  // # Atmospheric chemical or physical constitutent type
+  // # Atmospheric chemical or physical constituent type
   // codetable[2] aerosolType ('4.233.table',masterDir,localDir) : dump;
 
   T::UInt16_opt mAerosolType;

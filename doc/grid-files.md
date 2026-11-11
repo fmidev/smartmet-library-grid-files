@@ -125,7 +125,7 @@ All FMI parameter identifiers have unique names (= fmi-name) and numeric values 
 A typical FMI parameter name consists of the short name of the variable/quantity and abbreviation of the units of the actual data. Here are some examples:
 
 <pre>
-	ID	NAME		  DESCIPTION
+	ID	NAME		  DESCRIPTION
     -----------------------------------------------------------------------
 	153	T-K		  Temperature in Kelvins
 	154	T-C		  Temperature in Celsius
@@ -158,7 +158,7 @@ Different grid file formats use different identifiers of grid level types. That'
 Here are some examples of the FMI level identifiers:
 
 <pre>
-	ID	NAME		    DESCIPTION
+	ID	NAME		    DESCRIPTION
     -----------------------------------------------------------------------
 	1	GROUND		    Ground or water surface
 	2	PRESSURE	    Pressure level

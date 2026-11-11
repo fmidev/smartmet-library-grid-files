@@ -1859,7 +1859,7 @@ void Message::getGridStreamlinesByGrid(uint gridWidth,uint gridHeight,std::vecto
 
 
 /*! \brief The method returns all grid coordinates as a latlon coordinate vector. If the grid
-    original coordiantes were not latlon coordinates then the original coordinates are converted
+    original coordinates were not latlon coordinates then the original coordinates are converted
     to the latlon coordinates.
 
         \return   The grid latlon coordinates.
@@ -2018,7 +2018,7 @@ bool Message::isRelativeUV() const
 
 
 
-/*! \brief The method returns the grid geometry identifer.
+/*! \brief The method returns the grid geometry identifier.
 
         \return   The grid geometry identifier.
 */
@@ -2140,7 +2140,7 @@ T::FileType Message::getMessageType() const
 
 
 
-/*! \brief The method set the grid geometry identifer.
+/*! \brief The method set the grid geometry identifier.
 
    This identifier can be used for identifying different geometries. Usually geometry identifiers are defined
    in a configuration file and when a grid file read the geometry is automatically identified. However, there might
@@ -2182,7 +2182,7 @@ void Message::setGridValues(T::ParamValue_vec& /*values*/)
         \param grid_j  The grid j-coordinate.
         \param lat     The latitude value is returned in this parameter.
         \param lon     The longitude value is returned in this parameter.
-        \return   The method return true if the latlon values were succesfully returned.
+        \return   The method return true if the latlon values were successfully returned.
 */
 
 bool Message::getGridLatLonCoordinatesByGridPoint(uint /*grid_i*/,uint /*grid_j*/,double& /*lat*/,double& /*lon*/) const
@@ -2239,7 +2239,7 @@ void Message::getGridLatLonCoordinatesByGridPointList(std::vector<T::Point>& gri
         \param grid_j  The grid j-coordinate.
         \param lat     The latitude value is returned in this parameter.
         \param lon     The longitude value is returned in this parameter.
-        \return        The method return true if the latlon values were succesfully returned.
+        \return        The method return true if the latlon values were successfully returned.
 */
 
 bool Message::getGridLatLonCoordinatesByGridPosition(double /*grid_i*/,double /*grid_j*/,double& /*lat*/,double& /*lon*/) const
@@ -2257,7 +2257,7 @@ bool Message::getGridLatLonCoordinatesByGridPosition(double /*grid_i*/,double /*
         \param y       The y-coordinate in the original projection.
         \param lat     The latitude value is returned in this parameter.
         \param lon     The longitude value is returned in this parameter.
-        \return        The method return true if the latlon values were succesfully returned.
+        \return        The method return true if the latlon values were successfully returned.
 */
 
 bool Message::getGridLatLonCoordinatesByOriginalCoordinates(double /*x*/,double /*y*/,double& /*lat*/,double& /*lon*/) const
@@ -2275,7 +2275,7 @@ bool Message::getGridLatLonCoordinatesByOriginalCoordinates(double /*x*/,double 
         \param grid_j  The grid j-coordinate.
         \param x       The x-coordinate in the original projection is returned in this parameter.
         \param y       The y-coordinate in the original projection is returned in this parameter.
-        \return        The method return true if the original coordinates were succesfully returned.
+        \return        The method return true if the original coordinates were successfully returned.
 */
 
 bool Message::getGridOriginalCoordinatesByGridPoint(uint /*grid_i*/,uint /*grid_j*/,double& /*x*/,double& /*y*/) const
@@ -2293,7 +2293,7 @@ bool Message::getGridOriginalCoordinatesByGridPoint(uint /*grid_i*/,uint /*grid_
         \param grid_j  The grid j-coordinate.
         \param x       The x-coordinate in the original projection is returned in this parameter.
         \param y       The y-coordinate in the original projection is returned in this parameter.
-        \return        The method return true if the original coordinates were succesfully returned.
+        \return        The method return true if the original coordinates were successfully returned.
 */
 
 bool Message::getGridOriginalCoordinatesByGridPosition(double /*grid_i*/,double /*grid_j*/,double& /*x*/,double& /*y*/) const
@@ -2311,7 +2311,7 @@ bool Message::getGridOriginalCoordinatesByGridPosition(double /*grid_i*/,double 
         \param lon  The longitude value.
         \param x    The x-coordinate in the original projection is returned in this parameter.
         \param y    The y-coordinate in the original projection is returned in this parameter.
-        \return     The method return true if the original coordinates were succesfully returned.
+        \return     The method return true if the original coordinates were successfully returned.
 */
 
 bool Message::getGridOriginalCoordinatesByLatLonCoordinates(double /*lat*/,double /*lon*/,double& /*x*/,double& /*y*/) const
@@ -2395,7 +2395,7 @@ float Message::getGridPointAngle(T::CoordinateType coordinateType,double x,doubl
 
       default:
       {
-        Fmi::Exception exception(BCP,"Unknow coordinate type!",nullptr);
+        Fmi::Exception exception(BCP,"Unknown coordinate type!",nullptr);
         exception.addParameter("Coordinate Type",Fmi::to_string(coordinateType));
         throw exception;
       }
@@ -3866,7 +3866,7 @@ void Message::getGridValueVectorWithCaching(T::ParamValue_vec& values) const
     T::FileId fileId = getFileId();
     T::MessageIndex messageIndex = getMessageIndex();
 
-    // ### Seaching data from the temporary cache
+    // ### Searching data from the temporary cache
     if (fileId > 0)
     {
       AutoThreadLock lock(&tmpCacheThreadLock);
@@ -4821,7 +4821,7 @@ void Message::getGridValueByPoint(T::CoordinateType coordinateType,double x,doub
 
       default:
       {
-        Fmi::Exception exception(BCP,"Unknow coordinate type!",nullptr);
+        Fmi::Exception exception(BCP,"Unknown coordinate type!",nullptr);
         exception.addParameter("Coordinate Type",Fmi::to_string(coordinateType));
         throw exception;
       }
@@ -4885,7 +4885,7 @@ void Message::getGridValueVectorByPoint(T::CoordinateType coordinateType,double 
 
       default:
       {
-        Fmi::Exception exception(BCP,"Unknow coordinate type!",nullptr);
+        Fmi::Exception exception(BCP,"Unknown coordinate type!",nullptr);
         exception.addParameter("Coordinate Type",Fmi::to_string(coordinateType));
         throw exception;
       }
@@ -5697,7 +5697,7 @@ void Message::getGridValueListByRectangle(T::CoordinateType coordinateType,doubl
 
         default:
         {
-          Fmi::Exception exception(BCP,"Unknow coordinate type!",nullptr);
+          Fmi::Exception exception(BCP,"Unknown coordinate type!",nullptr);
           exception.addParameter("Coordinate Type",Fmi::to_string(coordinateType));
           throw exception;
         }
@@ -5758,7 +5758,7 @@ void Message::getGridValueVectorByCoordinateList(T::CoordinateType coordinateTyp
     T::FileId fileId = getFileId();
     T::MessageIndex messageIndex = getMessageIndex();
 
-    // ### Seaching data from the temporary cache
+    // ### Searching data from the temporary cache
     {
       AutoThreadLock lock(&tmpCacheThreadLock);
       for (auto& t : tmpValueCache)
@@ -5790,7 +5790,7 @@ void Message::getGridValueVectorByCoordinateList(T::CoordinateType coordinateTyp
 
       default:
       {
-        Fmi::Exception exception(BCP,"Unknow coordinate type!",nullptr);
+        Fmi::Exception exception(BCP,"Unknown coordinate type!",nullptr);
         exception.addParameter("Coordinate Type",Fmi::to_string(coordinateType));
         throw exception;
       }

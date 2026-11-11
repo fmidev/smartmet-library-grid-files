@@ -843,7 +843,7 @@ int GridSection::getGridOriginalValueIndex(uint grid_i,uint grid_j) const
         \param grid_j  The grid j-coordinate.
         \param lat     The latitude value is returned in this parameter.
         \param lon     The longitude value is returned in this parameter.
-        \return        The method return true if the latlon values were succesfully returned.
+        \return        The method return true if the latlon values were successfully returned.
 */
 
 bool GridSection::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const
@@ -872,7 +872,7 @@ bool GridSection::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,do
         \param y       The y-coordinate in the original projection.
         \param lat     The latitude value is returned in this parameter.
         \param lon     The longitude value is returned in this parameter.
-        \return        The method return true if the latlon values were succesfully returned.
+        \return        The method return true if the latlon values were successfully returned.
 */
 
 bool GridSection::getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,double& lat,double& lon) const
@@ -901,7 +901,7 @@ bool GridSection::getGridLatLonCoordinatesByOriginalCoordinates(double x,double 
         \param grid_j  The grid j-coordinate.
         \param x       The x-coordinate in the original projection is returned in this parameter.
         \param y       The y-coordinate in the original projection is returned in this parameter.
-        \return        The method return true if the original coordinates were succesfully returned.
+        \return        The method return true if the original coordinates were successfully returned.
 */
 
 bool GridSection::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,double& x,double& y) const
@@ -930,7 +930,7 @@ bool GridSection::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,
         \param grid_j  The grid j-coordinate.
         \param x       The x-coordinate in the original projection is returned in this parameter.
         \param y       The y-coordinate in the original projection is returned in this parameter.
-        \return        The method return true if the original coordinates were succesfully returned.
+        \return        The method return true if the original coordinates were successfully returned.
 */
 
 bool GridSection::getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const
@@ -959,7 +959,7 @@ bool GridSection::getGridOriginalCoordinatesByGridPosition(double grid_i,double 
         \param grid_j  The grid j-coordinate.
         \param lat     The latitude value is returned in this parameter.
         \param lon     The longitude value is returned in this parameter.
-        \return        The method return true if the latlon values were succesfully returned.
+        \return        The method return true if the latlon values were successfully returned.
 */
 
 bool GridSection::getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j,double& lat,double& lon) const
@@ -988,7 +988,7 @@ bool GridSection::getGridLatLonCoordinatesByGridPosition(double grid_i,double gr
         \param lon  The longitude value.
         \param x    The x-coordinate in the original projection is returned in this parameter.
         \param y    The y-coordinate in the original projection is returned in this parameter.
-        \return     The method return true if the original coordinates were succesfully returned.
+        \return     The method return true if the original coordinates were successfully returned.
 */
 
 bool GridSection::getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lon,double& x,double& y) const
@@ -1011,7 +1011,7 @@ bool GridSection::getGridOriginalCoordinatesByLatLonCoordinates(double lat,doubl
 
 
 
-/*! \brief The method returns the grid geometry identifer.
+/*! \brief The method returns the grid geometry identifier.
 
         \return   The grid geometry identifier.
 */
@@ -1175,7 +1175,7 @@ std::string GridSection::getGridGeometryString() const
 
 
 
-/*! \brief The method set the grid geometry identifer.
+/*! \brief The method set the grid geometry identifier.
 
    This identifier can be used for identifying different geometries. Usually geometry identifiers are defined
    in a configuration file and when a grid file read the geometry is automatically identified. However, there might
@@ -1234,7 +1234,7 @@ T::Coordinate_svec GridSection::getGridOriginalCoordinates() const
 
 
 /*! \brief The method returns all grid coordinates as a latlon coordinate vector. If the grid
-    original coordiantes were not latlon coordinates then the original coordinates are converted
+    original coordinates were not latlon coordinates then the original coordinates are converted
     to the latlon coordinates.
 
         \return   The grid latlon coordinates.

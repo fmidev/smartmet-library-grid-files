@@ -98,7 +98,7 @@ class GridDefinition
     virtual void                write(DataWriter& dataWriter);
     virtual void                print(std::ostream& stream,uint level,uint optionFlags) const;
 
-    // These methos are used for overiding the earth shape parameters in the grid file
+    // These methods are used for overriding the earth shape parameters in the grid file
 
     virtual double              getEarthSemiMajor();
     virtual double              getEarthSemiMinor();

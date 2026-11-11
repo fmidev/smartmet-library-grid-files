@@ -415,7 +415,7 @@ void BitmapSection::setTableReference(std::uint16_t reference)
 
 
 /*! \brief The method sets the bitmap data. The data will be released when the object
- * is distroyed.
+ * is destroyed.
 
         \param data         Pointer to the bitmap data.
         \param size         Size of the bitmap data in bytes.

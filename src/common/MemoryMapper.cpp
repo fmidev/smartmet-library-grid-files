@@ -398,7 +398,7 @@ void MemoryMapper::setEnabled(bool enabled)
       if (!mAccessFile.empty())
         df_network->setAccessFile(mAccessFile.c_str());
 
-      mDataFetchers.insert(std::pair<uint,DataFetcher_sptr>(DataFetcher::ServerType::Unknown,df_filesys));   // Unknow protocol
+      mDataFetchers.insert(std::pair<uint,DataFetcher_sptr>(DataFetcher::ServerType::Unknown,df_filesys));   // Unknown protocol
       mDataFetchers.insert(std::pair<uint,DataFetcher_sptr>(DataFetcher::ServerType::Filesys,df_filesys));   // Fileys
       mDataFetchers.insert(std::pair<uint,DataFetcher_sptr>(DataFetcher::ServerType::S3,df_network));        // S3
       mDataFetchers.insert(std::pair<uint,DataFetcher_sptr>(DataFetcher::ServerType::THREDDS,df_network));   // THREDDS
@@ -862,7 +862,7 @@ int MemoryMapper::getData(const MapInfo_sptr& info,std::size_t filePosition,int 
         if (n == dataSize || (filePosition + n) >= info->fileSize)
           return dataSize;
 
-        // It seems that we did not get the requsted data. Let's try again.
+        // It seems that we did not get the requested data. Let's try again.
         time_usleep(0,500000);
       }
     }
@@ -1112,7 +1112,7 @@ void MemoryMapper::faultProcessingThread()
       {
         int idx = takeNextMessage(currentCounter,ownerId);
 
-        // Reseting error counter after 10000 processed messages.
+        // Resetting error counter after 10000 processed messages.
         if ((mMessageProcessCount % 10000) == 0)
           errorCounter = 0;
 

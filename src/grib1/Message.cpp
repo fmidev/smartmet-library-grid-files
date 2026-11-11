@@ -1143,7 +1143,7 @@ bool Message::getProperty(const char *propertyName,Int64& value)
     uint id = gribProperty.getPropertyId(propertyName);
     if (id == 0)
     {
-      Fmi::Exception exception(BCP,"Unknow property name!");
+      Fmi::Exception exception(BCP,"Unknown property name!");
       exception.addParameter("propertyName",propertyName);
     }
 
@@ -1311,7 +1311,7 @@ bool Message::setProperty(const char *propertyName,Int64 value)
     uint id = gribProperty.getPropertyId(propertyName);
     if (id == 0)
     {
-      Fmi::Exception exception(BCP,"Unknow property name!");
+      Fmi::Exception exception(BCP,"Unknown property name!");
       exception.addParameter("propertyName",propertyName);
     }
 
@@ -1345,7 +1345,7 @@ bool Message::setProperty(const char *propertyName,double value)
     uint id = gribProperty.getPropertyId(propertyName);
     if (id == 0)
     {
-      Fmi::Exception exception(BCP,"Unknow property name!");
+      Fmi::Exception exception(BCP,"Unknown property name!");
       exception.addParameter("propertyName",propertyName);
     }
 
@@ -1377,7 +1377,7 @@ void Message::setGridValues(T::ParamValue_vec& values)
   try
   {
     // If the grid values contains "ParamValueMissing" values then we should use bitmap
-    // in ordert to indicate which values are in place.
+    // in ordered to indicate which values are in place.
 
     uint size = values.size();
 
@@ -1539,7 +1539,7 @@ uint Message::getGribVersion() const
 
 
 
-/*! \brief The method returns the GRIB 1 centre identifer.
+/*! \brief The method returns the GRIB 1 centre identifier.
 
         \return   The GRIB 1 centre identifier.
 */
@@ -1564,7 +1564,7 @@ uint Message::getGribCentre() const
 
 
 
-/*! \brief The method returns the GRIB 1 sub-centre identifer.
+/*! \brief The method returns the GRIB 1 sub-centre identifier.
 
         \return   The GRIB 1 sub-centre identifier.
 */
@@ -1589,7 +1589,7 @@ uint Message::getGribSubCentre() const
 
 
 
-/*! \brief The method returns the GRIB 1 processing identifer.
+/*! \brief The method returns the GRIB 1 processing identifier.
 
         \return   The GRIB 1 processing identifier.
 */
@@ -1666,7 +1666,7 @@ T::Hash Message::getGridHash() const
 
 
 
-/*! \brief The method returns the grid geometry identifer.
+/*! \brief The method returns the grid geometry identifier.
 
         \return   The grid geometry identifier.
 */
@@ -1848,7 +1848,7 @@ std::string Message::getGridGeometryString() const
 
 
 
-/*! \brief The method set the grid geometry identifer.
+/*! \brief The method set the grid geometry identifier.
 
    This identifier can be used for identifying different geometries. Usually geometry identifiers are defined
    in a configuration file and when a grid file read the geometry is automatically identified. However, there might
@@ -1972,7 +1972,7 @@ T::Dimensions Message::getGridDimensions() const
         \param grid_j  The grid j-coordinate.
         \param lat     The latitude value is returned in this parameter.
         \param lon     The longitude value is returned in this parameter.
-        \return        The method return true if the latlon values were succesfully returned.
+        \return        The method return true if the latlon values were successfully returned.
 */
 
 bool Message::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const
@@ -2003,7 +2003,7 @@ bool Message::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double
         \param grid_j  The grid j-coordinate.
         \param lat     The latitude value is returned in this parameter.
         \param lon     The longitude value is returned in this parameter.
-        \return        The method return true if the latlon values were succesfully returned.
+        \return        The method return true if the latlon values were successfully returned.
 */
 
 bool Message::getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j,double& lat,double& lon) const
@@ -2034,7 +2034,7 @@ bool Message::getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j
         \param y       The y-coordinate in the original projection.
         \param lat     The latitude value is returned in this parameter.
         \param lon     The longitude value is returned in this parameter.
-        \return        The method return true if the latlon values were succesfully returned.
+        \return        The method return true if the latlon values were successfully returned.
 */
 
 bool Message::getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,double& lat,double& lon) const
@@ -2065,7 +2065,7 @@ bool Message::getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,do
         \param grid_j  The grid j-coordinate.
         \param x       The x-coordinate in the original projection is returned in this parameter.
         \param y       The y-coordinate in the original projection is returned in this parameter.
-        \return        The method return true if the original coordinates were succesfully returned.
+        \return        The method return true if the original coordinates were successfully returned.
 */
 
 bool Message::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,double& x,double& y) const
@@ -2096,7 +2096,7 @@ bool Message::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,doub
         \param grid_j  The grid j-coordinate.
         \param x       The x-coordinate in the original projection is returned in this parameter.
         \param y       The y-coordinate in the original projection is returned in this parameter.
-        \return        The method return true if the original coordinates were succesfully returned.
+        \return        The method return true if the original coordinates were successfully returned.
 */
 
 bool Message::getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const
@@ -2152,7 +2152,7 @@ T::Coordinate_svec Message::getGridOriginalCoordinates() const
 
 
 /*! \brief The method returns all grid coordinates as a latlon coordinate vector. If the grid
-    original coordiantes were not latlon coordinates then the original coordinates are converted
+    original coordinates were not latlon coordinates then the original coordinates are converted
     to the latlon coordinates.
 
         \return   The grid latlon coordinates.
@@ -2186,7 +2186,7 @@ T::Coordinate_svec Message::getGridLatLonCoordinates() const
         \param lon  The longitude value.
         \param x    The x-coordinate in the original projection is returned in this parameter.
         \param y    The y-coordinate in the original projection is returned in this parameter.
-        \return     The method return true if the original coordinates were succesfully returned.
+        \return     The method return true if the original coordinates were successfully returned.
 */
 
 bool Message::getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lon,double& x,double& y) const
@@ -3083,7 +3083,7 @@ T::ParamLevelId Message::getGridParameterLevelId() const
 
 
 
-/*! \brief The method intializes the grid's spatial reference that is used for coordinate conversions. */
+/*! \brief The method initializes the grid's spatial reference that is used for coordinate conversions. */
 
 void Message::initSpatialReference()
 {
