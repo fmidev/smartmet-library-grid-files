@@ -1,5 +1,6 @@
 #include "AggregationDef.h"
 #include <macgyver/Exception.h>
+#include <ostream>
 #include "../common/GeneralFunctions.h"
 
 

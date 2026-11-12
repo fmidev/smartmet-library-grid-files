@@ -1,64 +1,65 @@
 #include "GridDef.h"
 #include <macgyver/Exception.h>
-#include <macgyver/Cache.h>
+#include <macgyver/StringConversion.h>
+#include <ogr_spatialref.h>
 #include <functional>
+#include <algorithm>
+#include <memory>
+#include <cctype>
+#include <cmath>
+#include <cstdio>
+#include <cstring>
+#include <cstdint>
+#include <list>
+#include <utility>
 #include "../common/GeneralFunctions.h"
 #include "../common/ShowFunction.h"
 #include "../common/CoordinateConversions.h"
-
 #include "../grib1/implementation/LatLonImpl.h"
 #include "../grib1/implementation/MercatorImpl.h"
 #include "../grib1/implementation/LambertConformalImpl.h"
-#include "../grib1/implementation/GaussianImpl.h"
 #include "../grib1/implementation/PolarStereographicImpl.h"
-#include "../grib1/implementation/AlbersImpl.h"
 #include "../grib1/implementation/RotatedLatLonImpl.h"
-#include "../grib1/implementation/ObliqueLambertConformalImpl.h"
-#include "../grib1/implementation/RotatedGaussianImpl.h"
-#include "../grib1/implementation/StretchedLatLonImpl.h"
-#include "../grib1/implementation/StretchedGaussianImpl.h"
-#include "../grib1/implementation/StretchedRotatedLatLonImpl.h"
-#include "../grib1/implementation/StretchedRotatedGaussianImpl.h"
-#include "../grib1/implementation/SphericalHarmonicImpl.h"
-#include "../grib1/implementation/RotatedSphericalHarmonicImpl.h"
-#include "../grib1/implementation/StretchedSphericalHarmonicImpl.h"
-#include "../grib1/implementation/StretchedRotatedSphericalHarmonicImpl.h"
-#include "../grib1/implementation/SpaceViewImpl.h"
-
 #include "../grib2/implementation/LatLonImpl.h"                             //  "3.0"
 #include "../grib2/implementation/RotatedLatLonImpl.h"                      //  "3.1"
-#include "../grib2/implementation/StretchedLatLonImpl.h"                    //  "3.2"
-#include "../grib2/implementation/StretchedRotatedLatLonImpl.h"             //  "3.3"
-#include "../grib2/implementation/VariableResolutionLatLonImpl.h"           //  "3.4"
-#include "../grib2/implementation/VariableResolutionRotatedLatLonImpl.h"    //  "3.5"
-#include "../grib2/implementation/MercatorImpl.h"                           //  "3.10"
 #include "../grib2/implementation/TransverseMercatorImpl.h"                 //  "3.12"
 #include "../grib2/implementation/PolarStereographicImpl.h"                 //  "3.20"
 #include "../grib2/implementation/LambertConformalImpl.h"                   //  "3.30"
-#include "../grib2/implementation/AlbersImpl.h"                             //  "3.31"
-#include "../grib2/implementation/GaussianImpl.h"                           //  "3.40"
-#include "../grib2/implementation/RotatedGaussianImpl.h"                    //  "3.41"
-#include "../grib2/implementation/StretchedGaussianImpl.h"                  //  "3.42"
-#include "../grib2/implementation/StretchedRotatedGaussianImpl.h"           //  "3.43"
-#include "../grib2/implementation/SphericalHarmonicImpl.h"                  //  "3.50"
-#include "../grib2/implementation/RotatedSphericalHarmonicImpl.h"           //  "3.51"
-#include "../grib2/implementation/StretchedSphericalHarmonicImpl.h"         //  "3.52"
-#include "../grib2/implementation/StretchedRotatedSphericalHarmonicImpl.h"  //  "3.53"
-#include "../grib2/implementation/SpaceViewImpl.h"                          //  "3.90"
-#include "../grib2/implementation/TriangularImpl.h"                         //  "3.100"
-#include "../grib2/implementation/UnstructuredImpl.h"                       //  "3.101"
-#include "../grib2/implementation/EquatorialAzimuthalEquidistantImpl.h"     //  "3.110"
-#include "../grib2/implementation/AzimuthRangeImpl.h"                       //  "3.120"
-#include "../grib2/implementation/IrregularLatLonImpl.h"                    //  "3.130"
 #include "../grib2/implementation/LambertAzimuthalEqualAreaImpl.h"          //  "3.140"
-#include "../grib2/implementation/CrossSectionImpl.h"                       //  "3.1000"
-#include "../grib2/implementation/HovmollerImpl.h"                          //  "3.1100"
-#include "../grib2/implementation/TimeSectionImpl.h"                        //  "3.1200"
-
-#include <macgyver/StringConversion.h>
-
-#include <algorithm>
-#include <memory>
+#include "../common/AttributeList.h"
+#include "../common/AutoReadLock.h"
+#include "../common/AutoWriteLock.h"
+#include "../common/ConfigurationFile.h"
+#include "../common/Dimensions.h"
+#include "../common/StringFactory.h"
+#include "../grib1/Message.h"
+#include "../grib1/definition/GridAreaSettings.h"
+#include "../grib1/definition/ResolutionFlagsSettings.h"
+#include "../grib1/definition/RotationSettings.h"
+#include "../grib1/definition/ScanningModeSettings.h"
+#include "../grib2/GridDefinition.h"
+#include "../grib2/Message.h"
+#include "../grib2/definition/GridSettings.h"
+#include "../grib2/definition/LatLonSettings.h"
+#include "../grib2/definition/ResolutionSettings.h"
+#include "../grib2/definition/RotationSettings.h"
+#include "../grib2/definition/ScanningModeSettings.h"
+#include "../grid/Typedefs.h"
+#include "AggregationDef.h"
+#include "FmiGeometryGroupDef.h"
+#include "FmiLevelId_grib.h"
+#include "FmiParameterDef.h"
+#include "FmiParameterId_grib.h"
+#include "FmiParameterId_netCdf.h"
+#include "FmiParameterId_newbase.h"
+#include "ForecastTypeDef.h"
+#include "Grib1ParameterDef.h"
+#include "Grib2ParameterDef.h"
+#include "GribParameterDef.h"
+#include "LevelDef.h"
+#include "NetCdfParameterDef.h"
+#include "NewbaseParameterDef.h"
+#include "ProcessingTypeDef.h"
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
 

@@ -1,24 +1,48 @@
 #pragma once
 
-#include "../common/Coordinate.h"
-#include "../common/CoordinateConversions.h"
-#include "../common/Dimensions.h"
-#include "../common/Point.h"
-#include "../grid/Typedefs.h"
-#include "../common/DataWriter.h"
-#include "../common/MemoryReader.h"
-#include "../common/AttributeList.h"
-#include "definition/EarthShapeSettings.h"
-#include "definition/LatLonSettings.h"
-#include "definition/RotationSettings.h"
-
-#include <macgyver/CacheStats.h>
-#include <ogr_spatialref.h>
 #include <map>
+#include <cstddef>
+#include <iosfwd>
+#include <memory>
+#include <string>
+#include <vector>
+#include "../common/Coordinate.h"
+#include "../common/Dimensions.h"
+#include "../grid/Typedefs.h"
+#include "../common/Typedefs.h"
+
+namespace Fmi
+{
+namespace Cache
+{
+struct CacheStats;
+}
+}
+namespace SmartMet
+{
+namespace GRIB2
+{
+class EarthShapeSettings;
+class LatLonSettings;
+class ResolutionSettings;
+class RotationSettings;
+}
+}
+namespace SmartMet
+{
+namespace T
+{
+class AttributeList;
+struct Point;
+}
+}
 
 
 namespace SmartMet
 {
+class DataWriter;
+class MemoryReader;
+
 namespace GRIB2
 {
 

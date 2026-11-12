@@ -8,11 +8,17 @@
 
 #pragma once
 
-#include <macgyver/TimeZones.h>
-#include <macgyver/TimeFormatter.h>
-#include <macgyver/TimeZoneFactory.h>
 #include <macgyver/ValueFormatter.h>
 #include <spine/Location.h>
+#include <macgyver/LocalDateTime.h>
+#include <locale>
+#include <string>
+
+namespace Fmi
+{
+class TimeFormatter;
+class TimeZones;
+}
 
 
 

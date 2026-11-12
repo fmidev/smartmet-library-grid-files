@@ -1,14 +1,16 @@
+#include <macgyver/Exception.h>
+#include <ogr_geometry.h>
+#include <algorithm>
+#include <memory>
+#include <cmath>
+#include <csetjmp>
+#include <cstdio>
+#include <cstdlib>
 #include "GeneralFunctions.h"
 #include "ImageFunctions.h"
 #include "ImagePaint.h"
-#include "MemoryReader.h"
 #include "ShowFunction.h"
-#include <macgyver/Exception.h>
-#include <algorithm>
-#include <memory>
-#include <gis/OGR.h>
-#include <cstdint>
-#include <cmath>
+#include "Typedefs.h"
 
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF

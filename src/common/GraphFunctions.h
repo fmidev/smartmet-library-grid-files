@@ -4,16 +4,22 @@
  *  \brief Geometric helper functions for working with polygons, SVG paths, and WKT
  *  geometries: point-in-polygon tests, grid-point enumeration, and format conversions. */
 
-#include "Point.h"
+#include <trax/SmoothOptions.h>
+#include <cstddef>
+#include <string>
+#include <vector>
 #include "Coordinate.h"
 #include "Typedefs.h"
 #include "../grid/Typedefs.h"
 
-#include <macgyver/Exception.h>
-#include <newbase/NFmiSvgPath.h>
-#include <trax/SmoothOptions.h>
-#include <set>
-#include <ogr_spatialref.h>
+class NFmiSvgPath;
+namespace SmartMet
+{
+namespace T
+{
+struct Point;
+}
+}
 
 
 namespace SmartMet

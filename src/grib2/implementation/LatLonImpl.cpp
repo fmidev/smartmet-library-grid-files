@@ -1,13 +1,22 @@
 #include "LatLonImpl.h"
 #include <macgyver/Exception.h>
+#include <ogr_spatialref.h>
+#include <iostream>
+#include <memory>
+#include <cmath>
+#include <cstdio>
+#include <cstdint>
+#include <vector>
 #include "../../common/GeneralFunctions.h"
-#include "../../common/GeneralDefinitions.h"
 #include "../../common/Dimensions.h"
 #include "../../common/CoordinateConversions.h"
 #include "../../grid/PrintOptions.h"
-
-#include <iostream>
-#include <memory>
+#include "../../common/Point.h"
+#include "../definition/GridSettings.h"
+#include "../definition/LatLon.h"
+#include "../definition/LatLonSettings.h"
+#include "../definition/ResolutionSettings.h"
+#include "../definition/ScanningModeSettings.h"
 
 
 namespace SmartMet

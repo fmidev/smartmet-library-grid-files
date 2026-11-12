@@ -1,28 +1,10 @@
 #include "GraphFunctions.h"
-#include "ImageFunctions.h"
-#include "ImagePaint.h"
-#include "MemoryReader.h"
-#include "MemoryWriter.h"
-#include "GeneralFunctions.h"
-#include <algorithm>
-#include <cmath>
-#include "AutoThreadLock.h"
-#include "ShowFunction.h"
-#include "InterpolationFunctions.h"
-
 #include <trax/Grid.h>
 #include <trax/Contour.h>
 #include <trax/IsolineValues.h>
 #include <trax/IsobandLimits.h>
 #include <trax/Smoother.h>
 #include <fmt/format.h>
-#include <memory>
-#include <vector>
-
-#include <sstream>
-#include <stack>
-#include <thread>
-
 #include <geos/io/WKBWriter.h>
 #include <geos/version.h>
 #include <macgyver/Exception.h>
@@ -30,6 +12,33 @@
 #include <macgyver/Cache.h>
 #include <boost/algorithm/string/replace.hpp>
 #include <macgyver/Hash.h>
+#include <newbase/NFmiSvgPath.h>
+#include <trax/GeometryCollection.h>
+#include <algorithm>
+#include <cmath>
+#include <memory>
+#include <vector>
+#include <sstream>
+#include <thread>
+#include <cstdlib>
+#include <iterator>
+#include <optional>
+#include <set>
+#include <utility>
+#include "ImageFunctions.h"
+#include "MemoryWriter.h"
+#include "ShowFunction.h"
+#include "InterpolationFunctions.h"
+#include "Coordinate.h"
+#include "Point.h"
+#include "Typedefs.h"
+#include "../grid/Typedefs.h"
+
+class OGRCoordinateTransformation;
+namespace SmartMet
+{
+class MemoryReader;
+}
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
 

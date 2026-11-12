@@ -1,11 +1,8 @@
 #include "GaussianLatitudeCache.h"
 #include <macgyver/Exception.h>
-#include "../common/CoordinateConversions.h"
-
 #include <cmath>
 #include <mutex>
 #include <string>
-#include <vector>
 
 
 namespace SmartMet

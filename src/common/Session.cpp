@@ -5,10 +5,14 @@
 // ======================================================================
 
 #include "Session.h"
-
+#include <macgyver/Exception.h>
+#include <cstdio>
+#include <sstream>
+#include <utility>
+#include <vector>
 #include "GeneralFunctions.h"
 #include "ShowFunction.h"
-#include <spine/SmartMet.h>
+#include "Typedefs.h"
 
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF

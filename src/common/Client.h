@@ -1,11 +1,9 @@
 #pragma once
 
-#include "MapInfo.h"
-
 #include <curl/curl.h>
 #include <string>
 #include <vector>
-#include <map>
+#include <cstddef>
 
 
 namespace SmartMet

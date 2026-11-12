@@ -4,9 +4,17 @@
  *  \brief Grid value interpolation functions for linear, logarithmic, landscape,
  *  level, and time interpolation methods.  All declarations are in `SmartMet`. */
 
-#include "Typedefs.h"
+#include <ctime>
+#include <string>
 #include "../grid/Typedefs.h"
-#include "../grid/GridValueList.h"
+
+namespace SmartMet
+{
+namespace T
+{
+class GridValueList;
+}
+}
 
 namespace SmartMet
 {

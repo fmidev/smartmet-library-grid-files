@@ -1,7 +1,19 @@
 #pragma once
 
+#include <cmath>
+#include <cstddef>
+#include <cstdint>
 #include "../definition/GridDataRepresentation.h"
-#include "../../common/BitArrayReader.h"
+#include "../../common/Typedefs.h"
+#include "../../grid/Typedefs.h"
+
+namespace SmartMet
+{
+namespace GRIB2
+{
+class Message;
+}
+}
 
 
 namespace SmartMet

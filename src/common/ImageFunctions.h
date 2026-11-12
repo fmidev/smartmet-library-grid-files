@@ -1,11 +1,13 @@
 #pragma once
 
+#include <cstdint>
+#include <cstring>
+#include <memory>
+#include <string>
+#include <vector>
 #include "Typedefs.h"
-#include "../grid/Typedefs.h"
 
-#include <newbase/NFmiSvgPath.h>
-#include <macgyver/Exception.h>
-#include <ogr_geometry.h>
+class OGRGeometry;
 
 
 namespace SmartMet

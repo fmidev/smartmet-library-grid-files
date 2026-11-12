@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../definition/Triangular.h"
+#include "../../common/Coordinate.h"
 
 
 namespace SmartMet

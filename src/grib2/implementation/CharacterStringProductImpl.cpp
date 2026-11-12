@@ -1,5 +1,7 @@
 #include "CharacterStringProductImpl.h"
 #include <macgyver/Exception.h>
+#include <string>
+#include "../definition/CharacterStringProduct.h"
 
 
 namespace SmartMet

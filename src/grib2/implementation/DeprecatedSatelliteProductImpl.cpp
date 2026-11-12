@@ -1,4 +1,7 @@
 #include "DeprecatedSatelliteProductImpl.h"
+#include <macgyver/Exception.h>
+#include <string>
+#include "../definition/DeprecatedSatelliteProduct.h"
 
 
 namespace SmartMet

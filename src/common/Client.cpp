@@ -1,7 +1,11 @@
 #include "Client.h"
-#include "GeneralFunctions.h"
 #include <macgyver/Exception.h>
+#include <cstdio>
+#include <cstring>
+#include <ctime>
+#include "GeneralFunctions.h"
 #include "ShowFunction.h"
+#include "Typedefs.h"
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
 

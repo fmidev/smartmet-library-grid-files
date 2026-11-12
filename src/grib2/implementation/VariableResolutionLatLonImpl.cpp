@@ -1,6 +1,12 @@
 #include "VariableResolutionLatLonImpl.h"
-#include <iostream>
 #include <macgyver/Exception.h>
+#include <iostream>
+#include <string>
+#include "../../common/Dimensions.h"
+#include "../GridDefinition.h"
+#include "../definition/VariableLatLonSettings.h"
+#include "../definition/VariableResolutionLatLon.h"
+#include "../../grid/Typedefs.h"
 
 namespace SmartMet
 {

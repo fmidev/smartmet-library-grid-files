@@ -1,17 +1,10 @@
 #include "HttpsClient.h"
-#include "GeneralFunctions.h"
 #include <macgyver/Exception.h>
-#include <fcntl.h>
 #include <cstdio>
-#include <unistd.h>
-#include <netinet/in.h>
-#include <cstdlib>
-#include <cstring>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netdb.h>
-
+#include <string>
 #include "ShowFunction.h"
+#include "Client.h"
+
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
 
 

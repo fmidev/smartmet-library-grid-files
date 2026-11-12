@@ -1,10 +1,15 @@
 #include "ImagePaint.h"
+#include <macgyver/Exception.h>
+#include <algorithm>
+#include <vector>
+#include <cmath>
+#include <cstdlib>
+#include <cstdint>
+#include <string>
 #include "ImageFunctions.h"
 #include "MemoryReader.h"
 #include "ShowFunction.h"
-#include <algorithm>
-#include <vector>
-#include <macgyver/Exception.h>
+#include "Coordinate.h"
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
 

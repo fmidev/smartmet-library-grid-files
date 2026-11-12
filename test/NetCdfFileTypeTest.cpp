@@ -4,14 +4,13 @@
 
 #define BOOST_TEST_MODULE NetCdfFileTypeTest
 #include <boost/test/included/unit_test.hpp>
-
-#include "TestCommon.h"
-#include "../src/grid/GridFile.h"
-#include "../src/identification/GridDef.h"
-
 #include <fstream>
 #include <iterator>
 #include <string>
+#include <algorithm>
+#include "TestCommon.h"
+#include "../src/grid/GridFile.h"
+#include "../src/identification/GridDef.h"
 
 using namespace SmartMet;
 using namespace GridTest;

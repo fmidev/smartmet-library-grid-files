@@ -1,7 +1,10 @@
 #pragma once
 
-#include "../grid/Typedefs.h"
 
+#include <array>
+#include <cmath>
+#include <cstdint>
+#include "Typedefs.h"
 
 namespace SmartMet
 {

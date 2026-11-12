@@ -1,22 +1,28 @@
 #pragma once
 
+#include <cmath>
+#include <cstdint>
+#include <ctime>
+#include <iosfwd>
+#include <memory>
+#include <string>
 #include "BitmapSection.h"
 #include "DataSection.h"
 #include "GridSection.h"
 #include "ProductSection.h"
 #include "IndicatorSection.h"
-#include "Properties.h"
 #include "../common/Coordinate.h"
-#include "../common/Dimensions.h"
-#include "../common/DataWriter.h"
-#include "../common/MemoryReader.h"
-#include "../common/GeneralDefinitions.h"
 #include "../grid/Message.h"
-#include "../grid/ValueCache.h"
 #include "../grid/Typedefs.h"
+#include "../common/Typedefs.h"
 
-#include <filesystem>
-#include <optional>
+namespace SmartMet
+{
+namespace GRID
+{
+class GridFile;
+}
+}
 
 
 namespace SmartMet

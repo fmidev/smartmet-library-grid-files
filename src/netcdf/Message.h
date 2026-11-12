@@ -2,7 +2,23 @@
 
 
 #include "../grid/Message.h"
-#include "../grib2/Message.h"
+#include <cstdint>
+#include <ctime>
+#include <iosfwd>
+#include <string>
+#include <vector>
+#include "../common/Coordinate.h"
+#include "../common/Typedefs.h"
+#include "../grib2/GridDefinition.h"
+#include "../grid/Typedefs.h"
+
+namespace SmartMet
+{
+namespace GRID
+{
+class GridFile;
+}
+}
 
 
 namespace SmartMet

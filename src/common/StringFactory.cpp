@@ -1,8 +1,9 @@
 #include "StringFactory.h"
+#include <macgyver/Exception.h>
+#include <cstring>
+#include <utility>
 #include "AutoWriteLock.h"
 #include "AutoReadLock.h"
-#include <cstring>
-#include <macgyver/Exception.h>
 
 namespace SmartMet
 {

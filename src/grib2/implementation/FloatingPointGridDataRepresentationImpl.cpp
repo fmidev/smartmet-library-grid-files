@@ -1,9 +1,11 @@
 #include "FloatingPointGridDataRepresentationImpl.h"
 #include <macgyver/Exception.h>
-#include "../../common/GeneralFunctions.h"
-#include "../../common/GeneralDefinitions.h"
+#include <cstddef>
+#include <cstdint>
+#include <string>
 #include "../../common/MemoryReader.h"
 #include "../Message.h"
+#include "../definition/FloatingPointGridDataRepresentation.h"
 
 namespace SmartMet
 {

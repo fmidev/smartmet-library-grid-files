@@ -1,5 +1,7 @@
 #include "PreprocessedGridDataRepresentationImpl.h"
 #include <macgyver/Exception.h>
+#include <string>
+#include "../definition/PreprocessedGridDataRepresentation.h"
 
 namespace SmartMet
 {

@@ -1,7 +1,11 @@
 #pragma once
 
+#include <iosfwd>
+#include <map>
+#include <string>
+#include <vector>
 #include "../grid/Typedefs.h"
-#include <unordered_map>
+#include "../common/Typedefs.h"
 
 namespace SmartMet
 {

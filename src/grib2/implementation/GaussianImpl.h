@@ -1,6 +1,9 @@
 #pragma once
 
+#include <iosfwd>
 #include "../definition/Gaussian.h"
+#include "../../common/Coordinate.h"
+#include "../../common/Typedefs.h"
 
 
 namespace SmartMet

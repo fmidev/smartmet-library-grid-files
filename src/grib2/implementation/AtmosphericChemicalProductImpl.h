@@ -1,6 +1,8 @@
 #pragma once
 
 #include "../definition/AtmosphericChemicalProduct.h"
+#include "../../common/Typedefs.h"
+#include "../../grid/Typedefs.h"
 
 
 namespace SmartMet

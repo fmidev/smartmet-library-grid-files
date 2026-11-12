@@ -1,5 +1,7 @@
 #include "LogarithmicGridDataRepresentationImpl.h"
 #include <macgyver/Exception.h>
+#include <string>
+#include "../definition/LogarithmicGridDataRepresentation.h"
 
 namespace SmartMet
 {

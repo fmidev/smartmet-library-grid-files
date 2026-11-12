@@ -1,4 +1,5 @@
 #include "FileWriter.h"
+#include <macgyver/Exception.h>
 
 
 namespace SmartMet

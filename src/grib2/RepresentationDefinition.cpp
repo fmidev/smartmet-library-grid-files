@@ -1,10 +1,24 @@
 #include "RepresentationDefinition.h"
-#include "Properties.h"
 #include <macgyver/Exception.h>
+#include "Properties.h"
+#include "definition/OriginalValuesSettings.h"
+#include "definition/PackingSettings.h"
+#include "../grid/Typedefs.h"
+
+namespace SmartMet
+{
+namespace T
+{
+class AttributeList;
+}
+}
 
 
 namespace SmartMet
 {
+class DataWriter;
+class MemoryReader;
+
 namespace GRIB2
 {
 

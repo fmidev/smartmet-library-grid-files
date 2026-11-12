@@ -1,6 +1,7 @@
 #include "AreaProcessedCrossSectionProductImpl.h"
 #include <macgyver/Exception.h>
-#include "../../common/GeneralFunctions.h"
+#include <string>
+#include "../definition/AreaProcessedCrossSectionProduct.h"
 
 namespace SmartMet
 {

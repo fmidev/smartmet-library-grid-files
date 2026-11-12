@@ -1,6 +1,13 @@
 #include "RotatedGaussianImpl.h"
-#include <iostream>
 #include <macgyver/Exception.h>
+#include <iostream>
+#include <string>
+#include "../../common/Dimensions.h"
+#include "../GridDefinition.h"
+#include "../definition/GaussianSettings.h"
+#include "../definition/GridSettings.h"
+#include "../definition/RotatedGaussian.h"
+#include "../../grid/Typedefs.h"
 
 namespace SmartMet
 {

@@ -1,6 +1,11 @@
 #pragma once
 
+#include <cstddef>
+#include <iosfwd>
+#include <string>
 #include "../definition/LambertAzimuthalEqualArea.h"
+#include "../../common/Coordinate.h"
+#include "../../common/Typedefs.h"
 
 
 namespace SmartMet

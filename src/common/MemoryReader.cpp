@@ -1,9 +1,10 @@
 #include "MemoryReader.h"
-#include "GeneralFunctions.h"
 #include <macgyver/Exception.h>
 #include <arpa/inet.h>
-
 #include <algorithm>
+#include <cstring>
+#include <string>
+#include "GeneralFunctions.h"
 
 namespace SmartMet
 {

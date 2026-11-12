@@ -1,6 +1,12 @@
 #include "Topography.h"
-#include "../common/ImageFunctions.h"
 #include <macgyver/Exception.h>
+#include <cstdio>
+#include "../common/ImageFunctions.h"
+#include "../common/AutoWriteLock.h"
+#include "../common/BitLine.h"
+#include "../common/ConfigurationFile.h"
+#include "../common/Coordinate.h"
+#include "../grid/Typedefs.h"
 
 
 namespace SmartMet

@@ -1,6 +1,11 @@
 #include "AttributeList.h"
-#include "GeneralFunctions.h"
 #include <macgyver/Hash.h>
+#include <macgyver/Exception.h>
+#include <cstring>
+#include <ostream>
+#include "GeneralFunctions.h"
+#include "Attribute.h"
+#include "Typedefs.h"
 
 
 namespace SmartMet

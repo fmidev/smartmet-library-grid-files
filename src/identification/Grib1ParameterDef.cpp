@@ -1,5 +1,6 @@
 #include "Grib1ParameterDef.h"
 #include <macgyver/Exception.h>
+#include <ostream>
 #include "../common/GeneralFunctions.h"
 #include "../common/StringFactory.h"
 

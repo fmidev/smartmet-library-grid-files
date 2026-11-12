@@ -1,13 +1,17 @@
 #include "DataFetcher_filesys.h"
+#include <macgyver/Exception.h>
+#include <sys/stat.h>
+#include <dirent.h>
+#include <cstring>
+#include <cstdlib>
+#include <utility>
 #include "GeneralFunctions.h"
 #include "AutoThreadLock.h"
 #include "AutoWriteLock.h"
 #include "AutoReadLock.h"
 #include "ShowFunction.h"
-#include <macgyver/Exception.h>
-#include <cstring>
-#include <sys/stat.h>
-#include <dirent.h>
+#include "DataFetcher.h"
+#include "ThreadLock.h"
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
 

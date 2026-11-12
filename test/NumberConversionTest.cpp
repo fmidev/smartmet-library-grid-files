@@ -6,10 +6,9 @@
 
 #define BOOST_TEST_MODULE NumberConversionTest
 #include <boost/test/included/unit_test.hpp>
-
-#include "../src/common/GeneralFunctions.h"
-
 #include <limits>
+#include "../src/common/GeneralFunctions.h"
+#include "../src/common/Typedefs.h"
 
 using namespace SmartMet;
 

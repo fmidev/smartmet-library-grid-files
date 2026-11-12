@@ -1,7 +1,11 @@
 #include "IrregularLatLonImpl.h"
-#include <iostream>
 #include <macgyver/Exception.h>
+#include <iostream>
+#include <string>
 #include "../../common/Dimensions.h"
+#include "../GridDefinition.h"
+#include "../definition/IrregularLatLon.h"
+#include "../../grid/Typedefs.h"
 
 namespace SmartMet
 {

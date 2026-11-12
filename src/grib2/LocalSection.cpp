@@ -1,9 +1,13 @@
 #include "LocalSection.h"
-#include "Message.h"
 #include <macgyver/Exception.h>
-#include "../common/GeneralFunctions.h"
-
 #include <iostream>
+#include <cstring>
+#include <optional>
+#include "Message.h"
+#include "../common/GeneralFunctions.h"
+#include "../common/DataWriter.h"
+#include "../common/MemoryReader.h"
+#include "../grid/MessageSection.h"
 
 
 namespace SmartMet

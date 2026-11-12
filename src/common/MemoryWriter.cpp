@@ -1,6 +1,7 @@
 #include "MemoryWriter.h"
-
+#include <macgyver/Exception.h>
 #include <algorithm>
+#include <string>
 
 
 namespace SmartMet

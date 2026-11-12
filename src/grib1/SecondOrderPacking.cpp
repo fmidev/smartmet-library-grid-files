@@ -1,12 +1,15 @@
 #include "SecondOrderPacking.h"
+#include <macgyver/Exception.h>
+#include <vector>
+#include <memory>
+#include <ostream>
+#include <string>
 #include "DataSection.h"
 #include "Message.h"
-#include <macgyver/Exception.h>
 #include "../common/GeneralFunctions.h"
 #include "../common/BitArrayReader.h"
 #include "../common/MemoryReader.h"
-
-#include <vector>
+#include "DataDefinition.h"
 
 
 namespace SmartMet

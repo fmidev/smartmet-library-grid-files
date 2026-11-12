@@ -1,7 +1,8 @@
 #pragma once
 
-#include "Typedefs.h"
 #include <macgyver/Exception.h>
+#include <string>
+#include "Typedefs.h"
 
 namespace SmartMet
 {

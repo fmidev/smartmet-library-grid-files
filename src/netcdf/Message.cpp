@@ -1,16 +1,25 @@
 #include "Message.h"
+#include <macgyver/StringConversion.h>
+#include <macgyver/Exception.h>
+#include <algorithm>
+#include <cstdio>
+#include <memory>
+#include <ostream>
 #include "NetCdfFile.h"
 #include "../common/ShowFunction.h"
+#include "../common/Point.h"
 #include "../grid/PrintOptions.h"
 #include "../grid/GridFile.h"
 #include "../common/GeneralFunctions.h"
 #include "../identification/GridDef.h"
-#include <macgyver/StringConversion.h>
-#include <macgyver/Exception.h>
-#include <macgyver/FastMath.h>
-#include <arpa/inet.h>
-
-#include <algorithm>
+#include "../common/Dimensions.h"
+#include "../common/MemoryReader.h"
+#include "../common/StringFactory.h"
+#include "../grid/Message.h"
+#include "../identification/FmiParameterDef.h"
+#include "../identification/FmiParameterId_grib.h"
+#include "../identification/GribParameterDef.h"
+#include "../identification/NewbaseParameterDef.h"
 
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../definition/Albers.h"
+#include "../../common/Coordinate.h"
 
 namespace SmartMet
 {

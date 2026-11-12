@@ -1,7 +1,10 @@
 #include "Dimensions.h"
-#include "GeneralFunctions.h"
 #include <macgyver/StringConversion.h>
 #include <macgyver/Exception.h>
+#include <ostream>
+#include <string>
+#include "GeneralFunctions.h"
+#include "Typedefs.h"
 
 
 namespace SmartMet

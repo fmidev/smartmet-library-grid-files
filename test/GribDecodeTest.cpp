@@ -18,12 +18,6 @@
 #include <boost/test/data/monomorphic.hpp>
 #include <boost/test/data/test_case.hpp>
 #include <boost/test/included/unit_test.hpp>
-
-#include "TestCommon.h"
-#include "../src/grid/GridFile.h"
-#include "../src/grid/Message.h"
-#include "../src/identification/GridDef.h"
-
 #include <boost/algorithm/string.hpp>
 #include <filesystem>
 #include <fstream>
@@ -31,6 +25,16 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <algorithm>
+#include <cmath>
+#include <cstddef>
+#include <utility>
+#include "TestCommon.h"
+#include "../src/grid/GridFile.h"
+#include "../src/grid/Message.h"
+#include "../src/identification/GridDef.h"
+#include "../src/common/Dimensions.h"
+#include "../src/grid/Typedefs.h"
 
 using namespace SmartMet;
 using namespace GridTest;

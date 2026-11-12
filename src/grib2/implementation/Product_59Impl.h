@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../definition/Product_59.h"
+#include "../../grid/Typedefs.h"
 
 
 namespace SmartMet

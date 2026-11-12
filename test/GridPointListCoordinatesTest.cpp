@@ -14,15 +14,21 @@
 
 #define BOOST_TEST_MODULE GridPointListCoordinatesTest
 #include <boost/test/included/unit_test.hpp>
-
+#include <macgyver/CacheStats.h>
+#include <string>
+#include <vector>
+#include <cstddef>
 #include "TestCommon.h"
 #include "../src/grid/GridFile.h"
 #include "../src/grid/Message.h"
 #include "../src/common/CoordinateConversions.h"
 #include "../src/identification/GridDef.h"
-
-#include <string>
-#include <vector>
+#include "../src/common/Coordinate.h"
+#include "../src/common/Dimensions.h"
+#include "../src/common/Point.h"
+#include "../src/grid/GridValue.h"
+#include "../src/grid/GridValueList.h"
+#include "../src/grid/Typedefs.h"
 
 using namespace SmartMet;
 using namespace GridTest;

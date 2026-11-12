@@ -1,15 +1,13 @@
 #include "TcpClient.h"
-#include "GeneralFunctions.h"
 #include <macgyver/Exception.h>
 #include <fcntl.h>
-#include <cstdio>
 #include <unistd.h>
 #include <netinet/in.h>
-#include <cstdlib>
-#include <cstring>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h>
+#include <cstring>
+#include "GeneralFunctions.h"
 
 
 namespace SmartMet

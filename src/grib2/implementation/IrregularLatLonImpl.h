@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../definition/IrregularLatLon.h"
+#include "../../common/Coordinate.h"
 
 
 namespace SmartMet

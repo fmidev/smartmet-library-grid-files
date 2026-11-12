@@ -1,7 +1,12 @@
 #include "EquatorialAzimuthalEquidistantImpl.h"
 #include <macgyver/Exception.h>
-
+#include <ogr_spatialref.h>
 #include <memory>
+#include <string>
+#include "../../common/Dimensions.h"
+#include "../GridDefinition.h"
+#include "../definition/EquatorialAzimuthalEquidistant.h"
+#include "../../grid/Typedefs.h"
 
 namespace SmartMet
 {

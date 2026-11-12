@@ -1,8 +1,10 @@
 #pragma once
 
+#include <cstdint>
+#include <iosfwd>
 #include "DataDefinition.h"
-#include "../common/DataWriter.h"
-#include "../common/MemoryReader.h"
+#include "../common/Typedefs.h"
+#include "../grid/Typedefs.h"
 
 namespace SmartMet
 {

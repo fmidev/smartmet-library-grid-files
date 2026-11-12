@@ -1,12 +1,17 @@
 #pragma once
 
+#include <cstddef>
+#include <map>
+#include <string>
+#include <vector>
 #include "DataFetcher.h"
 #include "ThreadLock.h"
 #include "Client.h"
-#include "XmlElement.h"
+#include "Typedefs.h"
 
 namespace SmartMet
 {
+class XmlElement;
 
 /*! \brief HTTP response buffer used by DataFetcher_network internals. */
 struct Response

@@ -1,8 +1,19 @@
 #include "AggregateAerosolProductImpl.h"
 #include <macgyver/Exception.h>
-
-#include <utility>
+#include <macgyver/DateTime.h>
+#include <string>
 #include "../../common/GeneralFunctions.h"
+#include "../definition/AggregateAerosolProduct.h"
+#include "../definition/HorizontalSettings.h"
+#include "../definition/ParameterAerosolSettings.h"
+
+namespace SmartMet
+{
+namespace GRIB2
+{
+class StatisticalSettings;
+}
+}
 
 
 namespace SmartMet

@@ -1,32 +1,44 @@
 #pragma once
 
-#include "MessageSection.h"
-#include "Typedefs.h"
-#include "GridPointValue.h"
-#include "GridPointValueList.h"
-#include "GridValueList.h"
-#include "../common/AttributeList.h"
-#include "../common/Coordinate.h"
-#include "../common/Dimensions.h"
-#include "../common/GraphFunctions.h"
-#include "../common/AutoThreadLock.h"
-#include "../common/AutoWriteLock.h"
-#include "../common/AutoReadLock.h"
-#include "../common/ThreadLock.h"
-#include "../common/RequestCounter.h"
-#include "../common/DataWriter.h"
-#include "../common/MemoryReader.h"
-#include "../common/StringFactory.h"
-
-#include <macgyver/CacheStats.h>
 #include <vector>
 #include <string>
-#include <memory>
+#include <ctime>
+#include <iosfwd>
+#include <map>
+#include <set>
+#include <utility>
+#include "Typedefs.h"
+#include "GridPointValue.h"
+#include "../common/Coordinate.h"
+#include "../common/Dimensions.h"
+#include "../common/ThreadLock.h"
+#include "../common/Typedefs.h"
+
+namespace Fmi
+{
+namespace Cache
+{
+struct CacheStats;
+}
+}
+namespace SmartMet
+{
+namespace T
+{
+class AttributeList;
+class GridPointValueList;
+class GridValueList;
+struct Point;
+}
+}
 
 
 
 namespace SmartMet
 {
+class DataWriter;
+class MemoryReader;
+
 namespace GRID
 {
 

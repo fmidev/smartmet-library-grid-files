@@ -1,5 +1,7 @@
 #include "ForecastErrorImpl.h"
 #include <macgyver/Exception.h>
+#include <string>
+#include "../definition/ForecastError.h"
 
 
 namespace SmartMet

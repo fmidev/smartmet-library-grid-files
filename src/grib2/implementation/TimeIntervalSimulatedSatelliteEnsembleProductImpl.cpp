@@ -1,5 +1,7 @@
 #include "TimeIntervalSimulatedSatelliteEnsembleProductImpl.h"
 #include <macgyver/Exception.h>
+#include <string>
+#include "../definition/TimeIntervalSimulatedSatelliteEnsembleProduct.h"
 
 
 namespace SmartMet

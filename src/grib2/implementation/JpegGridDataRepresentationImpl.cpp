@@ -1,10 +1,10 @@
 #include "JpegGridDataRepresentationImpl.h"
-
-#include "../../common/BitArrayReader.h"
 #include <macgyver/Exception.h>
-#include "../../common/GeneralDefinitions.h"
-#include "../../common/GeneralFunctions.h"
+#include "../../common/BitArrayReader.h"
 #include "../Message.h"
+#include "../../common/Typedefs.h"
+#include "../definition/JpegGridDataRepresentation.h"
+#include "../definition/PackingSettings.h"
 
 #ifdef JASPER
   #include <jasper/jas_image.h>
@@ -15,8 +15,9 @@
 
 //#include <openjpeg-1.5/openjpeg.h>
 #include <cstring>
-#include <iostream>
-#include <memory>
+#include <cmath>
+#include <cstdint>
+#include <string>
 
 namespace SmartMet
 {

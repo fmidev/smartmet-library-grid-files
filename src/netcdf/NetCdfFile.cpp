@@ -1,15 +1,24 @@
 #include "NetCdfFile.h"
-#include "../common/ShowFunction.h"
-#include "../grid/GridFile.h"
-#include "../grid/PrintOptions.h"
-#include "../common/GeneralFunctions.h"
-#include "../identification/GridDef.h"
-#include <macgyver/StringConversion.h>
 #include <macgyver/Exception.h>
-#include <macgyver/FastMath.h>
 #include <ogr_spatialref.h>
 #include <vector>
 #include <cmath>
+#include <cstdio>
+#include <cstring>
+#include <ctime>
+#include <algorithm>
+#include <cstdint>
+#include <iostream>
+#include <utility>
+#include "../common/ShowFunction.h"
+#include "../common/GeneralFunctions.h"
+#include "../identification/GridDef.h"
+#include "../common/AttributeList.h"
+#include "../common/MemoryReader.h"
+#include "../grib2/GridDefinition.h"
+#include "../grid/Typedefs.h"
+#include "../identification/NetCdfParameterDef.h"
+#include "Message.h"
 
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF

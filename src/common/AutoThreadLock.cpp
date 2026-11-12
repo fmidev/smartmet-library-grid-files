@@ -1,5 +1,4 @@
 #include "AutoThreadLock.h"
-#include <macgyver/Exception.h>
 
 
 namespace SmartMet

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../definition/EnsembleReforecast.h"
+#include "../../grid/Typedefs.h"
 
 
 namespace SmartMet

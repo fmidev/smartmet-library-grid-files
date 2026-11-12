@@ -1,7 +1,4 @@
 #include "ModificationLock.h"
-#include "AutoThreadLock.h"
-#include "GeneralFunctions.h"
-#include <macgyver/Exception.h>
 
 namespace SmartMet
 {

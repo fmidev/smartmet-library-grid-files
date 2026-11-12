@@ -2,15 +2,10 @@
 #include <arpa/inet.h>
 #include <dirent.h>
 #include <fnmatch.h>
-#include <algorithm>
-#include <climits>
 #include <macgyver/StringConversion.h>
 #include <macgyver/TimeParser.h>
 #include <macgyver/LocalDateTime.h>
 #include <macgyver/TimeZones.h>
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <sys/types.h>
@@ -20,16 +15,24 @@
 #include <boost/archive/iterators/base64_from_binary.hpp>
 #include <boost/archive/iterators/binary_from_base64.hpp>
 #include <boost/archive/iterators/transform_width.hpp>
+#include <openssl/sha.h>
+#include <openssl/hmac.h>
+#include <openssl/err.h>
+#include <macgyver/Exception.h>
+#include <algorithm>
+#include <cstdlib>
+#include <cstring>
 #include <filesystem>
 #include <set>
 #include <sstream>
 #include <string>
 #include <vector>
-#include <openssl/sha.h>
-#include <openssl/hmac.h>
-#include <openssl/err.h>
-#include "AutoThreadLock.h"
-#include "GeneralDefinitions.h"
+#include <cctype>
+#include <ctime>
+#include <exception>
+#include <utility>
+#include "Coordinate.h"
+#include "../grid/Typedefs.h"
 
 #define NUM(a) ((a)-'0')
 

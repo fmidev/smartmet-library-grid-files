@@ -1,20 +1,48 @@
 #pragma once
 
-#include "Message.h"
-#include "GridPointValue.h"
-#include "Typedefs.h"
-#include "../common/MemoryReader.h"
-#include "../common/MemoryMapper.h"
-#include "../netcdf/NetCdfFile.h"
-#include "../geotiff/GeoTiffFile.h"
-#include "../querydata/QueryDataFile.h"
-
+#include <boost/date_time/posix_time/posix_time.hpp>
 #include <memory>
 #include <vector>
+#include <ctime>
+#include <iosfwd>
+#include <map>
+#include <string>
+#include <utility>
+#include "Message.h"
+#include "Typedefs.h"
+#include "../common/MapInfo.h"
+#include "../common/ThreadLock.h"
+#include "../common/Typedefs.h"
+#include "ValueCache.h"
+
+namespace SmartMet
+{
+namespace GeoTiff
+{
+class GeoTiffFile;
+}
+}
+namespace SmartMet
+{
+namespace NetCDF
+{
+class NetCdfFile;
+}
+}
+namespace SmartMet
+{
+namespace QueryData
+{
+class QueryDataFile;
+}
+}
 
 
 namespace SmartMet
 {
+class DataWriter;
+class MemoryReader;
+
 namespace GRID
 {
 

@@ -1,11 +1,19 @@
 #include "SimplePacking.h"
-#include "Message.h"
 #include <macgyver/Exception.h>
-#include "../common/GeneralFunctions.h"
-#include "../common/GeneralDefinitions.h"
-#include "../common/BitArrayWriter.h"
 #include <macgyver/StringConversion.h>
 #include <macgyver/FastMath.h>
+#include <cstring>
+#include <ostream>
+#include <string>
+#include <vector>
+#include "Message.h"
+#include "../common/GeneralFunctions.h"
+#include "../common/BitArrayWriter.h"
+#include "../common/BitArrayReader.h"
+#include "../common/Dimensions.h"
+#include "../common/MemoryReader.h"
+#include "DataDefinition.h"
+#include "DataSection.h"
 
 
 namespace SmartMet

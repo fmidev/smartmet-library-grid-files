@@ -1,10 +1,16 @@
 #include "PngGridDataRepresentationImpl.h"
 #include <macgyver/Exception.h>
+#include <png.h>
+#include <csetjmp>
+#include <cstdint>
+#include <cstring>
+#include <string>
 #include "../../common/GeneralFunctions.h"
 #include "../../common/BitArrayReader.h"
 #include "../Message.h"
-
-#include <png.h>
+#include "../../common/Typedefs.h"
+#include "../definition/PackingSettings.h"
+#include "../definition/PngGridDataRepresentation.h"
 
 
 namespace SmartMet

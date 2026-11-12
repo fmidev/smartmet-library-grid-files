@@ -1,9 +1,12 @@
 #include "ProductSection.h"
-#include "Message.h"
-#include "../identification/GridDef.h"
 #include <macgyver/Exception.h>
+#include <macgyver/StringConversion.h>
+#include <iostream>
+#include <utility>
+#include <cstdio>
+#include <optional>
+#include "Message.h"
 #include "../common/GeneralFunctions.h"
-
 #include "implementation/NormalProductImpl.h"                                   // 4.0
 #include "implementation/EnsembleForecastImpl.h"                                // 4.1
 #include "implementation/EnsembleDerivedForecastImpl.h"                         // 4.2
@@ -56,10 +59,13 @@
 #include "implementation/Product_71Impl.h"
 #include "implementation/Product_72Impl.h"
 #include "implementation/Product_73Impl.h"
-
-#include <iostream>
-#include <utility>
-#include <macgyver/StringConversion.h>
+#include "../common/AttributeList.h"
+#include "../common/DataWriter.h"
+#include "../common/MemoryReader.h"
+#include "ProductDefinition.h"
+#include "Properties.h"
+#include "definition/EpsSettings.h"
+#include "../grid/MessageSection.h"
 
 namespace SmartMet
 {

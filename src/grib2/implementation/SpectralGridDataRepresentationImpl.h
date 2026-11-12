@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../definition/SpectralGridDataRepresentation.h"
+#include "../../grid/Typedefs.h"
 
 
 namespace SmartMet

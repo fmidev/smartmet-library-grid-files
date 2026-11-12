@@ -1,5 +1,7 @@
 #include "TimeIntervalAerosolEnsembleProductImpl.h"
 #include <macgyver/Exception.h>
+#include <string>
+#include "../definition/TimeIntervalAerosolEnsembleProduct.h"
 
 
 namespace SmartMet

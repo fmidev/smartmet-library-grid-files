@@ -1,19 +1,29 @@
 #pragma once
 
-#include "Typedefs.h"
 #include <macgyver/Exception.h>
 #include <macgyver/CacheStats.h>
 #include <macgyver/MappedFile.h>
-#include <filesystem>
-#include "../common/AttributeNode.h"
-#include "../common/GeneralFunctions.h"
-#include "../common/AutoReadLock.h"
-#include "../common/AutoWriteLock.h"
-
+#include <boost/iostreams/device/mapped_file.hpp>
 #include <atomic>
 #include <cstddef>
 #include <string>
 #include <vector>
+#include <cstdio>
+#include <cstring>
+#include <memory>
+#include "Typedefs.h"
+#include "../common/GeneralFunctions.h"
+#include "../common/AutoReadLock.h"
+#include "../common/ModificationLock.h"
+#include "../common/Typedefs.h"
+
+namespace SmartMet
+{
+namespace T
+{
+class AttributeNode;
+}
+}
 
 namespace SmartMet
 {

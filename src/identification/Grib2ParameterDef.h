@@ -1,6 +1,13 @@
 #pragma once
 
+#include <iosfwd>
+#include <iterator>
+#include <list>
+#include <string>
+#include <utility>
+#include <vector>
 #include "../grid/Typedefs.h"
+#include "../common/Typedefs.h"
 
 namespace SmartMet
 {

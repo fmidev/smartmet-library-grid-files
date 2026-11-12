@@ -1,12 +1,17 @@
 #include "GridDataRepresentationImpl.h"
 #include <macgyver/Exception.h>
+#include <cstring>
+#include <string>
+#include <vector>
 #include "../../common/GeneralFunctions.h"
-#include "../../common/GeneralDefinitions.h"
 #include "../../common/BitArrayWriter.h"
 #include "../../common/MemoryReader.h"
 #include "../Message.h"
-
-#include <limits>
+#include "../../common/BitArrayReader.h"
+#include "../DataSection.h"
+#include "../RepresentationSection.h"
+#include "../definition/GridDataRepresentation.h"
+#include "../definition/PackingSettings.h"
 
 namespace SmartMet
 {

@@ -1,6 +1,9 @@
 #pragma once
 
+#include <iosfwd>
+#include <string>
 #include "Typedefs.h"
+#include "../common/Typedefs.h"
 
 namespace SmartMet
 {

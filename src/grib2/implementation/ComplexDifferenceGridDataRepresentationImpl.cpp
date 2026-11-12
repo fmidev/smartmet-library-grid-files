@@ -1,9 +1,15 @@
 #include "ComplexDifferenceGridDataRepresentationImpl.h"
-#include "../Message.h"
 #include <macgyver/Exception.h>
+#include <algorithm>
+#include <cstddef>
+#include <memory>
+#include <string>
+#include "../Message.h"
 #include "../../common/GeneralFunctions.h"
-#include "../../common/GeneralDefinitions.h"
 #include "../../common/BitArrayReader.h"
+#include "../../common/Typedefs.h"
+#include "../definition/ComplexDifferenceGridDataRepresentation.h"
+#include "../definition/PackingSettings.h"
 
 namespace SmartMet
 {

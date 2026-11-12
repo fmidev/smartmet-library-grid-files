@@ -1,6 +1,12 @@
 #pragma once
 
+#include <cstddef>
+#include <iosfwd>
+#include <string>
 #include "../definition/RotatedLatLon.h"
+#include "../../common/Coordinate.h"
+#include "../../common/Typedefs.h"
+#include "../../grid/Typedefs.h"
 
 
 namespace SmartMet

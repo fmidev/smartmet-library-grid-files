@@ -1,12 +1,13 @@
 #include "Log.h"
-#include "AutoThreadLock.h"
-#include "GeneralFunctions.h"
 #include <macgyver/Exception.h>
 #include <macgyver/StringConversion.h>
-
-#include <cstdarg>
 #include <sys/types.h>
 #include <unistd.h>
+#include <cstdarg>
+#include "AutoThreadLock.h"
+#include "GeneralFunctions.h"
+#include "ThreadLock.h"
+#include "Typedefs.h"
 
 
 namespace SmartMet

@@ -1,8 +1,10 @@
 #include "GridValueList.h"
 #include <macgyver/Exception.h>
-
 #include <algorithm>
+#include <ostream>
+#include <string>
 #include "../common/GeneralFunctions.h"
+#include "GridValue.h"
 
 
 namespace SmartMet

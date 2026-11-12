@@ -1,25 +1,48 @@
 #pragma once
 
+#include <map>
+#include <cstddef>
+#include <cstdint>
+#include <iosfwd>
+#include <memory>
+#include <string>
+#include <vector>
 #include "../grid/Typedefs.h"
 #include "../common/Coordinate.h"
 #include "../common/Dimensions.h"
-#include "../common/DataWriter.h"
-#include "../common/MemoryReader.h"
-#include "../common/AttributeList.h"
-#include "../common/CoordinateConversions.h"
-#include "definition/GridAreaSettings.h"
-#include "definition/ScanningModeSettings.h"
-#include "definition/ResolutionFlagsSettings.h"
-#include "definition/RotationSettings.h"
+#include "../common/Typedefs.h"
 
-#include <macgyver/CacheStats.h>
-#include <ogr_spatialref.h>
-#include <ogr_srs_api.h>
-#include <map>
+namespace Fmi
+{
+namespace Cache
+{
+struct CacheStats;
+}
+}
+namespace SmartMet
+{
+namespace GRIB1
+{
+class GridAreaSettings;
+class ResolutionFlagsSettings;
+class RotationSettings;
+class ScanningModeSettings;
+}
+}
+namespace SmartMet
+{
+namespace T
+{
+class AttributeList;
+}
+}
 
 
 namespace SmartMet
 {
+class DataWriter;
+class MemoryReader;
+
 namespace GRIB1
 {
 

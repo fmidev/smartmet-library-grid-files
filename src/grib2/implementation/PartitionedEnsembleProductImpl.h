@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../definition/PartitionedEnsembleProduct.h"
+#include "../../grid/Typedefs.h"
 
 
 namespace SmartMet

@@ -1,12 +1,18 @@
 #pragma once
 
+#include <cstdint>
+#include <iosfwd>
+#include <memory>
+#include <string>
 #include "../grid/MessageSection.h"
 #include "../grid/Typedefs.h"
-#include "../common/DataWriter.h"
-#include "../common/MemoryReader.h"
+#include "../common/Typedefs.h"
 
 namespace SmartMet
 {
+class DataWriter;
+class MemoryReader;
+
 namespace GRIB2
 {
 

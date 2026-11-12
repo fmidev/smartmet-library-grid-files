@@ -1,14 +1,25 @@
 #pragma once
 
+#include <iosfwd>
+#include <memory>
+#include <string>
 #include "../grid/Typedefs.h"
-#include "../common/Dimensions.h"
-#include "../common/DataWriter.h"
-#include "../common/MemoryReader.h"
-#include "../common/AttributeList.h"
+#include "../common/Typedefs.h"
+
+namespace SmartMet
+{
+namespace T
+{
+class AttributeList;
+}
+}
 
 
 namespace SmartMet
 {
+class DataWriter;
+class MemoryReader;
+
 namespace GRIB1
 {
 

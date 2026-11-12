@@ -1,6 +1,8 @@
 #include "TimeIntervalEnsembleForecastImpl.h"
 #include <macgyver/Exception.h>
-#include "../../common/GeneralFunctions.h"
+#include <string>
+#include "../definition/HorizontalSettings.h"
+#include "../definition/TimeIntervalEnsembleForecast.h"
 
 namespace SmartMet
 {

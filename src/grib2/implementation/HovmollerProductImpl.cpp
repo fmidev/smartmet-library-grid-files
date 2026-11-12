@@ -1,6 +1,9 @@
 #include "HovmollerProductImpl.h"
 #include <macgyver/Exception.h>
-#include "../../common/GeneralFunctions.h"
+#include <cmath>
+#include <string>
+#include "../definition/HorizontalSettings.h"
+#include "../definition/HovmollerProduct.h"
 
 namespace SmartMet
 {

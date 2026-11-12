@@ -1,10 +1,11 @@
 #pragma once
 
+#include <string>
 #include "Typedefs.h"
-#include "Log.h"
 
 namespace SmartMet
 {
+class Log;
 
 
 // ====================================================================================

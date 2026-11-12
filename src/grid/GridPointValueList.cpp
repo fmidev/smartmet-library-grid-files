@@ -1,11 +1,14 @@
 #include "GridPointValueList.h"
 #include <macgyver/Exception.h>
-
 #include <algorithm>
+#include <cstdlib>
+#include <cstring>
+#include <ostream>
+#include <string>
 #include "../common/GeneralFunctions.h"
-#include "../common/AutoWriteLock.h"
 #include "../common/AutoThreadLock.h"
-#include "../common/AutoReadLock.h"
+#include "../common/ThreadLock.h"
+#include "GridPointValue.h"
 
 
 namespace SmartMet

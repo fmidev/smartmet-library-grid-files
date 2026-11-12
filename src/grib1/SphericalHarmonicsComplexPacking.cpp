@@ -1,6 +1,10 @@
 #include <macgyver/Exception.h>
+#include <ostream>
+#include <string>
 #include "../common/GeneralFunctions.h"
 #include "SphericalHarmonicsComplexPacking.h"
+#include "../common/MemoryReader.h"
+#include "DataDefinition.h"
 
 
 namespace SmartMet

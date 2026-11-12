@@ -1,5 +1,7 @@
 #include "CrossSectionProductImpl.h"
 #include <macgyver/Exception.h>
+#include <string>
+#include "../definition/CrossSectionProduct.h"
 
 
 namespace SmartMet

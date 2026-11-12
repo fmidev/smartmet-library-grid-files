@@ -1,12 +1,12 @@
 #include "GridSection.h"
+#include <macgyver/Exception.h>
+#include <cstdio>
+#include <ostream>
 #include "Message.h"
 #include "../identification/GridDef.h"
 #include "../common/Dimensions.h"
-#include <macgyver/Exception.h>
 #include "../common/GeneralFunctions.h"
-#include "../common/GeneralDefinitions.h"
 #include "../common/ShowFunction.h"
-
 #include "../grib1/implementation/LatLonImpl.h"
 #include "../grib1/implementation/MercatorImpl.h"
 #include "../grib1/implementation/LambertConformalImpl.h"
@@ -25,6 +25,13 @@
 #include "../grib1/implementation/StretchedSphericalHarmonicImpl.h"
 #include "../grib1/implementation/StretchedRotatedSphericalHarmonicImpl.h"
 #include "../grib1/implementation/SpaceViewImpl.h"
+#include "../common/AttributeList.h"
+#include "../common/Coordinate.h"
+#include "../common/DataWriter.h"
+#include "../common/MemoryReader.h"
+#include "GridDefinition.h"
+#include "Properties.h"
+#include "../grid/MessageSection.h"
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
 

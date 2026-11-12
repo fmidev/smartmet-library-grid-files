@@ -1,14 +1,21 @@
 #include "LambertConformalImpl.h"
 #include <macgyver/Exception.h>
+#include <ogr_spatialref.h>
+#include <iostream>
+#include <memory>
+#include <cmath>
+#include <cstdio>
+#include <optional>
+#include <vector>
 #include "../../common/GeneralFunctions.h"
-#include "../../common/GeneralDefinitions.h"
 #include "../../common/CoordinateConversions.h"
 #include "../../grid/PrintOptions.h"
 #include "../Properties.h"
-
-#include <iostream>
-#include <memory>
-#include <macgyver/Hash.h>
+#include "../../common/Dimensions.h"
+#include "../GridDefinition.h"
+#include "../definition/LambertConformal.h"
+#include "../definition/ResolutionSettings.h"
+#include "../definition/ScanningModeSettings.h"
 
 
 namespace SmartMet

@@ -1,5 +1,8 @@
 #include "Properties.h"
 #include <macgyver/Exception.h>
+#include <map>
+#include <utility>
+#include "../grid/Typedefs.h"
 
 
 namespace SmartMet

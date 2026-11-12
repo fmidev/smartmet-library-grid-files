@@ -1,5 +1,8 @@
 #pragma once
 
+#include <curl/curl.h>
+#include <cstddef>
+#include <vector>
 #include "Client.h"
 
 

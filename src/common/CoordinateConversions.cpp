@@ -1,24 +1,19 @@
 #include "CoordinateConversions.h"
-#include "CoordinateConverter.h"
-#include "GeneralFunctions.h"
-#include "GeneralDefinitions.h"
-#include "AutoThreadLock.h"
-#include "AutoWriteLock.h"
-#include "AutoReadLock.h"
-
 #include <macgyver/Exception.h>
 #include <macgyver/Cache.h>
 #include <macgyver/Hash.h>
-#include <boost/algorithm/string/predicate.hpp>
-#include <boost/filesystem/operations.hpp>
 #include <boost/math/constants/constants.hpp>
-#include <boost/numeric/conversion/cast.hpp>
-#include <boost/make_shared.hpp>
-#include <ogr_geometry.h>
-#include <ogr_spatialref.h>
-
 #include <newbase/NFmiLocation.h>
-#include <unordered_map>
+#include <newbase/NFmiPoint.h>
+#include <algorithm>
+#include <cmath>
+#include <optional>
+#include <string>
+#include "CoordinateConverter.h"
+#include "GeneralDefinitions.h"
+#include "Coordinate.h"
+
+class OGRSpatialReference;
 
 namespace
 {

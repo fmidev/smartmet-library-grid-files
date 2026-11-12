@@ -1,11 +1,10 @@
 #pragma once
 
+#include <vector>
+#include <ctime>
 #include "Typedefs.h"
 #include "../common/ModificationLock.h"
-#include "../common/AutoWriteLock.h"
-#include "../common/AutoReadLock.h"
-
-#include <vector>
+#include "../common/Typedefs.h"
 
 
 namespace SmartMet

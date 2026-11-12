@@ -1,5 +1,6 @@
 #include "BitArrayReader.h"
 #include <macgyver/Exception.h>
+#include "Typedefs.h"
 
 
 namespace SmartMet

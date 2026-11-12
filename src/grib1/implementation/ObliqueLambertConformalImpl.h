@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../definition/ObliqueLambertConformal.h"
+#include "../../common/Coordinate.h"
 
 namespace SmartMet
 {

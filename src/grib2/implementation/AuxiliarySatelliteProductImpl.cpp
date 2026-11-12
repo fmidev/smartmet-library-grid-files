@@ -1,5 +1,7 @@
 #include "AuxiliarySatelliteProductImpl.h"
 #include <macgyver/Exception.h>
+#include <string>
+#include "../definition/AuxiliarySatelliteProduct.h"
 
 
 namespace SmartMet

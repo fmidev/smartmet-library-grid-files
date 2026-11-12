@@ -1,13 +1,19 @@
 #include "PolarStereographicImpl.h"
 #include <macgyver/Exception.h>
+#include <ogr_spatialref.h>
+#include <iostream>
+#include <memory>
+#include <cmath>
+#include <cstdio>
+#include <vector>
 #include "../../common/GeneralFunctions.h"
-#include "../../common/GeneralDefinitions.h"
 #include "../../common/CoordinateConversions.h"
 #include "../../grid/PrintOptions.h"
 #include "../Properties.h"
-
-#include <iostream>
-#include <memory>
+#include "../../common/Dimensions.h"
+#include "../GridDefinition.h"
+#include "../definition/PolarStereographic.h"
+#include "../definition/ScanningModeSettings.h"
 
 namespace SmartMet
 {

@@ -1,10 +1,10 @@
 #include "BitLine.h"
-#include "GeneralFunctions.h"
 #include <macgyver/Exception.h>
-
-#include <memory.h>
-
 #include <algorithm>
+#include <cstring>
+#include <string>
+#include "GeneralFunctions.h"
+#include "Typedefs.h"
 
 namespace SmartMet
 {

@@ -1,12 +1,23 @@
 #include "DataDefinition.h"
-#include "Message.h"
 #include <macgyver/Exception.h>
+#include <ostream>
 #include "../common/GeneralFunctions.h"
-#include "../common/GeneralDefinitions.h"
+#include "../grid/Typedefs.h"
+
+namespace SmartMet
+{
+namespace T
+{
+class AttributeList;
+}
+}
 
 
 namespace SmartMet
 {
+class DataWriter;
+class MemoryReader;
+
 namespace GRIB1
 {
 

@@ -17,16 +17,16 @@
 
 #define BOOST_TEST_MODULE FastPathOrientationTest
 #include <boost/test/included/unit_test.hpp>
-
+#include <cstdlib>
+#include <string>
+#include <vector>
 #include "TestCommon.h"
 #include "../src/grid/GridFile.h"
 #include "../src/grid/Message.h"
 #include "../src/common/AttributeList.h"
 #include "../src/identification/GridDef.h"
-
-#include <cstdlib>
-#include <string>
-#include <vector>
+#include "../src/common/Dimensions.h"
+#include "../src/grid/Typedefs.h"
 
 using namespace SmartMet;
 using namespace GridTest;

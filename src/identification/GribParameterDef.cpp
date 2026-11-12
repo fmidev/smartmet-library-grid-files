@@ -1,7 +1,7 @@
 #include "GribParameterDef.h"
 #include <macgyver/Exception.h>
+#include <ostream>
 #include "../common/GeneralFunctions.h"
-#include "../common/GeneralDefinitions.h"
 
 
 namespace SmartMet

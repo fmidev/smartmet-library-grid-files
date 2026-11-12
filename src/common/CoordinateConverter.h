@@ -1,11 +1,12 @@
 #pragma once
 
-#include "Typedefs.h"
-#include "AutoThreadLock.h"
 #include <ogr_spatialref.h>
-#include <macgyver/Exception.h>
 #include <atomic>
 #include <memory>
+#include <ctime>
+#include "Typedefs.h"
+#include "AutoThreadLock.h"
+#include "ThreadLock.h"
 
 namespace SmartMet
 {

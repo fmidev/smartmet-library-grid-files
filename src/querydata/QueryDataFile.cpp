@@ -1,27 +1,34 @@
 #include "QueryDataFile.h"
-#include "../common/ShowFunction.h"
-#include "../grid/GridFile.h"
-#include "../grid/PrintOptions.h"
-#include "../common/GeneralFunctions.h"
-#include "../identification/GridDef.h"
-#include <macgyver/StringConversion.h>
-#include <newbase/NFmiCmdLine.h>
-#include <newbase/NFmiEnumConverter.h>
 #include <newbase/NFmiFastQueryInfo.h>
-#include <newbase/NFmiFileString.h>
-#include <newbase/NFmiFileSystem.h>
 #include <newbase/NFmiGrid.h>
-#include <newbase/NFmiSettings.h>
-#include <newbase/NFmiStringList.h>
-#include <newbase/NFmiStreamQueryData.h>
-
+#include <gis/SpatialReference.h>
+#include <newbase/NFmiArea.h>
+#include <newbase/NFmiDataIdent.h>
+#include <newbase/NFmiLevel.h>
+#include <newbase/NFmiMetTime.h>
+#include <newbase/NFmiPoint.h>
+#include <newbase/NFmiQueryData.h>
+#include <newbase/NFmiRect.h>
+#include <newbase/NFmiSaveBaseFactory.h>
+#include <ogr_spatialref.h>
 #include <algorithm>
 #include <ctime>
 #include <cmath>
-#include <list>
 #include <mutex>
 #include <set>
 #include <string>
+#include <cstdio>
+#include <iomanip>
+#include <iostream>
+#include <memory>
+#include <utility>
+#include <vector>
+#include "../common/ShowFunction.h"
+#include "../common/GeneralFunctions.h"
+#include "../identification/GridDef.h"
+#include "../common/CoordinateConversions.h"
+#include "../grib2/GridDefinition.h"
+#include "Message.h"
 
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF

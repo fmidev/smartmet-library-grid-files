@@ -1,6 +1,10 @@
 #pragma once
 
+#include <ctime>
+#include <iosfwd>
 #include "GridPointValue.h"
+#include "../common/Typedefs.h"
+#include "Typedefs.h"
 
 
 namespace SmartMet

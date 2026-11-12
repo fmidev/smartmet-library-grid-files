@@ -1,9 +1,14 @@
 #include "RequestCounter.h"
+#include <macgyver/Exception.h>
+#include <vector>
+#include <cstdio>
+#include <iterator>
+#include <string>
+#include <utility>
 #include "AutoThreadLock.h"
 #include "ShowFunction.h"
 #include "GeneralFunctions.h"
-#include <macgyver/Exception.h>
-#include <vector>
+#include "Typedefs.h"
 
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF

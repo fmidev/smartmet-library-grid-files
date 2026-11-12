@@ -1,5 +1,14 @@
 #include "MessageSection.h"
 #include <macgyver/Exception.h>
+#include "Typedefs.h"
+
+namespace SmartMet
+{
+namespace T
+{
+class AttributeList;
+}
+}
 
 
 namespace SmartMet

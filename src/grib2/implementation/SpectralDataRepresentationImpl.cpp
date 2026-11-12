@@ -1,5 +1,7 @@
 #include "SpectralDataRepresentationImpl.h"
 #include <macgyver/Exception.h>
+#include <string>
+#include "../definition/SpectralDataRepresentation.h"
 
 namespace SmartMet
 {

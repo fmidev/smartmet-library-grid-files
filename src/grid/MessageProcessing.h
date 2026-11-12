@@ -1,19 +1,26 @@
 #pragma once
 
-#include "Message.h"
-#include "Typedefs.h"
-#include "GridPointValue.h"
-#include "GridPointValueList.h"
-#include "GridValueList.h"
-#include "../common/AttributeList.h"
-#include "../common/Coordinate.h"
-#include "../common/Dimensions.h"
-#include "../common/GraphFunctions.h"
-#include "../common/ThreadLock.h"
-
 #include <vector>
-#include <string>
-#include <memory>
+#include <ctime>
+#include "Typedefs.h"
+#include "../common/Typedefs.h"
+
+namespace SmartMet
+{
+namespace GRID
+{
+class Message;
+}
+}
+namespace SmartMet
+{
+namespace T
+{
+class AttributeList;
+class Coordinate;
+class GridValueList;
+}
+}
 
 
 namespace SmartMet

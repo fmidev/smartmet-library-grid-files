@@ -1,9 +1,14 @@
 #include "ComplexGridDataRepresentationImpl.h"
 #include <macgyver/Exception.h>
+#include <cstddef>
+#include <memory>
+#include <string>
 #include "../../common/GeneralFunctions.h"
-#include "../../common/GeneralDefinitions.h"
 #include "../../common/BitArrayReader.h"
 #include "../Message.h"
+#include "../../common/Typedefs.h"
+#include "../definition/ComplexGridDataRepresentation.h"
+#include "../definition/PackingSettings.h"
 
 
 namespace SmartMet

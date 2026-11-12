@@ -1,5 +1,9 @@
 #include "GridPointValue.h"
+#include <macgyver/Exception.h>
+#include <ostream>
+#include <string>
 #include "../common/GeneralFunctions.h"
+#include "Typedefs.h"
 
 namespace SmartMet
 {

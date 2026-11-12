@@ -1,6 +1,8 @@
 #include "Product_73Impl.h"
 #include <macgyver/Exception.h>
-#include "../../common/GeneralFunctions.h"
+#include <string>
+#include "../definition/HorizontalSettings.h"
+#include "../definition/Product_73.h"
 
 namespace SmartMet
 {

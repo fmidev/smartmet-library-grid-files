@@ -1,13 +1,22 @@
 #include "DataSection.h"
+#include <macgyver/Exception.h>
+#include <macgyver/StringConversion.h>
+#include <cstdio>
+#include <cstring>
+#include <ostream>
 #include "Message.h"
 #include "SecondOrderPacking.h"
 #include "SimplePacking.h"
 #include "SphericalHarmonicsSimplePacking.h"
 #include "SphericalHarmonicsComplexPacking.h"
-#include <macgyver/Exception.h>
 #include "../common/GeneralFunctions.h"
-#include "../common/GeneralDefinitions.h"
-#include <macgyver/StringConversion.h>
+#include "../common/AttributeList.h"
+#include "../common/DataWriter.h"
+#include "../common/MemoryReader.h"
+#include "DataDefinition.h"
+#include "Properties.h"
+#include "../grid/MessageSection.h"
+#include "../grid/Typedefs.h"
 
 
 namespace SmartMet

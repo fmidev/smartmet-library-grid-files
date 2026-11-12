@@ -1,11 +1,25 @@
 #pragma once
 
-#include "../grid/Message.h"
+#include <iosfwd>
+#include <map>
+#include <string>
+#include <vector>
 #include "Message.h"
+#include "../common/Typedefs.h"
+
+namespace SmartMet
+{
+namespace T
+{
+class AttributeList;
+}
+}
 
 
 namespace SmartMet
 {
+class MemoryReader;
+
 namespace NetCDF
 {
 

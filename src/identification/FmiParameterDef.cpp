@@ -1,6 +1,8 @@
 #include "FmiParameterDef.h"
 #include <macgyver/Exception.h>
+#include <ostream>
 #include "../common/GeneralFunctions.h"
+#include "../grid/Typedefs.h"
 
 
 namespace SmartMet

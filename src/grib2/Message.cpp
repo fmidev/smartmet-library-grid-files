@@ -1,6 +1,18 @@
 #include "Message.h"
+#include <macgyver/Exception.h>
+#include <sys/mman.h>
+#include <macgyver/FastMath.h>
+#include <macgyver/StringConversion.h>
+#include <ogr_spatialref.h>
 #include <algorithm>
 #include <ctime>
+#include <iostream>
+#include <memory>
+#include <set>
+#include <utility>
+#include <cmath>
+#include <cstdio>
+#include <vector>
 #include "BitmapSection.h"
 #include "DataSection.h"
 #include "GridSection.h"
@@ -11,25 +23,27 @@
 #include "RepresentationSection.h"
 #include "../grid/PrintOptions.h"
 #include "../grid/ValueCache.h"
-#include "../grid/IndexCache.h"
 #include "../grid/Typedefs.h"
 #include "../grid/GridFile.h"
 #include "../common/BitArrayWriter.h"
 #include "../common/Dimensions.h"
-#include <macgyver/Exception.h>
 #include "../common/GeneralFunctions.h"
-#include "../common/GeneralDefinitions.h"
 #include "../common/InterpolationFunctions.h"
 #include "../common/MemoryMapper.h"
 #include "../identification/GridDef.h"
 #include "../common/ShowFunction.h"
-#include <iostream>
-#include <memory>
-#include <set>
-#include <utility>
-#include <sys/mman.h>
-#include <macgyver/FastMath.h>
-#include <macgyver/StringConversion.h>
+#include "../common/AttributeList.h"
+#include "../common/AutoThreadLock.h"
+#include "../common/Coordinate.h"
+#include "../common/DataWriter.h"
+#include "../common/MemoryReader.h"
+#include "../common/Point.h"
+#include "../common/StringFactory.h"
+#include "Properties.h"
+#include "../grid/Message.h"
+#include "../identification/FmiParameterDef.h"
+#include "../identification/Grib2ParameterDef.h"
+#include "../identification/GribParameterDef.h"
 
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF

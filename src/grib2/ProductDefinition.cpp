@@ -1,9 +1,27 @@
 #include "ProductDefinition.h"
-#include "Properties.h"
 #include <macgyver/Exception.h>
-
-#include <utility>
+#include <macgyver/DateTime.h>
+#include <cstdint>
+#include "Properties.h"
 #include "../common/GeneralFunctions.h"
+#include "definition/CategoricalSettings.h"
+#include "definition/DerivedSettings.h"
+#include "definition/EpsSettings.h"
+#include "definition/HorizontalSettings.h"
+#include "definition/ParameterSettings.h"
+#include "definition/PercentileSettings.h"
+#include "definition/PostprocSettings.h"
+#include "definition/ProbabilitySettings.h"
+#include "definition/RectangularClusterSettings.h"
+#include "definition/StatisticalSettings.h"
+
+namespace SmartMet
+{
+namespace T
+{
+class AttributeList;
+}
+}
 
 
 namespace SmartMet

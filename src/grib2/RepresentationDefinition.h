@@ -1,15 +1,33 @@
 #pragma once
 
+#include <iosfwd>
+#include <memory>
+#include <string>
 #include "../grid/Typedefs.h"
-#include "../common/DataWriter.h"
-#include "../common/MemoryReader.h"
-#include "../common/AttributeList.h"
-#include "../grib2/definition/PackingSettings.h"
-#include "../grib2/definition/OriginalValuesSettings.h"
+#include "../common/Typedefs.h"
+
+namespace SmartMet
+{
+namespace GRIB2
+{
+class OriginalValuesSettings;
+class PackingSettings;
+}
+}
+namespace SmartMet
+{
+namespace T
+{
+class AttributeList;
+}
+}
 
 
 namespace SmartMet
 {
+class DataWriter;
+class MemoryReader;
+
 namespace GRIB2
 {
 

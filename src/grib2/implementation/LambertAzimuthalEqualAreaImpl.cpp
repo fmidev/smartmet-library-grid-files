@@ -1,13 +1,19 @@
 #include "LambertAzimuthalEqualAreaImpl.h"
 #include <macgyver/Exception.h>
-#include "../../common/GeneralFunctions.h"
-#include "../../common/GeneralDefinitions.h"
-#include "../../common/CoordinateConversions.h"
-#include "../../grid/PrintOptions.h"
-#include "../Properties.h"
-
+#include <ogr_spatialref.h>
 #include <iostream>
 #include <memory>
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include "../../common/GeneralFunctions.h"
+#include "../../common/CoordinateConversions.h"
+#include "../../grid/PrintOptions.h"
+#include "../../common/Dimensions.h"
+#include "../GridDefinition.h"
+#include "../definition/LambertAzimuthalEqualArea.h"
+#include "../definition/ScanningModeSettings.h"
+#include "../../grid/Typedefs.h"
 
 namespace SmartMet
 {

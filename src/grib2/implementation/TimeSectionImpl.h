@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../definition/TimeSection.h"
+#include "../../common/Coordinate.h"
 
 
 namespace SmartMet

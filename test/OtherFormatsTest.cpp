@@ -11,20 +11,23 @@
 
 #define BOOST_TEST_MODULE OtherFormatsTest
 #include <boost/test/included/unit_test.hpp>
-
-#include "TestCommon.h"
-#include "../src/grid/GridFile.h"
-#include "../src/grid/Message.h"
-#include "../src/identification/GridDef.h"
-
 #include <newbase/NFmiFastQueryInfo.h>
 #include <newbase/NFmiQueryData.h>
-
+#include <newbase/NFmiGlobals.h>
+#include <newbase/NFmiPoint.h>
 #include <cmath>
 #include <filesystem>
 #include <fstream>
 #include <string>
 #include <vector>
+#include <algorithm>
+#include <cstdlib>
+#include "TestCommon.h"
+#include "../src/grid/GridFile.h"
+#include "../src/grid/Message.h"
+#include "../src/identification/GridDef.h"
+#include "../src/common/Dimensions.h"
+#include "../src/grid/Typedefs.h"
 
 using namespace SmartMet;
 using namespace GridTest;

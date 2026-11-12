@@ -1,5 +1,7 @@
 #include "PartitionedEnsembleProductImpl.h"
 #include <macgyver/Exception.h>
+#include <string>
+#include "../definition/PartitionedEnsembleProduct.h"
 
 
 namespace SmartMet

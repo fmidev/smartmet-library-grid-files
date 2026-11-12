@@ -1,7 +1,9 @@
 #include "Attribute.h"
-#include "GeneralFunctions.h"
 #include <macgyver/Hash.h>
 #include <macgyver/Exception.h>
+#include <ostream>
+#include "GeneralFunctions.h"
+#include "Typedefs.h"
 
 
 

@@ -1,10 +1,8 @@
 #pragma once
 
-#include "../grid/Typedefs.h"
-
-#include <map>
-#include <vector>
 #include <string>
+#include "../grid/Typedefs.h"
+#include "../common/Typedefs.h"
 
 
 namespace SmartMet

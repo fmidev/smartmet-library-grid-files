@@ -1,11 +1,13 @@
 #pragma once
 
-#include "../common/AutoWriteLock.h"
-#include "../common/AutoReadLock.h"
+#include <cmath>
+#include <string>
+#include <vector>
 #include "../common/ConfigurationFile.h"
 #include "../common/BitLine.h"
 #include "../common/Typedefs.h"
 #include "../grid/Typedefs.h"
+#include "../common/ModificationLock.h"
 
 
 namespace SmartMet

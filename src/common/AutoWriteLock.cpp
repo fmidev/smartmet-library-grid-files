@@ -1,5 +1,4 @@
 #include "AutoWriteLock.h"
-#include <macgyver/Exception.h>
 
 
 namespace SmartMet

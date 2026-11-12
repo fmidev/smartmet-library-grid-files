@@ -1,26 +1,42 @@
 #include "GridFile.h"
-#include "PrintOptions.h"
 #include <macgyver/Exception.h>
 #include <macgyver/StringConversion.h>
-#include "../common/GeneralDefinitions.h"
+#include <algorithm>
+#include <memory>
+#include <cstdio>
+#include <cstring>
+#include <cstdint>
+#include <ostream>
+#include "PrintOptions.h"
 #include "../common/GeneralFunctions.h"
 #include "../common/ShowFunction.h"
-#include "../identification/GridDef.h"
 #include "../common/FileWriter.h"
 #include "../grib1/Message.h"
 #include "../grib2/Message.h"
 #include "../netcdf/Message.h"
 #include "../netcdf/NetCdfFile.h"
 #include "../querydata/Message.h"
-#include <linux/userfaultfd.h>
-#include <sys/mman.h>
-#include <sys/syscall.h>
-#include <sys/ioctl.h>
-#include <fcntl.h>
-#include <algorithm>
-#include <csignal>
-#include <memory>
-#include <poll.h>
+#include "../common/AutoThreadLock.h"
+#include "../common/MemoryMapper.h"
+#include "../common/MemoryReader.h"
+#include "../geotiff/GeoTiffFile.h"
+#include "../geotiff/Message.h"
+#include "../grib2/BitmapSection.h"
+#include "../grib2/DataSection.h"
+#include "../grib2/GridSection.h"
+#include "../grib2/IdentificationSection.h"
+#include "../grib2/IndicatorSection.h"
+#include "../grib2/LocalSection.h"
+#include "../grib2/ProductSection.h"
+#include "../grib2/RepresentationSection.h"
+#include "Message.h"
+#include "Typedefs.h"
+#include "../querydata/QueryDataFile.h"
+
+namespace SmartMet
+{
+class DataWriter;
+}
 
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF

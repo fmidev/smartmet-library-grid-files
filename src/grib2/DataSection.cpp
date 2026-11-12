@@ -1,11 +1,15 @@
 #include "DataSection.h"
-#include "GridSection.h"
-#include "BitmapSection.h"
-#include "RepresentationSection.h"
-#include "Message.h"
-#include "../grid/PrintOptions.h"
 #include <macgyver/Exception.h>
+#include <cstdio>
+#include <cstring>
+#include <optional>
+#include <ostream>
+#include "Message.h"
 #include "../common/GeneralFunctions.h"
+#include "../common/AttributeList.h"
+#include "../common/DataWriter.h"
+#include "../common/MemoryReader.h"
+#include "../grid/MessageSection.h"
 
 
 namespace SmartMet

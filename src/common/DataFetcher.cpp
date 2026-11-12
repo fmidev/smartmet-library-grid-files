@@ -1,8 +1,14 @@
-#include "DataFetcher_filesys.h"
-#include "GeneralFunctions.h"
 #include <macgyver/Exception.h>
-#include "ShowFunction.h"
 #include <vector>
+#include <cstring>
+#include <cstdio>
+#include <map>
+#include <string>
+#include <utility>
+#include "GeneralFunctions.h"
+#include "ShowFunction.h"
+#include "DataFetcher.h"
+#include "Typedefs.h"
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
 

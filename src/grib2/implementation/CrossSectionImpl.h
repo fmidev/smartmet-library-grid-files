@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../definition/CrossSection.h"
+#include "../../common/Coordinate.h"
 
 
 namespace SmartMet

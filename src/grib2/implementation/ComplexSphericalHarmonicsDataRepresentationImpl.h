@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../definition/ComplexSphericalHarmonicsDataRepresentation.h"
+#include "../../grid/Typedefs.h"
 
 
 namespace SmartMet

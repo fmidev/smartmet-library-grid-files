@@ -14,15 +14,22 @@
 #include <boost/test/data/monomorphic.hpp>
 #include <boost/test/data/test_case.hpp>
 #include <boost/test/included/unit_test.hpp>
-
-#include "TestCommon.h"
-#include "../src/grid/Typedefs.h"
-#include "../src/identification/GridDef.h"
-
 #include <cmath>
 #include <set>
 #include <type_traits>
 #include <vector>
+#include <algorithm>
+#include <cstddef>
+#include <memory>
+#include <utility>
+#include "TestCommon.h"
+#include "../src/grid/Typedefs.h"
+#include "../src/identification/GridDef.h"
+#include "../src/common/Coordinate.h"
+#include "../src/common/Dimensions.h"
+#include "../src/common/Point.h"
+#include "../src/grib1/GridDefinition.h"
+#include "../src/grib2/GridDefinition.h"
 
 using namespace SmartMet;
 using namespace GridTest;

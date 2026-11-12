@@ -1,15 +1,20 @@
 #include "DataFetcher_network.h"
+#include <macgyver/Exception.h>
+#include <macgyver/TimeParser.h>
+#include <curl/curl.h>
+#include <vector>
+#include <cstdio>
+#include <cstring>
+#include <utility>
 #include "AutoThreadLock.h"
 #include "HttpClient.h"
 #include "HttpsClient.h"
 #include "GeneralFunctions.h"
-
-#include <macgyver/Exception.h>
-#include <macgyver/TimeParser.h>
-#include <curl/curl.h>
-
 #include "ShowFunction.h"
-#include <vector>
+#include "Client.h"
+#include "DataFetcher.h"
+#include "XmlElement.h"
+
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
 
 

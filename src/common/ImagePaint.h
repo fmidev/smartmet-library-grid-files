@@ -1,12 +1,19 @@
 #pragma once
 
-#include "ImageFunctions.h"
-#include "MemoryReader.h"
-#include "ShowFunction.h"
-#include <macgyver/Exception.h>
+#include <vector>
+#include "Typedefs.h"
 
 namespace SmartMet
 {
+namespace T
+{
+class Coordinate;
+}
+}
+
+namespace SmartMet
+{
+class MemoryReader;
 
 
 // ====================================================================================

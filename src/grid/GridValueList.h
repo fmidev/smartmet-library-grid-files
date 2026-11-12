@@ -1,7 +1,10 @@
 #pragma once
 
 #include <vector>
+#include <iosfwd>
 #include "GridValue.h"
+#include "../common/Typedefs.h"
+#include "Typedefs.h"
 
 
 namespace SmartMet

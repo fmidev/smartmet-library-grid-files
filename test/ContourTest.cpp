@@ -4,8 +4,11 @@
 
 #define BOOST_TEST_MODULE ContourTest
 #include <boost/test/included/unit_test.hpp>
-
+#include <cstddef>
+#include <vector>
 #include "../src/common/GraphFunctions.h"
+#include "../src/common/Coordinate.h"
+#include "../src/common/Typedefs.h"
 
 using namespace SmartMet;
 

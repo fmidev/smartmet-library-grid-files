@@ -1,9 +1,20 @@
 #pragma once
 
+#include <cmath>
+#include <cstddef>
+#include <cstdint>
+#include <iosfwd>
 #include "DataDefinition.h"
-#include "../common/DataWriter.h"
-#include "../common/MemoryReader.h"
-#include "../common/BitArrayReader.h"
+#include "../common/Typedefs.h"
+#include "../grid/Typedefs.h"
+
+namespace SmartMet
+{
+namespace GRIB1
+{
+class Message;
+}
+}
 
 namespace SmartMet
 {

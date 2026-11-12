@@ -1,9 +1,10 @@
 #include "AttributeNode.h"
-#include "GeneralFunctions.h"
-#include <macgyver/Hash.h>
 #include <macgyver/Exception.h>
-
 #include <utility>
+#include <cstdio>
+#include <ostream>
+#include "GeneralFunctions.h"
+#include "Typedefs.h"
 
 
 

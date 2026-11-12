@@ -1,12 +1,20 @@
 #include "MercatorImpl.h"
 #include <macgyver/Exception.h>
-#include "../../common/GeneralFunctions.h"
-#include "../../common/GeneralDefinitions.h"
-#include "../../grid/PrintOptions.h"
-#include "../Properties.h"
-
+#include <ogr_spatialref.h>
 #include <iostream>
 #include <memory>
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include "../../common/GeneralFunctions.h"
+#include "../../grid/PrintOptions.h"
+#include "../Properties.h"
+#include "../../common/CoordinateConversions.h"
+#include "../../common/Dimensions.h"
+#include "../GridDefinition.h"
+#include "../definition/Mercator.h"
+#include "../definition/ResolutionSettings.h"
+#include "../definition/ScanningModeSettings.h"
 
 namespace SmartMet
 {

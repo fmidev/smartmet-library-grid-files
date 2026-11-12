@@ -1,10 +1,11 @@
 #pragma once
 
-#include "ThreadLock.h"
-#include "Typedefs.h"
-
 #include <stdio.h>
 #include <string>
+#include <ctime>
+#include <cstdio>
+#include "ThreadLock.h"
+#include "Typedefs.h"
 
 
 namespace SmartMet

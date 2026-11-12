@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../definition/AerosolEnsembleProduct.h"
+#include "../../grid/Typedefs.h"
 
 
 namespace SmartMet

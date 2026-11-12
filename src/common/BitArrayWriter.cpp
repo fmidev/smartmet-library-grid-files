@@ -1,4 +1,7 @@
 #include "BitArrayWriter.h"
+#include <macgyver/Exception.h>
+#include <string>
+#include "Typedefs.h"
 
 namespace SmartMet
 {

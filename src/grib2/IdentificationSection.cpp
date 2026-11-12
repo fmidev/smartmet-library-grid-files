@@ -1,10 +1,16 @@
 #include "IdentificationSection.h"
-#include "Message.h"
-#include "../identification/GridDef.h"
 #include <macgyver/Exception.h>
-#include "../common/GeneralFunctions.h"
-
 #include <iostream>
+#include <cstring>
+#include <cstdio>
+#include "Message.h"
+#include "../common/GeneralFunctions.h"
+#include "../common/AttributeList.h"
+#include "../common/DataWriter.h"
+#include "../common/MemoryReader.h"
+#include "Properties.h"
+#include "../grid/MessageSection.h"
+#include "../grid/Typedefs.h"
 
 
 namespace SmartMet

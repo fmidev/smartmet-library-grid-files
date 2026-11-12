@@ -1,9 +1,13 @@
 #include "InterpolationFunctions.h"
+#include <macgyver/Exception.h>
+#include <algorithm>
+#include <cmath>
 #include "TransferInterpolation.h"
 #include "GeneralFunctions.h"
-#include <macgyver/Exception.h>
-
-#include <algorithm>
+#include "Typedefs.h"
+#include "../grid/GridValue.h"
+#include "../grid/GridValueList.h"
+#include "../grid/Typedefs.h"
 
 
 namespace SmartMet

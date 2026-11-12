@@ -1,4 +1,16 @@
 #include "MemoryMapper.h"
+#include <macgyver/Exception.h>
+#include <macgyver/ThreadName.h>
+#include <fmt/format.h>
+#include <macgyver/MappedFile.h>
+#include <boost/iostreams/device/mapped_file.hpp>
+#include <atomic>
+#include <iostream>
+#include <cerrno>
+#include <cstdio>
+#include <ctime>
+#include <cstring>
+#include <utility>
 #include "AutoWriteLock.h"
 #include "AutoReadLock.h"
 #include "AutoThreadLock.h"
@@ -6,18 +18,13 @@
 #include "DataFetcher_filesys.h"
 #include "DataFetcher_network.h"
 #include "ShowFunction.h"
-
-#include <macgyver/Exception.h>
-#include <macgyver/ThreadName.h>
-#include <atomic>
-#include <fmt/format.h>
-#include <iostream>
+#include "AttributeNode.h"
+#include "MapInfo.h"
 #include <linux/userfaultfd.h>
 #include <sys/mman.h>
 #include <sys/syscall.h>
 #include <sys/ioctl.h>
 #include <fcntl.h>
-#include <csignal>
 #include <poll.h>
 #include <curl/curl.h>
 #include <sys/utsname.h>

@@ -1,12 +1,14 @@
 #include "ValueCache.h"
-#include "../common/GeneralDefinitions.h"
-#include "../common/GeneralFunctions.h"
-#include "../common/AutoThreadLock.h"
 #include <macgyver/Exception.h>
 #include <sys/stat.h>
 #include <dirent.h>
-
+#include <macgyver/DateTime.h>
 #include <algorithm>
+#include <utility>
+#include "../common/AttributeNode.h"
+#include "../common/AutoReadLock.h"
+#include "../common/AutoWriteLock.h"
+#include "Typedefs.h"
 
 
 namespace SmartMet

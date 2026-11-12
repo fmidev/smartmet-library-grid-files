@@ -1,6 +1,11 @@
 #pragma once
 
+#include <cstddef>
+#include <string>
 #include "../definition/LambertConformal.h"
+#include "../../common/Coordinate.h"
+#include "../../common/Typedefs.h"
+#include "../../grid/Typedefs.h"
 
 namespace SmartMet
 {

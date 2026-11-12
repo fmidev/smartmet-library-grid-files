@@ -1,11 +1,14 @@
 #include "GridSection.h"
+#include <macgyver/Exception.h>
+#include <macgyver/StringConversion.h>
+#include <iostream>
+#include <cstdio>
+#include <optional>
 #include "Message.h"
 #include "../identification/GridDef.h"
 #include "../common/Dimensions.h"
-#include <macgyver/Exception.h>
 #include "../common/GeneralFunctions.h"
 #include "../common/ShowFunction.h"
-
 #include "implementation/LatLonImpl.h"                             //  "3.0"
 #include "implementation/RotatedLatLonImpl.h"                      //  "3.1"
 #include "implementation/StretchedLatLonImpl.h"                    //  "3.2"
@@ -35,9 +38,21 @@
 #include "implementation/CrossSectionImpl.h"                       //  "3.1000"
 #include "implementation/HovmollerImpl.h"                          //  "3.1100"
 #include "implementation/TimeSectionImpl.h"                        //  "3.1200"
+#include "../common/AttributeList.h"
+#include "../common/Coordinate.h"
+#include "../common/DataWriter.h"
+#include "../common/MemoryReader.h"
+#include "GridDefinition.h"
+#include "Properties.h"
+#include "../grid/MessageSection.h"
 
-#include <iostream>
-#include <macgyver/StringConversion.h>
+namespace SmartMet
+{
+namespace T
+{
+struct Point;
+}
+}
 
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF

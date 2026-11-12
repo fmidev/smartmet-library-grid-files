@@ -1,5 +1,7 @@
 #include "ComplexSphericalHarmonicsDataRepresentationImpl.h"
 #include <macgyver/Exception.h>
+#include <string>
+#include "../definition/ComplexSphericalHarmonicsDataRepresentation.h"
 
 
 namespace SmartMet

@@ -6,17 +6,16 @@
 
 #define BOOST_TEST_MODULE Grib2RepeatedSectionsTest
 #include <boost/test/included/unit_test.hpp>
-
-#include "TestCommon.h"
-#include "../src/grid/GridFile.h"
-#include "../src/grid/Message.h"
-#include "../src/identification/GridDef.h"
-
 #include <cstdint>
 #include <fstream>
 #include <iterator>
 #include <string>
 #include <vector>
+#include "TestCommon.h"
+#include "../src/grid/GridFile.h"
+#include "../src/grid/Message.h"
+#include "../src/identification/GridDef.h"
+#include "../src/grid/Typedefs.h"
 
 using namespace SmartMet;
 using namespace GridTest;

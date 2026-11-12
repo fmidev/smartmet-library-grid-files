@@ -1,12 +1,9 @@
 #pragma once
 
-#include "Typedefs.h"
-#include "ThreadLock.h"
-
-#include <vector>
-#include <string>
 #include <unordered_map>
 #include <map>
+#include "Typedefs.h"
+#include "ThreadLock.h"
 
 
 #define POINT_CACHE_SIZE 2731

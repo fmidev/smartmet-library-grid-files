@@ -1,9 +1,19 @@
 #include "TransverseMercatorImpl.h"
 #include <macgyver/Exception.h>
-
+#include <ogr_spatialref.h>
 #include <memory>
+#include <cmath>
+#include <cstdio>
+#include <ostream>
+#include <vector>
 #include "../../grid/PrintOptions.h"
 #include "../../common/GeneralFunctions.h"
+#include "../../common/CoordinateConversions.h"
+#include "../../common/Dimensions.h"
+#include "../GridDefinition.h"
+#include "../definition/ScanningModeSettings.h"
+#include "../definition/TransverseMercator.h"
+#include "../../grid/Typedefs.h"
 
 namespace SmartMet
 {

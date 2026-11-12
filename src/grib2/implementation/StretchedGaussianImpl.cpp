@@ -1,6 +1,13 @@
 #include "StretchedGaussianImpl.h"
-#include <iostream>
 #include <macgyver/Exception.h>
+#include <iostream>
+#include <string>
+#include "../../common/Dimensions.h"
+#include "../GridDefinition.h"
+#include "../definition/GaussianSettings.h"
+#include "../definition/GridSettings.h"
+#include "../definition/StretchedGaussian.h"
+#include "../../grid/Typedefs.h"
 
 namespace SmartMet
 {

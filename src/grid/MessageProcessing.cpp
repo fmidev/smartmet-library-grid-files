@@ -1,10 +1,20 @@
 #include "MessageProcessing.h"
+#include <macgyver/StringConversion.h>
+#include <macgyver/Exception.h>
+#include <cstdio>
+#include <string>
 #include "../common/InterpolationFunctions.h"
 #include "../common/GeneralFunctions.h"
 #include "../common/CoordinateConversions.h"
 #include "../identification/GridDef.h"
 #include "../common/ShowFunction.h"
-#include <macgyver/StringConversion.h>
+#include "../common/AttributeList.h"
+#include "../common/Coordinate.h"
+#include "../common/Dimensions.h"
+#include "../common/GraphFunctions.h"
+#include "GridValueList.h"
+#include "Message.h"
+#include "Typedefs.h"
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
 

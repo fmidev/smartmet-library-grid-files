@@ -1,9 +1,7 @@
 #pragma once
 
-#include "../grid/Typedefs.h"
-#include "../common/DataWriter.h"
-#include "../common/MemoryReader.h"
 #include <ostream>
+#include "../common/Typedefs.h"
 
 namespace SmartMet
 {

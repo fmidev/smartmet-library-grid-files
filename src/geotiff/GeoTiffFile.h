@@ -1,11 +1,15 @@
 #pragma once
 
-#include "../grid/Message.h"
+#include <iosfwd>
+#include <string>
 #include "Message.h"
+#include "../common/Typedefs.h"
 
 
 namespace SmartMet
 {
+class MemoryReader;
+
 namespace GeoTiff
 {
 

@@ -1,6 +1,9 @@
 #include "IndexCache.h"
 #include <macgyver/Exception.h>
-#include "../common/AutoThreadLock.h"
+#include <string>
+#include "../common/AutoReadLock.h"
+#include "../common/AutoWriteLock.h"
+#include "Typedefs.h"
 
 
 

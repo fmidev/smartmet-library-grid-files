@@ -1,8 +1,12 @@
 #pragma once
 
-#include "../../common/Dimensions.h"
+#include <cstddef>
+#include <iosfwd>
+#include <string>
 #include "../definition/PolarStereographic.h"
-#include <optional>
+#include "../../common/Coordinate.h"
+#include "../../common/Typedefs.h"
+#include "../../grid/Typedefs.h"
 
 namespace SmartMet
 {

@@ -1,6 +1,8 @@
 #include "EnsembleForecastImpl.h"
 #include <macgyver/Exception.h>
-#include "../../common/GeneralFunctions.h"
+#include <string>
+#include "../definition/EnsembleForecast.h"
+#include "../definition/HorizontalSettings.h"
 
 namespace SmartMet
 {

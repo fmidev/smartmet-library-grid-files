@@ -1,10 +1,21 @@
 #include "GaussianImpl.h"
 #include <macgyver/Exception.h>
-
+#include <ogr_spatialref.h>
 #include <memory>
+#include <cstdio>
+#include <algorithm>
+#include <ostream>
+#include <string>
+#include <vector>
 #include "../../common/GeneralFunctions.h"
 #include "../../grid/GaussianLatitudeCache.h"
 #include "../../grid/PrintOptions.h"
+#include "../../common/Dimensions.h"
+#include "../definition/Gaussian.h"
+#include "../definition/GridAreaSettings.h"
+#include "../definition/ResolutionFlagsSettings.h"
+#include "../definition/ScanningModeSettings.h"
+#include "../../grid/Typedefs.h"
 
 namespace SmartMet
 {

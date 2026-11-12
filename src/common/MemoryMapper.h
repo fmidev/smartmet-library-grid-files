@@ -1,12 +1,25 @@
 #pragma once
 
-#include "ModificationLock.h"
-#include "MapInfo.h"
-#include "DataFetcher_network.h"
-#include "AttributeNode.h"
-
 #include <string>
 #include <vector>
+#include <atomic>
+#include <cstddef>
+#include <map>
+#include <memory>
+#include "ModificationLock.h"
+#include "MapInfo.h"
+#include "DataFetcher.h"
+#include "ThreadLock.h"
+#include "Typedefs.h"
+
+namespace SmartMet
+{
+namespace T
+{
+class AttributeNode;
+}
+}
+struct uffd_msg;
 #include <linux/userfaultfd.h>
 
 

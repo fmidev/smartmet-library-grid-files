@@ -1,18 +1,39 @@
 #include "GridDefinition.h"
-#include "Properties.h"
-#include "../common/CoordinateConversions.h"
 #include <macgyver/Exception.h>
 #include <macgyver/Cache.h>
-#include "../common/ShowFunction.h"
-#include "../common/AutoWriteLock.h"
-#include "../common/AutoReadLock.h"
 #include <macgyver/Hash.h>
-
-#include <iostream>
-#include <map>
+#include <macgyver/CacheStats.h>
+#include <macgyver/DateTime.h>
+#include <ogr_spatialref.h>
 #include <memory>
-#include <unordered_map>
 #include <cmath>
+#include <optional>
+#include "Properties.h"
+#include "../common/CoordinateConversions.h"
+#include "../common/ShowFunction.h"
+#include "../common/Coordinate.h"
+#include "../common/Dimensions.h"
+#include "../common/Point.h"
+#include "definition/EarthShapeSettings.h"
+#include "definition/GridSettings.h"
+#include "definition/LatLonSettings.h"
+#include "definition/ResolutionSettings.h"
+#include "definition/RotationSettings.h"
+#include "definition/ScanningModeSettings.h"
+#include "../grid/Typedefs.h"
+
+namespace SmartMet
+{
+class DataWriter;
+class MemoryReader;
+}
+namespace SmartMet
+{
+namespace T
+{
+class AttributeList;
+}
+}
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
 

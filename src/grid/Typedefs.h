@@ -1,18 +1,17 @@
 #pragma once
 
-#include "../common/Coordinate.h"
-#include "../common/Dimensions.h"
-#include "../common/Typedefs.h"
-
+#include <macgyver/DateTime.h>
+#include <ogr_spatialref.h>
 #include <cstdint>
 #include <utility>
 #include <vector>
 #include <set>
-#include <optional>
-#include <macgyver/DateTime.h>
-#include <ogr_spatialref.h>
-#include <float.h>
 #include <string>
+#include <cstddef>
+#include <map>
+#include <memory>
+#include "../common/Coordinate.h"
+#include "../common/Typedefs.h"
 
 
 

@@ -1,14 +1,13 @@
 #include "GeoTiffFile.h"
-#include "../common/ShowFunction.h"
-#include "../grid/GridFile.h"
-#include "../grid/PrintOptions.h"
-#include "../common/GeneralFunctions.h"
-#include "../identification/GridDef.h"
-
-#include <algorithm>
+#include <macgyver/Exception.h>
 #include <ctime>
-#include <list>
 #include <string>
+#include <ostream>
+#include <vector>
+#include "../common/ShowFunction.h"
+#include "../common/GeneralFunctions.h"
+#include "../common/MemoryReader.h"
+#include "Message.h"
 
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF

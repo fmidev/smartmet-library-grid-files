@@ -1,7 +1,18 @@
 #pragma once
 
+#include <cstdint>
+#include <iosfwd>
+#include <string>
 #include "Typedefs.h"
-#include "../common/AttributeList.h"
+#include "../common/Typedefs.h"
+
+namespace SmartMet
+{
+namespace T
+{
+class AttributeList;
+}
+}
 
 
 namespace SmartMet

@@ -1,14 +1,21 @@
 #include "SpectralGridDataRepresentationImpl.h"
 #include <macgyver/Exception.h>
 #include <macgyver/StringConversion.h>
-#include "../../common/GeneralFunctions.h"
 #include "../../common/BitArrayReader.h"
 #include "../../common/AutoThreadLock.h"
 #include "../Message.h"
+#include "../../common/ThreadLock.h"
+#include "../../common/Typedefs.h"
+#include "../definition/PackingSettings.h"
+#include "../definition/SpectralGridDataRepresentation.h"
 
 extern "C"
 {
   #include <libaec.h>
+#include <cmath>
+#include <cstddef>
+#include <cstdint>
+#include <string>
 }
 
 

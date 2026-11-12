@@ -1,13 +1,17 @@
 #include "AdditionalParameters.h"
-#include "GeneralFunctions.h"
-#include "ShowFunction.h"
-
 #include <boost/cast.hpp>
-#include <utility>
 #include <macgyver/StringConversion.h>
-#include <macgyver/TimeParser.h>
 #include <macgyver/Astronomy.h>
 #include <macgyver/CharsetTools.h>
+#include <macgyver/DateTime.h>
+#include <macgyver/Exception.h>
+#include <macgyver/TimeFormatter.h>
+#include <macgyver/TimeZones.h>
+#include <utility>
+#include <cmath>
+#include "GeneralFunctions.h"
+#include "ShowFunction.h"
+#include "Typedefs.h"
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
 

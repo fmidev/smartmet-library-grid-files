@@ -1,9 +1,15 @@
 #include "IndicatorSection.h"
-#include "Message.h"
 #include <macgyver/Exception.h>
-#include "../common/GeneralFunctions.h"
-
 #include <iostream>
+#include <cstdio>
+#include <cstring>
+#include "Message.h"
+#include "../common/GeneralFunctions.h"
+#include "../common/AttributeList.h"
+#include "../common/DataWriter.h"
+#include "../common/MemoryReader.h"
+#include "Properties.h"
+#include "../grid/MessageSection.h"
 
 namespace SmartMet
 {

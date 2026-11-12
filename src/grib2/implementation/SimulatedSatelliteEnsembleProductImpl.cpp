@@ -1,5 +1,7 @@
 #include "SimulatedSatelliteEnsembleProductImpl.h"
 #include <macgyver/Exception.h>
+#include <string>
+#include "../definition/SimulatedSatelliteEnsembleProduct.h"
 
 
 namespace SmartMet

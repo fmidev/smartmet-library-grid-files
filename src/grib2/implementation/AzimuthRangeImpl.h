@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../definition/AzimuthRange.h"
+#include "../../common/Coordinate.h"
 
 namespace SmartMet
 {

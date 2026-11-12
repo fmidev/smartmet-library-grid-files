@@ -1,10 +1,13 @@
 #pragma once
 
+#include <vector>
+#include <cstddef>
+#include <iterator>
+#include <memory>
+#include <utility>
 #include "Coordinate.h"
 
-#include <vector>
-#include <optional>
-#include <ogr_spatialref.h>
+class OGRSpatialReference;
 
 /*! \brief Transform an array of coordinates between two OGR spatial references.
  *  \param[in]     sr_from  Source spatial reference.

@@ -1,5 +1,7 @@
 #include "MatrixDataRepresentationImpl.h"
 #include <macgyver/Exception.h>
+#include <string>
+#include "../definition/MatrixDataRepresentation.h"
 
 
 namespace SmartMet

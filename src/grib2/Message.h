@@ -1,5 +1,9 @@
 #pragma once
 
+#include <cstdint>
+#include <ctime>
+#include <iosfwd>
+#include <string>
 #include "BitmapSection.h"
 #include "DataSection.h"
 #include "GridSection.h"
@@ -8,18 +12,24 @@
 #include "IndicatorSection.h"
 #include "IdentificationSection.h"
 #include "RepresentationSection.h"
-#include "Properties.h"
-#include "../common/DataWriter.h"
-#include "../common/MemoryReader.h"
-#include "../common/GeneralDefinitions.h"
 #include "../common/Coordinate.h"
-#include "../common/Dimensions.h"
 #include "../grid/Message.h"
-#include "../grid/ValueCache.h"
+#include "../common/Typedefs.h"
+#include "../grid/Typedefs.h"
+
+namespace SmartMet
+{
+namespace GRID
+{
+class GridFile;
+}
+}
 
 
 namespace SmartMet
 {
+class MemoryReader;
+
 namespace GRIB2
 {
 

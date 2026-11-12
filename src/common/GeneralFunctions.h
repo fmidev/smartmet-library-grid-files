@@ -5,16 +5,23 @@
  *  string manipulation, file I/O, numeric parsing, and data compression.
  *  All declarations are in the `SmartMet` namespace. */
 
-#include "Coordinate.h"
-#include "../grid/Typedefs.h"
-
-#include <string>
-#include <set>
 #include <macgyver/LocalDateTime.h>
 #include <macgyver/DateTime.h>
-
-#include <macgyver/Exception.h>
 #include <arpa/inet.h>
+#include <string>
+#include <set>
+#include <cstdio>
+#include <ctime>
+#include <array>
+#include <cmath>
+#include <cstdint>
+#include <iterator>
+#include <list>
+#include <map>
+#include <vector>
+#include "Coordinate.h"
+#include "../grid/Typedefs.h"
+#include "Typedefs.h"
 
 
 namespace SmartMet

@@ -1,7 +1,10 @@
 #include "XmlElement.h"
-#include "GeneralFunctions.h"
 #include <macgyver/Exception.h>
 #include <vector>
+#include <cstdio>
+#include <cstring>
+#include "GeneralFunctions.h"
+#include "Typedefs.h"
 
 namespace SmartMet
 {

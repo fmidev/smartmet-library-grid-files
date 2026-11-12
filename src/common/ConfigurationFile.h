@@ -1,10 +1,11 @@
 #pragma once
 
+#include <set>
+#include <iosfwd>
+#include <string>
+#include <vector>
 #include "Attribute.h"
 #include "Typedefs.h"
-
-#include <macgyver/Exception.h>
-#include <set>
 
 
 namespace SmartMet

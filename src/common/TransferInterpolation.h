@@ -4,8 +4,8 @@
  *  is conditionally excluded from compilation. */
 
 #include <vector>
-#include <cmath>
 #include <algorithm>
+#include <utility>
 
 struct FlowField
 {

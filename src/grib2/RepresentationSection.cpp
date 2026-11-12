@@ -1,9 +1,11 @@
 #include "RepresentationSection.h"
-#include "Message.h"
-#include "../identification/GridDef.h"
 #include <macgyver/Exception.h>
+#include <macgyver/StringConversion.h>
+#include <iostream>
+#include <cstdio>
+#include <optional>
+#include "Message.h"
 #include "../common/GeneralFunctions.h"
-
 #include "implementation/GridDataRepresentationImpl.h"                       // "5.0"
 #include "implementation/MatrixDataRepresentationImpl.h"                     // "5.1"
 #include "implementation/ComplexGridDataRepresentationImpl.h"                // "5.2"
@@ -17,9 +19,12 @@
 #include "implementation/SphericalHarmonicsDataRepresentationImpl.h"         // "5.51"
 #include "implementation/LogarithmicGridDataRepresentationImpl.h"            // "5.61"
 #include "implementation/ComplexSphericalHarmonicsDataRepresentationImpl.h"  // "5.50000"
-
-#include <iostream>
-#include <macgyver/StringConversion.h>
+#include "../common/AttributeList.h"
+#include "../common/DataWriter.h"
+#include "../common/MemoryReader.h"
+#include "Properties.h"
+#include "RepresentationDefinition.h"
+#include "../grid/MessageSection.h"
 
 namespace SmartMet
 {

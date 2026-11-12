@@ -1,6 +1,8 @@
 #include "TimeIntervalCategoricalForecastImpl.h"
 #include <macgyver/Exception.h>
-#include "../../common/GeneralFunctions.h"
+#include <string>
+#include "../definition/HorizontalSettings.h"
+#include "../definition/TimeIntervalCategoricalForecast.h"
 
 namespace SmartMet
 {

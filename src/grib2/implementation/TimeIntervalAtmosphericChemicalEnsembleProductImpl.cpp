@@ -1,8 +1,19 @@
 #include "TimeIntervalAtmosphericChemicalEnsembleProductImpl.h"
 #include <macgyver/Exception.h>
-
-#include <utility>
+#include <macgyver/DateTime.h>
+#include <string>
 #include "../../common/GeneralFunctions.h"
+#include "../definition/HorizontalSettings.h"
+#include "../definition/ParameterChemicalSettings.h"
+#include "../definition/TimeIntervalAtmosphericChemicalEnsembleProduct.h"
+
+namespace SmartMet
+{
+namespace GRIB2
+{
+class StatisticalSettings;
+}
+}
 
 
 namespace SmartMet

@@ -1,16 +1,23 @@
 #pragma once
 
+#include <vector>
+#include <cstddef>
+#include <cstdint>
+#include <iosfwd>
+#include <memory>
+#include <string>
 #include "GridDefinition.h"
 #include "../common/Coordinate.h"
 #include "../common/Dimensions.h"
 #include "../grid/MessageSection.h"
-#include "../common/DataWriter.h"
-#include "../common/MemoryReader.h"
-
-#include <vector>
+#include "../common/Typedefs.h"
+#include "../grid/Typedefs.h"
 
 namespace SmartMet
 {
+class DataWriter;
+class MemoryReader;
+
 namespace GRIB1
 {
 

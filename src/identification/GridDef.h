@@ -1,5 +1,11 @@
 #pragma once
 
+#include <atomic>
+#include <set>
+#include <ctime>
+#include <string>
+#include <unordered_map>
+#include <vector>
 #include "GribParameterDef.h"
 #include "Grib1ParameterDef.h"
 #include "Grib2ParameterDef.h"
@@ -15,16 +21,35 @@
 #include "ForecastTypeDef.h"
 #include "NetCdfParameterDef.h"
 #include "NewbaseParameterDef.h"
-#include "../common/AutoWriteLock.h"
-#include "../common/AutoReadLock.h"
 #include "../common/ConfigurationFile.h"
-#include "../grib1/Message.h"
-#include "../grib2/Message.h"
 #include "../grid/Typedefs.h"
 #include "../grib2/GridDefinition.h"
+#include "../common/Coordinate.h"
+#include "../common/ModificationLock.h"
+#include "../common/Typedefs.h"
+#include "../grib1/GridDefinition.h"
 
-#include <atomic>
-#include <set>
+namespace SmartMet
+{
+namespace GRIB1
+{
+class Message;
+}
+}
+namespace SmartMet
+{
+namespace GRIB2
+{
+class Message;
+}
+}
+namespace SmartMet
+{
+namespace T
+{
+class AttributeList;
+}
+}
 
 
 /*! \brief Environment variable whose value is the path to the GridDef configuration file. */

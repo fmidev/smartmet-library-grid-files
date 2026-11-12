@@ -1,16 +1,17 @@
 #include "ConfigurationFile.h"
-#include "GeneralFunctions.h"
-#include "ShowFunction.h"
-
 #include <macgyver/Exception.h>
-
+#include <fnmatch.h>
 #include <algorithm>
 #include <cstdio>
 #include <cstdlib>
 #include <string>
 #include <vector>
 #include <iostream>
-#include <fnmatch.h>
+#include <cstring>
+#include "GeneralFunctions.h"
+#include "ShowFunction.h"
+#include "Attribute.h"
+#include "Typedefs.h"
 
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF

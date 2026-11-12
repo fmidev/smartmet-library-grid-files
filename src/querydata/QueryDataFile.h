@@ -1,8 +1,15 @@
 #pragma once
 
-#include "../grid/Message.h"
-#include "Message.h"
 #include <newbase/NFmiFastQueryInfo.h>
+#include <macgyver/Exception.h>
+#include <cstddef>
+#include <iosfwd>
+#include <string>
+#include "Message.h"
+#include "../common/Typedefs.h"
+#include "../grid/Typedefs.h"
+
+class NFmiQueryData;
 
 
 namespace SmartMet

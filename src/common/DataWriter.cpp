@@ -1,6 +1,7 @@
 #include "DataWriter.h"
+#include <macgyver/Exception.h>
+#include <string>
 #include "GeneralFunctions.h"
-#include <arpa/inet.h>
 
 
 namespace SmartMet

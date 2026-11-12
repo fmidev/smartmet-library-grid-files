@@ -1,5 +1,8 @@
 #include "ShowFunction.h"
+#include <cstdio>
 #include "GeneralFunctions.h"
+#include "Log.h"
+#include "Typedefs.h"
 
 namespace SmartMet
 {

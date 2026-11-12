@@ -1,6 +1,9 @@
 #pragma once
 
+#include <cstdio>
+#include <string>
 #include "DataWriter.h"
+#include "Typedefs.h"
 
 
 namespace SmartMet

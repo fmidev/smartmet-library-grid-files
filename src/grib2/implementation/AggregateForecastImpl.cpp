@@ -1,5 +1,8 @@
 #include "AggregateForecastImpl.h"
 #include <macgyver/Exception.h>
+#include <string>
+#include "../definition/AggregateForecast.h"
+#include "../definition/HorizontalSettings.h"
 
 namespace SmartMet
 {

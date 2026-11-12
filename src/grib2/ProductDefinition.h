@@ -1,21 +1,40 @@
 #pragma once
 
-#include "../common/DataWriter.h"
-#include "../common/MemoryReader.h"
-#include "../common/AttributeList.h"
-#include "../grib2/definition/ParameterSettings.h"
-#include "../grib2/definition/PostprocSettings.h"
-#include "../grib2/definition/HorizontalSettings.h"
-#include "../grib2/definition/StatisticalSettings.h"
-#include "../grib2/definition/EpsSettings.h"
-#include "../grib2/definition/DerivedSettings.h"
-#include "../grib2/definition/RectangularClusterSettings.h"
-#include "../grib2/definition/ProbabilitySettings.h"
-#include "../grib2/definition/PercentileSettings.h"
-#include "../grib2/definition/CategoricalSettings.h"
+#include <iosfwd>
+#include <memory>
+#include <string>
+#include "../common/Typedefs.h"
+#include "../grid/Typedefs.h"
 
 namespace SmartMet
 {
+namespace GRIB2
+{
+class CategoricalSettings;
+class DerivedSettings;
+class EpsSettings;
+class HorizontalSettings;
+class ParameterSettings;
+class PercentileSettings;
+class PostprocSettings;
+class ProbabilitySettings;
+class RectangularClusterSettings;
+class StatisticalSettings;
+}
+}
+namespace SmartMet
+{
+namespace T
+{
+class AttributeList;
+}
+}
+
+namespace SmartMet
+{
+class DataWriter;
+class MemoryReader;
+
 namespace GRIB2
 {
 
