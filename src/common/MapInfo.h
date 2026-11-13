@@ -4,6 +4,7 @@
 #include <boost/iostreams/device/mapped_file.hpp>
 #include <string>
 #include <chrono>
+#include <filesystem>
 #include <cstddef>
 #include <memory>
 
