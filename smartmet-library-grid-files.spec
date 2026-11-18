@@ -133,6 +133,8 @@ libraries, the grid engine and the plugins using it
 - Fixed decoding of GRIB2 complex packed fields (templates 5.2 and 5.3) that have a bitmap:
   the group size validation expected a value for every grid point and rejected the message
   (for example several GFS fields)
+- Fixed the string splitting functions for parts of 10000 characters
+- Fixed the transfer time interpolation for grids with a dimension smaller than 16, and added a check that the grid dimensions match the number of values
 
 * Fri Nov 13 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.11.13-1.fmi
 - Include cleanup: headers include what they use and prefer forward declarations,

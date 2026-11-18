@@ -147,6 +147,9 @@ Pyramid build_pyramid(const std::vector<float> &base, int w, int h, int levels)
   P.W.push_back(w);
   P.H.push_back(h);
   for (int i = 1; i < levels; i++) {
+    // A small image cannot be halved any more: the pyramid gets fewer levels
+    if (P.W.back() < 4 || P.H.back() < 4)
+      break;
     int nw = 0;
     int nh = 0;
     auto ds = downsample2(P.levels.back(), P.W.back(), P.H.back(), nw, nh);
@@ -197,7 +200,7 @@ FlowField pyramid_optical_flow(const std::vector<float> &A, const std::vector<fl
 {
   Pyramid PA = build_pyramid(A, w, h, levels);
   Pyramid PB = build_pyramid(B, w, h, levels);
-  int L = levels - 1;
+  int L = static_cast<int>(PA.levels.size()) - 1;
   FlowField flow;
   flow.w = PA.W[L];
   flow.h = PA.H[L];

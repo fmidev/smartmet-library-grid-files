@@ -2089,7 +2089,7 @@ void splitString(const char *str, char separator, std::vector<std::string> &part
     char *p = const_cast<char *>(str);
 
     bool ind = false;
-    while (*p != '\0' && *p != '\n' && c < 10000)
+    while (*p != '\0' && *p != '\n' && c < 9999)
     {
       if (*p == '"') ind = !ind;
 
@@ -2147,7 +2147,7 @@ void splitString(const char *str, char separator, std::set<std::string> &partLis
     char *p = const_cast<char *>(str);
 
     bool ind = false;
-    while (*p != '\0' && *p != '\n' && c < 10000)
+    while (*p != '\0' && *p != '\n' && c < 9999)
     {
       if (*p == '"') ind = !ind;
 
@@ -2205,7 +2205,7 @@ void splitString(const char *str, char separator, std::vector<uint> &partList)
     char *p = const_cast<char *>(str);
 
     bool ind = false;
-    while (*p != '\0' && *p != '\n' && c < 10000)
+    while (*p != '\0' && *p != '\n' && c < 9999)
     {
       if (*p == '"') ind = !ind;
 
@@ -2263,7 +2263,7 @@ void splitString(const char *str, char separator, std::vector<int> &partList)
     char *p = const_cast<char *>(str);
 
     bool ind = false;
-    while (*p != '\0' && *p != '\n' && c < 10000)
+    while (*p != '\0' && *p != '\n' && c < 9999)
     {
       if (*p == '"') ind = !ind;
 
@@ -2321,7 +2321,7 @@ void splitString(const char *str, char separator, std::vector<double> &partList)
     char *p = const_cast<char *>(str);
 
     bool ind = false;
-    while (*p != '\0' && *p != '\n' && c < 10000)
+    while (*p != '\0' && *p != '\n' && c < 9999)
     {
       if (*p == '"') ind = !ind;
 
@@ -2379,7 +2379,7 @@ void splitString(const char *str, char separator, std::vector<float> &partList)
     char *p = const_cast<char *>(str);
 
     bool ind = false;
-    while (*p != '\0' && *p != '\n' && c < 10000)
+    while (*p != '\0' && *p != '\n' && c < 9999)
     {
       if (*p == '"') ind = !ind;
 
@@ -2437,7 +2437,7 @@ void splitString(const char *str, char separator, std::set<float> &partList)
     char *p = const_cast<char *>(str);
 
     bool ind = false;
-    while (*p != '\0' && *p != '\n' && c < 10000)
+    while (*p != '\0' && *p != '\n' && c < 9999)
     {
       if (*p == '"') ind = !ind;
 
@@ -2495,7 +2495,7 @@ void splitString(const char *str, char separator, std::set<int> &partList)
     char *p = const_cast<char *>(str);
 
     bool ind = false;
-    while (*p != '\0' && *p != '\n' && c < 10000)
+    while (*p != '\0' && *p != '\n' && c < 9999)
     {
       if (*p == '"') ind = !ind;
 
@@ -2553,7 +2553,7 @@ void splitString(const char *str, char separator, std::set<double> &partList)
     char *p = const_cast<char *>(str);
 
     bool ind = false;
-    while (*p != '\0' && *p != '\n' && c < 10000)
+    while (*p != '\0' && *p != '\n' && c < 9999)
     {
       if (*p == '"') ind = !ind;
 
@@ -2652,7 +2652,7 @@ void lineSplit(const char *str,std::vector<std::string> &lines)
     char *p = const_cast<char *>(str);
 
     bool ind = false;
-    while (*p != '\0' && c < 10000)
+    while (*p != '\0' && c < 9999)
     {
       if (*p == '"') ind = !ind;
 

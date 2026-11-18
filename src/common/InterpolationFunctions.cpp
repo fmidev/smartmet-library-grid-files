@@ -811,6 +811,10 @@ void timeInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,int
         return;
 
       case T::TimeInterpolationMethod::Transfer:
+        // The method handles the values as an image: the dimensions must match the data
+        if (width <= 0 || height <= 0 || C_UINT64(width) * C_UINT64(height) != C_UINT64(sz))
+          throw Fmi::Exception(BCP,"The grid dimensions do not match the number of values!");
+
         newValues = transferInterpolation(values1,values2,width,height,tp);
         break;
 
