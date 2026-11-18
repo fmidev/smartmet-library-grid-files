@@ -324,9 +324,11 @@ void scaleValues(int missingValueManagementUsed,std::size_t numberOfValues,const
 
 
 
-/*! \brief Returns the values, inserting ParamValueMissing where the bitmap bit is not set. */
+/*! \brief Returns the values, inserting ParamValueMissing where the bitmap bit is not set.
+    'numberOfGridValues' is the number of the grid points and 'numberOfValues' the number of
+    the packed values, which is smaller when the bitmap marks grid points missing. */
 
-void storeValues(const T::ParamValue *value,std::size_t numberOfValues,T::Data_ptr bitmap,std::size_t bitmapSizeInBytes,T::ParamValue_vec& decodedValues)
+void storeValues(const T::ParamValue *value,std::size_t numberOfGridValues,std::size_t numberOfValues,T::Data_ptr bitmap,std::size_t bitmapSizeInBytes,T::ParamValue_vec& decodedValues)
 {
   if (bitmap == nullptr)
   {
@@ -342,7 +344,7 @@ void storeValues(const T::ParamValue *value,std::size_t numberOfValues,T::Data_p
   const int bitmask[] = {128, 64, 32, 16, 8, 4, 2, 1};
 
   std::size_t n = 0;
-  for (std::size_t i = 0; i < numberOfValues; i++)
+  for (std::size_t i = 0; i < numberOfGridValues; i++)
   {
     // Guard against a bitmap that is shorter than the grid implies (OOB read).
     if ((i / 8) >= bitmapSizeInBytes)
@@ -354,6 +356,10 @@ void storeValues(const T::ParamValue *value,std::size_t numberOfValues,T::Data_p
     }
     else
     {
+      // Guard against a bitmap that marks more values present than were packed (OOB read).
+      if (n >= numberOfValues)
+        throw Fmi::Exception(BCP,"GRIB2 bitmap marks more values present than the message contains!");
+
       decodedValues.emplace_back(value[n]);
       n++;
     }
@@ -384,7 +390,17 @@ void ComplexGridDataRepresentationImpl::decodeValues(Message *message,T::ParamVa
     decodedValues.clear();
     decodedValues.reserve(numOfValues);
 
+    // With a bitmap only the values the bitmap marks present are packed, and their number
+    // is given in the representation section. Without one every grid point is packed.
+
     std::size_t numberOfValues = numOfValues;
+    if (bitmap != nullptr)
+    {
+      numberOfValues = message->getRepresentationSection()->getNumberOfValues();
+      if (numberOfValues > numOfValues)
+        throw Fmi::Exception(BCP,"GRIB2 packed value count exceeds the number of grid points!");
+    }
+
     T::ParamValue ref = mPacking.getReferenceValue();
     T::ParamValue bscale = int_power(2.0,C_INT(*mPacking.getBinaryScaleFactor()));
     T::ParamValue dscale = int_power(10.0,-C_INT(*mPacking.getDecimalScaleFactor()));
@@ -398,16 +414,16 @@ void ComplexGridDataRepresentationImpl::decodeValues(Message *message,T::ParamVa
     {
       // The number of groups is zero (or invalid), so all values are set to 'ref'.
 
-      for (std::size_t i=0; i<numberOfValues; i++)
-         decodedValues.emplace_back(ref);
+      std::vector<T::ParamValue> constantValues(numberOfValues,ref);
+      storeValues(constantValues.data(),numOfValues,numberOfValues,bitmap,bitmapSizeInBytes,decodedValues);
 
-       return;
+      return;
     }
 
 
     // Allocating some memory and making sure that it will be released.
 
-    auto *value = new T::ParamValue[numOfValues]();
+    auto *value = new T::ParamValue[numberOfValues]();
     std::unique_ptr<T::ParamValue[]> value_delete(value);
 
     int *dataValue = new int[numberOfValues]();
@@ -501,7 +517,7 @@ void ComplexGridDataRepresentationImpl::decodeValues(Message *message,T::ParamVa
 
     // ### Returning values.
 
-    storeValues(value,numberOfValues,bitmap,bitmapSizeInBytes,decodedValues);
+    storeValues(value,numOfValues,numberOfValues,bitmap,bitmapSizeInBytes,decodedValues);
   }
   catch (...)
   {

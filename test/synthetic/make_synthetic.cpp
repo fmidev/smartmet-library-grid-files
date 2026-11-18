@@ -290,6 +290,12 @@ std::vector<Case> cases()
   ret.push_back({"grib2_regular_ll_bitmap_jpeg", "regular_ll_sfc_grib2", T2_GRIB2 + ll_jpos + ll,
                  "grid_jpeg", 16, true});
 
+  // Complex packing with a bitmap packs only the values the bitmap marks present (as in GFS)
+  ret.push_back({"grib2_regular_ll_bitmap_complex", "regular_ll_sfc_grib2",
+                 T2_GRIB2 + ll_jpos + ll, "grid_complex", 16, true});
+  ret.push_back({"grib2_regular_ll_bitmap_complex_spatial_differencing", "regular_ll_sfc_grib2",
+                 T2_GRIB2 + ll_jpos + ll, "grid_complex_spatial_differencing", 16, true});
+
   // Global grid crossing the date line / Greenwich
   ret.push_back({"grib2_regular_ll_global", "regular_ll_sfc_grib2",
                  T2_GRIB2 + std::vector<Key>{{"jScansPositively", 0L}} +
