@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 26.11.18
+Version: 26.11.20
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -129,6 +129,12 @@ libraries, the grid engine and the plugins using it
 %attr(0755,root,root) %{_bindir}/smartmet-grid-test-redis
 
 %changelog
+* Fri Nov 20 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.11.20-1.fmi
+- Contouring options for grid data from the contour.* attributes (getContourOptions):
+  closedRange, extrapolation, strict, validate and desliver are new, and the subdivision and
+  the Trax smoother are now applied to ordinary parameters too, not only to functions.
+  New getIsolines/getIsobands overloads taking ContourOptions; the old ones are unchanged (ABI compatible)
+
 * Wed Nov 18 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.11.18-1.fmi
 - Fixed decoding of GRIB2 complex packed fields (templates 5.2 and 5.3) that have a bitmap:
   the group size validation expected a value for every grid point and rejected the message
