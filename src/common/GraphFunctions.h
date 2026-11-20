@@ -8,6 +8,7 @@
 #include <cstddef>
 #include <string>
 #include <vector>
+#include "AttributeList.h"
 #include "Coordinate.h"
 #include "Typedefs.h"
 #include "../grid/Typedefs.h"
@@ -140,8 +141,43 @@ void getIsobands(
     T::ByteData_vec& contours,
     int subdivide = 0,
     int threads = 1,
-    const Trax::SmoothOptions& smoothOptions = Trax::SmoothOptions(),
-    bool closedRange = false);
+    const Trax::SmoothOptions& smoothOptions = Trax::SmoothOptions());
+
+// Contouring options of a query (the contour.* attributes, see getContourOptions)
+struct ContourOptions
+{
+  int subdivide = 0;          // contour.subdivide: bilinear cell subdivision, 0 = off
+  int threads = 1;            // contour.threads
+  int extrapolation = 0;      // contour.extrapolation: fill missing cells next to the data this many times
+  bool closedRange = false;   // contour.closedRange: the last isoband includes its upper limit
+  bool strict = false;        // contour.strict: fail instead of returning unfinished contours
+  bool validate = false;      // contour.validate: validate the contours (OGC rules)
+  bool desliver = false;      // contour.desliver: remove slivers
+  Trax::SmoothOptions smoothOptions;  // contour.smooth.method, radius, passes, boundary, morphology, preserve_missing
+};
+
+ContourOptions getContourOptions(const T::AttributeList& attributeList);
+
+void getIsolines(
+    std::vector<float>& gridData,
+    T::Coordinate_vec *coordinates,
+    int width,
+    int height,
+    std::vector<float>& contourValues,
+    short interpolationMethod,
+    T::ByteData_vec& contours,
+    const ContourOptions& options);
+
+void getIsobands(
+    std::vector<float>& gridData,
+    std::vector<T::Coordinate> *coordinates,
+    int width,
+    int height,
+    std::vector<float>& contourLowValues,
+    std::vector<float>& contourHighValues,
+    short interpolationMethod,
+    T::ByteData_vec& contours,
+    const ContourOptions& options);
 
 bool getLineIntersectionPoint(
     double x1,double y1,double x2,double y2,  // Line 1

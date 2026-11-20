@@ -4,6 +4,7 @@
 #include <trax/IsolineValues.h>
 #include <trax/IsobandLimits.h>
 #include <trax/Smoother.h>
+#include <trax/SmoothOptions.h>
 #include <fmt/format.h>
 #include <geos/io/WKBWriter.h>
 #include <geos/version.h>
@@ -25,6 +26,7 @@
 #include <optional>
 #include <set>
 #include <utility>
+#include "GeneralFunctions.h"
 #include "ImageFunctions.h"
 #include "MemoryWriter.h"
 #include "ShowFunction.h"
@@ -1144,10 +1146,149 @@ T::Polygon_vec getEnlargedPolygonPath(T::Polygon_vec &oldPath, double areaExtens
 
 
 
-/*! \brief Computes isolines for the given grid values and returns them as WKB-encoded contours. */
+namespace
+{
+/*!
+ * \brief Fills missing cells next to valid ones with the mean of their valid neighbours,
+ *        theAmount times, as the extrapolation of the contour engine. Edge neighbours, then
+ *        corner neighbours if no edge neighbour is valid.
+ */
+
+void extrapolate(std::vector<float> &values, int width, int height, int theAmount)
+{
+  auto missing = [](float v) { return v == ParamValueMissing || std::isnan(v); };
+  auto tmp = values;
+  for (int k = 0; k < theAmount; k++)
+  {
+    for (int j = 0; j < height; j++)
+      for (int i = 0; i < width; i++)
+      {
+        if (!missing(tmp[j * width + i]))
+          continue;
+        float sum = 0;
+        int count = 0;
+        auto add = [&](int x, int y)
+        {
+          if (x < 0 || y < 0 || x >= width || y >= height)
+            return;
+          float v = values[y * width + x];
+          if (!missing(v))
+          {
+            sum += v;
+            count++;
+          }
+        };
+        add(i - 1, j);
+        add(i + 1, j);
+        add(i, j - 1);
+        add(i, j + 1);
+        if (count == 0)
+        {
+          add(i - 1, j - 1);
+          add(i - 1, j + 1);
+          add(i + 1, j - 1);
+          add(i + 1, j + 1);
+        }
+        if (count > 0)
+          tmp[j * width + i] = sum / count;
+      }
+    values = tmp;
+  }
+}
+}  // namespace
+
+
+
+/*! \brief Reads the contouring options of a query from its contour.* attributes. */
+
+ContourOptions getContourOptions(const T::AttributeList &attributeList)
+{
+  try
+  {
+    ContourOptions options;
+    auto flag = [&](const char *name, bool &value)
+    {
+      const char *str = attributeList.getAttributeValue(name);
+      if (str != nullptr)
+        value = (toInt32(str) != 0);
+    };
+    auto number = [&](const char *name, int &value)
+    {
+      const char *str = attributeList.getAttributeValue(name);
+      if (str != nullptr)
+        value = toInt32(str);
+    };
+
+    number("contour.subdivide", options.subdivide);
+    number("contour.threads", options.threads);
+    number("contour.extrapolation", options.extrapolation);
+    flag("contour.closedRange", options.closedRange);
+    flag("contour.strict", options.strict);
+    flag("contour.validate", options.validate);
+    flag("contour.desliver", options.desliver);
+
+    // The Trax grid smoother, active only when a method is given
+    const char *method = attributeList.getAttributeValue("contour.smooth.method");
+    if (method != nullptr)
+    {
+      auto &so = options.smoothOptions;
+      so.method = Trax::to_smooth_method(method);
+      const char *str = nullptr;
+      if ((str = attributeList.getAttributeValue("contour.smooth.radius")) != nullptr)
+        so.radius = toInt32(str);
+      if ((str = attributeList.getAttributeValue("contour.smooth.passes")) != nullptr)
+        so.passes = toInt32(str);
+      if ((str = attributeList.getAttributeValue("contour.smooth.degree")) != nullptr)
+        so.degree = toInt32(str);
+      if ((str = attributeList.getAttributeValue("contour.smooth.boundary")) != nullptr)
+        so.boundary = Trax::to_smooth_boundary(str);
+      if ((str = attributeList.getAttributeValue("contour.smooth.morphology")) != nullptr)
+        so.morphology = Trax::to_morphology_op(str);
+      if ((str = attributeList.getAttributeValue("contour.smooth.preserve_missing")) != nullptr)
+        so.preserve_missing = (toInt32(str) != 0);
+    }
+    return options;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+  }
+}
+
+
+
+/*! \brief Computes isolines (the original interface). */
 
 void getIsolines(std::vector<float> &gridData, T::Coordinate_vec *coordinates, int width, int height, std::vector<float> &contourValues, short interpolationMethod,
     size_t /*smooth_size*/, size_t /*smooth_degree*/, T::ByteData_vec &contours, int subdivide, int threads, const Trax::SmoothOptions &smoothOptions)
+{
+  ContourOptions options;
+  options.subdivide = subdivide;
+  options.threads = threads;
+  options.smoothOptions = smoothOptions;
+  getIsolines(gridData, coordinates, width, height, contourValues, interpolationMethod, contours, options);
+}
+
+
+
+/*! \brief Computes isobands (the original interface). */
+
+void getIsobands(std::vector<float> &gridData, std::vector<T::Coordinate> *coordinates, int width, int height, std::vector<float> &contourLowValues,
+    std::vector<float> &contourHighValues, short interpolationMethod, size_t /*smooth_size*/, size_t /*smooth_degree*/, T::ByteData_vec &contours, int subdivide, int threads, const Trax::SmoothOptions &smoothOptions)
+{
+  ContourOptions options;
+  options.subdivide = subdivide;
+  options.threads = threads;
+  options.smoothOptions = smoothOptions;
+  getIsobands(gridData, coordinates, width, height, contourLowValues, contourHighValues, interpolationMethod, contours, options);
+}
+
+
+
+/*! \brief Computes isolines for the given grid values and returns them as WKB-encoded contours. */
+
+void getIsolines(std::vector<float> &gridData, T::Coordinate_vec *coordinates, int width, int height, std::vector<float> &contourValues, short interpolationMethod,
+    T::ByteData_vec &contours, const ContourOptions &options)
 {
   try
   {
@@ -1163,16 +1304,29 @@ void getIsolines(std::vector<float> &gridData, T::Coordinate_vec *coordinates, i
 
     Trax::Contour contourer;
     contourer.interpolation((Trax::InterpolationType) interpolationMethod);
-    contourer.subdivide(subdivide);
-    contourer.threads(clampContourThreads(threads));
+    contourer.subdivide(options.subdivide);
+    contourer.threads(clampContourThreads(options.threads));
+    contourer.strict(options.strict);
+    contourer.validate(options.validate);
+    contourer.desliver(options.desliver);
 
-    auto grid = std::make_shared<TraxGrid>(&gridData, coordinates, width, height);
+    // Extrapolation fills missing cells next to the data, on a copy of the values
+    std::vector<float> extrapolated;
+    std::vector<float> *values = &gridData;
+    if (options.extrapolation > 0)
+    {
+      extrapolated = gridData;
+      extrapolate(extrapolated, width, height, options.extrapolation);
+      values = &extrapolated;
+    }
+
+    auto grid = std::make_shared<TraxGrid>(values, coordinates, width, height);
 
     // Optionally smooth the grid before contouring. Trax::smooth returns a new
     // grid sharing the source geometry; an inactive (default) option is a no-op.
     std::shared_ptr<const Trax::Grid> input = grid;
-    if (smoothOptions.active())
-      input = Trax::smooth(grid, smoothOptions);
+    if (options.smoothOptions.active())
+      input = Trax::smooth(grid, options.smoothOptions);
 
     Trax::IsolineValues isolineValues;
     for (float & contourValue : contourValues)
@@ -1219,7 +1373,7 @@ void getIsolines(std::vector<float> &gridData, T::Coordinate_vec *coordinates, i
 /*! \brief Computes isobands for the given grid values and returns them as WKB-encoded contours. */
 
 void getIsobands(std::vector<float> &gridData, std::vector<T::Coordinate> *coordinates, int width, int height, std::vector<float> &contourLowValues,
-    std::vector<float> &contourHighValues, short interpolationMethod, size_t /*smooth_size*/, size_t /*smooth_degree*/, T::ByteData_vec &contours, int subdivide, int threads, const Trax::SmoothOptions &smoothOptions, bool closedRange)
+    std::vector<float> &contourHighValues, short interpolationMethod, T::ByteData_vec &contours, const ContourOptions &options)
 {
   try
   {
@@ -1235,20 +1389,33 @@ void getIsobands(std::vector<float> &gridData, std::vector<T::Coordinate> *coord
 
     Trax::Contour contourer;
     contourer.interpolation((Trax::InterpolationType) interpolationMethod);
-    contourer.subdivide(subdivide);
-    contourer.threads(clampContourThreads(threads));
+    contourer.subdivide(options.subdivide);
+    contourer.threads(clampContourThreads(options.threads));
+    contourer.strict(options.strict);
+    contourer.validate(options.validate);
+    contourer.desliver(options.desliver);
 
-    auto grid = std::make_shared<TraxGrid>(&gridData, coordinates, width, height);
+    // Extrapolation fills missing cells next to the data, on a copy of the values
+    std::vector<float> extrapolated;
+    std::vector<float> *values = &gridData;
+    if (options.extrapolation > 0)
+    {
+      extrapolated = gridData;
+      extrapolate(extrapolated, width, height, options.extrapolation);
+      values = &extrapolated;
+    }
+
+    auto grid = std::make_shared<TraxGrid>(values, coordinates, width, height);
 
     // Optionally smooth the grid before contouring. Trax::smooth returns a new
     // grid sharing the source geometry; an inactive (default) option is a no-op.
     std::shared_ptr<const Trax::Grid> input = grid;
-    if (smoothOptions.active())
-      input = Trax::smooth(grid, smoothOptions);
+    if (options.smoothOptions.active())
+      input = Trax::smooth(grid, options.smoothOptions);
 
     // Whether the last isoband includes its upper limit (lolimit <= x <= hilimit), as the
     // closed_range setting of the WMS plugin and the contour engine
-    contourer.closed_range(closedRange);
+    contourer.closed_range(options.closedRange);
 
     Trax::IsobandLimits limits;
 

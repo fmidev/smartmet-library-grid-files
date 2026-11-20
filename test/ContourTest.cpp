@@ -102,6 +102,74 @@ BOOST_AUTO_TEST_CASE(isobands_closed_range)
   BOOST_CHECK_EQUAL(nonEmpty(open), 0U);
 
   T::ByteData_vec closed;
-  getIsobands(values, nullptr, width, height, low, high, 0, 0, 0, closed, 0, 1, Trax::SmoothOptions(), true);
+  ContourOptions options;
+  options.closedRange = true;
+  getIsobands(values, nullptr, width, height, low, high, 0, closed, options);
   BOOST_CHECK_EQUAL(nonEmpty(closed), 1U);
+}
+
+BOOST_AUTO_TEST_CASE(contour_options_from_attributes)
+{
+  T::AttributeList attributes;
+  attributes.addAttribute("contour.subdivide", "4");
+  attributes.addAttribute("contour.threads", "2");
+  attributes.addAttribute("contour.extrapolation", "3");
+  attributes.addAttribute("contour.closedRange", "1");
+  attributes.addAttribute("contour.strict", "1");
+  attributes.addAttribute("contour.validate", "1");
+  attributes.addAttribute("contour.desliver", "1");
+  attributes.addAttribute("contour.smooth.method", "box");
+  attributes.addAttribute("contour.smooth.radius", "2");
+  auto options = getContourOptions(attributes);
+  BOOST_CHECK_EQUAL(options.subdivide, 4);
+  BOOST_CHECK_EQUAL(options.threads, 2);
+  BOOST_CHECK_EQUAL(options.extrapolation, 3);
+  BOOST_CHECK(options.closedRange && options.strict && options.validate && options.desliver);
+  BOOST_CHECK(options.smoothOptions.active());
+
+  auto defaults = getContourOptions(T::AttributeList());
+  BOOST_CHECK_EQUAL(defaults.subdivide, 0);
+  BOOST_CHECK_EQUAL(defaults.threads, 1);
+  BOOST_CHECK_EQUAL(defaults.extrapolation, 0);
+  BOOST_CHECK(!defaults.closedRange && !defaults.strict && !defaults.validate && !defaults.desliver);
+  BOOST_CHECK(!defaults.smoothOptions.active());
+}
+
+// Extrapolation fills missing cells next to the data: the band reaches into the missing column
+BOOST_AUTO_TEST_CASE(isobands_extrapolation)
+{
+  auto values = gradient();  // 0 2 4 6 8 10 per row
+  for (int j = 0; j < height; j++)
+    values[j * width + width - 1] = ParamValueMissing;
+  const auto original = values;
+  std::vector<float> low{7};
+  std::vector<float> high{100};
+
+  ContourOptions options;
+  T::ByteData_vec plain;
+  getIsobands(values, nullptr, width, height, low, high, 0, plain, options);
+
+  options.extrapolation = 1;
+  T::ByteData_vec extrapolated;
+  getIsobands(values, nullptr, width, height, low, high, 0, extrapolated, options);
+
+  BOOST_REQUIRE_EQUAL(nonEmpty(plain), 1U);
+  BOOST_REQUIRE_EQUAL(nonEmpty(extrapolated), 1U);
+  BOOST_CHECK(plain[0] != extrapolated[0]);
+  BOOST_CHECK(values == original);  // the caller's data is not modified
+}
+
+// The contour checks are passed to Trax without changing a simple result
+BOOST_AUTO_TEST_CASE(contour_checks)
+{
+  auto values = gradient();
+  std::vector<float> low{0, 4};
+  std::vector<float> high{4, 8};
+  ContourOptions options;
+  options.strict = true;
+  options.validate = true;
+  options.desliver = true;
+  T::ByteData_vec contours;
+  getIsobands(values, nullptr, width, height, low, high, 0, contours, options);
+  BOOST_CHECK_EQUAL(nonEmpty(contours), 2U);
 }
