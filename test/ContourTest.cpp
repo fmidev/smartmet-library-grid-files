@@ -90,3 +90,18 @@ BOOST_AUTO_TEST_CASE(coordinate_count_mismatch)
   BOOST_CHECK(isolines(&coordinates).empty());
   BOOST_CHECK(isobands(&coordinates).empty());
 }
+
+// With closedRange the last isoband includes its upper limit: a field at the limit is inside
+BOOST_AUTO_TEST_CASE(isobands_closed_range)
+{
+  std::vector<float> values(width * height, 10.0F);
+  std::vector<float> low{8};
+  std::vector<float> high{10};
+  T::ByteData_vec open;
+  getIsobands(values, nullptr, width, height, low, high, 0, 0, 0, open);
+  BOOST_CHECK_EQUAL(nonEmpty(open), 0U);
+
+  T::ByteData_vec closed;
+  getIsobands(values, nullptr, width, height, low, high, 0, 0, 0, closed, 0, 1, Trax::SmoothOptions(), true);
+  BOOST_CHECK_EQUAL(nonEmpty(closed), 1U);
+}

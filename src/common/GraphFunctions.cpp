@@ -1219,7 +1219,7 @@ void getIsolines(std::vector<float> &gridData, T::Coordinate_vec *coordinates, i
 /*! \brief Computes isobands for the given grid values and returns them as WKB-encoded contours. */
 
 void getIsobands(std::vector<float> &gridData, std::vector<T::Coordinate> *coordinates, int width, int height, std::vector<float> &contourLowValues,
-    std::vector<float> &contourHighValues, short interpolationMethod, size_t /*smooth_size*/, size_t /*smooth_degree*/, T::ByteData_vec &contours, int subdivide, int threads, const Trax::SmoothOptions &smoothOptions)
+    std::vector<float> &contourHighValues, short interpolationMethod, size_t /*smooth_size*/, size_t /*smooth_degree*/, T::ByteData_vec &contours, int subdivide, int threads, const Trax::SmoothOptions &smoothOptions, bool closedRange)
 {
   try
   {
@@ -1245,6 +1245,10 @@ void getIsobands(std::vector<float> &gridData, std::vector<T::Coordinate> *coord
     std::shared_ptr<const Trax::Grid> input = grid;
     if (smoothOptions.active())
       input = Trax::smooth(grid, smoothOptions);
+
+    // Whether the last isoband includes its upper limit (lolimit <= x <= hilimit), as the
+    // closed_range setting of the WMS plugin and the contour engine
+    contourer.closed_range(closedRange);
 
     Trax::IsobandLimits limits;
 

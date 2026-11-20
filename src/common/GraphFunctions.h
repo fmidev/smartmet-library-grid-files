@@ -140,7 +140,8 @@ void getIsobands(
     T::ByteData_vec& contours,
     int subdivide = 0,
     int threads = 1,
-    const Trax::SmoothOptions& smoothOptions = Trax::SmoothOptions());
+    const Trax::SmoothOptions& smoothOptions = Trax::SmoothOptions(),
+    bool closedRange = false);
 
 bool getLineIntersectionPoint(
     double x1,double y1,double x2,double y2,  // Line 1

@@ -56,6 +56,14 @@ int getContourThreads(const T::AttributeList &attributeList)
   const char *str = attributeList.getAttributeValue("contour.threads");
   return (str != nullptr) ? toInt32(str) : 1;
 }
+
+/*! \brief Whether the last isoband includes its upper limit: attribute contour.closedRange (default false). */
+
+bool getContourClosedRange(const T::AttributeList &attributeList)
+{
+  const char *str = attributeList.getAttributeValue("contour.closedRange");
+  return (str != nullptr) && toInt32(str) != 0;
+}
 }  // namespace
 
 using AngleList = std::vector<float>;
@@ -780,7 +788,7 @@ void Message::getGridIsobands(T::ParamValue_vec& contourLowValues,T::ParamValue_
         break;
     }
 
-    getIsobands(gridValues,coordinates.get(),d.nx(),d.ny(),contourLowValues,contourHighValues,interpolationType,smoothSize,smoothDegree,contours,0,getContourThreads(attributeList));
+    getIsobands(gridValues,coordinates.get(),d.nx(),d.ny(),contourLowValues,contourHighValues,interpolationType,smoothSize,smoothDegree,contours,0,getContourThreads(attributeList),Trax::SmoothOptions(),getContourClosedRange(attributeList));
 
     attributeList.setAttribute("grid.width",Fmi::to_string(d.nx()));
     attributeList.setAttribute("grid.height",Fmi::to_string(d.ny()));
@@ -1114,7 +1122,7 @@ void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::P
         break;
     }
 
-    getIsobands(gridValues,coordinatePtr,width,height,contourLowValues,contourHighValues,interpolationType,smoothSize,smoothDegree,contours,0,getContourThreads(attributeList));
+    getIsobands(gridValues,coordinatePtr,width,height,contourLowValues,contourHighValues,interpolationType,smoothSize,smoothDegree,contours,0,getContourThreads(attributeList),Trax::SmoothOptions(),getContourClosedRange(attributeList));
 
     attributeList.setAttribute("grid.width",Fmi::to_string(width));
     attributeList.setAttribute("grid.height",Fmi::to_string(height));
@@ -1203,7 +1211,7 @@ void Message::getGridIsobandsByGrid(T::ParamValue_vec& contourLowValues,T::Param
         break;
     }
 
-    getIsobands(gridValues,coordinatePtr,gridWidth,gridHeight,contourLowValues,contourHighValues,interpolationType,smoothSize,smoothDegree,contours,0,getContourThreads(attributeList));
+    getIsobands(gridValues,coordinatePtr,gridWidth,gridHeight,contourLowValues,contourHighValues,interpolationType,smoothSize,smoothDegree,contours,0,getContourThreads(attributeList),Trax::SmoothOptions(),getContourClosedRange(attributeList));
 
     attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
     attributeList.setAttribute("grid.width",Fmi::to_string(gridWidth));
