@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 26.11.20
+Version: 26.11.21
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -129,6 +129,11 @@ libraries, the grid engine and the plugins using it
 %attr(0755,root,root) %{_bindir}/smartmet-grid-test-redis
 
 %changelog
+* Sat Nov 21 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.11.21-1.fmi
+- Isobands with NaN limits are the area of missing values: cells with missing values are no
+  longer skipped when contouring
+- Tests for the desliver, validate and strict contour options
+
 * Fri Nov 20 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.11.20-1.fmi
 - Contouring options for grid data from the contour.* attributes (getContourOptions):
   closedRange, extrapolation, strict, validate and desliver are new, and the subdivision and
