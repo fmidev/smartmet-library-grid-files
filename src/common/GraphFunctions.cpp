@@ -129,11 +129,12 @@ class TraxGrid: public Trax::Grid
       (*mCoordinates)[i + mWidth * j].set(x, y);
     }
 
+    // A cell is valid if its coordinates are. Missing values are not a reason to skip a
+    // cell: Trax needs the cell for the isoband of missing values (NaN...NaN limits).
     bool valid(long i, long j) const override
     {
-      return !std::isnan(get(i, j)) && !std::isnan(get(i + 1, j)) && !std::isnan(get(i, j + 1)) && !std::isnan(get(i + 1, j + 1)) && !std::isnan(x(i, j))
-          && !std::isnan(x(i + 1, j)) && !std::isnan(x(i, j + 1)) && !std::isnan(x(i + 1, j + 1)) && !std::isnan(y(i, j)) && !std::isnan(y(i + 1, j)) && !std::isnan(y(i, j + 1))
-          && !std::isnan(y(i + 1, j + 1));
+      return !std::isnan(x(i, j)) && !std::isnan(x(i + 1, j)) && !std::isnan(x(i, j + 1)) && !std::isnan(x(i + 1, j + 1)) && !std::isnan(y(i, j))
+          && !std::isnan(y(i + 1, j)) && !std::isnan(y(i, j + 1)) && !std::isnan(y(i + 1, j + 1));
     }
 
     std::string dump(const std::string &indent) const

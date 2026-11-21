@@ -7,6 +7,7 @@
 #include <boost/test/included/unit_test.hpp>
 #include <cstddef>
 #include <exception>
+#include <limits>
 #include <vector>
 #include "../src/common/GraphFunctions.h"
 #include "../src/common/Coordinate.h"
@@ -247,4 +248,24 @@ BOOST_AUTO_TEST_CASE(isolines_strict)
   };
   BOOST_CHECK_NO_THROW(lines(false));
   BOOST_CHECK_THROW(lines(true), std::exception);
+}
+
+// An isoband with NaN limits is the area of missing values, as in the contour engine
+BOOST_AUTO_TEST_CASE(isobands_missing_values)
+{
+  auto values = gradient();  // 0 2 4 6 8 10 per row
+  for (int j = 0; j < height; j++)
+    values[j * width + width - 1] = ParamValueMissing;
+
+  const float nan = std::numeric_limits<float>::quiet_NaN();
+  std::vector<float> low{nan, 0};
+  std::vector<float> high{nan, 100};
+  ContourOptions options;
+  T::ByteData_vec contours;
+  getIsobands(values, nullptr, width, height, low, high, 0, contours, options);
+
+  BOOST_REQUIRE_EQUAL(contours.size(), 2U);
+  BOOST_CHECK(!contours[0].empty());  // the cells of the missing column
+  BOOST_CHECK(!contours[1].empty());  // the data
+  BOOST_CHECK(contours[0] != contours[1]);
 }
