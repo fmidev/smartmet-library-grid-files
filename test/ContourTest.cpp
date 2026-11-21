@@ -1,10 +1,12 @@
 // getIsolines/getIsobands contour in grid coordinates when no coordinate vector is given
-// (contour.coordinateType = GRID_COORDINATES), and refuse a coordinate vector whose size
-// does not match the grid.
+// (contour.coordinateType = GRID_COORDINATES), refuse a coordinate vector whose size does not
+// match the grid, and pass the contour.* options (closed range, extrapolation, desliver,
+// validate, strict) to Trax.
 
 #define BOOST_TEST_MODULE ContourTest
 #include <boost/test/included/unit_test.hpp>
 #include <cstddef>
+#include <exception>
 #include <vector>
 #include "../src/common/GraphFunctions.h"
 #include "../src/common/Coordinate.h"
@@ -159,17 +161,90 @@ BOOST_AUTO_TEST_CASE(isobands_extrapolation)
   BOOST_CHECK(values == original);  // the caller's data is not modified
 }
 
-// The contour checks are passed to Trax without changing a simple result
-BOOST_AUTO_TEST_CASE(contour_checks)
+// A grid folded back on itself: the second column lies at x=1 and the third back at x=0
+static std::vector<T::Coordinate> coordinates(const std::vector<double>& xs, int rows)
 {
-  auto values = gradient();
-  std::vector<float> low{0, 4};
-  std::vector<float> high{4, 8};
+  std::vector<T::Coordinate> result;
+  for (int j = 0; j < rows; j++)
+    for (auto x : xs)
+      result.emplace_back(x, static_cast<double>(j));
+  return result;
+}
+
+// contour.desliver removes the zero-area sliver of an isoband on a grid folded back on itself
+BOOST_AUTO_TEST_CASE(isobands_desliver)
+{
+  auto coords = coordinates({0, 1, 0}, 2);
+  std::vector<float> values(6, 1.0F);
+  std::vector<float> low{0};
+  std::vector<float> high{2};
   ContourOptions options;
-  options.strict = true;
-  options.validate = true;
+  T::ByteData_vec plain;
+  getIsobands(values, &coords, 3, 2, low, high, 0, plain, options);
+  BOOST_CHECK_EQUAL(nonEmpty(plain), 1U);
+
   options.desliver = true;
-  T::ByteData_vec contours;
-  getIsobands(values, nullptr, width, height, low, high, 0, contours, options);
-  BOOST_CHECK_EQUAL(nonEmpty(contours), 2U);
+  T::ByteData_vec deslivered;
+  getIsobands(values, &coords, 3, 2, low, high, 0, deslivered, options);
+  BOOST_CHECK_EQUAL(nonEmpty(deslivered), 0U);
+}
+
+// contour.desliver removes the spike of an isoline going out to x=1 and back to almost x=0
+BOOST_AUTO_TEST_CASE(isolines_desliver)
+{
+  auto coords = coordinates({-1, 1e-8, 1, 0}, 2);
+  std::vector<float> values{0, 0, 0, 0, 1, 1, 1, 1};
+  std::vector<float> isovalues{0.5};
+  ContourOptions options;
+  T::ByteData_vec plain;
+  getIsolines(values, &coords, 4, 2, isovalues, 0, plain, options);
+
+  options.desliver = true;
+  T::ByteData_vec deslivered;
+  getIsolines(values, &coords, 4, 2, isovalues, 0, deslivered, options);
+
+  // WKB linestrings: 9 header bytes and 16 bytes per point
+  BOOST_REQUIRE_EQUAL(plain.size(), 1U);
+  BOOST_REQUIRE_EQUAL(deslivered.size(), 1U);
+  BOOST_CHECK_EQUAL(plain[0].size(), 9U + 4 * 16);
+  BOOST_CHECK_EQUAL(deslivered[0].size(), 9U + 2 * 16);
+}
+
+// On a folded grid the isobands are invalid: only contour.validate together with
+// contour.strict turns that into an error, either alone lets the contours through
+BOOST_AUTO_TEST_CASE(isobands_validate_strict)
+{
+  auto coords = coordinates({0, 3, 1}, 2);
+  std::vector<float> low{0};
+  std::vector<float> high{2};
+  auto bands = [&](bool validate, bool strict)
+  {
+    std::vector<float> values(6, 1.0F);
+    ContourOptions options;
+    options.validate = validate;
+    options.strict = strict;
+    T::ByteData_vec contours;
+    getIsobands(values, &coords, 3, 2, low, high, 0, contours, options);
+  };
+  BOOST_CHECK_NO_THROW(bands(false, false));
+  BOOST_CHECK_NO_THROW(bands(false, true));
+  BOOST_CHECK_NO_THROW(bands(true, false));
+  BOOST_CHECK_THROW(bands(true, true), std::exception);
+}
+
+// On a folded grid an isoline cannot be finished: contour.strict turns that into an error
+BOOST_AUTO_TEST_CASE(isolines_strict)
+{
+  auto coords = coordinates({0, 1, 0, -1}, 2);
+  std::vector<float> isovalues{0.5};
+  auto lines = [&](bool strict)
+  {
+    std::vector<float> values{0, 0, 0, 0, 1, 1, 1, 1};
+    ContourOptions options;
+    options.strict = strict;
+    T::ByteData_vec contours;
+    getIsolines(values, &coords, 4, 2, isovalues, 0, contours, options);
+  };
+  BOOST_CHECK_NO_THROW(lines(false));
+  BOOST_CHECK_THROW(lines(true), std::exception);
 }
