@@ -467,17 +467,20 @@ void MemoryMapper::setEnabled(bool enabled)
 
 
 
-/*! \brief Throws if a network file would be accessed without the userfaultfd memory mapper.
+/*! \brief Throws a descriptive error for a network file that has no local copy.
 
-    The old memory mapper can map only local files. Without this check a network file is
-    reported as missing, which hides the real reason: the kernel refused userfaultfd. */
+    Called when the old memory mapper cannot find the file locally. A server may read a file
+    that is registered with a network protocol through a local mount of the same path (with
+    the memory mapper disabled), so only a missing local copy is an error. Without this
+    error a network file would be reported just as missing, which hides the real reason:
+    reading it over the network requires the userfaultfd memory mapper. */
 
 void MemoryMapper::checkLocalFile(uint protocol,const std::string& server,const std::string& filename)
 {
   if (protocol == MapInfo::Protocol::None)
     return;
 
-  Fmi::Exception exception(BCP,"Network grid files require the userfaultfd memory mapper, which is not enabled!");
+  Fmi::Exception exception(BCP,"A network grid file has no local copy, and reading it over the network requires the userfaultfd memory mapper, which is not enabled!");
   exception.addParameter("Server",server);
   exception.addParameter("Filename",filename);
   throw exception;
@@ -499,9 +502,8 @@ void MemoryMapper::map(const MapInfo_sptr& info)
 
     if (!mEnabled)
     {
-      // We should use the old memory mapper, which can map only local files
-
-      checkLocalFile(info->protocol,info->server,info->filename);
+      // We should use the old memory mapper, which can map only local files. A network
+      // file may also be available through a local mount of the same path.
 
       struct stat buf{};
       if (stat(info->filename.c_str(), &buf) == 0)
@@ -510,6 +512,7 @@ void MemoryMapper::map(const MapInfo_sptr& info)
       }
       else
       {
+        checkLocalFile(info->protocol,info->server,info->filename);
         Fmi::Exception exception(BCP,"The file does not exist!");
         exception.addParameter("Filename",info->filename);
         throw exception;
@@ -835,14 +838,14 @@ Int64 MemoryMapper::getFileSize(uint serverType,uint protocol,const char *server
   {
     if (!mEnabled)
     {
-      // We should use the old memory mapper, which can map only local files
-
-      checkLocalFile(protocol,server,filename);
+      // We should use the old memory mapper, which can map only local files. A network
+      // file may also be available through a local mount of the same path.
 
       struct stat buf{};
       if (stat(filename, &buf) == 0)
         return (Int64)buf.st_size;
 
+      checkLocalFile(protocol,server,filename);
       return -1;
     }
 

@@ -501,9 +501,13 @@ memory directly to system calls such as `write()`, they would fail with `EFAULT`
 kernels (RHEL8) reject the unknown flag with `EINVAL`, and the mapper then retries without it.
 
 If the kernel still refuses `userfaultfd`, `setEnabled(true)` prints a `### WARNING` to
-stdout and returns without switching modes. Local files then use the old mapper, but
-network files (`protocol` other than `None`) cannot be read at all: `map()` throws
-"Network grid files require the userfaultfd memory mapper". Check the startup log when
+stdout and returns without switching modes. The old mapper then reads every file from the
+local filesystem, including files registered with a network `protocol`: a server can read
+them through a local mount of the same path (the clients cluster reads WRM this way). Only
+a network file without a local copy is an error, and `map()` and `getFileSize()` then throw
+"A network grid file has no local copy, and reading it over the network requires the
+userfaultfd memory mapper". The same applies when the mapper is disabled in the
+configuration (`memoryMapper.enabled`, which defaults to false). Check the startup log when
 enabling it. Debug it with the state tree from `memoryMapper.getStateAttributes()`, which
 the grid engine exposes.
 

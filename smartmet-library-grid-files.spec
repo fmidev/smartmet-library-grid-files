@@ -4,7 +4,7 @@
 Summary: grid file handling library
 Name: %{SPECNAME}
 Version: 26.11.25
-Release: 1%{?dist}.fmi
+Release: 2%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
 URL: https://github.com/fmidev/smartmet-library-grid-files
@@ -129,6 +129,11 @@ libraries, the grid engine and the plugins using it
 %attr(0755,root,root) %{_bindir}/smartmet-grid-test-redis
 
 %changelog
+* Wed Nov 25 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.11.25-2.fmi
+- Fixed a regression in 26.11.25-1: with the memory mapper disabled, a file registered with
+  a network protocol is again read from a local mount of the same path when one exists (the
+  clients cluster reads WRM this way). The new error is given only when there is no local copy
+
 * Wed Nov 25 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.11.25-1.fmi
 - The memory mapper asks for a user mode only userfaultfd: RHEL9 refused the plain one from
   a non-root server (vm.unprivileged_userfaultfd=0), the mapper stayed disabled and all
