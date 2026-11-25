@@ -21,11 +21,11 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %endif
 
 BuildRequires: rpm-build
-BuildRequires: smartmet-utils-devel >= 26.9.3
-BuildRequires: smartmet-library-newbase-devel >= 26.10.16
-BuildRequires: smartmet-library-spine-devel >= 26.10.16
-BuildRequires: smartmet-library-macgyver-devel >= 26.10.16
-BuildRequires: smartmet-library-trax-devel >= 26.10.16
+BuildRequires: smartmet-utils-devel >= 26.11.9
+BuildRequires: smartmet-library-newbase-devel >= 26.11.18
+BuildRequires: smartmet-library-spine-devel >= 26.11.13
+BuildRequires: smartmet-library-macgyver-devel >= 26.11.13
+BuildRequires: smartmet-library-trax-devel >= 26.11.13
 BuildRequires: %{smartmet_boost}-devel
 BuildRequires: gcc-c++
 BuildRequires: gdal312-devel
@@ -50,10 +50,10 @@ Requires: libaec
 Requires: libcurl
 Requires: openjpeg2
 Requires: libwebp13 >= 1.3.2
-Requires: smartmet-library-newbase >= 26.10.17
-Requires: smartmet-library-macgyver >= 26.10.17
-Requires: smartmet-library-spine >= 26.10.17
-Requires: smartmet-library-trax >= 26.10.17
+Requires: smartmet-library-newbase >= 26.11.18
+Requires: smartmet-library-macgyver >= 26.11.13
+Requires: smartmet-library-spine >= 26.11.13
+Requires: smartmet-library-trax >= 26.11.13
 Requires: smartmet-topography-data >= 1.0.0
 #TestRequires: %{smartmet_boost}-devel
 #TestRequires: gcc-c++
@@ -61,12 +61,12 @@ Requires: smartmet-topography-data >= 1.0.0
 #TestRequires: gdal312-devel
 #TestRequires: geos313-devel
 #TestRequires: libwebp13-devel >= 1.3.2
-#TestRequires: smartmet-library-macgyver-devel >= 26.10.16
-#TestRequires: smartmet-library-newbase-devel >= 26.10.16
-#TestRequires: smartmet-library-spine-devel >= 26.10.16
-#TestRequires: smartmet-library-trax-devel >= 26.10.16
-#TestRequires: smartmet-test-data >= 26.8.26
-#TestRequires: smartmet-qdtools-test-data >= 26.7.9
+#TestRequires: smartmet-library-macgyver-devel >= 26.11.13
+#TestRequires: smartmet-library-newbase-devel >= 26.11.18
+#TestRequires: smartmet-library-spine-devel >= 26.11.13
+#TestRequires: smartmet-library-trax-devel >= 26.11.13
+#TestRequires: smartmet-test-data >= 26.10.30
+#TestRequires: smartmet-qdtools-test-data >= 26.11.3
 
 %description
 FMI Grid File handling library
@@ -96,9 +96,9 @@ rm -rf $RPM_BUILD_ROOT
 Summary: FMI Grid File library development files
 Provides: %{SPECNAME}-devel
 Requires: %{SPECNAME} = %{version}-%{release}
-Requires: smartmet-library-newbase-devel >= 26.10.16
+Requires: smartmet-library-newbase-devel >= 26.11.18
 Requires: smartmet-library-spine-devel
-Requires: smartmet-library-macgyver-devel >= 26.10.16
+Requires: smartmet-library-macgyver-devel >= 26.11.13
 Requires: smartmet-library-trax-devel
 Requires: %{smartmet_boost}-devel
 Requires: libcurl-devel
@@ -116,7 +116,7 @@ Summary: Grid configuration and Redis content for testing the grid libraries, en
 Requires: %{SPECNAME} = %{version}-%{release}
 Provides: smartmet-engine-grid-test = %{version}-%{release}
 Obsoletes: smartmet-engine-grid-test < 26.10.6
-Requires: smartmet-test-data >= 26.10.27
+Requires: smartmet-test-data >= 26.10.30
 
 %description -n %{SPECNAME}-test
 Grid configuration (grid-files, grid engine) and a Redis content database for testing the grid
@@ -170,7 +170,7 @@ libraries, the grid engine and the plugins using it
 - splitNumbers rejects numeric ranges that would expand beyond a sane element count
 
 * Wed Oct 28 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.28-1.fmi
-- The test package requires smartmet-test-data >= 26.10.27, whose grib/pal_ensemble control
+- The test package requires smartmet-test-data >= 26.10.30, whose grib/pal_ensemble control
   forecast has the three steps the Redis content registers
 
 * Tue Oct 27 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.27-1.fmi
