@@ -29,6 +29,11 @@
 #include <curl/curl.h>
 #include <sys/utsname.h>
 
+#ifndef UFFD_USER_MODE_ONLY
+// Kernel headers older than 5.11 (RHEL8) do not define the flag
+#define UFFD_USER_MODE_ONLY 1
+#endif
+
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
 
@@ -412,7 +417,14 @@ void MemoryMapper::setEnabled(bool enabled)
       mDataFetchers.insert(std::pair<uint,DataFetcher_sptr>(DataFetcher::ServerType::HTTPD,df_network));     // HTTPD
 
       mPageSize = sysconf(_SC_PAGE_SIZE);
-      mUffd = syscall(__NR_userfaultfd, O_CLOEXEC | O_NONBLOCK);
+      // Kernels 5.11 and newer refuse userfaultfd from an unprivileged process unless
+      // vm.unprivileged_userfaultfd=1 (the default is 0, for example on RHEL9) or the
+      // descriptor only handles faults from user mode. The grid data is read in user space,
+      // so the user mode flag is enough. Older kernels (RHEL8) do not know the flag and
+      // reject it with EINVAL, but they do not restrict userfaultfd either.
+      mUffd = syscall(__NR_userfaultfd, O_CLOEXEC | O_NONBLOCK | UFFD_USER_MODE_ONLY);
+      if (mUffd == -1 && errno == EINVAL)
+        mUffd = syscall(__NR_userfaultfd, O_CLOEXEC | O_NONBLOCK);
 
       if (mUffd == -1)
       {
@@ -455,6 +467,25 @@ void MemoryMapper::setEnabled(bool enabled)
 
 
 
+/*! \brief Throws if a network file would be accessed without the userfaultfd memory mapper.
+
+    The old memory mapper can map only local files. Without this check a network file is
+    reported as missing, which hides the real reason: the kernel refused userfaultfd. */
+
+void MemoryMapper::checkLocalFile(uint protocol,const std::string& server,const std::string& filename)
+{
+  if (protocol == MapInfo::Protocol::None)
+    return;
+
+  Fmi::Exception exception(BCP,"Network grid files require the userfaultfd memory mapper, which is not enabled!");
+  exception.addParameter("Server",server);
+  exception.addParameter("Filename",filename);
+  throw exception;
+}
+
+
+
+
 /*! \brief Memory-maps the file described by the given MapInfo, using userfaultfd when enabled. */
 
 void MemoryMapper::map(const MapInfo_sptr& info)
@@ -468,7 +499,9 @@ void MemoryMapper::map(const MapInfo_sptr& info)
 
     if (!mEnabled)
     {
-      // We should use the old memory mapper
+      // We should use the old memory mapper, which can map only local files
+
+      checkLocalFile(info->protocol,info->server,info->filename);
 
       struct stat buf{};
       if (stat(info->filename.c_str(), &buf) == 0)
@@ -802,7 +835,9 @@ Int64 MemoryMapper::getFileSize(uint serverType,uint protocol,const char *server
   {
     if (!mEnabled)
     {
-      // We should use the old memory mapper
+      // We should use the old memory mapper, which can map only local files
+
+      checkLocalFile(protocol,server,filename);
 
       struct stat buf{};
       if (stat(filename, &buf) == 0)

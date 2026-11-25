@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 26.11.21
+Version: 26.11.25
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -129,6 +129,13 @@ libraries, the grid engine and the plugins using it
 %attr(0755,root,root) %{_bindir}/smartmet-grid-test-redis
 
 %changelog
+* Wed Nov 25 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.11.25-1.fmi
+- The memory mapper asks for a user mode only userfaultfd: RHEL9 refused the plain one from
+  a non-root server (vm.unprivileged_userfaultfd=0), the mapper stayed disabled and all
+  network grid files (for example WRM over HTTPS) were read as missing values
+- Mapping a network grid file without the userfaultfd mapper now throws a clear error
+  instead of "The file does not exist!"
+
 * Sat Nov 21 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.11.21-1.fmi
 - Isobands with NaN limits are the area of missing values: cells with missing values are no
   longer skipped when contouring

@@ -136,6 +136,7 @@ class MemoryMapper
 
   protected:
 
+    static void checkLocalFile(uint protocol,const std::string& server,const std::string& filename);
     void      addMapInfo(const MapInfo_sptr& mapInfo);
     int       getData(const MapInfo_sptr& info,std::size_t filePosition,int dataSize,char *dataPtr);
     int       getClosestIndex(char *address);

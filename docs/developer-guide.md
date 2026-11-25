@@ -493,10 +493,19 @@ page with zeros, so the faulting thread is not blocked forever. Decoders then ca
 `mGridFilePtr->hasMemoryMapperError()` and **throw instead of returning the zeros as
 data**. Any new decoding path must do the same check after reading.
 
-If the kernel refuses `userfaultfd` (for example with `vm.unprivileged_userfaultfd=0`
-for a non-root process), `setEnabled(true)` prints a `### WARNING` to stdout and
-returns without switching modes. Check the startup log when enabling it. Debug it with the state tree
-from `memoryMapper.getStateAttributes()`, which the grid engine exposes.
+`setEnabled(true)` asks for a descriptor with `UFFD_USER_MODE_ONLY`. Kernels 5.11 and
+newer (for example RHEL9) refuse a plain `userfaultfd` from a non-root process when
+`vm.unprivileged_userfaultfd=0`, the default, but allow one that handles only user mode
+faults. That is enough because the grid data is read in user space; do not pass mapped
+memory directly to system calls such as `write()`, they would fail with `EFAULT`. Older
+kernels (RHEL8) reject the unknown flag with `EINVAL`, and the mapper then retries without it.
+
+If the kernel still refuses `userfaultfd`, `setEnabled(true)` prints a `### WARNING` to
+stdout and returns without switching modes. Local files then use the old mapper, but
+network files (`protocol` other than `None`) cannot be read at all: `map()` throws
+"Network grid files require the userfaultfd memory mapper". Check the startup log when
+enabling it. Debug it with the state tree from `memoryMapper.getStateAttributes()`, which
+the grid engine exposes.
 
 **NFS caveat (both modes).** If a file on NFS is unlinked while it is mapped, a later
 page fault raises `SIGBUS`. This cannot be caught safely. The content server's
